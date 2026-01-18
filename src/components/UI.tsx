@@ -197,8 +197,8 @@ export const UI: React.FC = () => {
                             {/* Metric 3: Human Resilience */}
                             <div className="bg-white/5 rounded-xl p-3 md:p-4 border border-white/5 min-w-[140px]">
                                 <p className="text-[10px] uppercase text-gray-400 font-bold tracking-wider mb-1">Human Resilience</p>
-                                <div className="text-xl md:text-2xl font-bold text-cyan-400">
-                                    High
+                                <div className={`text-xl md:text-2xl font-bold ${selectedJob.humanResilienceLabel === 'Critical' || selectedJob.humanResilienceLabel === 'Very High' ? 'text-green-400' : selectedJob.humanResilienceLabel === 'High' ? 'text-cyan-400' : 'text-yellow-400'}`}>
+                                    {selectedJob.humanResilienceLabel}
                                 </div>
                                 <p className="text-[10px] text-gray-400 mt-1">Social Intel Priority</p>
                             </div>
@@ -206,8 +206,8 @@ export const UI: React.FC = () => {
                             {/* Metric 4: Salary Impact */}
                             <div className="bg-white/5 rounded-xl p-3 md:p-4 border border-white/5 min-w-[140px]">
                                 <p className="text-[10px] uppercase text-gray-400 font-bold tracking-wider mb-1">Salary Volatility</p>
-                                <div className="text-xl md:text-2xl font-bold text-yellow-400">
-                                    Medium
+                                <div className={`text-xl md:text-2xl font-bold ${selectedJob.salaryVolatilityLabel === 'High' || selectedJob.salaryVolatilityLabel === 'Very High' ? 'text-red-400' : selectedJob.salaryVolatilityLabel === 'Medium' ? 'text-yellow-400' : 'text-green-400'}`}>
+                                    {selectedJob.salaryVolatilityLabel}
                                 </div>
                                 <p className="text-[10px] text-gray-400 mt-1">Dependent on upskilling</p>
                             </div>
