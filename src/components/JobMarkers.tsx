@@ -24,15 +24,24 @@ export const JobMarkers: React.FC = () => {
     // Pre-calculate all peak states for this frame/year
     const peaks = useMemo(() => {
         return jobs.map((job, i) => {
-            const status = getJobStatus(job, year);
-            const isHighRisk = status.riskScore > 0.7;
-            const rate = isHighRisk ? 0.95 : 1.02;
-            const yearsPassed = year - 2025;
-            const projectedEmployment = job.employment * Math.pow(rate, yearsPassed);
-            const h = (projectedEmployment / 500000); // Scale factor
+            // SYNCED LOGIC WITH TERRAIN.TSX
+            // Interpolate growth impact based on current year (2025-2030)
+            const progress = (year - 2025) / 5; // 0.0 to 1.0
 
+            // Calculate "Current" Growth at this specific year
+            const currentGrowth = job.projectedGrowth * progress;
+
+            // Visual Height Calculation (Must match Terrain.tsx exactly)
+            const getVisualHeight = (growthDelta: number) => {
+                const baseHeight = 1.2;
+                const impact = growthDelta * 0.08;
+                return Math.max(0.2, Math.min(4.0, baseHeight + impact));
+            };
+
+            const h = getVisualHeight(currentGrowth);
             const { x, z } = getTerrainPosition(i);
 
+            // Note: We use the same 'h' that the vertex shader receives
             return { x, z, height: h } as PeakData;
         });
     }, [jobs, year]);
