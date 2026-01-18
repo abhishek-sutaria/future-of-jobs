@@ -164,10 +164,10 @@ async function run() {
             // --- MANUAL OVERRIDES FOR NARRATIVE CONSISTENCY ---
             // This ensures that "Real Data" generation doesn't overwrite our curated story points (e.g. 5.2% bug fix)
             const MANUAL_OVERRIDES = {
-                'Marketing Associate': { growth: 4.8, vol: 'Medium', res: 'High' },
+                'Marketing Associate': { growth: -2.5, vol: 'Medium', res: 'High' },
                 'Assoc. Brand Manager': { growth: 5.5, vol: 'Low', res: 'Very High' },
-                'Digital Mktg Specialist': { growth: 2.2, vol: 'High', res: 'Low' },
-                'Sales Representative': { growth: 1.5, vol: 'High', res: 'Medium' },
+                'Digital Mktg Specialist': { growth: 0.8, vol: 'High', res: 'Low' },
+                'Sales Representative': { growth: -5.0, vol: 'High', res: 'Medium' },
                 'Project Manager': { growth: 4.0, vol: 'Low', res: 'Very High' },
                 'Management Consultant': { growth: 6.5, vol: 'Medium', res: 'High' },
                 'Market Research Analyst': { growth: 7.8, vol: 'Low', res: 'Moderate' },

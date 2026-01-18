@@ -10,7 +10,7 @@ export const initialJobs: Job[] = [
         cluster: 'Marketing',
         employment: 400000,
         automationCostIndex: 0.5,
-        projectedGrowth: 4.8,
+        projectedGrowth: -2.5,
         salaryVolatilityLabel: 'Medium',
         humanResilienceLabel: 'High',
         tasks: [
@@ -38,7 +38,7 @@ export const initialJobs: Job[] = [
         cluster: 'Marketing',
         employment: 600000,
         automationCostIndex: 0.2, // Highly automatable via GenAI
-        projectedGrowth: 2.2, // Lowered to reflect automation pressure
+        projectedGrowth: 0.8,
         salaryVolatilityLabel: 'High',
         humanResilienceLabel: 'Low',
         tasks: [
@@ -52,7 +52,7 @@ export const initialJobs: Job[] = [
         cluster: 'Sales',
         employment: 900000,
         automationCostIndex: 0.4,
-        projectedGrowth: 1.5,
+        projectedGrowth: -5.0,
         salaryVolatilityLabel: 'High',
         humanResilienceLabel: 'Medium',
         tasks: [
