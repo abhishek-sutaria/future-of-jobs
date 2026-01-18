@@ -34,7 +34,7 @@ export const SkillsModal: React.FC<SkillsModalProps> = ({ isOpen, onClose }) => 
         const lower = input.toLowerCase();
         const skills = input.split(',').map(s => s.trim());
         const hasStrategy = lower.includes('strategy') || lower.includes('planning');
-        const hasTech = lower.includes('python') || lower.includes('sql') || lower.includes('data');
+        const hasTech = lower.includes('python') || lower.includes('sql') || lower.includes('data') || lower.includes('code') || lower.includes('dev') || lower.includes('programming');
         const hasLeadership = lower.includes('leadership') || lower.includes('management');
 
         let score = 60;

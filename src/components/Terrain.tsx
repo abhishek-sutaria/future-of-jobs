@@ -15,8 +15,8 @@ const vertexShader = `
   
   // Peak Data (Flat Arrays for robustness)
   // uniform vec3 uPeaks[20] => ThreeJS maps array of Vector3 to this.
-  uniform vec3 uPeaks[20]; 
-  uniform vec3 uColors[20]; 
+  uniform vec3 uPeaks[50]; 
+  uniform vec3 uColors[50]; 
   uniform int uPeakCount;
 
   // Constants 
@@ -37,7 +37,7 @@ const vertexShader = `
     vec3 blendedColor = vec3(0.0);
     float totalWeight = 0.0;
 
-    for(int i = 0; i < 20; i++) {
+    for(int i = 0; i < 50; i++) {
         if (i >= uPeakCount) break;
         
         vec3 peak = uPeaks[i]; // x, z, height
@@ -47,7 +47,7 @@ const vertexShader = `
         // In UV mapping of PlaneGeometry:
         // u=0 -> x=-20, v=0 -> y=-20 (which is world Z after rotation)
         // INVERTING Z logic to match World Space
-        float dz = worldPos.y + peak.y; 
+        float dz = worldPos.y - peak.y; 
         
         float distSq = dx*dx + dz*dz;
         
@@ -113,8 +113,8 @@ export const Terrain: React.FC = () => {
   const uniforms = useMemo(() => {
     return {
       uTime: { value: 0 },
-      uPeaks: { value: new Array(20).fill(0).map(() => new Vector3(0, 0, 0)) },
-      uColors: { value: new Array(20).fill(0).map(() => new Vector3(0, 0, 0)) },
+      uPeaks: { value: new Array(50).fill(0).map(() => new Vector3(0, 0, 0)) },
+      uColors: { value: new Array(50).fill(0).map(() => new Vector3(0, 0, 0)) },
       uPeakCount: { value: jobs.length }
     };
   }, []);
@@ -129,7 +129,7 @@ export const Terrain: React.FC = () => {
 
     // Update Arrays
     jobs.forEach((job, i) => {
-      if (i >= 20) return;
+      if (i >= 50) return;
 
       const status = getJobStatus(job, year);
       const isHighRisk = status.riskScore > 0.7;
@@ -157,7 +157,7 @@ export const Terrain: React.FC = () => {
       if (colorVec) colorVec.set(c.r, c.g, c.b);
     });
 
-    materialRef.current.uniforms.uPeakCount.value = Math.min(jobs.length, 20);
+    materialRef.current.uniforms.uPeakCount.value = Math.min(jobs.length, 50);
 
     // Critical: Tell Three.js the material needs an update? 
     // No, usually modifying uniforms is enough. But let's try this if issues persist.

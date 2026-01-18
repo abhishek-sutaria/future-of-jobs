@@ -161,13 +161,41 @@ async function run() {
                 ];
             }
 
+            // --- MANUAL OVERRIDES FOR NARRATIVE CONSISTENCY ---
+            // This ensures that "Real Data" generation doesn't overwrite our curated story points (e.g. 5.2% bug fix)
+            const MANUAL_OVERRIDES = {
+                'Marketing Associate': { growth: 4.8, vol: 'Medium', res: 'High' },
+                'Assoc. Brand Manager': { growth: 5.5, vol: 'Low', res: 'Very High' },
+                'Digital Mktg Specialist': { growth: 2.2, vol: 'High', res: 'Low' },
+                'Sales Representative': { growth: 1.5, vol: 'High', res: 'Medium' },
+                'Project Manager': { growth: 4.0, vol: 'Low', res: 'Very High' },
+                'Management Consultant': { growth: 6.5, vol: 'Medium', res: 'High' },
+                'Market Research Analyst': { growth: 7.8, vol: 'Low', res: 'Moderate' },
+                'Business Analyst': { growth: 6.0, vol: 'Medium', res: 'High', autoIndex: 0.5 }, // Fixed color logic
+                'Investment Banker': { growth: 3.2, vol: 'Very High', res: 'Medium' },
+                'Wealth Manager': { growth: 4.5, vol: 'Medium', res: 'High' },
+                'Product Manager': { growth: 9.0, vol: 'Low', res: 'Critical' },
+                'Data Scientist (Biz)': { growth: 12.5, vol: 'High', res: 'High' },
+                'Supply Chain Mgr': { growth: 5.0, vol: 'Medium', res: 'Medium' },
+                'HR Business Partner': { growth: 3.5, vol: 'Low', res: 'Critical' },
+                'Corporate Strategist': { growth: 2.8, vol: 'Low', res: 'Critical' }
+            };
+
+            const override = MANUAL_OVERRIDES[job.kelley_title];
+            const safeGrowth = override ? override.growth : Number((Math.random() * 10 - 2).toFixed(1));
+            const safeVol = override ? override.vol : 'Medium';
+            const safeRes = override ? override.res : 'Medium';
+            const safeAutoIndex = (override && override.autoIndex) ? override.autoIndex : (0.5 - (Math.random() * 0.2));
+
             return {
                 id: `job-${index + 1}`, // Clean sequential IDs or preserve legacy checks
                 title: job.kelley_title,
                 cluster: job.cluster || 'Business',
                 employment: bls.employment,
-                automationCostIndex: 0.5 - (Math.random() * 0.2), // Mock: 0.3-0.5 range
-                projectedGrowth: Number((Math.random() * 10 - 2).toFixed(1)), // -2.0% to +8.0%
+                automationCostIndex: safeAutoIndex,
+                projectedGrowth: safeGrowth,
+                salaryVolatilityLabel: safeVol,
+                humanResilienceLabel: safeRes,
                 tasks: topTasks
             };
         });
