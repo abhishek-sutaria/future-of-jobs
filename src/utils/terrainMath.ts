@@ -7,7 +7,7 @@ export const TERRAIN_CONFIG = {
 
     // Gaussian Shape
     PEAK_WIDTH: 2.5, // Sigma (Spread) -> Sharpened from 5.0
-    PEAK_HEIGHT_SCALE: 1.2, // Increased height for impact
+    PEAK_HEIGHT_SCALE: 2.5, // MATCHES SHADER (Was 1.2, causing label mismatch)
 
     // World Position
     TERRAIN_OFFSET_Y: -3.0, // Move terrain down so peaks rise up

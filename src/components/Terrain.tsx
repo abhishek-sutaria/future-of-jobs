@@ -118,70 +118,72 @@ export const Terrain: React.FC = () => {
     };
   }, []);
 
-  useFrame((state) => {
-    if (!materialRef.current) return;
+  // Access year directly from store for animation
+  const year = useStore.getState().year;
 
-    materialRef.current.uniforms.uTime.value = state.clock.getElapsedTime();
+  materialRef.current.uniforms.uTime.value = state.clock.getElapsedTime();
 
-    // Update Arrays
-    jobs.forEach((job, i) => {
-      if (i >= 50) return;
+  // Update Arrays
+  jobs.forEach((job, i) => {
+    if (i >= 50) return;
 
-      // CALIBRATION: Use High-Accuracy Growth for Visuals
-      // Old: Employment based. New: Growth based (Dynamic).
+    // ANIMATION LOGIC
+    // Interpolate growth impact based on current year (2025-2030)
+    const progress = (year - 2025) / 5; // 0.0 to 1.0
 
-      // 1. Visual Height Dampening
-      // Raw growth: -5 to +25. 
-      // We want to map this to [0.5, 3.5] roughly.
-      // Strategy: Base 1.0 + (Growth * 0.1)
-      const getVisualHeight = (val: number) => {
-        const dampened = 1.0 + (val * 0.08); // 25 * 0.08 = +2.0 -> Total 3.0
-        return Math.max(0.2, Math.min(4.0, dampened)); // Clamp between 0.2 and 4.0
-      };
+    // Calculate "Current" Growth at this specific year
+    const currentGrowth = job.projectedGrowth * progress;
 
-      const h = getVisualHeight(job.projectedGrowth);
+    // 1. Visual Height Calculation
+    // Base height (1.0) + Growth Impact.
+    const getVisualHeight = (growthDelta: number) => {
+      const dampened = 1.0 + (growthDelta * 0.08); // 25 * 0.08 = +2.0 -> Total 3.0
+      return Math.max(0.2, Math.min(4.0, dampened)); // Clamp between 0.2 and 4.0
+    };
 
-      // Position
-      const { x, z } = getTerrainPosition(i);
+    const h = getVisualHeight(currentGrowth);
 
-      // 2. Color Grading (New Logic)
-      let c = new Color(0.2, 0.4, 0.6); // Default Blue-ish
+    // Position
+    const { x, z } = getTerrainPosition(i);
 
-      if (job.projectedGrowth > 15) {
-        c.setHex(0xFFD700); // Gold for "Booming"
-      } else if (job.projectedGrowth > 5) {
-        c.setHex(0x10B981); // Emerald Green for "Strong Growth"
-      } else if (job.projectedGrowth < 0) {
-        c.setHex(0xEF4444); // Red for "Decline"
-      } else {
-        c.setHex(0x3B82F6); // Standard Blue
-      }
+    // 2. Color Grading (New Logic)
+    let c = new Color(0.2, 0.4, 0.6); // Default Blue-ish
 
-      // Directly modify the Vector3 objects in the uniform array
-      const peakVec = materialRef.current!.uniforms.uPeaks.value[i];
-      if (peakVec) peakVec.set(x, z, h);
+    if (job.projectedGrowth > 15) {
+      c.setHex(0xFFD700); // Gold for "Booming"
+    } else if (job.projectedGrowth > 5) {
+      c.setHex(0x10B981); // Emerald Green for "Strong Growth"
+    } else if (job.projectedGrowth < 0) {
+      c.setHex(0xEF4444); // Red for "Decline"
+    } else {
+      c.setHex(0x3B82F6); // Standard Blue
+    }
 
-      const colorVec = materialRef.current!.uniforms.uColors.value[i];
-      if (colorVec) colorVec.set(c.r, c.g, c.b);
-    });
+    // Directly modify the Vector3 objects in the uniform array
+    const peakVec = materialRef.current!.uniforms.uPeaks.value[i];
+    if (peakVec) peakVec.set(x, z, h);
 
-    materialRef.current.uniforms.uPeakCount.value = Math.min(jobs.length, 50);
+    const colorVec = materialRef.current!.uniforms.uColors.value[i];
+    if (colorVec) colorVec.set(c.r, c.g, c.b);
   });
 
-  return (
-    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, TERRAIN_CONFIG.TERRAIN_OFFSET_Y, 0]}>
-      {/* Plane centered at 0, Offset Y to allow peaks to rise up */}
-      {/* Medium Grid: 64x64 segments */}
-      <planeGeometry args={[70, 70, 64, 64]} />
-      <shaderMaterial
-        ref={materialRef}
-        vertexShader={vertexShader}
-        fragmentShader={fragmentShader}
-        uniforms={uniforms}
-        wireframe={true}
-        transparent={true}
-        side={DoubleSide}
-      />
-    </mesh>
-  );
+  materialRef.current.uniforms.uPeakCount.value = Math.min(jobs.length, 50);
+});
+
+return (
+  <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, TERRAIN_CONFIG.TERRAIN_OFFSET_Y, 0]}>
+    {/* Plane centered at 0, Offset Y to allow peaks to rise up */}
+    {/* Medium Grid: 64x64 segments */}
+    <planeGeometry args={[70, 70, 64, 64]} />
+    <shaderMaterial
+      ref={materialRef}
+      vertexShader={vertexShader}
+      fragmentShader={fragmentShader}
+      uniforms={uniforms}
+      wireframe={true}
+      transparent={true}
+      side={DoubleSide}
+    />
+  </mesh>
+);
 };
