@@ -10,6 +10,7 @@ export type Job = {
   cluster: string;
   employment: number; // Proxy for BLS volume
   automationCostIndex: number; // 0-1 (Higher = more expensive to automate)
+  projectedGrowth: number; // Percentage (e.g., 5.2)
   tasks: Task[];
 };
 

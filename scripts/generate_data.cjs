@@ -34,7 +34,7 @@ async function run() {
         const workbook = XLSX.readFile(FILES.employment);
         const sheetName = workbook.SheetNames[0];
         const employmentData = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
-        
+
         // Create lookup map: SOC_CODE -> { TOT_EMP, A_MEAN }
         const blsMap = new Map();
         employmentData.forEach(row => {
@@ -78,7 +78,7 @@ async function run() {
 
         // Map: ONET Code -> Array of { taskName, score }
         const onetTasksFunc = new Map();
-        
+
         // Filter Ratings for "Importance" (Scale ID = IM)
         const importanceRatings = taskRatings.filter(r => r['Scale ID'] === 'IM');
 
@@ -90,9 +90,9 @@ async function run() {
             if (!onetTasksFunc.has(onetCode)) {
                 onetTasksFunc.set(onetCode, []);
             }
-            
+
             if (taskIdToStatement.has(taskId)) {
-                 onetTasksFunc.get(onetCode).push({
+                onetTasksFunc.get(onetCode).push({
                     name: taskIdToStatement.get(taskId),
                     score: score
                 });
@@ -121,14 +121,14 @@ async function run() {
                 // Okay, I will include top 5 but the UI might only render 2-3.
                 // Wait, previous data.ts had exactly 2 tasks per job. The UI "JobDetails" likely iterates map. 
                 // Using 2 is safer for layout, but let's grab 3 to be safe/richer.
-                
+
                 topTasks = allTasks.slice(0, 3).map(t => {
                     // Normalize 1-5 to 0-1
-                    const humanScore = (t.score - 1) / 4; 
-                    
+                    const humanScore = (t.score - 1) / 4;
+
                     // Simple heuristic for AI capability (inverse of human usually, but let's randomize for variety)
                     // Or make it semi-related. If Human score is ultra high (>0.9), AI is low.
-                    
+
                     let aiScore = 0.5;
                     if (humanScore > 0.8) aiScore = 0.1 + Math.random() * 0.3;
                     else if (humanScore < 0.4) aiScore = 0.7 + Math.random() * 0.3;
@@ -154,11 +154,11 @@ async function run() {
                     };
                 });
             } else {
-                 // Fallback mock tasks if ONET match fails
-                 topTasks = [
-                     { name: 'Core Function A', aiCapabilityScore: 0.5, humanCriticalityScore: 0.5 },
-                     { name: 'Core Function B', aiCapabilityScore: 0.5, humanCriticalityScore: 0.5 }
-                 ];
+                // Fallback mock tasks if ONET match fails
+                topTasks = [
+                    { name: 'Core Function A', aiCapabilityScore: 0.5, humanCriticalityScore: 0.5 },
+                    { name: 'Core Function B', aiCapabilityScore: 0.5, humanCriticalityScore: 0.5 }
+                ];
             }
 
             return {
@@ -167,6 +167,7 @@ async function run() {
                 cluster: job.cluster || 'Business',
                 employment: bls.employment,
                 automationCostIndex: 0.5 - (Math.random() * 0.2), // Mock: 0.3-0.5 range
+                projectedGrowth: Number((Math.random() * 10 - 2).toFixed(1)), // -2.0% to +8.0%
                 tasks: topTasks
             };
         });
@@ -175,7 +176,7 @@ async function run() {
         // I need to ensure the Marketing Manager job gets job-15 if possible, or I manually override.
         // Let's see if Marketing Manager is in the CSV.
         // Assuming it is. I will search for "Marketing Manager" title and force ID 'job-15'.
-        
+
         const marketingJob = finalJobs.find(j => j.title === 'Marketing Manager');
         if (marketingJob) {
             marketingJob.id = 'job-15';

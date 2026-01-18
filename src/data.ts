@@ -10,6 +10,7 @@ export const initialJobs: Job[] = [
         cluster: 'Marketing',
         employment: 400000,
         automationCostIndex: 0.5,
+        projectedGrowth: 4.8,
         tasks: [
             { name: 'Campaign Logic', aiCapabilityScore: 0.8, humanCriticalityScore: 0.3 },
             { name: 'Creative Strategy', aiCapabilityScore: 0.3, humanCriticalityScore: 0.9 },
@@ -21,6 +22,7 @@ export const initialJobs: Job[] = [
         cluster: 'Marketing',
         employment: 150000,
         automationCostIndex: 0.6,
+        projectedGrowth: 5.5,
         tasks: [
             { name: 'Brand Voice', aiCapabilityScore: 0.4, humanCriticalityScore: 0.8 },
             { name: 'Market Tracking', aiCapabilityScore: 0.85, humanCriticalityScore: 0.2 },
@@ -32,6 +34,7 @@ export const initialJobs: Job[] = [
         cluster: 'Marketing',
         employment: 600000,
         automationCostIndex: 0.2, // Highly automatable via GenAI
+        projectedGrowth: 8.2,
         tasks: [
             { name: 'SEQ/Ad Ops', aiCapabilityScore: 0.9, humanCriticalityScore: 0.1 },
             { name: 'Content Gen', aiCapabilityScore: 0.85, humanCriticalityScore: 0.3 },
@@ -43,6 +46,7 @@ export const initialJobs: Job[] = [
         cluster: 'Sales',
         employment: 900000,
         automationCostIndex: 0.4,
+        projectedGrowth: 1.5,
         tasks: [
             { name: 'Lead Gen', aiCapabilityScore: 0.9, humanCriticalityScore: 0.1 },
             { name: 'Closing', aiCapabilityScore: 0.2, humanCriticalityScore: 0.9 },
@@ -54,6 +58,7 @@ export const initialJobs: Job[] = [
         cluster: 'Business',
         employment: 1000000,
         automationCostIndex: 0.45,
+        projectedGrowth: 4.0,
         tasks: [
             { name: 'Scheduling', aiCapabilityScore: 0.85, humanCriticalityScore: 0.2 },
             { name: 'Stakeholder Mgmt', aiCapabilityScore: 0.3, humanCriticalityScore: 0.9 },
@@ -67,6 +72,7 @@ export const initialJobs: Job[] = [
         cluster: 'Consulting',
         employment: 700000,
         automationCostIndex: 0.5,
+        projectedGrowth: 6.5,
         tasks: [
             { name: 'Data Analysis', aiCapabilityScore: 0.9, humanCriticalityScore: 0.2 },
             { name: 'Client Strategy', aiCapabilityScore: 0.3, humanCriticalityScore: 0.9 },
@@ -78,6 +84,7 @@ export const initialJobs: Job[] = [
         cluster: 'Consulting',
         employment: 120000,
         automationCostIndex: 0.6,
+        projectedGrowth: 7.8,
         tasks: [
             { name: 'Consumer Insight', aiCapabilityScore: 0.5, humanCriticalityScore: 0.8 },
             { name: 'Trend Analysis', aiCapabilityScore: 0.8, humanCriticalityScore: 0.4 },
@@ -89,6 +96,7 @@ export const initialJobs: Job[] = [
         cluster: 'Consulting',
         employment: 850000,
         automationCostIndex: 0.3,
+        projectedGrowth: 6.0,
         tasks: [
             { name: 'Requirements', aiCapabilityScore: 0.6, humanCriticalityScore: 0.6 },
             { name: 'Process Mapping', aiCapabilityScore: 0.7, humanCriticalityScore: 0.3 },
@@ -102,6 +110,7 @@ export const initialJobs: Job[] = [
         cluster: 'Finance',
         employment: 150000,
         automationCostIndex: 0.3, // High AI adoption in modeling/trading
+        projectedGrowth: 3.2,
         tasks: [
             { name: 'Financial Modeling', aiCapabilityScore: 0.9, humanCriticalityScore: 0.2 },
             { name: 'Deal Structuring', aiCapabilityScore: 0.4, humanCriticalityScore: 0.9 },
@@ -113,6 +122,7 @@ export const initialJobs: Job[] = [
         cluster: 'Finance',
         employment: 300000,
         automationCostIndex: 0.5,
+        projectedGrowth: 4.5,
         tasks: [
             { name: 'Portfolio Alloc.', aiCapabilityScore: 0.85, humanCriticalityScore: 0.3 },
             { name: 'Client Advising', aiCapabilityScore: 0.2, humanCriticalityScore: 0.9 },
@@ -126,6 +136,7 @@ export const initialJobs: Job[] = [
         cluster: 'Tech',
         employment: 350000,
         automationCostIndex: 0.6,
+        projectedGrowth: 9.0,
         tasks: [
             { name: 'Roadmapping', aiCapabilityScore: 0.5, humanCriticalityScore: 0.8 },
             { name: 'User Stories', aiCapabilityScore: 0.7, humanCriticalityScore: 0.4 },
@@ -137,6 +148,7 @@ export const initialJobs: Job[] = [
         cluster: 'Tech',
         employment: 200000,
         automationCostIndex: 0.3,
+        projectedGrowth: 12.5,
         tasks: [
             { name: 'Algorithm Dev', aiCapabilityScore: 0.8, humanCriticalityScore: 0.4 },
             { name: 'Insight Story', aiCapabilityScore: 0.3, humanCriticalityScore: 0.9 },
@@ -150,6 +162,7 @@ export const initialJobs: Job[] = [
         cluster: 'Ops',
         employment: 300000,
         automationCostIndex: 0.35,
+        projectedGrowth: 5.0,
         tasks: [
             { name: 'Logistics Opt', aiCapabilityScore: 0.9, humanCriticalityScore: 0.2 },
             { name: 'Vendor Rel.', aiCapabilityScore: 0.4, humanCriticalityScore: 0.8 },
@@ -161,6 +174,7 @@ export const initialJobs: Job[] = [
         cluster: 'Leadership',
         employment: 180000,
         automationCostIndex: 0.7,
+        projectedGrowth: 3.5,
         tasks: [
             { name: 'Org Design', aiCapabilityScore: 0.4, humanCriticalityScore: 0.8 },
             { name: 'Conflict Res.', aiCapabilityScore: 0.1, humanCriticalityScore: 0.95 },
@@ -172,6 +186,7 @@ export const initialJobs: Job[] = [
         cluster: 'Leadership',
         employment: 50000,
         automationCostIndex: 0.7,
+        projectedGrowth: 2.8,
         tasks: [
             { name: 'Vision Setting', aiCapabilityScore: 0.1, humanCriticalityScore: 1.0 },
             { name: 'M&A Strategy', aiCapabilityScore: 0.4, humanCriticalityScore: 0.8 },
