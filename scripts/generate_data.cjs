@@ -239,9 +239,11 @@ async function run() {
             const netImpact = (weightedHumanScore - weightedAiScore);
 
             // 3. Final Calculation
-            const VOLATILITY_FACTOR = 0.5;
-            // E.g. Anchor 4.0 + (-0.6 * 0.5 * 10) = 4.0 - 3.0 = 1.0%
-            const calcGrowth = anchorGrowth + (netImpact * VOLATILITY_FACTOR * 10);
+            // ADJUSTED: Stronger AI Penalty (15.0) vs Human Bonus (5.0)
+            const AI_PENALTY_FACTOR = 15.0;
+            const HUMAN_BONUS_FACTOR = 5.0;
+
+            const calcGrowth = anchorGrowth - (weightedAiScore * AI_PENALTY_FACTOR) + (weightedHumanScore * HUMAN_BONUS_FACTOR);
 
             const projectedGrowth = Number(calcGrowth.toFixed(1));
 
