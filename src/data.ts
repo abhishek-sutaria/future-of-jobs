@@ -38,7 +38,7 @@ export const initialJobs: Job[] = [
         cluster: 'Marketing',
         employment: 600000,
         automationCostIndex: 0.2, // Highly automatable via GenAI
-        projectedGrowth: 8.2,
+        projectedGrowth: 2.2, // Lowered to reflect automation pressure
         salaryVolatilityLabel: 'High',
         humanResilienceLabel: 'Low',
         tasks: [
@@ -109,7 +109,7 @@ export const initialJobs: Job[] = [
         title: 'Business Analyst',
         cluster: 'Consulting',
         employment: 850000,
-        automationCostIndex: 0.3,
+        automationCostIndex: 0.5, // Increased logic complexity -> Resists pure automation
         projectedGrowth: 6.0,
         salaryVolatilityLabel: 'Medium',
         humanResilienceLabel: 'High',
