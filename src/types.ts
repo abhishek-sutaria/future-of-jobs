@@ -2,6 +2,7 @@ export type Task = {
   name: string;
   aiCapabilityScore: number; // 0-1 matches how well AI can do this
   humanCriticalityScore: number; // 0-1 matches human requirement (trust, empathy, etc)
+  importance?: number; // 1-5 (Optional, for weighted scoring)
 };
 
 export type Job = {
