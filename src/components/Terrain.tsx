@@ -42,6 +42,9 @@ const vertexShader = `
         vec3 peak = uPeaks[i]; // x, z, height
         vec3 color = uColors[i];
 
+        // FIXED: Restore dx calculation
+        float dx = worldPos.x - peak.x;
+
         // INVERTING Z logic to match World Space (Mesh Rotated -90deg X)
         // worldPos.y corresponds to Terrain Plane's 'height' relative to camera, which is Z
         // peak.y in the uniform now holds the -z value we passed
