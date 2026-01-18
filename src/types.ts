@@ -12,7 +12,13 @@ export type Job = {
   automationCostIndex: number; // 0-1 (Higher = more expensive to automate)
   projectedGrowth: number; // Percentage (e.g., 5.2)
   salaryVolatilityLabel: string; // e.g., "High", "Medium", "Low"
-  humanResilienceLabel: string; // e.g., "High", "Critical"
+  humanResilienceLabel: string; // "Low", "Medium", "High"
+
+  // Accuracy Metadata
+  confidenceScore: number; // 0.0 to 1.0
+  dataSources: string[];   // e.g. ["BLS-2024", "ONET-Weighted"]
+  isAlias: boolean;        // True if we used a Proxy Job
+
   tasks: Task[];
 };
 
