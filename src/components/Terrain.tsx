@@ -42,10 +42,9 @@ const vertexShader = `
         vec3 peak = uPeaks[i]; // x, z, height
         vec3 color = uColors[i];
 
-        float dx = worldPos.x - peak.x;
-        // In UV mapping of PlaneGeometry:
-        // u=0 -> x=-20, v=0 -> y=-20 (which is world Z after rotation)
-        // INVERTING Z logic to match World Space
+        // INVERTING Z logic to match World Space (Mesh Rotated -90deg X)
+        // worldPos.y corresponds to Terrain Plane's 'height' relative to camera, which is Z
+        // peak.y in the uniform now holds the -z value we passed
         float dz = worldPos.y - peak.y; 
         
         float distSq = dx*dx + dz*dz;
@@ -164,11 +163,17 @@ export const Terrain: React.FC = () => {
 
       // Directly modify the Vector3 objects in the uniform array
       const peakVec = materialRef.current!.uniforms.uPeaks.value[i];
-      if (peakVec) peakVec.set(x, z, h);
+      // FIXED: Invert Z because Mesh is rotated -90deg X (World Z = Local -Y)
+      if (peakVec) peakVec.set(x, -z, h);
 
       const colorVec = materialRef.current!.uniforms.uColors.value[i];
       if (colorVec) colorVec.set(c.r, c.g, c.b);
     });
+
+    // FIXED: Force Three.js to detect the array change for Uniforms
+    // Without this, modifying inner properties of Vector3 isn't always picked up
+    materialRef.current.uniforms.uPeaks.value = [...materialRef.current.uniforms.uPeaks.value];
+    materialRef.current.uniforms.uColors.value = [...materialRef.current.uniforms.uColors.value];
 
     materialRef.current.uniforms.uPeakCount.value = Math.min(jobs.length, 50);
   });
