@@ -202,7 +202,7 @@ export const UI: React.FC = () => {
                                     {(selectedJob.employment * 1.05).toLocaleString()}
                                 </div>
                                 <p className={`text-xs mt-1 flex items-center gap-1 ${selectedJob.projectedGrowth >= 0 ? 'text-green-400' : 'text-red-400'}`}>
-                                    <span>{selectedJob.projectedGrowth >= 0 ? '▲' : '▼'}</span> {Math.abs(selectedJob.projectedGrowth)}% Growth
+                                    <span>{selectedJob.projectedGrowth >= 0 ? '▲' : '▼'}</span> {Math.abs(selectedJob.projectedGrowth)}% {selectedJob.projectedGrowth >= 0 ? 'Growth' : 'Decline'}
                                 </p>
                             </div>
 
