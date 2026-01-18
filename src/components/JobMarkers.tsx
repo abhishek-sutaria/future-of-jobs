@@ -33,7 +33,7 @@ export const JobMarkers: React.FC = () => {
 
             // Visual Height Calculation (Must match Terrain.tsx exactly)
             const getVisualHeight = (growthDelta: number) => {
-                const baseHeight = 1.2;
+                const baseHeight = 1.0; // FIXED: Changed from 1.2 to match Terrain.tsx
                 const impact = growthDelta * 0.08;
                 return Math.max(0.2, Math.min(4.0, baseHeight + impact));
             };
