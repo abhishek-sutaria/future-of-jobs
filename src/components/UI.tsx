@@ -147,9 +147,21 @@ export const UI: React.FC = () => {
                                     <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-blue-500/10 text-blue-400 border border-blue-500/20">
                                         {selectedJob.cluster} Cluster
                                     </span>
+                                    {/* TRUTH BADGE */}
+                                    {selectedJob.confidenceScore >= 0.9 ? (
+                                        <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-green-500/10 text-green-400 border border-green-500/20 flex items-center gap-1">
+                                            <span>✓</span> Verified
+                                        </span>
+                                    ) : (
+                                        <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-yellow-500/10 text-yellow-400 border border-yellow-500/20 flex items-center gap-1">
+                                            <span>~</span> Est.
+                                        </span>
+                                    )}
                                     <span className="text-xs text-gray-400 font-mono">ID: {selectedJob.id.slice(0, 8)}</span>
                                 </div>
-                                <h2 className="text-xl md:text-3xl font-bold text-white tracking-tight leading-tight">{selectedJob.title}</h2>
+                                <h2 className="text-xl md:text-3xl font-bold text-white tracking-tight leading-tight flex items-center gap-2">
+                                    {selectedJob.title}
+                                </h2>
                             </div>
                             <button
                                 onClick={() => setSelectedJob(null)}
@@ -298,6 +310,17 @@ export const UI: React.FC = () => {
                                 </div>
                             </div>
 
+                        </div>
+
+                        {/* Sources Footnote */}
+                        <div className="flex-none p-3 border-t border-white/5 bg-black/20 flex justify-between items-center text-[10px] text-gray-500 font-mono uppercase tracking-wider">
+                            <div className="flex items-center gap-2">
+                                <span>Data Consistency:</span>
+                                <span className={selectedJob.confidenceScore >= 0.9 ? "text-green-500" : "text-yellow-500"}>
+                                    {((selectedJob.confidenceScore || 0.5) * 100).toFixed(0)}%
+                                </span>
+                            </div>
+                            <span>Sources: {(selectedJob.dataSources || ['Modeled']).join(', ')}</span>
                         </div>
                     </div>
                 </div>

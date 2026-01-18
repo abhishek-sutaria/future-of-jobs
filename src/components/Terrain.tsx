@@ -2,7 +2,6 @@ import React, { useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Color, ShaderMaterial, DoubleSide, Vector3 } from 'three';
 import { useStore } from '../store';
-import { getJobStatus } from '../data';
 import { getTerrainPosition, TERRAIN_CONFIG } from '../utils/terrainMath';
 
 // SHADERS
@@ -122,34 +121,43 @@ export const Terrain: React.FC = () => {
   useFrame((state) => {
     if (!materialRef.current) return;
 
-    // Access year directly from store without causing re-renders
-    const year = useStore.getState().year;
-
     materialRef.current.uniforms.uTime.value = state.clock.getElapsedTime();
 
     // Update Arrays
     jobs.forEach((job, i) => {
       if (i >= 50) return;
 
-      const status = getJobStatus(job, year);
-      const isHighRisk = status.riskScore > 0.7;
-      const rate = isHighRisk ? 0.95 : 1.02;
-      const yearsPassed = year - 2025;
-      const projectedEmployment = job.employment * Math.pow(rate, yearsPassed);
+      // CALIBRATION: Use High-Accuracy Growth for Visuals
+      // Old: Employment based. New: Growth based (Dynamic).
 
-      // Normalize Height
-      const h = (projectedEmployment / 500000);
+      // 1. Visual Height Dampening
+      // Raw growth: -5 to +25. 
+      // We want to map this to [0.5, 3.5] roughly.
+      // Strategy: Base 1.0 + (Growth * 0.1)
+      const getVisualHeight = (val: number) => {
+        const dampened = 1.0 + (val * 0.08); // 25 * 0.08 = +2.0 -> Total 3.0
+        return Math.max(0.2, Math.min(4.0, dampened)); // Clamp between 0.2 and 4.0
+      };
+
+      const h = getVisualHeight(job.projectedGrowth);
 
       // Position
       const { x, z } = getTerrainPosition(i);
 
-      // Color
-      const c = new Color(status.color);
+      // 2. Color Grading (New Logic)
+      let c = new Color(0.2, 0.4, 0.6); // Default Blue-ish
+
+      if (job.projectedGrowth > 15) {
+        c.setHex(0xFFD700); // Gold for "Booming"
+      } else if (job.projectedGrowth > 5) {
+        c.setHex(0x10B981); // Emerald Green for "Strong Growth"
+      } else if (job.projectedGrowth < 0) {
+        c.setHex(0xEF4444); // Red for "Decline"
+      } else {
+        c.setHex(0x3B82F6); // Standard Blue
+      }
 
       // Directly modify the Vector3 objects in the uniform array
-      // This preserves the reference, so we must rely on ThreeJS to pick up values
-      // Or typically, we might need to flag update
-      // But let's verify if `uPeaks.value[i]` is a Vector3
       const peakVec = materialRef.current!.uniforms.uPeaks.value[i];
       if (peakVec) peakVec.set(x, z, h);
 
@@ -158,10 +166,6 @@ export const Terrain: React.FC = () => {
     });
 
     materialRef.current.uniforms.uPeakCount.value = Math.min(jobs.length, 50);
-
-    // Critical: Tell Three.js the material needs an update? 
-    // No, usually modifying uniforms is enough. But let's try this if issues persist.
-    // materialRef.current.uniformsNeedUpdate = true; 
   });
 
   return (
