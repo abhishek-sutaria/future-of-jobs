@@ -3,7 +3,7 @@ import { useStore } from '../store';
 import RoadmapModal from './Modals/RoadmapModal';
 import { ScenarioModal } from './Modals/ScenarioModal';
 import { AnalysisModal } from './Modals/AnalysisModal';
-import { generateJobScenario, analyzeJobWithGemini, getClaudeUserFriendlyMessage, type ScenarioResult, type GeminiJobAnalysis } from '../utils/gemini';
+import { generateJobScenario, analyzeJob, getClaudeUserFriendlyMessage, type ScenarioResult, type JobAnalysis } from '../utils/analysis';
 import { IconBrain, IconSparkles, IconAlertTriangle, IconShield, IconTarget, IconInfo, IconTrendingDown, IconCheck } from './ui/Icons';
 import { Skeleton } from './ui/Skeleton';
 import { Z } from '../config/layers';
@@ -13,12 +13,12 @@ import type { Job } from '../types';
 
 interface JobDetailPanelProps {
     job: Job;
-    analysisResult: GeminiJobAnalysis | null;
+    analysisResult: JobAnalysis | null;
     analysisLoading: boolean;
     analysisError: string | null;
     missingApiKey: boolean;
     onClose: () => void;
-    onSetAnalysisResult: (result: GeminiJobAnalysis | null) => void;
+    onSetAnalysisResult: (result: JobAnalysis | null) => void;
     onSetAnalysisLoading: (loading: boolean) => void;
     onShowMethodology: () => void;
 }
@@ -41,7 +41,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
         setAnalysisModalError(null);
         try {
             const taskList = job.tasks.map(t => t.name);
-            const res = await analyzeJobWithGemini(job.title, taskList);
+            const res = await analyzeJob(job.title, taskList);
             onSetAnalysisResult(res);
             if (res?.yearlyForecast) {
                 useStore.getState().updateJobForecast(job.id, res.yearlyForecast);

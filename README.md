@@ -1,73 +1,96 @@
-# React + TypeScript + Vite
+# AI & Future of Work 2025-2030
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A futuristic dashboard visualizing the impact of AI on the workforce. This application combines 3D visualization, live economic data, and generative AI to provide a comprehensive look at how jobs are evolving.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **3D Terrain Visualization**: Interactive 3D landscape representing job markets, where peak height corresponds to growth and automation resilience.
+- **Holographic World Map**: Global view of role distribution across regions.
+- **Live Economic Data**: Real-time integration with the Bureau of Labor Statistics (BLS) for unemployment rates.
+- **Crystal Ball Simulation**: Claude-powered "Day in the Life" scenario generator for 2030.
+- **Strategic Upskilling Roadmap**: Actionable 6-month plans to transition from at-risk tasks to safe harbors.
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Frontend**: React, TypeScript, Vite
+- **3D/Graphics**: React Three Fiber, Three.js, GLSL Shaders
+- **Styling**: TailwindCSS
+- **State Management**: Zustand
+- **AI**: Anthropic Claude API
 
-## Expanding the ESLint configuration
+## Setup
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+1. **Install Dependencies**
+   ```bash
+   npm install
+   ```
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+2. **Environment Configuration**
+   Create a `.env` file in the root directory:
+   ```env
+   ANTHROPIC_API_KEY=your_server_default_claude_key_here
+   VITE_BLS_API_KEY=your_bls_api_key_here
+   ```
+   Notes:
+   - `ANTHROPIC_API_KEY` is used server-side by the proxy as the default Claude key.
+   - On app startup, users can either enter their own Claude key or choose the default key.
+   - The default key is never embedded in frontend source code.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+3. **Run Locally**
+   ```bash
+   npm run dev
+   ```
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Deploy on Vercel
+
+This app is a Vite SPA and uses server-side proxy endpoints in production.
+The local Vite proxy in `vite.config.ts` is dev-only and does not run on Vercel.
+
+### 1) Required environment variables
+
+Set these in Vercel Project Settings -> Environment Variables:
+
+```env
+ANTHROPIC_API_KEY=your_server_default_claude_key_here
+VITE_BLS_API_KEY=your_bls_api_key_here
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Notes:
+- `ANTHROPIC_API_KEY` enables default Claude key mode.
+- Users can still provide their own key in-app; user mode is preserved.
+- `VITE_BLS_API_KEY` is optional but recommended for higher BLS rate limits.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### 2) Create a new Vercel project
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+From the repo root:
+
+```bash
+npx vercel
 ```
+
+Follow prompts to create/link the project, then add env vars above.
+
+### 3) Deploy
+
+After env vars are configured:
+
+```bash
+npx vercel --prod
+```
+
+### 4) Production behavior parity
+
+Production uses Vercel serverless functions under:
+- `/api/claude/messages` -> Anthropic proxy
+- `/api/bls` and `/api/bls/:seriesId` -> BLS proxy
+
+These endpoints preserve the same runtime behavior expected by the frontend:
+- Claude default-key + user-key mode
+- BLS POST batch fetches and unemployment series fetches
+
+## Key Components
+
+- `Landscape.tsx`: Main 3D scene controller.
+- `Terrain.tsx`: Custom shader-based terrain generation using BLS data.
+- `MapView.tsx`: Interactive SVG/Dom-based world map for geographic insights.
+- `UI.tsx`: The main "Glassmorphism" overlay dashboard.

@@ -1,0 +1,483 @@
+{
+    "13-1161": [
+        {
+            "name": "California",
+            "lat": 36.78,
+            "lng": -119.42,
+            "employment": 113630,
+            "lq": 1.14
+        },
+        {
+            "name": "New York",
+            "lat": 40.71,
+            "lng": -74.01,
+            "employment": 83450,
+            "lq": 1.59
+        },
+        {
+            "name": "Florida",
+            "lat": 27.66,
+            "lng": -81.52,
+            "employment": 55760,
+            "lq": 1.05
+        },
+        {
+            "name": "Texas",
+            "lat": 31.97,
+            "lng": -99.9,
+            "employment": 52200,
+            "lq": 0.69
+        },
+        {
+            "name": "Illinois",
+            "lat": 40.63,
+            "lng": -89.4,
+            "employment": 37790,
+            "lq": 1.13
+        }
+    ],
+    "13-1111": [
+        {
+            "name": "California",
+            "lat": 36.78,
+            "lng": -119.42,
+            "employment": 110430,
+            "lq": 1.11
+        },
+        {
+            "name": "Florida",
+            "lat": 27.66,
+            "lng": -81.52,
+            "employment": 68540,
+            "lq": 1.3
+        },
+        {
+            "name": "Virginia",
+            "lat": 37.43,
+            "lng": -78.66,
+            "employment": 66840,
+            "lq": 3.04
+        },
+        {
+            "name": "New York",
+            "lat": 40.71,
+            "lng": -74.01,
+            "employment": 59640,
+            "lq": 1.15
+        },
+        {
+            "name": "Texas",
+            "lat": 31.97,
+            "lng": -99.9,
+            "employment": 50900,
+            "lq": 0.68
+        }
+    ],
+    "13-1081": [
+        {
+            "name": "California",
+            "lat": 36.78,
+            "lng": -119.42,
+            "employment": 29940,
+            "lq": 1.11
+        },
+        {
+            "name": "Texas",
+            "lat": 31.97,
+            "lng": -99.9,
+            "employment": 21460,
+            "lq": 1.05
+        },
+        {
+            "name": "Michigan",
+            "lat": 44.31,
+            "lng": -85.6,
+            "employment": 11560,
+            "lq": 1.77
+        },
+        {
+            "name": "Florida",
+            "lat": 27.66,
+            "lng": -81.52,
+            "employment": 11520,
+            "lq": 0.8
+        },
+        {
+            "name": "Pennsylvania",
+            "lat": 41.2,
+            "lng": -77.19,
+            "employment": 10580,
+            "lq": 1.18
+        }
+    ],
+    "11-3031": [
+        {
+            "name": "California",
+            "lat": 36.78,
+            "lng": -119.42,
+            "employment": 97400,
+            "lq": 1.05
+        },
+        {
+            "name": "Texas",
+            "lat": 31.97,
+            "lng": -99.9,
+            "employment": 63800,
+            "lq": 0.91
+        },
+        {
+            "name": "New York",
+            "lat": 40.71,
+            "lng": -74.01,
+            "employment": 62800,
+            "lq": 1.29
+        },
+        {
+            "name": "Illinois",
+            "lat": 40.63,
+            "lng": -89.4,
+            "employment": 48810,
+            "lq": 1.57
+        },
+        {
+            "name": "Florida",
+            "lat": 27.66,
+            "lng": -81.52,
+            "employment": 42740,
+            "lq": 0.86
+        }
+    ],
+    "11-2021": [
+        {
+            "name": "California",
+            "lat": 36.78,
+            "lng": -119.42,
+            "employment": 59830,
+            "lq": 1.37
+        },
+        {
+            "name": "New York",
+            "lat": 40.71,
+            "lng": -74.01,
+            "employment": 45000,
+            "lq": 1.97
+        },
+        {
+            "name": "Texas",
+            "lat": 31.97,
+            "lng": -99.9,
+            "employment": 36900,
+            "lq": 1.12
+        },
+        {
+            "name": "Illinois",
+            "lat": 40.63,
+            "lng": -89.4,
+            "employment": 24910,
+            "lq": 1.71
+        },
+        {
+            "name": "Florida",
+            "lat": 27.66,
+            "lng": -81.52,
+            "employment": 17420,
+            "lq": 0.75
+        }
+    ],
+    "41-3031": [
+        {
+            "name": "New York",
+            "lat": 40.71,
+            "lng": -74.01,
+            "employment": 62110,
+            "lq": 2.09
+        },
+        {
+            "name": "California",
+            "lat": 36.78,
+            "lng": -119.42,
+            "employment": 56820,
+            "lq": 1.0
+        },
+        {
+            "name": "Florida",
+            "lat": 27.66,
+            "lng": -81.52,
+            "employment": 43710,
+            "lq": 1.45
+        },
+        {
+            "name": "Texas",
+            "lat": 31.97,
+            "lng": -99.9,
+            "employment": 41120,
+            "lq": 0.96
+        },
+        {
+            "name": "Illinois",
+            "lat": 40.63,
+            "lng": -89.4,
+            "employment": 25390,
+            "lq": 1.34
+        }
+    ],
+    "13-2051": [
+        {
+            "name": "New York",
+            "lat": 40.71,
+            "lng": -74.01,
+            "employment": 49220,
+            "lq": 2.45
+        },
+        {
+            "name": "California",
+            "lat": 36.78,
+            "lng": -119.42,
+            "employment": 35660,
+            "lq": 0.93
+        },
+        {
+            "name": "Texas",
+            "lat": 31.97,
+            "lng": -99.9,
+            "employment": 25100,
+            "lq": 0.86
+        },
+        {
+            "name": "Florida",
+            "lat": 27.66,
+            "lng": -81.52,
+            "employment": 18070,
+            "lq": 0.88
+        },
+        {
+            "name": "Illinois",
+            "lat": 40.63,
+            "lng": -89.4,
+            "employment": 17060,
+            "lq": 1.32
+        }
+    ],
+    "13-2011": [
+        {
+            "name": "California",
+            "lat": 36.78,
+            "lng": -119.42,
+            "employment": 166020,
+            "lq": 0.98
+        },
+        {
+            "name": "New York",
+            "lat": 40.71,
+            "lng": -74.01,
+            "employment": 119150,
+            "lq": 1.34
+        },
+        {
+            "name": "Texas",
+            "lat": 31.97,
+            "lng": -99.9,
+            "employment": 111160,
+            "lq": 0.87
+        },
+        {
+            "name": "Florida",
+            "lat": 27.66,
+            "lng": -81.52,
+            "employment": 89350,
+            "lq": 0.99
+        },
+        {
+            "name": "Pennsylvania",
+            "lat": 41.2,
+            "lng": -77.19,
+            "employment": 54540,
+            "lq": 0.97
+        }
+    ],
+    "15-1252": [
+        {
+            "name": "California",
+            "lat": 36.78,
+            "lng": -119.42,
+            "employment": 304390,
+            "lq": 1.55
+        },
+        {
+            "name": "Texas",
+            "lat": 31.97,
+            "lng": -99.9,
+            "employment": 138510,
+            "lq": 0.94
+        },
+        {
+            "name": "New York",
+            "lat": 40.71,
+            "lng": -74.01,
+            "employment": 105460,
+            "lq": 1.03
+        },
+        {
+            "name": "Washington",
+            "lat": 47.75,
+            "lng": -120.74,
+            "employment": 89110,
+            "lq": 2.34
+        },
+        {
+            "name": "Virginia",
+            "lat": 37.43,
+            "lng": -78.66,
+            "employment": 86680,
+            "lq": 2.0
+        }
+    ],
+    "11-3071": [
+        {
+            "name": "California",
+            "lat": 36.78,
+            "lng": -119.42,
+            "employment": 30930,
+            "lq": 1.32
+        },
+        {
+            "name": "Texas",
+            "lat": 31.97,
+            "lng": -99.9,
+            "employment": 26230,
+            "lq": 1.48
+        },
+        {
+            "name": "Illinois",
+            "lat": 40.63,
+            "lng": -89.4,
+            "employment": 12640,
+            "lq": 1.61
+        },
+        {
+            "name": "Florida",
+            "lat": 27.66,
+            "lng": -81.52,
+            "employment": 10030,
+            "lq": 0.8
+        },
+        {
+            "name": "Ohio",
+            "lat": 40.42,
+            "lng": -82.91,
+            "employment": 7980,
+            "lq": 1.11
+        }
+    ],
+    "13-1199": [
+        {
+            "name": "California",
+            "lat": 36.78,
+            "lng": -119.42,
+            "employment": 164560,
+            "lq": 1.26
+        },
+        {
+            "name": "Texas",
+            "lat": 31.97,
+            "lng": -99.9,
+            "employment": 77840,
+            "lq": 0.79
+        },
+        {
+            "name": "Georgia",
+            "lat": 32.17,
+            "lng": -82.9,
+            "employment": 73610,
+            "lq": 2.13
+        },
+        {
+            "name": "Florida",
+            "lat": 27.66,
+            "lng": -81.52,
+            "employment": 69000,
+            "lq": 0.99
+        },
+        {
+            "name": "Washington",
+            "lat": 47.75,
+            "lng": -120.74,
+            "employment": 51710,
+            "lq": 2.04
+        }
+    ],
+    "15-2031": [
+        {
+            "name": "California",
+            "lat": 36.78,
+            "lng": -119.42,
+            "employment": 20100,
+            "lq": 1.44
+        },
+        {
+            "name": "Texas",
+            "lat": 31.97,
+            "lng": -99.9,
+            "employment": 11690,
+            "lq": 1.11
+        },
+        {
+            "name": "Florida",
+            "lat": 27.66,
+            "lng": -81.52,
+            "employment": 7750,
+            "lq": 1.04
+        },
+        {
+            "name": "Virginia",
+            "lat": 37.43,
+            "lng": -78.66,
+            "employment": 7720,
+            "lq": 2.5
+        },
+        {
+            "name": "New York",
+            "lat": 40.71,
+            "lng": -74.01,
+            "employment": 5980,
+            "lq": 0.82
+        }
+    ],
+    "11-2022": [
+        {
+            "name": "California",
+            "lat": 36.78,
+            "lng": -119.42,
+            "employment": 113910,
+            "lq": 1.67
+        },
+        {
+            "name": "Texas",
+            "lat": 31.97,
+            "lng": -99.9,
+            "employment": 79050,
+            "lq": 1.54
+        },
+        {
+            "name": "New York",
+            "lat": 40.71,
+            "lng": -74.01,
+            "employment": 32870,
+            "lq": 0.92
+        },
+        {
+            "name": "Illinois",
+            "lat": 40.63,
+            "lng": -89.4,
+            "employment": 32710,
+            "lq": 1.43
+        },
+        {
+            "name": "Florida",
+            "lat": 27.66,
+            "lng": -81.52,
+            "employment": 30490,
+            "lq": 0.84
+        }
+    ]
+}

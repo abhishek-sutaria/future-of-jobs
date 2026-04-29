@@ -1,6 +1,9 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useMemo } from 'react';
 import * as d3 from 'd3';
 import type { Task } from '../../types';
+import { VISUALIZATION_THRESHOLDS } from '../../config/GameMechanics';
+import { YEAR_MIN, GROWTH_RATES, RISK_THRESHOLDS, CHART } from '../../config/constants';
+import { CHART_COLORS } from '../../config/theme';
 
 interface ImpactMatrixChartProps {
     tasks: Task[];
@@ -8,111 +11,82 @@ interface ImpactMatrixChartProps {
 }
 
 export const ImpactMatrixChart: React.FC<ImpactMatrixChartProps> = ({ tasks, year }) => {
-    const svgRef = useRef<SVGSVGElement>(null);
+    const { WIDTH: width, HEIGHT: height, MARGIN: margin } = CHART.IMPACT_MATRIX;
+    const innerWidth = width - margin.left - margin.right;
+    const innerHeight = height - margin.top - margin.bottom;
 
-    useEffect(() => {
-        if (!svgRef.current) return;
+    const xScale = useMemo(() => d3.scaleLinear().domain([0, 1]).range([0, innerWidth]), [innerWidth]);
+    const yScale = useMemo(() => d3.scaleLinear().domain([0, 1]).range([innerHeight, 0]), [innerHeight]);
 
-        const width = 300;
-        const height = 220; // Increased height
-        const margin = { top: 20, right: 20, bottom: 40, left: 40 };
-        const innerWidth = width - margin.left - margin.right;
-        const innerHeight = height - margin.top - margin.bottom;
+    const xTicks = useMemo(() => xScale.ticks(3), [xScale]);
+    const yTicks = useMemo(() => yScale.ticks(3), [yScale]);
 
-        const svg = d3.select(svgRef.current);
-        svg.selectAll("*").remove();
-
-        const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
-
-        // Scales
-        const xScale = d3.scaleLinear().domain([0, 1]).range([0, innerWidth]);
-        const yScale = d3.scaleLinear().domain([0, 1]).range([innerHeight, 0]);
-
-        // Background Intelligence Zones
-        // Safe Zone (High Human, Low AI)
-        g.append('rect')
-            .attr('x', 0)
-            .attr('y', 0)
-            .attr('width', xScale(0.5))
-            .attr('height', yScale(0.5))
-            .attr('fill', '#22c55e')
-            .attr('opacity', 0.05);
-
-        // Danger Zone (Low Human, High AI)
-        g.append('rect')
-            .attr('x', xScale(0.5))
-            .attr('y', yScale(0.5))
-            .attr('width', xScale(1) - xScale(0.5))
-            .attr('height', yScale(0))
-            .attr('fill', '#ef4444')
-            .attr('opacity', 0.05);
-
-        // Axes with Gridlines
-        const xAxis = d3.axisBottom(xScale).ticks(3).tickSize(-innerHeight);
-        const yAxis = d3.axisLeft(yScale).ticks(3).tickSize(-innerWidth);
-
-        g.append('g')
-            .attr('transform', `translate(0,${innerHeight})`)
-            .call(xAxis)
-            .selectAll('line')
-            .attr('stroke', '#374151') // gray-700
-            .attr('stroke-dasharray', '2,2');
-
-        g.append('g')
-            .call(yAxis)
-            .selectAll('line')
-            .attr('stroke', '#374151')
-            .attr('stroke-dasharray', '2,2');
-
-        g.selectAll('.domain').attr('stroke', '#4b5563');
-        g.selectAll('text').attr('fill', '#9ca3af').style('font-size', '10px');
-
-        // Axis Labels
-        g.append('text')
-            .attr('x', innerWidth / 2)
-            .attr('y', innerHeight + 30)
-            .attr('fill', '#9ca3af')
-            .style('font-size', '10px')
-            .style('text-anchor', 'middle')
-            .style('text-transform', 'uppercase')
-            .text('AI Capability (Automation Risk)');
-
-        g.append('text')
-            .attr('transform', 'rotate(-90)')
-            .attr('x', -innerHeight / 2)
-            .attr('y', -30)
-            .attr('fill', '#9ca3af')
-            .style('font-size', '10px')
-            .style('text-anchor', 'middle')
-            .style('text-transform', 'uppercase')
-            .text('Human Criticality');
-
-        // Data Points
-        const points = tasks.map(t => {
-            const yearsPassed = year - 2025;
-            const currentAi = Math.min(1, t.aiCapabilityScore + (yearsPassed * 0.02)); // AI Grows
-            return { ...t, currentAi };
+    const points = useMemo(() => {
+        const yearsPassed = year - YEAR_MIN;
+        return tasks.map(t => {
+            const currentAi = Math.min(1, t.aiCapabilityScore + (yearsPassed * GROWTH_RATES.AI_CAPABILITY_PER_YEAR));
+            const color = t.humanCriticalityScore > RISK_THRESHOLDS.HUMAN_CRITICAL_SCORE ? CHART_COLORS.success : (currentAi > RISK_THRESHOLDS.PROJECTED_HIGH_RISK_AI ? CHART_COLORS.danger : CHART_COLORS.warning);
+            return { name: t.name, cx: xScale(currentAi), cy: yScale(t.humanCriticalityScore), color };
         });
-
-        g.selectAll('circle')
-            .data(points)
-            .enter()
-            .append('circle')
-            .attr('cx', d => xScale(d.currentAi))
-            .attr('cy', d => yScale(d.humanCriticalityScore))
-            .attr('r', 6)
-            .attr('fill', d => d.humanCriticalityScore > 0.6 ? '#22c55e' : (d.currentAi > 0.7 ? '#ef4444' : '#eab308'))
-            .attr('stroke', '#111827')
-            .attr('stroke-width', 1.5)
-            .attr('opacity', 0.9)
-            .append('title')
-            .text(d => `${d.name}`);
-
-    }, [tasks, year]);
+    }, [tasks, year, xScale, yScale]);
 
     return (
         <div className="w-full flex justify-center">
-            <svg ref={svgRef} width="100%" height="220" viewBox="0 0 300 220" style={{ maxWidth: '350px' }} />
+            <svg width="100%" height={height} viewBox={`0 0 ${width} ${height}`} style={{ maxWidth: '350px' }}>
+                <g transform={`translate(${margin.left},${margin.top})`}>
+                    {/* Safe Zone */}
+                    <rect
+                        x={0} y={0}
+                        width={xScale(VISUALIZATION_THRESHOLDS.SAFE_ZONE_MIN_HUMAN_SCORE)}
+                        height={yScale(VISUALIZATION_THRESHOLDS.SAFE_ZONE_MIN_HUMAN_SCORE)}
+                        fill={CHART_COLORS.success} opacity={0.05}
+                    />
+                    {/* Danger Zone */}
+                    <rect
+                        x={xScale(VISUALIZATION_THRESHOLDS.DANGER_ZONE_MIN_AI_SCORE)}
+                        y={yScale(VISUALIZATION_THRESHOLDS.DANGER_ZONE_MIN_AI_SCORE)}
+                        width={xScale(1) - xScale(VISUALIZATION_THRESHOLDS.DANGER_ZONE_MIN_AI_SCORE)}
+                        height={yScale(0)}
+                        fill={CHART_COLORS.danger} opacity={0.05}
+                    />
+
+                    {/* X-axis gridlines */}
+                    {xTicks.map(t => (
+                        <g key={`x-${t}`} transform={`translate(${xScale(t)},0)`}>
+                            <line y1={0} y2={innerHeight} stroke={CHART_COLORS.grid} strokeDasharray="2,2" />
+                            <text y={innerHeight + 14} fill={CHART_COLORS.text} fontSize={10} textAnchor="middle">{t}</text>
+                        </g>
+                    ))}
+
+                    {/* Y-axis gridlines */}
+                    {yTicks.map(t => (
+                        <g key={`y-${t}`} transform={`translate(0,${yScale(t)})`}>
+                            <line x1={0} x2={innerWidth} stroke={CHART_COLORS.grid} strokeDasharray="2,2" />
+                            <text x={-8} fill={CHART_COLORS.text} fontSize={10} textAnchor="end" dominantBaseline="middle">{t}</text>
+                        </g>
+                    ))}
+
+                    {/* Axes */}
+                    <line x1={0} y1={innerHeight} x2={innerWidth} y2={innerHeight} stroke={CHART_COLORS.grid} />
+                    <line x1={0} y1={0} x2={0} y2={innerHeight} stroke={CHART_COLORS.grid} />
+
+                    {/* X label */}
+                    <text x={innerWidth / 2} y={innerHeight + 30} fill={CHART_COLORS.text} fontSize={10} textAnchor="middle" style={{ textTransform: 'uppercase' }}>
+                        AI Capability (Automation Risk)
+                    </text>
+                    {/* Y label */}
+                    <text transform="rotate(-90)" x={-innerHeight / 2} y={-30} fill={CHART_COLORS.text} fontSize={10} textAnchor="middle" style={{ textTransform: 'uppercase' }}>
+                        Human Criticality
+                    </text>
+
+                    {/* Data Points */}
+                    {points.map((p, i) => (
+                        <circle key={i} cx={p.cx} cy={p.cy} r={6} fill={p.color} stroke="#111827" strokeWidth={1.5} opacity={0.9}>
+                            <title>{p.name}</title>
+                        </circle>
+                    ))}
+                </g>
+            </svg>
         </div>
     );
 };

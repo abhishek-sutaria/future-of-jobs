@@ -1,0 +1,22 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "framework": "vite",
+  "routes": [
+    {
+      "src": "/api/claude/messages",
+      "dest": "/api/claude"
+    },
+    {
+      "src": "/api/bls/([^/]+)",
+      "dest": "/api/bls?seriesId=$1"
+    },
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/.*",
+      "dest": "/index.html"
+    }
+  ]
+}

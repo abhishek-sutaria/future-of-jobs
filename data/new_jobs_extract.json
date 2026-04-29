@@ -1,0 +1,434 @@
+[
+  {
+    "title": "Brand Manager",
+    "soc": "11-2011",
+    "employment": 100,
+    "tasks": [
+      "Plan and prepare advertising and promotional material to increase sales of products or services, working with customers, company officials, sales departments, and advertising agencies.",
+      "Inspect layouts and advertising copy, and edit scripts, audio, video, and other promotional material for adherence to specifications.",
+      "Confer with department heads or staff to discuss topics such as contracts, selection of advertising media, or product to be advertised.",
+      "Coordinate with the media to disseminate advertising.",
+      "Coordinate activities of departments, such as sales, graphic arts, media, finance, and research."
+    ]
+  },
+  {
+    "title": "Public Relations Manager",
+    "soc": "11-2031",
+    "employment": null,
+    "tasks": []
+  },
+  {
+    "title": "Advertising Sales Agent",
+    "soc": "41-3011",
+    "employment": 30,
+    "tasks": [
+      "Prepare and deliver sales presentations to new and existing customers to sell new advertising programs and to protect and increase existing advertising.",
+      "Maintain assigned account bases while developing new accounts.",
+      "Provide clients with estimates of the costs of advertising products or services.",
+      "Locate and contact potential clients to offer advertising services.",
+      "Explain to customers how specific types of advertising will help promote their products or services in the most effective way possible."
+    ]
+  },
+  {
+    "title": "Event Coordinator",
+    "soc": "13-1121",
+    "employment": 60,
+    "tasks": [
+      "Consult with customers to determine objectives and requirements for events, such as meetings, conferences, and conventions.",
+      "Review event bills for accuracy and approve payment.",
+      "Coordinate services for events, such as accommodation and transportation for participants, facilities, catering, signage, displays, special needs requirements, printing and event security.",
+      "Arrange the availability of audio-visual equipment, transportation, displays, and other event needs.",
+      "Confer with staff at a chosen event site to coordinate details."
+    ]
+  },
+  {
+    "title": "Account Executive",
+    "soc": "41-3091",
+    "employment": 80,
+    "tasks": [
+      "Answer customers' questions about services, prices, availability, or credit terms.",
+      "Attend sales or trade meetings or read related publications to obtain information about market conditions, business trends, regulations, or industry developments.",
+      "Compute and compare costs of services.",
+      "Consult with clients after sales or contract signings to resolve problems and provide ongoing support.",
+      "Contact prospective or existing customers to discuss how services can meet their needs."
+    ]
+  },
+  {
+    "title": "Sales Representative",
+    "soc": "41-4011",
+    "employment": 90,
+    "tasks": [
+      "Negotiate prices or terms of sales or service agreements.",
+      "Prepare and submit sales contracts for orders.",
+      "Visit establishments to evaluate needs or to promote product or service sales.",
+      "Maintain customer records, using automated systems.",
+      "Answer customers' questions about products, prices, availability, or credit terms."
+    ]
+  },
+  {
+    "title": "Insurance Sales Agent",
+    "soc": "41-3021",
+    "employment": 50,
+    "tasks": [
+      "Customize insurance programs to suit individual customers, often covering a variety of risks.",
+      "Sell various types of insurance policies to businesses and individuals on behalf of insurance companies, including automobile, fire, life, property, medical and dental insurance, or specialized policies, such as marine, farm/crop, and medical malpractice.",
+      "Explain features, advantages, and disadvantages of various policies to promote sale of insurance plans.",
+      "Perform administrative tasks, such as maintaining records and handling policy renewals.",
+      "Seek out new clients and develop clientele by networking to find new customers and generate lists of prospective clients."
+    ]
+  },
+  {
+    "title": "Personal Financial Advisor",
+    "soc": "13-2052",
+    "employment": 170,
+    "tasks": [
+      "Interview clients to determine their current income, expenses, insurance coverage, tax status, financial objectives, risk tolerance, or other information needed to develop a financial plan.",
+      "Analyze financial information obtained from clients to determine strategies for meeting clients' financial objectives.",
+      "Answer clients' questions about the purposes and details of financial plans and strategies.",
+      "Review clients' accounts and plans regularly to determine whether life changes, economic changes, environmental concerns, or financial performance indicate a need for plan reassessment.",
+      "Manage client portfolios, keeping client plans up-to-date."
+    ]
+  },
+  {
+    "title": "Credit Analyst",
+    "soc": "13-2041",
+    "employment": 40,
+    "tasks": [
+      "Analyze credit data and financial statements to determine the degree of risk involved in extending credit or lending money.",
+      "Complete loan applications, including credit analyses and summaries of loan requests, and submit to loan committees for approval.",
+      "Generate financial ratios, using computer programs, to evaluate customers' financial status.",
+      "Prepare reports that include the degree of risk involved in extending credit or lending money.",
+      "Analyze financial data, such as income growth, quality of management, and market share to determine expected profitability of loans."
+    ]
+  },
+  {
+    "title": "Budget Analyst",
+    "soc": "13-2030",
+    "employment": 400,
+    "tasks": []
+  },
+  {
+    "title": "Risk Specialist",
+    "soc": "13-2099",
+    "employment": 70,
+    "tasks": [
+      "Apply mathematical or statistical techniques to address practical issues in finance, such as derivative valuation, securities trading, risk management, or financial market regulation.",
+      "Research or develop analytical tools to address issues such as portfolio construction or optimization, performance measurement, attribution, profit and loss measurement, or pricing models.",
+      "Interpret results of financial analysis procedures.",
+      "Develop core analytical capabilities or model libraries, using advanced statistical, quantitative, or econometric techniques.",
+      "Define or recommend model specifications or data collection methods."
+    ]
+  },
+  {
+    "title": "Insurance Underwriter",
+    "soc": "13-2053",
+    "employment": 60,
+    "tasks": [
+      "Examine documents to determine degree of risk from factors such as applicant health, financial standing and value, and condition of property.",
+      "Decline excessive risks.",
+      "Write to field representatives, medical personnel, or others to obtain further information, quote rates, or explain company underwriting policies.",
+      "Evaluate possibility of losses due to catastrophe or excessive insurance.",
+      "Review company records to determine amount of insurance in force on single risk or group of closely related risks."
+    ]
+  },
+  {
+    "title": "Actuary",
+    "soc": "15-2011",
+    "employment": 80,
+    "tasks": [
+      "Ascertain premium rates required and cash reserves and liabilities necessary to ensure payment of future benefits.",
+      "Collaborate with programmers, underwriters, accounts, claims experts, and senior management to help companies develop plans for new lines of business or improvements to existing business.",
+      "Analyze statistical information to estimate mortality, accident, sickness, disability, and retirement rates.",
+      "Design, review, and help administer insurance, annuity and pension plans, determining financial soundness and calculating premiums.",
+      "Determine, or help determine, company policy, and explain complex technical matters to company executives, government officials, shareholders, policyholders, or the public."
+    ]
+  },
+  {
+    "title": "Loan Officer",
+    "soc": "13-2072",
+    "employment": 50,
+    "tasks": [
+      "Meet with applicants to obtain information for loan applications and to answer questions about the process.",
+      "Analyze applicants' financial status, credit, and property evaluations to determine feasibility of granting loans.",
+      "Approve loans within specified limits, and refer loan applications outside those limits to management for approval.",
+      "Explain to customers the different types of loans and credit options that are available, as well as the terms of those services.",
+      "Submit applications to credit analysts for verification and recommendation."
+    ]
+  },
+  {
+    "title": "Data Scientist",
+    "soc": "15-2051",
+    "employment": 40,
+    "tasks": [
+      "Analyze, manipulate, or process large sets of data using statistical software.",
+      "Apply feature selection algorithms to models predicting outcomes of interest, such as sales, attrition, and healthcare use.",
+      "Apply sampling techniques to determine groups to be surveyed or use complete enumeration methods.",
+      "Clean and manipulate raw data using statistical software.",
+      "Compare models using statistical performance metrics, such as loss functions or proportion of explained variance."
+    ]
+  },
+  {
+    "title": "Statistician",
+    "soc": "15-2041",
+    "employment": 40,
+    "tasks": [
+      "Analyze and interpret statistical data to identify significant differences in relationships among sources of information.",
+      "Evaluate the statistical methods and procedures used to obtain data to ensure validity, applicability, efficiency, and accuracy.",
+      "Report results of statistical analyses, including information in the form of graphs, charts, and tables.",
+      "Determine whether statistical methods are appropriate, based on user needs or research questions of interest.",
+      "Prepare data for processing by organizing information, checking for inaccuracies, and adjusting and weighting the raw data."
+    ]
+  },
+  {
+    "title": "Computer Systems Analyst",
+    "soc": "15-1211",
+    "employment": 40,
+    "tasks": [
+      "Troubleshoot program and system malfunctions to restore normal functioning.",
+      "Provide staff and users with assistance solving computer-related problems, such as malfunctions and program problems.",
+      "Test, maintain, and monitor computer programs and systems, including coordinating the installation of computer programs and systems.",
+      "Use the computer in the analysis and solution of business problems, such as development of integrated production and inventory control and cost analysis systems.",
+      "Coordinate and link the computer systems within an organization to increase compatibility so that information can be shared."
+    ]
+  },
+  {
+    "title": "Cost Estimator",
+    "soc": "13-1051",
+    "employment": 60,
+    "tasks": [
+      "Analyze blueprints and other documentation to prepare time, cost, materials, and labor estimates.",
+      "Confer with engineers, architects, owners, contractors, and subcontractors on changes and adjustments to cost estimates.",
+      "Collect historical cost data to estimate costs for current or future products.",
+      "Assess cost effectiveness of products, projects or services, tracking actual costs relative to bids as the project develops.",
+      "Consult with clients, vendors, personnel in other departments, or construction foremen to discuss and formulate estimates and resolve issues."
+    ]
+  },
+  {
+    "title": "Compensation Analyst",
+    "soc": "13-1141",
+    "employment": 50,
+    "tasks": [
+      "Administer employee insurance, pension, and savings plans, working with insurance brokers and plan carriers.",
+      "Ensure company compliance with federal and state laws, including reporting requirements.",
+      "Research employee benefit and health and safety practices, and recommend changes or modifications to existing policies.",
+      "Advise managers and employees on state and federal employment regulations, collective agreements, benefit and compensation policies, personnel procedures, and classification programs.",
+      "Plan and develop curricula and materials for training programs and conduct training."
+    ]
+  },
+  {
+    "title": "Purchasing Manager",
+    "soc": "11-3061",
+    "employment": 40,
+    "tasks": [
+      "Develop and implement purchasing and contract management instructions, policies, and procedures.",
+      "Locate vendors of materials, equipment or supplies, and interview them to determine product availability and terms of sales.",
+      "Prepare bid awards requiring board approval.",
+      "Direct and coordinate activities of personnel engaged in buying, selling, and distributing materials, equipment, machinery, and supplies.",
+      "Review purchase order claims and contracts for conformance to company policy."
+    ]
+  },
+  {
+    "title": "Wholesale & Retail Buyer",
+    "soc": "13-1022",
+    "employment": null,
+    "tasks": [
+      "Buy merchandise or commodities for resale to wholesale or retail consumers.",
+      "Negotiate prices, discount terms, or transportation arrangements with suppliers.",
+      "Examine, select, order, or purchase merchandise consistent with quality, quantity, specification requirements, or other factors, such as environmental soundness.",
+      "Recommend mark-up rates, mark-down rates, or merchandise selling prices.",
+      "Obtain information about customer needs or preferences by conferring with sales or purchasing personnel."
+    ]
+  },
+  {
+    "title": "Purchasing Agent",
+    "soc": "13-1023",
+    "employment": null,
+    "tasks": [
+      "Monitor and follow applicable laws and regulations.",
+      "Purchase the highest quality merchandise at the lowest possible price and in correct amounts.",
+      "Formulate policies and procedures for bid proposals and procurement of goods and services.",
+      "Prepare purchase orders, solicit bid proposals, and review requisitions for goods and services.",
+      "Write and review product specifications, maintaining a working technical knowledge of the goods or services to be purchased."
+    ]
+  },
+  {
+    "title": "Industrial Production Manager",
+    "soc": "11-3051",
+    "employment": 70,
+    "tasks": [
+      "Set and monitor product standards, examining samples of raw products or directing testing during processing, to ensure finished products are of prescribed quality.",
+      "Direct or coordinate production, processing, distribution, or marketing activities of industrial organizations.",
+      "Review processing schedules or production orders to make decisions concerning inventory requirements, staffing requirements, work procedures, or duty assignments, considering budgetary limitations and time constraints.",
+      "Review operations and confer with technical or administrative staff to resolve production or processing problems.",
+      "Hire, train, evaluate, or discharge staff or resolve personnel grievances."
+    ]
+  },
+  {
+    "title": "UX Designer",
+    "soc": "15-1255",
+    "employment": 150,
+    "tasks": [
+      "Collaborate with management or users to develop e-commerce strategies and to integrate these strategies with Web sites.",
+      "Collaborate with web development professionals, such as front-end or back-end developers, to complete the full scope of Web development projects.",
+      "Communicate with network personnel or Web site hosting agencies to address hardware or software issues affecting Web sites.",
+      "Conduct user research to determine design requirements and analyze user feedback to improve design quality.",
+      "Confer with management or development teams to prioritize needs, resolve conflicts, develop content criteria, or choose solutions."
+    ]
+  },
+  {
+    "title": "IT Manager",
+    "soc": "11-3021",
+    "employment": 50,
+    "tasks": [
+      "Direct daily operations of department, analyzing workflow, establishing priorities, developing standards and setting deadlines.",
+      "Meet with department heads, managers, supervisors, vendors, and others, to solicit cooperation and resolve problems.",
+      "Review project plans to plan and coordinate project activity.",
+      "Assign and review the work of systems analysts, programmers, and other computer-related workers.",
+      "Provide users with technical support for computer problems."
+    ]
+  },
+  {
+    "title": "Cybersecurity Analyst",
+    "soc": "15-1212",
+    "employment": 60,
+    "tasks": [
+      "Develop plans to safeguard computer files against accidental or unauthorized modification, destruction, or disclosure and to meet emergency data processing needs.",
+      "Monitor current reports of computer viruses to determine when to update virus protection systems.",
+      "Encrypt data transmissions and erect firewalls to conceal confidential information as it is being transmitted and to keep out tainted digital transfers.",
+      "Perform risk assessments and execute tests of data processing system to ensure functioning of data processing activities and security measures.",
+      "Modify computer security files to incorporate new software, correct errors, or change individual access status."
+    ]
+  },
+  {
+    "title": "Web Developer",
+    "soc": "15-1254",
+    "employment": 80,
+    "tasks": [
+      "Write supporting code for Web applications or Web sites.",
+      "Design, build, or maintain Web sites, using authoring or scripting languages, content creation tools, management tools, and digital media.",
+      "Back up files from Web sites to local directories for instant recovery in case of problems.",
+      "Select programming languages, design tools, or applications.",
+      "Evaluate code to ensure that it is valid, is properly structured, meets industry standards, and is compatible with browsers, devices, or operating systems."
+    ]
+  },
+  {
+    "title": "Database Administrator",
+    "soc": "15-1242",
+    "employment": 30,
+    "tasks": [
+      "Modify existing databases and database management systems or direct programmers and analysts to make changes.",
+      "Plan, coordinate, and implement security measures to safeguard information in computer files against accidental or unauthorized damage, modification or disclosure.",
+      "Plan and install upgrades of database management system software to enhance database performance.",
+      "Specify users and user access levels for each segment of database.",
+      "Test changes to database applications or systems."
+    ]
+  },
+  {
+    "title": "IT Project Manager",
+    "soc": "15-1299",
+    "employment": 40,
+    "tasks": [
+      "Monitor systems for intrusions or denial of service attacks, and report security breaches to appropriate personnel.",
+      "Identify or document backup or recovery plans.",
+      "Back up or modify applications and related data to provide for disaster recovery.",
+      "Correct testing-identified problems, or recommend actions for their resolution.",
+      "Identify, standardize, and communicate levels of access and security."
+    ]
+  },
+  {
+    "title": "General Manager",
+    "soc": "11-1021",
+    "employment": 1170,
+    "tasks": [
+      "Review financial statements, sales or activity reports, or other performance data to measure productivity or goal achievement or to identify areas needing cost reduction or program improvement.",
+      "Direct and coordinate activities of businesses or departments concerned with the production, pricing, sales, or distribution of products.",
+      "Direct administrative activities directly related to making products or providing services.",
+      "Prepare staff work schedules and assign specific duties.",
+      "Direct or coordinate financial or budget activities to fund operations, maximize investments, or increase efficiency."
+    ]
+  },
+  {
+    "title": "HR Manager",
+    "soc": "11-3121",
+    "employment": 60,
+    "tasks": [
+      "Serve as a link between management and employees by handling questions, interpreting and administering contracts and helping resolve work-related problems.",
+      "Plan, direct, supervise, and coordinate work activities of subordinates and staff relating to employment, compensation, labor relations, and employee relations.",
+      "Perform difficult staffing duties, including dealing with understaffing, refereeing disputes, firing employees, and administering disciplinary procedures.",
+      "Represent organization at personnel-related hearings and investigations.",
+      "Negotiate bargaining agreements and help interpret labor contracts."
+    ]
+  },
+  {
+    "title": "Project Management Specialist",
+    "soc": "13-1082",
+    "employment": 80,
+    "tasks": [
+      "Assign duties or responsibilities to project personnel.",
+      "Communicate with key stakeholders to determine project requirements and objectives.",
+      "Confer with project personnel to identify and resolve problems.",
+      "Create project status presentations for delivery to customers or project personnel.",
+      "Develop or update project plans including information such as objectives, technologies, schedules, funding, and staffing."
+    ]
+  },
+  {
+    "title": "Training & Development Specialist",
+    "soc": "13-1151",
+    "employment": 40,
+    "tasks": [
+      "Present information with a variety of instructional techniques or formats, such as role playing, simulations, team exercises, group discussions, videos, or lectures.",
+      "Obtain, organize, or develop training procedure manuals, guides, or course materials, such as handouts or visual materials.",
+      "Evaluate modes of training delivery, such as in-person or virtual, to optimize training effectiveness, training costs, or environmental impacts.",
+      "Offer specific training programs to help workers maintain or improve job skills.",
+      "Assess training needs through surveys, interviews with employees, focus groups, or consultation with managers, instructors, or customer representatives."
+    ]
+  },
+  {
+    "title": "HR Specialist",
+    "soc": "13-1071",
+    "employment": 130,
+    "tasks": [
+      "Interpret and explain human resources policies, procedures, laws, standards, or regulations.",
+      "Hire employees and process hiring-related paperwork.",
+      "Maintain current knowledge of Equal Employment Opportunity (EEO) and affirmative action guidelines and laws, such as the Americans with Disabilities Act (ADA).",
+      "Prepare or maintain employment records related to events, such as hiring, termination, leaves, transfers, or promotions, using human resources management system software.",
+      "Address employee relations issues, such as harassment allegations, work complaints, or other employee concerns."
+    ]
+  },
+  {
+    "title": "Training & Development Manager",
+    "soc": "11-3131",
+    "employment": 30,
+    "tasks": [
+      "Analyze training needs to develop new training programs or modify and improve existing programs.",
+      "Evaluate instructor performance and the effectiveness of training programs, providing recommendations for improvement.",
+      "Plan, develop, and provide training and staff development programs, using knowledge of the effectiveness of methods such as classroom training, demonstrations, on-the-job training, meetings, conferences, and workshops.",
+      "Confer with management and conduct surveys to identify training needs based on projected production processes, changes, and other factors.",
+      "Conduct orientation sessions and arrange on-the-job training for new hires."
+    ]
+  },
+  {
+    "title": "Compensation & Benefits Manager",
+    "soc": "11-3111",
+    "employment": 50,
+    "tasks": [
+      "Direct preparation and distribution of written and verbal information to inform employees of benefits, compensation, and personnel policies.",
+      "Design, evaluate, and modify benefits policies to ensure that programs are current, competitive, and in compliance with legal requirements.",
+      "Fulfill all reporting requirements of all relevant government rules and regulations, including the Employee Retirement Income Security Act (ERISA).",
+      "Analyze compensation policies, government regulations, and prevailing wage rates to develop competitive compensation plan.",
+      "Identify and implement benefits to increase the quality of life for employees by working with brokers and researching benefits issues."
+    ]
+  },
+  {
+    "title": "Financial Risk Analyst",
+    "soc": "13-2054",
+    "employment": 30,
+    "tasks": [
+      "Analyze areas of potential risk to the assets, earning capacity, or success of organizations.",
+      "Analyze new legislation to determine impact on risk exposure.",
+      "Conduct statistical analyses to quantify risk, using statistical analysis software or econometric models.",
+      "Confer with traders to identify and communicate risks associated with specific trading strategies or positions.",
+      "Consult financial literature to ensure use of the latest models or statistical techniques."
+    ]
+  }
+]

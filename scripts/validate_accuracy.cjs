@@ -14,15 +14,20 @@ if (!match) {
     process.exit(1);
 }
 
-// Evaluate the string to get the object (safe in this context as we generated it)
-// We need to cleanup the TS types from the array string if any exist, but our generator outputs pure JS objects in TS file.
 let jobs;
 try {
-    // Basic sanitization if needed, though usually the generator outputs standard JSON-compatible structure
-    jobs = eval(match[1]);
+    const jsonStr = match[1]
+        .replace(/(\w+)\s*:/g, '"$1":')
+        .replace(/'/g, '"')
+        .replace(/,\s*([}\]])/g, '$1');
+    jobs = JSON.parse(jsonStr);
 } catch (e) {
-    console.error('❌ JSON Eval failed:', e.message);
-    process.exit(1);
+    try {
+        jobs = (new Function('return ' + match[1]))();
+    } catch (e2) {
+        console.error('❌ Parse failed:', e2.message);
+        process.exit(1);
+    }
 }
 
 console.log(`\n🔍 VALIDATING ${jobs.length} JOBS...\n`);

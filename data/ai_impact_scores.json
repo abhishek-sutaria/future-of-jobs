@@ -1,0 +1,56 @@
+{
+  "11-2021": [
+    {
+      "id": "8823",
+      "text": "Direct or coordinate an organization's financial or budget activities to fund operations, maximize investments, or increase efficiency.",
+      "ai_exposure": 0.9,
+      "human_criticality": 0.2
+    },
+    {
+      "id": "8824",
+      "text": "Confer with board members, organization officials, or staff members to discuss issues, coordinate activities, or resolve problems.",
+      "ai_exposure": 0.3,
+      "human_criticality": 0.9
+    },
+    {
+      "id": "8827",
+      "text": "Prepare budgets for approval, including those for funding or implementation of programs.",
+      "ai_exposure": 0.85,
+      "human_criticality": 0.3
+    },
+    {
+      "id": "8826",
+      "text": "Direct, plan, or implement policies, objectives, or activities of organizations or businesses to ensure continuing operations, to maximize returns on investments, or to increase productivity.",
+      "ai_exposure": 0.5,
+      "human_criticality": 0.8
+    }
+  ],
+  "15-1252": [
+    {
+      "id": "task_sw_1",
+      "text": "Modify existing software to correct errors, allow it to adapt to new hardware, or to improve its performance.",
+      "ai_exposure": 0.95,
+      "human_criticality": 0.1
+    },
+    {
+      "id": "task_sw_2",
+      "text": "Develop and direct software system testing and validation procedures, programming, and documentation.",
+      "ai_exposure": 0.8,
+      "human_criticality": 0.4
+    }
+  ],
+  "13-1161": [
+    {
+      "id": "task_mr_1",
+      "text": "Prepare reports of findings, illustrating data graphically and translating complex findings into written text.",
+      "ai_exposure": 0.9,
+      "human_criticality": 0.2
+    },
+    {
+      "id": "task_mr_2",
+      "text": "Seek and provide information to help companies determine their position in the marketplace.",
+      "ai_exposure": 0.6,
+      "human_criticality": 0.7
+    }
+  ]
+}

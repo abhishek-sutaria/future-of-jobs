@@ -1,0 +1,553 @@
+/**
+ * Appends 37 new Kelley Top 50 jobs to src/data.ts
+ * Data sources:
+ *   - Employment: BLS OES May 2023
+ *   - Tasks: O*NET 30.1 (extracted to data/new_jobs_extract.json)
+ *   - Automation scores: pre-computed estimates aligned with existing 13 jobs
+ */
+const fs = require('fs');
+const path = require('path');
+
+const OUT = path.join(__dirname, '../src/data.ts');
+
+const NEW_JOBS = [
+  {
+    id: 'job-14', title: 'Brand Manager', cluster: 'Business',
+    employment: 27100, automationCostIndex: 0.42, projectedGrowth: 6,
+    salaryVolatilityLabel: 'Medium', humanResilienceLabel: 'High',
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    isAlias: false,
+    tasks: [
+      { name: 'Plan and prepare advertising and promotional material to increase sales of products or services, working with customers, company officials, sales departments, and advertising agencies.', aiCapabilityScore: 0.55, humanCriticalityScore: 0.65, importance: 3 },
+      { name: 'Inspect layouts and advertising copy, and edit scripts, audio, video, and other promotional material for adherence to specifications.', aiCapabilityScore: 0.70, humanCriticalityScore: 0.40, importance: 3 },
+      { name: 'Confer with department heads or staff to discuss topics such as contracts, selection of advertising media, or product to be advertised.', aiCapabilityScore: 0.30, humanCriticalityScore: 0.88, importance: 3 },
+      { name: 'Coordinate with the media to disseminate advertising.', aiCapabilityScore: 0.60, humanCriticalityScore: 0.40, importance: 3 },
+      { name: 'Coordinate activities of departments, such as sales, graphic arts, media, finance, and research.', aiCapabilityScore: 0.35, humanCriticalityScore: 0.80, importance: 3 },
+    ],
+  },
+  {
+    id: 'job-16', title: 'Public Relations Manager', cluster: 'Business',
+    employment: 84100, automationCostIndex: 0.35, projectedGrowth: 8,
+    salaryVolatilityLabel: 'Medium', humanResilienceLabel: 'High',
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    isAlias: false,
+    tasks: [
+      { name: 'Develop and implement public relations programs to promote a favorable image for the organization with the public, press, and other stakeholders.', aiCapabilityScore: 0.50, humanCriticalityScore: 0.75, importance: 3 },
+      { name: 'Manage media relations, including responding to press inquiries and pitching stories to journalists and media outlets.', aiCapabilityScore: 0.40, humanCriticalityScore: 0.85, importance: 3 },
+      { name: 'Write and edit press releases, speeches, and other communications materials for executive and organizational use.', aiCapabilityScore: 0.65, humanCriticalityScore: 0.50, importance: 3 },
+      { name: 'Lead crisis communications planning and real-time response to reputational threats.', aiCapabilityScore: 0.28, humanCriticalityScore: 0.92, importance: 3 },
+      { name: 'Build and maintain relationships with community organizations, media, government, and other external stakeholders.', aiCapabilityScore: 0.22, humanCriticalityScore: 0.95, importance: 3 },
+    ],
+  },
+  {
+    id: 'job-17', title: 'Advertising Sales Agent', cluster: 'Business',
+    employment: 100700, automationCostIndex: 0.62, projectedGrowth: 3,
+    salaryVolatilityLabel: 'Very High', humanResilienceLabel: 'High',
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    isAlias: false,
+    tasks: [
+      { name: 'Prepare and deliver sales presentations to new and existing customers to sell new advertising programs and to protect and increase existing advertising.', aiCapabilityScore: 0.58, humanCriticalityScore: 0.60, importance: 3 },
+      { name: 'Maintain assigned account bases while developing new accounts.', aiCapabilityScore: 0.65, humanCriticalityScore: 0.45, importance: 3 },
+      { name: 'Provide clients with estimates of the costs of advertising products or services.', aiCapabilityScore: 0.78, humanCriticalityScore: 0.28, importance: 3 },
+      { name: 'Locate and contact potential clients to offer advertising services.', aiCapabilityScore: 0.62, humanCriticalityScore: 0.50, importance: 3 },
+      { name: 'Explain to customers how specific types of advertising will help promote their products or services in the most effective way possible.', aiCapabilityScore: 0.55, humanCriticalityScore: 0.60, importance: 3 },
+    ],
+  },
+  {
+    id: 'job-18', title: 'Event Coordinator', cluster: 'Business',
+    employment: 164800, automationCostIndex: 0.50, projectedGrowth: 8,
+    salaryVolatilityLabel: 'Medium', humanResilienceLabel: 'High',
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    isAlias: false,
+    tasks: [
+      { name: 'Consult with customers to determine objectives and requirements for events, such as meetings, conferences, and conventions.', aiCapabilityScore: 0.40, humanCriticalityScore: 0.78, importance: 3 },
+      { name: 'Review event bills for accuracy and approve payment.', aiCapabilityScore: 0.75, humanCriticalityScore: 0.30, importance: 3 },
+      { name: 'Coordinate services for events, such as accommodation and transportation for participants, facilities, catering, signage, displays, and event security.', aiCapabilityScore: 0.55, humanCriticalityScore: 0.55, importance: 3 },
+      { name: 'Arrange the availability of audio-visual equipment, transportation, displays, and other event needs.', aiCapabilityScore: 0.60, humanCriticalityScore: 0.48, importance: 3 },
+      { name: 'Confer with staff at a chosen event site to coordinate details.', aiCapabilityScore: 0.35, humanCriticalityScore: 0.78, importance: 3 },
+    ],
+  },
+  {
+    id: 'job-19', title: 'Account Executive', cluster: 'Business',
+    employment: 1040500, automationCostIndex: 0.45, projectedGrowth: 5,
+    salaryVolatilityLabel: 'Very High', humanResilienceLabel: 'High',
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    isAlias: false,
+    tasks: [
+      { name: 'Answer customers\' questions about services, prices, availability, or credit terms.', aiCapabilityScore: 0.58, humanCriticalityScore: 0.58, importance: 3 },
+      { name: 'Attend sales or trade meetings or read related publications to obtain information about market conditions, business trends, or industry developments.', aiCapabilityScore: 0.35, humanCriticalityScore: 0.72, importance: 3 },
+      { name: 'Compute and compare costs of services.', aiCapabilityScore: 0.72, humanCriticalityScore: 0.32, importance: 3 },
+      { name: 'Consult with clients after sales or contract signings to resolve problems and provide ongoing support.', aiCapabilityScore: 0.30, humanCriticalityScore: 0.90, importance: 3 },
+      { name: 'Contact prospective or existing customers to discuss how services can meet their needs.', aiCapabilityScore: 0.50, humanCriticalityScore: 0.65, importance: 3 },
+    ],
+  },
+  {
+    id: 'job-20', title: 'Sales Representative', cluster: 'Business',
+    employment: 286960, automationCostIndex: 0.58, projectedGrowth: 4,
+    salaryVolatilityLabel: 'Very High', humanResilienceLabel: 'High',
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    isAlias: false,
+    tasks: [
+      { name: 'Negotiate prices or terms of sales or service agreements.', aiCapabilityScore: 0.45, humanCriticalityScore: 0.80, importance: 3 },
+      { name: 'Prepare and submit sales contracts for orders.', aiCapabilityScore: 0.72, humanCriticalityScore: 0.32, importance: 3 },
+      { name: 'Visit establishments to evaluate needs or to promote product or service sales.', aiCapabilityScore: 0.35, humanCriticalityScore: 0.78, importance: 3 },
+      { name: 'Maintain customer records, using automated systems.', aiCapabilityScore: 0.82, humanCriticalityScore: 0.18, importance: 3 },
+      { name: 'Answer customers\' questions about products, prices, availability, or credit terms.', aiCapabilityScore: 0.58, humanCriticalityScore: 0.58, importance: 3 },
+    ],
+  },
+  {
+    id: 'job-21', title: 'Insurance Sales Agent', cluster: 'Business',
+    employment: 427720, automationCostIndex: 0.60, projectedGrowth: 7,
+    salaryVolatilityLabel: 'Very High', humanResilienceLabel: 'High',
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    isAlias: false,
+    tasks: [
+      { name: 'Customize insurance programs to suit individual customers, often covering a variety of risks.', aiCapabilityScore: 0.55, humanCriticalityScore: 0.65, importance: 3 },
+      { name: 'Sell various types of insurance policies to businesses and individuals on behalf of insurance companies, including automobile, fire, life, property, and medical insurance.', aiCapabilityScore: 0.58, humanCriticalityScore: 0.62, importance: 3 },
+      { name: 'Explain features, advantages, and disadvantages of various policies to promote sale of insurance plans.', aiCapabilityScore: 0.65, humanCriticalityScore: 0.50, importance: 3 },
+      { name: 'Perform administrative tasks, such as maintaining records and handling policy renewals.', aiCapabilityScore: 0.80, humanCriticalityScore: 0.20, importance: 3 },
+      { name: 'Seek out new clients and develop clientele by networking to find new customers and generate lists of prospective clients.', aiCapabilityScore: 0.52, humanCriticalityScore: 0.65, importance: 3 },
+    ],
+  },
+  {
+    id: 'job-22', title: 'Personal Financial Advisor', cluster: 'Business',
+    employment: 330300, automationCostIndex: 0.55, projectedGrowth: 13,
+    salaryVolatilityLabel: 'Very High', humanResilienceLabel: 'High',
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    isAlias: false,
+    tasks: [
+      { name: 'Interview clients to determine their current income, expenses, insurance coverage, tax status, financial objectives, and risk tolerance needed to develop a financial plan.', aiCapabilityScore: 0.40, humanCriticalityScore: 0.85, importance: 3 },
+      { name: 'Analyze financial information obtained from clients to determine strategies for meeting clients\' financial objectives.', aiCapabilityScore: 0.70, humanCriticalityScore: 0.45, importance: 3 },
+      { name: 'Answer clients\' questions about the purposes and details of financial plans and strategies.', aiCapabilityScore: 0.52, humanCriticalityScore: 0.70, importance: 3 },
+      { name: 'Review clients\' accounts and plans regularly to determine whether life changes, economic changes, or financial performance indicate a need for plan reassessment.', aiCapabilityScore: 0.68, humanCriticalityScore: 0.55, importance: 3 },
+      { name: 'Manage client portfolios, keeping client plans up-to-date.', aiCapabilityScore: 0.65, humanCriticalityScore: 0.60, importance: 3 },
+    ],
+  },
+  {
+    id: 'job-23', title: 'Credit Analyst', cluster: 'Business',
+    employment: 86100, automationCostIndex: 0.72, projectedGrowth: 2,
+    salaryVolatilityLabel: 'Very High', humanResilienceLabel: 'At Risk',
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    isAlias: false,
+    tasks: [
+      { name: 'Analyze credit data and financial statements to determine the degree of risk involved in extending credit or lending money.', aiCapabilityScore: 0.82, humanCriticalityScore: 0.25, importance: 3 },
+      { name: 'Complete loan applications, including credit analyses and summaries of loan requests, and submit to loan committees for approval.', aiCapabilityScore: 0.78, humanCriticalityScore: 0.28, importance: 3 },
+      { name: 'Generate financial ratios, using computer programs, to evaluate customers\' financial status.', aiCapabilityScore: 0.92, humanCriticalityScore: 0.10, importance: 3 },
+      { name: 'Prepare reports that include the degree of risk involved in extending credit or lending money.', aiCapabilityScore: 0.82, humanCriticalityScore: 0.25, importance: 3 },
+      { name: 'Analyze financial data, such as income growth, quality of management, and market share to determine expected profitability of loans.', aiCapabilityScore: 0.80, humanCriticalityScore: 0.30, importance: 3 },
+    ],
+  },
+  {
+    id: 'job-24', title: 'Budget Analyst', cluster: 'Business',
+    employment: 57800, automationCostIndex: 0.70, projectedGrowth: 3,
+    salaryVolatilityLabel: 'Very High', humanResilienceLabel: 'At Risk',
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    isAlias: false,
+    tasks: [
+      { name: 'Develop and analyze annual budgets for departments or organizations, identifying areas where costs can be reduced or resources optimized.', aiCapabilityScore: 0.78, humanCriticalityScore: 0.30, importance: 3 },
+      { name: 'Analyze budget proposals submitted by departments to determine whether they comply with organizational goals and legal requirements.', aiCapabilityScore: 0.80, humanCriticalityScore: 0.28, importance: 3 },
+      { name: 'Monitor budget allocations and expenditures to ensure spending stays within approved budget limits.', aiCapabilityScore: 0.85, humanCriticalityScore: 0.22, importance: 3 },
+      { name: 'Forecast future financial needs of the organization based on economic trends, historical data, and operational requirements.', aiCapabilityScore: 0.75, humanCriticalityScore: 0.40, importance: 3 },
+      { name: 'Prepare budget variance reports comparing actual spending against forecasts, and recommend corrective actions.', aiCapabilityScore: 0.82, humanCriticalityScore: 0.25, importance: 3 },
+    ],
+  },
+  {
+    id: 'job-25', title: 'Risk Specialist', cluster: 'Business',
+    employment: 84800, automationCostIndex: 0.68, projectedGrowth: 9,
+    salaryVolatilityLabel: 'Very High', humanResilienceLabel: 'At Risk',
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    isAlias: false,
+    tasks: [
+      { name: 'Apply mathematical or statistical techniques to address practical issues in finance, such as derivative valuation, securities trading, and risk management.', aiCapabilityScore: 0.78, humanCriticalityScore: 0.30, importance: 3 },
+      { name: 'Research or develop analytical tools to address issues such as portfolio construction, performance measurement, or pricing models.', aiCapabilityScore: 0.72, humanCriticalityScore: 0.35, importance: 3 },
+      { name: 'Interpret results of financial analysis procedures.', aiCapabilityScore: 0.65, humanCriticalityScore: 0.52, importance: 3 },
+      { name: 'Develop core analytical capabilities or model libraries, using advanced statistical, quantitative, or econometric techniques.', aiCapabilityScore: 0.76, humanCriticalityScore: 0.30, importance: 3 },
+      { name: 'Define or recommend model specifications or data collection methods.', aiCapabilityScore: 0.68, humanCriticalityScore: 0.45, importance: 3 },
+    ],
+  },
+  {
+    id: 'job-26', title: 'Insurance Underwriter', cluster: 'Business',
+    employment: 100000, automationCostIndex: 0.78, projectedGrowth: -4,
+    salaryVolatilityLabel: 'Very High', humanResilienceLabel: 'At Risk',
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    isAlias: false,
+    tasks: [
+      { name: 'Examine documents to determine degree of risk from factors such as applicant health, financial standing and value, and condition of property.', aiCapabilityScore: 0.82, humanCriticalityScore: 0.25, importance: 3 },
+      { name: 'Decline excessive risks based on established underwriting guidelines and loss experience data.', aiCapabilityScore: 0.75, humanCriticalityScore: 0.40, importance: 3 },
+      { name: 'Write to field representatives, medical personnel, or others to obtain further information, quote rates, or explain company underwriting policies.', aiCapabilityScore: 0.68, humanCriticalityScore: 0.48, importance: 3 },
+      { name: 'Evaluate possibility of losses due to catastrophe or excessive insurance using actuarial and statistical data.', aiCapabilityScore: 0.82, humanCriticalityScore: 0.28, importance: 3 },
+      { name: 'Review company records to determine amount of insurance in force on single risk or group of closely related risks.', aiCapabilityScore: 0.88, humanCriticalityScore: 0.18, importance: 3 },
+    ],
+  },
+  {
+    id: 'job-27', title: 'Actuary', cluster: 'Business',
+    employment: 28800, automationCostIndex: 0.62, projectedGrowth: 23,
+    salaryVolatilityLabel: 'Very High', humanResilienceLabel: 'High',
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    isAlias: false,
+    tasks: [
+      { name: 'Ascertain premium rates required and cash reserves and liabilities necessary to ensure payment of future benefits.', aiCapabilityScore: 0.72, humanCriticalityScore: 0.38, importance: 3 },
+      { name: 'Collaborate with programmers, underwriters, accounts, claims experts, and senior management to help companies develop plans for new lines of business.', aiCapabilityScore: 0.35, humanCriticalityScore: 0.85, importance: 3 },
+      { name: 'Analyze statistical information to estimate mortality, accident, sickness, disability, and retirement rates.', aiCapabilityScore: 0.80, humanCriticalityScore: 0.28, importance: 3 },
+      { name: 'Design, review, and help administer insurance, annuity and pension plans, determining financial soundness and calculating premiums.', aiCapabilityScore: 0.65, humanCriticalityScore: 0.55, importance: 3 },
+      { name: 'Determine company policy and explain complex technical matters to company executives, government officials, shareholders, and policyholders.', aiCapabilityScore: 0.40, humanCriticalityScore: 0.80, importance: 3 },
+    ],
+  },
+  {
+    id: 'job-28', title: 'Loan Officer', cluster: 'Business',
+    employment: 325900, automationCostIndex: 0.68, projectedGrowth: 3,
+    salaryVolatilityLabel: 'Very High', humanResilienceLabel: 'At Risk',
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    isAlias: false,
+    tasks: [
+      { name: 'Meet with applicants to obtain information for loan applications and to answer questions about the process.', aiCapabilityScore: 0.45, humanCriticalityScore: 0.75, importance: 3 },
+      { name: 'Analyze applicants\' financial status, credit, and property evaluations to determine feasibility of granting loans.', aiCapabilityScore: 0.80, humanCriticalityScore: 0.28, importance: 3 },
+      { name: 'Approve loans within specified limits, and refer loan applications outside those limits to management for approval.', aiCapabilityScore: 0.68, humanCriticalityScore: 0.52, importance: 3 },
+      { name: 'Explain to customers the different types of loans and credit options that are available, as well as the terms of those services.', aiCapabilityScore: 0.62, humanCriticalityScore: 0.55, importance: 3 },
+      { name: 'Submit applications to credit analysts for verification and recommendation.', aiCapabilityScore: 0.72, humanCriticalityScore: 0.32, importance: 3 },
+    ],
+  },
+  {
+    id: 'job-29', title: 'Data Scientist', cluster: 'Business',
+    employment: 168900, automationCostIndex: 0.60, projectedGrowth: 36,
+    salaryVolatilityLabel: 'Very High', humanResilienceLabel: 'High',
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    isAlias: false,
+    tasks: [
+      { name: 'Analyze, manipulate, or process large sets of data using statistical software to identify patterns and generate insights.', aiCapabilityScore: 0.72, humanCriticalityScore: 0.35, importance: 3 },
+      { name: 'Apply feature selection algorithms to models predicting outcomes of interest, such as sales, attrition, and customer behaviour.', aiCapabilityScore: 0.70, humanCriticalityScore: 0.40, importance: 3 },
+      { name: 'Apply sampling techniques to determine groups to be surveyed or use complete enumeration methods.', aiCapabilityScore: 0.68, humanCriticalityScore: 0.35, importance: 3 },
+      { name: 'Clean and manipulate raw data using statistical software to prepare it for analysis.', aiCapabilityScore: 0.82, humanCriticalityScore: 0.20, importance: 3 },
+      { name: 'Compare models using statistical performance metrics, such as loss functions or proportion of explained variance.', aiCapabilityScore: 0.68, humanCriticalityScore: 0.45, importance: 3 },
+    ],
+  },
+  {
+    id: 'job-30', title: 'Statistician', cluster: 'Business',
+    employment: 42800, automationCostIndex: 0.65, projectedGrowth: 32,
+    salaryVolatilityLabel: 'Very High', humanResilienceLabel: 'At Risk',
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    isAlias: false,
+    tasks: [
+      { name: 'Analyze and interpret statistical data to identify significant differences in relationships among sources of information.', aiCapabilityScore: 0.72, humanCriticalityScore: 0.35, importance: 3 },
+      { name: 'Evaluate the statistical methods and procedures used to obtain data to ensure validity, applicability, efficiency, and accuracy.', aiCapabilityScore: 0.65, humanCriticalityScore: 0.52, importance: 3 },
+      { name: 'Report results of statistical analyses, including information in the form of graphs, charts, and tables.', aiCapabilityScore: 0.78, humanCriticalityScore: 0.28, importance: 3 },
+      { name: 'Determine whether statistical methods are appropriate, based on user needs or research questions of interest.', aiCapabilityScore: 0.60, humanCriticalityScore: 0.58, importance: 3 },
+      { name: 'Prepare data for processing by organizing information, checking for inaccuracies, and adjusting and weighting the raw data.', aiCapabilityScore: 0.82, humanCriticalityScore: 0.20, importance: 3 },
+    ],
+  },
+  {
+    id: 'job-31', title: 'Computer Systems Analyst', cluster: 'Business',
+    employment: 635000, automationCostIndex: 0.62, projectedGrowth: 11,
+    salaryVolatilityLabel: 'Very High', humanResilienceLabel: 'High',
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    isAlias: false,
+    tasks: [
+      { name: 'Troubleshoot program and system malfunctions to restore normal functioning.', aiCapabilityScore: 0.65, humanCriticalityScore: 0.50, importance: 3 },
+      { name: 'Provide staff and users with assistance solving computer-related problems, such as malfunctions and program problems.', aiCapabilityScore: 0.58, humanCriticalityScore: 0.60, importance: 3 },
+      { name: 'Test, maintain, and monitor computer programs and systems, including coordinating the installation of computer programs and systems.', aiCapabilityScore: 0.70, humanCriticalityScore: 0.40, importance: 3 },
+      { name: 'Use the computer in the analysis and solution of business problems, such as development of integrated production and inventory control and cost analysis systems.', aiCapabilityScore: 0.72, humanCriticalityScore: 0.40, importance: 3 },
+      { name: 'Coordinate and link the computer systems within an organization to increase compatibility so that information can be shared.', aiCapabilityScore: 0.58, humanCriticalityScore: 0.55, importance: 3 },
+    ],
+  },
+  {
+    id: 'job-32', title: 'Cost Estimator', cluster: 'Business',
+    employment: 196400, automationCostIndex: 0.72, projectedGrowth: 1,
+    salaryVolatilityLabel: 'Very High', humanResilienceLabel: 'At Risk',
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    isAlias: false,
+    tasks: [
+      { name: 'Analyze blueprints and other documentation to prepare time, cost, materials, and labor estimates.', aiCapabilityScore: 0.80, humanCriticalityScore: 0.28, importance: 3 },
+      { name: 'Confer with engineers, architects, owners, contractors, and subcontractors on changes and adjustments to cost estimates.', aiCapabilityScore: 0.38, humanCriticalityScore: 0.82, importance: 3 },
+      { name: 'Collect historical cost data to estimate costs for current or future products.', aiCapabilityScore: 0.80, humanCriticalityScore: 0.25, importance: 3 },
+      { name: 'Assess cost effectiveness of products, projects or services, tracking actual costs relative to bids as the project develops.', aiCapabilityScore: 0.82, humanCriticalityScore: 0.28, importance: 3 },
+      { name: 'Consult with clients, vendors, or construction foremen to discuss and formulate estimates and resolve issues.', aiCapabilityScore: 0.35, humanCriticalityScore: 0.80, importance: 3 },
+    ],
+  },
+  {
+    id: 'job-33', title: 'Compensation Analyst', cluster: 'Business',
+    employment: 90700, automationCostIndex: 0.62, projectedGrowth: 6,
+    salaryVolatilityLabel: 'Very High', humanResilienceLabel: 'High',
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    isAlias: false,
+    tasks: [
+      { name: 'Administer employee insurance, pension, and savings plans, working with insurance brokers and plan carriers.', aiCapabilityScore: 0.65, humanCriticalityScore: 0.45, importance: 3 },
+      { name: 'Ensure company compliance with federal and state laws, including reporting requirements.', aiCapabilityScore: 0.62, humanCriticalityScore: 0.58, importance: 3 },
+      { name: 'Research employee benefit and health and safety practices, and recommend changes or modifications to existing policies.', aiCapabilityScore: 0.68, humanCriticalityScore: 0.48, importance: 3 },
+      { name: 'Advise managers and employees on state and federal employment regulations, collective agreements, benefit and compensation policies, and classification programs.', aiCapabilityScore: 0.48, humanCriticalityScore: 0.70, importance: 3 },
+      { name: 'Plan and develop curricula and materials for training programs and conduct training.', aiCapabilityScore: 0.55, humanCriticalityScore: 0.62, importance: 3 },
+    ],
+  },
+  {
+    id: 'job-34', title: 'Purchasing Manager', cluster: 'Business',
+    employment: 75100, automationCostIndex: 0.52, projectedGrowth: 4,
+    salaryVolatilityLabel: 'Medium', humanResilienceLabel: 'High',
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    isAlias: false,
+    tasks: [
+      { name: 'Develop and implement purchasing and contract management instructions, policies, and procedures.', aiCapabilityScore: 0.45, humanCriticalityScore: 0.70, importance: 3 },
+      { name: 'Locate vendors of materials, equipment or supplies, and interview them to determine product availability and terms of sales.', aiCapabilityScore: 0.60, humanCriticalityScore: 0.55, importance: 3 },
+      { name: 'Prepare bid awards requiring board approval.', aiCapabilityScore: 0.62, humanCriticalityScore: 0.48, importance: 3 },
+      { name: 'Direct and coordinate activities of personnel engaged in buying, selling, and distributing materials, equipment, machinery, and supplies.', aiCapabilityScore: 0.45, humanCriticalityScore: 0.70, importance: 3 },
+      { name: 'Review purchase order claims and contracts for conformance to company policy.', aiCapabilityScore: 0.68, humanCriticalityScore: 0.42, importance: 3 },
+    ],
+  },
+  {
+    id: 'job-35', title: 'Wholesale & Retail Buyer', cluster: 'Business',
+    employment: 113400, automationCostIndex: 0.58, projectedGrowth: -4,
+    salaryVolatilityLabel: 'Very High', humanResilienceLabel: 'High',
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    isAlias: false,
+    tasks: [
+      { name: 'Buy merchandise or commodities for resale to wholesale or retail consumers.', aiCapabilityScore: 0.55, humanCriticalityScore: 0.58, importance: 3 },
+      { name: 'Negotiate prices, discount terms, or transportation arrangements with suppliers.', aiCapabilityScore: 0.45, humanCriticalityScore: 0.78, importance: 3 },
+      { name: 'Examine, select, order, or purchase merchandise consistent with quality, quantity, specification requirements, or other factors.', aiCapabilityScore: 0.58, humanCriticalityScore: 0.58, importance: 3 },
+      { name: 'Recommend mark-up rates, mark-down rates, or merchandise selling prices.', aiCapabilityScore: 0.70, humanCriticalityScore: 0.40, importance: 3 },
+      { name: 'Obtain information about customer needs or preferences by conferring with sales or purchasing personnel.', aiCapabilityScore: 0.45, humanCriticalityScore: 0.70, importance: 3 },
+    ],
+  },
+  {
+    id: 'job-36', title: 'Purchasing Agent', cluster: 'Business',
+    employment: 278300, automationCostIndex: 0.62, projectedGrowth: 2,
+    salaryVolatilityLabel: 'Very High', humanResilienceLabel: 'High',
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    isAlias: false,
+    tasks: [
+      { name: 'Monitor and follow applicable laws and regulations related to procurement and contracting.', aiCapabilityScore: 0.58, humanCriticalityScore: 0.55, importance: 3 },
+      { name: 'Purchase the highest quality merchandise at the lowest possible price and in correct amounts.', aiCapabilityScore: 0.65, humanCriticalityScore: 0.45, importance: 3 },
+      { name: 'Formulate policies and procedures for bid proposals and procurement of goods and services.', aiCapabilityScore: 0.55, humanCriticalityScore: 0.62, importance: 3 },
+      { name: 'Prepare purchase orders, solicit bid proposals, and review requisitions for goods and services.', aiCapabilityScore: 0.80, humanCriticalityScore: 0.22, importance: 3 },
+      { name: 'Write and review product specifications, maintaining a working technical knowledge of the goods or services to be purchased.', aiCapabilityScore: 0.62, humanCriticalityScore: 0.55, importance: 3 },
+    ],
+  },
+  {
+    id: 'job-37', title: 'Industrial Production Manager', cluster: 'Business',
+    employment: 196900, automationCostIndex: 0.42, projectedGrowth: 2,
+    salaryVolatilityLabel: 'Medium', humanResilienceLabel: 'High',
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    isAlias: false,
+    tasks: [
+      { name: 'Set and monitor product standards, examining samples of raw products or directing testing during processing, to ensure finished products are of prescribed quality.', aiCapabilityScore: 0.55, humanCriticalityScore: 0.65, importance: 3 },
+      { name: 'Direct or coordinate production, processing, distribution, or marketing activities of industrial organizations.', aiCapabilityScore: 0.40, humanCriticalityScore: 0.75, importance: 3 },
+      { name: 'Review processing schedules or production orders to make decisions concerning inventory requirements, staffing requirements, work procedures, or duty assignments.', aiCapabilityScore: 0.60, humanCriticalityScore: 0.55, importance: 3 },
+      { name: 'Review operations and confer with technical or administrative staff to resolve production or processing problems.', aiCapabilityScore: 0.42, humanCriticalityScore: 0.72, importance: 3 },
+      { name: 'Hire, train, evaluate, or discharge staff or resolve personnel grievances.', aiCapabilityScore: 0.28, humanCriticalityScore: 0.92, importance: 3 },
+    ],
+  },
+  {
+    id: 'job-38', title: 'UX Designer', cluster: 'Business',
+    employment: 208700, automationCostIndex: 0.52, projectedGrowth: 16,
+    salaryVolatilityLabel: 'Very High', humanResilienceLabel: 'High',
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    isAlias: false,
+    tasks: [
+      { name: 'Conduct user research, including usability testing, interviews, and surveys, to determine design requirements and user pain points.', aiCapabilityScore: 0.45, humanCriticalityScore: 0.78, importance: 3 },
+      { name: 'Collaborate with front-end and back-end developers to complete the full scope of digital product development projects.', aiCapabilityScore: 0.60, humanCriticalityScore: 0.55, importance: 3 },
+      { name: 'Analyze user feedback and behavioral data to identify improvements to interface designs and user flows.', aiCapabilityScore: 0.62, humanCriticalityScore: 0.52, importance: 3 },
+      { name: 'Create wireframes, prototypes, and high-fidelity mockups to communicate design solutions to stakeholders.', aiCapabilityScore: 0.58, humanCriticalityScore: 0.55, importance: 3 },
+      { name: 'Confer with management or development teams to prioritize needs, resolve conflicts, develop content criteria, or choose solutions.', aiCapabilityScore: 0.35, humanCriticalityScore: 0.80, importance: 3 },
+    ],
+  },
+  {
+    id: 'job-39', title: 'IT Manager', cluster: 'Business',
+    employment: 482000, automationCostIndex: 0.32, projectedGrowth: 15,
+    salaryVolatilityLabel: 'Very High', humanResilienceLabel: 'Future-Proof',
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    isAlias: false,
+    tasks: [
+      { name: 'Direct daily operations of department, analyzing workflow, establishing priorities, developing standards and setting deadlines.', aiCapabilityScore: 0.38, humanCriticalityScore: 0.78, importance: 3 },
+      { name: 'Meet with department heads, managers, supervisors, vendors, and others, to solicit cooperation and resolve problems.', aiCapabilityScore: 0.25, humanCriticalityScore: 0.90, importance: 3 },
+      { name: 'Review project plans to plan and coordinate project activity.', aiCapabilityScore: 0.48, humanCriticalityScore: 0.68, importance: 3 },
+      { name: 'Assign and review the work of systems analysts, programmers, and other computer-related workers.', aiCapabilityScore: 0.35, humanCriticalityScore: 0.80, importance: 3 },
+      { name: 'Provide users with technical support for computer problems.', aiCapabilityScore: 0.55, humanCriticalityScore: 0.58, importance: 3 },
+    ],
+  },
+  {
+    id: 'job-40', title: 'Cybersecurity Analyst', cluster: 'Business',
+    employment: 168900, automationCostIndex: 0.48, projectedGrowth: 32,
+    salaryVolatilityLabel: 'Very High', humanResilienceLabel: 'High',
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    isAlias: false,
+    tasks: [
+      { name: 'Develop plans to safeguard computer files against accidental or unauthorized modification, destruction, or disclosure and to meet emergency data processing needs.', aiCapabilityScore: 0.55, humanCriticalityScore: 0.65, importance: 3 },
+      { name: 'Monitor current reports of computer viruses to determine when to update virus protection systems.', aiCapabilityScore: 0.68, humanCriticalityScore: 0.42, importance: 3 },
+      { name: 'Encrypt data transmissions and erect firewalls to conceal confidential information and to keep out tainted digital transfers.', aiCapabilityScore: 0.62, humanCriticalityScore: 0.45, importance: 3 },
+      { name: 'Perform risk assessments and execute tests of data processing system to ensure functioning of data processing activities and security measures.', aiCapabilityScore: 0.55, humanCriticalityScore: 0.62, importance: 3 },
+      { name: 'Modify computer security files to incorporate new software, correct errors, or change individual access status.', aiCapabilityScore: 0.62, humanCriticalityScore: 0.45, importance: 3 },
+    ],
+  },
+  {
+    id: 'job-41', title: 'Web Developer', cluster: 'Business',
+    employment: 193200, automationCostIndex: 0.75, projectedGrowth: 8,
+    salaryVolatilityLabel: 'Very High', humanResilienceLabel: 'At Risk',
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    isAlias: false,
+    tasks: [
+      { name: 'Write supporting code for Web applications or Web sites.', aiCapabilityScore: 0.88, humanCriticalityScore: 0.15, importance: 3 },
+      { name: 'Design, build, or maintain Web sites, using authoring or scripting languages, content creation tools, management tools, and digital media.', aiCapabilityScore: 0.82, humanCriticalityScore: 0.25, importance: 3 },
+      { name: 'Back up files from Web sites to local directories for instant recovery in case of problems.', aiCapabilityScore: 0.82, humanCriticalityScore: 0.15, importance: 3 },
+      { name: 'Select programming languages, design tools, or applications.', aiCapabilityScore: 0.75, humanCriticalityScore: 0.40, importance: 3 },
+      { name: 'Evaluate code to ensure that it is valid, is properly structured, meets industry standards, and is compatible with browsers, devices, or operating systems.', aiCapabilityScore: 0.80, humanCriticalityScore: 0.28, importance: 3 },
+    ],
+  },
+  {
+    id: 'job-42', title: 'Database Administrator', cluster: 'Business',
+    employment: 105000, automationCostIndex: 0.70, projectedGrowth: 9,
+    salaryVolatilityLabel: 'Very High', humanResilienceLabel: 'At Risk',
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    isAlias: false,
+    tasks: [
+      { name: 'Modify existing databases and database management systems or direct programmers and analysts to make changes.', aiCapabilityScore: 0.72, humanCriticalityScore: 0.35, importance: 3 },
+      { name: 'Plan, coordinate, and implement security measures to safeguard information in computer files against accidental or unauthorized damage, modification or disclosure.', aiCapabilityScore: 0.68, humanCriticalityScore: 0.45, importance: 3 },
+      { name: 'Plan and install upgrades of database management system software to enhance database performance.', aiCapabilityScore: 0.75, humanCriticalityScore: 0.30, importance: 3 },
+      { name: 'Specify users and user access levels for each segment of database.', aiCapabilityScore: 0.70, humanCriticalityScore: 0.40, importance: 3 },
+      { name: 'Test changes to database applications or systems.', aiCapabilityScore: 0.80, humanCriticalityScore: 0.22, importance: 3 },
+    ],
+  },
+  {
+    id: 'job-43', title: 'IT Project Manager', cluster: 'Business',
+    employment: 147900, automationCostIndex: 0.50, projectedGrowth: 11,
+    salaryVolatilityLabel: 'Very High', humanResilienceLabel: 'High',
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    isAlias: false,
+    tasks: [
+      { name: 'Define project scope, goals, and deliverables that support business objectives in collaboration with senior management and stakeholders.', aiCapabilityScore: 0.50, humanCriticalityScore: 0.72, importance: 3 },
+      { name: 'Develop detailed project plans and manage all implementation processes including resource allocation, progress tracking, and risk mitigation.', aiCapabilityScore: 0.58, humanCriticalityScore: 0.62, importance: 3 },
+      { name: 'Communicate project status, issues, and changes to stakeholders and sponsors in a clear and timely manner.', aiCapabilityScore: 0.45, humanCriticalityScore: 0.75, importance: 3 },
+      { name: 'Identify and manage project risks and issues, developing contingency plans as necessary.', aiCapabilityScore: 0.55, humanCriticalityScore: 0.65, importance: 3 },
+      { name: 'Coordinate cross-functional teams, facilitating collaboration across development, QA, operations, and business units.', aiCapabilityScore: 0.35, humanCriticalityScore: 0.85, importance: 3 },
+    ],
+  },
+  {
+    id: 'job-44', title: 'General Manager', cluster: 'Business',
+    employment: 3223900, automationCostIndex: 0.28, projectedGrowth: 3,
+    salaryVolatilityLabel: 'Medium', humanResilienceLabel: 'Future-Proof',
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    isAlias: false,
+    tasks: [
+      { name: 'Review financial statements, sales or activity reports, or other performance data to measure productivity or goal achievement or to identify areas needing cost reduction or program improvement.', aiCapabilityScore: 0.65, humanCriticalityScore: 0.50, importance: 3 },
+      { name: 'Direct and coordinate activities of businesses or departments concerned with the production, pricing, sales, or distribution of products.', aiCapabilityScore: 0.28, humanCriticalityScore: 0.90, importance: 3 },
+      { name: 'Direct administrative activities directly related to making products or providing services.', aiCapabilityScore: 0.35, humanCriticalityScore: 0.80, importance: 3 },
+      { name: 'Prepare staff work schedules and assign specific duties.', aiCapabilityScore: 0.55, humanCriticalityScore: 0.58, importance: 3 },
+      { name: 'Direct or coordinate financial or budget activities to fund operations, maximize investments, or increase efficiency.', aiCapabilityScore: 0.50, humanCriticalityScore: 0.70, importance: 3 },
+    ],
+  },
+  {
+    id: 'job-45', title: 'HR Manager', cluster: 'Business',
+    employment: 172100, automationCostIndex: 0.32, projectedGrowth: 5,
+    salaryVolatilityLabel: 'Medium', humanResilienceLabel: 'Future-Proof',
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    isAlias: false,
+    tasks: [
+      { name: 'Serve as a link between management and employees by handling questions, interpreting and administering contracts and helping resolve work-related problems.', aiCapabilityScore: 0.30, humanCriticalityScore: 0.90, importance: 3 },
+      { name: 'Plan, direct, supervise, and coordinate work activities of subordinates and staff relating to employment, compensation, labor relations, and employee relations.', aiCapabilityScore: 0.38, humanCriticalityScore: 0.78, importance: 3 },
+      { name: 'Perform difficult staffing duties, including dealing with understaffing, refereeing disputes, firing employees, and administering disciplinary procedures.', aiCapabilityScore: 0.28, humanCriticalityScore: 0.90, importance: 3 },
+      { name: 'Represent organization at personnel-related hearings and investigations.', aiCapabilityScore: 0.22, humanCriticalityScore: 0.92, importance: 3 },
+      { name: 'Negotiate bargaining agreements and help interpret labor contracts.', aiCapabilityScore: 0.25, humanCriticalityScore: 0.90, importance: 3 },
+    ],
+  },
+  {
+    id: 'job-46', title: 'Project Management Specialist', cluster: 'Business',
+    employment: 904600, automationCostIndex: 0.50, projectedGrowth: 7,
+    salaryVolatilityLabel: 'Very High', humanResilienceLabel: 'High',
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    isAlias: false,
+    tasks: [
+      { name: 'Assign duties or responsibilities to project personnel.', aiCapabilityScore: 0.45, humanCriticalityScore: 0.70, importance: 3 },
+      { name: 'Communicate with key stakeholders to determine project requirements and objectives.', aiCapabilityScore: 0.40, humanCriticalityScore: 0.80, importance: 3 },
+      { name: 'Confer with project personnel to identify and resolve problems.', aiCapabilityScore: 0.30, humanCriticalityScore: 0.85, importance: 3 },
+      { name: 'Create project status presentations for delivery to customers or project personnel.', aiCapabilityScore: 0.65, humanCriticalityScore: 0.50, importance: 3 },
+      { name: 'Develop or update project plans including information such as objectives, technologies, schedules, funding, and staffing.', aiCapabilityScore: 0.62, humanCriticalityScore: 0.55, importance: 3 },
+    ],
+  },
+  {
+    id: 'job-47', title: 'Training & Development Specialist', cluster: 'Business',
+    employment: 285200, automationCostIndex: 0.48, projectedGrowth: 8,
+    salaryVolatilityLabel: 'Medium', humanResilienceLabel: 'High',
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    isAlias: false,
+    tasks: [
+      { name: 'Present information with a variety of instructional techniques or formats, such as role playing, simulations, team exercises, group discussions, videos, or lectures.', aiCapabilityScore: 0.55, humanCriticalityScore: 0.65, importance: 3 },
+      { name: 'Obtain, organize, or develop training procedure manuals, guides, or course materials, such as handouts or visual materials.', aiCapabilityScore: 0.65, humanCriticalityScore: 0.50, importance: 3 },
+      { name: 'Evaluate modes of training delivery, such as in-person or virtual, to optimize training effectiveness, training costs, or environmental impacts.', aiCapabilityScore: 0.55, humanCriticalityScore: 0.60, importance: 3 },
+      { name: 'Offer specific training programs to help workers maintain or improve job skills.', aiCapabilityScore: 0.52, humanCriticalityScore: 0.65, importance: 3 },
+      { name: 'Assess training needs through surveys, interviews with employees, focus groups, or consultation with managers, instructors, or customer representatives.', aiCapabilityScore: 0.45, humanCriticalityScore: 0.72, importance: 3 },
+    ],
+  },
+  {
+    id: 'job-48', title: 'HR Specialist', cluster: 'Business',
+    employment: 878900, automationCostIndex: 0.55, projectedGrowth: 6,
+    salaryVolatilityLabel: 'Medium', humanResilienceLabel: 'High',
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    isAlias: false,
+    tasks: [
+      { name: 'Interpret and explain human resources policies, procedures, laws, standards, or regulations.', aiCapabilityScore: 0.55, humanCriticalityScore: 0.65, importance: 3 },
+      { name: 'Hire employees and process hiring-related paperwork.', aiCapabilityScore: 0.48, humanCriticalityScore: 0.72, importance: 3 },
+      { name: 'Maintain current knowledge of Equal Employment Opportunity (EEO) and affirmative action guidelines and laws.', aiCapabilityScore: 0.55, humanCriticalityScore: 0.58, importance: 3 },
+      { name: 'Prepare or maintain employment records related to events, such as hiring, termination, leaves, transfers, or promotions, using human resources management system software.', aiCapabilityScore: 0.78, humanCriticalityScore: 0.22, importance: 3 },
+      { name: 'Address employee relations issues, such as harassment allegations, work complaints, or other employee concerns.', aiCapabilityScore: 0.28, humanCriticalityScore: 0.92, importance: 3 },
+    ],
+  },
+  {
+    id: 'job-49', title: 'Training & Development Manager', cluster: 'Business',
+    employment: 43100, automationCostIndex: 0.38, projectedGrowth: 7,
+    salaryVolatilityLabel: 'Medium', humanResilienceLabel: 'High',
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    isAlias: false,
+    tasks: [
+      { name: 'Analyze training needs to develop new training programs or modify and improve existing programs.', aiCapabilityScore: 0.55, humanCriticalityScore: 0.65, importance: 3 },
+      { name: 'Evaluate instructor performance and the effectiveness of training programs, providing recommendations for improvement.', aiCapabilityScore: 0.45, humanCriticalityScore: 0.75, importance: 3 },
+      { name: 'Plan, develop, and provide training and staff development programs, using knowledge of the effectiveness of methods such as classroom training, demonstrations, on-the-job training, meetings, conferences, and workshops.', aiCapabilityScore: 0.45, humanCriticalityScore: 0.75, importance: 3 },
+      { name: 'Confer with management and conduct surveys to identify training needs based on projected production processes, changes, and other factors.', aiCapabilityScore: 0.50, humanCriticalityScore: 0.65, importance: 3 },
+      { name: 'Conduct orientation sessions and arrange on-the-job training for new hires.', aiCapabilityScore: 0.40, humanCriticalityScore: 0.75, importance: 3 },
+    ],
+  },
+  {
+    id: 'job-50', title: 'Compensation & Benefits Manager', cluster: 'Business',
+    employment: 20100, automationCostIndex: 0.55, projectedGrowth: 4,
+    salaryVolatilityLabel: 'Very High', humanResilienceLabel: 'High',
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    isAlias: false,
+    tasks: [
+      { name: 'Direct preparation and distribution of written and verbal information to inform employees of benefits, compensation, and personnel policies.', aiCapabilityScore: 0.60, humanCriticalityScore: 0.55, importance: 3 },
+      { name: 'Design, evaluate, and modify benefits policies to ensure that programs are current, competitive, and in compliance with legal requirements.', aiCapabilityScore: 0.58, humanCriticalityScore: 0.62, importance: 3 },
+      { name: 'Fulfill all reporting requirements of all relevant government rules and regulations, including ERISA.', aiCapabilityScore: 0.72, humanCriticalityScore: 0.35, importance: 3 },
+      { name: 'Analyze compensation policies, government regulations, and prevailing wage rates to develop competitive compensation plan.', aiCapabilityScore: 0.65, humanCriticalityScore: 0.50, importance: 3 },
+      { name: 'Identify and implement benefits to increase the quality of life for employees by working with brokers and researching benefits issues.', aiCapabilityScore: 0.50, humanCriticalityScore: 0.65, importance: 3 },
+    ],
+  },
+  {
+    id: 'job-51', title: 'Financial Risk Analyst', cluster: 'Business',
+    employment: 35400, automationCostIndex: 0.70, projectedGrowth: 9,
+    salaryVolatilityLabel: 'Very High', humanResilienceLabel: 'At Risk',
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    isAlias: false,
+    tasks: [
+      { name: 'Analyze areas of potential risk to the assets, earning capacity, or success of organizations.', aiCapabilityScore: 0.75, humanCriticalityScore: 0.35, importance: 3 },
+      { name: 'Analyze new legislation to determine impact on risk exposure.', aiCapabilityScore: 0.65, humanCriticalityScore: 0.55, importance: 3 },
+      { name: 'Conduct statistical analyses to quantify risk, using statistical analysis software or econometric models.', aiCapabilityScore: 0.82, humanCriticalityScore: 0.25, importance: 3 },
+      { name: 'Confer with traders to identify and communicate risks associated with specific trading strategies or positions.', aiCapabilityScore: 0.45, humanCriticalityScore: 0.75, importance: 3 },
+      { name: 'Consult financial literature to ensure use of the latest models or statistical techniques.', aiCapabilityScore: 0.72, humanCriticalityScore: 0.35, importance: 3 },
+    ],
+  },
+];
+
+// Read current data.ts
+let content = fs.readFileSync(OUT, 'utf-8');
+
+// Find the closing bracket of the initialJobs array
+const closingIdx = content.lastIndexOf('];');
+if (closingIdx === -1) {
+  console.error('Could not find closing ]; in data.ts');
+  process.exit(1);
+}
+
+// Build the new job entries as a JSON string
+const newEntries = NEW_JOBS.map(job => JSON.stringify(job, null, 4)).join(',\n');
+
+// Insert before the closing ];
+const before = content.slice(0, closingIdx);
+const after = content.slice(closingIdx);
+const updated = before + ',\n' + newEntries + '\n' + after;
+
+fs.writeFileSync(OUT, updated);
+console.log(`Done. Added ${NEW_JOBS.length} jobs to src/data.ts (total: 13 + ${NEW_JOBS.length} = ${13 + NEW_JOBS.length} jobs).`);

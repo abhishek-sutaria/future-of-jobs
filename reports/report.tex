@@ -1,0 +1,101 @@
+\documentclass[11pt, letterpaper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{geometry}
+\geometry{letterpaper, margin=1.0in}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{titlesec}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{setspace}
+
+% Professional Formatting
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1em}
+\linespread{1.2}
+
+% Section Styling
+\titleformat{\section}
+  {\Large\bfseries}
+  {\thesection}{1em}{}[\titlerule]
+  
+\titleformat{\subsection}
+  {\large\bfseries\itshape}
+  {\thesubsection}{1em}{}
+
+% Header/Footer
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{\textit{Future of Jobs - Project Report}}
+\lhead{Abhishek M. Sutaria}
+\cfoot{\thepage}
+
+\title{\textbf{\huge Future of Jobs: Technical Realization \& Development Status}}
+\author{
+    \large \textbf{Abhishek Manoj Sutaria} \\ 
+    Kelley School of Business \\[2em] 
+    Prepared for: Professor Raymond Burke \\
+    Date: February 2026
+}
+\date{}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+
+\section{System Architecture \& Improvements}
+
+This report outlines the comprehensive transformation of the \textit{Future of Jobs} platform. We have moved beyond a simple concept to a fully functional, data-driven application. The following sections detail the completed improvements and the active development features currently underway.
+
+\subsection{Data Integrity: From Assumption to Fact}
+The core value of the platform has been secured by effectively replacing "simulated" data with verified, real-world sources.
+\begin{enumerate}
+    \item \textbf{U.S. Bureau of Labor Statistics (BLS):} We now directly integrate verified data for over 413,000 employment records. This means the specific salary numbers, growth projections, and location data are now factual and authoritative, rather than rough estimates.
+    \item \textbf{Google Gemini 2.0 Integration:} Where historical data is too slow to catch up, we use advanced Artificial Intelligence to predict emerging trends, giving the platform a "living" analysis of the job market.
+\end{enumerate}
+
+\newpage
+\subsection{Feature Expansion: Candidate Relevance Engine}
+To make the tool personal for every student, we built a \textbf{Resume Analysis Module}.
+\begin{itemize}
+    \item \textbf{Instant PDF Scanning:} Students can drag and drop their actual PDF resumes. The system instantly reads them in the browser by parsing the pdf at the same instant and feeding it to AI.
+    \item \textbf{AI "Survival Score":} The system doesn't just look for keywords; it understands the student's career path and compares it against AI automation trends to give a personalized "5-Year Relevance Score."
+    \item \textbf{Actionable Advice:} Instead of generic feedback, it gives specific advice—for example, telling a student to "Shift focus from Manual Data Entry to Strategic Analytics" to stay competitive.
+\end{itemize}
+
+\subsection{User Interface (UI) Overhaul}
+Based on direct feedback, the interface was completely redesigned to be intuitive:
+\begin{itemize}
+    \item \textbf{Visual Precision \& Alignment:} We meticulously aligned all buttons, cards, and data panels to a strict grid system. This ensures the interface looks clean, professional, and visually balanced, preventing any "cluttered" feeling.
+    \item \textbf{Command Center:} The dashboard was simplified into a clean, 4-step journey, making powerful insights easy to access without digging through menus.
+\end{itemize}
+
+\section{Technical Engineering \& Optimization}
+\textit{Creating a seamless experience required significant engineering effort "under the hood" to ensure the application is fast, stable, and professional.}
+
+\begin{itemize}
+    \item \textbf{Complete Code Reorganization (Stability):} The original code was massive and complex. I manually deconstructed it into smaller, organized pieces. This "modular" approach means the app is much more stable and new features can be added without breaking existing ones.
+    \item \textbf{Zero-Error Standard (Reliability):} I conducted a strict review of the entire codebase, fixing multiple potential issues. This ensures the application doesn't crash or behave inextricably, providing a professional-grade experience.
+    \item \textbf{Performance for Everyone (Optimization):} The 3D graphics are heavy, but I engineered an optimization system that automatically adjusts quality. This ensures the stunning visuals work smoothly on a standard student laptop, not just expensive high-end computers.
+\end{itemize}
+
+\section{User Evaluation \& Feedback}
+We tested the platform with real users, including \textbf{Neel Shah}, \textbf{Aaryan Purohit}, and \textbf{Dev Patel}. Their feedback directly shaped our improvements:
+\begin{itemize}
+    \item \textbf{Clarity:} They found the original scores confusing, so we split them into clear "Automation Risk" vs. "Human Skills" metrics.
+    \item \textbf{Next Steps:} They asked, "What do I do now?"—so we built the "Upskilling Plan" feature to give them a direct answer.
+\end{itemize}
+
+\section{Current Features in Development}
+
+\subsection{Ontology Expansion: The "Kelley 50"}
+I am currently working to expanding the job list from the initial 13 roles to the \textbf{Top 50 Marketing \& Business Roles} most relevant to Kelley students. This will ensure every student finds their specific dream job in the system.
+
+\subsection{Dynamic Timeline Engine}
+I am developing a "Rolling Timeline" feature. This means if a student uses the app in 2027, the system will automatically project 5 years into the future (to 2032). This ensures the tool never becomes outdated and always offers a relevant 5-year outlook.
+
+\end{document}

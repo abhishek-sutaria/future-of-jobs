@@ -3,24 +3,21 @@ import { useFrame } from '@react-three/fiber';
 import { Html } from '@react-three/drei';
 import { Mesh, Color, MeshStandardMaterial, Vector2 } from 'three';
 import type { Job } from '../types';
-import { getJobStatus } from '../data';
+
 import { useStore } from '../store';
 import { initialJobs } from '../data';
+import { YEAR_MIN, RISK_COLORS, VOLATILITY_LABELS, ANIMATIONS, JOB_ICON_KEYWORDS, JOB_ICON_DEFAULT, SHADER } from '../config/constants';
 
 interface JobMeshProps {
     job: Job;
     position: [number, number, number];
 }
 
-// Helper to get icon
 const getJobIcon = (title: string) => {
-    if (title.includes('Nurse') || title.includes('Health') || title.includes('Doctor')) return '⚕️';
-    if (title.includes('Data') || title.includes('Entry') || title.includes('Software')) return '⌨️';
-    if (title.includes('Analyst') || title.includes('Finance') || title.includes('Accountant')) return '📊';
-    if (title.includes('Manager') || title.includes('Executive')) return '💼';
-    if (title.includes('Sales') || title.includes('Retail')) return '🏷️';
-    if (title.includes('Driver')) return '🚚';
-    return '⚡';
+    for (const [keywords, icon] of JOB_ICON_KEYWORDS) {
+        if (keywords.some(k => title.includes(k))) return icon;
+    }
+    return JOB_ICON_DEFAULT;
 };
 
 export const JobMesh: React.FC<JobMeshProps> = ({ job, position }) => {
@@ -34,48 +31,57 @@ export const JobMesh: React.FC<JobMeshProps> = ({ job, position }) => {
     // Track previous color to trigger pulse
     const prevColorRef = useRef<string>('');
     const pulseRef = useRef<number>(0);
+    const lastLoggedYearRef = useRef<number | null>(null);
 
-    // Check if "Saved" (Was High Risk initially, now Safe/Medium)
+    // Check if "Saved" (Was Critical/High Risk initially, now Safe/Moderate)
     const isSaved = useMemo(() => {
         const initialJob = initialJobs.find(j => j.id === job.id);
         if (!initialJob) return false;
-        const initStatus = getJobStatus(initialJob, 2025);
-        const currentStatus = getJobStatus(job, year);
-        return initStatus.riskScore > 0.7 && currentStatus.riskScore <= 0.7;
-    }, [job, year]);
+        // Initial state logic (hardcoded fallback since we don't have time machine for initial)
+        // Check if current job is safer than initial logic would suggest
+        // Simplified: If current label is "Stable" or "Future-Proof" but automation index is high
+        return job.humanResilienceLabel === 'Future-Proof' && job.automationCostIndex > ANIMATIONS.SAVED_AUTOMATION_THRESHOLD;
+    }, [job]);
+
+    // Helper to get color from real labels
+    const getJobColor = (j: Job) => {
+        if (j.salaryVolatilityLabel === VOLATILITY_LABELS.CRITICAL || j.salaryVolatilityLabel === VOLATILITY_LABELS.HIGH) return RISK_COLORS.HIGH;
+        if (j.salaryVolatilityLabel === VOLATILITY_LABELS.MODERATE) return RISK_COLORS.MEDIUM;
+        return RISK_COLORS.LOW;
+    };
 
     useFrame(() => {
         if (!meshRef.current) return;
 
-        const currentStatus = getJobStatus(job, year);
+        const colorHex = getJobColor(job);
 
         // Pulse Logic
-        if (prevColorRef.current && prevColorRef.current !== currentStatus.color) {
+        if (prevColorRef.current && prevColorRef.current !== colorHex) {
             pulseRef.current = 1.0;
         }
-        prevColorRef.current = currentStatus.color;
+        prevColorRef.current = colorHex;
 
         if (pulseRef.current > 0) {
-            pulseRef.current -= 0.05;
+            pulseRef.current -= ANIMATIONS.PULSE_DECAY;
             if (pulseRef.current < 0) pulseRef.current = 0;
         }
 
-        // Projection logic
-        const isHighRisk = currentStatus.riskScore > 0.7;
-        const rate = isHighRisk ? 0.95 : 1.02;
-        const yearsPassed = year - 2025;
+        // Projection logic - Use Real Automation Index
+        // High Risk is defined by the Store (Top 25%), reflected in the label
+        const isHighRisk = job.salaryVolatilityLabel === VOLATILITY_LABELS.CRITICAL || job.salaryVolatilityLabel === VOLATILITY_LABELS.HIGH;
+
+        const rate = isHighRisk ? ANIMATIONS.HIGH_RISK_GROWTH_RATE : ANIMATIONS.LOW_RISK_GROWTH_RATE;
+        const yearsPassed = year - YEAR_MIN;
+        // Simple projection for visual height
         const projectedEmployment = job.employment * Math.pow(rate, yearsPassed);
 
         // Height calculation
-        const height = (projectedEmployment / 500000);
+        const height = (projectedEmployment / ANIMATIONS.EMPLOYMENT_HEIGHT_DIVISOR);
 
         // Visual Scale (Mountain Shape)
-        // Base width is fixed (1.5), Height varies.
-        const pulseScale = 1 + (Math.sin(pulseRef.current * Math.PI) * 0.2);
+        const pulseScale = 1 + (Math.sin(pulseRef.current * Math.PI) * ANIMATIONS.PULSE_AMPLITUDE);
 
-        // In three.js cylinder, y-scale stretches it. 
-        // We want the base to stay relatively constant but the peak to rise.
-        meshRef.current.scale.y += (height - meshRef.current.scale.y) * 0.1;
+        meshRef.current.scale.y += (height - meshRef.current.scale.y) * ANIMATIONS.COLOR_LERP_SPEED;
 
         // Apply pulse to overall size slightly
         meshRef.current.scale.x = 1 * pulseScale;
@@ -84,20 +90,30 @@ export const JobMesh: React.FC<JobMeshProps> = ({ job, position }) => {
         meshRef.current.position.y = meshRef.current.scale.y / 2;
 
         // Color Logic
-        const targetColor = new Color(currentStatus.color);
+        const targetColor = new Color(colorHex);
         if (isSelected) targetColor.offsetHSL(0, 0, 0.2);
 
         // Apply to Inner Core
         const mat = meshRef.current.material as MeshStandardMaterial;
-        mat.color.lerp(targetColor, 0.1);
+        mat.color.lerp(targetColor, ANIMATIONS.COLOR_LERP_SPEED);
 
         if (isSaved) {
-            mat.emissive.lerp(targetColor, 0.1);
-            mat.emissiveIntensity = 1.0;
+            mat.emissive.lerp(targetColor, ANIMATIONS.COLOR_LERP_SPEED);
+            mat.emissiveIntensity = ANIMATIONS.EMISSIVE_INTENSITY_HIGHLIGHTED;
         } else {
             // Emissive for normal state too, to look "Holographic"
-            mat.emissive.lerp(targetColor, 0.1);
-            mat.emissiveIntensity = 0.5;
+            mat.emissive.lerp(targetColor, ANIMATIONS.COLOR_LERP_SPEED);
+            mat.emissiveIntensity = ANIMATIONS.EMISSIVE_INTENSITY_NORMAL;
+        }
+
+        if (job.id === 'job-15') {
+            const roundedYear = Math.round(year * 10) / 10;
+            if (lastLoggedYearRef.current !== roundedYear) {
+                lastLoggedYearRef.current = roundedYear;
+                // #region agent log
+                fetch('http://127.0.0.1:7252/ingest/46718283-b9ba-4afd-b6a8-059ca781fa06',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'a3c6a6'},body:JSON.stringify({sessionId:'a3c6a6',runId:'run1',hypothesisId:'H4',location:'JobMesh.tsx:120',message:'jobmesh_height_projection',data:{jobId:job.id,year:roundedYear,isHighRisk,rate,height,scaleY:meshRef.current.scale.y,projectedEmployment},timestamp:Date.now()})}).catch(()=>{});
+                // #endregion
+            }
         }
     });
 
@@ -115,7 +131,7 @@ export const JobMesh: React.FC<JobMeshProps> = ({ job, position }) => {
             // Gaussian-like decay: radius shrinks as y increases
             // Using logic: r = base * e^(-k * y^2)
             // k controls steepness. 
-            const radius = baseRadius * Math.exp(-3.5 * y * y);
+            const radius = baseRadius * Math.exp(-SHADER.BELL_CURVE_DECAY * y * y);
             points.push(new Vector2(radius, y));
         }
         return [points, 32]; // points, segments
@@ -140,7 +156,7 @@ export const JobMesh: React.FC<JobMeshProps> = ({ job, position }) => {
                     opacity={0.8}
                     roughness={0.1}
                     metalness={0.6}
-                    emissive={isSaved ? new Color(getJobStatus(job, year).color) : new Color(0x000000)}
+                    emissive={isSaved ? new Color(getJobColor(job)) : new Color(0x000000)}
                     emissiveIntensity={isSaved ? 1.0 : 0.4}
                 />
 
@@ -152,7 +168,7 @@ export const JobMesh: React.FC<JobMeshProps> = ({ job, position }) => {
             </mesh>
 
             {/* Floating Label with Icon */}
-            {(isSelected || job.employment > 1500000) && (
+            {(isSelected || job.employment > ANIMATIONS.MAJOR_EMPLOYMENT_THRESHOLD) && (
                 <Html position={[0, (meshRef.current?.scale.y || 1) + 0.2, 0]} center distanceFactor={12} zIndexRange={[100, 0]}>
                     <div className="flex flex-col items-center pointer-events-none text-center">
                         <div className="text-2xl drop-shadow-[0_0_10px_rgba(255,255,255,0.5)] mb-1">

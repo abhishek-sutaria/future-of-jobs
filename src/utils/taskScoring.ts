@@ -1,7 +1,7 @@
 /**
  * taskScoring.ts
  * --------------
- * Scores every job's O*NET tasks via Gemini API at runtime.
+ * Scores every job's O*NET tasks via Analysis API at runtime.
  * Results are cached in localStorage (30-day TTL) so the API is
  * only called once per browser session / cache expiry.
  *
@@ -60,7 +60,7 @@ export function clearScoreCache(): void {
 
 // ── Claude call ────────────────────────────────────────────────────────────
 
-async function callGeminiForScores(
+async function callAIForScores(
     jobTitle: string,
     taskNames: string[]
 ): Promise<TaskScore[]> {
@@ -83,7 +83,7 @@ Return ONLY a valid JSON array. No markdown, no explanation, no extra text:
 ]`;
     const parsed = await callClaudeJSON<TaskScore[]>(prompt);
 
-    // Clamp scores and match back to original task names (Gemini may paraphrase)
+    // Clamp scores and match back to original task names (AI may paraphrase)
     return parsed.map((s, i) => ({
         taskName: taskNames[i] ?? s.taskName, // prefer original text
         aiCapabilityScore: Math.max(0, Math.min(1, Number(s.aiCapabilityScore) || 0)),
@@ -96,7 +96,7 @@ function sleep(ms: number) { return new Promise(r => setTimeout(r, ms)); }
 // ── Public API ─────────────────────────────────────────────────────────────
 
 /**
- * Scores every job's tasks with Gemini. Reads from localStorage cache first;
+ * Scores every job's tasks with AI. Reads from localStorage cache first;
  * only calls the API for jobs not yet cached. Saves after each successful job.
  *
  * @param jobs  Subset of the store's job list (id + title + task names)
@@ -117,7 +117,7 @@ export async function scoreAllJobTasks(
     for (const job of uncached) {
         try {
             console.log(`[TaskScoring] Scoring "${job.title}" (${done + 1}/${jobs.length})...`);
-            const scores = await callGeminiForScores(
+            const scores = await callAIForScores(
                 job.title,
                 job.tasks.map(t => t.name)
             );
