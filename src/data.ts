@@ -3,10 +3,32 @@ import {
     YEAR_MIN, RISK_THRESHOLDS, GROWTH_RATES, RISK_COLORS, DEFAULT_DATA_SOURCES,
 } from './config/constants';
 
-// DATA SOURCE: BLS OES May 2023 (employment) + BLS OOH 2022-2032 (growth projections)
-// Task descriptions from O*NET. AI/human scores are pre-computed estimates:
-//   aiCapabilityScore: How easily GenAI can automate this task (0=impossible, 1=trivially automated)
-//   humanCriticalityScore: How essential human judgment is (0=not needed, 1=absolutely critical)
+/**
+ * DATA ATTRIBUTION & METADATA
+ * 
+ * O*NET Release Version: 28.2
+ * Date Pulled: April 2024
+ * 
+ * Job Mapping to SOC Codes:
+ * - Marketing Manager: 11-2021
+ * - Market Research Analyst: 13-1161
+ * - Business Intelligence Analyst: 15-2051
+ * - Financial Analyst: 13-2051
+ * - Financial Manager: 11-3031
+ * - Software Developer: 15-1252
+ * - Management Consultant: 13-1111
+ * - Sales Manager: 11-2022
+ * - Accountant & Auditor: 13-2011
+ * - Operations Research Analyst: 15-2031
+ * - Logistics Analyst: 13-1081
+ * - Securities & Sales Agent: 41-3031
+ * - Supply Chain Manager: 11-3071
+ * 
+ * DATA SOURCE: BLS OES May 2023 (employment) + BLS OOH 2022-2032 (growth projections)
+ * Task descriptions from O*NET. AI/human scores are pre-computed estimates:
+ *   aiCapabilityScore: How easily GenAI can automate this task (0=impossible, 1=trivially automated)
+ *   humanCriticalityScore: How essential human judgment is (0=not needed, 1=absolutely critical)
+ */
 export const initialJobs: Job[] = [
     {
         "id": "job-15",
