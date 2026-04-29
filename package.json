@@ -7,9 +7,11 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "score-tasks": "node scripts/score_tasks.mjs"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "@react-three/drei": "^10.7.7",
     "@react-three/fiber": "^9.4.2",
     "@react-three/postprocessing": "^3.0.4",
@@ -20,13 +22,22 @@
     "autoprefixer": "^10.4.23",
     "csv-parser": "^3.2.0",
     "d3": "^7.9.0",
+    "d3-geo": "^3.1.1",
+    "d3-scale": "^4.0.2",
+    "dotenv": "^17.2.4",
+    "exceljs": "^4.4.0",
     "gsap": "^3.14.2",
+    "node-fetch": "^3.3.2",
+    "pdfjs-dist": "^5.4.624",
     "postcss": "^8.5.6",
+    "prop-types": "^15.8.1",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
+    "react-simple-maps": "^3.0.0",
     "tailwindcss": "^4.1.18",
     "three": "^0.182.0",
     "xlsx": "^0.18.5",
+    "zod": "^4.3.6",
     "zustand": "^5.0.9"
   },
   "devDependencies": {
@@ -34,6 +45,7 @@
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",
+    "@types/react-simple-maps": "^3.0.6",
     "@vitejs/plugin-react": "^5.1.1",
     "eslint": "^9.39.1",
     "eslint-plugin-react-hooks": "^7.0.1",
@@ -41,6 +53,7 @@
     "globals": "^16.5.0",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.46.4",
-    "vite": "^7.2.4"
+    "vite": "^7.2.4",
+    "vitest": "^4.0.18"
   }
 }

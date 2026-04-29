@@ -1,0 +1,147 @@
+import { z } from 'zod';
+
+const CLAUDE_PROXY_ENDPOINT = '/api/claude/messages';
+const CLAUDE_MODEL = 'claude-sonnet-4-20250514';
+
+const AI_MODE_STORAGE_KEY = 'foj_ai_mode';
+const AI_USER_KEY_STORAGE_KEY = 'foj_user_claude_key';
+
+function extractJsonBlock(text: string): string {
+    const cleaned = text.trim().replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/```$/i, '').trim();
+    const objectStart = cleaned.indexOf('{');
+    const arrayStart = cleaned.indexOf('[');
+    const start = objectStart === -1 ? arrayStart : arrayStart === -1 ? objectStart : Math.min(objectStart, arrayStart);
+    if (start === -1) return cleaned;
+    const objectEnd = cleaned.lastIndexOf('}');
+    const arrayEnd = cleaned.lastIndexOf(']');
+    const end = Math.max(objectEnd, arrayEnd);
+    if (end === -1 || end < start) return cleaned.slice(start);
+    return cleaned.slice(start, end + 1);
+}
+
+function getUserKeyFromStorage(): string | null {
+    const mode = localStorage.getItem(AI_MODE_STORAGE_KEY);
+    if (mode !== 'user') return null;
+    const userKey = localStorage.getItem(AI_USER_KEY_STORAGE_KEY)?.trim();
+    return userKey || null;
+}
+
+export const TaskScoreSchema = z.object({
+    ai_exposure_score: z.number().min(0).max(1),
+    human_criticality_score: z.number().min(0).max(1),
+    reasoning: z.string().min(1)
+});
+
+export const ClaudeResponseSchema = z.object({
+    tasks: z.array(TaskScoreSchema).nonempty()
+}).passthrough();
+
+export function validateClaudeResponse(jsonText: string) {
+    if (/"(?:ai_exposure_score|human_criticality_score)"\s*:\s*(0|1|0\.\d|1\.0)(?!\d|\.)/.test(jsonText)) {
+        throw new Error("Validation Error: Score must be exactly 2 decimals.");
+    }
+    const parsed = JSON.parse(jsonText);
+    return ClaudeResponseSchema.parse(parsed);
+}
+
+export async function callClaudeJSON<T>(prompt: string, schema?: z.ZodType<T>): Promise<T> {
+    const userKey = getUserKeyFromStorage();
+    const mode = localStorage.getItem(AI_MODE_STORAGE_KEY) || 'unset';
+    const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+    };
+    if (userKey) {
+        headers['x-user-api-key'] = userKey;
+        headers['x-foj-key-source'] = 'user';
+    }
+
+    // #region agent log
+    fetch('http://127.0.0.1:7252/ingest/46718283-b9ba-4afd-b6a8-059ca781fa06',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'a3c6a6'},body:JSON.stringify({sessionId:'a3c6a6',runId:'run3',hypothesisId:'A1',location:'claude.ts:37',message:'claude_request_start',data:{mode,hasUserKey:!!userKey,promptLength:prompt.length},timestamp:Date.now()})}).catch(()=>{});
+    // #endregion
+
+    const response = await fetch(CLAUDE_PROXY_ENDPOINT, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+            model: CLAUDE_MODEL,
+            max_tokens: 2000,
+            temperature: 0.2,
+            messages: [{ role: 'user', content: prompt }],
+        }),
+    });
+
+    // #region agent log
+    fetch('http://127.0.0.1:7252/ingest/46718283-b9ba-4afd-b6a8-059ca781fa06',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'a3c6a6'},body:JSON.stringify({sessionId:'a3c6a6',runId:'run3',hypothesisId:'A2',location:'claude.ts:50',message:'claude_response_received',data:{status:response.status,ok:response.ok},timestamp:Date.now()})}).catch(()=>{});
+    // #endregion
+
+    if (!response.ok) {
+        let message = response.statusText;
+        try {
+            const data = await response.json();
+            message = data?.error?.message || data?.message || message;
+            // #region agent log
+            fetch('http://127.0.0.1:7252/ingest/46718283-b9ba-4afd-b6a8-059ca781fa06',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'a3c6a6'},body:JSON.stringify({sessionId:'a3c6a6',runId:'run3',hypothesisId:'A3',location:'claude.ts:58',message:'claude_error_body',data:{status:response.status,errorMessage:message},timestamp:Date.now()})}).catch(()=>{});
+            // #endregion
+        } catch {
+            // no-op
+        }
+        const lower = String(message).toLowerCase();
+        const missingProxyKey =
+            response.status === 401 &&
+            (lower.includes('x-api-key') || lower.includes('api key')) &&
+            (lower.includes('required') || lower.includes('missing'));
+        if (missingProxyKey) {
+            // #region agent log
+            fetch('http://127.0.0.1:7252/ingest/46718283-b9ba-4afd-b6a8-059ca781fa06',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'a3c6a6'},body:JSON.stringify({sessionId:'a3c6a6',runId:'post-fix',hypothesisId:'A6',location:'claude.ts:missingProxy',message:'claude_default_key_missing_branch',data:{status:401},timestamp:Date.now()})}).catch(()=>{});
+            // #endregion
+            throw new Error(
+                'No default AI key is configured on the dev server. Add ANTHROPIC_API_KEY to a .env file in the project root and restart the dev server, or use your own key from the Claude setup screen.',
+            );
+        }
+        throw new Error(`Claude ${response.status}: ${message}`);
+    }
+
+    const body = await response.json();
+    const text = body?.content?.map((part: { type?: string; text?: string }) => part?.text || '').join('\n').trim();
+    if (!text) {
+        // #region agent log
+        fetch('http://127.0.0.1:7252/ingest/46718283-b9ba-4afd-b6a8-059ca781fa06',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'a3c6a6'},body:JSON.stringify({sessionId:'a3c6a6',runId:'run3',hypothesisId:'A4',location:'claude.ts:69',message:'claude_empty_text',data:{hasContentArray:Array.isArray(body?.content)},timestamp:Date.now()})}).catch(()=>{});
+        // #endregion
+        throw new Error('Empty response from Claude');
+    }
+    const jsonText = extractJsonBlock(text);
+    try {
+        if (schema) {
+            const parsed = JSON.parse(jsonText);
+            return schema.parse(parsed);
+        }
+        // Use custom validation for job analysis tasks
+        if (jsonText.includes('"tasks"')) {
+            return validateClaudeResponse(jsonText) as T;
+        }
+        return JSON.parse(jsonText) as T;
+    } catch (e) {
+        // #region agent log
+        fetch('http://127.0.0.1:7252/ingest/46718283-b9ba-4afd-b6a8-059ca781fa06',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'a3c6a6'},body:JSON.stringify({sessionId:'a3c6a6',runId:'run3',hypothesisId:'A5',location:'claude.ts:76',message:'claude_json_parse_failed',data:{textPreview:text.slice(0,180),jsonPreview:jsonText.slice(0,180),error:e instanceof Error ? e.message : 'unknown'},timestamp:Date.now()})}).catch(()=>{});
+        // #endregion
+        throw e;
+    }
+}
+
+/** Maps Claude/proxy errors to short UI copy (never logs secrets). */
+export function getClaudeUserFriendlyMessage(err: unknown): string {
+    const msg = err instanceof Error ? err.message : String(err);
+    if (msg.startsWith('No default AI key is configured')) {
+        return msg;
+    }
+    if (msg.startsWith('Claude 401:') || msg.includes('authentication') || msg.includes('invalid x-api-key')) {
+        return 'Claude could not authenticate. Check your API key, or set ANTHROPIC_API_KEY in .env for default mode.';
+    }
+    if (msg.includes('429') || msg.toLowerCase().includes('rate')) {
+        return 'Claude rate limit reached. Try again in a moment.';
+    }
+    if (msg.includes('Empty response')) {
+        return 'Claude returned an empty response. Try again.';
+    }
+    return 'Analysis unavailable. Using baseline data.';
+}
