@@ -256,9 +256,9 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                 </h3>
                                 <div className="space-y-3">
                                     {highRiskTasks.map((task, i) => (
-                                        <div key={i} className="bg-white/[0.02] border border-red-500/10 hover:border-red-500/25 p-3.5 rounded-lg flex justify-between items-center gap-3 transition-colors">
-                                            <div className="text-gray-200 text-sm font-medium flex-1 truncate">{task.name}</div>
-                                            <div className="text-[10px] font-semibold text-red-400 bg-red-500/10 px-2 py-1 rounded border border-red-500/15 tabular-nums shrink-0">
+                                        <div key={i} className="bg-white/[0.02] border border-red-500/10 hover:border-red-500/25 p-3.5 rounded-lg flex justify-between items-start gap-3 transition-colors">
+                                            <div className="text-gray-200 text-sm font-medium flex-1">{task.name}</div>
+                                            <div className="text-[10px] font-semibold text-red-400 bg-red-500/10 px-2 py-1 rounded border border-red-500/15 tabular-nums shrink-0 mt-0.5">
                                                 {(task.aiCapabilityScore * 100).toFixed(0)}% RISK
                                             </div>
                                         </div>
@@ -288,9 +288,9 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                 </h3>
                                 <div className="space-y-3">
                                     {safeTasks.map((task, i) => (
-                                        <div key={i} className="bg-white/[0.02] border border-emerald-500/10 hover:border-emerald-500/25 p-3.5 rounded-lg flex justify-between items-center gap-3 transition-colors">
-                                            <div className="text-white text-sm font-medium flex-1 truncate">{task.name}</div>
-                                            <div className="flex items-center gap-1.5">
+                                        <div key={i} className="bg-white/[0.02] border border-emerald-500/10 hover:border-emerald-500/25 p-3.5 rounded-lg flex justify-between items-start gap-3 transition-colors">
+                                            <div className="text-white text-sm font-medium flex-1">{task.name}</div>
+                                            <div className="flex items-center gap-1.5 shrink-0 mt-1">
                                                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                                                 <span className="text-[10px] font-semibold text-emerald-400 uppercase tracking-wider hidden md:inline">Safe</span>
                                             </div>
