@@ -3,12 +3,7 @@ import { validateClaudeResponse } from '../utils/claude';
 
 test('Claude response validation', () => {
     // 1. Valid response
-    const validText = JSON.stringify({
-        tasks: [
-            { task_text: "Task 1", ai_exposure_score: 0.73, human_criticality_score: 0.41, reasoning: "Valid" }
-        ]
-    });
-    // In validText, JSON.stringify(0.70) becomes "0.7". But we are testing the raw string.
+    // JSON.stringify(0.70) becomes "0.7". But we are testing the raw string.
     // So if the raw string literally had 0.70 it would pass.
     const validRaw = `{"tasks": [{"task_text": "Task 1", "ai_exposure_score": 0.70, "human_criticality_score": 0.40, "reasoning": "Valid"}]}`;
     expect(() => validateClaudeResponse(validRaw)).not.toThrow();
