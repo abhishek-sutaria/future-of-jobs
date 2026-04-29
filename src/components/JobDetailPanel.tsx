@@ -230,7 +230,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                             />
                                         </svg>
                                         <div className="flex items-center gap-1 mt-1 cursor-help group/tooltip relative">
-                                            <p className="text-[10px] uppercase text-gray-500 font-semibold tracking-wider truncate max-w-[80px]">
+                                            <p className="text-[10px] uppercase text-gray-500 font-semibold tracking-wider text-center max-w-[100px] leading-tight">
                                                 {getSeriesLabel(getSeriesIdForJob(job.title)) || 'Employment Trend'}
                                             </p>
                                             <IconInfo size={10} className="text-gray-500" />

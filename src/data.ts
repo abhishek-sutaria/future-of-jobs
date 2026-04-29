@@ -47,7 +47,7 @@ export const initialJobs: Job[] = [
         "isAlias": true,
         "tasks": [
             {
-                "name": "Identify, develop, or evaluate marketing strategy, based on knowledge of establishment objectives, market characteristics, and cost and markup factors",
+                "name": "Identify, develop, or evaluate marketing strategy, based on knowledge of establishment objectives, market characteristics, and cost and markup factors.",
                 "aiCapabilityScore": 0.45,
                 "humanCriticalityScore": 0.80,
                 "importance": 3
@@ -59,7 +59,7 @@ export const initialJobs: Job[] = [
                 "importance": 3
             },
             {
-                "name": "Evaluate the financial aspects of product development, such as budgets, expenditures, research and development appropriations, or return-on-investment",
+                "name": "Evaluate the financial aspects of product development, such as budgets, expenditures, research and development appropriations, or return-on-investment and profit-loss projections.",
                 "aiCapabilityScore": 0.70,
                 "humanCriticalityScore": 0.40,
                 "importance": 3
@@ -101,13 +101,13 @@ export const initialJobs: Job[] = [
                 "importance": 3
             },
             {
-                "name": "Collect and analyze data on customer demographics, preferences, needs, and buying habits to identify potential markets and factors affecting product d",
+                "name": "Collect and analyze data on customer demographics, preferences, needs, and buying habits to identify potential markets and factors affecting product demand.",
                 "aiCapabilityScore": 0.75,
                 "humanCriticalityScore": 0.30,
                 "importance": 3
             },
             {
-                "name": "Conduct research on consumer opinions and marketing strategies, collaborating with marketing professionals, statisticians, pollsters, and other profes",
+                "name": "Conduct research on consumer opinions and marketing strategies, collaborating with marketing professionals, statisticians, pollsters, and other professionals.",
                 "aiCapabilityScore": 0.50,
                 "humanCriticalityScore": 0.60,
                 "importance": 3
@@ -143,7 +143,7 @@ export const initialJobs: Job[] = [
         "isAlias": true,
         "tasks": [
             {
-                "name": "Develop emergency management plans for recovery decision making and communications, continuity of critical departmental processes, or temporary shut-d",
+                "name": "Develop emergency management plans for recovery decision making and communications, continuity of critical departmental processes, or temporary shut-downs of facilities.",
                 "aiCapabilityScore": 0.35,
                 "humanCriticalityScore": 0.85,
                 "importance": 3
@@ -167,7 +167,7 @@ export const initialJobs: Job[] = [
                 "importance": 3
             },
             {
-                "name": "Identify opportunities for strategic improvement or mitigation of business interruption and other risks caused by business, regulatory, or industry-sp",
+                "name": "Identify opportunities for strategic improvement or mitigation of business interruption and other risks caused by business, regulatory, or industry-specific change initiatives.",
                 "aiCapabilityScore": 0.50,
                 "humanCriticalityScore": 0.75,
                 "importance": 3
@@ -251,7 +251,7 @@ export const initialJobs: Job[] = [
                 "importance": 3
             },
             {
-                "name": "Plan, direct, or coordinate the activities of workers in branches, offices, or departments of establishments, such as branch banks, brokerage firms, r",
+                "name": "Plan, direct, or coordinate the activities of workers in branches, offices, or departments of establishments, such as branch banks, brokerage firms, risk and insurance departments, or credit departments.",
                 "aiCapabilityScore": 0.20,
                 "humanCriticalityScore": 0.90,
                 "importance": 3
@@ -311,7 +311,7 @@ export const initialJobs: Job[] = [
                 "importance": 3
             },
             {
-                "name": "Plan study of work problems and procedures, such as organizational change, communications, information flow, integrated production methods, inventory ",
+                "name": "Plan study of work problems and procedures, such as organizational change, communications, information flow, integrated production methods, inventory control, or cost analysis.",
                 "aiCapabilityScore": 0.45,
                 "humanCriticalityScore": 0.70,
                 "importance": 3
@@ -353,13 +353,13 @@ export const initialJobs: Job[] = [
                 "importance": 3
             },
             {
-                "name": "Plan, organize, or manage the work of subordinate staff to ensure that the work is accomplished in a manner consistent with organizational requirement",
+                "name": "Plan, organize, or manage the work of subordinate staff to ensure that the work is accomplished in a manner consistent with organizational requirements.",
                 "aiCapabilityScore": 0.25,
                 "humanCriticalityScore": 0.85,
                 "importance": 3
             },
             {
-                "name": "Collaborate with other departments to integrate logistics with business systems or processes, such as customer sales, order management, accounting, or",
+                "name": "Collaborate with other departments to integrate logistics with business systems or processes, such as customer sales, order management, accounting, or shipping.",
                 "aiCapabilityScore": 0.40,
                 "humanCriticalityScore": 0.70,
                 "importance": 3
@@ -395,7 +395,7 @@ export const initialJobs: Job[] = [
                 "importance": 3
             },
             {
-                "name": "Manage subcontractor activities, reviewing proposals, developing performance specifications, and serving as liaisons between subcontractors and organi",
+                "name": "Manage subcontractor activities, reviewing proposals, developing performance specifications, and serving as liaisons between subcontractors and organizations.",
                 "aiCapabilityScore": 0.35,
                 "humanCriticalityScore": 0.75,
                 "importance": 3
@@ -443,7 +443,7 @@ export const initialJobs: Job[] = [
                 "importance": 3
             },
             {
-                "name": "Confer with systems analysts, engineers, programmers and others to design systems and to obtain information on project limitations and capabilities, p",
+                "name": "Confer with systems analysts, engineers, programmers and others to design systems and to obtain information on project limitations and capabilities, performance requirements, and interfaces.",
                 "aiCapabilityScore": 0.25,
                 "humanCriticalityScore": 0.85,
                 "importance": 3
@@ -635,7 +635,7 @@ export const initialJobs: Job[] = [
                 "importance": 3
             },
             {
-                "name": "Collect and analyze data to detect deficient controls, duplicated effort, extravagance, fraud, or non-compliance with laws, regulations, and managemen",
+                "name": "Collect and analyze data to detect deficient controls, duplicated effort, extravagance, fraud, or non-compliance with laws, regulations, and management policies.",
                 "aiCapabilityScore": 0.85,
                 "humanCriticalityScore": 0.40,
                 "importance": 3
