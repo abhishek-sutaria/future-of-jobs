@@ -12,9 +12,10 @@ interface HeaderProps {
     loadingEconomy: boolean;
     onOpenSkillsModal: () => void;
     onStartTour: () => void;
+    onOpenStudentGuide: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onOpenSkillsModal, onStartTour }) => {
+export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onOpenSkillsModal, onStartTour, onOpenStudentGuide }) => {
     const mapView = useStore((state) => state.mapView);
     const setMapView = useStore((state) => state.setMapView);
     const setSelectedJob = useStore((state) => state.setSelectedJob);
@@ -116,6 +117,14 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
                         className="w-9 h-9 flex items-center justify-center rounded-lg border border-white/[0.08] bg-white/[0.03] hover:bg-white/[0.08] text-gray-500 hover:text-white transition-colors min-h-[44px] min-w-[44px]"
                     >
                         <IconInfo size={15} />
+                    </button>
+
+                    <button
+                        onClick={onOpenStudentGuide}
+                        title="Student Feature Guide — printable reference"
+                        className="hidden md:flex items-center gap-1.5 px-3 py-2 rounded-lg border border-amber-500/25 bg-amber-500/[0.06] hover:bg-amber-500/15 text-amber-400 text-xs font-semibold uppercase tracking-wider transition-colors min-h-[44px]"
+                    >
+                        <span className="text-sm">📋</span> Guide
                     </button>
                 </div>
 

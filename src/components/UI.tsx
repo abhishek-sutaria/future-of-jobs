@@ -3,6 +3,7 @@ import { useStore } from '../store';
 import { IntroModal } from './IntroModal';
 import { SkillsModal } from './SkillsModal';
 import { MethodologyModal } from './MethodologyModal';
+import { StudentGuideModal } from './Modals/StudentGuideModal';
 import { BLS_API } from '../config/constants';
 import RoleSelector from './RoleSelector';
 import { analyzeJob, getClaudeUserFriendlyMessage, type JobAnalysis, IS_DEMO_MODE } from '../utils/analysis';
@@ -22,6 +23,7 @@ export const UI: React.FC = () => {
 
     const [showSkillsModal, setShowSkillsModal] = useState(false);
     const [showMethodologyModal, setShowMethodologyModal] = useState(false);
+    const [showStudentGuide, setShowStudentGuide] = useState(false);
     const [tourActive, setTourActive] = useState(false);
 
     const [economyData, setEconomyData] = useState<{ value: string, period: string, color: string } | null>(null);
@@ -106,12 +108,14 @@ export const UI: React.FC = () => {
         <>
             <IntroModal />
             <MethodologyModal isOpen={showMethodologyModal} onClose={() => setShowMethodologyModal(false)} />
+            <StudentGuideModal isOpen={showStudentGuide} onClose={() => setShowStudentGuide(false)} />
 
             <Header
                 economyData={economyData}
                 loadingEconomy={loadingEconomy}
                 onOpenSkillsModal={() => setShowSkillsModal(true)}
                 onStartTour={() => setTourActive(true)}
+                onOpenStudentGuide={() => setShowStudentGuide(true)}
             />
 
             {mapView === 'map' && (
