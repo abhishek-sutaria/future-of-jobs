@@ -1,22 +1,30 @@
 import { BLS_API } from '../config/constants';
 
 
-interface BLSResponse {
-    status: string;
-    responseTime: number;
-    message: string[];
-    Results: {
-        series: {
-            seriesID: string;
-            data: {
-                year: string;
-                period: string;
-                periodName: string;
-                value: string;
-            }[];
-        }[];
-    };
-}
+import { z } from 'zod';
+
+export const BLSDataPointSchema = z.object({
+    year: z.string(),
+    period: z.string().regex(/^M\d{2}$/, "Period must match Mxx format"),
+    periodName: z.string().optional(),
+    value: z.string().refine((val) => !isNaN(parseFloat(val)), "Value must be numeric")
+});
+
+export const BLSSeriesSchema = z.object({
+    seriesID: z.string(),
+    data: z.array(BLSDataPointSchema).nonempty("Data array cannot be empty")
+});
+
+export const BLSResponseSchema = z.object({
+    status: z.string(),
+    responseTime: z.number().optional(),
+    message: z.array(z.string()).optional(),
+    Results: z.object({
+        series: z.array(BLSSeriesSchema)
+    })
+}).passthrough();
+
+export type BLSResponse = z.infer<typeof BLSResponseSchema>;
 
 export async function fetchLaborStats(seriesIds: string[]): Promise<Map<string, number>> {
     const apiKey = import.meta.env.VITE_BLS_API_KEY;
@@ -43,7 +51,8 @@ export async function fetchLaborStats(seriesIds: string[]): Promise<Map<string, 
             throw new Error(`BLS API Error: ${response.statusText}`);
         }
 
-        const json: BLSResponse = await response.json();
+        const rawJson = await response.json();
+        const json: BLSResponse = BLSResponseSchema.parse(rawJson);
 
         if (json.status !== 'REQUEST_SUCCEEDED') {
             console.error('BLS API Messages:', json.message);
