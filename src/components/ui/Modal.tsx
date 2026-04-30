@@ -78,11 +78,13 @@ export function Modal({ isOpen, onClose, title, children, footer, size = 'md', l
             role="dialog"
             aria-modal="true"
             aria-labelledby={titleId.current}
+            {...(printable ? { 'data-print-modal-overlay': '' } : {})}
         >
             <div
                 className="absolute inset-0 bg-black/70 backdrop-blur-sm"
                 onClick={onClose}
                 aria-hidden="true"
+                {...(printable ? { 'data-print-backdrop': '' } : {})}
             />
             <div
                 ref={dialogRef}

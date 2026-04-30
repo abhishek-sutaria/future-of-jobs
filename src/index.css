@@ -110,28 +110,51 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ── Print styles (Student Guide) ─────────────────────────────────────────── */
 @media print {
+  /* Hide everything by default */
   body * { visibility: hidden; }
 
-  [data-print-modal] {
+  /* Show the modal and all its descendants */
+  [data-print-modal-overlay],
+  [data-print-modal-overlay] * {
     visibility: visible !important;
-    position: fixed !important;
-    inset: 0 !important;
+  }
+
+  /* Hide the backdrop in print */
+  [data-print-backdrop] {
+    display: none !important;
+  }
+
+  /* Let the modal overlay flow naturally so content can paginate across pages */
+  [data-print-modal-overlay] {
+    position: static !important;
+    inset: auto !important;
+    width: 100% !important;
+    height: auto !important;
+    padding: 0 !important;
+    display: block !important;
+    background: white !important;
+    z-index: auto !important;
+  }
+
+  /* Strip the dialog's fixed-height/scroll/styling so it fills the page */
+  [data-print-modal] {
+    position: static !important;
+    width: 100% !important;
+    max-width: none !important;
+    height: auto !important;
+    max-height: none !important;
+    overflow: visible !important;
     background: white !important;
     color: black !important;
-    overflow: auto !important;
-    max-height: none !important;
-    padding: 24px !important;
     box-shadow: none !important;
     border: none !important;
     border-radius: 0 !important;
-    z-index: 9999 !important;
-    display: flex !important;
-    flex-direction: column !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: block !important;
   }
 
-  [data-print-modal] * { visibility: visible !important; }
-
-  /* Let the scrollable content area expand fully */
+  /* Inner scroll container: let it expand */
   [data-print-modal] .overflow-y-auto {
     overflow: visible !important;
     max-height: none !important;
