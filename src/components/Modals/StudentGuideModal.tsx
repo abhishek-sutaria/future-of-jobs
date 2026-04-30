@@ -116,7 +116,7 @@ export const StudentGuideModal: React.FC<Props> = ({ isOpen, onClose }) => {
     };
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose} title="Student Feature Guide" size="lg" layer="top">
+        <Modal isOpen={isOpen} onClose={onClose} title="Student Feature Guide" size="lg" layer="top" printable>
             {/* Print-only header */}
             <div className="hidden print:block mb-6 pb-4 border-b border-gray-300">
                 <h1 className="text-2xl font-bold text-gray-900">AI & Future of Work — Feature Guide</h1>
@@ -140,6 +140,7 @@ export const StudentGuideModal: React.FC<Props> = ({ isOpen, onClose }) => {
                     return (
                         <div
                             key={i}
+                            data-print-card
                             className={`rounded-xl border ${c.border} bg-white/[0.02] p-4 print:border-gray-200 print:bg-white print:rounded-lg print:p-3`}
                         >
                             <div className="flex items-start gap-3">
@@ -174,24 +175,11 @@ export const StudentGuideModal: React.FC<Props> = ({ isOpen, onClose }) => {
                 })}
             </div>
 
-            {/* QR code + print footer */}
-            <div className="mt-6 pt-4 border-t border-white/[0.06] print:border-gray-300 flex flex-col sm:flex-row items-center justify-between gap-4">
-                {/* QR code (print only visible, in-app shown too as a nice touch) */}
-                <div className="flex items-center gap-3">
-                    {/* QR code via free API */}
-                    <img
-                        src="https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=https://futureofjobs.vercel.app&bgcolor=0a0e17&color=06b6d4&format=svg"
-                        alt="QR code to futureofjobs.vercel.app"
-                        className="w-14 h-14 rounded-lg print:w-16 print:h-16"
-                        onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-                    />
-                    <div>
-                        <p className="text-white text-xs font-semibold print:text-gray-900">Scan to open the live app</p>
-                        <p className="text-gray-500 text-[10px] print:text-gray-500">futureofjobs.vercel.app</p>
-                    </div>
-                </div>
-
-                {/* Buttons — hidden on print */}
+            {/* Footer */}
+            <div className="mt-6 pt-4 border-t border-white/[0.06] print:border-gray-300 flex items-center justify-between gap-4">
+                <p className="text-gray-500 text-[11px] print:text-gray-500">
+                    futureofjobs.vercel.app &nbsp;·&nbsp; BLS OES, O*NET 28.2, Anthropic Claude
+                </p>
                 <div className="flex gap-2 print:hidden">
                     <button
                         onClick={handlePrint}
@@ -206,11 +194,6 @@ export const StudentGuideModal: React.FC<Props> = ({ isOpen, onClose }) => {
                         Close
                     </button>
                 </div>
-            </div>
-
-            {/* Printed footer */}
-            <div className="hidden print:block mt-4 text-center text-gray-400 text-xs">
-                Generated from futureofjobs.vercel.app &nbsp;·&nbsp; Data: BLS OES, O*NET 28.2, Anthropic Claude &nbsp;·&nbsp; For educational use
             </div>
         </Modal>
     );

@@ -110,43 +110,39 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ── Print styles (Student Guide) ─────────────────────────────────────────── */
 @media print {
-  /* Hide everything except the guide modal */
-  body > * { display: none !important; }
-  #root > * { display: none !important; }
+  body * { visibility: hidden; }
 
-  /* Show only the modal overlay */
   [data-print-modal] {
-    display: block !important;
-    position: static !important;
+    visibility: visible !important;
+    position: fixed !important;
+    inset: 0 !important;
     background: white !important;
     color: black !important;
-    width: 100% !important;
-    height: auto !important;
-    overflow: visible !important;
-    padding: 24px !important;
-  }
-
-  /* Reset backdrop */
-  [data-print-modal] [role="dialog"] {
-    position: static !important;
-    transform: none !important;
+    overflow: auto !important;
     max-height: none !important;
-    overflow: visible !important;
+    padding: 24px !important;
     box-shadow: none !important;
     border: none !important;
-    background: white !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    padding: 0 !important;
+    border-radius: 0 !important;
+    z-index: 9999 !important;
+    display: flex !important;
+    flex-direction: column !important;
   }
 
-  /* Page settings */
+  [data-print-modal] * { visibility: visible !important; }
+
+  /* Let the scrollable content area expand fully */
+  [data-print-modal] .overflow-y-auto {
+    overflow: visible !important;
+    max-height: none !important;
+    flex: none !important;
+  }
+
   @page {
     margin: 16mm 12mm;
     size: A4 portrait;
   }
 
-  /* Avoid page breaks inside feature cards */
   [data-print-card] {
     break-inside: avoid;
     page-break-inside: avoid;

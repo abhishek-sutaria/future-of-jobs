@@ -8,6 +8,7 @@ interface ModalProps {
     children: ReactNode;
     size?: 'sm' | 'md' | 'lg' | 'xl';
     layer?: 'base' | 'overlay' | 'top';
+    printable?: boolean;
 }
 
 const Z_MAP = { base: Z.detailPanel, overlay: Z.modal, top: Z.modalTop } as const;
@@ -18,7 +19,7 @@ const SIZE_MAP = {
     xl: 'max-w-6xl'
 } as const;
 
-export function Modal({ isOpen, onClose, title, children, size = 'md', layer = 'overlay' }: ModalProps) {
+export function Modal({ isOpen, onClose, title, children, size = 'md', layer = 'overlay', printable = false }: ModalProps) {
     const dialogRef = useRef<HTMLDivElement>(null);
     const previousFocus = useRef<HTMLElement | null>(null);
     const titleId = useRef(`modal-${Math.random().toString(36).slice(2, 9)}`);
@@ -84,6 +85,7 @@ export function Modal({ isOpen, onClose, title, children, size = 'md', layer = '
             />
             <div
                 ref={dialogRef}
+                {...(printable ? { 'data-print-modal': '' } : {})}
                 className={`relative bg-gray-900/95 border border-white/10 rounded-2xl ${SIZE_MAP[size]} w-full shadow-2xl flex flex-col max-h-[90vh] overflow-hidden animate-in zoom-in-95 slide-in-from-bottom-2 duration-300`}
             >
                 <div className="flex items-center justify-between px-6 py-5 border-b border-white/[0.06]">

@@ -101,9 +101,6 @@ const HAS_DEFAULT_CLAUDE_KEY = import.meta.env.VITE_HAS_DEFAULT_CLAUDE_KEY;
 export const useStore = create<AppState>((set, get) => ({
     year: YEAR_MIN,
     setYear: (year) => {
-        // #region agent log
-        fetch('http://127.0.0.1:7252/ingest/46718283-b9ba-4afd-b6a8-059ca781fa06',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'a3c6a6'},body:JSON.stringify({sessionId:'a3c6a6',runId:'run1',hypothesisId:'H1',location:'store.ts:84',message:'store_set_year_called',data:{year},timestamp:Date.now()})}).catch(()=>{});
-        // #endregion
         set({ year });
     },
     selectedJob: null,
@@ -221,9 +218,6 @@ export const useStore = create<AppState>((set, get) => ({
     },
 
     updateJobForecast: (jobId, forecast) => set((state) => {
-        // #region agent log
-        fetch('http://127.0.0.1:7252/ingest/46718283-b9ba-4afd-b6a8-059ca781fa06',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'9fe126'},body:JSON.stringify({sessionId:'9fe126',runId:'run2',hypothesisId:'H3',location:'store.ts:219',message:'update_job_forecast_called',data:{jobId,forecastYears:forecast.map(item => item.year),forecastCount:forecast.length,selectedJobId:state.selectedJob?.id ?? null},timestamp:Date.now()})}).catch(()=>{});
-        // #endregion
         const newJobs = state.jobs.map(job =>
             job.id !== jobId ? job : { ...job, yearlyForecast: forecast }
         );
@@ -311,10 +305,6 @@ export const useStore = create<AppState>((set, get) => ({
             console.log('[TaskScoring] User-key mode active but no key found.');
             return;
         }
-
-        // #region agent log
-        fetch('http://127.0.0.1:7252/ingest/46718283-b9ba-4afd-b6a8-059ca781fa06',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'9fe126'},body:JSON.stringify({sessionId:'9fe126',runId:'run3',hypothesisId:'H5',location:'store.ts:310',message:'score_all_jobs_started',data:{hasConfiguredAI:state.hasConfiguredAI,hasAIScores:state.hasAIScores,jobCount:state.jobs.length,sampleAutomation:state.jobs.slice(0,3).map(job=>({id:job.id,automationCostIndex:job.automationCostIndex}))},timestamp:Date.now()})}).catch(()=>{});
-        // #endregion
         set({ isScoring: true });
 
         try {
@@ -360,9 +350,6 @@ export const useStore = create<AppState>((set, get) => ({
                         ? relabelled.find(j => j.id === s.selectedJob!.id) || s.selectedJob
                         : null;
 
-                    // #region agent log
-                    fetch('http://127.0.0.1:7252/ingest/46718283-b9ba-4afd-b6a8-059ca781fa06',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'9fe126'},body:JSON.stringify({sessionId:'9fe126',runId:'run3',hypothesisId:'H6',location:'store.ts:355',message:'score_progress_applied',data:{jobId,done,total,updatedAutomation:relabelled.find(job=>job.id===jobId)?.automationCostIndex ?? null,sampleAutomation:relabelled.slice(0,3).map(job=>({id:job.id,automationCostIndex:job.automationCostIndex}))},timestamp:Date.now()})}).catch(()=>{});
-                    // #endregion
                     return { jobs: relabelled, selectedJob: newSelectedJob };
                 });
             });
@@ -395,9 +382,6 @@ export const useStore = create<AppState>((set, get) => ({
                     ? relabelled.find(j => j.id === s.selectedJob!.id) || s.selectedJob
                     : null;
 
-                // #region agent log
-                fetch('http://127.0.0.1:7252/ingest/46718283-b9ba-4afd-b6a8-059ca781fa06',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'9fe126'},body:JSON.stringify({sessionId:'9fe126',runId:'run3',hypothesisId:'H5',location:'store.ts:388',message:'score_all_jobs_finished',data:{jobCount:relabelled.length,sampleAutomation:relabelled.slice(0,3).map(job=>({id:job.id,automationCostIndex:job.automationCostIndex})),hasSelectedJob:!!newSelectedJob},timestamp:Date.now()})}).catch(()=>{});
-                // #endregion
                 return { jobs: relabelled, selectedJob: newSelectedJob, hasAIScores: true };
             });
 

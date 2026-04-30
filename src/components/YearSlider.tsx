@@ -34,9 +34,6 @@ export const YearSlider: React.FC = () => {
                         value={year}
                         onChange={(e) => {
                             const nextYear = parseFloat(e.target.value);
-                            // #region agent log
-                            fetch('http://127.0.0.1:7252/ingest/46718283-b9ba-4afd-b6a8-059ca781fa06',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'a3c6a6'},body:JSON.stringify({sessionId:'a3c6a6',runId:'run1',hypothesisId:'H1',location:'YearSlider.tsx:35',message:'slider_on_change',data:{nextYear,prevYear:year},timestamp:Date.now()})}).catch(()=>{});
-                            // #endregion
                             setYear(nextYear);
                         }}
                         aria-label={`Year selector, currently ${year.toFixed(0)}`}

@@ -143,33 +143,33 @@ export const initialJobs: Job[] = [
         "isAlias": true,
         "tasks": [
             {
-                "name": "Develop emergency management plans for recovery decision making and communications, continuity of critical departmental processes, or temporary shut-downs of facilities.",
-                "aiCapabilityScore": 0.35,
-                "humanCriticalityScore": 0.85,
+                "name": "Create or review technical specifications for data dashboards, reports, or visualizations to ensure they meet business requirements.",
+                "aiCapabilityScore": 0.70,
+                "humanCriticalityScore": 0.45,
                 "importance": 3
             },
             {
-                "name": "Test documented disaster recovery strategies and plans.",
-                "aiCapabilityScore": 0.45,
+                "name": "Query databases, using structured query language (SQL), to compile, manipulate, and retrieve data.",
+                "aiCapabilityScore": 0.80,
+                "humanCriticalityScore": 0.25,
+                "importance": 3
+            },
+            {
+                "name": "Identify, communicate, and interpret business or operational data patterns and trends to guide strategic decisions.",
+                "aiCapabilityScore": 0.55,
                 "humanCriticalityScore": 0.70,
                 "importance": 3
             },
             {
-                "name": "Develop disaster recovery plans for physical locations with critical assets, such as data centers.",
-                "aiCapabilityScore": 0.40,
-                "humanCriticalityScore": 0.75,
-                "importance": 3
-            },
-            {
-                "name": "Establish, maintain, or test call trees to ensure appropriate communication during disaster.",
-                "aiCapabilityScore": 0.60,
-                "humanCriticalityScore": 0.50,
-                "importance": 3
-            },
-            {
-                "name": "Identify opportunities for strategic improvement or mitigation of business interruption and other risks caused by business, regulatory, or industry-specific change initiatives.",
+                "name": "Design and develop key performance metrics, scorecards, and reporting frameworks aligned to business objectives.",
                 "aiCapabilityScore": 0.50,
                 "humanCriticalityScore": 0.75,
+                "importance": 3
+            },
+            {
+                "name": "Present findings and insights from data analysis to senior leadership, translating technical results into actionable business recommendations.",
+                "aiCapabilityScore": 0.40,
+                "humanCriticalityScore": 0.80,
                 "importance": 3
             }
         ]

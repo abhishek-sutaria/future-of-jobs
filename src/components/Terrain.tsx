@@ -144,7 +144,6 @@ const fragmentShader = `
 export const Terrain: React.FC = () => {
   const materialRef = useRef<ShaderMaterial>(null);
   const forecastsRef = useRef<number[]>([]);
-  const lastFrameLogRef = useRef('');
   const jobs = useStore((state) => state.jobs);
   const selectedRoleIds = useStore((state) => state.selectedRoleIds);
   const year = useStore((state) => state.year);
@@ -153,8 +152,6 @@ export const Terrain: React.FC = () => {
     const filteredJobs = selectedRoleIds.size === 0
       ? jobs
       : jobs.filter(job => selectedRoleIds.has(job.id));
-    const buildYear = useStore.getState().year;
-    const { isScoring, hasAIScores, startupAnalysisState } = useStore.getState();
 
     const peakVectors = new Array(SHADER.MAX_JOBS).fill(0).map((_, i) => {
       if (i >= filteredJobs.length) return new Vector3(0, 0, 0);
@@ -205,10 +202,6 @@ export const Terrain: React.FC = () => {
       growthNow[i] = growthAtYearFromFlatForecasts(forecasts, i, yearNow);
     }
 
-    // #region agent log
-    fetch('http://127.0.0.1:7252/ingest/46718283-b9ba-4afd-b6a8-059ca781fa06',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'9fe126'},body:JSON.stringify({sessionId:'9fe126',runId:'run3',hypothesisId:'H7',location:'Terrain.tsx:207',message:'terrain_uniforms_built',data:{buildYear,yearNow,jobCount:filteredJobs.length,jobsWithForecast:filteredJobs.filter(job => !!job.yearlyForecast).length,isScoring,hasAIScores,startupAnalysisState,sampleJobs:filteredJobs.slice(0,3).map((job,i)=>({id:job.id,title:job.title,growthNow:growthNow[i],automationCostIndex:job.automationCostIndex,hasForecast:!!job.yearlyForecast}))},timestamp:Date.now()})}).catch(()=>{});
-    // #endregion
-
     return {
       uTime: { value: 0 },
       uMouse: { value: new Vector2(0, 0) },
@@ -236,28 +229,12 @@ export const Terrain: React.FC = () => {
     for (let i = 0; i < peakCount; i++) {
       next[i] = growthAtYearFromFlatForecasts(forecasts, i, year);
     }
-    const previousUniform = mat.uniforms.uGrowthNow.value as Float32Array;
     mat.uniforms.uGrowthNow.value = next;
-
-    const firstJob = jobs[0];
-    const sampleFallbackAtRequestedYear = firstJob ? getCurrentYearGrowth(firstJob, year).value : null;
-    const sampleForecastAtRequestedYear = forecasts.length > 0 ? growthAtYearFromFlatForecasts(forecasts, 0, year) : null;
-    // #region agent log
-    fetch('http://127.0.0.1:7252/ingest/46718283-b9ba-4afd-b6a8-059ca781fa06',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'9fe126'},body:JSON.stringify({sessionId:'9fe126',runId:'run4',hypothesisId:'H8',location:'Terrain.tsx:244',message:'terrain_uniforms_applied',data:{requestedYear:year,peakCount,materialUuid:mat.uuid,previousFirstGrowth:previousUniform?.[0] ?? null,nextFirstGrowth:next[0],sampleGrowth:Array.from(next.slice(0,3)),sampleFirstJobId:firstJob?.id ?? null,sampleFallbackAtRequestedYear,sampleForecastAtRequestedYear},timestamp:Date.now()})}).catch(()=>{});
-    // #endregion
   }, [year, meshKey]);
 
   useFrame((state) => {
     if (!materialRef.current) return;
     materialRef.current.uniforms.uTime.value = state.clock.getElapsedTime();
-    const currentGrowth = materialRef.current.uniforms.uGrowthNow.value as Float32Array | undefined;
-    const frameKey = `${year}-${currentGrowth?.[0] ?? 'na'}-${currentGrowth?.[1] ?? 'na'}-${materialRef.current.uuid}`;
-    if (lastFrameLogRef.current !== frameKey) {
-      lastFrameLogRef.current = frameKey;
-      // #region agent log
-      fetch('http://127.0.0.1:7252/ingest/46718283-b9ba-4afd-b6a8-059ca781fa06',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'9fe126'},body:JSON.stringify({sessionId:'9fe126',runId:'run4',hypothesisId:'H10',location:'Terrain.tsx:255',message:'terrain_frame_observed_uniforms',data:{year,materialUuid:materialRef.current.uuid,firstGrowth:currentGrowth?.[0] ?? null,secondGrowth:currentGrowth?.[1] ?? null,peakCount:materialRef.current.uniforms.uPeakCount.value},timestamp:Date.now()})}).catch(()=>{});
-      // #endregion
-    }
   });
 
   return (

@@ -15,7 +15,6 @@ export const JobMarkers: React.FC = () => {
     const mapView = useStore((state) => state.mapView);
 
     const [hoveredJobId, setHoveredJobId] = useState<string | null>(null);
-    const lastMarkerLogRef = useRef<string>('');
 
     // LOD level stored in ref — avoids re-renders per frame
     const lodLevelRef = useRef<0 | 1 | 2>(2); // 0=Far, 1=Mid, 2=Close
@@ -40,16 +39,8 @@ export const JobMarkers: React.FC = () => {
             const { value: currentGrowth } = getCurrentYearGrowth(job, year);
             const h = getVisualHeightForGrowth(currentGrowth);
             const { x, z } = getTerrainPosition(i);
-            if (job.id === 'job-15') {
-                // #region agent log
-                fetch('http://127.0.0.1:7252/ingest/46718283-b9ba-4afd-b6a8-059ca781fa06',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'a3c6a6'},body:JSON.stringify({sessionId:'a3c6a6',runId:'run2',hypothesisId:'H5',location:'JobMarkers.tsx:63',message:'marker_peak_growth_source',data:{jobId:job.id,year,hasYearlyForecast:!!job.yearlyForecast,currentGrowth,projectedGrowth:job.projectedGrowth,visualHeight:h},timestamp:Date.now()})}).catch(()=>{});
-                // #endregion
-            }
             return { x, z, height: h } as PeakData;
         });
-        // #region agent log
-        fetch('http://127.0.0.1:7252/ingest/46718283-b9ba-4afd-b6a8-059ca781fa06',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'9fe126'},body:JSON.stringify({sessionId:'9fe126',runId:'run1',hypothesisId:'H3',location:'JobMarkers.tsx:73',message:'marker_peaks_built',data:{year,jobCount:filteredJobs.length,samplePeaks:filteredJobs.slice(0,3).map((job,i)=>({id:job.id,title:job.title,currentGrowth:getCurrentYearGrowth(job,year).value,height:nextPeaks[i]?.height}))},timestamp:Date.now()})}).catch(()=>{});
-        // #endregion
         return nextPeaks;
     }, [filteredJobs, jobs, year]);
 
@@ -109,15 +100,6 @@ export const JobMarkers: React.FC = () => {
                 const isHovered = hoveredJobId === job.id;
                 const pipColor = CLUSTER_COLORS[job.cluster] || FALLBACK_COLORS[originalIndex % FALLBACK_COLORS.length];
                 const labelHeight = SCENE.LABEL.BASE_HEIGHT + peak.offset;
-                if (job.id === 'job-15') {
-                    const markerKey = `${year}-${surfaceY.toFixed(3)}-${labelHeight.toFixed(3)}`;
-                    if (lastMarkerLogRef.current !== markerKey) {
-                        lastMarkerLogRef.current = markerKey;
-                        // #region agent log
-                        fetch('http://127.0.0.1:7252/ingest/46718283-b9ba-4afd-b6a8-059ca781fa06',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'a3c6a6'},body:JSON.stringify({sessionId:'a3c6a6',runId:'run2',hypothesisId:'H6',location:'JobMarkers.tsx:126',message:'marker_surface_and_label_position',data:{jobId:job.id,year,surfaceY,labelHeight,peakHeight:peak.height},timestamp:Date.now()})}).catch(()=>{});
-                        // #endregion
-                    }
-                }
 
                 const automationRisk = job.automationCostIndex >= 0.65 ? 'High' : job.automationCostIndex >= 0.4 ? 'Moderate' : 'Low';
                 const riskColor = automationRisk === 'High' ? '#f87171' : automationRisk === 'Moderate' ? '#fb923c' : '#4ade80';

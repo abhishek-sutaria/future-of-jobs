@@ -33,14 +33,6 @@ export const BLS_API = {
     UNEMPLOYMENT_SERIES_ID: 'LNS14000000',
 } as const;
 
-// ── Analysis API ─────────────────────────────────────────────────────
-export const AI_API = {
-    MODEL: 'ai-2.0-flash',
-    BASE_URL: 'https://generativelanguage.googleapis.com/v1beta/models',
-    get ENDPOINT() { return `${this.BASE_URL}/${this.MODEL}:generateContent`; },
-    /** Simulated delay (ms) for demo mode responses */
-    DEMO_DELAY_MS: 800,
-} as const;
 
 // ── Risk & Classification Thresholds ───────────────────────────────
 export const RISK_THRESHOLDS = {

@@ -83,11 +83,6 @@ export const getFallbackYearlyImpact = (job: Job, year: number): number => {
     const attenuation = baselineGrowth * job.automationCostIndex * progress * 1.4;
     const declinePressure = job.automationCostIndex * 8 * Math.pow(progress, 2);
     const result = baselineGrowth - attenuation - declinePressure;
-    if (job.id === 'job-15' || job.id === 'job-2') {
-        // #region agent log
-        fetch('http://127.0.0.1:7252/ingest/46718283-b9ba-4afd-b6a8-059ca781fa06',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'9fe126'},body:JSON.stringify({sessionId:'9fe126',runId:'post-fix',hypothesisId:'H2',location:'terrainMath.ts:88',message:'fallback_growth_computed',data:{jobId:job.id,title:job.title,year,projectedGrowth:job.projectedGrowth,automationCostIndex:job.automationCostIndex,baselineGrowth,attenuation,declinePressure,result},timestamp:Date.now()})}).catch(()=>{});
-        // #endregion
-    }
     return result;
 };
 

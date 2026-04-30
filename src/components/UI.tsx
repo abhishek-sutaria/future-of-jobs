@@ -41,17 +41,13 @@ export const UI: React.FC = () => {
         const runAnalysis = async () => {
             setAnalysisLoading(true);
             setAnalysisError(null);
-            // #region agent log
-            fetch('http://127.0.0.1:7252/ingest/46718283-b9ba-4afd-b6a8-059ca781fa06',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'9fe126'},body:JSON.stringify({sessionId:'9fe126',runId:'run2',hypothesisId:'H4',location:'UI.tsx:42',message:'auto_analysis_started',data:{jobId:selectedJob.id,jobTitle:selectedJob.title,selectedYear:useStore.getState().year,alreadyHasForecast:!!selectedJob.yearlyForecast},timestamp:Date.now()})}).catch(()=>{});
-            // #endregion
+
             try {
                 const taskList = selectedJob.tasks.map(t => t.name);
                 const res = await analyzeJob(selectedJob.title, taskList);
                 setAnalysisResult(res);
                 if (res?.yearlyForecast) {
-                    // #region agent log
-                    fetch('http://127.0.0.1:7252/ingest/46718283-b9ba-4afd-b6a8-059ca781fa06',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'9fe126'},body:JSON.stringify({sessionId:'9fe126',runId:'run2',hypothesisId:'H4',location:'UI.tsx:48',message:'auto_analysis_received_forecast',data:{jobId:selectedJob.id,selectedYear:useStore.getState().year,forecastYears:res.yearlyForecast.map(item => item.year),forecastCount:res.yearlyForecast.length},timestamp:Date.now()})}).catch(()=>{});
-                    // #endregion
+
                     useStore.getState().updateJobForecast(selectedJob.id, res.yearlyForecast);
                 }
                 if (!IS_DEMO_MODE) {

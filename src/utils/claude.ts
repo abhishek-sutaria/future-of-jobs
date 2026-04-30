@@ -44,9 +44,9 @@ export function validateClaudeResponse(jsonText: string) {
     return ClaudeResponseSchema.parse(parsed);
 }
 
+
 export async function callClaudeJSON<T>(prompt: string, schema?: z.ZodType<T>): Promise<T> {
     const userKey = getUserKeyFromStorage();
-    const mode = localStorage.getItem(AI_MODE_STORAGE_KEY) || 'unset';
     const headers: Record<string, string> = {
         'Content-Type': 'application/json',
     };
@@ -54,10 +54,6 @@ export async function callClaudeJSON<T>(prompt: string, schema?: z.ZodType<T>): 
         headers['x-user-api-key'] = userKey;
         headers['x-foj-key-source'] = 'user';
     }
-
-    // #region agent log
-    fetch('http://127.0.0.1:7252/ingest/46718283-b9ba-4afd-b6a8-059ca781fa06',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'a3c6a6'},body:JSON.stringify({sessionId:'a3c6a6',runId:'run3',hypothesisId:'A1',location:'claude.ts:37',message:'claude_request_start',data:{mode,hasUserKey:!!userKey,promptLength:prompt.length},timestamp:Date.now()})}).catch(()=>{});
-    // #endregion
 
     const response = await fetch(CLAUDE_PROXY_ENDPOINT, {
         method: 'POST',
@@ -70,18 +66,11 @@ export async function callClaudeJSON<T>(prompt: string, schema?: z.ZodType<T>): 
         }),
     });
 
-    // #region agent log
-    fetch('http://127.0.0.1:7252/ingest/46718283-b9ba-4afd-b6a8-059ca781fa06',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'a3c6a6'},body:JSON.stringify({sessionId:'a3c6a6',runId:'run3',hypothesisId:'A2',location:'claude.ts:50',message:'claude_response_received',data:{status:response.status,ok:response.ok},timestamp:Date.now()})}).catch(()=>{});
-    // #endregion
-
     if (!response.ok) {
         let message = response.statusText;
         try {
             const data = await response.json();
             message = data?.error?.message || data?.message || message;
-            // #region agent log
-            fetch('http://127.0.0.1:7252/ingest/46718283-b9ba-4afd-b6a8-059ca781fa06',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'a3c6a6'},body:JSON.stringify({sessionId:'a3c6a6',runId:'run3',hypothesisId:'A3',location:'claude.ts:58',message:'claude_error_body',data:{status:response.status,errorMessage:message},timestamp:Date.now()})}).catch(()=>{});
-            // #endregion
         } catch {
             // no-op
         }
@@ -91,9 +80,6 @@ export async function callClaudeJSON<T>(prompt: string, schema?: z.ZodType<T>): 
             (lower.includes('x-api-key') || lower.includes('api key')) &&
             (lower.includes('required') || lower.includes('missing'));
         if (missingProxyKey) {
-            // #region agent log
-            fetch('http://127.0.0.1:7252/ingest/46718283-b9ba-4afd-b6a8-059ca781fa06',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'a3c6a6'},body:JSON.stringify({sessionId:'a3c6a6',runId:'post-fix',hypothesisId:'A6',location:'claude.ts:missingProxy',message:'claude_default_key_missing_branch',data:{status:401},timestamp:Date.now()})}).catch(()=>{});
-            // #endregion
             throw new Error(
                 'No default AI key is configured on the dev server. Add ANTHROPIC_API_KEY to a .env file in the project root and restart the dev server, or use your own key from the Claude setup screen.',
             );
@@ -104,9 +90,6 @@ export async function callClaudeJSON<T>(prompt: string, schema?: z.ZodType<T>): 
     const body = await response.json();
     const text = body?.content?.map((part: { type?: string; text?: string }) => part?.text || '').join('\n').trim();
     if (!text) {
-        // #region agent log
-        fetch('http://127.0.0.1:7252/ingest/46718283-b9ba-4afd-b6a8-059ca781fa06',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'a3c6a6'},body:JSON.stringify({sessionId:'a3c6a6',runId:'run3',hypothesisId:'A4',location:'claude.ts:69',message:'claude_empty_text',data:{hasContentArray:Array.isArray(body?.content)},timestamp:Date.now()})}).catch(()=>{});
-        // #endregion
         throw new Error('Empty response from Claude');
     }
     const jsonText = extractJsonBlock(text);
@@ -115,15 +98,8 @@ export async function callClaudeJSON<T>(prompt: string, schema?: z.ZodType<T>): 
             const parsed = JSON.parse(jsonText);
             return schema.parse(parsed);
         }
-        // Use custom validation for job analysis tasks
-        if (jsonText.includes('"tasks"')) {
-            return validateClaudeResponse(jsonText) as T;
-        }
         return JSON.parse(jsonText) as T;
     } catch (e) {
-        // #region agent log
-        fetch('http://127.0.0.1:7252/ingest/46718283-b9ba-4afd-b6a8-059ca781fa06',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'a3c6a6'},body:JSON.stringify({sessionId:'a3c6a6',runId:'run3',hypothesisId:'A5',location:'claude.ts:76',message:'claude_json_parse_failed',data:{textPreview:text.slice(0,180),jsonPreview:jsonText.slice(0,180),error:e instanceof Error ? e.message : 'unknown'},timestamp:Date.now()})}).catch(()=>{});
-        // #endregion
         throw e;
     }
 }

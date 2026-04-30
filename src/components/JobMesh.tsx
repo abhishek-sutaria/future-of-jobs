@@ -31,7 +31,6 @@ export const JobMesh: React.FC<JobMeshProps> = ({ job, position }) => {
     // Track previous color to trigger pulse
     const prevColorRef = useRef<string>('');
     const pulseRef = useRef<number>(0);
-    const lastLoggedYearRef = useRef<number | null>(null);
 
     // Check if "Saved" (Was Critical/High Risk initially, now Safe/Moderate)
     const isSaved = useMemo(() => {
@@ -106,15 +105,6 @@ export const JobMesh: React.FC<JobMeshProps> = ({ job, position }) => {
             mat.emissiveIntensity = ANIMATIONS.EMISSIVE_INTENSITY_NORMAL;
         }
 
-        if (job.id === 'job-15') {
-            const roundedYear = Math.round(year * 10) / 10;
-            if (lastLoggedYearRef.current !== roundedYear) {
-                lastLoggedYearRef.current = roundedYear;
-                // #region agent log
-                fetch('http://127.0.0.1:7252/ingest/46718283-b9ba-4afd-b6a8-059ca781fa06',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'a3c6a6'},body:JSON.stringify({sessionId:'a3c6a6',runId:'run1',hypothesisId:'H4',location:'JobMesh.tsx:120',message:'jobmesh_height_projection',data:{jobId:job.id,year:roundedYear,isHighRisk,rate,height,scaleY:meshRef.current.scale.y,projectedEmployment},timestamp:Date.now()})}).catch(()=>{});
-                // #endregion
-            }
-        }
     });
 
     const icon = getJobIcon(job.title);
