@@ -111,10 +111,6 @@ const colorMap: Record<string, { border: string; badge: string; tip: string }> =
 };
 
 export const StudentGuideModal: React.FC<Props> = ({ isOpen, onClose }) => {
-    const handlePrint = () => {
-        window.print();
-    };
-
     return (
         <Modal
             isOpen={isOpen}
@@ -122,19 +118,20 @@ export const StudentGuideModal: React.FC<Props> = ({ isOpen, onClose }) => {
             title="Student Feature Guide"
             size="lg"
             layer="top"
-            printable
             footer={
                 <div className="flex items-center justify-between gap-4">
-                    <p className="text-gray-500 text-[11px] print:text-gray-500">
+                    <p className="text-gray-500 text-[11px]">
                         futureofjobs.vercel.app &nbsp;·&nbsp; BLS OES, O*NET 28.2, Anthropic Claude
                     </p>
-                    <div className="flex gap-2 print:hidden">
-                        <button
-                            onClick={handlePrint}
+                    <div className="flex gap-2">
+                        <a
+                            href="/student-guide.pdf"
+                            target="_blank"
+                            rel="noopener noreferrer"
                             className="flex items-center gap-2 px-4 py-2 bg-cyan-600 hover:bg-cyan-500 text-white text-sm font-semibold rounded-lg transition-colors"
                         >
-                            🖨️ Print / Save PDF
-                        </button>
+                            📄 Download PDF
+                        </a>
                         <button
                             onClick={onClose}
                             className="px-4 py-2 bg-white/[0.06] hover:bg-white/10 text-gray-300 text-sm font-semibold rounded-lg transition-colors"

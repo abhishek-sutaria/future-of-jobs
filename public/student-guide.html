@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>AI &amp; Future of Work — Student Feature Guide</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+  @page { size: A4 portrait; margin: 14mm 12mm; }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #ffffff;
+    color: #111827;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 11pt;
+    line-height: 1.5;
+  }
+  .wrap {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 24px 28px 32px;
+  }
+  header {
+    border-bottom: 2px solid #0f172a;
+    padding-bottom: 14px;
+    margin-bottom: 22px;
+  }
+  header h1 {
+    margin: 0 0 4px;
+    font-size: 22pt;
+    font-weight: 700;
+    letter-spacing: -0.2px;
+    color: #0f172a;
+  }
+  header .sub {
+    color: #475569;
+    font-size: 10.5pt;
+  }
+  .intro {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 18px;
+    color: #334155;
+    font-size: 10.5pt;
+  }
+  .feature {
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 10px;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  .feature .head {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+  .feature .num {
+    font-size: 9pt;
+    font-weight: 700;
+    color: #64748b;
+    background: #f1f5f9;
+    padding: 2px 6px;
+    border-radius: 4px;
+    letter-spacing: 0.6px;
+  }
+  .feature .icon { font-size: 14pt; }
+  .feature h2 {
+    margin: 0;
+    font-size: 12.5pt;
+    font-weight: 700;
+    color: #0f172a;
+  }
+  .feature p {
+    margin: 4px 0 8px;
+    color: #1f2937;
+    font-size: 10.5pt;
+  }
+  .feature .tip {
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    border-radius: 6px;
+    padding: 8px 10px;
+    color: #92400e;
+    font-size: 10pt;
+  }
+  .feature .tip strong { color: #78350f; }
+  footer {
+    margin-top: 22px;
+    padding-top: 12px;
+    border-top: 1px solid #e2e8f0;
+    color: #64748b;
+    font-size: 9.5pt;
+    text-align: center;
+  }
+
+  /* Cluster colored borders so feature cards remain visually distinct in print */
+  .c-cyan    { border-left: 4px solid #06b6d4; }
+  .c-purple  { border-left: 4px solid #a855f7; }
+  .c-blue    { border-left: 4px solid #3b82f6; }
+  .c-red     { border-left: 4px solid #ef4444; }
+  .c-violet  { border-left: 4px solid #8b5cf6; }
+  .c-orange  { border-left: 4px solid #f97316; }
+  .c-emerald { border-left: 4px solid #10b981; }
+  .c-teal    { border-left: 4px solid #14b8a6; }
+  .c-green   { border-left: 4px solid #22c55e; }
+  .c-gray    { border-left: 4px solid #94a3b8; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>AI &amp; Future of Work — Student Feature Guide</h1>
+    <div class="sub">futureofjobs.vercel.app · Data: BLS OES, O*NET 28.2, Anthropic Claude</div>
+  </header>
+
+  <div class="intro">
+    This guide explains every feature of the <strong>AI &amp; Future of Work</strong> visualisation tool.
+    Each feature is designed to help you analyse how artificial intelligence is reshaping specific job roles —
+    so you can make strategic decisions about your career or studies.
+  </div>
+
+  <div class="feature c-cyan">
+    <div class="head"><span class="num">01</span><span class="icon">🏔️</span><h2>3D Terrain Map</h2></div>
+    <p>Each glowing peak represents one job role. Peak height = number of people employed in that role. Peak colour = AI automation risk: red means high risk, green means the role is largely safe from automation.</p>
+    <div class="tip"><strong>Student tip:</strong> Taller peaks mean more jobs exist today — watch them shrink as you move the time slider forward.</div>
+  </div>
+
+  <div class="feature c-purple">
+    <div class="head"><span class="num">02</span><span class="icon">⏱️</span><h2>AI Timeline Slider</h2></div>
+    <p>Drag the slider from 2025 → 2030 to simulate how AI displaces workers over time. Peaks fall faster for high-risk roles. The animation shows where the biggest structural changes are expected.</p>
+    <div class="tip"><strong>Student tip:</strong> Compare a Marketing Manager to a Sales Manager at 2030 — notice which peak drops faster and by how much.</div>
+  </div>
+
+  <div class="feature c-blue">
+    <div class="head"><span class="num">03</span><span class="icon">📋</span><h2>Job Detail Panel</h2></div>
+    <p>Click any peak to open a role's full profile: automation risk %, growth outlook to 2032, a list of its most human-critical tasks, and a BLS employment trend sparkline.</p>
+    <div class="tip"><strong>Student tip:</strong> The "Human Skills" section shows what AI cannot easily replace. These are the tasks worth developing.</div>
+  </div>
+
+  <div class="feature c-red">
+    <div class="head"><span class="num">04</span><span class="icon">🤖</span><h2>AI Analysis (Analyze)</h2></div>
+    <p>Tap the Analyze button on any role. Claude AI reads the O*NET task list and scores each task individually for AI replaceability vs. human criticality — in real time, not from a pre-written database.</p>
+    <div class="tip"><strong>Student tip:</strong> Every score is freshly generated. The AI reasons about each specific task, so results reflect genuine capability assessment.</div>
+  </div>
+
+  <div class="feature c-violet">
+    <div class="head"><span class="num">05</span><span class="icon">🔮</span><h2>Scenario Planning</h2></div>
+    <p>The Scenario button asks "what if" — what happens to this role if AI adoption accelerates, if regulation tightens, or if economic conditions shift? It generates a written strategic brief.</p>
+    <div class="tip"><strong>Student tip:</strong> Use this to stress-test career choices. Ask the same role under two different scenarios and compare the outlooks.</div>
+  </div>
+
+  <div class="feature c-orange">
+    <div class="head"><span class="num">06</span><span class="icon">🗺️</span><h2>Career Roadmap</h2></div>
+    <p>Identifies the highest-risk task in a role and builds a personalised 6-month upskilling plan to move away from it — covering specific skills, tools, and learning resources.</p>
+    <div class="tip"><strong>Student tip:</strong> Available from the Job Detail Panel after running an AI Analysis. The plan is tailored to that specific role's risk profile.</div>
+  </div>
+
+  <div class="feature c-emerald">
+    <div class="head"><span class="num">07</span><span class="icon">🎯</span><h2>My Skills (CV Match)</h2></div>
+    <p>Paste your CV or a list of your skills. The app analyses which roles align with your strengths and flags where you are most exposed to automation risk.</p>
+    <div class="tip"><strong>Student tip:</strong> Honest input = honest output. List the skills you actually have, not the ones you wish you had.</div>
+  </div>
+
+  <div class="feature c-teal">
+    <div class="head"><span class="num">08</span><span class="icon">🗺️</span><h2>US Map View</h2></div>
+    <p>Switch from the 3D terrain to a flat 2D US map. Circle size shows employment concentration by state — so you can see whether automation risk is evenly distributed or regionally concentrated.</p>
+    <div class="tip"><strong>Student tip:</strong> Toggle using the "Map" button in the top navigation. Useful for understanding local labour market exposure.</div>
+  </div>
+
+  <div class="feature c-green">
+    <div class="head"><span class="num">09</span><span class="icon">📊</span><h2>Job Security Index</h2></div>
+    <p>The colour legend on the right of the screen maps roles into three bands: High Automation Risk (red), Hybrid/Augmented (amber), and Safe Human-Centric (green). Bands are relative — graded on a curve across all 50 roles shown.</p>
+    <div class="tip"><strong>Student tip:</strong> A "green" role here means it is safer than most others in this dataset — not that it is completely immune to automation.</div>
+  </div>
+
+  <div class="feature c-gray">
+    <div class="head"><span class="num">10</span><span class="icon">📚</span><h2>Data Sources</h2></div>
+    <p>Employment numbers come from the Bureau of Labor Statistics (BLS) Occupational Employment &amp; Wage Statistics. Task descriptions are sourced from O*NET 28.2. AI risk scores are generated live by Anthropic Claude.</p>
+    <div class="tip"><strong>Student tip:</strong> Click "Methodology &amp; Data" at the bottom of the screen to read the full sourcing and calculation methodology.</div>
+  </div>
+
+  <footer>
+    Generated from futureofjobs.vercel.app · Data: BLS OES, O*NET 28.2, Anthropic Claude · For educational use
+  </footer>
+</div>
+</body>
+</html>
