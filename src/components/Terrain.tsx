@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useMemo, useRef } from 'react';
+import React, { useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Color, ShaderMaterial, DoubleSide, Vector3, Vector2 } from 'three';
 import { useStore } from '../store';
@@ -146,7 +146,6 @@ export const Terrain: React.FC = () => {
   const forecastsRef = useRef<number[]>([]);
   const jobs = useStore((state) => state.jobs);
   const selectedRoleIds = useStore((state) => state.selectedRoleIds);
-  const year = useStore((state) => state.year);
 
   const uniforms = useMemo(() => {
     const filteredJobs = selectedRoleIds.size === 0
@@ -216,25 +215,23 @@ export const Terrain: React.FC = () => {
     (Array.from(selectedRoleIds).sort().join(',') || 'all') + '-' + jobs.length + '-' + jobs.map(j => j.yearlyForecast ? 'Y' : 'N').join('')
     , [selectedRoleIds, jobs]);
 
-  // Drive heights from React when the timeline changes so uniforms reliably upload (in-place Float32Array
-  // mutation + useFrame-only updates can fail to refresh the GPU on some Three / R3F paths).
-  useLayoutEffect(() => {
+  // Push current-year growth values to the GPU every frame.
+  // Mutating the existing Float32Array in place lets three.js detect per-element changes;
+  // replacing the reference can leave the cached uniform stale on some R3F paths.
+  useFrame((state) => {
     const mat = materialRef.current;
     if (!mat) return;
+    mat.uniforms.uTime.value = state.clock.getElapsedTime();
+
     const forecasts = forecastsRef.current;
     const peakCount = mat.uniforms.uPeakCount.value as number;
     if (peakCount === 0 || forecasts.length === 0) return;
 
-    const next = new Float32Array(SHADER.MAX_JOBS);
+    const currentYear = useStore.getState().year;
+    const arr = mat.uniforms.uGrowthNow.value as Float32Array;
     for (let i = 0; i < peakCount; i++) {
-      next[i] = growthAtYearFromFlatForecasts(forecasts, i, year);
+      arr[i] = growthAtYearFromFlatForecasts(forecasts, i, currentYear);
     }
-    mat.uniforms.uGrowthNow.value = next;
-  }, [year, meshKey]);
-
-  useFrame((state) => {
-    if (!materialRef.current) return;
-    materialRef.current.uniforms.uTime.value = state.clock.getElapsedTime();
   });
 
   return (
