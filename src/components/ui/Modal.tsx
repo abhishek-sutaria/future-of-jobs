@@ -6,6 +6,7 @@ interface ModalProps {
     onClose: () => void;
     title: string;
     children: ReactNode;
+    footer?: ReactNode;
     size?: 'sm' | 'md' | 'lg' | 'xl';
     layer?: 'base' | 'overlay' | 'top';
     printable?: boolean;
@@ -19,7 +20,7 @@ const SIZE_MAP = {
     xl: 'max-w-6xl'
 } as const;
 
-export function Modal({ isOpen, onClose, title, children, size = 'md', layer = 'overlay', printable = false }: ModalProps) {
+export function Modal({ isOpen, onClose, title, children, footer, size = 'md', layer = 'overlay', printable = false }: ModalProps) {
     const dialogRef = useRef<HTMLDivElement>(null);
     const previousFocus = useRef<HTMLElement | null>(null);
     const titleId = useRef(`modal-${Math.random().toString(36).slice(2, 9)}`);
@@ -108,6 +109,11 @@ export function Modal({ isOpen, onClose, title, children, size = 'md', layer = '
                 <div className="flex-1 overflow-y-auto p-6 custom-scrollbar">
                     {children}
                 </div>
+                {footer && (
+                    <div className="shrink-0 px-6 py-4 border-t border-white/[0.06] print:border-gray-300">
+                        {footer}
+                    </div>
+                )}
             </div>
         </div>
     );
