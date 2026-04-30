@@ -82,12 +82,12 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
                 </div>
             </div>
 
-            <div className="flex items-center gap-2 md:gap-3 pointer-events-auto min-w-0 max-w-full flex-wrap md:flex-nowrap justify-end">
-                <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto max-w-[100vw] md:max-w-none py-0.5 [scrollbar-width:thin] shrink min-w-0">
+            <div className="flex items-center gap-2 md:gap-3 pointer-events-auto justify-end flex-wrap min-w-0">
+                <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap justify-end">
                     <button
                         data-tour="tour-skills"
                         onClick={onOpenSkillsModal}
-                        className="hidden md:flex shrink-0 items-center gap-2 px-4 py-2.5 rounded-lg border border-cyan-500/20 bg-cyan-500/[0.06] hover:bg-cyan-500/15 text-cyan-400 text-xs font-semibold uppercase tracking-wider transition-colors min-h-[44px]"
+                        className="hidden md:flex shrink-0 items-center gap-2 px-3 py-2.5 rounded-lg border border-cyan-500/20 bg-cyan-500/[0.06] hover:bg-cyan-500/15 text-cyan-400 text-xs font-semibold uppercase tracking-wider transition-colors min-h-[44px]"
                     >
                         <IconZap size={14} /> My Skills
                     </button>
@@ -96,7 +96,7 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
                             type="button"
                             onClick={openClaudeKeyModal}
                             title="Claude API key — change or switch default vs. your key"
-                            className="hidden md:flex shrink-0 items-center gap-2 px-4 py-2.5 rounded-lg border border-cyan-500/20 bg-cyan-500/[0.06] hover:bg-cyan-500/15 text-cyan-400 text-xs font-semibold uppercase tracking-wider transition-colors min-h-[44px]"
+                            className="hidden md:flex shrink-0 items-center gap-2 px-3 py-2.5 rounded-lg border border-cyan-500/20 bg-cyan-500/[0.06] hover:bg-cyan-500/15 text-cyan-400 text-xs font-semibold uppercase tracking-wider transition-colors min-h-[44px]"
                         >
                             <IconKey size={14} /> Claude API
                         </button>
@@ -105,7 +105,7 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
                     <button
                         data-tour="tour-toggle"
                         onClick={() => setMapView(mapView === 'map' ? 'globe' : 'map')}
-                        className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-blue-500/20 bg-blue-500/[0.06] hover:bg-blue-500/15 text-blue-400 text-xs font-semibold uppercase tracking-wider transition-colors min-h-[44px]"
+                        className="shrink-0 flex items-center gap-2 px-3 py-2.5 rounded-lg border border-blue-500/20 bg-blue-500/[0.06] hover:bg-blue-500/15 text-blue-400 text-xs font-semibold uppercase tracking-wider transition-colors min-h-[44px]"
                     >
                         {mapView === 'map' ? <IconGlobe size={14} /> : <IconMap size={14} />}
                         {mapView === 'map' ? 'Globe' : 'Map'}
@@ -114,7 +114,7 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
                     <button
                         onClick={onStartTour}
                         title="Take a guided tour"
-                        className="w-9 h-9 flex items-center justify-center rounded-lg border border-white/[0.08] bg-white/[0.03] hover:bg-white/[0.08] text-gray-500 hover:text-white transition-colors min-h-[44px] min-w-[44px]"
+                        className="shrink-0 w-11 h-11 flex items-center justify-center rounded-lg border border-white/[0.08] bg-white/[0.03] hover:bg-white/[0.08] text-gray-500 hover:text-white transition-colors"
                     >
                         <IconInfo size={15} />
                     </button>
@@ -122,13 +122,13 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
                     <button
                         onClick={onOpenStudentGuide}
                         title="Student Feature Guide — printable reference"
-                        className="hidden md:flex items-center gap-1.5 px-3 py-2 rounded-lg border border-amber-500/25 bg-amber-500/[0.06] hover:bg-amber-500/15 text-amber-400 text-xs font-semibold uppercase tracking-wider transition-colors min-h-[44px]"
+                        className="hidden md:flex shrink-0 items-center gap-2 px-3 py-2.5 rounded-lg border border-amber-500/25 bg-amber-500/[0.06] hover:bg-amber-500/15 text-amber-400 text-xs font-semibold uppercase tracking-wider transition-colors min-h-[44px]"
                     >
-                        <span className="text-sm">📋</span> Guide
+                        <span className="text-sm leading-none">📋</span> Guide
                     </button>
                 </div>
 
-                <div data-tour="tour-search">
+                <div data-tour="tour-search" className="w-full md:w-auto">
                     <SearchBar onSelectJob={(job) => setSelectedJob(job)} />
                 </div>
             </div>
@@ -166,7 +166,7 @@ const SearchBar: React.FC<{ onSelectJob: (job: Job) => void }> = ({ onSelectJob 
     }, [onSelectJob]);
 
     return (
-        <div className="relative w-full md:w-[280px]">
+        <div className="relative w-full md:w-[220px]">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <IconSearch size={14} className="text-gray-500" />
             </div>
