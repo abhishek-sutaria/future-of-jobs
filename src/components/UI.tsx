@@ -138,13 +138,13 @@ export const UI: React.FC = () => {
 
             <YearSlider />
 
-            <div className="absolute bottom-4 right-4 md:right-8 pointer-events-none md:pointer-events-auto flex justify-end" style={{ zIndex: Z.base }}>
+            <div className="absolute bottom-4 left-4 md:left-8 pointer-events-auto" style={{ zIndex: Z.base }}>
                 <button
                     data-tour="tour-methodology"
                     onClick={() => setShowMethodologyModal(true)}
-                    className="bg-gray-900/40 backdrop-blur-sm border border-white/[0.06] rounded-full px-4 py-1.5 flex items-center gap-3 text-[10px] text-gray-500 hover:text-white hover:bg-gray-900/60 transition-all cursor-pointer"
+                    className="bg-gray-900/70 backdrop-blur-sm border border-white/15 rounded-full px-4 py-2 flex items-center gap-2 text-[11px] text-gray-200 hover:text-white hover:bg-gray-900/90 hover:border-white/25 transition-all cursor-pointer shadow-lg"
                 >
-                    <span className="uppercase tracking-wider font-semibold opacity-70">Sources:</span>
+                    <span className="uppercase tracking-wider font-semibold text-cyan-400">Sources:</span>
                     <span>Methodology & Data</span>
                 </button>
             </div>
