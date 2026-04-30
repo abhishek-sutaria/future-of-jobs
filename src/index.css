@@ -110,21 +110,17 @@ h1, h2, h3, h4, h5, h6 {
 
 /* ── Print styles (Student Guide) ─────────────────────────────────────────── */
 @media print {
-  /* Hide everything by default */
-  body * { visibility: hidden; }
-
-  /* Show the modal and all its descendants */
-  [data-print-modal-overlay],
-  [data-print-modal-overlay] * {
-    visibility: visible !important;
+  /* The modal is portaled to document.body when printable, so it's a direct
+     child of <body>. Hide every other body child, then strip the modal's
+     fixed/overflow constraints so its content can paginate across pages. */
+  body > *:not([data-print-modal-overlay]) {
+    display: none !important;
   }
 
-  /* Hide the backdrop in print */
   [data-print-backdrop] {
     display: none !important;
   }
 
-  /* Let the modal overlay flow naturally so content can paginate across pages */
   [data-print-modal-overlay] {
     position: static !important;
     inset: auto !important;
@@ -136,7 +132,6 @@ h1, h2, h3, h4, h5, h6 {
     z-index: auto !important;
   }
 
-  /* Strip the dialog's fixed-height/scroll/styling so it fills the page */
   [data-print-modal] {
     position: static !important;
     width: 100% !important;
@@ -154,7 +149,6 @@ h1, h2, h3, h4, h5, h6 {
     display: block !important;
   }
 
-  /* Inner scroll container: let it expand */
   [data-print-modal] .overflow-y-auto {
     overflow: visible !important;
     max-height: none !important;

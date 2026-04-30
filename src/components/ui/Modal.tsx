@@ -1,4 +1,5 @@
 import { useEffect, useRef, useCallback, type ReactNode } from 'react';
+import { createPortal } from 'react-dom';
 import { Z } from '../../config/layers';
 
 interface ModalProps {
@@ -71,7 +72,7 @@ export function Modal({ isOpen, onClose, title, children, footer, size = 'md', l
 
     if (!isOpen) return null;
 
-    return (
+    const tree = (
         <div
             className="fixed inset-0 flex items-center justify-center p-4 animate-in fade-in duration-200"
             style={{ zIndex: Z_MAP[layer] }}
@@ -119,4 +120,6 @@ export function Modal({ isOpen, onClose, title, children, footer, size = 'md', l
             </div>
         </div>
     );
+
+    return printable ? createPortal(tree, document.body) : tree;
 }
