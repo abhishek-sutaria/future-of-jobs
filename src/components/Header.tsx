@@ -1,8 +1,7 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { useStore } from '../store';
-import { IS_DEMO_MODE } from '../utils/analysis';
 import { clearScoreCache } from '../utils/taskScoring';
-import { IconZap, IconGlobe, IconMap, IconSearch, IconInfo, IconKey } from './ui/Icons';
+import { IconZap, IconGlobe, IconMap, IconSearch, IconInfo, IconKey, IconX, IconActivity } from './ui/Icons';
 import { Z } from '../config/layers';
 import { YEAR_MIN, YEAR_MAX, UI } from '../config/constants';
 import type { Job } from '../types';
@@ -13,9 +12,10 @@ interface HeaderProps {
     onOpenSkillsModal: () => void;
     onStartTour: () => void;
     onOpenStudentGuide: () => void;
+    onOpenHealthCheck: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onOpenSkillsModal, onStartTour, onOpenStudentGuide }) => {
+export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onOpenSkillsModal, onStartTour, onOpenStudentGuide, onOpenHealthCheck }) => {
     const mapView = useStore((state) => state.mapView);
     const setMapView = useStore((state) => state.setMapView);
     const setSelectedJob = useStore((state) => state.setSelectedJob);
@@ -42,20 +42,14 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
                         </p>
                     </div>
 
-                    {IS_DEMO_MODE && (
-                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-amber-500/10 border border-amber-500/20 text-[10px] text-amber-400 font-bold uppercase tracking-wider pointer-events-auto">
-                            Demo Mode
-                        </span>
-                    )}
-
-                    {!IS_DEMO_MODE && !startupGateActive && isScoring && (
+                    {!startupGateActive && isScoring && (
                         <span className="hidden md:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-blue-500/10 border border-blue-500/20 text-[10px] text-blue-400 font-semibold uppercase tracking-wider">
                             <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
                             Scoring tasks with AI...
                         </span>
                     )}
 
-                    {!IS_DEMO_MODE && !startupGateActive && !isScoring && hasAIScores && (
+                    {!startupGateActive && !isScoring && hasAIScores && (
                         <span
                             className="hidden md:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-[10px] text-emerald-400 font-semibold uppercase tracking-wider pointer-events-auto cursor-pointer hover:bg-emerald-500/20 transition-colors"
                             title="Click to re-score tasks with fresh Claude data"
@@ -82,8 +76,8 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
                 </div>
             </div>
 
-            <div className="flex items-center gap-2 md:gap-3 pointer-events-auto justify-end flex-wrap min-w-0">
-                <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap justify-end">
+            <div className="flex flex-col items-end gap-2 pointer-events-auto w-full md:w-auto">
+                <div className="flex items-center gap-1.5 sm:gap-2 flex-nowrap justify-end shrink-0">
                     <button
                         data-tour="tour-skills"
                         onClick={onOpenSkillsModal}
@@ -91,16 +85,14 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
                     >
                         <IconZap size={14} /> My Skills
                     </button>
-                    {!IS_DEMO_MODE && (
-                        <button
-                            type="button"
-                            onClick={openClaudeKeyModal}
-                            title="Claude API key — change or switch default vs. your key"
-                            className="hidden md:flex shrink-0 items-center gap-2 px-3 py-2.5 rounded-lg border border-cyan-500/20 bg-cyan-500/[0.06] hover:bg-cyan-500/15 text-cyan-400 text-xs font-semibold uppercase tracking-wider transition-colors min-h-[44px]"
-                        >
-                            <IconKey size={14} /> Claude API
-                        </button>
-                    )}
+                    <button
+                        type="button"
+                        onClick={openClaudeKeyModal}
+                        title="Claude API key — change or switch default vs. your key"
+                        className="hidden md:flex shrink-0 items-center gap-2 px-3 py-2.5 rounded-lg border border-cyan-500/20 bg-cyan-500/[0.06] hover:bg-cyan-500/15 text-cyan-400 text-xs font-semibold uppercase tracking-wider transition-colors min-h-[44px]"
+                    >
+                        <IconKey size={14} /> Claude API
+                    </button>
 
                     <button
                         data-tour="tour-toggle"
@@ -120,6 +112,14 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
                     </button>
 
                     <button
+                        onClick={onOpenHealthCheck}
+                        title="Health Check — verify all app systems are working"
+                        className="shrink-0 flex items-center gap-2 px-3 py-2.5 rounded-lg border border-emerald-500/25 bg-emerald-500/[0.06] hover:bg-emerald-500/15 text-emerald-400 text-xs font-semibold uppercase tracking-wider transition-colors min-h-[44px]"
+                    >
+                        <IconActivity size={14} /> Health
+                    </button>
+
+                    <button
                         onClick={onOpenStudentGuide}
                         title="Student Feature Guide — printable reference"
                         className="hidden md:flex shrink-0 items-center gap-2 px-3 py-2.5 rounded-lg border border-amber-500/25 bg-amber-500/[0.06] hover:bg-amber-500/15 text-amber-400 text-xs font-semibold uppercase tracking-wider transition-colors min-h-[44px]"
@@ -128,8 +128,20 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
                     </button>
                 </div>
 
-                <div data-tour="tour-search" className="w-full md:w-auto">
-                    <SearchBar onSelectJob={(job) => setSelectedJob(job)} />
+                <div className="flex items-center gap-2 w-full md:w-auto justify-end">
+                    {mapView === 'map' && (
+                        <button
+                            onClick={() => setMapView('globe')}
+                            title="Close map and return to 3D view"
+                            className="shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-lg border border-white/10 bg-slate-800/90 hover:bg-slate-700 text-white text-xs font-semibold uppercase tracking-wider transition-colors min-h-[44px] shadow-lg"
+                        >
+                            <IconX size={14} /> Close Map
+                        </button>
+                    )}
+
+                    <div data-tour="tour-search" className="w-full md:w-auto">
+                        <SearchBar onSelectJob={(job) => setSelectedJob(job)} />
+                    </div>
                 </div>
             </div>
         </header>

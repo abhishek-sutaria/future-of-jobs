@@ -2,7 +2,7 @@ import React, { useMemo, useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Html, Line } from '@react-three/drei';
 import { useStore } from '../store';
-import { getTerrainPosition, calculateGaussianHeight, getCurrentYearGrowth, getVisualHeightForGrowth, type PeakData, TERRAIN_CONFIG } from '../utils/terrainMath';
+import { getTerrainPosition, calculateGaussianHeight, getCurrentYearGrowth, getVisualHeightForGrowth, getVisualHeightForEmployment, type PeakData, TERRAIN_CONFIG } from '../utils/terrainMath';
 import { CLUSTER_COLORS, FALLBACK_COLORS } from '../config/theme';
 import { SCENE } from '../config/constants';
 
@@ -13,6 +13,7 @@ export const JobMarkers: React.FC = () => {
     const selectedJob = useStore((state) => state.selectedJob);
     const selectedRoleIds = useStore((state) => state.selectedRoleIds);
     const mapView = useStore((state) => state.mapView);
+    const heightMode = useStore((state) => state.heightMode);
 
     const [hoveredJobId, setHoveredJobId] = useState<string | null>(null);
 
@@ -37,12 +38,14 @@ export const JobMarkers: React.FC = () => {
         const nextPeaks = filteredJobs.map((job) => {
             const i = jobs.findIndex(j => j.id === job.id);
             const { value: currentGrowth } = getCurrentYearGrowth(job, year);
-            const h = getVisualHeightForGrowth(currentGrowth);
+            const h = heightMode === 'employment'
+                ? getVisualHeightForEmployment(job.employment)
+                : getVisualHeightForGrowth(currentGrowth);
             const { x, z } = getTerrainPosition(i);
             return { x, z, height: h } as PeakData;
         });
         return nextPeaks;
-    }, [filteredJobs, jobs, year]);
+    }, [filteredJobs, jobs, year, heightMode]);
 
     // Stagger: vertical offset to separate overlapping labels
     const staggeredPeaks = useMemo(() => {

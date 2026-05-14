@@ -6,11 +6,57 @@ import { YEAR_MIN, YEAR_MAX, YEAR_RANGE } from '../config/constants';
 export const YearSlider: React.FC = () => {
     const year = useStore((state) => state.year);
     const setYear = useStore((state) => state.setYear);
+    const heightMode = useStore((state) => state.heightMode);
+    const setHeightMode = useStore((state) => state.setHeightMode);
     const progress = ((year - YEAR_MIN) / YEAR_RANGE) * 100;
+
+    const modeHint = heightMode === 'employment'
+        ? 'Height = number of workers (static · log-scaled)'
+        : 'Height = projected growth at this year';
 
     return (
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 w-[90%] max-w-2xl pointer-events-auto" style={{ zIndex: Z.base }}>
             <div data-tour="tour-slider" className="bg-gray-900/60 backdrop-blur-xl border border-white/[0.08] rounded-2xl p-4 md:p-6 shadow-lg">
+                {/* Peak height encoding toggle */}
+                <div className="flex items-center justify-between gap-3 mb-3 flex-wrap">
+                    <span className="text-[10px] text-gray-500 uppercase tracking-widest font-semibold">
+                        Peak Height
+                    </span>
+                    <div
+                        role="radiogroup"
+                        aria-label="Peak height encoding"
+                        className="inline-flex rounded-lg border border-white/[0.08] bg-white/[0.03] p-0.5"
+                    >
+                        <button
+                            type="button"
+                            role="radio"
+                            aria-checked={heightMode === 'growth'}
+                            onClick={() => setHeightMode('growth')}
+                            className={`px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider rounded-md transition-colors ${
+                                heightMode === 'growth'
+                                    ? 'bg-cyan-500/20 text-cyan-200'
+                                    : 'text-gray-400 hover:text-white'
+                            }`}
+                        >
+                            Growth
+                        </button>
+                        <button
+                            type="button"
+                            role="radio"
+                            aria-checked={heightMode === 'employment'}
+                            onClick={() => setHeightMode('employment')}
+                            className={`px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider rounded-md transition-colors ${
+                                heightMode === 'employment'
+                                    ? 'bg-cyan-500/20 text-cyan-200'
+                                    : 'text-gray-400 hover:text-white'
+                            }`}
+                        >
+                            Workers
+                        </button>
+                    </div>
+                </div>
+                <p className="text-[10px] text-gray-500 mb-3 leading-snug">{modeHint}</p>
+
                 <div className="flex justify-between items-center mb-3 text-sm font-medium tracking-widest">
                     <span className="text-gray-500 text-xs">{YEAR_MIN}</span>
                     <span className="text-cyan-400 text-lg font-bold tabular-nums" aria-live="polite">

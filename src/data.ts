@@ -5,29 +5,25 @@ import {
 
 /**
  * DATA ATTRIBUTION & METADATA
- * 
- * O*NET Release Version: 28.2
- * Date Pulled: April 2024
- * 
- * Job Mapping to SOC Codes:
- * - Marketing Manager: 11-2021
- * - Market Research Analyst: 13-1161
- * - Business Intelligence Analyst: 15-2051
- * - Financial Analyst: 13-2051
- * - Financial Manager: 11-3031
- * - Software Developer: 15-1252
- * - Management Consultant: 13-1111
- * - Sales Manager: 11-2022
- * - Accountant & Auditor: 13-2011
- * - Operations Research Analyst: 15-2031
- * - Logistics Analyst: 13-1081
- * - Securities & Sales Agent: 41-3031
- * - Supply Chain Manager: 11-3071
- * 
- * DATA SOURCE: BLS OES May 2023 (employment) + BLS OOH 2022-2032 (growth projections)
- * Task descriptions from O*NET. AI/human scores are pre-computed estimates:
- *   aiCapabilityScore: How easily GenAI can automate this task (0=impossible, 1=trivially automated)
- *   humanCriticalityScore: How essential human judgment is (0=not needed, 1=absolutely critical)
+ *
+ * Every value below is either real government data or a sentinel that gets
+ * filled in at runtime by Claude. NO heuristic estimates or hand-rolled
+ * scores are embedded in this file.
+ *
+ * Real data (BLS / O*NET):
+ *   - title, cluster, employment      → BLS OES May 2023
+ *   - projectedGrowth                  → BLS OOH 2022-2032 (10-year projection)
+ *   - tasks[].name, tasks[].importance → O*NET 28.2 (April 2024)
+ *
+ * Runtime-populated (Claude API analyzing the real O*NET tasks):
+ *   - tasks[].aiCapabilityScore        (initial value: 0 = pending AI)
+ *   - tasks[].humanCriticalityScore    (initial value: 0 = pending AI)
+ *   - automationCostIndex              (computed from the AI scores above)
+ *   - humanResilienceLabel             (initial value: "—" = pending AI)
+ *   - salaryVolatilityLabel            (initial value: "—" = pending AI)
+ *   - yearlyForecast                   (filled in when user clicks a job)
+ *
+ * Job → SOC code mappings live in src/utils/onet.ts.
  */
 export const initialJobs: Job[] = [
     {
@@ -35,7 +31,7 @@ export const initialJobs: Job[] = [
         "title": "Marketing Manager",
         "cluster": "Business",
         "employment": 368940,
-        "automationCostIndex": 0.35,
+        "automationCostIndex": 0,
         "projectedGrowth": 7,
         "salaryVolatilityLabel": "—",
         "humanResilienceLabel": "—",
@@ -48,32 +44,32 @@ export const initialJobs: Job[] = [
         "tasks": [
             {
                 "name": "Identify, develop, or evaluate marketing strategy, based on knowledge of establishment objectives, market characteristics, and cost and markup factors.",
-                "aiCapabilityScore": 0.45,
-                "humanCriticalityScore": 0.80,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             },
             {
                 "name": "Formulate, direct, or coordinate marketing activities or policies to promote products or services, working with advertising or promotion managers.",
-                "aiCapabilityScore": 0.30,
-                "humanCriticalityScore": 0.85,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             },
             {
                 "name": "Evaluate the financial aspects of product development, such as budgets, expenditures, research and development appropriations, or return-on-investment and profit-loss projections.",
-                "aiCapabilityScore": 0.70,
-                "humanCriticalityScore": 0.40,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             },
             {
                 "name": "Develop pricing strategies, balancing firm objectives and customer satisfaction.",
-                "aiCapabilityScore": 0.55,
-                "humanCriticalityScore": 0.65,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             },
             {
                 "name": "Compile lists describing product or service offerings.",
-                "aiCapabilityScore": 0.85,
-                "humanCriticalityScore": 0.20,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             }
         ]
@@ -83,7 +79,7 @@ export const initialJobs: Job[] = [
         "title": "Market Research Analyst",
         "cluster": "Business",
         "employment": 846370,
-        "automationCostIndex": 0.60,
+        "automationCostIndex": 0,
         "projectedGrowth": 13,
         "salaryVolatilityLabel": "—",
         "humanResilienceLabel": "—",
@@ -96,32 +92,32 @@ export const initialJobs: Job[] = [
         "tasks": [
             {
                 "name": "Prepare reports of findings, illustrating data graphically and translating complex findings into written text.",
-                "aiCapabilityScore": 0.80,
-                "humanCriticalityScore": 0.35,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             },
             {
                 "name": "Collect and analyze data on customer demographics, preferences, needs, and buying habits to identify potential markets and factors affecting product demand.",
-                "aiCapabilityScore": 0.75,
-                "humanCriticalityScore": 0.30,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             },
             {
                 "name": "Conduct research on consumer opinions and marketing strategies, collaborating with marketing professionals, statisticians, pollsters, and other professionals.",
-                "aiCapabilityScore": 0.50,
-                "humanCriticalityScore": 0.60,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             },
             {
                 "name": "Measure and assess customer and employee satisfaction.",
-                "aiCapabilityScore": 0.65,
-                "humanCriticalityScore": 0.55,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             },
             {
                 "name": "Devise and evaluate methods and procedures for collecting data, such as surveys, opinion polls, or questionnaires, or arrange to obtain existing data.",
-                "aiCapabilityScore": 0.70,
-                "humanCriticalityScore": 0.45,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             }
         ]
@@ -131,7 +127,7 @@ export const initialJobs: Job[] = [
         "title": "Business Intelligence Analyst",
         "cluster": "Business",
         "employment": 1103440,
-        "automationCostIndex": 0.55,
+        "automationCostIndex": 0,
         "projectedGrowth": 10,
         "salaryVolatilityLabel": "—",
         "humanResilienceLabel": "—",
@@ -144,32 +140,32 @@ export const initialJobs: Job[] = [
         "tasks": [
             {
                 "name": "Create or review technical specifications for data dashboards, reports, or visualizations to ensure they meet business requirements.",
-                "aiCapabilityScore": 0.70,
-                "humanCriticalityScore": 0.45,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             },
             {
                 "name": "Query databases, using structured query language (SQL), to compile, manipulate, and retrieve data.",
-                "aiCapabilityScore": 0.80,
-                "humanCriticalityScore": 0.25,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             },
             {
                 "name": "Identify, communicate, and interpret business or operational data patterns and trends to guide strategic decisions.",
-                "aiCapabilityScore": 0.55,
-                "humanCriticalityScore": 0.70,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             },
             {
                 "name": "Design and develop key performance metrics, scorecards, and reporting frameworks aligned to business objectives.",
-                "aiCapabilityScore": 0.50,
-                "humanCriticalityScore": 0.75,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             },
             {
                 "name": "Present findings and insights from data analysis to senior leadership, translating technical results into actionable business recommendations.",
-                "aiCapabilityScore": 0.40,
-                "humanCriticalityScore": 0.80,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             }
         ]
@@ -179,7 +175,7 @@ export const initialJobs: Job[] = [
         "title": "Financial Analyst",
         "cluster": "Business",
         "employment": 325220,
-        "automationCostIndex": 0.65,
+        "automationCostIndex": 0,
         "projectedGrowth": 8,
         "salaryVolatilityLabel": "—",
         "humanResilienceLabel": "—",
@@ -192,32 +188,32 @@ export const initialJobs: Job[] = [
         "tasks": [
             {
                 "name": "Advise clients on aspects of capitalization, such as amounts, sources, or timing.",
-                "aiCapabilityScore": 0.40,
-                "humanCriticalityScore": 0.80,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             },
             {
                 "name": "Analyze financial or operational performance of companies facing financial difficulties to identify or recommend remedies.",
-                "aiCapabilityScore": 0.70,
-                "humanCriticalityScore": 0.55,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             },
             {
                 "name": "Assess companies as investments for clients by examining company facilities.",
-                "aiCapabilityScore": 0.30,
-                "humanCriticalityScore": 0.85,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             },
             {
                 "name": "Collaborate with investment bankers to attract new corporate clients.",
-                "aiCapabilityScore": 0.20,
-                "humanCriticalityScore": 0.90,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             },
             {
                 "name": "Collaborate on projects with other professionals, such as lawyers, accountants, or public relations experts.",
-                "aiCapabilityScore": 0.15,
-                "humanCriticalityScore": 0.90,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             }
         ]
@@ -227,7 +223,7 @@ export const initialJobs: Job[] = [
         "title": "Financial Manager",
         "cluster": "Business",
         "employment": 787340,
-        "automationCostIndex": 0.30,
+        "automationCostIndex": 0,
         "projectedGrowth": 16,
         "salaryVolatilityLabel": "—",
         "humanResilienceLabel": "—",
@@ -240,32 +236,32 @@ export const initialJobs: Job[] = [
         "tasks": [
             {
                 "name": "Establish and maintain relationships with individual or business customers or provide assistance with problems these customers may encounter.",
-                "aiCapabilityScore": 0.15,
-                "humanCriticalityScore": 0.95,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             },
             {
                 "name": "Oversee the flow of cash or financial instruments.",
-                "aiCapabilityScore": 0.60,
-                "humanCriticalityScore": 0.50,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             },
             {
                 "name": "Plan, direct, or coordinate the activities of workers in branches, offices, or departments of establishments, such as branch banks, brokerage firms, risk and insurance departments, or credit departments.",
-                "aiCapabilityScore": 0.20,
-                "humanCriticalityScore": 0.90,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             },
             {
                 "name": "Recruit staff members.",
-                "aiCapabilityScore": 0.30,
-                "humanCriticalityScore": 0.85,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             },
             {
                 "name": "Evaluate data pertaining to costs to plan budgets.",
-                "aiCapabilityScore": 0.75,
-                "humanCriticalityScore": 0.35,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             }
         ]
@@ -275,7 +271,7 @@ export const initialJobs: Job[] = [
         "title": "Management Consultant",
         "cluster": "Business",
         "employment": 838140,
-        "automationCostIndex": 0.45,
+        "automationCostIndex": 0,
         "projectedGrowth": 10,
         "salaryVolatilityLabel": "—",
         "humanResilienceLabel": "—",
@@ -288,32 +284,32 @@ export const initialJobs: Job[] = [
         "tasks": [
             {
                 "name": "Gather and organize information on problems or procedures.",
-                "aiCapabilityScore": 0.75,
-                "humanCriticalityScore": 0.30,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             },
             {
                 "name": "Confer with personnel concerned to ensure successful functioning of newly implemented systems or procedures.",
-                "aiCapabilityScore": 0.20,
-                "humanCriticalityScore": 0.90,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             },
             {
                 "name": "Analyze data gathered and develop solutions or alternative methods of proceeding.",
-                "aiCapabilityScore": 0.65,
-                "humanCriticalityScore": 0.55,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             },
             {
                 "name": "Document findings of study and prepare recommendations for implementation of new systems, procedures, or organizational changes.",
-                "aiCapabilityScore": 0.70,
-                "humanCriticalityScore": 0.50,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             },
             {
                 "name": "Plan study of work problems and procedures, such as organizational change, communications, information flow, integrated production methods, inventory control, or cost analysis.",
-                "aiCapabilityScore": 0.45,
-                "humanCriticalityScore": 0.70,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             }
         ]
@@ -323,7 +319,7 @@ export const initialJobs: Job[] = [
         "title": "Supply Chain Manager",
         "cluster": "Business",
         "employment": 198780,
-        "automationCostIndex": 0.50,
+        "automationCostIndex": 0,
         "projectedGrowth": 18,
         "salaryVolatilityLabel": "—",
         "humanResilienceLabel": "—",
@@ -336,32 +332,32 @@ export const initialJobs: Job[] = [
         "tasks": [
             {
                 "name": "Supervise the activities of workers engaged in receiving, storing, testing, and shipping products or materials.",
-                "aiCapabilityScore": 0.25,
-                "humanCriticalityScore": 0.80,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             },
             {
                 "name": "Plan, develop, or implement warehouse safety and security programs and activities.",
-                "aiCapabilityScore": 0.30,
-                "humanCriticalityScore": 0.85,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             },
             {
                 "name": "Inspect physical conditions of warehouses, vehicle fleets, or equipment and order testing, maintenance, repairs, or replacements.",
-                "aiCapabilityScore": 0.20,
-                "humanCriticalityScore": 0.90,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             },
             {
                 "name": "Plan, organize, or manage the work of subordinate staff to ensure that the work is accomplished in a manner consistent with organizational requirements.",
-                "aiCapabilityScore": 0.25,
-                "humanCriticalityScore": 0.85,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             },
             {
                 "name": "Collaborate with other departments to integrate logistics with business systems or processes, such as customer sales, order management, accounting, or shipping.",
-                "aiCapabilityScore": 0.40,
-                "humanCriticalityScore": 0.70,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             }
         ]
@@ -371,7 +367,7 @@ export const initialJobs: Job[] = [
         "title": "Logistics Analyst",
         "cluster": "Business",
         "employment": 228470,
-        "automationCostIndex": 0.60,
+        "automationCostIndex": 0,
         "projectedGrowth": 18,
         "salaryVolatilityLabel": "—",
         "humanResilienceLabel": "—",
@@ -384,32 +380,32 @@ export const initialJobs: Job[] = [
         "tasks": [
             {
                 "name": "Maintain and develop positive business relationships with a customer's key personnel involved in, or directly relevant to, a logistics activity.",
-                "aiCapabilityScore": 0.15,
-                "humanCriticalityScore": 0.90,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             },
             {
                 "name": "Develop an understanding of customers' needs and take actions to ensure that such needs are met.",
-                "aiCapabilityScore": 0.30,
-                "humanCriticalityScore": 0.80,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             },
             {
                 "name": "Manage subcontractor activities, reviewing proposals, developing performance specifications, and serving as liaisons between subcontractors and organizations.",
-                "aiCapabilityScore": 0.35,
-                "humanCriticalityScore": 0.75,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             },
             {
                 "name": "Develop proposals that include documentation for estimates.",
-                "aiCapabilityScore": 0.70,
-                "humanCriticalityScore": 0.35,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             },
             {
                 "name": "Review logistics performance with customers against targets, benchmarks, and service agreements.",
-                "aiCapabilityScore": 0.65,
-                "humanCriticalityScore": 0.50,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             }
         ]
@@ -419,7 +415,7 @@ export const initialJobs: Job[] = [
         "title": "Software Developer",
         "cluster": "Business",
         "employment": 1656880,
-        "automationCostIndex": 0.70,
+        "automationCostIndex": 0,
         "projectedGrowth": 25,
         "salaryVolatilityLabel": "—",
         "humanResilienceLabel": "—",
@@ -432,32 +428,32 @@ export const initialJobs: Job[] = [
         "tasks": [
             {
                 "name": "Analyze user needs and software requirements to determine feasibility of design within time and cost constraints.",
-                "aiCapabilityScore": 0.45,
-                "humanCriticalityScore": 0.70,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             },
             {
                 "name": "Develop or direct software system testing or validation procedures, programming, or documentation.",
-                "aiCapabilityScore": 0.80,
-                "humanCriticalityScore": 0.30,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             },
             {
                 "name": "Confer with systems analysts, engineers, programmers and others to design systems and to obtain information on project limitations and capabilities, performance requirements, and interfaces.",
-                "aiCapabilityScore": 0.25,
-                "humanCriticalityScore": 0.85,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             },
             {
                 "name": "Modify existing software to correct errors, adapt it to new hardware, or upgrade interfaces and improve performance.",
-                "aiCapabilityScore": 0.85,
-                "humanCriticalityScore": 0.25,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             },
             {
                 "name": "Prepare reports or correspondence concerning project specifications, activities, or status.",
-                "aiCapabilityScore": 0.80,
-                "humanCriticalityScore": 0.20,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             }
         ]
@@ -467,7 +463,7 @@ export const initialJobs: Job[] = [
         "title": "Operations Research Analyst",
         "cluster": "Business",
         "employment": 117880,
-        "automationCostIndex": 0.65,
+        "automationCostIndex": 0,
         "projectedGrowth": 23,
         "salaryVolatilityLabel": "—",
         "humanResilienceLabel": "—",
@@ -480,32 +476,32 @@ export const initialJobs: Job[] = [
         "tasks": [
             {
                 "name": "Present the results of mathematical modeling and data analysis to management or other end users.",
-                "aiCapabilityScore": 0.60,
-                "humanCriticalityScore": 0.65,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             },
             {
                 "name": "Define data requirements, and gather and validate information, applying judgment and statistical tests.",
-                "aiCapabilityScore": 0.70,
-                "humanCriticalityScore": 0.45,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             },
             {
                 "name": "Perform validation and testing of models to ensure adequacy, and reformulate models, as necessary.",
-                "aiCapabilityScore": 0.75,
-                "humanCriticalityScore": 0.40,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             },
             {
                 "name": "Prepare management reports defining and evaluating problems and recommending solutions.",
-                "aiCapabilityScore": 0.65,
-                "humanCriticalityScore": 0.55,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             },
             {
                 "name": "Collaborate with others in the organization to ensure successful implementation of chosen problem solutions.",
-                "aiCapabilityScore": 0.20,
-                "humanCriticalityScore": 0.85,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             }
         ]
@@ -515,7 +511,7 @@ export const initialJobs: Job[] = [
         "title": "Securities & Sales Agent",
         "cluster": "Business",
         "employment": 479630,
-        "automationCostIndex": 0.75,
+        "automationCostIndex": 0,
         "projectedGrowth": 7,
         "salaryVolatilityLabel": "—",
         "humanResilienceLabel": "—",
@@ -528,32 +524,32 @@ export const initialJobs: Job[] = [
         "tasks": [
             {
                 "name": "Make bids or offers to buy or sell securities.",
-                "aiCapabilityScore": 0.90,
-                "humanCriticalityScore": 0.15,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             },
             {
                 "name": "Monitor markets or positions.",
-                "aiCapabilityScore": 0.90,
-                "humanCriticalityScore": 0.10,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             },
             {
                 "name": "Agree on buying or selling prices at optimal levels for clients.",
-                "aiCapabilityScore": 0.85,
-                "humanCriticalityScore": 0.30,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             },
             {
                 "name": "Keep accurate records of transactions.",
-                "aiCapabilityScore": 0.95,
-                "humanCriticalityScore": 0.05,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             },
             {
                 "name": "Buy or sell stocks, bonds, commodity futures, foreign currencies, or other securities on behalf of investment dealers.",
-                "aiCapabilityScore": 0.85,
-                "humanCriticalityScore": 0.25,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             }
         ]
@@ -563,7 +559,7 @@ export const initialJobs: Job[] = [
         "title": "Sales Manager",
         "cluster": "Business",
         "employment": 575880,
-        "automationCostIndex": 0.40,
+        "automationCostIndex": 0,
         "projectedGrowth": 4,
         "salaryVolatilityLabel": "—",
         "humanResilienceLabel": "—",
@@ -576,32 +572,32 @@ export const initialJobs: Job[] = [
         "tasks": [
             {
                 "name": "Oversee regional and local sales managers and their staffs.",
-                "aiCapabilityScore": 0.15,
-                "humanCriticalityScore": 0.90,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             },
             {
                 "name": "Resolve customer complaints regarding sales and service.",
-                "aiCapabilityScore": 0.30,
-                "humanCriticalityScore": 0.85,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             },
             {
                 "name": "Monitor customer preferences to determine focus of sales efforts.",
-                "aiCapabilityScore": 0.70,
-                "humanCriticalityScore": 0.40,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             },
             {
                 "name": "Confer with potential customers regarding equipment needs, and advise customers on types of equipment to purchase.",
-                "aiCapabilityScore": 0.35,
-                "humanCriticalityScore": 0.80,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             },
             {
                 "name": "Review operational records and reports to project sales and determine profitability.",
-                "aiCapabilityScore": 0.80,
-                "humanCriticalityScore": 0.25,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             }
         ]
@@ -611,7 +607,7 @@ export const initialJobs: Job[] = [
         "title": "Accountant & Auditor",
         "cluster": "Business",
         "employment": 1435770,
-        "automationCostIndex": 0.72,
+        "automationCostIndex": 0,
         "projectedGrowth": 4,
         "salaryVolatilityLabel": "—",
         "humanResilienceLabel": "—",
@@ -624,32 +620,32 @@ export const initialJobs: Job[] = [
         "tasks": [
             {
                 "name": "Prepare detailed reports on audit findings.",
-                "aiCapabilityScore": 0.80,
-                "humanCriticalityScore": 0.30,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             },
             {
                 "name": "Report to management about asset utilization and audit results, and recommend changes in operations and financial activities.",
-                "aiCapabilityScore": 0.55,
-                "humanCriticalityScore": 0.65,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             },
             {
                 "name": "Collect and analyze data to detect deficient controls, duplicated effort, extravagance, fraud, or non-compliance with laws, regulations, and management policies.",
-                "aiCapabilityScore": 0.85,
-                "humanCriticalityScore": 0.40,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             },
             {
                 "name": "Inspect account books and accounting systems for efficiency, effectiveness, and use of accepted accounting procedures to record transactions.",
-                "aiCapabilityScore": 0.90,
-                "humanCriticalityScore": 0.20,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             },
             {
                 "name": "Supervise auditing of establishments, and determine scope of investigation required.",
-                "aiCapabilityScore": 0.35,
-                "humanCriticalityScore": 0.80,
+                "aiCapabilityScore": 0,
+                "humanCriticalityScore": 0,
                 "importance": 3
             }
         ]
@@ -660,10 +656,10 @@ export const initialJobs: Job[] = [
     "title": "Brand Manager",
     "cluster": "Business",
     "employment": 27100,
-    "automationCostIndex": 0.42,
+    "automationCostIndex": 0,
     "projectedGrowth": 6,
-    "salaryVolatilityLabel": "Medium",
-    "humanResilienceLabel": "High",
+    "salaryVolatilityLabel": "—",
+    "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
@@ -674,32 +670,32 @@ export const initialJobs: Job[] = [
     "tasks": [
         {
             "name": "Plan and prepare advertising and promotional material to increase sales of products or services, working with customers, company officials, sales departments, and advertising agencies.",
-            "aiCapabilityScore": 0.55,
-            "humanCriticalityScore": 0.65,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Inspect layouts and advertising copy, and edit scripts, audio, video, and other promotional material for adherence to specifications.",
-            "aiCapabilityScore": 0.7,
-            "humanCriticalityScore": 0.4,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Confer with department heads or staff to discuss topics such as contracts, selection of advertising media, or product to be advertised.",
-            "aiCapabilityScore": 0.3,
-            "humanCriticalityScore": 0.88,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Coordinate with the media to disseminate advertising.",
-            "aiCapabilityScore": 0.6,
-            "humanCriticalityScore": 0.4,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Coordinate activities of departments, such as sales, graphic arts, media, finance, and research.",
-            "aiCapabilityScore": 0.35,
-            "humanCriticalityScore": 0.8,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         }
     ]
@@ -709,10 +705,10 @@ export const initialJobs: Job[] = [
     "title": "Public Relations Manager",
     "cluster": "Business",
     "employment": 84100,
-    "automationCostIndex": 0.35,
+    "automationCostIndex": 0,
     "projectedGrowth": 8,
-    "salaryVolatilityLabel": "Medium",
-    "humanResilienceLabel": "High",
+    "salaryVolatilityLabel": "—",
+    "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
@@ -723,32 +719,32 @@ export const initialJobs: Job[] = [
     "tasks": [
         {
             "name": "Develop and implement public relations programs to promote a favorable image for the organization with the public, press, and other stakeholders.",
-            "aiCapabilityScore": 0.5,
-            "humanCriticalityScore": 0.75,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Manage media relations, including responding to press inquiries and pitching stories to journalists and media outlets.",
-            "aiCapabilityScore": 0.4,
-            "humanCriticalityScore": 0.85,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Write and edit press releases, speeches, and other communications materials for executive and organizational use.",
-            "aiCapabilityScore": 0.65,
-            "humanCriticalityScore": 0.5,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Lead crisis communications planning and real-time response to reputational threats.",
-            "aiCapabilityScore": 0.28,
-            "humanCriticalityScore": 0.92,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Build and maintain relationships with community organizations, media, government, and other external stakeholders.",
-            "aiCapabilityScore": 0.22,
-            "humanCriticalityScore": 0.95,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         }
     ]
@@ -758,10 +754,10 @@ export const initialJobs: Job[] = [
     "title": "Advertising Sales Agent",
     "cluster": "Business",
     "employment": 100700,
-    "automationCostIndex": 0.62,
+    "automationCostIndex": 0,
     "projectedGrowth": 3,
-    "salaryVolatilityLabel": "Very High",
-    "humanResilienceLabel": "High",
+    "salaryVolatilityLabel": "—",
+    "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
@@ -772,32 +768,32 @@ export const initialJobs: Job[] = [
     "tasks": [
         {
             "name": "Prepare and deliver sales presentations to new and existing customers to sell new advertising programs and to protect and increase existing advertising.",
-            "aiCapabilityScore": 0.58,
-            "humanCriticalityScore": 0.6,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Maintain assigned account bases while developing new accounts.",
-            "aiCapabilityScore": 0.65,
-            "humanCriticalityScore": 0.45,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Provide clients with estimates of the costs of advertising products or services.",
-            "aiCapabilityScore": 0.78,
-            "humanCriticalityScore": 0.28,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Locate and contact potential clients to offer advertising services.",
-            "aiCapabilityScore": 0.62,
-            "humanCriticalityScore": 0.5,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Explain to customers how specific types of advertising will help promote their products or services in the most effective way possible.",
-            "aiCapabilityScore": 0.55,
-            "humanCriticalityScore": 0.6,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         }
     ]
@@ -807,10 +803,10 @@ export const initialJobs: Job[] = [
     "title": "Event Coordinator",
     "cluster": "Business",
     "employment": 164800,
-    "automationCostIndex": 0.5,
+    "automationCostIndex": 0,
     "projectedGrowth": 8,
-    "salaryVolatilityLabel": "Medium",
-    "humanResilienceLabel": "High",
+    "salaryVolatilityLabel": "—",
+    "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
@@ -821,32 +817,32 @@ export const initialJobs: Job[] = [
     "tasks": [
         {
             "name": "Consult with customers to determine objectives and requirements for events, such as meetings, conferences, and conventions.",
-            "aiCapabilityScore": 0.4,
-            "humanCriticalityScore": 0.78,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Review event bills for accuracy and approve payment.",
-            "aiCapabilityScore": 0.75,
-            "humanCriticalityScore": 0.3,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Coordinate services for events, such as accommodation and transportation for participants, facilities, catering, signage, displays, and event security.",
-            "aiCapabilityScore": 0.55,
-            "humanCriticalityScore": 0.55,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Arrange the availability of audio-visual equipment, transportation, displays, and other event needs.",
-            "aiCapabilityScore": 0.6,
-            "humanCriticalityScore": 0.48,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Confer with staff at a chosen event site to coordinate details.",
-            "aiCapabilityScore": 0.35,
-            "humanCriticalityScore": 0.78,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         }
     ]
@@ -856,10 +852,10 @@ export const initialJobs: Job[] = [
     "title": "Account Executive",
     "cluster": "Business",
     "employment": 1040500,
-    "automationCostIndex": 0.45,
+    "automationCostIndex": 0,
     "projectedGrowth": 5,
-    "salaryVolatilityLabel": "Very High",
-    "humanResilienceLabel": "High",
+    "salaryVolatilityLabel": "—",
+    "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
@@ -870,32 +866,32 @@ export const initialJobs: Job[] = [
     "tasks": [
         {
             "name": "Answer customers' questions about services, prices, availability, or credit terms.",
-            "aiCapabilityScore": 0.58,
-            "humanCriticalityScore": 0.58,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Attend sales or trade meetings or read related publications to obtain information about market conditions, business trends, or industry developments.",
-            "aiCapabilityScore": 0.35,
-            "humanCriticalityScore": 0.72,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Compute and compare costs of services.",
-            "aiCapabilityScore": 0.72,
-            "humanCriticalityScore": 0.32,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Consult with clients after sales or contract signings to resolve problems and provide ongoing support.",
-            "aiCapabilityScore": 0.3,
-            "humanCriticalityScore": 0.9,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Contact prospective or existing customers to discuss how services can meet their needs.",
-            "aiCapabilityScore": 0.5,
-            "humanCriticalityScore": 0.65,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         }
     ]
@@ -905,10 +901,10 @@ export const initialJobs: Job[] = [
     "title": "Sales Representative",
     "cluster": "Business",
     "employment": 286960,
-    "automationCostIndex": 0.58,
+    "automationCostIndex": 0,
     "projectedGrowth": 4,
-    "salaryVolatilityLabel": "Very High",
-    "humanResilienceLabel": "High",
+    "salaryVolatilityLabel": "—",
+    "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
@@ -919,32 +915,32 @@ export const initialJobs: Job[] = [
     "tasks": [
         {
             "name": "Negotiate prices or terms of sales or service agreements.",
-            "aiCapabilityScore": 0.45,
-            "humanCriticalityScore": 0.8,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Prepare and submit sales contracts for orders.",
-            "aiCapabilityScore": 0.72,
-            "humanCriticalityScore": 0.32,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Visit establishments to evaluate needs or to promote product or service sales.",
-            "aiCapabilityScore": 0.35,
-            "humanCriticalityScore": 0.78,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Maintain customer records, using automated systems.",
-            "aiCapabilityScore": 0.82,
-            "humanCriticalityScore": 0.18,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Answer customers' questions about products, prices, availability, or credit terms.",
-            "aiCapabilityScore": 0.58,
-            "humanCriticalityScore": 0.58,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         }
     ]
@@ -954,10 +950,10 @@ export const initialJobs: Job[] = [
     "title": "Insurance Sales Agent",
     "cluster": "Business",
     "employment": 427720,
-    "automationCostIndex": 0.6,
+    "automationCostIndex": 0,
     "projectedGrowth": 7,
-    "salaryVolatilityLabel": "Very High",
-    "humanResilienceLabel": "High",
+    "salaryVolatilityLabel": "—",
+    "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
@@ -968,32 +964,32 @@ export const initialJobs: Job[] = [
     "tasks": [
         {
             "name": "Customize insurance programs to suit individual customers, often covering a variety of risks.",
-            "aiCapabilityScore": 0.55,
-            "humanCriticalityScore": 0.65,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Sell various types of insurance policies to businesses and individuals on behalf of insurance companies, including automobile, fire, life, property, and medical insurance.",
-            "aiCapabilityScore": 0.58,
-            "humanCriticalityScore": 0.62,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Explain features, advantages, and disadvantages of various policies to promote sale of insurance plans.",
-            "aiCapabilityScore": 0.65,
-            "humanCriticalityScore": 0.5,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Perform administrative tasks, such as maintaining records and handling policy renewals.",
-            "aiCapabilityScore": 0.8,
-            "humanCriticalityScore": 0.2,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Seek out new clients and develop clientele by networking to find new customers and generate lists of prospective clients.",
-            "aiCapabilityScore": 0.52,
-            "humanCriticalityScore": 0.65,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         }
     ]
@@ -1003,10 +999,10 @@ export const initialJobs: Job[] = [
     "title": "Personal Financial Advisor",
     "cluster": "Business",
     "employment": 330300,
-    "automationCostIndex": 0.55,
+    "automationCostIndex": 0,
     "projectedGrowth": 13,
-    "salaryVolatilityLabel": "Very High",
-    "humanResilienceLabel": "High",
+    "salaryVolatilityLabel": "—",
+    "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
@@ -1017,32 +1013,32 @@ export const initialJobs: Job[] = [
     "tasks": [
         {
             "name": "Interview clients to determine their current income, expenses, insurance coverage, tax status, financial objectives, and risk tolerance needed to develop a financial plan.",
-            "aiCapabilityScore": 0.4,
-            "humanCriticalityScore": 0.85,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Analyze financial information obtained from clients to determine strategies for meeting clients' financial objectives.",
-            "aiCapabilityScore": 0.7,
-            "humanCriticalityScore": 0.45,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Answer clients' questions about the purposes and details of financial plans and strategies.",
-            "aiCapabilityScore": 0.52,
-            "humanCriticalityScore": 0.7,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Review clients' accounts and plans regularly to determine whether life changes, economic changes, or financial performance indicate a need for plan reassessment.",
-            "aiCapabilityScore": 0.68,
-            "humanCriticalityScore": 0.55,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Manage client portfolios, keeping client plans up-to-date.",
-            "aiCapabilityScore": 0.65,
-            "humanCriticalityScore": 0.6,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         }
     ]
@@ -1052,10 +1048,10 @@ export const initialJobs: Job[] = [
     "title": "Credit Analyst",
     "cluster": "Business",
     "employment": 86100,
-    "automationCostIndex": 0.72,
+    "automationCostIndex": 0,
     "projectedGrowth": 2,
-    "salaryVolatilityLabel": "Very High",
-    "humanResilienceLabel": "At Risk",
+    "salaryVolatilityLabel": "—",
+    "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
@@ -1066,32 +1062,32 @@ export const initialJobs: Job[] = [
     "tasks": [
         {
             "name": "Analyze credit data and financial statements to determine the degree of risk involved in extending credit or lending money.",
-            "aiCapabilityScore": 0.82,
-            "humanCriticalityScore": 0.25,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Complete loan applications, including credit analyses and summaries of loan requests, and submit to loan committees for approval.",
-            "aiCapabilityScore": 0.78,
-            "humanCriticalityScore": 0.28,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Generate financial ratios, using computer programs, to evaluate customers' financial status.",
-            "aiCapabilityScore": 0.92,
-            "humanCriticalityScore": 0.1,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Prepare reports that include the degree of risk involved in extending credit or lending money.",
-            "aiCapabilityScore": 0.82,
-            "humanCriticalityScore": 0.25,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Analyze financial data, such as income growth, quality of management, and market share to determine expected profitability of loans.",
-            "aiCapabilityScore": 0.8,
-            "humanCriticalityScore": 0.3,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         }
     ]
@@ -1101,10 +1097,10 @@ export const initialJobs: Job[] = [
     "title": "Budget Analyst",
     "cluster": "Business",
     "employment": 57800,
-    "automationCostIndex": 0.7,
+    "automationCostIndex": 0,
     "projectedGrowth": 3,
-    "salaryVolatilityLabel": "Very High",
-    "humanResilienceLabel": "At Risk",
+    "salaryVolatilityLabel": "—",
+    "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
@@ -1115,32 +1111,32 @@ export const initialJobs: Job[] = [
     "tasks": [
         {
             "name": "Develop and analyze annual budgets for departments or organizations, identifying areas where costs can be reduced or resources optimized.",
-            "aiCapabilityScore": 0.78,
-            "humanCriticalityScore": 0.3,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Analyze budget proposals submitted by departments to determine whether they comply with organizational goals and legal requirements.",
-            "aiCapabilityScore": 0.8,
-            "humanCriticalityScore": 0.28,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Monitor budget allocations and expenditures to ensure spending stays within approved budget limits.",
-            "aiCapabilityScore": 0.85,
-            "humanCriticalityScore": 0.22,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Forecast future financial needs of the organization based on economic trends, historical data, and operational requirements.",
-            "aiCapabilityScore": 0.75,
-            "humanCriticalityScore": 0.4,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Prepare budget variance reports comparing actual spending against forecasts, and recommend corrective actions.",
-            "aiCapabilityScore": 0.82,
-            "humanCriticalityScore": 0.25,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         }
     ]
@@ -1150,10 +1146,10 @@ export const initialJobs: Job[] = [
     "title": "Risk Specialist",
     "cluster": "Business",
     "employment": 84800,
-    "automationCostIndex": 0.68,
+    "automationCostIndex": 0,
     "projectedGrowth": 9,
-    "salaryVolatilityLabel": "Very High",
-    "humanResilienceLabel": "At Risk",
+    "salaryVolatilityLabel": "—",
+    "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
@@ -1164,32 +1160,32 @@ export const initialJobs: Job[] = [
     "tasks": [
         {
             "name": "Apply mathematical or statistical techniques to address practical issues in finance, such as derivative valuation, securities trading, and risk management.",
-            "aiCapabilityScore": 0.78,
-            "humanCriticalityScore": 0.3,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Research or develop analytical tools to address issues such as portfolio construction, performance measurement, or pricing models.",
-            "aiCapabilityScore": 0.72,
-            "humanCriticalityScore": 0.35,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Interpret results of financial analysis procedures.",
-            "aiCapabilityScore": 0.65,
-            "humanCriticalityScore": 0.52,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Develop core analytical capabilities or model libraries, using advanced statistical, quantitative, or econometric techniques.",
-            "aiCapabilityScore": 0.76,
-            "humanCriticalityScore": 0.3,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Define or recommend model specifications or data collection methods.",
-            "aiCapabilityScore": 0.68,
-            "humanCriticalityScore": 0.45,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         }
     ]
@@ -1199,10 +1195,10 @@ export const initialJobs: Job[] = [
     "title": "Insurance Underwriter",
     "cluster": "Business",
     "employment": 100000,
-    "automationCostIndex": 0.78,
+    "automationCostIndex": 0,
     "projectedGrowth": -4,
-    "salaryVolatilityLabel": "Very High",
-    "humanResilienceLabel": "At Risk",
+    "salaryVolatilityLabel": "—",
+    "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
@@ -1213,32 +1209,32 @@ export const initialJobs: Job[] = [
     "tasks": [
         {
             "name": "Examine documents to determine degree of risk from factors such as applicant health, financial standing and value, and condition of property.",
-            "aiCapabilityScore": 0.82,
-            "humanCriticalityScore": 0.25,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Decline excessive risks based on established underwriting guidelines and loss experience data.",
-            "aiCapabilityScore": 0.75,
-            "humanCriticalityScore": 0.4,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Write to field representatives, medical personnel, or others to obtain further information, quote rates, or explain company underwriting policies.",
-            "aiCapabilityScore": 0.68,
-            "humanCriticalityScore": 0.48,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Evaluate possibility of losses due to catastrophe or excessive insurance using actuarial and statistical data.",
-            "aiCapabilityScore": 0.82,
-            "humanCriticalityScore": 0.28,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Review company records to determine amount of insurance in force on single risk or group of closely related risks.",
-            "aiCapabilityScore": 0.88,
-            "humanCriticalityScore": 0.18,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         }
     ]
@@ -1248,10 +1244,10 @@ export const initialJobs: Job[] = [
     "title": "Actuary",
     "cluster": "Business",
     "employment": 28800,
-    "automationCostIndex": 0.62,
+    "automationCostIndex": 0,
     "projectedGrowth": 23,
-    "salaryVolatilityLabel": "Very High",
-    "humanResilienceLabel": "High",
+    "salaryVolatilityLabel": "—",
+    "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
@@ -1262,32 +1258,32 @@ export const initialJobs: Job[] = [
     "tasks": [
         {
             "name": "Ascertain premium rates required and cash reserves and liabilities necessary to ensure payment of future benefits.",
-            "aiCapabilityScore": 0.72,
-            "humanCriticalityScore": 0.38,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Collaborate with programmers, underwriters, accounts, claims experts, and senior management to help companies develop plans for new lines of business.",
-            "aiCapabilityScore": 0.35,
-            "humanCriticalityScore": 0.85,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Analyze statistical information to estimate mortality, accident, sickness, disability, and retirement rates.",
-            "aiCapabilityScore": 0.8,
-            "humanCriticalityScore": 0.28,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Design, review, and help administer insurance, annuity and pension plans, determining financial soundness and calculating premiums.",
-            "aiCapabilityScore": 0.65,
-            "humanCriticalityScore": 0.55,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Determine company policy and explain complex technical matters to company executives, government officials, shareholders, and policyholders.",
-            "aiCapabilityScore": 0.4,
-            "humanCriticalityScore": 0.8,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         }
     ]
@@ -1297,10 +1293,10 @@ export const initialJobs: Job[] = [
     "title": "Loan Officer",
     "cluster": "Business",
     "employment": 325900,
-    "automationCostIndex": 0.68,
+    "automationCostIndex": 0,
     "projectedGrowth": 3,
-    "salaryVolatilityLabel": "Very High",
-    "humanResilienceLabel": "At Risk",
+    "salaryVolatilityLabel": "—",
+    "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
@@ -1311,32 +1307,32 @@ export const initialJobs: Job[] = [
     "tasks": [
         {
             "name": "Meet with applicants to obtain information for loan applications and to answer questions about the process.",
-            "aiCapabilityScore": 0.45,
-            "humanCriticalityScore": 0.75,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Analyze applicants' financial status, credit, and property evaluations to determine feasibility of granting loans.",
-            "aiCapabilityScore": 0.8,
-            "humanCriticalityScore": 0.28,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Approve loans within specified limits, and refer loan applications outside those limits to management for approval.",
-            "aiCapabilityScore": 0.68,
-            "humanCriticalityScore": 0.52,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Explain to customers the different types of loans and credit options that are available, as well as the terms of those services.",
-            "aiCapabilityScore": 0.62,
-            "humanCriticalityScore": 0.55,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Submit applications to credit analysts for verification and recommendation.",
-            "aiCapabilityScore": 0.72,
-            "humanCriticalityScore": 0.32,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         }
     ]
@@ -1346,10 +1342,10 @@ export const initialJobs: Job[] = [
     "title": "Data Scientist",
     "cluster": "Business",
     "employment": 168900,
-    "automationCostIndex": 0.6,
+    "automationCostIndex": 0,
     "projectedGrowth": 36,
-    "salaryVolatilityLabel": "Very High",
-    "humanResilienceLabel": "High",
+    "salaryVolatilityLabel": "—",
+    "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
@@ -1360,32 +1356,32 @@ export const initialJobs: Job[] = [
     "tasks": [
         {
             "name": "Analyze, manipulate, or process large sets of data using statistical software to identify patterns and generate insights.",
-            "aiCapabilityScore": 0.72,
-            "humanCriticalityScore": 0.35,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Apply feature selection algorithms to models predicting outcomes of interest, such as sales, attrition, and customer behaviour.",
-            "aiCapabilityScore": 0.7,
-            "humanCriticalityScore": 0.4,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Apply sampling techniques to determine groups to be surveyed or use complete enumeration methods.",
-            "aiCapabilityScore": 0.68,
-            "humanCriticalityScore": 0.35,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Clean and manipulate raw data using statistical software to prepare it for analysis.",
-            "aiCapabilityScore": 0.82,
-            "humanCriticalityScore": 0.2,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Compare models using statistical performance metrics, such as loss functions or proportion of explained variance.",
-            "aiCapabilityScore": 0.68,
-            "humanCriticalityScore": 0.45,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         }
     ]
@@ -1395,10 +1391,10 @@ export const initialJobs: Job[] = [
     "title": "Statistician",
     "cluster": "Business",
     "employment": 42800,
-    "automationCostIndex": 0.65,
+    "automationCostIndex": 0,
     "projectedGrowth": 32,
-    "salaryVolatilityLabel": "Very High",
-    "humanResilienceLabel": "At Risk",
+    "salaryVolatilityLabel": "—",
+    "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
@@ -1409,32 +1405,32 @@ export const initialJobs: Job[] = [
     "tasks": [
         {
             "name": "Analyze and interpret statistical data to identify significant differences in relationships among sources of information.",
-            "aiCapabilityScore": 0.72,
-            "humanCriticalityScore": 0.35,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Evaluate the statistical methods and procedures used to obtain data to ensure validity, applicability, efficiency, and accuracy.",
-            "aiCapabilityScore": 0.65,
-            "humanCriticalityScore": 0.52,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Report results of statistical analyses, including information in the form of graphs, charts, and tables.",
-            "aiCapabilityScore": 0.78,
-            "humanCriticalityScore": 0.28,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Determine whether statistical methods are appropriate, based on user needs or research questions of interest.",
-            "aiCapabilityScore": 0.6,
-            "humanCriticalityScore": 0.58,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Prepare data for processing by organizing information, checking for inaccuracies, and adjusting and weighting the raw data.",
-            "aiCapabilityScore": 0.82,
-            "humanCriticalityScore": 0.2,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         }
     ]
@@ -1444,10 +1440,10 @@ export const initialJobs: Job[] = [
     "title": "Computer Systems Analyst",
     "cluster": "Business",
     "employment": 635000,
-    "automationCostIndex": 0.62,
+    "automationCostIndex": 0,
     "projectedGrowth": 11,
-    "salaryVolatilityLabel": "Very High",
-    "humanResilienceLabel": "High",
+    "salaryVolatilityLabel": "—",
+    "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
@@ -1458,32 +1454,32 @@ export const initialJobs: Job[] = [
     "tasks": [
         {
             "name": "Troubleshoot program and system malfunctions to restore normal functioning.",
-            "aiCapabilityScore": 0.65,
-            "humanCriticalityScore": 0.5,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Provide staff and users with assistance solving computer-related problems, such as malfunctions and program problems.",
-            "aiCapabilityScore": 0.58,
-            "humanCriticalityScore": 0.6,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Test, maintain, and monitor computer programs and systems, including coordinating the installation of computer programs and systems.",
-            "aiCapabilityScore": 0.7,
-            "humanCriticalityScore": 0.4,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Use the computer in the analysis and solution of business problems, such as development of integrated production and inventory control and cost analysis systems.",
-            "aiCapabilityScore": 0.72,
-            "humanCriticalityScore": 0.4,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Coordinate and link the computer systems within an organization to increase compatibility so that information can be shared.",
-            "aiCapabilityScore": 0.58,
-            "humanCriticalityScore": 0.55,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         }
     ]
@@ -1493,10 +1489,10 @@ export const initialJobs: Job[] = [
     "title": "Cost Estimator",
     "cluster": "Business",
     "employment": 196400,
-    "automationCostIndex": 0.72,
+    "automationCostIndex": 0,
     "projectedGrowth": 1,
-    "salaryVolatilityLabel": "Very High",
-    "humanResilienceLabel": "At Risk",
+    "salaryVolatilityLabel": "—",
+    "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
@@ -1507,32 +1503,32 @@ export const initialJobs: Job[] = [
     "tasks": [
         {
             "name": "Analyze blueprints and other documentation to prepare time, cost, materials, and labor estimates.",
-            "aiCapabilityScore": 0.8,
-            "humanCriticalityScore": 0.28,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Confer with engineers, architects, owners, contractors, and subcontractors on changes and adjustments to cost estimates.",
-            "aiCapabilityScore": 0.38,
-            "humanCriticalityScore": 0.82,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Collect historical cost data to estimate costs for current or future products.",
-            "aiCapabilityScore": 0.8,
-            "humanCriticalityScore": 0.25,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Assess cost effectiveness of products, projects or services, tracking actual costs relative to bids as the project develops.",
-            "aiCapabilityScore": 0.82,
-            "humanCriticalityScore": 0.28,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Consult with clients, vendors, or construction foremen to discuss and formulate estimates and resolve issues.",
-            "aiCapabilityScore": 0.35,
-            "humanCriticalityScore": 0.8,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         }
     ]
@@ -1542,10 +1538,10 @@ export const initialJobs: Job[] = [
     "title": "Compensation Analyst",
     "cluster": "Business",
     "employment": 90700,
-    "automationCostIndex": 0.62,
+    "automationCostIndex": 0,
     "projectedGrowth": 6,
-    "salaryVolatilityLabel": "Very High",
-    "humanResilienceLabel": "High",
+    "salaryVolatilityLabel": "—",
+    "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
@@ -1556,32 +1552,32 @@ export const initialJobs: Job[] = [
     "tasks": [
         {
             "name": "Administer employee insurance, pension, and savings plans, working with insurance brokers and plan carriers.",
-            "aiCapabilityScore": 0.65,
-            "humanCriticalityScore": 0.45,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Ensure company compliance with federal and state laws, including reporting requirements.",
-            "aiCapabilityScore": 0.62,
-            "humanCriticalityScore": 0.58,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Research employee benefit and health and safety practices, and recommend changes or modifications to existing policies.",
-            "aiCapabilityScore": 0.68,
-            "humanCriticalityScore": 0.48,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Advise managers and employees on state and federal employment regulations, collective agreements, benefit and compensation policies, and classification programs.",
-            "aiCapabilityScore": 0.48,
-            "humanCriticalityScore": 0.7,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Plan and develop curricula and materials for training programs and conduct training.",
-            "aiCapabilityScore": 0.55,
-            "humanCriticalityScore": 0.62,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         }
     ]
@@ -1591,10 +1587,10 @@ export const initialJobs: Job[] = [
     "title": "Purchasing Manager",
     "cluster": "Business",
     "employment": 75100,
-    "automationCostIndex": 0.52,
+    "automationCostIndex": 0,
     "projectedGrowth": 4,
-    "salaryVolatilityLabel": "Medium",
-    "humanResilienceLabel": "High",
+    "salaryVolatilityLabel": "—",
+    "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
@@ -1605,32 +1601,32 @@ export const initialJobs: Job[] = [
     "tasks": [
         {
             "name": "Develop and implement purchasing and contract management instructions, policies, and procedures.",
-            "aiCapabilityScore": 0.45,
-            "humanCriticalityScore": 0.7,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Locate vendors of materials, equipment or supplies, and interview them to determine product availability and terms of sales.",
-            "aiCapabilityScore": 0.6,
-            "humanCriticalityScore": 0.55,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Prepare bid awards requiring board approval.",
-            "aiCapabilityScore": 0.62,
-            "humanCriticalityScore": 0.48,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Direct and coordinate activities of personnel engaged in buying, selling, and distributing materials, equipment, machinery, and supplies.",
-            "aiCapabilityScore": 0.45,
-            "humanCriticalityScore": 0.7,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Review purchase order claims and contracts for conformance to company policy.",
-            "aiCapabilityScore": 0.68,
-            "humanCriticalityScore": 0.42,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         }
     ]
@@ -1640,10 +1636,10 @@ export const initialJobs: Job[] = [
     "title": "Wholesale & Retail Buyer",
     "cluster": "Business",
     "employment": 113400,
-    "automationCostIndex": 0.58,
+    "automationCostIndex": 0,
     "projectedGrowth": -4,
-    "salaryVolatilityLabel": "Very High",
-    "humanResilienceLabel": "High",
+    "salaryVolatilityLabel": "—",
+    "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
@@ -1654,32 +1650,32 @@ export const initialJobs: Job[] = [
     "tasks": [
         {
             "name": "Buy merchandise or commodities for resale to wholesale or retail consumers.",
-            "aiCapabilityScore": 0.55,
-            "humanCriticalityScore": 0.58,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Negotiate prices, discount terms, or transportation arrangements with suppliers.",
-            "aiCapabilityScore": 0.45,
-            "humanCriticalityScore": 0.78,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Examine, select, order, or purchase merchandise consistent with quality, quantity, specification requirements, or other factors.",
-            "aiCapabilityScore": 0.58,
-            "humanCriticalityScore": 0.58,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Recommend mark-up rates, mark-down rates, or merchandise selling prices.",
-            "aiCapabilityScore": 0.7,
-            "humanCriticalityScore": 0.4,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Obtain information about customer needs or preferences by conferring with sales or purchasing personnel.",
-            "aiCapabilityScore": 0.45,
-            "humanCriticalityScore": 0.7,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         }
     ]
@@ -1689,10 +1685,10 @@ export const initialJobs: Job[] = [
     "title": "Purchasing Agent",
     "cluster": "Business",
     "employment": 278300,
-    "automationCostIndex": 0.62,
+    "automationCostIndex": 0,
     "projectedGrowth": 2,
-    "salaryVolatilityLabel": "Very High",
-    "humanResilienceLabel": "High",
+    "salaryVolatilityLabel": "—",
+    "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
@@ -1703,32 +1699,32 @@ export const initialJobs: Job[] = [
     "tasks": [
         {
             "name": "Monitor and follow applicable laws and regulations related to procurement and contracting.",
-            "aiCapabilityScore": 0.58,
-            "humanCriticalityScore": 0.55,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Purchase the highest quality merchandise at the lowest possible price and in correct amounts.",
-            "aiCapabilityScore": 0.65,
-            "humanCriticalityScore": 0.45,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Formulate policies and procedures for bid proposals and procurement of goods and services.",
-            "aiCapabilityScore": 0.55,
-            "humanCriticalityScore": 0.62,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Prepare purchase orders, solicit bid proposals, and review requisitions for goods and services.",
-            "aiCapabilityScore": 0.8,
-            "humanCriticalityScore": 0.22,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Write and review product specifications, maintaining a working technical knowledge of the goods or services to be purchased.",
-            "aiCapabilityScore": 0.62,
-            "humanCriticalityScore": 0.55,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         }
     ]
@@ -1738,10 +1734,10 @@ export const initialJobs: Job[] = [
     "title": "Industrial Production Manager",
     "cluster": "Business",
     "employment": 196900,
-    "automationCostIndex": 0.42,
+    "automationCostIndex": 0,
     "projectedGrowth": 2,
-    "salaryVolatilityLabel": "Medium",
-    "humanResilienceLabel": "High",
+    "salaryVolatilityLabel": "—",
+    "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
@@ -1752,32 +1748,32 @@ export const initialJobs: Job[] = [
     "tasks": [
         {
             "name": "Set and monitor product standards, examining samples of raw products or directing testing during processing, to ensure finished products are of prescribed quality.",
-            "aiCapabilityScore": 0.55,
-            "humanCriticalityScore": 0.65,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Direct or coordinate production, processing, distribution, or marketing activities of industrial organizations.",
-            "aiCapabilityScore": 0.4,
-            "humanCriticalityScore": 0.75,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Review processing schedules or production orders to make decisions concerning inventory requirements, staffing requirements, work procedures, or duty assignments.",
-            "aiCapabilityScore": 0.6,
-            "humanCriticalityScore": 0.55,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Review operations and confer with technical or administrative staff to resolve production or processing problems.",
-            "aiCapabilityScore": 0.42,
-            "humanCriticalityScore": 0.72,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Hire, train, evaluate, or discharge staff or resolve personnel grievances.",
-            "aiCapabilityScore": 0.28,
-            "humanCriticalityScore": 0.92,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         }
     ]
@@ -1787,10 +1783,10 @@ export const initialJobs: Job[] = [
     "title": "UX Designer",
     "cluster": "Business",
     "employment": 208700,
-    "automationCostIndex": 0.52,
+    "automationCostIndex": 0,
     "projectedGrowth": 16,
-    "salaryVolatilityLabel": "Very High",
-    "humanResilienceLabel": "High",
+    "salaryVolatilityLabel": "—",
+    "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
@@ -1801,32 +1797,32 @@ export const initialJobs: Job[] = [
     "tasks": [
         {
             "name": "Conduct user research, including usability testing, interviews, and surveys, to determine design requirements and user pain points.",
-            "aiCapabilityScore": 0.45,
-            "humanCriticalityScore": 0.78,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Collaborate with front-end and back-end developers to complete the full scope of digital product development projects.",
-            "aiCapabilityScore": 0.6,
-            "humanCriticalityScore": 0.55,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Analyze user feedback and behavioral data to identify improvements to interface designs and user flows.",
-            "aiCapabilityScore": 0.62,
-            "humanCriticalityScore": 0.52,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Create wireframes, prototypes, and high-fidelity mockups to communicate design solutions to stakeholders.",
-            "aiCapabilityScore": 0.58,
-            "humanCriticalityScore": 0.55,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Confer with management or development teams to prioritize needs, resolve conflicts, develop content criteria, or choose solutions.",
-            "aiCapabilityScore": 0.35,
-            "humanCriticalityScore": 0.8,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         }
     ]
@@ -1836,10 +1832,10 @@ export const initialJobs: Job[] = [
     "title": "IT Manager",
     "cluster": "Business",
     "employment": 482000,
-    "automationCostIndex": 0.32,
+    "automationCostIndex": 0,
     "projectedGrowth": 15,
-    "salaryVolatilityLabel": "Very High",
-    "humanResilienceLabel": "Future-Proof",
+    "salaryVolatilityLabel": "—",
+    "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
@@ -1850,32 +1846,32 @@ export const initialJobs: Job[] = [
     "tasks": [
         {
             "name": "Direct daily operations of department, analyzing workflow, establishing priorities, developing standards and setting deadlines.",
-            "aiCapabilityScore": 0.38,
-            "humanCriticalityScore": 0.78,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Meet with department heads, managers, supervisors, vendors, and others, to solicit cooperation and resolve problems.",
-            "aiCapabilityScore": 0.25,
-            "humanCriticalityScore": 0.9,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Review project plans to plan and coordinate project activity.",
-            "aiCapabilityScore": 0.48,
-            "humanCriticalityScore": 0.68,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Assign and review the work of systems analysts, programmers, and other computer-related workers.",
-            "aiCapabilityScore": 0.35,
-            "humanCriticalityScore": 0.8,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Provide users with technical support for computer problems.",
-            "aiCapabilityScore": 0.55,
-            "humanCriticalityScore": 0.58,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         }
     ]
@@ -1885,10 +1881,10 @@ export const initialJobs: Job[] = [
     "title": "Cybersecurity Analyst",
     "cluster": "Business",
     "employment": 168900,
-    "automationCostIndex": 0.48,
+    "automationCostIndex": 0,
     "projectedGrowth": 32,
-    "salaryVolatilityLabel": "Very High",
-    "humanResilienceLabel": "High",
+    "salaryVolatilityLabel": "—",
+    "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
@@ -1899,32 +1895,32 @@ export const initialJobs: Job[] = [
     "tasks": [
         {
             "name": "Develop plans to safeguard computer files against accidental or unauthorized modification, destruction, or disclosure and to meet emergency data processing needs.",
-            "aiCapabilityScore": 0.55,
-            "humanCriticalityScore": 0.65,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Monitor current reports of computer viruses to determine when to update virus protection systems.",
-            "aiCapabilityScore": 0.68,
-            "humanCriticalityScore": 0.42,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Encrypt data transmissions and erect firewalls to conceal confidential information and to keep out tainted digital transfers.",
-            "aiCapabilityScore": 0.62,
-            "humanCriticalityScore": 0.45,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Perform risk assessments and execute tests of data processing system to ensure functioning of data processing activities and security measures.",
-            "aiCapabilityScore": 0.55,
-            "humanCriticalityScore": 0.62,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Modify computer security files to incorporate new software, correct errors, or change individual access status.",
-            "aiCapabilityScore": 0.62,
-            "humanCriticalityScore": 0.45,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         }
     ]
@@ -1934,10 +1930,10 @@ export const initialJobs: Job[] = [
     "title": "Web Developer",
     "cluster": "Business",
     "employment": 193200,
-    "automationCostIndex": 0.75,
+    "automationCostIndex": 0,
     "projectedGrowth": 8,
-    "salaryVolatilityLabel": "Very High",
-    "humanResilienceLabel": "At Risk",
+    "salaryVolatilityLabel": "—",
+    "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
@@ -1948,32 +1944,32 @@ export const initialJobs: Job[] = [
     "tasks": [
         {
             "name": "Write supporting code for Web applications or Web sites.",
-            "aiCapabilityScore": 0.88,
-            "humanCriticalityScore": 0.15,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Design, build, or maintain Web sites, using authoring or scripting languages, content creation tools, management tools, and digital media.",
-            "aiCapabilityScore": 0.82,
-            "humanCriticalityScore": 0.25,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Back up files from Web sites to local directories for instant recovery in case of problems.",
-            "aiCapabilityScore": 0.82,
-            "humanCriticalityScore": 0.15,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Select programming languages, design tools, or applications.",
-            "aiCapabilityScore": 0.75,
-            "humanCriticalityScore": 0.4,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Evaluate code to ensure that it is valid, is properly structured, meets industry standards, and is compatible with browsers, devices, or operating systems.",
-            "aiCapabilityScore": 0.8,
-            "humanCriticalityScore": 0.28,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         }
     ]
@@ -1983,10 +1979,10 @@ export const initialJobs: Job[] = [
     "title": "Database Administrator",
     "cluster": "Business",
     "employment": 105000,
-    "automationCostIndex": 0.7,
+    "automationCostIndex": 0,
     "projectedGrowth": 9,
-    "salaryVolatilityLabel": "Very High",
-    "humanResilienceLabel": "At Risk",
+    "salaryVolatilityLabel": "—",
+    "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
@@ -1997,32 +1993,32 @@ export const initialJobs: Job[] = [
     "tasks": [
         {
             "name": "Modify existing databases and database management systems or direct programmers and analysts to make changes.",
-            "aiCapabilityScore": 0.72,
-            "humanCriticalityScore": 0.35,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Plan, coordinate, and implement security measures to safeguard information in computer files against accidental or unauthorized damage, modification or disclosure.",
-            "aiCapabilityScore": 0.68,
-            "humanCriticalityScore": 0.45,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Plan and install upgrades of database management system software to enhance database performance.",
-            "aiCapabilityScore": 0.75,
-            "humanCriticalityScore": 0.3,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Specify users and user access levels for each segment of database.",
-            "aiCapabilityScore": 0.7,
-            "humanCriticalityScore": 0.4,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Test changes to database applications or systems.",
-            "aiCapabilityScore": 0.8,
-            "humanCriticalityScore": 0.22,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         }
     ]
@@ -2032,10 +2028,10 @@ export const initialJobs: Job[] = [
     "title": "IT Project Manager",
     "cluster": "Business",
     "employment": 147900,
-    "automationCostIndex": 0.5,
+    "automationCostIndex": 0,
     "projectedGrowth": 11,
-    "salaryVolatilityLabel": "Very High",
-    "humanResilienceLabel": "High",
+    "salaryVolatilityLabel": "—",
+    "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
@@ -2046,32 +2042,32 @@ export const initialJobs: Job[] = [
     "tasks": [
         {
             "name": "Define project scope, goals, and deliverables that support business objectives in collaboration with senior management and stakeholders.",
-            "aiCapabilityScore": 0.5,
-            "humanCriticalityScore": 0.72,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Develop detailed project plans and manage all implementation processes including resource allocation, progress tracking, and risk mitigation.",
-            "aiCapabilityScore": 0.58,
-            "humanCriticalityScore": 0.62,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Communicate project status, issues, and changes to stakeholders and sponsors in a clear and timely manner.",
-            "aiCapabilityScore": 0.45,
-            "humanCriticalityScore": 0.75,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Identify and manage project risks and issues, developing contingency plans as necessary.",
-            "aiCapabilityScore": 0.55,
-            "humanCriticalityScore": 0.65,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Coordinate cross-functional teams, facilitating collaboration across development, QA, operations, and business units.",
-            "aiCapabilityScore": 0.35,
-            "humanCriticalityScore": 0.85,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         }
     ]
@@ -2081,10 +2077,10 @@ export const initialJobs: Job[] = [
     "title": "General Manager",
     "cluster": "Business",
     "employment": 3223900,
-    "automationCostIndex": 0.28,
+    "automationCostIndex": 0,
     "projectedGrowth": 3,
-    "salaryVolatilityLabel": "Medium",
-    "humanResilienceLabel": "Future-Proof",
+    "salaryVolatilityLabel": "—",
+    "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
@@ -2095,32 +2091,32 @@ export const initialJobs: Job[] = [
     "tasks": [
         {
             "name": "Review financial statements, sales or activity reports, or other performance data to measure productivity or goal achievement or to identify areas needing cost reduction or program improvement.",
-            "aiCapabilityScore": 0.65,
-            "humanCriticalityScore": 0.5,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Direct and coordinate activities of businesses or departments concerned with the production, pricing, sales, or distribution of products.",
-            "aiCapabilityScore": 0.28,
-            "humanCriticalityScore": 0.9,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Direct administrative activities directly related to making products or providing services.",
-            "aiCapabilityScore": 0.35,
-            "humanCriticalityScore": 0.8,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Prepare staff work schedules and assign specific duties.",
-            "aiCapabilityScore": 0.55,
-            "humanCriticalityScore": 0.58,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Direct or coordinate financial or budget activities to fund operations, maximize investments, or increase efficiency.",
-            "aiCapabilityScore": 0.5,
-            "humanCriticalityScore": 0.7,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         }
     ]
@@ -2130,10 +2126,10 @@ export const initialJobs: Job[] = [
     "title": "HR Manager",
     "cluster": "Business",
     "employment": 172100,
-    "automationCostIndex": 0.32,
+    "automationCostIndex": 0,
     "projectedGrowth": 5,
-    "salaryVolatilityLabel": "Medium",
-    "humanResilienceLabel": "Future-Proof",
+    "salaryVolatilityLabel": "—",
+    "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
@@ -2144,32 +2140,32 @@ export const initialJobs: Job[] = [
     "tasks": [
         {
             "name": "Serve as a link between management and employees by handling questions, interpreting and administering contracts and helping resolve work-related problems.",
-            "aiCapabilityScore": 0.3,
-            "humanCriticalityScore": 0.9,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Plan, direct, supervise, and coordinate work activities of subordinates and staff relating to employment, compensation, labor relations, and employee relations.",
-            "aiCapabilityScore": 0.38,
-            "humanCriticalityScore": 0.78,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Perform difficult staffing duties, including dealing with understaffing, refereeing disputes, firing employees, and administering disciplinary procedures.",
-            "aiCapabilityScore": 0.28,
-            "humanCriticalityScore": 0.9,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Represent organization at personnel-related hearings and investigations.",
-            "aiCapabilityScore": 0.22,
-            "humanCriticalityScore": 0.92,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Negotiate bargaining agreements and help interpret labor contracts.",
-            "aiCapabilityScore": 0.25,
-            "humanCriticalityScore": 0.9,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         }
     ]
@@ -2179,10 +2175,10 @@ export const initialJobs: Job[] = [
     "title": "Project Management Specialist",
     "cluster": "Business",
     "employment": 904600,
-    "automationCostIndex": 0.5,
+    "automationCostIndex": 0,
     "projectedGrowth": 7,
-    "salaryVolatilityLabel": "Very High",
-    "humanResilienceLabel": "High",
+    "salaryVolatilityLabel": "—",
+    "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
@@ -2193,32 +2189,32 @@ export const initialJobs: Job[] = [
     "tasks": [
         {
             "name": "Assign duties or responsibilities to project personnel.",
-            "aiCapabilityScore": 0.45,
-            "humanCriticalityScore": 0.7,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Communicate with key stakeholders to determine project requirements and objectives.",
-            "aiCapabilityScore": 0.4,
-            "humanCriticalityScore": 0.8,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Confer with project personnel to identify and resolve problems.",
-            "aiCapabilityScore": 0.3,
-            "humanCriticalityScore": 0.85,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Create project status presentations for delivery to customers or project personnel.",
-            "aiCapabilityScore": 0.65,
-            "humanCriticalityScore": 0.5,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Develop or update project plans including information such as objectives, technologies, schedules, funding, and staffing.",
-            "aiCapabilityScore": 0.62,
-            "humanCriticalityScore": 0.55,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         }
     ]
@@ -2228,10 +2224,10 @@ export const initialJobs: Job[] = [
     "title": "Training & Development Specialist",
     "cluster": "Business",
     "employment": 285200,
-    "automationCostIndex": 0.48,
+    "automationCostIndex": 0,
     "projectedGrowth": 8,
-    "salaryVolatilityLabel": "Medium",
-    "humanResilienceLabel": "High",
+    "salaryVolatilityLabel": "—",
+    "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
@@ -2242,32 +2238,32 @@ export const initialJobs: Job[] = [
     "tasks": [
         {
             "name": "Present information with a variety of instructional techniques or formats, such as role playing, simulations, team exercises, group discussions, videos, or lectures.",
-            "aiCapabilityScore": 0.55,
-            "humanCriticalityScore": 0.65,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Obtain, organize, or develop training procedure manuals, guides, or course materials, such as handouts or visual materials.",
-            "aiCapabilityScore": 0.65,
-            "humanCriticalityScore": 0.5,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Evaluate modes of training delivery, such as in-person or virtual, to optimize training effectiveness, training costs, or environmental impacts.",
-            "aiCapabilityScore": 0.55,
-            "humanCriticalityScore": 0.6,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Offer specific training programs to help workers maintain or improve job skills.",
-            "aiCapabilityScore": 0.52,
-            "humanCriticalityScore": 0.65,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Assess training needs through surveys, interviews with employees, focus groups, or consultation with managers, instructors, or customer representatives.",
-            "aiCapabilityScore": 0.45,
-            "humanCriticalityScore": 0.72,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         }
     ]
@@ -2277,10 +2273,10 @@ export const initialJobs: Job[] = [
     "title": "HR Specialist",
     "cluster": "Business",
     "employment": 878900,
-    "automationCostIndex": 0.55,
+    "automationCostIndex": 0,
     "projectedGrowth": 6,
-    "salaryVolatilityLabel": "Medium",
-    "humanResilienceLabel": "High",
+    "salaryVolatilityLabel": "—",
+    "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
@@ -2291,32 +2287,32 @@ export const initialJobs: Job[] = [
     "tasks": [
         {
             "name": "Interpret and explain human resources policies, procedures, laws, standards, or regulations.",
-            "aiCapabilityScore": 0.55,
-            "humanCriticalityScore": 0.65,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Hire employees and process hiring-related paperwork.",
-            "aiCapabilityScore": 0.48,
-            "humanCriticalityScore": 0.72,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Maintain current knowledge of Equal Employment Opportunity (EEO) and affirmative action guidelines and laws.",
-            "aiCapabilityScore": 0.55,
-            "humanCriticalityScore": 0.58,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Prepare or maintain employment records related to events, such as hiring, termination, leaves, transfers, or promotions, using human resources management system software.",
-            "aiCapabilityScore": 0.78,
-            "humanCriticalityScore": 0.22,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Address employee relations issues, such as harassment allegations, work complaints, or other employee concerns.",
-            "aiCapabilityScore": 0.28,
-            "humanCriticalityScore": 0.92,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         }
     ]
@@ -2326,10 +2322,10 @@ export const initialJobs: Job[] = [
     "title": "Training & Development Manager",
     "cluster": "Business",
     "employment": 43100,
-    "automationCostIndex": 0.38,
+    "automationCostIndex": 0,
     "projectedGrowth": 7,
-    "salaryVolatilityLabel": "Medium",
-    "humanResilienceLabel": "High",
+    "salaryVolatilityLabel": "—",
+    "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
@@ -2340,32 +2336,32 @@ export const initialJobs: Job[] = [
     "tasks": [
         {
             "name": "Analyze training needs to develop new training programs or modify and improve existing programs.",
-            "aiCapabilityScore": 0.55,
-            "humanCriticalityScore": 0.65,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Evaluate instructor performance and the effectiveness of training programs, providing recommendations for improvement.",
-            "aiCapabilityScore": 0.45,
-            "humanCriticalityScore": 0.75,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Plan, develop, and provide training and staff development programs, using knowledge of the effectiveness of methods such as classroom training, demonstrations, on-the-job training, meetings, conferences, and workshops.",
-            "aiCapabilityScore": 0.45,
-            "humanCriticalityScore": 0.75,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Confer with management and conduct surveys to identify training needs based on projected production processes, changes, and other factors.",
-            "aiCapabilityScore": 0.5,
-            "humanCriticalityScore": 0.65,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Conduct orientation sessions and arrange on-the-job training for new hires.",
-            "aiCapabilityScore": 0.4,
-            "humanCriticalityScore": 0.75,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         }
     ]
@@ -2375,10 +2371,10 @@ export const initialJobs: Job[] = [
     "title": "Compensation & Benefits Manager",
     "cluster": "Business",
     "employment": 20100,
-    "automationCostIndex": 0.55,
+    "automationCostIndex": 0,
     "projectedGrowth": 4,
-    "salaryVolatilityLabel": "Very High",
-    "humanResilienceLabel": "High",
+    "salaryVolatilityLabel": "—",
+    "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
@@ -2389,32 +2385,32 @@ export const initialJobs: Job[] = [
     "tasks": [
         {
             "name": "Direct preparation and distribution of written and verbal information to inform employees of benefits, compensation, and personnel policies.",
-            "aiCapabilityScore": 0.6,
-            "humanCriticalityScore": 0.55,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Design, evaluate, and modify benefits policies to ensure that programs are current, competitive, and in compliance with legal requirements.",
-            "aiCapabilityScore": 0.58,
-            "humanCriticalityScore": 0.62,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Fulfill all reporting requirements of all relevant government rules and regulations, including ERISA.",
-            "aiCapabilityScore": 0.72,
-            "humanCriticalityScore": 0.35,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Analyze compensation policies, government regulations, and prevailing wage rates to develop competitive compensation plan.",
-            "aiCapabilityScore": 0.65,
-            "humanCriticalityScore": 0.5,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Identify and implement benefits to increase the quality of life for employees by working with brokers and researching benefits issues.",
-            "aiCapabilityScore": 0.5,
-            "humanCriticalityScore": 0.65,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         }
     ]
@@ -2424,10 +2420,10 @@ export const initialJobs: Job[] = [
     "title": "Financial Risk Analyst",
     "cluster": "Business",
     "employment": 35400,
-    "automationCostIndex": 0.7,
+    "automationCostIndex": 0,
     "projectedGrowth": 9,
-    "salaryVolatilityLabel": "Very High",
-    "humanResilienceLabel": "At Risk",
+    "salaryVolatilityLabel": "—",
+    "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
@@ -2438,32 +2434,32 @@ export const initialJobs: Job[] = [
     "tasks": [
         {
             "name": "Analyze areas of potential risk to the assets, earning capacity, or success of organizations.",
-            "aiCapabilityScore": 0.75,
-            "humanCriticalityScore": 0.35,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Analyze new legislation to determine impact on risk exposure.",
-            "aiCapabilityScore": 0.65,
-            "humanCriticalityScore": 0.55,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Conduct statistical analyses to quantify risk, using statistical analysis software or econometric models.",
-            "aiCapabilityScore": 0.82,
-            "humanCriticalityScore": 0.25,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Confer with traders to identify and communicate risks associated with specific trading strategies or positions.",
-            "aiCapabilityScore": 0.45,
-            "humanCriticalityScore": 0.75,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         },
         {
             "name": "Consult financial literature to ensure use of the latest models or statistical techniques.",
-            "aiCapabilityScore": 0.72,
-            "humanCriticalityScore": 0.35,
+            "aiCapabilityScore": 0,
+            "humanCriticalityScore": 0,
             "importance": 3
         }
     ]

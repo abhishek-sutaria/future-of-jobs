@@ -2,7 +2,7 @@ import React, { useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Color, ShaderMaterial, DoubleSide, Vector3, Vector2 } from 'three';
 import { useStore } from '../store';
-import { getCurrentYearGrowth, getTerrainPosition, TERRAIN_CONFIG } from '../utils/terrainMath';
+import { getCurrentYearGrowth, getTerrainPosition, getVisualHeightForEmployment, TERRAIN_CONFIG } from '../utils/terrainMath';
 import { CLUSTER_COLORS, FALLBACK_COLORS } from '../config/theme';
 import { YEAR_MIN, YEAR_MAX, YEAR_COUNT, SHADER, SHADER_VISUAL, SHADER_COLORS, SCENE } from '../config/constants';
 
@@ -31,38 +31,47 @@ const vertexShader = `
   uniform float uTime;
 
   // Peak Data
+  // uPeaks[i] = vec3(worldX, worldZ, employmentHeight)
+  //   .xy = location in terrain plane
+  //   .z  = log-scaled employment-mode peak height (constant per job)
   uniform vec3 uPeaks[${SHADER.MAX_JOBS}];
   uniform vec3 uColors[${SHADER.MAX_JOBS}];
 
-  // Per-job growth impact at the current timeline (uploaded from CPU each frame).
+  // Per-job current-year growth value (cumulative %, from Claude). Mutated by CPU
+  // each frame. This is the ONLY dynamically-indexed uniform array — some WebGL
+  // drivers don't reliably index more than one.
   uniform float uGrowthNow[${SHADER.MAX_JOBS}];
   uniform int uPeakCount;
+
+  // Scalar mode flag (not an array): 0.0 = Growth mode, 1.0 = Workers mode.
+  uniform float uHeightMode;
 
   const float SIGMA_SQ2 = ${SHADER.SIGMA_SQ2.toFixed(1)};
   const float HEIGHT_SCALE = ${SHADER.HEIGHT_SCALE.toFixed(1)};
 
   void main() {
     vUv = uv;
-    vec3 pos = position; 
-    
+    vec3 pos = position;
+
     vec2 worldPos = (uv - 0.5) * vec2(${SCENE.PLANE_SIZE}.0, ${SCENE.PLANE_SIZE}.0);
-    
+
     float elevation = 0.0;
     vec3 blendedColor = vec3(0.0);
     float totalWeight = 0.0;
-    
+
     // Iterate Jobs
     for(int i = 0; i < uPeakCount; i++) {
-        
-        vec3 peakData = uPeaks[i]; 
-        
-        // --- DYNAMIC HEIGHT CALCULATION ---
+
+        vec3 peakData = uPeaks[i];
         float growthImpact = uGrowthNow[i];
-        
-        float scaler = growthImpact >= 0.0 ? ${SHADER.GROWTH_DAMPENING} : ${SHADER.DECLINE_DAMPENING};
-        float dampened = 1.0 + (growthImpact * scaler);
-        float visualHeight = clamp(dampened, ${SHADER.HEIGHT_CLAMP_MIN}, ${SHADER.HEIGHT_CLAMP_MAX.toFixed(1)});
-        
+
+        // Workers mode: peak height = log-scaled employment, packed in uPeaks.z (constant).
+        // Growth mode:  same formula the original (working) shader used — compute from uGrowthNow.
+        float growthScaler = growthImpact >= 0.0 ? ${SHADER.GROWTH_DAMPENING} : ${SHADER.DECLINE_DAMPENING};
+        float growthHeight = 1.0 + growthImpact * growthScaler;
+        float rawHeight = uHeightMode > 0.5 ? peakData.z : growthHeight;
+        float visualHeight = clamp(rawHeight, ${SHADER.HEIGHT_CLAMP_MIN}, ${SHADER.HEIGHT_CLAMP_MAX.toFixed(1)});
+
         float dx = worldPos.x - peakData.x;
         float dz = worldPos.y - peakData.y; // worldPos.y is Z in terrain space
         
@@ -146,18 +155,22 @@ export const Terrain: React.FC = () => {
   const forecastsRef = useRef<number[]>([]);
   const jobs = useStore((state) => state.jobs);
   const selectedRoleIds = useStore((state) => state.selectedRoleIds);
+  const heightMode = useStore((state) => state.heightMode);
 
   const uniforms = useMemo(() => {
     const filteredJobs = selectedRoleIds.size === 0
       ? jobs
       : jobs.filter(job => selectedRoleIds.has(job.id));
 
+    // uPeaks[i].xy = world position; uPeaks[i].z = log-scaled employment height
+    // (constant per job — used as the peak height in Workers mode).
     const peakVectors = new Array(SHADER.MAX_JOBS).fill(0).map((_, i) => {
       if (i >= filteredJobs.length) return new Vector3(0, 0, 0);
       const job = filteredJobs[i];
       const originalIndex = jobs.findIndex(j => j.id === job.id);
       const { x, z } = getTerrainPosition(originalIndex);
-      return new Vector3(x, -z, 1.0);
+      const employmentHeight = getVisualHeightForEmployment(job.employment);
+      return new Vector3(x, -z, employmentHeight);
     });
 
     const colors = new Array(SHADER.MAX_JOBS).fill(0).map((_, i) => {
@@ -183,11 +196,9 @@ export const Terrain: React.FC = () => {
         const fallbackImpact = getCurrentYearGrowth(job, year).value;
 
         if (job.yearlyForecast) {
-          // Use Specific AI Prediction
           const item = job.yearlyForecast.find(f => f.year === year);
           forecasts[flatIdx] = item ? item.growthImpact : fallbackImpact;
         } else {
-          // Use risk-aware fallback so overview peaks can visibly decline.
           forecasts[flatIdx] = fallbackImpact;
         }
       }
@@ -195,7 +206,7 @@ export const Terrain: React.FC = () => {
 
     forecastsRef.current = forecasts;
 
-      const growthNow = new Float32Array(SHADER.MAX_JOBS);
+    const growthNow = new Float32Array(SHADER.MAX_JOBS);
     const yearNow = useStore.getState().year;
     for (let i = 0; i < filteredJobs.length; i++) {
       growthNow[i] = growthAtYearFromFlatForecasts(forecasts, i, yearNow);
@@ -207,7 +218,8 @@ export const Terrain: React.FC = () => {
       uPeaks: { value: peakVectors },
       uColors: { value: colors },
       uGrowthNow: { value: growthNow },
-      uPeakCount: { value: filteredJobs.length }
+      uPeakCount: { value: filteredJobs.length },
+      uHeightMode: { value: useStore.getState().heightMode === 'employment' ? 1.0 : 0.0 },
     };
   }, [jobs, selectedRoleIds]);
 
@@ -215,9 +227,16 @@ export const Terrain: React.FC = () => {
     (Array.from(selectedRoleIds).sort().join(',') || 'all') + '-' + jobs.length + '-' + jobs.map(j => j.yearlyForecast ? 'Y' : 'N').join('')
     , [selectedRoleIds, jobs]);
 
-  // Push current-year growth values to the GPU every frame.
-  // Mutating the existing Float32Array in place lets three.js detect per-element changes;
-  // replacing the reference can leave the cached uniform stale on some R3F paths.
+  // Keep uHeightMode in sync with the store toggle without remounting the mesh.
+  React.useEffect(() => {
+    const mat = materialRef.current;
+    if (!mat || !mat.uniforms.uHeightMode) return;
+    mat.uniforms.uHeightMode.value = heightMode === 'employment' ? 1.0 : 0.0;
+  }, [heightMode]);
+
+  // Push current-year growth values to the GPU every frame. Only ONE
+  // dynamically-indexed uniform array (uGrowthNow) — drives both color tint
+  // and (via in-shader formula) Growth-mode peak height.
   useFrame((state) => {
     const mat = materialRef.current;
     if (!mat) return;
@@ -228,10 +247,15 @@ export const Terrain: React.FC = () => {
     if (peakCount === 0 || forecasts.length === 0) return;
 
     const currentYear = useStore.getState().year;
-    const arr = mat.uniforms.uGrowthNow.value as Float32Array;
+    const growthArr = mat.uniforms.uGrowthNow.value as Float32Array;
     for (let i = 0; i < peakCount; i++) {
-      arr[i] = growthAtYearFromFlatForecasts(forecasts, i, currentYear);
+      growthArr[i] = growthAtYearFromFlatForecasts(forecasts, i, currentYear);
     }
+
+    // ShaderMaterial only re-uploads uniforms when this flag is true (see three.js
+    // WebGLRenderer). In-place Float32Array writes do not flip it — without this,
+    // uGrowthNow / uTime never reach the GPU after the first upload.
+    mat.uniformsNeedUpdate = true;
   });
 
   return (

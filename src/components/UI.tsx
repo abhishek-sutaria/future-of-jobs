@@ -4,9 +4,10 @@ import { IntroModal } from './IntroModal';
 import { SkillsModal } from './SkillsModal';
 import { MethodologyModal } from './MethodologyModal';
 import { StudentGuideModal } from './Modals/StudentGuideModal';
+import { HealthCheckModal } from './Modals/HealthCheckModal';
 import { BLS_API } from '../config/constants';
 import RoleSelector from './RoleSelector';
-import { analyzeJob, getClaudeUserFriendlyMessage, type JobAnalysis, IS_DEMO_MODE } from '../utils/analysis';
+import { analyzeJob, getClaudeUserFriendlyMessage, type JobAnalysis } from '../utils/analysis';
 import { Legend } from './Legend';
 import { Header } from './Header';
 import { YearSlider } from './YearSlider';
@@ -24,6 +25,7 @@ export const UI: React.FC = () => {
     const [showSkillsModal, setShowSkillsModal] = useState(false);
     const [showMethodologyModal, setShowMethodologyModal] = useState(false);
     const [showStudentGuide, setShowStudentGuide] = useState(false);
+    const [showHealthCheck, setShowHealthCheck] = useState(false);
     const [tourActive, setTourActive] = useState(false);
 
     const [economyData, setEconomyData] = useState<{ value: string, period: string, color: string } | null>(null);
@@ -50,9 +52,7 @@ export const UI: React.FC = () => {
 
                     useStore.getState().updateJobForecast(selectedJob.id, res.yearlyForecast);
                 }
-                if (!IS_DEMO_MODE) {
-                    toast.success('AI analysis complete');
-                }
+                toast.success('AI analysis complete');
             } catch (e: unknown) {
                 console.error('Auto-analysis failed', e);
                 const msg = e instanceof Error ? e.message : 'Failed to analyze';
@@ -105,6 +105,7 @@ export const UI: React.FC = () => {
             <IntroModal />
             <MethodologyModal isOpen={showMethodologyModal} onClose={() => setShowMethodologyModal(false)} />
             <StudentGuideModal isOpen={showStudentGuide} onClose={() => setShowStudentGuide(false)} />
+            <HealthCheckModal isOpen={showHealthCheck} onClose={() => setShowHealthCheck(false)} />
 
             <Header
                 economyData={economyData}
@@ -112,6 +113,7 @@ export const UI: React.FC = () => {
                 onOpenSkillsModal={() => setShowSkillsModal(true)}
                 onStartTour={() => setTourActive(true)}
                 onOpenStudentGuide={() => setShowStudentGuide(true)}
+                onOpenHealthCheck={() => setShowHealthCheck(true)}
             />
 
             {mapView === 'map' && (

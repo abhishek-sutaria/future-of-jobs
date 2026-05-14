@@ -9,8 +9,28 @@ import {
 } from './config/constants';
 
 // ── Percentile helper (used by both fetchRealData and scoreAllJobsWithAI) ──
+//
+// Labels are only meaningful when the underlying scores are real (i.e. Claude
+// has analyzed the tasks). If every job's automation index is still 0 we leave
+// the labels at their pending sentinel ("—") instead of computing percentiles
+// from uninitialized data.
+
+const PENDING_LABEL = '—';
 
 function applyPercentileLabels(jobs: Job[]): Job[] {
+    const allUninitialized = jobs.every(j =>
+        j.automationCostIndex === 0 &&
+        j.tasks.every(t => t.aiCapabilityScore === 0 && t.humanCriticalityScore === 0)
+    );
+
+    if (allUninitialized) {
+        return jobs.map(job => ({
+            ...job,
+            humanResilienceLabel: PENDING_LABEL,
+            salaryVolatilityLabel: PENDING_LABEL,
+        }));
+    }
+
     const autoScores = jobs.map(j => j.automationCostIndex).sort((a, b) => a - b);
     const humanScores = jobs.map(j => {
         const avg = j.tasks.reduce((sum, t) => sum + t.humanCriticalityScore, 0) / j.tasks.length;
@@ -27,6 +47,18 @@ function applyPercentileLabels(jobs: Job[]): Job[] {
 
     return jobs.map(job => {
         const item = { ...job };
+        const taskScoresUninitialized = job.tasks.every(t =>
+            t.aiCapabilityScore === 0 && t.humanCriticalityScore === 0
+        );
+
+        // Per-job pending: this specific job hasn't been Claude-scored yet
+        // (e.g. a single job failed to score) — leave its labels pending.
+        if (taskScoresUninitialized) {
+            item.humanResilienceLabel = PENDING_LABEL;
+            item.salaryVolatilityLabel = PENDING_LABEL;
+            return item;
+        }
+
         const avgHuman = job.tasks.reduce((sum, t) => sum + t.humanCriticalityScore, 0) / job.tasks.length;
         const isHighRisk   = job.automationCostIndex >= p75_auto;
         const isMediumRisk = job.automationCostIndex >= p50_auto;
@@ -55,6 +87,12 @@ interface AppState {
     setSelectedJob: (job: Job | null) => void;
     jobs: Job[];
     upskillTask: (jobId: string, taskName: string) => void;
+
+    // Peak height encoding — what does mountain height represent in the 3D view?
+    //   'growth'     → projected growth/decline at the selected year (animates with timeline)
+    //   'employment' → log-scaled number of workers (static across years)
+    heightMode: 'growth' | 'employment';
+    setHeightMode: (mode: 'growth' | 'employment') => void;
 
     // Map view state
     mapView: 'globe' | 'map';
@@ -127,6 +165,10 @@ export const useStore = create<AppState>((set, get) => ({
 
         return { jobs: newJobs, selectedJob: newSelectedJob };
     }),
+
+    // Peak height encoding
+    heightMode: 'growth',
+    setHeightMode: (mode) => set({ heightMode: mode }),
 
     // Map state
     mapView: 'globe',
@@ -314,21 +356,22 @@ export const useStore = create<AppState>((set, get) => ({
                 id: j.id,
                 title: j.title,
                 tasks: j.tasks.map(t => ({ name: t.name })),
+                projectedGrowth: j.projectedGrowth,
             }));
 
-            const allScores = await scoreAllJobTasks(jobsToScore, userKey, (jobId, done, total) => {
-                console.log(`[TaskScoring] ${done}/${total} jobs scored`);
+            const allAnalyses = await scoreAllJobTasks(jobsToScore, userKey, (jobId, done, total) => {
+                console.log(`[TaskScoring] ${done}/${total} jobs analyzed`);
 
-                // Apply scores for this job immediately as they arrive
+                // Apply scores + forecast for this job immediately as they arrive
                 set(s => {
-                    const jobScores = allScores[jobId];
-                    if (!jobScores) return s;
+                    const analysis = allAnalyses[jobId];
+                    if (!analysis) return s;
 
                     const updatedJobs = s.jobs.map(job => {
                         if (job.id !== jobId) return job;
 
                         const newTasks = job.tasks.map(task => {
-                            const match = jobScores.find(sc =>
+                            const match = analysis.tasks.find(sc =>
                                 sc.taskName === task.name ||
                                 sc.taskName.startsWith(task.name.slice(0, 40))
                             );
@@ -341,7 +384,14 @@ export const useStore = create<AppState>((set, get) => ({
                         });
 
                         const avgAi = newTasks.reduce((sum, t) => sum + t.aiCapabilityScore, 0) / newTasks.length;
-                        return { ...job, tasks: newTasks, automationCostIndex: parseFloat(avgAi.toFixed(2)) };
+                        return {
+                            ...job,
+                            tasks: newTasks,
+                            automationCostIndex: parseFloat(avgAi.toFixed(2)),
+                            yearlyForecast: analysis.yearlyForecast.length > 0
+                                ? analysis.yearlyForecast
+                                : job.yearlyForecast,
+                        };
                     });
 
                     // Re-run percentile labels across all jobs after each update
@@ -354,14 +404,14 @@ export const useStore = create<AppState>((set, get) => ({
                 });
             });
 
-            // Final pass — apply any remaining scores that arrived after the last callback
+            // Final pass — apply any remaining analyses that arrived after the last callback
             set(s => {
                 const finalJobs = s.jobs.map(job => {
-                    const jobScores = allScores[job.id];
-                    if (!jobScores) return job;
+                    const analysis = allAnalyses[job.id];
+                    if (!analysis) return job;
 
                     const newTasks = job.tasks.map(task => {
-                        const match = jobScores.find(sc =>
+                        const match = analysis.tasks.find(sc =>
                             sc.taskName === task.name ||
                             sc.taskName.startsWith(task.name.slice(0, 40))
                         );
@@ -374,7 +424,14 @@ export const useStore = create<AppState>((set, get) => ({
                     });
 
                     const avgAi = newTasks.reduce((sum, t) => sum + t.aiCapabilityScore, 0) / newTasks.length;
-                    return { ...job, tasks: newTasks, automationCostIndex: parseFloat(avgAi.toFixed(2)) };
+                    return {
+                        ...job,
+                        tasks: newTasks,
+                        automationCostIndex: parseFloat(avgAi.toFixed(2)),
+                        yearlyForecast: analysis.yearlyForecast.length > 0
+                            ? analysis.yearlyForecast
+                            : job.yearlyForecast,
+                    };
                 });
 
                 const relabelled     = applyPercentileLabels(finalJobs);

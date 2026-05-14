@@ -2,7 +2,6 @@ import React, { useMemo, useState, useCallback } from 'react';
 import { ComposableMap, Geographies, Geography, Marker, ZoomableGroup } from 'react-simple-maps';
 import { scaleLinear } from 'd3-scale';
 import { useStore } from '../store';
-import { IconX } from './ui/Icons';
 import { CLUSTER_COLORS, FALLBACK_COLORS } from '../config/theme';
 
 // Low-res US state boundaries from the public us-atlas CDN
@@ -19,7 +18,6 @@ interface TooltipState {
 export const MapView: React.FC = () => {
     const jobs = useStore((state) => state.jobs);
     const selectedRoleIds = useStore((state) => state.selectedRoleIds);
-    const setMapView = useStore((state) => state.setMapView);
     const [tooltip, setTooltip] = useState<TooltipState | null>(null);
     const [position, setPosition] = useState<{ coordinates: [number, number]; zoom: number }>({
         coordinates: [-97, 38],
@@ -95,23 +93,18 @@ export const MapView: React.FC = () => {
 
     return (
         <div className="w-full h-full bg-[#0f172a] relative overflow-hidden">
-            {/* Controls */}
-            <div className="absolute top-20 right-6 z-50 flex flex-col gap-2 items-end">
-                <button
-                    onClick={() => setMapView('globe')}
-                    className="px-4 py-2.5 bg-slate-800/90 hover:bg-slate-700 text-white rounded-lg border border-white/10 shadow-lg backdrop-blur-sm flex items-center gap-2 transition-colors font-semibold text-sm min-h-[44px]"
-                >
-                    <IconX size={14} /> Close Map
-                </button>
-                {!isDefault && (
+            {/* Reset view — small, conditional, only appears when zoomed/panned.
+                Close Map lives in the Header beside the search bar. */}
+            {!isDefault && (
+                <div className="absolute top-32 right-6 z-50">
                     <button
                         onClick={() => setPosition({ coordinates: [-97, 38], zoom: 1 })}
                         className="px-3 py-1.5 bg-slate-800/80 hover:bg-slate-700 text-gray-400 hover:text-white rounded-lg border border-white/[0.07] text-xs transition-colors"
                     >
                         Reset view
                     </button>
-                )}
-            </div>
+                </div>
+            )}
 
             {/* Legend */}
             <div className="absolute bottom-6 left-6 z-10 flex flex-col gap-2">

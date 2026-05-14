@@ -1,6 +1,11 @@
 import { SHADER, YEAR_MIN, YEAR_MAX } from '../config/constants';
 import type { Job } from '../types';
 
+// Per-year growth values come from Claude's forecast (cumulative percent change
+// from the 2025 baseline, grounded in real BLS + O*NET inputs). When Claude
+// hasn't yet analyzed a job, the peak stays at neutral baseline (0% change)
+// rather than fabricating an intermediate value.
+
 // Constants for Landscape Generation
 export const TERRAIN_CONFIG = {
     // Spatial Layout
@@ -66,39 +71,45 @@ export const getVisualHeightForGrowth = (growthDelta: number): number => {
     return Math.max(VISUAL_CONFIG.MIN_HEIGHT, Math.min(VISUAL_CONFIG.MAX_HEIGHT, VISUAL_CONFIG.BASE_HEIGHT + impact));
 };
 
+/**
+ * Log-scaled height from employment count. Maps roughly:
+ *   1,000 workers   → ~0.5  (short peak)
+ *   100,000 workers → ~2.5  (medium peak)
+ *   10M workers     → ~4.5  (tall peak)
+ * Output is clamped to the same visual range as the growth-mode height.
+ */
+export const getVisualHeightForEmployment = (employment: number): number => {
+    const safe = Math.max(1, employment);
+    const logE = Math.log10(safe);
+    const minLog = 3;  // log10(1,000)
+    const maxLog = 7;  // log10(10,000,000)
+    const normalized = (logE - minLog) / (maxLog - minLog);
+    const clamped = Math.max(0, Math.min(1, normalized));
+    return Math.max(VISUAL_CONFIG.MIN_HEIGHT, Math.min(VISUAL_CONFIG.MAX_HEIGHT, 0.5 + clamped * 4.0));
+};
+
 export const getDeclineTintStrength = (growthDelta: number): number => {
     if (growthDelta >= 0) return 0;
     return Math.min(VISUAL_CONFIG.DECLINE_TINT_MAX, Math.abs(growthDelta) * 0.08);
 };
 
-export const getFallbackYearlyImpact = (job: Job, year: number): number => {
-    if (year <= YEAR_MIN) return 0;
-
-    const progress = (year - YEAR_MIN) / (YEAR_MAX - YEAR_MIN);
-    const baselineGrowth = job.projectedGrowth * progress;
-
-    // Use globally-scored AI risk to create overview decline even before a per-job
-    // detailed yearly forecast is generated. The drag ramps up later in the
-    // timeline so jobs can rise early, then flatten or decline near 2030.
-    const attenuation = baselineGrowth * job.automationCostIndex * progress * 1.4;
-    const declinePressure = job.automationCostIndex * 8 * Math.pow(progress, 2);
-    const result = baselineGrowth - attenuation - declinePressure;
-    return result;
-};
-
 export const getCurrentYearGrowth = (job: Job, year: number): { value: number; source: 'ai' | 'baseline' } => {
-    if (job.yearlyForecast) {
+    if (job.yearlyForecast && job.yearlyForecast.length > 0) {
         const t = Math.max(YEAR_MIN, Math.min(YEAR_MAX, year));
         const y1 = Math.floor(t);
         const y2 = Math.ceil(t);
         const f = t - y1;
         const item1 = job.yearlyForecast.find((x) => x.year === y1);
         const item2 = job.yearlyForecast.find((x) => x.year === y2);
-        const fallbackValue = getFallbackYearlyImpact(job, t);
-        const val1 = item1 ? item1.growthImpact : fallbackValue;
-        const val2 = item2 ? item2.growthImpact : fallbackValue;
+        // Year 2025 is the baseline (0% change by definition) when Claude
+        // didn't include it; other years that Claude didn't include fall back
+        // to whichever value is available.
+        const val1 = item1 ? item1.growthImpact : (y1 === YEAR_MIN ? 0 : (item2?.growthImpact ?? 0));
+        const val2 = item2 ? item2.growthImpact : (y2 === YEAR_MIN ? 0 : (item1?.growthImpact ?? 0));
         return { value: val1 * (1 - f) + val2 * f, source: 'ai' };
     }
 
-    return { value: getFallbackYearlyImpact(job, year), source: 'baseline' };
+    // No Claude forecast yet for this job — peak stays at neutral baseline
+    // (height = 1.0 in the shader). No invented intermediate values.
+    return { value: 0, source: 'baseline' };
 };
