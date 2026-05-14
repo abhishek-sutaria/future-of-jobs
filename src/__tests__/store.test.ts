@@ -36,18 +36,41 @@ describe('Store Logic: Truth in Data', () => {
         });
     });
 
-    it('should calculate percentiles and assign volatility labels after fetchRealData', async () => {
+    it('keeps pending volatility labels (—) after fetchRealData when task scores are still uninitialized', async () => {
         await useStore.getState().fetchRealData();
 
         const updatedJobs = useStore.getState().jobs;
+        expect(useStore.getState().hasLoadedRealData).toBe(true);
 
-        // Every job should have a salaryVolatilityLabel assigned
-        updatedJobs.forEach(job => {
+        const allPending = updatedJobs.every(
+            (job) => job.salaryVolatilityLabel === '—' && job.humanResilienceLabel === '—',
+        );
+        expect(allPending).toBe(true);
+    });
+
+    it('assigns volatility labels after fetchRealData once jobs have Claude task scores', async () => {
+        const varied = initialJobs.map((job, i) => {
+            const highRisk = i < 25;
+            return {
+                ...job,
+                tasks: job.tasks.map((t) => ({
+                    ...t,
+                    aiCapabilityScore: highRisk ? 0.85 : 0.15,
+                    humanCriticalityScore: highRisk ? 0.25 : 0.75,
+                })),
+                automationCostIndex: highRisk ? 0.85 : 0.15,
+            };
+        });
+        useStore.setState({ jobs: varied, hasLoadedRealData: false });
+
+        await useStore.getState().fetchRealData();
+
+        const updatedJobs = useStore.getState().jobs;
+        updatedJobs.forEach((job) => {
             expect(job.salaryVolatilityLabel).toMatch(/Critical|High|Moderate|Stable/);
         });
 
-        // At least one job should not be "Stable" (population has variance)
-        const nonStable = updatedJobs.filter(j => j.salaryVolatilityLabel !== 'Stable');
+        const nonStable = updatedJobs.filter((j) => j.salaryVolatilityLabel !== 'Stable');
         expect(nonStable.length).toBeGreaterThan(0);
     });
 });
