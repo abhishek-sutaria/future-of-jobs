@@ -2,7 +2,8 @@ import React, { useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Color, ShaderMaterial, DoubleSide, Vector3, Vector2 } from 'three';
 import { useStore } from '../store';
-import { getCurrentYearGrowth, getTerrainPosition, getVisualHeightForEmployment, TERRAIN_CONFIG } from '../utils/terrainMath';
+import type { Job } from '../types';
+import { getCurrentYearGrowth, getTerrainPosition, getVisualHeightForEmployment, employmentFromCumulativePct, TERRAIN_CONFIG } from '../utils/terrainMath';
 import { CLUSTER_COLORS, FALLBACK_COLORS } from '../config/theme';
 import { YEAR_MIN, YEAR_MAX, YEAR_COUNT, SHADER, SHADER_VISUAL, SHADER_COLORS, SCENE } from '../config/constants';
 
@@ -31,9 +32,9 @@ const vertexShader = `
   uniform float uTime;
 
   // Peak Data
-  // uPeaks[i] = vec3(worldX, worldZ, employmentHeight)
+  // uPeaks[i] = vec3(worldX, worldZ, workersModeHeight)
   //   .xy = location in terrain plane
-  //   .z  = log-scaled employment-mode peak height (constant per job)
+  //   .z  = log-scaled peak height in Workers mode (CPU updates each frame vs timeline)
   uniform vec3 uPeaks[${SHADER.MAX_JOBS}];
   uniform vec3 uColors[${SHADER.MAX_JOBS}];
 
@@ -65,8 +66,8 @@ const vertexShader = `
         vec3 peakData = uPeaks[i];
         float growthImpact = uGrowthNow[i];
 
-        // Workers mode: peak height = log-scaled employment, packed in uPeaks.z (constant).
-        // Growth mode:  same formula the original (working) shader used — compute from uGrowthNow.
+        // Workers mode: peak height from uPeaks.z (implied headcount at scrub year, CPU-updated).
+        // Growth mode: height from uGrowthNow only.
         float growthScaler = growthImpact >= 0.0 ? ${SHADER.GROWTH_DAMPENING} : ${SHADER.DECLINE_DAMPENING};
         float growthHeight = 1.0 + growthImpact * growthScaler;
         float rawHeight = uHeightMode > 0.5 ? peakData.z : growthHeight;
@@ -153,6 +154,7 @@ const fragmentShader = `
 export const Terrain: React.FC = () => {
   const materialRef = useRef<ShaderMaterial>(null);
   const forecastsRef = useRef<number[]>([]);
+  const filteredJobsRef = useRef<Job[]>([]);
   const jobs = useStore((state) => state.jobs);
   const selectedRoleIds = useStore((state) => state.selectedRoleIds);
   const heightMode = useStore((state) => state.heightMode);
@@ -162,8 +164,8 @@ export const Terrain: React.FC = () => {
       ? jobs
       : jobs.filter(job => selectedRoleIds.has(job.id));
 
-    // uPeaks[i].xy = world position; uPeaks[i].z = log-scaled employment height
-    // (constant per job — used as the peak height in Workers mode).
+    // uPeaks[i].xy = world position; uPeaks[i].z = baseline workers height (useFrame
+    // refreshes .z each frame in Workers mode vs the timeline).
     const peakVectors = new Array(SHADER.MAX_JOBS).fill(0).map((_, i) => {
       if (i >= filteredJobs.length) return new Vector3(0, 0, 0);
       const job = filteredJobs[i];
@@ -205,6 +207,7 @@ export const Terrain: React.FC = () => {
     });
 
     forecastsRef.current = forecasts;
+    filteredJobsRef.current = filteredJobs;
 
     const growthNow = new Float32Array(SHADER.MAX_JOBS);
     const yearNow = useStore.getState().year;
@@ -250,6 +253,18 @@ export const Terrain: React.FC = () => {
     const growthArr = mat.uniforms.uGrowthNow.value as Float32Array;
     for (let i = 0; i < peakCount; i++) {
       growthArr[i] = growthAtYearFromFlatForecasts(forecasts, i, currentYear);
+    }
+
+    const hm = useStore.getState().heightMode;
+    if (hm === 'employment') {
+      const peaks = mat.uniforms.uPeaks.value as Vector3[];
+      const fj = filteredJobsRef.current;
+      for (let i = 0; i < peakCount; i++) {
+        const job = fj[i];
+        if (!job) continue;
+        const implied = employmentFromCumulativePct(job.employment, growthArr[i]);
+        peaks[i].z = getVisualHeightForEmployment(implied);
+      }
     }
 
     // ShaderMaterial only re-uploads uniforms when this flag is true (see three.js

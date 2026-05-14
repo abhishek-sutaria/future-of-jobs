@@ -2,7 +2,7 @@ import React, { useMemo, useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Html, Line } from '@react-three/drei';
 import { useStore } from '../store';
-import { getTerrainPosition, calculateGaussianHeight, getCurrentYearGrowth, getVisualHeightForGrowth, getVisualHeightForEmployment, type PeakData, TERRAIN_CONFIG } from '../utils/terrainMath';
+import { getTerrainPosition, calculateGaussianHeight, getCurrentYearGrowth, getVisualHeightForGrowth, getVisualHeightForEmployment, employmentFromCumulativePct, type PeakData, TERRAIN_CONFIG } from '../utils/terrainMath';
 import { CLUSTER_COLORS, FALLBACK_COLORS } from '../config/theme';
 import { SCENE } from '../config/constants';
 
@@ -39,7 +39,7 @@ export const JobMarkers: React.FC = () => {
             const i = jobs.findIndex(j => j.id === job.id);
             const { value: currentGrowth } = getCurrentYearGrowth(job, year);
             const h = heightMode === 'employment'
-                ? getVisualHeightForEmployment(job.employment)
+                ? getVisualHeightForEmployment(employmentFromCumulativePct(job.employment, currentGrowth))
                 : getVisualHeightForGrowth(currentGrowth);
             const { x, z } = getTerrainPosition(i);
             return { x, z, height: h } as PeakData;

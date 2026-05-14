@@ -78,6 +78,14 @@ export const getVisualHeightForGrowth = (growthDelta: number): number => {
  *   10M workers     → ~4.5  (tall peak)
  * Output is clamped to the same visual range as the growth-mode height.
  */
+/**
+ * Scale baseline US headcount by cumulative % change from the forecast (vs YEAR_MIN).
+ * Used so “Workers” terrain height can move with the timeline when AI forecast exists.
+ */
+export function employmentFromCumulativePct(employment: number, cumulativePctFromBaseline: number): number {
+    return Math.max(1, employment * (1 + cumulativePctFromBaseline / 100));
+}
+
 export const getVisualHeightForEmployment = (employment: number): number => {
     const safe = Math.max(1, employment);
     const logE = Math.log10(safe);

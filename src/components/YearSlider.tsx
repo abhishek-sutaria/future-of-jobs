@@ -11,7 +11,7 @@ export const YearSlider: React.FC = () => {
     const progress = ((year - YEAR_MIN) / YEAR_RANGE) * 100;
 
     const modeHint = heightMode === 'employment'
-        ? 'Height = number of workers (static · log-scaled)'
+        ? 'Height = implied headcount at this year (baseline × forecast curve)'
         : 'Height = projected growth at this year';
 
     return (
