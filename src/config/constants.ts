@@ -166,7 +166,7 @@ export const SHADER = {
      * Workers mode only: stretches peak height change from baseline→implied headcount
      * when the year scrub updates cumulative %. Does not alter stored % or data.
      */
-    WORKERS_HEIGHT_DELTA_AMPLIFIER: 1.85,
+    WORKERS_HEIGHT_DELTA_AMPLIFIER: 2.25,
 } as const;
 
 // ── Chart Defaults ─────────────────────────────────────────────────
