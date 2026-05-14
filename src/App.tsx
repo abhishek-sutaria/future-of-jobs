@@ -31,6 +31,8 @@ function App() {
   const fetchRealData = useStore((state) => state.fetchRealData);
   const scoreAllJobsWithAI = useStore((state) => state.scoreAllJobsWithAI);
   const hasConfiguredAI = useStore((state) => state.hasConfiguredAI);
+  const hasAIScores = useStore((state) => state.hasAIScores);
+  const isScoring = useStore((state) => state.isScoring);
   const hydrateAIConfig = useStore((state) => state.hydrateAIConfig);
   const startupAnalysisState = useStore((state) => state.startupAnalysisState);
   const hasShownStartupGate = useStore((state) => state.hasShownStartupGate);
@@ -38,6 +40,7 @@ function App() {
   const finishStartupAnalysisGate = useStore((state) => state.finishStartupAnalysisGate);
   const dismissStartupAnalysisGate = useStore((state) => state.dismissStartupAnalysisGate);
   const startupGateTimerRef = useRef<number | null>(null);
+  const postGateScoreAttemptsRef = useRef(0);
 
   useEffect(() => {
     hydrateAIConfig();
@@ -62,6 +65,18 @@ function App() {
     startStartupAnalysisGate,
     finishStartupAnalysisGate,
   ]);
+
+  // If startup bulk scoring produced no merged AI data (API errors, no key, etc.),
+  // hasAIScores stays false but the gate effect above never runs again. Retry a
+  // limited number of times after the gate dismisses so peaks get forecasts
+  // without requiring a full page refresh.
+  useEffect(() => {
+    if (!hasConfiguredAI || !hasShownStartupGate) return;
+    if (hasAIScores || isScoring) return;
+    if (postGateScoreAttemptsRef.current >= 2) return;
+    postGateScoreAttemptsRef.current += 1;
+    void scoreAllJobsWithAI();
+  }, [hasConfiguredAI, hasShownStartupGate, hasAIScores, isScoring, scoreAllJobsWithAI]);
 
   useEffect(() => {
 

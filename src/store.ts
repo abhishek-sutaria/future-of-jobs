@@ -329,6 +329,12 @@ export const useStore = create<AppState>((set, get) => ({
         localStorage.setItem(AI_MODE_STORAGE_KEY, 'default');
         localStorage.removeItem(AI_USER_KEY_STORAGE_KEY);
         set({ apiKeyMode: 'default', userClaudeApiKey: '', hasConfiguredAI: true });
+        queueMicrotask(() => {
+            const st = get();
+            if (!st.hasConfiguredAI || st.hasAIScores || st.isScoring) return;
+            if (st.apiKeyMode === 'user' && !st.userClaudeApiKey.trim()) return;
+            void st.scoreAllJobsWithAI();
+        });
     },
 
     setUserClaudeApiKey: (key) => {
@@ -336,6 +342,12 @@ export const useStore = create<AppState>((set, get) => ({
         localStorage.setItem(AI_MODE_STORAGE_KEY, 'user');
         localStorage.setItem(AI_USER_KEY_STORAGE_KEY, trimmed);
         set({ apiKeyMode: 'user', userClaudeApiKey: trimmed, hasConfiguredAI: true });
+        queueMicrotask(() => {
+            const st = get();
+            if (!st.hasConfiguredAI || st.hasAIScores || st.isScoring) return;
+            if (st.apiKeyMode === 'user' && !st.userClaudeApiKey.trim()) return;
+            void st.scoreAllJobsWithAI();
+        });
     },
 
     scoreAllJobsWithAI: async () => {
@@ -406,6 +418,12 @@ export const useStore = create<AppState>((set, get) => ({
 
             // Final pass — apply any remaining analyses that arrived after the last callback
             set(s => {
+                const before = s.jobs.map(j => ({
+                    id: j.id,
+                    fc: j.yearlyForecast?.length ?? 0,
+                    sum: j.tasks.reduce((a, t) => a + t.aiCapabilityScore + t.humanCriticalityScore, 0),
+                }));
+
                 const finalJobs = s.jobs.map(job => {
                     const analysis = allAnalyses[job.id];
                     if (!analysis) return job;
@@ -434,12 +452,20 @@ export const useStore = create<AppState>((set, get) => ({
                     };
                 });
 
+                const hasAnyApplied = finalJobs.some(job => {
+                    const b = before.find(x => x.id === job.id);
+                    if (!b) return false;
+                    const fc = job.yearlyForecast?.length ?? 0;
+                    const sum = job.tasks.reduce((a, t) => a + t.aiCapabilityScore + t.humanCriticalityScore, 0);
+                    return fc > b.fc || sum !== b.sum;
+                });
+
                 const relabelled     = applyPercentileLabels(finalJobs);
                 const newSelectedJob = s.selectedJob
                     ? relabelled.find(j => j.id === s.selectedJob!.id) || s.selectedJob
                     : null;
 
-                return { jobs: relabelled, selectedJob: newSelectedJob, hasAIScores: true };
+                return { jobs: relabelled, selectedJob: newSelectedJob, hasAIScores: hasAnyApplied };
             });
 
         } catch (err) {
