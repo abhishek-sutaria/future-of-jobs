@@ -110,7 +110,8 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                         cumulative path from 0% at 2025 to the BLS OOH 10-year % at 2030.{' '}
                         <strong>Workers</strong> mode uses the same cumulative % to scale baseline
                         BLS employment into an implied headcount, then log-scales that for peak height,
-                        with a modest display-only boost to the height change so the scrub reads clearly.
+                        with a modest display-only boost to the height change so the scrub reads clearly,
+                        plus a touch of the Growth height mapping for extra motion.
                     </p>
                 </div>
 
@@ -167,7 +168,7 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                     </p>
                     <ul className="list-disc list-inside text-xs text-gray-400 ml-1 space-y-1">
                         <li><strong>Growth</strong>: per-year cumulative % from Claude&apos;s forecast when available; otherwise a linear path from 0% at 2025 to the BLS OOH 10-year % for that role at 2030 (until Claude fills in a forecast).</li>
-                        <li><strong>Workers</strong>: log-scaled implied headcount (BLS baseline × cumulative % at the selected year). Peak height applies a small display-only multiplier to the change from baseline so the scrub is easier to see.</li>
+                        <li><strong>Workers</strong>: log-scaled implied headcount (BLS baseline × cumulative % at the selected year), with a stronger height-delta boost and a partial blend of the Growth height curve so the scrub feels responsive. Labels still show the real cumulative %.</li>
                     </ul>
                 </div>
             </div>
