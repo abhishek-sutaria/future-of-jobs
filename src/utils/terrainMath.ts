@@ -3,8 +3,8 @@ import type { Job } from '../types';
 
 // Per-year growth values come from Claude's forecast (cumulative percent change
 // from the 2025 baseline, grounded in real BLS + O*NET inputs). When Claude
-// hasn't yet analyzed a job, the peak stays at neutral baseline (0% change)
-// rather than fabricating an intermediate value.
+// has not produced a forecast yet, cumulative % is a linear ramp from 0% at
+// YEAR_MIN to the job's BLS OOH projectedGrowth at YEAR_MAX (single official anchor).
 
 // Constants for Landscape Generation
 export const TERRAIN_CONFIG = {
@@ -121,9 +121,12 @@ export const getCurrentYearGrowth = (job: Job, year: number): { value: number; s
         return { value: val1 * (1 - f) + val2 * f, source: 'ai' };
     }
 
-    // No Claude forecast yet for this job — peak stays at neutral baseline
-    // (height = 1.0 in the shader). No invented intermediate values.
-    return { value: 0, source: 'baseline' };
+    const t = Math.max(YEAR_MIN, Math.min(YEAR_MAX, year));
+    const span = YEAR_MAX - YEAR_MIN;
+    const frac = span > 0 ? (t - YEAR_MIN) / span : 0;
+    const cumulative = job.projectedGrowth * frac;
+
+    return { value: cumulative, source: 'baseline' };
 };
 
 /**

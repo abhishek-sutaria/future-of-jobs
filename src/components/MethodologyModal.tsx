@@ -165,7 +165,7 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                         Use the toggle on the year-slider panel to flip peak height between:
                     </p>
                     <ul className="list-disc list-inside text-xs text-gray-400 ml-1 space-y-1">
-                        <li><strong>Growth</strong>: per-year growth/decline from Claude's forecast when available, otherwise the real BLS 10-year projection held constant.</li>
+                        <li><strong>Growth</strong>: per-year cumulative % from Claude&apos;s forecast when available; otherwise a linear path from 0% at 2025 to the BLS OOH 10-year % for that role at 2030 (until Claude fills in a forecast).</li>
                         <li><strong>Workers</strong>: log-scaled BLS employment headcount (static across years).</li>
                     </ul>
                 </div>
