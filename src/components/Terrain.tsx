@@ -149,8 +149,8 @@ export const Terrain: React.FC = () => {
       ? jobs
       : jobs.filter(job => selectedRoleIds.has(job.id));
 
-    // uPeaks[i].xy = world position; uPeaks[i].z = baseline workers height (useFrame
-    // refreshes .z each frame in Workers mode vs the timeline).
+    // uPeaks[i].xy = world position; uPeaks[i].z = Workers-mode height (useFrame
+    // updates .z from implied headcount at the current scrub year).
     const peakVectors = new Array(SHADER.MAX_JOBS).fill(0).map((_, i) => {
       if (i >= filteredJobs.length) return new Vector3(0, 0, 0);
       const job = filteredJobs[i];

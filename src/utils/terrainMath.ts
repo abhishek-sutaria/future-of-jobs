@@ -89,15 +89,17 @@ export const getVisualHeightForEmployment = (employment: number): number => {
 };
 
 /**
- * Workers mode: peak height follows **BLS headcount only** (log-scaled), same as
- * the static employment surface. Timeline scrub does not change Workers peak height;
- * cumulative AI forecast drives Growth mode and marker copy only.
+ * Workers mode: log-scaled height from **implied** headcount at the scrub year:
+ *   baseline OES employment × (1 + cumulative% / 100),
+ * where cumulative% is the same series as Growth mode (Claude forecast or BLS linear baseline).
+ * Peak motion with the timeline is intentional; values trace to snapshot employment + that % path only.
  */
 export function getVisualHeightForWorkersAtYear(
     baselineEmployment: number,
-    _cumulativePctFromBaseline: number,
+    cumulativePctFromBaseline: number,
 ): number {
-    return getVisualHeightForEmployment(baselineEmployment);
+    const implied = Math.max(1, baselineEmployment * (1 + cumulativePctFromBaseline / 100));
+    return getVisualHeightForEmployment(implied);
 }
 
 export const getDeclineTintStrength = (growthDelta: number): number => {

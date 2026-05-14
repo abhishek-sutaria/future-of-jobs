@@ -106,10 +106,11 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                     <p className="text-[11px] text-gray-500 leading-relaxed mt-2 italic">
                         Before Claude finishes scoring a role, task-level AI / human scores stay at
                         their pending baseline. In <strong>Growth</strong> mode, peak motion follows
-                        Claude&apos;s stored year-by-year forecast when present; otherwise the BLS
-                        10-year projection is applied as a flat cumulative path.{' '}
-                        <strong>Workers</strong> mode uses log-scaled employment only — it does not
-                        animate with the year scrub.
+                        Claude&apos;s stored year-by-year forecast when present; otherwise a linear
+                        cumulative path from 0% at 2025 to the BLS OOH 10-year % at 2030.{' '}
+                        <strong>Workers</strong> mode uses the same cumulative % to scale baseline
+                        BLS employment into an implied headcount, then log-scales that for peak height
+                        (so the timeline still moves peaks while encoding &quot;size of workforce&quot;).
                     </p>
                 </div>
 
@@ -166,7 +167,7 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                     </p>
                     <ul className="list-disc list-inside text-xs text-gray-400 ml-1 space-y-1">
                         <li><strong>Growth</strong>: per-year cumulative % from Claude&apos;s forecast when available; otherwise a linear path from 0% at 2025 to the BLS OOH 10-year % for that role at 2030 (until Claude fills in a forecast).</li>
-                        <li><strong>Workers</strong>: log-scaled BLS employment headcount (static across years).</li>
+                        <li><strong>Workers</strong>: log-scaled implied headcount (BLS baseline employment adjusted by the same cumulative % path as Growth at the selected year).</li>
                     </ul>
                 </div>
             </div>

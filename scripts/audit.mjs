@@ -665,9 +665,9 @@ heading('CAT-8', 'Real-data policy — banned simulation tokens in src/');
 {
   const src = read('src/utils/terrainMath.ts');
   check(
-    'T49 — Workers height uses employment-only mapping (no timeline peak amplifier)',
+    'T49 — Workers height maps implied headcount via getVisualHeightForEmployment (no WORKERS_TIMELINE amplifier)',
     src.includes('getVisualHeightForWorkersAtYear') &&
-      src.includes('getVisualHeightForEmployment(baselineEmployment)') &&
+      src.includes('getVisualHeightForEmployment') &&
       !src.includes('WORKERS_TIMELINE')
   );
 }

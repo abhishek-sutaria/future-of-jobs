@@ -89,8 +89,8 @@ interface AppState {
     upskillTask: (jobId: string, taskName: string) => void;
 
     // Peak height encoding — what does mountain height represent in the 3D view?
-    //   'growth'     → projected growth/decline at the selected year (animates with timeline)
-    //   'employment' → log-scaled number of workers (static across years)
+    //   'growth'     → cumulative % → damped shader height (timeline scrub)
+    //   'employment' → implied headcount (BLS employment × (1+cumulative%/100)) log-scaled (timeline scrub)
     heightMode: 'growth' | 'employment';
     setHeightMode: (mode: 'growth' | 'employment') => void;
 
