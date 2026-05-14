@@ -16,7 +16,7 @@ export type Job = {
   humanResilienceLabel: string; // "Low", "Medium", "High"
 
   // Accuracy Metadata
-  confidenceScore: number; // 0.0 to 1.0
+  confidenceScore: number; // Source coverage index (store formula), not a BLS accuracy metric
   dataSources: string[];   // e.g. ["BLS-2024", "ONET-Weighted"]
   isAlias: boolean;        // True if we used a Proxy Job
   isEstimate?: boolean;    // Flag for hardcoded estimate

@@ -2,15 +2,14 @@ import React, { useMemo } from 'react';
 import * as d3 from 'd3';
 import type { Task } from '../../types';
 import { VISUALIZATION_THRESHOLDS } from '../../config/GameMechanics';
-import { YEAR_MIN, GROWTH_RATES, RISK_THRESHOLDS, CHART } from '../../config/constants';
+import { RISK_THRESHOLDS, CHART } from '../../config/constants';
 import { CHART_COLORS } from '../../config/theme';
 
 interface ImpactMatrixChartProps {
     tasks: Task[];
-    year: number;
 }
 
-export const ImpactMatrixChart: React.FC<ImpactMatrixChartProps> = ({ tasks, year }) => {
+export const ImpactMatrixChart: React.FC<ImpactMatrixChartProps> = ({ tasks }) => {
     const { WIDTH: width, HEIGHT: height, MARGIN: margin } = CHART.IMPACT_MATRIX;
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
@@ -22,13 +21,12 @@ export const ImpactMatrixChart: React.FC<ImpactMatrixChartProps> = ({ tasks, yea
     const yTicks = useMemo(() => yScale.ticks(3), [yScale]);
 
     const points = useMemo(() => {
-        const yearsPassed = year - YEAR_MIN;
         return tasks.map(t => {
-            const currentAi = Math.min(1, t.aiCapabilityScore + (yearsPassed * GROWTH_RATES.AI_CAPABILITY_PER_YEAR));
+            const currentAi = Math.min(1, t.aiCapabilityScore);
             const color = t.humanCriticalityScore > RISK_THRESHOLDS.HUMAN_CRITICAL_SCORE ? CHART_COLORS.success : (currentAi > RISK_THRESHOLDS.PROJECTED_HIGH_RISK_AI ? CHART_COLORS.danger : CHART_COLORS.warning);
             return { name: t.name, cx: xScale(currentAi), cy: yScale(t.humanCriticalityScore), color };
         });
-    }, [tasks, year, xScale, yScale]);
+    }, [tasks, xScale, yScale]);
 
     return (
         <div className="w-full flex justify-center">

@@ -5,8 +5,8 @@ import { Mesh, Color, MeshStandardMaterial, Vector2 } from 'three';
 import type { Job } from '../types';
 
 import { useStore } from '../store';
-import { initialJobs } from '../data';
-import { YEAR_MIN, RISK_COLORS, VOLATILITY_LABELS, ANIMATIONS, JOB_ICON_KEYWORDS, JOB_ICON_DEFAULT, SHADER } from '../config/constants';
+import { getCurrentYearGrowth } from '../utils/terrainMath';
+import { RISK_COLORS, VOLATILITY_LABELS, ANIMATIONS, JOB_ICON_KEYWORDS, JOB_ICON_DEFAULT, SHADER } from '../config/constants';
 
 interface JobMeshProps {
     job: Job;
@@ -33,14 +33,9 @@ export const JobMesh: React.FC<JobMeshProps> = ({ job, position }) => {
     const pulseRef = useRef<number>(0);
 
     // Check if "Saved" (Was Critical/High Risk initially, now Safe/Moderate)
-    const isSaved = useMemo(() => {
-        const initialJob = initialJobs.find(j => j.id === job.id);
-        if (!initialJob) return false;
-        // Initial state logic (hardcoded fallback since we don't have time machine for initial)
-        // Check if current job is safer than initial logic would suggest
-        // Simplified: If current label is "Stable" or "Future-Proof" but automation index is high
-        return job.humanResilienceLabel === 'Future-Proof' && job.automationCostIndex > ANIMATIONS.SAVED_AUTOMATION_THRESHOLD;
-    }, [job]);
+    const isSaved = useMemo(() => (
+        job.humanResilienceLabel === 'Future-Proof' && job.automationCostIndex > ANIMATIONS.SAVED_AUTOMATION_THRESHOLD
+    ), [job]);
 
     // Helper to get color from real labels
     const getJobColor = (j: Job) => {
@@ -67,14 +62,10 @@ export const JobMesh: React.FC<JobMeshProps> = ({ job, position }) => {
 
         // Projection logic - Use Real Automation Index
         // High Risk is defined by the Store (Top 25%), reflected in the label
-        const isHighRisk = job.salaryVolatilityLabel === VOLATILITY_LABELS.CRITICAL || job.salaryVolatilityLabel === VOLATILITY_LABELS.HIGH;
+        const { value: cumulativePct } = getCurrentYearGrowth(job, year);
+        const projectedEmployment = job.employment * (1 + cumulativePct / 100);
 
-        const rate = isHighRisk ? ANIMATIONS.HIGH_RISK_GROWTH_RATE : ANIMATIONS.LOW_RISK_GROWTH_RATE;
-        const yearsPassed = year - YEAR_MIN;
-        // Simple projection for visual height
-        const projectedEmployment = job.employment * Math.pow(rate, yearsPassed);
-
-        // Height calculation
+        // Height calculation (BLS headcount adjusted only by Claude cumulative % when present)
         const height = (projectedEmployment / ANIMATIONS.EMPLOYMENT_HEIGHT_DIVISOR);
 
         // Visual Scale (Mountain Shape)

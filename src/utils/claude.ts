@@ -36,6 +36,20 @@ export const ClaudeResponseSchema = z.object({
     tasks: z.array(TaskScoreSchema).nonempty()
 }).passthrough();
 
+/** Batch job scoring + yearly forecast (taskScoring.ts). */
+export const JobTaskScoringSchema = z.object({
+    tasks: z.array(z.object({
+        taskName: z.string().optional(),
+        aiCapabilityScore: z.number(),
+        humanCriticalityScore: z.number(),
+    })).nonempty(),
+    yearlyForecast: z.array(z.object({
+        year: z.number(),
+        growthImpact: z.number(),
+        reasoning: z.string().optional(),
+    })).nonempty(),
+});
+
 export function validateClaudeResponse(jsonText: string) {
     if (/"(?:ai_exposure_score|human_criticality_score)"\s*:\s*(0|1|0\.\d|1\.0)(?!\d|\.)/.test(jsonText)) {
         throw new Error("Validation Error: Score must be exactly 2 decimals.");

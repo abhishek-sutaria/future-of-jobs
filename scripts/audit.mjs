@@ -3,7 +3,7 @@
  * EXHAUSTIVE AUDIT TEST SUITE
  * Future of Jobs — Data Integrity & Production Readiness
  *
- * Runs 42 automated checks across 7 categories:
+ * Runs 49 automated checks across 9 categories:
  *   [CAT-1] Telemetry Cleanup
  *   [CAT-2] Dead Code Removal
  *   [CAT-3] Data Integrity — Jobs & Tasks
@@ -631,50 +631,92 @@ heading('CAT-7', 'Validation, Data Flow & Schema Correctness');
 }
 
 // =============================================================================
-// CATEGORY 8: Build
+// CATEGORY 8: Real-data policy (no synthetic labor-market simulation)
 // =============================================================================
-heading('CAT-8', 'Production Build');
+heading('CAT-8', 'Real-data policy — banned simulation tokens in src/');
 
-// T43: TypeScript compilation succeeds (tsc --noEmit)
+{
+  const banned = ['GROWTH_RATES', 'WORKERS_TIMELINE_PEAK_AMPLIFIER'];
+  const hits = [];
+  for (const f of SRC_FILES) {
+    const content = read(f);
+    for (const token of banned) {
+      if (content.includes(token)) hits.push(`${path.relative(ROOT, f)} (${token})`);
+    }
+  }
+  check(
+    'T47 — No GROWTH_RATES or WORKERS_TIMELINE_PEAK_AMPLIFIER in src/',
+    hits.length === 0,
+    hits.length > 0 ? hits.join(', ') : ''
+  );
+}
+
+{
+  const src = read('src/utils/taskScoring.ts');
+  const m = src.match(/const CACHE_VERSION = (\d+)/);
+  const v = m ? parseInt(m[1], 10) : 0;
+  check(
+    'T48 — taskScoring.ts CACHE_VERSION is at least 5 (prompt + validation bumps)',
+    v >= 5,
+    m ? `Found CACHE_VERSION = ${v}` : 'CACHE_VERSION not found'
+  );
+}
+
+{
+  const src = read('src/utils/terrainMath.ts');
+  check(
+    'T49 — Workers height uses employment-only mapping (no timeline peak amplifier)',
+    src.includes('getVisualHeightForWorkersAtYear') &&
+      src.includes('getVisualHeightForEmployment(baselineEmployment)') &&
+      !src.includes('WORKERS_TIMELINE')
+  );
+}
+
+// =============================================================================
+// CATEGORY 9: Build
+// =============================================================================
+heading('CAT-9', 'Production Build');
+
+// T50: TypeScript compilation succeeds (tsc --noEmit)
 {
   try {
     execSync('npx tsc --noEmit 2>&1', { cwd: ROOT, stdio: 'pipe' });
     passed++;
-    pass('T43 — TypeScript type-check (tsc --noEmit) passes with zero errors');
+    pass('T50 — TypeScript type-check (tsc --noEmit) passes with zero errors');
   } catch (e) {
     failed++;
     const output = e.stdout?.toString() || e.message || '';
     const errorLines = output.split('\n').filter(l => l.includes('error TS')).slice(0, 5);
-    fail('T43 — TypeScript type-check failed', errorLines.join(' | '));
+    fail('T50 — TypeScript type-check failed', errorLines.join(' | '));
   }
 }
 
-// T44: Vite production build succeeds
+// T51: Vite production build succeeds
 {
   try {
     execSync('npm run build 2>&1', { cwd: ROOT, stdio: 'pipe' });
     passed++;
-    pass('T44 — Vite production build (npm run build) succeeds');
+    pass('T51 — Vite production build (npm run build) succeeds');
   } catch (e) {
     failed++;
     const output = e.stdout?.toString() || e.message || '';
-    fail('T44 — Vite production build failed', output.slice(0, 200));
+    fail('T51 — Vite production build failed', output.slice(0, 200));
   }
 }
 
-// T45: dist/index.html exists after build
+// T52: dist/index.html exists after build
 check(
-  'T45 — dist/index.html exists post-build',
+  'T52 — dist/index.html exists post-build',
   exists('dist/index.html')
 );
 
-// T46: dist/assets directory has JS bundle
+// T53: dist/assets directory has JS bundle
 {
   const assetsDir = path.join(ROOT, 'dist', 'assets');
   const hasJs = fs.existsSync(assetsDir) &&
     fs.readdirSync(assetsDir).some(f => f.endsWith('.js'));
   check(
-    'T46 — dist/assets/ contains a JavaScript bundle',
+    'T53 — dist/assets/ contains a JavaScript bundle',
     hasJs
   );
 }

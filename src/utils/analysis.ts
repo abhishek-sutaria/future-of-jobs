@@ -175,9 +175,17 @@ export async function generateUpskillCourses(jobTitle: string, taskName: string)
     return callAnalysis(prompt) as Promise<UpskillCoursesResult>;
 }
 
-export async function analyzeJob(jobTitle: string, tasks: string[]): Promise<JobAnalysis | null> {
+export async function analyzeJob(
+    jobTitle: string,
+    tasks: string[],
+    bls: { employment: number; projectedGrowth: number },
+): Promise<JobAnalysis | null> {
     const prompt = `
     Analyze the following job tasks for a "${jobTitle}" role.
+
+    Official BLS / snapshot context (do not invent different national totals; your scenario interprets these inputs):
+    - US employment level (OES snapshot used in app): ${bls.employment.toLocaleString()}
+    - BLS Occupational Outlook 10-year projected employment change for this occupation group: ${bls.projectedGrowth >= 0 ? '+' : ''}${bls.projectedGrowth}%
 
     For each task, provide:
     1. ai_exposure_score (0.0 to 1.0): How easily can GenAI/Agents automate this?
@@ -210,7 +218,9 @@ export async function analyzeJob(jobTitle: string, tasks: string[]): Promise<Job
 
     IMPORTANT COHERENCE INSTRUCTIONS:
     - Provide precise, granular two-decimal scores (e.g., 0.73, 0.41, 0.88). DO NOT round to the nearest tenth or quarter.
-    - "yearlyForecast.growthImpact" is CUMULATIVE percent change in employment from the 2025 baseline. NOT year-over-year. Year 2025 MUST be 0.00. Use two-decimal precision (e.g. 2.40, -3.85). Magnitudes around half of the BLS 10-year projection by year 2030, adjusted up for high human-criticality and down for high AI-capability tasks.
+    - "yearlyForecast.growthImpact" is CUMULATIVE percent change in employment from the 2025 baseline. NOT year-over-year. Year 2025 MUST be 0.00. Use two-decimal precision (e.g. 2.40, -3.85).
+    - For every forecast year, cumulative |growthImpact| must NOT exceed |${bls.projectedGrowth}| (the BLS OOH 10-year % for this role). Intermediate years must interpolate smoothly toward the 2030 endpoint without violating that cap at any year.
+    - Do not introduce other macro statistics (GDP, national unemployment, wages) unless they appear in the task text you were given.
     - "salary_forecast" should be an array of 6 numbers representing a salary index from 2025 to 2030. Start at 100.
     - If the role's tasks have high automation exposure, the salary forecast should show VOLATILITY (ups and downs) or DECLINE.
     - If the role's tasks have high human criticality, the salary should remain STABLE or GROW.

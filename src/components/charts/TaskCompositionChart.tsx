@@ -6,15 +6,14 @@ import { CHART, TASK_CATEGORY_COLORS } from '../../config/constants';
 
 interface TaskCompositionChartProps {
     tasks: Task[];
-    year: number;
 }
 
-export const TaskCompositionChart: React.FC<TaskCompositionChartProps> = ({ tasks, year }) => {
+export const TaskCompositionChart: React.FC<TaskCompositionChartProps> = ({ tasks }) => {
     const { WIDTH: width, HEIGHT: height } = CHART.TASK_COMPOSITION;
 
     const segments = useMemo(() => {
         const counts = { 'Automatable': 0, 'Augmentable': 0, 'Human-Critical': 0 } as Record<string, number>;
-        tasks.forEach(task => { counts[getTaskCategory(task, year)]++; });
+        tasks.forEach(task => { counts[getTaskCategory(task)]++; });
 
         const total = tasks.length;
         const xScale = d3.scaleLinear().domain([0, total]).range([0, width]);
@@ -32,7 +31,7 @@ export const TaskCompositionChart: React.FC<TaskCompositionChartProps> = ({ task
             currentX += barWidth;
             return seg;
         });
-    }, [tasks, year]);
+    }, [tasks]);
 
     return (
         <div className="w-full">

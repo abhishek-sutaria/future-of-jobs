@@ -7,8 +7,9 @@ import { generateJobScenario, analyzeJob, getClaudeUserFriendlyMessage, type Sce
 import { IconBrain, IconSparkles, IconAlertTriangle, IconShield, IconTarget, IconInfo, IconTrendingDown, IconCheck } from './ui/Icons';
 import { Skeleton } from './ui/Skeleton';
 import { Z } from '../config/layers';
-import { RISK_THRESHOLDS, UI, CHART, CONFIDENCE } from '../config/constants';
+import { RISK_THRESHOLDS, UI, CHART } from '../config/constants';
 import { getSeriesIdForJob, getSeriesLabel } from '../utils/bls';
+import { jobSourceProvenanceChips, dataCoverageTooltip, provenanceLabel } from '../utils/provenance';
 import type { Job } from '../types';
 
 interface JobDetailPanelProps {
@@ -41,7 +42,10 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
         setAnalysisModalError(null);
         try {
             const taskList = job.tasks.map(t => t.name);
-            const res = await analyzeJob(job.title, taskList);
+            const res = await analyzeJob(job.title, taskList, {
+                employment: job.employment,
+                projectedGrowth: job.projectedGrowth,
+            });
             onSetAnalysisResult(res);
             if (res?.yearlyForecast) {
                 useStore.getState().updateJobForecast(job.id, res.yearlyForecast);
@@ -92,15 +96,12 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                 <span className="px-2 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wider bg-blue-500/10 text-blue-400 border border-blue-500/20">
                                     {job.cluster}
                                 </span>
-                                {job.confidenceScore >= CONFIDENCE.VERIFIED_THRESHOLD ? (
-                                    <span className="px-2 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wider bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center gap-1">
-                                        <IconCheck size={10} /> Verified
-                                    </span>
-                                ) : (
-                                    <span className="px-2 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wider bg-amber-500/10 text-amber-400 border border-amber-500/20">
-                                        ~ Est.
-                                    </span>
-                                )}
+                                <span
+                                    title={dataCoverageTooltip()}
+                                    className="px-2 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wider bg-slate-500/10 text-slate-300 border border-slate-500/25 cursor-help"
+                                >
+                                    Coverage {(job.confidenceScore * 100).toFixed(0)}%
+                                </span>
                                 {job.isStale && (
                                     <span title="Stale Data: BLS API rate limit exceeded. Showing cached employment data." className="px-2 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wider bg-red-500/10 text-red-400 border border-red-500/20 flex items-center gap-1 cursor-help">
                                         <IconAlertTriangle size={10} /> Stale
@@ -109,6 +110,17 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                 <span className="text-[10px] text-gray-500 font-mono">{job.id.slice(0, 8)}</span>
                             </div>
                             <h2 className="text-xl md:text-2xl font-bold text-white tracking-tight">{job.title}</h2>
+                            <div className="flex flex-wrap gap-1.5 mt-2" aria-label="Data sources for this role">
+                                {jobSourceProvenanceChips(job).map((c) => (
+                                    <span
+                                        key={c.key}
+                                        title={provenanceLabel(c.provenance)}
+                                        className="px-2 py-0.5 rounded text-[9px] font-medium uppercase tracking-wide bg-white/[0.06] text-gray-400 border border-white/[0.08]"
+                                    >
+                                        {c.label}
+                                    </span>
+                                ))}
+                            </div>
                         </div>
 
                         <div className="flex items-center gap-2">

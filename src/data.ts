@@ -1,6 +1,6 @@
 import type { Job, JobStatus } from './types';
 import {
-    YEAR_MIN, RISK_THRESHOLDS, GROWTH_RATES, RISK_COLORS, DEFAULT_DATA_SOURCES,
+    RISK_THRESHOLDS, RISK_COLORS, DEFAULT_DATA_SOURCES,
 } from './config/constants';
 
 /**
@@ -2466,7 +2466,7 @@ export const initialJobs: Job[] = [
 }
 ];
 
-export function getJobStatus(job: Job, year: number): JobStatus {
+export function getJobStatus(job: Job, _year: number): JobStatus {
     const totalAiScore = job.tasks.reduce((sum, t) => sum + t.aiCapabilityScore, 0);
     const totalHumanScore = job.tasks.reduce((sum, t) => sum + t.humanCriticalityScore, 0);
     const avgAiCapability = job.tasks.length ? totalAiScore / job.tasks.length : 0.5;
@@ -2477,24 +2477,14 @@ export function getJobStatus(job: Job, year: number): JobStatus {
     let color = RISK_COLORS.MEDIUM;
     if (isHighRisk) { riskScore = 0.9; color = RISK_COLORS.HIGH; }
     else if (isInsulated) { riskScore = 0.1; color = RISK_COLORS.LOW; }
-    const yearsPassed = year - YEAR_MIN;
-    const adaptationBoost = yearsPassed * GROWTH_RATES.ADAPTATION_BOOST_PER_YEAR;
-    const projectedAiCap = Math.min(1, avgAiCapability + (yearsPassed * GROWTH_RATES.AI_CAPABILITY_PER_YEAR));
-    const effectiveHumanCriticality = Math.min(1, avgHumanCriticality + adaptationBoost);
-    const isProjectedHighRisk = projectedAiCap > RISK_THRESHOLDS.PROJECTED_HIGH_RISK_AI;
-    const isProjectedInsulated = effectiveHumanCriticality > RISK_THRESHOLDS.PROJECTED_INSULATED_HUMAN;
-    if (isProjectedInsulated) { riskScore = 0.2; color = RISK_COLORS.LOW; }
-    else if (isProjectedHighRisk) { riskScore = 0.9; color = RISK_COLORS.HIGH; }
     return { riskScore, color };
 }
 
 export type TaskCategory = 'Automatable' | 'Augmentable' | 'Human-Critical';
-export function getTaskCategory(task: { aiCapabilityScore: number; humanCriticalityScore: number }, year: number): TaskCategory {
-    const yearsPassed = year - YEAR_MIN;
-    const adaptationBoost = yearsPassed * GROWTH_RATES.ADAPTATION_BOOST_PER_YEAR;
-    const effectiveHumanScore = Math.min(1, task.humanCriticalityScore + adaptationBoost);
-    if (task.aiCapabilityScore > RISK_THRESHOLDS.AUTOMATABLE_AI_SCORE && effectiveHumanScore < RISK_THRESHOLDS.AUTOMATABLE_HUMAN_CEILING) return 'Automatable';
-    if (effectiveHumanScore > RISK_THRESHOLDS.HUMAN_CRITICAL_SCORE) return 'Human-Critical';
+/** Categories from current Claude/O*NET-backed task scores only (no synthetic year drift). */
+export function getTaskCategory(task: { aiCapabilityScore: number; humanCriticalityScore: number }): TaskCategory {
+    if (task.aiCapabilityScore > RISK_THRESHOLDS.AUTOMATABLE_AI_SCORE && task.humanCriticalityScore < RISK_THRESHOLDS.AUTOMATABLE_HUMAN_CEILING) return 'Automatable';
+    if (task.humanCriticalityScore > RISK_THRESHOLDS.HUMAN_CRITICAL_SCORE) return 'Human-Critical';
     return 'Augmentable';
 }
 

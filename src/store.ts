@@ -368,6 +368,7 @@ export const useStore = create<AppState>((set, get) => ({
                 id: j.id,
                 title: j.title,
                 tasks: j.tasks.map(t => ({ name: t.name })),
+                employment: j.employment,
                 projectedGrowth: j.projectedGrowth,
             }));
 

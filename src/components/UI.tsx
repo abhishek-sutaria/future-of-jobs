@@ -46,7 +46,10 @@ export const UI: React.FC = () => {
 
             try {
                 const taskList = selectedJob.tasks.map(t => t.name);
-                const res = await analyzeJob(selectedJob.title, taskList);
+                const res = await analyzeJob(selectedJob.title, taskList, {
+                    employment: selectedJob.employment,
+                    projectedGrowth: selectedJob.projectedGrowth,
+                });
                 setAnalysisResult(res);
                 if (res?.yearlyForecast) {
 

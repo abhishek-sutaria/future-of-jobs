@@ -9,14 +9,6 @@ export const YEAR_MAX = 2030;
 export const YEAR_RANGE = YEAR_MAX - YEAR_MIN;       // 5
 export const YEAR_COUNT = YEAR_RANGE + 1;             // 6 years (2025–2030 inclusive)
 
-/**
- * Applied when mapping forecast cumulative % → Workers-mode peak height (after
- * log-scaled baseline). Multiplies the % before the same damped factor Growth
- * mode uses so the time slider moves peaks comparably; not a literal labor model.
- * Lower = subtler motion; too high hits HEIGHT_CLAMP_MAX and looks uniformly “maxed”.
- */
-export const WORKERS_TIMELINE_PEAK_AMPLIFIER = 2;
-
 // ── Data Sources (metadata for seed data) ──────────────────────────
 export const DATA_SOURCES = {
     BLS_OES: 'BLS-OES-2023',
@@ -92,16 +84,6 @@ export const CONFIDENCE = {
     BASELINE: 0.5,
     BLS_BONUS: 0.25,
     ONET_BONUS: 0.25,
-    /** Score at or above which a job's data is shown as "Verified" */
-    VERIFIED_THRESHOLD: 0.9,
-} as const;
-
-// ── Simulation Growth Rates ────────────────────────────────────────
-export const GROWTH_RATES = {
-    /** AI capability increase per year (0–1 scale) */
-    AI_CAPABILITY_PER_YEAR: 0.02,
-    /** Human adaptation boost per year (upskilling effect) */
-    ADAPTATION_BOOST_PER_YEAR: 0.05,
 } as const;
 
 // ── 3D Scene ───────────────────────────────────────────────────────

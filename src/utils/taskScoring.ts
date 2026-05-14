@@ -11,7 +11,7 @@
  * when the schema or prompt changes so stale entries are dropped.
  */
 
-import { callClaudeJSON } from './claude';
+import { callClaudeJSON, JobTaskScoringSchema } from './claude';
 import { YEAR_MIN, YEAR_MAX } from '../config/constants';
 
 // ── Types ──────────────────────────────────────────────────────────────────
@@ -42,9 +42,9 @@ interface ScoreCache {
 // ── Cache ──────────────────────────────────────────────────────────────────
 
 const CACHE_KEY = 'foj_ai_scores_v1';
-// v4 = forecast switched from year-over-year deltas to cumulative percent
-//      change from 2025 baseline (matches shader dampening calibration).
-const CACHE_VERSION = 4;
+// v4 = cumulative % from 2025 baseline (not YoY deltas).
+// v5 = prompts grounded in inlined BLS numbers; post-parse forecast cap validation.
+const CACHE_VERSION = 5;
 const CACHE_TTL_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
 const RATE_LIMIT_MS = 1200; // stay under free-tier limits (~50 req/min)
 
@@ -76,23 +76,41 @@ export function clearScoreCache(): void {
 
 // ── Claude call ────────────────────────────────────────────────────────────
 
-interface ClaudeJobResponse {
-    tasks: Array<{
-        taskName?: string;
-        aiCapabilityScore?: number;
-        humanCriticalityScore?: number;
-    }>;
-    yearlyForecast?: Array<{
-        year?: number;
-        growthImpact?: number;
-        reasoning?: string;
-    }>;
+/** Reject forecasts that violate BLS OOH cap or baseline rules (post-Zod). */
+function assertValidYearlyForecast(projectedGrowth: number, points: ForecastPoint[]): void {
+    const cap = Math.abs(projectedGrowth);
+    const baselineTol = 0.08;
+    const expectedYears = Array.from({ length: YEAR_MAX - YEAR_MIN + 1 }, (_, i) => YEAR_MIN + i);
+    const byYear = new Map<number, ForecastPoint>();
+    for (const p of points) {
+        if (!byYear.has(p.year)) byYear.set(p.year, p);
+    }
+
+    for (const y of expectedYears) {
+        const pt = byYear.get(y);
+        if (!pt) throw new Error(`Forecast missing year ${y}`);
+        const g = pt.growthImpact;
+        if (!Number.isFinite(g)) throw new Error(`Invalid growthImpact for ${y}`);
+        if (cap < 1e-9) {
+            if (Math.abs(g) > baselineTol) {
+                throw new Error(`BLS 10-year growth ~0%: year ${y} must stay near 0, got ${g}`);
+            }
+        } else if (Math.abs(g) > cap + 1e-6) {
+            throw new Error(`Year ${y}: |cumulative ${g}| exceeds BLS |${projectedGrowth}|`);
+        }
+    }
+
+    const base = byYear.get(YEAR_MIN);
+    if (!base || Math.abs(base.growthImpact) > baselineTol) {
+        throw new Error(`${YEAR_MIN} baseline cumulative must be ~0 (within ${baselineTol}), got ${base?.growthImpact}`);
+    }
 }
 
 async function callAIForJobAnalysis(
     jobTitle: string,
     taskNames: string[],
-    projectedGrowth: number
+    employment: number,
+    projectedGrowth: number,
 ): Promise<JobAnalysisResult> {
     const growthLabel = `${projectedGrowth >= 0 ? '+' : ''}${projectedGrowth}%`;
     const years = Array.from({ length: YEAR_MAX - YEAR_MIN + 1 }, (_, i) => YEAR_MIN + i);
@@ -100,7 +118,10 @@ async function callAIForJobAnalysis(
     const prompt = `You are an expert labor economist analyzing the impact of Generative AI on job tasks.
 
 Job Title: "${jobTitle}"
-BLS Occupational Outlook 2022-2032 projection for this role: ${growthLabel} (10-year total).
+
+Official BLS / snapshot context (do not invent different national totals; your forecast must stay consistent with these inputs):
+- US employment level (OES snapshot used in app): ${employment.toLocaleString()}
+- BLS Occupational Outlook 2022-2032 projected employment change for this occupation group: ${growthLabel} (10-year total)
 
 TWO outputs are needed:
 
@@ -113,22 +134,11 @@ TWO outputs are needed:
 (2) YEARLY FORECAST for ${YEAR_MIN} through ${YEAR_MAX} (six years):
   - growthImpact: CUMULATIVE percent change in this role's total US employment
     from the ${YEAR_MIN} baseline. NOT year-over-year — cumulative from ${YEAR_MIN}.
-  - Year ${YEAR_MIN} MUST be exactly 0.00 (this is the baseline by definition).
-  - Year ${YEAR_MAX} should approximate roughly half of the BLS 10-year projection
-    (since BLS covers 2022-2032 and ${YEAR_MIN}-${YEAR_MAX} is roughly half that span),
-    adjusted up or down based on AI risk:
-      * Mostly high aiCapabilityScore tasks → adjust DOWN (may go negative)
-      * Mostly high humanCriticalityScore tasks → adjust UP (may exceed half-projection)
-  - Years ${YEAR_MIN + 1} through ${YEAR_MAX - 1}: smooth progression between baseline and endpoint.
+  - Year ${YEAR_MIN} MUST be exactly 0.00 (baseline).
+  - For EVERY year in the window, cumulative |growthImpact| must NOT exceed |${projectedGrowth}| (the BLS OOH 10-year % above).
+  - Years ${YEAR_MIN + 1} through ${YEAR_MAX}: smooth progression toward a plausible 2030 endpoint that still respects the cap at every year.
   - Use two-decimal precision (e.g. 2.40, -3.85).
-
-Examples to calibrate magnitudes:
-  - Software Developer (BLS +25% over 10 yrs, moderate AI exposure):
-    2025: 0.00, 2026: 2.50, 2027: 4.20, 2028: 5.80, 2029: 7.00, 2030: 8.50
-  - Marketing Manager (BLS +7% over 10 yrs, high AI exposure):
-    2025: 0.00, 2026: 1.00, 2027: 1.20, 2028: 0.80, 2029: -0.40, 2030: -2.50
-  - Cashier (BLS -2% over 10 yrs, very high AI exposure):
-    2025: 0.00, 2026: -1.50, 2027: -3.80, 2028: -6.20, 2029: -8.50, 2030: -10.20
+  - Do not invent other macro statistics (GDP, national unemployment) unless they appear in a task description below.
 
 Tasks:
 ${taskNames.map((t, i) => `${i + 1}. ${t}`).join('\n')}
@@ -143,23 +153,24 @@ ${years.map(y => `    { "year": ${y}, "growthImpact": 0.00, "reasoning": "<one s
   ]
 }`;
 
-    const parsed = await callClaudeJSON<ClaudeJobResponse>(prompt);
+    const parsed = await callClaudeJSON(prompt, JobTaskScoringSchema);
 
-    // Clamp and align task scores back to original task names (Claude may paraphrase).
-    const tasks: TaskScore[] = (parsed.tasks || []).map((s, i) => ({
+    const tasks: TaskScore[] = parsed.tasks.map((s, i) => ({
         taskName: taskNames[i] ?? s.taskName ?? '',
         aiCapabilityScore: Math.max(0, Math.min(1, Number(s.aiCapabilityScore) || 0)),
         humanCriticalityScore: Math.max(0, Math.min(1, Number(s.humanCriticalityScore) || 0)),
     }));
 
-    // Validate and normalize the forecast.
-    const yearlyForecast: ForecastPoint[] = (parsed.yearlyForecast || [])
+    const yearlyForecast: ForecastPoint[] = parsed.yearlyForecast
         .map(f => ({
-            year: Number(f.year) || 0,
-            growthImpact: Number(f.growthImpact) || 0,
-            reasoning: String(f.reasoning || ''),
+            year: f.year,
+            growthImpact: f.growthImpact,
+            reasoning: String(f.reasoning ?? ''),
         }))
-        .filter(f => f.year >= YEAR_MIN && f.year <= YEAR_MAX);
+        .filter(f => f.year >= YEAR_MIN && f.year <= YEAR_MAX)
+        .sort((a, b) => a.year - b.year);
+
+    assertValidYearlyForecast(projectedGrowth, yearlyForecast);
 
     return { tasks, yearlyForecast };
 }
@@ -174,12 +185,12 @@ function sleep(ms: number) { return new Promise(r => setTimeout(r, ms)); }
  * jobs not yet cached. Saves after each successful job so a refresh keeps
  * partial progress.
  *
- * @param jobs       Subset of the store's job list (id + title + task names + BLS projection)
+ * @param jobs       Subset of the store's job list (id + title + tasks + OES employment + BLS OOH %)
  * @param _apiKey    Deprecated — user key is read inside callClaudeJSON
  * @param onProgress Called after each job is analyzed (jobId, done, total)
  */
 export async function scoreAllJobTasks(
-    jobs: { id: string; title: string; tasks: { name: string }[]; projectedGrowth: number }[],
+    jobs: { id: string; title: string; tasks: { name: string }[]; employment: number; projectedGrowth: number }[],
     _apiKey?: string,
     onProgress?: (jobId: string, done: number, total: number) => void
 ): Promise<Record<string, JobAnalysisResult>> {
@@ -195,7 +206,8 @@ export async function scoreAllJobTasks(
             const analysis = await callAIForJobAnalysis(
                 job.title,
                 job.tasks.map(t => t.name),
-                job.projectedGrowth
+                job.employment,
+                job.projectedGrowth,
             );
             result[job.id] = analysis;
             done++;

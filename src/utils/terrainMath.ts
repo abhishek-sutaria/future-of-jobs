@@ -1,4 +1,4 @@
-import { SHADER, YEAR_MIN, YEAR_MAX, YEAR_COUNT, WORKERS_TIMELINE_PEAK_AMPLIFIER } from '../config/constants';
+import { SHADER, YEAR_MIN, YEAR_MAX, YEAR_COUNT } from '../config/constants';
 import type { Job } from '../types';
 
 // Per-year growth values come from Claude's forecast (cumulative percent change
@@ -89,21 +89,15 @@ export const getVisualHeightForEmployment = (employment: number): number => {
 };
 
 /**
- * Workers-mode height: log baseline from BLS headcount, then scale by the same
- * damped cumulative-% curve Growth mode uses (see terrain vertex shader). Feeding
- * implied headcount only into log() still barely moves the peak; this product term
- * makes the year slider readable.
+ * Workers mode: peak height follows **BLS headcount only** (log-scaled), same as
+ * the static employment surface. Timeline scrub does not change Workers peak height;
+ * cumulative AI forecast drives Growth mode and marker copy only.
  */
 export function getVisualHeightForWorkersAtYear(
     baselineEmployment: number,
-    cumulativePctFromBaseline: number,
+    _cumulativePctFromBaseline: number,
 ): number {
-    const baseH = getVisualHeightForEmployment(baselineEmployment);
-    const g = cumulativePctFromBaseline * WORKERS_TIMELINE_PEAK_AMPLIFIER;
-    const scaler = g >= 0 ? SHADER.GROWTH_DAMPENING : SHADER.DECLINE_DAMPENING;
-    const factor = 1 + g * scaler;
-    const raw = baseH * factor;
-    return Math.max(VISUAL_CONFIG.MIN_HEIGHT, Math.min(VISUAL_CONFIG.MAX_HEIGHT, raw));
+    return getVisualHeightForEmployment(baselineEmployment);
 }
 
 export const getDeclineTintStrength = (growthDelta: number): number => {
