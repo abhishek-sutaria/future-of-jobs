@@ -13,8 +13,9 @@ export const YEAR_COUNT = YEAR_RANGE + 1;             // 6 years (2025–2030 in
  * Applied when mapping forecast cumulative % → Workers-mode peak height (after
  * log-scaled baseline). Multiplies the % before the same damped factor Growth
  * mode uses so the time slider moves peaks comparably; not a literal labor model.
+ * Lower = subtler motion; too high hits HEIGHT_CLAMP_MAX and looks uniformly “maxed”.
  */
-export const WORKERS_TIMELINE_PEAK_AMPLIFIER = 4;
+export const WORKERS_TIMELINE_PEAK_AMPLIFIER = 2;
 
 // ── Data Sources (metadata for seed data) ──────────────────────────
 export const DATA_SOURCES = {
