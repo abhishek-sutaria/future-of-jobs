@@ -78,17 +78,6 @@ export const getVisualHeightForGrowth = (growthDelta: number): number => {
  *   10M workers     → ~4.5  (tall peak)
  * Output is clamped to the same visual range as the growth-mode height.
  */
-
-/**
- * Scale baseline US headcount by cumulative % change from the forecast (vs YEAR_MIN).
- * Uses {@link WORKERS_TIMELINE_PEAK_AMPLIFIER} so Workers-mode peaks respond visibly
- * on the time slider (raw % × log height is otherwise very subtle).
- */
-export function employmentFromCumulativePct(employment: number, cumulativePctFromBaseline: number): number {
-    const pct = cumulativePctFromBaseline * WORKERS_TIMELINE_PEAK_AMPLIFIER;
-    return Math.max(1, employment * (1 + pct / 100));
-}
-
 export const getVisualHeightForEmployment = (employment: number): number => {
     const safe = Math.max(1, employment);
     const logE = Math.log10(safe);
@@ -98,6 +87,24 @@ export const getVisualHeightForEmployment = (employment: number): number => {
     const clamped = Math.max(0, Math.min(1, normalized));
     return Math.max(VISUAL_CONFIG.MIN_HEIGHT, Math.min(VISUAL_CONFIG.MAX_HEIGHT, 0.5 + clamped * 4.0));
 };
+
+/**
+ * Workers-mode height: log baseline from BLS headcount, then scale by the same
+ * damped cumulative-% curve Growth mode uses (see terrain vertex shader). Feeding
+ * implied headcount only into log() still barely moves the peak; this product term
+ * makes the year slider readable.
+ */
+export function getVisualHeightForWorkersAtYear(
+    baselineEmployment: number,
+    cumulativePctFromBaseline: number,
+): number {
+    const baseH = getVisualHeightForEmployment(baselineEmployment);
+    const g = cumulativePctFromBaseline * WORKERS_TIMELINE_PEAK_AMPLIFIER;
+    const scaler = g >= 0 ? SHADER.GROWTH_DAMPENING : SHADER.DECLINE_DAMPENING;
+    const factor = 1 + g * scaler;
+    const raw = baseH * factor;
+    return Math.max(VISUAL_CONFIG.MIN_HEIGHT, Math.min(VISUAL_CONFIG.MAX_HEIGHT, raw));
+}
 
 export const getDeclineTintStrength = (growthDelta: number): number => {
     if (growthDelta >= 0) return 0;

@@ -3,7 +3,7 @@ import { useFrame } from '@react-three/fiber';
 import { Color, ShaderMaterial, DoubleSide, Vector3, Vector2 } from 'three';
 import { useStore } from '../store';
 import type { Job } from '../types';
-import { getCurrentYearGrowth, getTerrainPosition, getVisualHeightForEmployment, employmentFromCumulativePct, TERRAIN_CONFIG } from '../utils/terrainMath';
+import { getCurrentYearGrowth, getTerrainPosition, getVisualHeightForEmployment, getVisualHeightForWorkersAtYear, TERRAIN_CONFIG } from '../utils/terrainMath';
 import { CLUSTER_COLORS, FALLBACK_COLORS } from '../config/theme';
 import { YEAR_MIN, YEAR_MAX, YEAR_COUNT, SHADER, SHADER_VISUAL, SHADER_COLORS, SCENE } from '../config/constants';
 
@@ -262,8 +262,7 @@ export const Terrain: React.FC = () => {
       for (let i = 0; i < peakCount; i++) {
         const job = fj[i];
         if (!job) continue;
-        const implied = employmentFromCumulativePct(job.employment, growthArr[i]);
-        peaks[i].z = getVisualHeightForEmployment(implied);
+        peaks[i].z = getVisualHeightForWorkersAtYear(job.employment, growthArr[i]);
       }
     }
 

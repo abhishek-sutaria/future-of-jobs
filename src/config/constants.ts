@@ -10,11 +10,9 @@ export const YEAR_RANGE = YEAR_MAX - YEAR_MIN;       // 5
 export const YEAR_COUNT = YEAR_RANGE + 1;             // 6 years (2025–2030 inclusive)
 
 /**
- * Applied only when mapping forecast → Workers-mode peak height.
- * Cumulative % over a half-decade is usually small; implied headcount is then
- * passed through log10 in {@link getVisualHeightForEmployment}, which compresses
- * changes further. Values above 1 exaggerate motion on the time slider for readability
- * (not a literal labor-market multiplier).
+ * Applied when mapping forecast cumulative % → Workers-mode peak height (after
+ * log-scaled baseline). Multiplies the % before the same damped factor Growth
+ * mode uses so the time slider moves peaks comparably; not a literal labor model.
  */
 export const WORKERS_TIMELINE_PEAK_AMPLIFIER = 4;
 
