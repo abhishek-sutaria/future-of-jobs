@@ -9,6 +9,15 @@ export const YEAR_MAX = 2030;
 export const YEAR_RANGE = YEAR_MAX - YEAR_MIN;       // 5
 export const YEAR_COUNT = YEAR_RANGE + 1;             // 6 years (2025–2030 inclusive)
 
+/**
+ * Applied only when mapping forecast → Workers-mode peak height.
+ * Cumulative % over a half-decade is usually small; implied headcount is then
+ * passed through log10 in {@link getVisualHeightForEmployment}, which compresses
+ * changes further. Values above 1 exaggerate motion on the time slider for readability
+ * (not a literal labor-market multiplier).
+ */
+export const WORKERS_TIMELINE_PEAK_AMPLIFIER = 4;
+
 // ── Data Sources (metadata for seed data) ──────────────────────────
 export const DATA_SOURCES = {
     BLS_OES: 'BLS-OES-2023',

@@ -1,4 +1,4 @@
-import { SHADER, YEAR_MIN, YEAR_MAX } from '../config/constants';
+import { SHADER, YEAR_MIN, YEAR_MAX, WORKERS_TIMELINE_PEAK_AMPLIFIER } from '../config/constants';
 import type { Job } from '../types';
 
 // Per-year growth values come from Claude's forecast (cumulative percent change
@@ -78,12 +78,15 @@ export const getVisualHeightForGrowth = (growthDelta: number): number => {
  *   10M workers     → ~4.5  (tall peak)
  * Output is clamped to the same visual range as the growth-mode height.
  */
+
 /**
  * Scale baseline US headcount by cumulative % change from the forecast (vs YEAR_MIN).
- * Used so “Workers” terrain height can move with the timeline when AI forecast exists.
+ * Uses {@link WORKERS_TIMELINE_PEAK_AMPLIFIER} so Workers-mode peaks respond visibly
+ * on the time slider (raw % × log height is otherwise very subtle).
  */
 export function employmentFromCumulativePct(employment: number, cumulativePctFromBaseline: number): number {
-    return Math.max(1, employment * (1 + cumulativePctFromBaseline / 100));
+    const pct = cumulativePctFromBaseline * WORKERS_TIMELINE_PEAK_AMPLIFIER;
+    return Math.max(1, employment * (1 + pct / 100));
 }
 
 export const getVisualHeightForEmployment = (employment: number): number => {
