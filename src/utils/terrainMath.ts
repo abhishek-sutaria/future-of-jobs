@@ -92,14 +92,19 @@ export const getVisualHeightForEmployment = (employment: number): number => {
  * Workers mode: log-scaled height from **implied** headcount at the scrub year:
  *   baseline OES employment × (1 + cumulative% / 100),
  * where cumulative% is the same series as Growth mode (Claude forecast or BLS linear baseline).
- * Peak motion with the timeline is intentional; values trace to snapshot employment + that % path only.
+ * The delta from baseline-only employment height is amplified slightly so timeline scrub reads clearly
+ * (see SHADER.WORKERS_HEIGHT_DELTA_AMPLIFIER); underlying % is unchanged.
  */
 export function getVisualHeightForWorkersAtYear(
     baselineEmployment: number,
     cumulativePctFromBaseline: number,
 ): number {
     const implied = Math.max(1, baselineEmployment * (1 + cumulativePctFromBaseline / 100));
-    return getVisualHeightForEmployment(implied);
+    const hBase = getVisualHeightForEmployment(baselineEmployment);
+    const hImplied = getVisualHeightForEmployment(implied);
+    const delta = hImplied - hBase;
+    const amplified = hBase + delta * SHADER.WORKERS_HEIGHT_DELTA_AMPLIFIER;
+    return Math.max(VISUAL_CONFIG.MIN_HEIGHT, Math.min(VISUAL_CONFIG.MAX_HEIGHT, amplified));
 }
 
 export const getDeclineTintStrength = (growthDelta: number): number => {
