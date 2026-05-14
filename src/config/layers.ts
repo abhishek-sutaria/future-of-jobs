@@ -1,5 +1,7 @@
 export const Z = {
     base: 10,
+    /** Above drei Html job labels (zIndexRange ~100) so the year slider stays on top. */
+    timeBar: 110,
     header: 20,
     sidebar: 150,
     detailPanel: 200,

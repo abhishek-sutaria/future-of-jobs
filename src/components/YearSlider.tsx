@@ -15,10 +15,10 @@ export const YearSlider: React.FC = () => {
         : 'Height = projected growth at this year';
 
     return (
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 w-[90%] max-w-2xl pointer-events-auto" style={{ zIndex: Z.base }}>
-            <div data-tour="tour-slider" className="bg-gray-900/60 backdrop-blur-xl border border-white/[0.08] rounded-2xl p-4 md:p-6 shadow-lg">
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 w-[90%] max-w-2xl pointer-events-auto" style={{ zIndex: Z.timeBar }}>
+            <div data-tour="tour-slider" className="bg-gray-900/60 backdrop-blur-xl border border-white/[0.08] rounded-2xl p-4 md:p-6 shadow-lg overflow-hidden">
                 {/* Peak height encoding toggle */}
-                <div className="flex items-center justify-between gap-3 mb-3 flex-wrap">
+                <div className="flex items-center justify-between gap-3 mb-3 flex-wrap min-w-0">
                     <span className="text-[10px] text-gray-500 uppercase tracking-widest font-semibold">
                         Peak Height
                     </span>
@@ -55,11 +55,11 @@ export const YearSlider: React.FC = () => {
                         </button>
                     </div>
                 </div>
-                <p className="text-[10px] text-gray-500 mb-3 leading-snug">{modeHint}</p>
+                <p className="text-[10px] text-gray-500 mb-3 leading-snug break-words">{modeHint}</p>
 
-                <div className="flex justify-between items-center mb-3 text-sm font-medium tracking-widest">
+                <div className="flex justify-between items-center mb-3 text-sm font-medium tracking-widest gap-2 min-w-0">
                     <span className="text-gray-500 text-xs">{YEAR_MIN}</span>
-                    <span className="text-cyan-400 text-lg font-bold tabular-nums" aria-live="polite">
+                    <span className="text-cyan-400 text-lg font-bold tabular-nums shrink-0 min-w-0 text-center" aria-live="polite">
                         {year.toFixed(0)}
                     </span>
                     <span className="text-gray-500 text-xs">{YEAR_MAX}</span>

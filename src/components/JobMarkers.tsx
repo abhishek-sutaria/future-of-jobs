@@ -145,41 +145,41 @@ export const JobMarkers: React.FC = () => {
                         {/* Label */}
                         <Html position={[0, labelHeight, 0]} center zIndexRange={[100, 0]}>
                             <div
-                                className={`flex flex-col bg-[#0F172A]/90 backdrop-blur-md rounded-md border shadow-md cursor-pointer transition-all duration-200 ${isSelected ? 'scale-110 ring-1 ring-white/20 border-slate-600/60' : 'border-slate-700/50'} ${isHovered ? 'border-cyan-500/40 shadow-cyan-500/10 shadow-lg' : ''}`}
+                                className={`flex flex-col max-w-[min(18rem,calc(100vw-2rem))] overflow-hidden bg-[#0F172A]/90 backdrop-blur-md rounded-md border shadow-md cursor-pointer transition-all duration-200 ${isSelected ? 'scale-110 ring-1 ring-white/20 border-slate-600/60' : 'border-slate-700/50'} ${isHovered ? 'border-cyan-500/40 shadow-cyan-500/10 shadow-lg' : ''}`}
                                 onClick={(e) => { e.stopPropagation(); setSelectedJob(job); }}
                                 onMouseEnter={() => setHoveredJobId(job.id)}
                                 onMouseLeave={() => setHoveredJobId(null)}
                             >
                                 {/* Title row */}
-                                <div className="flex items-center gap-3 px-3 py-2">
+                                <div className="flex items-center gap-2 px-3 py-2 min-w-0">
                                     <div
                                         className="w-2 h-2 rounded-full flex-shrink-0"
                                         style={{ backgroundColor: pipColor, boxShadow: `0 0 4px ${pipColor}` }}
                                     />
-                                    <span className="text-white text-xs font-semibold leading-none whitespace-nowrap tracking-wide font-sans">{job.title}</span>
+                                    <span className="text-white text-xs font-semibold leading-snug tracking-wide font-sans truncate min-w-0" title={job.title}>{job.title}</span>
                                 </div>
 
                                 {/* BLS Stats — shown on hover or when selected */}
                                 {(isHovered || isSelected) && (
-                                    <div className="px-3 pb-2.5 pt-0 border-t border-slate-700/50 mt-0.5 grid grid-cols-2 gap-x-4 gap-y-1.5">
-                                        <div className="flex flex-col">
+                                    <div className="px-3 pb-2.5 pt-0 border-t border-slate-700/50 mt-0.5 grid grid-cols-2 gap-x-3 gap-y-1.5 min-w-0">
+                                        <div className="flex flex-col min-w-0">
                                             <span className="text-[9px] text-slate-500 uppercase tracking-widest leading-none mb-0.5">Workers</span>
-                                            <span className="text-[11px] text-slate-200 font-mono font-medium leading-none">{workersStr}</span>
+                                            <span className="text-[11px] text-slate-200 font-mono font-medium leading-none truncate">{workersStr}</span>
                                         </div>
-                                        <div className="flex flex-col">
+                                        <div className="flex flex-col min-w-0">
                                             <span className="text-[9px] text-slate-500 uppercase tracking-widest leading-none mb-0.5">{growthLabel}</span>
-                                            <span className="text-[11px] font-mono font-medium leading-none" style={{ color: growthColor }}>
+                                            <span className="text-[11px] font-mono font-medium leading-none truncate" style={{ color: growthColor }}>
                                                 {isDeclining ? `${growthStr} Decline` : growthStr}
                                             </span>
-                                            <span className="text-[9px] text-slate-600 uppercase tracking-widest leading-none mt-1">{growthSourceLabel}</span>
+                                            <span className="text-[9px] text-slate-600 uppercase tracking-widest leading-none mt-1 truncate">{growthSourceLabel}</span>
                                         </div>
-                                        <div className="flex flex-col">
+                                        <div className="flex flex-col min-w-0">
                                             <span className="text-[9px] text-slate-500 uppercase tracking-widest leading-none mb-0.5">AI Risk</span>
-                                            <span className="text-[11px] font-medium leading-none" style={{ color: riskColor }}>{automationRisk}</span>
+                                            <span className="text-[11px] font-medium leading-none truncate" style={{ color: riskColor }}>{automationRisk}</span>
                                         </div>
-                                        <div className="flex flex-col">
+                                        <div className="flex flex-col min-w-0">
                                             <span className="text-[9px] text-slate-500 uppercase tracking-widest leading-none mb-0.5">Sector</span>
-                                            <span className="text-[11px] text-slate-300 font-medium leading-none whitespace-nowrap">{job.cluster}</span>
+                                            <span className="text-[11px] text-slate-300 font-medium leading-snug truncate" title={job.cluster}>{job.cluster}</span>
                                         </div>
                                     </div>
                                 )}
