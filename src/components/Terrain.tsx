@@ -3,24 +3,9 @@ import { useFrame } from '@react-three/fiber';
 import { Color, ShaderMaterial, DoubleSide, Vector3, Vector2 } from 'three';
 import { useStore } from '../store';
 import type { Job } from '../types';
-import { getCurrentYearGrowth, getTerrainPosition, getVisualHeightForEmployment, getVisualHeightForWorkersAtYear, TERRAIN_CONFIG } from '../utils/terrainMath';
+import { getTerrainPosition, getVisualHeightForEmployment, getVisualHeightForWorkersAtYear, buildGrowthForecastFlatArray, growthAtYearFromForecastFlat, TERRAIN_CONFIG } from '../utils/terrainMath';
 import { CLUSTER_COLORS, FALLBACK_COLORS } from '../config/theme';
-import { YEAR_MIN, YEAR_MAX, YEAR_COUNT, SHADER, SHADER_VISUAL, SHADER_COLORS, SCENE } from '../config/constants';
-
-/** Same interpolation as JobMarkers; avoids non-constant indexing into huge uniform arrays in GLSL (often breaks on WebGL). */
-function growthAtYearFromFlatForecasts(forecasts: number[], jobIndex: number, year: number): number {
-    const t = Math.max(YEAR_MIN, Math.min(YEAR_MAX, year));
-    const y1 = Math.floor(t);
-    const y2 = Math.ceil(t);
-    const offset1 = y1 - YEAR_MIN;
-    const offset2 = y2 - YEAR_MIN;
-    const idx1 = jobIndex * YEAR_COUNT + offset1;
-    const idx2 = jobIndex * YEAR_COUNT + offset2;
-    const val1 = forecasts[idx1] ?? 0;
-    const val2 = forecasts[idx2] ?? 0;
-    const f = t - y1;
-    return val1 * (1 - f) + val2 * f;
-}
+import { SHADER, SHADER_VISUAL, SHADER_COLORS, SCENE } from '../config/constants';
 
 // SHADERS
 const vertexShader = `
@@ -153,7 +138,7 @@ const fragmentShader = `
 
 export const Terrain: React.FC = () => {
   const materialRef = useRef<ShaderMaterial>(null);
-  const forecastsRef = useRef<number[]>([]);
+  const forecastsRef = useRef<Float32Array | null>(null);
   const filteredJobsRef = useRef<Job[]>([]);
   const jobs = useStore((state) => state.jobs);
   const selectedRoleIds = useStore((state) => state.selectedRoleIds);
@@ -187,24 +172,7 @@ export const Terrain: React.FC = () => {
       return new Vector3(c.r, c.g, c.b);
     });
 
-    const forecasts = new Array(SHADER.FORECAST_ARRAY_SIZE).fill(0);
-
-    filteredJobs.forEach((job, jobIdx) => {
-      if (jobIdx >= SHADER.MAX_JOBS) return;
-
-      for (let year = YEAR_MIN; year <= YEAR_MAX; year++) {
-        const yearIdx = year - YEAR_MIN;
-        const flatIdx = (jobIdx * YEAR_COUNT) + yearIdx;
-        const fallbackImpact = getCurrentYearGrowth(job, year).value;
-
-        if (job.yearlyForecast) {
-          const item = job.yearlyForecast.find(f => f.year === year);
-          forecasts[flatIdx] = item ? item.growthImpact : fallbackImpact;
-        } else {
-          forecasts[flatIdx] = fallbackImpact;
-        }
-      }
-    });
+    const forecasts = buildGrowthForecastFlatArray(filteredJobs);
 
     forecastsRef.current = forecasts;
     filteredJobsRef.current = filteredJobs;
@@ -212,7 +180,7 @@ export const Terrain: React.FC = () => {
     const growthNow = new Float32Array(SHADER.MAX_JOBS);
     const yearNow = useStore.getState().year;
     for (let i = 0; i < filteredJobs.length; i++) {
-      growthNow[i] = growthAtYearFromFlatForecasts(forecasts, i, yearNow);
+      growthNow[i] = growthAtYearFromForecastFlat(forecasts, i, yearNow);
     }
 
     return {
@@ -247,12 +215,12 @@ export const Terrain: React.FC = () => {
 
     const forecasts = forecastsRef.current;
     const peakCount = mat.uniforms.uPeakCount.value as number;
-    if (peakCount === 0 || forecasts.length === 0) return;
+    if (peakCount === 0 || !forecasts || forecasts.length === 0) return;
 
     const currentYear = useStore.getState().year;
     const growthArr = mat.uniforms.uGrowthNow.value as Float32Array;
     for (let i = 0; i < peakCount; i++) {
-      growthArr[i] = growthAtYearFromFlatForecasts(forecasts, i, currentYear);
+      growthArr[i] = growthAtYearFromForecastFlat(forecasts, i, currentYear);
     }
 
     const hm = useStore.getState().heightMode;

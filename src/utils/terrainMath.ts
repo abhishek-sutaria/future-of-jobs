@@ -1,4 +1,4 @@
-import { SHADER, YEAR_MIN, YEAR_MAX, WORKERS_TIMELINE_PEAK_AMPLIFIER } from '../config/constants';
+import { SHADER, YEAR_MIN, YEAR_MAX, YEAR_COUNT, WORKERS_TIMELINE_PEAK_AMPLIFIER } from '../config/constants';
 import type { Job } from '../types';
 
 // Per-year growth values come from Claude's forecast (cumulative percent change
@@ -131,3 +131,48 @@ export const getCurrentYearGrowth = (job: Job, year: number): { value: number; s
     // (height = 1.0 in the shader). No invented intermediate values.
     return { value: 0, source: 'baseline' };
 };
+
+/**
+ * Integer-year growth % table — same layout Terrain.tsx uploads before fractional
+ * interpolation in useFrame (must stay in lockstep with the GPU path).
+ */
+export function buildGrowthForecastFlatArray(filteredJobs: Job[]): Float32Array {
+    const forecasts = new Float32Array(SHADER.FORECAST_ARRAY_SIZE);
+    filteredJobs.forEach((job, jobIdx) => {
+        if (jobIdx >= SHADER.MAX_JOBS) return;
+        for (let year = YEAR_MIN; year <= YEAR_MAX; year++) {
+            const yearIdx = year - YEAR_MIN;
+            const flatIdx = jobIdx * YEAR_COUNT + yearIdx;
+            const fallbackImpact = getCurrentYearGrowth(job, year).value;
+            if (job.yearlyForecast) {
+                const item = job.yearlyForecast.find((f) => f.year === year);
+                forecasts[flatIdx] = item ? item.growthImpact : fallbackImpact;
+            } else {
+                forecasts[flatIdx] = fallbackImpact;
+            }
+        }
+    });
+    return forecasts;
+}
+
+/**
+ * Fractional-year interpolation over {@link buildGrowthForecastFlatArray} —
+ * must match Terrain useFrame growth sampling (and Growth-mode shader height).
+ */
+export function growthAtYearFromForecastFlat(
+    forecasts: ArrayLike<number>,
+    jobIndex: number,
+    year: number,
+): number {
+    const t = Math.max(YEAR_MIN, Math.min(YEAR_MAX, year));
+    const y1 = Math.floor(t);
+    const y2 = Math.ceil(t);
+    const offset1 = y1 - YEAR_MIN;
+    const offset2 = y2 - YEAR_MIN;
+    const idx1 = jobIndex * YEAR_COUNT + offset1;
+    const idx2 = jobIndex * YEAR_COUNT + offset2;
+    const val1 = Number(forecasts[idx1] ?? 0);
+    const val2 = Number(forecasts[idx2] ?? 0);
+    const f = t - y1;
+    return val1 * (1 - f) + val2 * f;
+}

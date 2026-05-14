@@ -2,7 +2,7 @@ import React, { useMemo, useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { Html, Line } from '@react-three/drei';
 import { useStore } from '../store';
-import { getTerrainPosition, calculateGaussianHeight, getCurrentYearGrowth, getVisualHeightForGrowth, getVisualHeightForWorkersAtYear, type PeakData, TERRAIN_CONFIG } from '../utils/terrainMath';
+import { getTerrainPosition, calculateGaussianHeight, buildGrowthForecastFlatArray, growthAtYearFromForecastFlat, getVisualHeightForGrowth, getVisualHeightForWorkersAtYear, type PeakData, TERRAIN_CONFIG } from '../utils/terrainMath';
 import { CLUSTER_COLORS, FALLBACK_COLORS } from '../config/theme';
 import { SCENE } from '../config/constants';
 
@@ -33,19 +33,24 @@ export const JobMarkers: React.FC = () => {
         return jobs.filter(job => selectedRoleIds.has(job.id));
     }, [jobs, selectedRoleIds]);
 
-    // Peak positions & heights (synced with Terrain.tsx shader)
+    const forecastsFlat = useMemo(
+        () => buildGrowthForecastFlatArray(filteredJobs),
+        [filteredJobs],
+    );
+
+    // Peak positions & heights (synced with Terrain.tsx shader + forecast flat buffer)
     const peaks = useMemo(() => {
-        const nextPeaks = filteredJobs.map((job) => {
+        const nextPeaks = filteredJobs.map((job, filteredIndex) => {
             const i = jobs.findIndex(j => j.id === job.id);
-            const { value: currentGrowth } = getCurrentYearGrowth(job, year);
+            const g = growthAtYearFromForecastFlat(forecastsFlat, filteredIndex, year);
             const h = heightMode === 'employment'
-                ? getVisualHeightForWorkersAtYear(job.employment, currentGrowth)
-                : getVisualHeightForGrowth(currentGrowth);
+                ? getVisualHeightForWorkersAtYear(job.employment, g)
+                : getVisualHeightForGrowth(g);
             const { x, z } = getTerrainPosition(i);
             return { x, z, height: h } as PeakData;
         });
         return nextPeaks;
-    }, [filteredJobs, jobs, year, heightMode]);
+    }, [filteredJobs, jobs, year, heightMode, forecastsFlat]);
 
     // Stagger: vertical offset to separate overlapping labels
     const staggeredPeaks = useMemo(() => {
@@ -106,11 +111,12 @@ export const JobMarkers: React.FC = () => {
 
                 const automationRisk = job.automationCostIndex >= 0.65 ? 'High' : job.automationCostIndex >= 0.4 ? 'Moderate' : 'Low';
                 const riskColor = automationRisk === 'High' ? '#f87171' : automationRisk === 'Moderate' ? '#fb923c' : '#4ade80';
-                const { value: currentYearGrowth, source: growthSource } = getCurrentYearGrowth(job, year);
+                const sampledGrowth = growthAtYearFromForecastFlat(forecastsFlat, filteredIndex, year);
+                const growthSource: 'ai' | 'baseline' = job.yearlyForecast?.length ? 'ai' : 'baseline';
                 const roundedYear = Math.round(year);
-                const isDeclining = currentYearGrowth < 0;
-                const isGrowing = currentYearGrowth > 0;
-                const growthStr = `${currentYearGrowth >= 0 ? '+' : ''}${currentYearGrowth.toFixed(1)}%`;
+                const isDeclining = sampledGrowth < 0;
+                const isGrowing = sampledGrowth > 0;
+                const growthStr = `${sampledGrowth >= 0 ? '+' : ''}${sampledGrowth.toFixed(1)}%`;
                 const growthColor = isGrowing ? '#4ade80' : isDeclining ? '#f87171' : '#94a3b8';
                 const growthLabel = `${roundedYear} Forecast`;
                 const growthSourceLabel = growthSource === 'ai' ? 'AI Forecast' : 'Baseline Estimate';
