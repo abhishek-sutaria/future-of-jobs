@@ -2,17 +2,27 @@ import React, { useMemo, useState, useCallback } from 'react';
 import { ComposableMap, Geographies, Geography, Marker, ZoomableGroup } from 'react-simple-maps';
 import { scaleLinear } from 'd3-scale';
 import { useStore } from '../store';
-import { CLUSTER_COLORS, FALLBACK_COLORS } from '../config/theme';
+import { aggregateByState } from '../utils/mapAggregation';
 
 // Low-res US state boundaries from the public us-atlas CDN
 const GEO_URL = 'https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json';
+
+// Maximum number of states that receive a circle marker (top by employment).
+// States beyond this still receive choropleth fill — only the marker labels are capped.
+const MARKER_CAP = 15;
 
 interface TooltipState {
     x: number;
     y: number;
     name: string;
-    totalJobs: number;
-    jobs: Array<{ title: string; count: number; color: string }>;
+    totalEmployment: number;
+    bySoc: Array<{
+        soc: string;
+        titles: string[];
+        employment: number;
+        lq: number | null;
+    }>;
+    hasData: boolean;
 }
 
 export const MapView: React.FC = () => {
@@ -29,32 +39,17 @@ export const MapView: React.FC = () => {
         return jobs.filter((j) => selectedRoleIds.has(j.id));
     }, [jobs, selectedRoleIds]);
 
-    // Build per-state employment totals and breakdown
+    // Build per-state employment totals, de-duped by SOC code so alias titles
+    // (e.g. Marketing Manager + Brand Manager → 11-2021) don't double-count.
     const { stateData, maxEmployment, regionMarkers } = useMemo(() => {
-        const byState: Record<string, {
-            totalJobs: number;
-            jobs: Array<{ title: string; count: number; color: string }>;
-            coordinates: [number, number];
-        }> = {};
+        const { stateData: sd, maxEmployment: maxEmp } = aggregateByState(activeJobs);
 
-        activeJobs.forEach((job, idx) => {
-            if (!job.locations) return;
-            const color = CLUSTER_COLORS[job.cluster] || FALLBACK_COLORS[idx % FALLBACK_COLORS.length];
-            job.locations.forEach((loc) => {
-                if (!byState[loc.name]) {
-                    byState[loc.name] = { totalJobs: 0, jobs: [], coordinates: [loc.lng, loc.lat] };
-                }
-                byState[loc.name].totalJobs += loc.employment;
-                byState[loc.name].jobs.push({ title: job.title, count: loc.employment, color });
-            });
-        });
+        // Top MARKER_CAP states by employment get circle labels
+        const markers = Object.entries(sd)
+            .sort((a, b) => b[1].totalEmployment - a[1].totalEmployment)
+            .slice(0, MARKER_CAP);
 
-        const maxEmp = Math.max(...Object.values(byState).map((d) => d.totalJobs), 1);
-        const markers = Object.entries(byState)
-            .sort((a, b) => b[1].totalJobs - a[1].totalJobs)
-            .slice(0, 15); // top 15 states get a circle marker
-
-        return { stateData: byState, maxEmployment: maxEmp, regionMarkers: markers };
+        return { stateData: sd, maxEmployment: maxEmp, regionMarkers: markers };
     }, [activeJobs]);
 
     // Cyan-tinted fill scale: dark slate → deep cyan
@@ -71,13 +66,13 @@ export const MapView: React.FC = () => {
     const handleStateEnter = useCallback(
         (e: React.MouseEvent, stateName: string) => {
             const data = stateData[stateName];
-            if (!data) return;
             setTooltip({
                 x: e.clientX,
                 y: e.clientY,
                 name: stateName,
-                totalJobs: data.totalJobs,
-                jobs: data.jobs.sort((a, b) => b.count - a.count),
+                totalEmployment: data?.totalEmployment ?? 0,
+                bySoc: data?.bySoc ?? [],
+                hasData: !!data,
             });
         },
         [stateData]
@@ -93,8 +88,7 @@ export const MapView: React.FC = () => {
 
     return (
         <div className="w-full h-full bg-[#0f172a] relative overflow-hidden">
-            {/* Reset view — small, conditional, only appears when zoomed/panned.
-                Close Map lives in the Header beside the search bar. */}
+            {/* Reset view — small, conditional, only appears when zoomed/panned */}
             {!isDefault && (
                 <div className="absolute top-32 right-6 z-50">
                     <button
@@ -113,12 +107,14 @@ export const MapView: React.FC = () => {
                     <div className="w-28 h-2.5 rounded-full" style={{ background: 'linear-gradient(to right, #1e293b, #0e7490)' }} />
                     <span className="text-[10px] text-gray-500">Low → High</span>
                 </div>
-                <p className="text-[10px] text-gray-600 mt-1">Scroll to zoom · Drag to pan</p>
+                <p className="text-[10px] text-gray-600 mt-1">
+                    Circle labels: top {MARKER_CAP} states &middot; Scroll to zoom &middot; Drag to pan
+                </p>
             </div>
 
-            {/* Source */}
+            {/* Source attribution */}
             <div className="absolute bottom-6 right-6 z-10 text-[10px] text-gray-600 font-mono">
-                BLS OES May 2023
+                BLS OES May 2023 · Aggregated by SOC code
             </div>
 
             {/* Composable US Map */}
@@ -138,7 +134,7 @@ export const MapView: React.FC = () => {
                             geographies.map((geo) => {
                                 const stateName: string = geo.properties.name;
                                 const data = stateData[stateName];
-                                const fill = data ? fillScale(data.totalJobs) : '#1e293b';
+                                const fill = data ? fillScale(data.totalEmployment) : '#1e293b';
 
                                 return (
                                     <Geography
@@ -161,11 +157,11 @@ export const MapView: React.FC = () => {
                         }
                     </Geographies>
 
-                    {/* Circle markers for top states */}
+                    {/* Circle markers for top MARKER_CAP states */}
                     {regionMarkers.map(([name, data]) => (
                         <Marker key={name} coordinates={data.coordinates}>
                             <circle
-                                r={Math.max(3, Math.log(data.totalJobs / 1000 + 1) * 3)}
+                                r={Math.max(3, Math.log(data.totalEmployment / 1000 + 1) * 3)}
                                 fill="rgba(8,145,178,0.25)"
                                 stroke="rgba(8,145,178,0.6)"
                                 strokeWidth={0.8}
@@ -188,24 +184,60 @@ export const MapView: React.FC = () => {
                     className="fixed z-[500] pointer-events-none"
                     style={{ top: tooltip.y + 12, left: tooltip.x + 12 }}
                 >
-                    <div className="bg-gray-900/95 backdrop-blur-xl border border-white/10 rounded-xl p-3 shadow-2xl w-52">
+                    <div className="bg-gray-900/95 backdrop-blur-xl border border-white/10 rounded-xl p-3 shadow-2xl w-60">
                         <div className="flex justify-between items-baseline border-b border-white/[0.06] pb-2 mb-2">
                             <span className="text-white text-xs font-bold truncate">{tooltip.name}</span>
-                            <span className="text-cyan-400 text-[10px] font-mono ml-2 shrink-0">
-                                {tooltip.totalJobs.toLocaleString()}
-                            </span>
+                            {tooltip.hasData ? (
+                                <span className="text-cyan-400 text-[10px] font-mono ml-2 shrink-0">
+                                    {tooltip.totalEmployment.toLocaleString()}
+                                </span>
+                            ) : (
+                                <span className="text-gray-600 text-[10px] ml-2 shrink-0">no data</span>
+                            )}
                         </div>
-                        <div className="space-y-1.5 max-h-36 overflow-y-auto custom-scrollbar">
-                            {tooltip.jobs.map((j, i) => (
-                                <div key={i} className="flex justify-between items-center text-[10px]">
-                                    <div className="flex items-center gap-1.5 overflow-hidden">
-                                        <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: j.color }} />
-                                        <span className="text-gray-300 truncate max-w-[110px]">{j.title}</span>
+
+                        {tooltip.hasData ? (
+                            <div className="space-y-2 max-h-48 overflow-y-auto custom-scrollbar">
+                                {tooltip.bySoc.map((entry) => (
+                                    <div key={entry.soc} className="space-y-0.5">
+                                        <div className="flex justify-between items-baseline">
+                                            <span className="text-[10px] text-gray-300 truncate max-w-[140px]">
+                                                {entry.titles.length > 1
+                                                    ? `${entry.titles[0]} +${entry.titles.length - 1}`
+                                                    : entry.titles[0]}
+                                            </span>
+                                            <span className="text-[10px] text-gray-400 font-mono ml-2 shrink-0">
+                                                {entry.employment.toLocaleString()}
+                                            </span>
+                                        </div>
+                                        <div className="flex items-center gap-2 pl-0.5">
+                                            <span className="text-[9px] text-gray-600 font-mono">{entry.soc}</span>
+                                            {entry.lq !== null && entry.lq > 0 && (
+                                                <span
+                                                    className={`text-[9px] font-mono ${
+                                                        entry.lq >= 1.5
+                                                            ? 'text-cyan-500'
+                                                            : entry.lq >= 1.0
+                                                            ? 'text-gray-400'
+                                                            : 'text-gray-600'
+                                                    }`}
+                                                    title="BLS Location Quotient — ratio of this occupation's share of state employment to its national share. >1 = concentration above national average."
+                                                >
+                                                    LQ {entry.lq.toFixed(2)}
+                                                </span>
+                                            )}
+                                        </div>
                                     </div>
-                                    <span className="text-gray-500 font-mono ml-2">{j.count.toLocaleString()}</span>
-                                </div>
-                            ))}
-                        </div>
+                                ))}
+                                <p className="text-[8px] text-gray-700 border-t border-white/[0.04] pt-1.5 mt-1.5">
+                                    BLS OES May 2023 · TOT_EMP by SOC
+                                </p>
+                            </div>
+                        ) : (
+                            <p className="text-[10px] text-gray-600 italic">
+                                No BLS OES data for selected roles in this state.
+                            </p>
+                        )}
                     </div>
                 </div>
             )}

@@ -1,0 +1,522 @@
+{
+  "11-1021": {
+    "soc_code": "11-1021",
+    "titles": [
+      "General Manager"
+    ],
+    "employment": 3507810,
+    "salary_mean": 129330,
+    "salary_median": 101280,
+    "projectedGrowth": 3,
+    "state_count": 54
+  },
+  "11-2021": {
+    "soc_code": "11-2021",
+    "titles": [
+      "Marketing Manager",
+      "Brand Manager"
+    ],
+    "employment": 368940,
+    "salary_mean": 166410,
+    "salary_median": 157620,
+    "projectedGrowth": 7,
+    "state_count": 52
+  },
+  "11-2022": {
+    "soc_code": "11-2022",
+    "titles": [
+      "Sales Manager"
+    ],
+    "employment": 575880,
+    "salary_mean": 157610,
+    "salary_median": 135160,
+    "projectedGrowth": 4,
+    "state_count": 53
+  },
+  "11-2032": {
+    "soc_code": "11-2032",
+    "titles": [
+      "Public Relations Manager"
+    ],
+    "employment": 72760,
+    "salary_mean": 159420,
+    "salary_median": 134760,
+    "projectedGrowth": 6,
+    "state_count": 49
+  },
+  "11-3021": {
+    "soc_code": "11-3021",
+    "titles": [
+      "IT Manager"
+    ],
+    "employment": 592600,
+    "salary_mean": 180720,
+    "salary_median": 169510,
+    "projectedGrowth": 15,
+    "state_count": 53
+  },
+  "11-3031": {
+    "soc_code": "11-3031",
+    "titles": [
+      "Financial Manager"
+    ],
+    "employment": 787340,
+    "salary_mean": 174820,
+    "salary_median": 156100,
+    "projectedGrowth": 16,
+    "state_count": 54
+  },
+  "11-3051": {
+    "soc_code": "11-3051",
+    "titles": [
+      "Industrial Production Manager"
+    ],
+    "employment": 222890,
+    "salary_mean": 125900,
+    "salary_median": 116970,
+    "projectedGrowth": 3,
+    "state_count": 51
+  },
+  "11-3061": {
+    "soc_code": "11-3061",
+    "titles": [
+      "Purchasing Manager"
+    ],
+    "employment": 77530,
+    "salary_mean": 146710,
+    "salary_median": 136380,
+    "projectedGrowth": 4,
+    "state_count": 52
+  },
+  "11-3071": {
+    "soc_code": "11-3071",
+    "titles": [
+      "Supply Chain Manager"
+    ],
+    "employment": 198780,
+    "salary_mean": 111870,
+    "salary_median": 99200,
+    "projectedGrowth": 18,
+    "state_count": 52
+  },
+  "11-3111": {
+    "soc_code": "11-3111",
+    "titles": [
+      "Compensation & Benefits Manager"
+    ],
+    "employment": 18690,
+    "salary_mean": 150940,
+    "salary_median": 136380,
+    "projectedGrowth": 3,
+    "state_count": 42
+  },
+  "11-3121": {
+    "soc_code": "11-3121",
+    "titles": [
+      "HR Manager"
+    ],
+    "employment": 200600,
+    "salary_mean": 154740,
+    "salary_median": 136350,
+    "projectedGrowth": 5,
+    "state_count": 54
+  },
+  "11-3131": {
+    "soc_code": "11-3131",
+    "titles": [
+      "Training & Development Manager"
+    ],
+    "employment": 41540,
+    "salary_mean": 138450,
+    "salary_median": 125040,
+    "projectedGrowth": 7,
+    "state_count": 48
+  },
+  "13-1022": {
+    "soc_code": "13-1022",
+    "titles": [
+      "Wholesale & Retail Buyer"
+    ],
+    "employment": 0,
+    "salary_mean": 0,
+    "salary_median": 0,
+    "projectedGrowth": 4,
+    "state_count": 0
+  },
+  "13-1023": {
+    "soc_code": "13-1023",
+    "titles": [
+      "Purchasing Agent"
+    ],
+    "employment": 0,
+    "salary_mean": 0,
+    "salary_median": 0,
+    "projectedGrowth": 4,
+    "state_count": 0
+  },
+  "13-1051": {
+    "soc_code": "13-1051",
+    "titles": [
+      "Cost Estimator"
+    ],
+    "employment": 220970,
+    "salary_mean": 79520,
+    "salary_median": 74740,
+    "projectedGrowth": -6,
+    "state_count": 53
+  },
+  "13-1071": {
+    "soc_code": "13-1071",
+    "titles": [
+      "HR Specialist"
+    ],
+    "employment": 895970,
+    "salary_mean": 76060,
+    "salary_median": 67650,
+    "projectedGrowth": 6,
+    "state_count": 54
+  },
+  "13-1081": {
+    "soc_code": "13-1081",
+    "titles": [
+      "Logistics Analyst"
+    ],
+    "employment": 228470,
+    "salary_mean": 84640,
+    "salary_median": 79400,
+    "projectedGrowth": 18,
+    "state_count": 53
+  },
+  "13-1082": {
+    "soc_code": "13-1082",
+    "titles": [
+      "Project Management Specialist"
+    ],
+    "employment": 947630,
+    "salary_mean": 104920,
+    "salary_median": 98580,
+    "projectedGrowth": 6,
+    "state_count": 53
+  },
+  "13-1111": {
+    "soc_code": "13-1111",
+    "titles": [
+      "Management Consultant"
+    ],
+    "employment": 838140,
+    "salary_mean": 115530,
+    "salary_median": 99410,
+    "projectedGrowth": 10,
+    "state_count": 53
+  },
+  "13-1121": {
+    "soc_code": "13-1121",
+    "titles": [
+      "Event Coordinator"
+    ],
+    "employment": 122130,
+    "salary_mean": 62280,
+    "salary_median": 56920,
+    "projectedGrowth": 8,
+    "state_count": 52
+  },
+  "13-1141": {
+    "soc_code": "13-1141",
+    "titles": [
+      "Compensation Analyst"
+    ],
+    "employment": 99850,
+    "salary_mean": 80620,
+    "salary_median": 74530,
+    "projectedGrowth": 5,
+    "state_count": 51
+  },
+  "13-1151": {
+    "soc_code": "13-1151",
+    "titles": [
+      "Training & Development Specialist"
+    ],
+    "employment": 403480,
+    "salary_mean": 71980,
+    "salary_median": 64340,
+    "projectedGrowth": 8,
+    "state_count": 54
+  },
+  "13-1161": {
+    "soc_code": "13-1161",
+    "titles": [
+      "Market Research Analyst"
+    ],
+    "employment": 846370,
+    "salary_mean": 83190,
+    "salary_median": 74680,
+    "projectedGrowth": 13,
+    "state_count": 54
+  },
+  "13-2011": {
+    "soc_code": "13-2011",
+    "titles": [
+      "Accountant & Auditor"
+    ],
+    "employment": 1435770,
+    "salary_mean": 90780,
+    "salary_median": 79880,
+    "projectedGrowth": 4,
+    "state_count": 54
+  },
+  "13-2031": {
+    "soc_code": "13-2031",
+    "titles": [
+      "Budget Analyst"
+    ],
+    "employment": 47310,
+    "salary_mean": 90880,
+    "salary_median": 84940,
+    "projectedGrowth": 3,
+    "state_count": 53
+  },
+  "13-2041": {
+    "soc_code": "13-2041",
+    "titles": [
+      "Credit Analyst"
+    ],
+    "employment": 73200,
+    "salary_mean": 94750,
+    "salary_median": 79420,
+    "projectedGrowth": 8,
+    "state_count": 52
+  },
+  "13-2051": {
+    "soc_code": "13-2051",
+    "titles": [
+      "Financial Analyst"
+    ],
+    "employment": 325220,
+    "salary_mean": 112950,
+    "salary_median": 99010,
+    "projectedGrowth": 8,
+    "state_count": 52
+  },
+  "13-2052": {
+    "soc_code": "13-2052",
+    "titles": [
+      "Personal Financial Advisor"
+    ],
+    "employment": 272190,
+    "salary_mean": 150670,
+    "salary_median": 99580,
+    "projectedGrowth": 13,
+    "state_count": 51
+  },
+  "13-2053": {
+    "soc_code": "13-2053",
+    "titles": [
+      "Insurance Underwriter"
+    ],
+    "employment": 101310,
+    "salary_mean": 85610,
+    "salary_median": 77860,
+    "projectedGrowth": -4,
+    "state_count": 52
+  },
+  "13-2072": {
+    "soc_code": "13-2072",
+    "titles": [
+      "Loan Officer"
+    ],
+    "employment": 321090,
+    "salary_mean": 84490,
+    "salary_median": 69990,
+    "projectedGrowth": 3,
+    "state_count": 54
+  },
+  "13-2099": {
+    "soc_code": "13-2099",
+    "titles": [
+      "Risk Specialist",
+      "Financial Risk Analyst"
+    ],
+    "employment": 122730,
+    "salary_mean": 89650,
+    "salary_median": 78310,
+    "projectedGrowth": 6,
+    "state_count": 51
+  },
+  "15-1211": {
+    "soc_code": "15-1211",
+    "titles": [
+      "Computer Systems Analyst"
+    ],
+    "employment": 498810,
+    "salary_mean": 110800,
+    "salary_median": 103800,
+    "projectedGrowth": 10,
+    "state_count": 52
+  },
+  "15-1212": {
+    "soc_code": "15-1212",
+    "titles": [
+      "Cybersecurity Analyst"
+    ],
+    "employment": 175350,
+    "salary_mean": 124740,
+    "salary_median": 120360,
+    "projectedGrowth": 33,
+    "state_count": 51
+  },
+  "15-1242": {
+    "soc_code": "15-1242",
+    "titles": [
+      "Database Administrator"
+    ],
+    "employment": 76140,
+    "salary_mean": 104810,
+    "salary_median": 101510,
+    "projectedGrowth": 9,
+    "state_count": 52
+  },
+  "15-1252": {
+    "soc_code": "15-1252",
+    "titles": [
+      "Software Developer"
+    ],
+    "employment": 1656880,
+    "salary_mean": 138110,
+    "salary_median": 132270,
+    "projectedGrowth": 25,
+    "state_count": 53
+  },
+  "15-1254": {
+    "soc_code": "15-1254",
+    "titles": [
+      "Web Developer"
+    ],
+    "employment": 85350,
+    "salary_mean": 95570,
+    "salary_median": 84960,
+    "projectedGrowth": 16,
+    "state_count": 47
+  },
+  "15-1255": {
+    "soc_code": "15-1255",
+    "titles": [
+      "UX Designer"
+    ],
+    "employment": 111060,
+    "salary_mean": 108820,
+    "salary_median": 98540,
+    "projectedGrowth": 16,
+    "state_count": 46
+  },
+  "15-1299": {
+    "soc_code": "15-1299",
+    "titles": [
+      "IT Project Manager"
+    ],
+    "employment": 437170,
+    "salary_mean": 112430,
+    "salary_median": 104920,
+    "projectedGrowth": 6,
+    "state_count": 49
+  },
+  "15-2011": {
+    "soc_code": "15-2011",
+    "titles": [
+      "Actuary"
+    ],
+    "employment": 25470,
+    "salary_mean": 132500,
+    "salary_median": 120000,
+    "projectedGrowth": 24,
+    "state_count": 41
+  },
+  "15-2031": {
+    "soc_code": "15-2031",
+    "titles": [
+      "Operations Research Analyst"
+    ],
+    "employment": 117880,
+    "salary_mean": 95600,
+    "salary_median": 83640,
+    "projectedGrowth": 23,
+    "state_count": 49
+  },
+  "15-2041": {
+    "soc_code": "15-2041",
+    "titles": [
+      "Statistician"
+    ],
+    "employment": 29950,
+    "salary_mean": 109190,
+    "salary_median": 104110,
+    "projectedGrowth": 31,
+    "state_count": 49
+  },
+  "15-2051": {
+    "soc_code": "15-2051",
+    "titles": [
+      "Business Intelligence Analyst",
+      "Data Scientist"
+    ],
+    "employment": 192710,
+    "salary_mean": 119040,
+    "salary_median": 108020,
+    "projectedGrowth": 35,
+    "state_count": 50
+  },
+  "41-3011": {
+    "soc_code": "41-3011",
+    "titles": [
+      "Advertising Sales Agent"
+    ],
+    "employment": 108100,
+    "salary_mean": 75820,
+    "salary_median": 61270,
+    "projectedGrowth": -3,
+    "state_count": 52
+  },
+  "41-3021": {
+    "soc_code": "41-3021",
+    "titles": [
+      "Insurance Sales Agent"
+    ],
+    "employment": 457510,
+    "salary_mean": 79700,
+    "salary_median": 59080,
+    "projectedGrowth": 5,
+    "state_count": 54
+  },
+  "41-3031": {
+    "soc_code": "41-3031",
+    "titles": [
+      "Securities & Sales Agent"
+    ],
+    "employment": 479630,
+    "salary_mean": 109710,
+    "salary_median": 76900,
+    "projectedGrowth": 7,
+    "state_count": 53
+  },
+  "41-3091": {
+    "soc_code": "41-3091",
+    "titles": [
+      "Account Executive"
+    ],
+    "employment": 1142020,
+    "salary_mean": 81080,
+    "salary_median": 64600,
+    "projectedGrowth": 4,
+    "state_count": 53
+  },
+  "41-4012": {
+    "soc_code": "41-4012",
+    "titles": [
+      "Sales Representative"
+    ],
+    "employment": 1288920,
+    "salary_mean": 80490,
+    "salary_median": 65630,
+    "projectedGrowth": 2,
+    "state_count": 53
+  }
+}

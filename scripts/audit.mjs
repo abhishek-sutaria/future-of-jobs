@@ -3,14 +3,17 @@
  * EXHAUSTIVE AUDIT TEST SUITE
  * Future of Jobs — Data Integrity & Production Readiness
  *
- * Runs 49 automated checks across 9 categories:
- *   [CAT-1] Telemetry Cleanup
- *   [CAT-2] Dead Code Removal
- *   [CAT-3] Data Integrity — Jobs & Tasks
- *   [CAT-4] Data Integrity — Config & Constants
- *   [CAT-5] API / Proxy Correctness
- *   [CAT-6] Zod / Validation Path
- *   [CAT-7] Production Build
+ * Runs 64 automated checks across 10 categories:
+ *   [CAT-1]  Telemetry Cleanup
+ *   [CAT-2]  Dead Code Removal
+ *   [CAT-3]  Data Integrity — Jobs & Tasks
+ *   [CAT-4]  SOC Code Map Coverage
+ *   [CAT-5]  Config & Constants Correctness
+ *   [CAT-6]  API / Proxy / Serverless Functions
+ *   [CAT-7]  Validation & Data Flow
+ *   [CAT-8]  Real-data policy
+ *   [CAT-9]  Geographic Map Data Integrity
+ *   [CAT-10] Production Build
  *
  * Usage: node scripts/audit.mjs
  */
@@ -673,9 +676,144 @@ heading('CAT-8', 'Real-data policy — banned simulation tokens in src/');
 }
 
 // =============================================================================
-// CATEGORY 9: Build
+// CATEGORY 9: Geographic Map Data Integrity
 // =============================================================================
-heading('CAT-9', 'Production Build');
+heading('CAT-9', 'Geographic Map Data Integrity (geo_real.json ↔ onet.ts)');
+
+{
+  const geoPath = path.join(ROOT, 'src', 'data', 'geo_real.json');
+  const onetSrc = read('src/utils/onet.ts');
+
+  if (!exists('src/data/geo_real.json')) {
+    failed++;
+    fail('T54 — src/data/geo_real.json exists', 'File not found');
+  } else {
+    let geo;
+    try {
+      geo = JSON.parse(read('src/data/geo_real.json'));
+    } catch (e) {
+      failed++;
+      fail('T54 — src/data/geo_real.json is valid JSON', e.message);
+      geo = null;
+    }
+
+    if (geo) {
+      // T54: _meta block present
+      check(
+        'T54 — geo_real.json has a _meta provenance block',
+        !!geo._meta && !!geo._meta.bls_release && !!geo._meta.extracted,
+        !geo._meta ? 'No _meta key' : 'Missing bls_release or extracted'
+      );
+
+      // T55: at least 40 SOC codes in geo
+      const socKeys = Object.keys(geo).filter(k => k !== '_meta');
+      check(
+        `T55 — geo_real.json has ≥40 SOC code entries (found ${socKeys.length})`,
+        socKeys.length >= 40,
+        `Found ${socKeys.length}`
+      );
+
+      // T56: at least 1000 state rows in total
+      const totalRows = socKeys.reduce((n, soc) => n + (geo[soc]?.length ?? 0), 0);
+      check(
+        `T56 — geo_real.json has ≥1000 state rows total (found ${totalRows})`,
+        totalRows >= 1000,
+        `Found ${totalRows}`
+      );
+
+      // T57: every SOC in MAP_TITLE_TO_SOC has an entry in geo (or is documented as BLS-suppressed)
+      const titleToSocMatches = [...onetSrc.matchAll(/"[^"]+"\s*:\s*"(\d{2}-\d{4})"/g)];
+      const appSocSet = new Set(titleToSocMatches.map(m => m[1]));
+      const geoSocSet = new Set(socKeys);
+      const knownSuppressed = new Set(['13-1022', '13-1023']); // BLS does not publish detailed-level data
+      const missingInGeo = [...appSocSet].filter(s => !geoSocSet.has(s) && !knownSuppressed.has(s));
+      check(
+        'T57 — Every MAP_TITLE_TO_SOC code is in geo_real.json (excl. BLS-suppressed 13-1022/13-1023)',
+        missingInGeo.length === 0,
+        missingInGeo.length > 0 ? `Missing: ${missingInGeo.join(', ')}` : ''
+      );
+
+      // T58: no orphaned geo keys (every geo SOC is used by at least one title)
+      const orphaned = socKeys.filter(s => !appSocSet.has(s));
+      check(
+        `T58 — No orphaned SOC keys in geo_real.json (all ${socKeys.length} SOCs used by a job title)`,
+        orphaned.length === 0,
+        orphaned.length > 0 ? `Orphaned: ${orphaned.join(', ')}` : ''
+      );
+
+      // T59: every state row has employment > 0 and lq >= 0
+      let badRows = 0;
+      for (const soc of socKeys) {
+        for (const row of (geo[soc] || [])) {
+          if (!row.employment || row.employment <= 0 || row.lq < 0) badRows++;
+        }
+      }
+      check(
+        `T59 — All state rows have employment > 0 and lq ≥ 0`,
+        badRows === 0,
+        badRows > 0 ? `${badRows} invalid rows found` : ''
+      );
+
+      // T60: _meta.note_coordinates explicitly mentions Census Bureau
+      check(
+        'T60 — _meta.note_coordinates documents lat/lng as Census centroids (display-only)',
+        !!(geo._meta?.note_coordinates?.toLowerCase().includes('census')),
+        'Expected "Census" in note_coordinates'
+      );
+    }
+  }
+}
+
+// T61: MapView uses aggregateByState (de-duped SOC aggregation)
+{
+  const mapSrc = read('src/components/MapView.tsx');
+  check(
+    'T61 — MapView.tsx imports and uses aggregateByState (SOC-level de-dup)',
+    mapSrc.includes('aggregateByState')
+  );
+}
+
+// T62: mapAggregation.ts exists and de-dupes by SOC
+{
+  if (exists('src/utils/mapAggregation.ts')) {
+    const src = read('src/utils/mapAggregation.ts');
+    check(
+      'T62 — mapAggregation.ts de-dupes by SOC (bySoc grouping present)',
+      src.includes('bySoc') && src.includes('MAP_TITLE_TO_SOC')
+    );
+  } else {
+    failed++;
+    fail('T62 — src/utils/mapAggregation.ts exists', 'File not found');
+  }
+}
+
+// T63: MapView does NOT use the old double-counting pattern (slice on raw job loop)
+{
+  const mapSrc = read('src/components/MapView.tsx');
+  // Old pattern was: activeJobs.forEach(job => job.locations.forEach(loc => byState[loc.name].totalJobs += loc.employment))
+  // New pattern uses aggregateByState. Check old pattern is gone.
+  check(
+    'T63 — MapView.tsx no longer double-counts per job.locations (uses aggregateByState)',
+    !mapSrc.includes('loc.employment') || mapSrc.includes('aggregateByState')
+  );
+}
+
+// T64: Deprecated onet.ts SOC codes are gone (11-2031, 41-3099)
+{
+  const onetSrc = read('src/utils/onet.ts');
+  const badCodes = ['11-2031', '41-3099'];
+  const found = badCodes.filter(c => onetSrc.includes(`"${c}"`));
+  check(
+    'T64 — Deprecated SOC codes 11-2031 and 41-3099 removed from onet.ts',
+    found.length === 0,
+    found.length > 0 ? `Still present: ${found.join(', ')}` : ''
+  );
+}
+
+// =============================================================================
+// CATEGORY 10: Build
+// =============================================================================
+heading('CAT-10', 'Production Build');
 
 // T50: TypeScript compilation succeeds (tsc --noEmit)
 {

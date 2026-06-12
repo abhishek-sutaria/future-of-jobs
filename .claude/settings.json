@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx vercel *)",
+      "Bash(curl -s https://futureofjobs.vercel.app/)",
+      "Bash(grep -cE '\"aiCapabilityScore\": 0\\(,|$\\)' src/data.ts)",
+      "Bash(grep -cE '\"humanCriticalityScore\": 0\\(,|$\\)' src/data.ts)",
+      "Bash(curl -sL https://futureofjobs.vercel.app/assets/index-BgNogCQf.js -o /tmp/live.js)"
+    ]
+  }
+}

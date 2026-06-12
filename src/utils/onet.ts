@@ -24,11 +24,11 @@ export const MAP_TITLE_TO_SOC: Record<string, string> = {
     "Supply Chain Manager":            "11-3071",
 
     // Business / Marketing
-    "Brand Manager":                   "11-2021",  // alias: Advertising & Promotions Managers
-    "Public Relations Manager":        "11-2031",
+    "Brand Manager":                   "11-2021",  // Marketing Managers (same BLS group as Marketing Manager)
+    "Public Relations Manager":        "11-2032",  // BLS 2018 SOC: 11-2032 (was 11-2031 pre-2018)
     "Advertising Sales Agent":         "41-3011",
     "Event Coordinator":               "13-1121",
-    "Account Executive":               "41-3099",
+    "Account Executive":               "41-3091",  // Sales Representatives of Services (BLS OES)
     "Sales Representative":            "41-4012",
     "Insurance Sales Agent":           "41-3021",
 

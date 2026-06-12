@@ -25,7 +25,7 @@ export const Legend: React.FC = () => {
 
             <div className="mt-1.5 pt-1.5 border-t border-white/[0.06] w-full text-right">
                 <div className="text-[9px] text-gray-600 uppercase tracking-widest">
-                    Y: Growth &middot; X/Z: Cluster
+                    Y: Growth &middot; X/Z: Spiral index
                 </div>
             </div>
         </div>

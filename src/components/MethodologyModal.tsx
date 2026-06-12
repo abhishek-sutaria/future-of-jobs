@@ -158,6 +158,31 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
 
                 <div className="h-px bg-white/[0.06]" />
 
+                {/* 2D Map section */}
+                <div className="space-y-2">
+                    <div className="flex items-center gap-2.5">
+                        <span className="text-lg leading-none">🗺️</span>
+                        <h3 className="text-base font-semibold text-teal-400">2D US Map</h3>
+                    </div>
+                    <p className="text-sm text-gray-300 leading-relaxed">
+                        The map shows state-level employment for each selected role, sourced from{' '}
+                        <SourceLink href="https://www.bls.gov/oes/current/oessrcst.htm">BLS OES May 2023 state data</SourceLink>.
+                        Values are the BLS <code className="text-[10px] bg-white/[0.06] rounded px-1">TOT_EMP</code> column
+                        (cross-industry, detailed occupation level). The Location Quotient (LQ) shown in tooltips
+                        comes from the BLS <code className="text-[10px] bg-white/[0.06] rounded px-1">LOC_QUOTIENT</code> column;
+                        LQ&nbsp;&gt;&nbsp;1 means the occupation is more concentrated in that state than the national average.
+                    </p>
+                    <ul className="list-disc list-inside text-xs text-gray-400 ml-1 space-y-1">
+                        <li><strong>Aggregation</strong>: employment is summed once per unique SOC code. Alias titles sharing a SOC (e.g. Marketing Manager and Brand Manager both map to 11-2021) are counted once per state.</li>
+                        <li><strong>Coverage</strong>: 45 of 47 SOC codes have BLS state-level data. Two codes (13-1022, 13-1023) are not published at the detailed level in BLS OES May 2023.</li>
+                        <li><strong>Map coordinates</strong>: state centroid lat/lng values are US Census Bureau geographic centroids — display-only, not BLS data.</li>
+                        <li><strong>Circle labels</strong>: only the top 15 states by total employment receive a circle marker. All states with data still receive a choropleth fill.</li>
+                        <li><strong>Automation risk is not encoded</strong> in the map — colour and circle size both represent employment volume only.</li>
+                    </ul>
+                </div>
+
+                <div className="h-px bg-white/[0.06]" />
+
                 <div className="space-y-2">
                     <div className="flex items-center gap-2.5">
                         <IconTrendingUp size={18} className="text-emerald-400" />

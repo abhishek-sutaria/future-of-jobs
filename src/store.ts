@@ -197,8 +197,11 @@ export const useStore = create<AppState>((set, get) => ({
         const { fetchLaborStats, getSeriesIdForJob } = await import('./utils/bls');
         const { MAP_TITLE_TO_SOC }                   = await import('./utils/onet');
         const locationModule                          = await import('./data/geo_real.json');
+        // Strip the _meta provenance block — it is not a SOC → locations array entry.
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const rawGeo: Record<string, any> = locationModule.default || locationModule;
         const locationData: Record<string, { name: string; lat: number; lng: number; employment: number; lq: number }[]> =
-            locationModule.default || locationModule;
+            Object.fromEntries(Object.entries(rawGeo).filter(([k]) => k !== '_meta'));
 
         // Collect BLS series IDs
         const jobMap    = new Map<string, string>();

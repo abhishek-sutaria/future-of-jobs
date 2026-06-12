@@ -19,8 +19,8 @@ const FEATURES: Feature[] = [
         emoji: '🏔️',
         title: '3D Terrain Map',
         description:
-            'Each glowing peak represents one job role. Peak height = number of people employed in that role. Peak colour = AI automation risk: red means high risk, green means the role is largely safe from automation.',
-        tip: 'Taller peaks mean more jobs exist today — watch them shrink as you move the time slider forward.',
+            'Each glowing peak represents one job role. Peak colour = AI automation risk (red = high risk, green = safe). Peak height depends on the mode: in Growth mode it reflects the projected employment change %; in Workers mode it reflects the implied BLS headcount at that year.',
+        tip: 'Toggle the height mode with the switch on the year-slider panel. Workers mode shows which roles employ the most people right now; Growth mode shows where change is happening fastest.',
         color: 'cyan',
     },
     {
@@ -75,8 +75,8 @@ const FEATURES: Feature[] = [
         emoji: '🗺️',
         title: 'US Map View',
         description:
-            'Switch from the 3D terrain to a flat 2D US map. Circle size shows employment concentration by state — so you can see whether automation risk is evenly distributed or regionally concentrated.',
-        tip: 'Toggle using the "Map" button in the top navigation. Useful for understanding local labour market exposure.',
+            'Switch from the 3D terrain to a flat 2D US map. State colour and circle size both encode BLS employment volume — darker and larger means more workers in that state for the selected roles. Hover a state to see the exact BLS OES May 2023 employment count and Location Quotient (LQ) per occupation.',
+        tip: 'Select specific roles using the role filter before opening the map to compare which states are most exposed for those jobs in particular.',
         color: 'teal',
     },
     {

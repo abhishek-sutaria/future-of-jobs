@@ -11,15 +11,26 @@ Inputs:
   - data/ai_impact_scores.json (pre-scored tasks, partial)
 
 Outputs:
-  - src/data/geo_real.json (real state-level employment data)
+  - src/data/geo_real.json (real state-level employment data, all states)
   - src/data/national_employment.json (national figures)
   - src/data/bls_extracted.json (full extracted dataset for data.ts)
+
+Notes on geo_real.json:
+  - SOC codes are taken from src/utils/onet.ts MAP_TITLE_TO_SOC (the runtime
+    lookup key), not from Kelley_Job_Map.csv, so there is no drift between the
+    extraction and what the app uses.
+  - All states with employment > 0 are included (no top-N truncation).
+  - lat/lng values are US Census Bureau geographic centroids (display-only;
+    they are NOT BLS data).
+  - The _meta block records provenance so every value in geo_real.json can be
+    traced to the source workbook.
 """
 
 import csv
 import json
 import os
 import sys
+import datetime
 
 try:
     import openpyxl
@@ -37,27 +48,132 @@ XLSX_PATH = os.path.join(DATA_DIR, "all_data_M_2023.xlsx")
 CSV_PATH = os.path.join(DATA_DIR, "Kelley_Job_Map.csv")
 AI_SCORES_PATH = os.path.join(DATA_DIR, "ai_impact_scores.json")
 
+# Canonical SOC codes as used by MAP_TITLE_TO_SOC in src/utils/onet.ts.
+# This is the runtime lookup key; extracting with these codes ensures geo_real.json
+# matches exactly what the app queries — no drift between onet.ts and this file.
+# Duplicate SOC codes (e.g. Marketing Manager + Brand Manager → 11-2021) are
+# intentional: they share the same occupation group per BLS OES, and the app's
+# aggregation layer de-dupes by SOC before summing state employment.
+MAP_TITLE_TO_SOC = {
+    # Original 13 jobs
+    "Marketing Manager":               "11-2021",
+    "Market Research Analyst":         "13-1161",
+    "Business Intelligence Analyst":   "15-2051",
+    "Financial Analyst":               "13-2051",
+    "Financial Manager":               "11-3031",
+    "Software Developer":              "15-1252",
+    "Management Consultant":           "13-1111",
+    "Sales Manager":                   "11-2022",
+    "Accountant & Auditor":            "13-2011",
+    "Operations Research Analyst":     "15-2031",
+    "Logistics Analyst":               "13-1081",
+    "Securities & Sales Agent":        "41-3031",
+    "Supply Chain Manager":            "11-3071",
+    # Business / Marketing
+    "Brand Manager":                   "11-2021",
+    "Public Relations Manager":        "11-2032",  # BLS 2018 SOC (was 11-2031)
+    "Advertising Sales Agent":         "41-3011",
+    "Event Coordinator":               "13-1121",
+    "Account Executive":               "41-3091",  # Sales Representatives of Services (BLS OES)
+    "Sales Representative":            "41-4012",
+    "Insurance Sales Agent":           "41-3021",
+    # Finance
+    "Personal Financial Advisor":      "13-2052",
+    "Credit Analyst":                  "13-2041",
+    "Budget Analyst":                  "13-2031",
+    "Risk Specialist":                 "13-2099",
+    "Insurance Underwriter":           "13-2053",
+    "Actuary":                         "15-2011",
+    "Loan Officer":                    "13-2072",
+    "Financial Risk Analyst":          "13-2099",
+    # Data & Technology
+    "Data Scientist":                  "15-2051",
+    "Statistician":                    "15-2041",
+    "Computer Systems Analyst":        "15-1211",
+    "UX Designer":                     "15-1255",
+    "IT Manager":                      "11-3021",
+    "Cybersecurity Analyst":           "15-1212",
+    "Web Developer":                   "15-1254",
+    "Database Administrator":          "15-1242",
+    "IT Project Manager":              "15-1299",
+    # Operations
+    "Cost Estimator":                  "13-1051",
+    "Compensation Analyst":            "13-1141",
+    "Purchasing Manager":              "11-3061",
+    "Wholesale & Retail Buyer":        "13-1022",
+    "Purchasing Agent":                "13-1023",
+    "Industrial Production Manager":   "11-3051",
+    # HR & Management
+    "General Manager":                 "11-1021",
+    "HR Manager":                      "11-3121",
+    "Project Management Specialist":   "13-1082",
+    "Training & Development Specialist": "13-1151",
+    "HR Specialist":                   "13-1071",
+    "Training & Development Manager":  "11-3131",
+    "Compensation & Benefits Manager": "11-3111",
+}
+
+# Unique SOC codes to extract (some titles share a code; extract each code once)
+UNIQUE_SOC_CODES = sorted(set(MAP_TITLE_TO_SOC.values()))
+
 # BLS Employment Projections 2022-2032
 # Source: https://www.bls.gov/ooh/ (Occupational Outlook Handbook)
 # These are the OFFICIAL projected percent change in employment, 2022-32
 BLS_GROWTH_PROJECTIONS = {
     "11-2021": 7,     # Marketing Managers: 7% (faster than average)
     "13-1161": 13,    # Market Research Analysts: 13% (much faster than average)
-    "13-1199": 10,    # Business Operations Specialists, All Other: 10%
+    "15-2051": 35,    # Data Scientists / BI Analysts: 35% (much faster than average)
     "13-2051": 8,     # Financial Analysts: 8% (faster than average)
     "11-3031": 16,    # Financial Managers: 16% (much faster than average)
-    "13-1111": 10,    # Management Analysts/Consultants: 10% (faster than average)
-    "11-3071": 18,    # Transportation/Storage/Distribution Managers: 18%
-    "13-1081": 18,    # Logisticians: 18% (much faster than average)
     "15-1252": 25,    # Software Developers: 25% (much faster than average)
-    "15-2031": 23,    # Operations Research Analysts: 23% (much faster)
-    "41-3031": 7,     # Securities/Financial Services Sales Agents: 7%
+    "13-1111": 10,    # Management Analysts/Consultants: 10% (faster than average)
     "11-2022": 4,     # Sales Managers: 4% (as fast as average)
     "13-2011": 4,     # Accountants and Auditors: 4% (as fast as average)
+    "15-2031": 23,    # Operations Research Analysts: 23% (much faster)
+    "13-1081": 18,    # Logisticians: 18% (much faster than average)
+    "41-3031": 7,     # Securities/Financial Services Sales Agents: 7%
+    "11-3071": 18,    # Transportation/Storage/Distribution Managers: 18%
+    "11-2032": 6,     # Public Relations Managers: 6% (BLS OOH)
+    "41-3091": 4,     # Sales Representatives of Services, Except Advertising/Insurance/Financial/Travel: 4%
+    "41-3011": -3,    # Advertising Sales Agents: -3% (decline)
+    "13-1121": 8,     # Meeting/Convention/Event Planners: 8%
+    # 41-3099 removed — not a valid BLS OES detailed code; replaced by 41-3091
+    "41-4012": 2,     # Sales Representatives, Wholesale: 2%
+    "41-3021": 5,     # Insurance Sales Agents: 5%
+    "13-2052": 13,    # Personal Financial Advisors: 13%
+    "13-2041": 8,     # Credit Analysts: 8%
+    "13-2031": 3,     # Budget Analysts: 3%
+    "13-2099": 6,     # Financial Specialists, All Other: 6%
+    "13-2053": -4,    # Insurance Underwriters: -4% (decline)
+    "15-2011": 24,    # Actuaries: 24%
+    "13-2072": 3,     # Loan Officers: 3%
+    "15-2041": 31,    # Statisticians: 31%
+    "15-1211": 10,    # Computer Systems Analysts: 10%
+    "13-1051": -6,    # Cost Estimators: -6% (decline)
+    "13-1141": 5,     # Compensation/Benefits/Job Analysis Specialists: 5%
+    "11-3061": 4,     # Purchasing Managers: 4%
+    "13-1022": 4,     # Wholesale and Retail Buyers: 4%
+    "13-1023": 4,     # Purchasing Agents: 4%
+    "11-3051": 3,     # Industrial Production Managers: 3%
+    "15-1255": 16,    # Web and Digital Interface Designers: 16%
+    "11-3021": 15,    # Computer and IT Managers: 15%
+    "15-1212": 33,    # Information Security Analysts: 33%
+    "15-1254": 16,    # Web Developers: 16%
+    "15-1242": 9,     # Database Administrators: 9%
+    "15-1299": 6,     # Computer Occupations, All Other: 6%
+    "11-1021": 3,     # General and Operations Managers: 3%
+    "11-3121": 5,     # Human Resources Managers: 5%
+    "13-1082": 6,     # Project Management Specialists: 6%
+    "13-1151": 8,     # Training and Development Specialists: 8%
+    "13-1071": 6,     # Human Resources Specialists: 6%
+    "11-3131": 7,     # Training and Development Managers: 7%
+    "11-3111": 3,     # Compensation and Benefits Managers: 3%
 }
 
 # US State centroid coordinates
 # Source: US Census Bureau Geographic Reference Files
+# These are display-only coordinates used to position map markers.
+# They are NOT part of the BLS data — do not cite them as BLS.
 STATE_INFO = {
     "Alabama": {"lat": 32.81, "lng": -86.79, "abbr": "AL"},
     "Alaska": {"lat": 63.35, "lng": -152.00, "abbr": "AK"},
@@ -117,7 +233,7 @@ STATE_INFO = {
 
 
 def load_job_map():
-    """Load the SOC → title mapping from Kelley_Job_Map.csv"""
+    """Load the SOC → title mapping from Kelley_Job_Map.csv (reference only)."""
     jobs = {}
     with open(CSV_PATH, 'r', encoding='utf-8-sig') as f:
         reader = csv.reader(f)
@@ -146,15 +262,15 @@ def extract_national_data(wb, soc_codes):
     ws = wb.active
     headers = [cell.value for cell in next(ws.iter_rows(min_row=1, max_row=1))]
     col_idx = {name: i for i, name in enumerate(headers)}
-    
+
     results = {}
-    
+
     for row in ws.iter_rows(min_row=2):
         vals = [cell.value for cell in row]
         area = str(vals[col_idx['AREA']] or '')
         occ_code = str(vals[col_idx['OCC_CODE']] or '')
         i_group = str(vals[col_idx['I_GROUP']] or '')
-        
+
         # National data: AREA='99', cross-industry
         if area == '99' and i_group == 'cross-industry' and occ_code in soc_codes:
             o_group = str(vals[col_idx['O_GROUP']] or '')
@@ -162,34 +278,34 @@ def extract_national_data(wb, soc_codes):
                 tot_emp = vals[col_idx['TOT_EMP']]
                 a_mean = vals[col_idx['A_MEAN']]
                 a_median = vals[col_idx['A_MEDIAN']]
-                
+
                 emp = parse_int(tot_emp)
                 salary_mean = parse_int(a_mean)
                 salary_median = parse_int(a_median)
-                
+
                 results[occ_code] = {
                     "employment": emp,
                     "salary_mean": salary_mean,
                     "salary_median": salary_median,
                 }
                 print(f"  ✓ {occ_code}: emp={emp:,}, mean=${salary_mean:,}, median=${salary_median:,}")
-    
+
     return results
 
 
-def extract_state_data(wb, soc_codes, top_n=5):
-    """Extract top N states by employment for each SOC code.
-    
-    BLS OES uses 2-digit FIPS codes for states. We filter for state-level,
-    cross-industry, detailed occupation rows.
+def extract_state_data(wb, soc_codes):
+    """Extract ALL states with employment > 0 for each SOC code from BLS OES.
+
+    Includes every state/territory row — no top-N truncation — so the map can
+    show full US coverage. Values are taken directly from BLS OES TOT_EMP and
+    LOC_QUOTIENT columns without modification.
     """
     ws = wb.active
     headers = [cell.value for cell in next(ws.iter_rows(min_row=1, max_row=1))]
     col_idx = {name: i for i, name in enumerate(headers)}
-    
-    # Build reverse lookup: state name used in xlsx
+
     state_data = {soc: [] for soc in soc_codes}
-    
+
     for row in ws.iter_rows(min_row=2):
         vals = [cell.value for cell in row]
         area = str(vals[col_idx['AREA']] or '')
@@ -197,29 +313,28 @@ def extract_state_data(wb, soc_codes, top_n=5):
         i_group = str(vals[col_idx['I_GROUP']] or '')
         o_group = str(vals[col_idx['O_GROUP']] or '')
         area_title = str(vals[col_idx['AREA_TITLE']] or '')
-        
+
         # State-level: AREA is 2-digit (01-72), not '99' (national)
-        # Also check that the area_title matches a known state
         is_state = area != '99' and len(area) <= 2 and area_title in STATE_INFO
-        
+
         if is_state and i_group == 'cross-industry' and o_group == 'detailed' and occ_code in soc_codes:
             tot_emp = vals[col_idx['TOT_EMP']]
             loc_q = vals[col_idx['LOC_QUOTIENT']]
-            
+
             emp = parse_int(tot_emp)
             lq = parse_float(loc_q)
-            
+
             if emp > 0:
                 state_data[occ_code].append({
                     "state_name": area_title,
                     "employment": emp,
                     "lq": round(lq, 2),
                 })
-    
-    # Sort by employment, take top N
+
+    # Sort by employment (descending), attach Census centroids for display
     geo_result = {}
     for soc in soc_codes:
-        states = sorted(state_data[soc], key=lambda x: x['employment'], reverse=True)[:top_n]
+        states = sorted(state_data[soc], key=lambda x: x['employment'], reverse=True)
         geo_result[soc] = []
         for s in states:
             info = STATE_INFO[s['state_name']]
@@ -232,7 +347,7 @@ def extract_state_data(wb, soc_codes, top_n=5):
             })
         top_info = f"{states[0]['state_name']} = {states[0]['employment']:,}" if states else "—"
         print(f"  ✓ {soc}: {len(states)} states (top: {top_info})")
-    
+
     return geo_result
 
 
@@ -260,86 +375,119 @@ def main():
     print("=" * 60)
     print("BLS Data Extraction Pipeline")
     print("=" * 60)
-    
-    # 1. Load job mapping
+
+    # 1. Load job mapping (reference; canonical codes are in MAP_TITLE_TO_SOC above)
     print("\n📋 Loading job mapping...")
     job_map = load_job_map()
-    soc_codes = list(job_map.keys())
-    print(f"   Found {len(soc_codes)} SOC codes")
-    
+    print(f"   Found {len(job_map)} Kelley SOC codes")
+    print(f"   Using {len(UNIQUE_SOC_CODES)} unique canonical SOC codes from MAP_TITLE_TO_SOC")
+
     # 2. Load AI impact scores
     print("\n🤖 Loading AI impact scores...")
     ai_scores = load_ai_scores()
     scored_socs = set(ai_scores.keys())
-    missing_socs = set(soc_codes) - scored_socs
+    missing_socs = set(UNIQUE_SOC_CODES) - scored_socs
     print(f"   Pre-scored: {len(scored_socs)} SOC codes")
     if missing_socs:
-        print(f"   ⚠ Missing: {len(missing_socs)} ({sorted(missing_socs)})")
-    
-    # 3. Open BLS xlsx
-    print(f"\n📊 Opening BLS OES data...")
-    print("   (scanning 413K rows...)")
+        print(f"   ⚠ Not in legacy ai_impact_scores: {sorted(missing_socs)} (scored live by Claude)")
+
+    # 3. Open BLS xlsx (load once, pass workbook to both extractors)
+    print(f"\n📊 Opening BLS OES data (scanning ~413K rows)...")
     wb = openpyxl.load_workbook(XLSX_PATH, read_only=True)
-    
+
     # 4. Extract national employment
     print("\n🇺🇸 National employment:")
-    national = extract_national_data(wb, set(soc_codes))
-    print(f"   → {len(national)}/{len(soc_codes)} SOC codes found")
-    
-    # 5. Extract state-level data
-    print("\n🏛️  State-level employment (top 5 per SOC):")
+    national = extract_national_data(wb, set(UNIQUE_SOC_CODES))
+    print(f"   → {len(national)}/{len(UNIQUE_SOC_CODES)} SOC codes found")
+    wb.close()
+
+    # 5. Extract state-level data (ALL states, no top-N truncation)
+    print(f"\n🏛️  State-level employment (all states per SOC, from BLS OES):")
     wb2 = openpyxl.load_workbook(XLSX_PATH, read_only=True)
-    geo = extract_state_data(wb2, set(soc_codes))
-    
+    geo = extract_state_data(wb2, set(UNIQUE_SOC_CODES))
+    wb2.close()
+
     # 6. Write outputs
     print("\n📦 Writing output files...")
-    
-    # Output 1: geo_real.json
+
+    # Output 1: geo_real.json — includes _meta provenance block
+    geo_output = {
+        "_meta": {
+            "source": "BLS Occupational Employment and Wage Statistics (OES), May 2023",
+            "source_file": "all_data_M_2023.xlsx",
+            "bls_release": "OES May 2023",
+            "extracted": datetime.date.today().isoformat(),
+            "soc_count": len([k for k in geo if k != "_meta"]),
+            "note_coordinates": (
+                "lat/lng values are US Census Bureau geographic centroids "
+                "(display-only). They are NOT part of BLS data."
+            ),
+            "note_employment": (
+                "employment values are BLS OES TOT_EMP (cross-industry, detailed "
+                "occupation level). lq values are BLS LOC_QUOTIENT."
+            ),
+            "note_soc_codes": (
+                "SOC codes match MAP_TITLE_TO_SOC in src/utils/onet.ts exactly. "
+                "Some titles share a SOC (e.g. Marketing Manager and Brand Manager "
+                "both map to 11-2021). The map aggregation layer de-dupes by SOC."
+            ),
+        }
+    }
+    # Merge geo data under soc keys after _meta
+    geo_output.update({k: v for k, v in geo.items()})
+
     geo_path = os.path.join(SRC_DATA_DIR, "geo_real.json")
     with open(geo_path, 'w') as f:
-        json.dump(geo, f, indent=4)
-    print(f"   ✓ {geo_path}")
-    
+        json.dump(geo_output, f, indent=2, ensure_ascii=False)
+    total_state_rows = sum(len(v) for k, v in geo_output.items() if k != "_meta")
+    print(f"   ✓ {geo_path}  ({len(UNIQUE_SOC_CODES)} SOCs, {total_state_rows} state rows)")
+
     # Output 2: national_employment.json
     nat_path = os.path.join(SRC_DATA_DIR, "national_employment.json")
     with open(nat_path, 'w') as f:
-        json.dump(national, f, indent=4)
+        json.dump(national, f, indent=2)
     print(f"   ✓ {nat_path}")
-    
+
     # Output 3: bls_extracted.json (comprehensive)
     bls_extracted = {}
-    for soc in soc_codes:
+    for soc in UNIQUE_SOC_CODES:
+        # Find titles that map to this SOC
+        titles = [t for t, s in MAP_TITLE_TO_SOC.items() if s == soc]
         bls_extracted[soc] = {
             "soc_code": soc,
-            "title": job_map[soc]["title"],
-            "track": job_map[soc]["track"],
+            "titles": titles,
             "employment": national.get(soc, {}).get("employment", 0),
             "salary_mean": national.get(soc, {}).get("salary_mean", 0),
             "salary_median": national.get(soc, {}).get("salary_median", 0),
             "projectedGrowth": BLS_GROWTH_PROJECTIONS.get(soc, 0),
-            "has_ai_scores": soc in scored_socs,
-            "ai_task_count": len(ai_scores.get(soc, [])),
+            "state_count": len(geo.get(soc, [])),
         }
-    
+
     ext_path = os.path.join(SRC_DATA_DIR, "bls_extracted.json")
     with open(ext_path, 'w') as f:
-        json.dump(bls_extracted, f, indent=4)
+        json.dump(bls_extracted, f, indent=2)
     print(f"   ✓ {ext_path}")
-    
+
     # Summary table
-    print("\n" + "=" * 80)
+    print("\n" + "=" * 90)
     print("EXTRACTION COMPLETE — Real BLS OES May 2023 Data")
-    print("=" * 80)
-    print(f"\n{'SOC Code':<12} {'Title':<35} {'Employment':>12} {'Growth':>8} {'Salary':>10}")
-    print("-" * 80)
-    for soc in soc_codes:
+    print("=" * 90)
+    print(f"\n{'SOC Code':<12} {'Titles':<38} {'Employment':>12} {'Growth':>8} {'States':>8}")
+    print("-" * 90)
+    for soc in sorted(UNIQUE_SOC_CODES):
         e = bls_extracted[soc]
-        print(f"{soc:<12} {e['title']:<35} {e['employment']:>12,} {e['projectedGrowth']:>7}% ${e['salary_mean']:>8,}")
-    
-    total_states = sum(len(geo.get(soc, [])) for soc in soc_codes)
-    print(f"\n✅ {len(national)} jobs with real national data")
-    print(f"✅ {total_states} state entries across {len(soc_codes)} occupations")
-    print(f"⚠️  {len(missing_socs)} SOC codes need AI task scoring via Gemini")
+        titles_str = ", ".join(e['titles'])[:36]
+        if len(", ".join(e['titles'])) > 36:
+            titles_str += "…"
+        print(f"{soc:<12} {titles_str:<38} {e['employment']:>12,} {e['projectedGrowth']:>7}% {e['state_count']:>7}")
+
+    socs_with_geo = sum(1 for soc in UNIQUE_SOC_CODES if geo.get(soc))
+    socs_no_geo = [soc for soc in UNIQUE_SOC_CODES if not geo.get(soc)]
+    print(f"\n✅ {len(national)}/{len(UNIQUE_SOC_CODES)} SOC codes with national data")
+    print(f"✅ {socs_with_geo}/{len(UNIQUE_SOC_CODES)} SOC codes with state-level data")
+    print(f"✅ {total_state_rows} total state employment rows in geo_real.json")
+    if socs_no_geo:
+        print(f"⚠️  SOCs with no state rows (BLS may suppress): {socs_no_geo}")
 
 
 if __name__ == "__main__":
