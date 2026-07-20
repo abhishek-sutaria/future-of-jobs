@@ -1,7 +1,7 @@
 import { z } from 'zod';
 
 const CLAUDE_PROXY_ENDPOINT = '/api/claude/messages';
-const CLAUDE_MODEL = 'claude-sonnet-4-20250514';
+const CLAUDE_MODEL = 'claude-sonnet-5';
 
 const AI_MODE_STORAGE_KEY = 'foj_ai_mode';
 const AI_USER_KEY_STORAGE_KEY = 'foj_user_claude_key';
@@ -75,7 +75,6 @@ export async function callClaudeJSON<T>(prompt: string, schema?: z.ZodType<T>): 
         body: JSON.stringify({
             model: CLAUDE_MODEL,
             max_tokens: 2000,
-            temperature: 0.2,
             messages: [{ role: 'user', content: prompt }],
         }),
     });
