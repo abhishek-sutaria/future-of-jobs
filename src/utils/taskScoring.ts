@@ -192,7 +192,7 @@ function sleep(ms: number) { return new Promise(r => setTimeout(r, ms)); }
 export async function scoreAllJobTasks(
     jobs: { id: string; title: string; tasks: { name: string }[]; employment: number; projectedGrowth: number }[],
     _apiKey?: string,
-    onProgress?: (jobId: string, done: number, total: number) => void
+    onProgress?: (jobId: string, done: number, total: number, analysis: JobAnalysisResult) => void
 ): Promise<Record<string, JobAnalysisResult>> {
     const cached = loadScoreCache() ?? {};
     const result: Record<string, JobAnalysisResult> = { ...cached };
@@ -213,7 +213,7 @@ export async function scoreAllJobTasks(
             done++;
 
             saveScoreCache(result);
-            onProgress?.(job.id, done, jobs.length);
+            onProgress?.(job.id, done, jobs.length, analysis);
 
             if (done < jobs.length) await sleep(RATE_LIMIT_MS);
         } catch (err) {

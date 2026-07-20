@@ -74,7 +74,7 @@ export async function callClaudeJSON<T>(prompt: string, schema?: z.ZodType<T>): 
         headers,
         body: JSON.stringify({
             model: CLAUDE_MODEL,
-            max_tokens: 2000,
+            max_tokens: 4096,
             messages: [{ role: 'user', content: prompt }],
         }),
     });
@@ -113,6 +113,11 @@ export async function callClaudeJSON<T>(prompt: string, schema?: z.ZodType<T>): 
         }
         return JSON.parse(jsonText) as T;
     } catch (e) {
+        // A truncated response (hit max_tokens mid-JSON) surfaces as a generic
+        // SyntaxError otherwise — give a diagnosable message instead.
+        if (body?.stop_reason === 'max_tokens') {
+            throw new Error('Claude response truncated: hit max_tokens before finishing the JSON output.');
+        }
         throw e;
     }
 }
@@ -131,6 +136,9 @@ export function getClaudeUserFriendlyMessage(err: unknown): string {
     }
     if (msg.includes('Empty response')) {
         return 'Claude returned an empty response. Try again.';
+    }
+    if (msg.includes('truncated')) {
+        return "Claude's response was cut off before finishing. Try again — usually succeeds on retry.";
     }
     return 'Analysis unavailable. Using baseline data.';
 }

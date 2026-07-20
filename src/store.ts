@@ -388,14 +388,11 @@ export const useStore = create<AppState>((set, get) => ({
                 projectedGrowth: j.projectedGrowth,
             }));
 
-            const allAnalyses = await scoreAllJobTasks(jobsToScore, userKey, (jobId, done, total) => {
+            const allAnalyses = await scoreAllJobTasks(jobsToScore, userKey, (jobId, done, total, analysis) => {
                 console.log(`[TaskScoring] ${done}/${total} jobs analyzed`);
 
                 // Apply scores + forecast for this job immediately as they arrive
                 set(s => {
-                    const analysis = allAnalyses[jobId];
-                    if (!analysis) return s;
-
                     const updatedJobs = s.jobs.map(job => {
                         if (job.id !== jobId) return job;
 
