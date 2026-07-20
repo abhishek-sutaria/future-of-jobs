@@ -1,10 +1,10 @@
 import React, { useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { Color, ShaderMaterial, DoubleSide, Vector3, Vector2 } from 'three';
+import { ShaderMaterial, DoubleSide, Vector3, Vector2 } from 'three';
 import { useStore } from '../store';
 import type { Job } from '../types';
 import { getTerrainPosition, getVisualHeightForEmployment, getVisualHeightForWorkersAtYear, buildGrowthForecastFlatArray, growthAtYearFromForecastFlat, TERRAIN_CONFIG } from '../utils/terrainMath';
-import { CLUSTER_COLORS, FALLBACK_COLORS } from '../config/theme';
+import { riskColorRGB, RISK_UNSCORED_RGB } from '../config/theme';
 import { SHADER, SHADER_VISUAL, SHADER_COLORS, SCENE } from '../config/constants';
 
 // SHADERS
@@ -66,10 +66,9 @@ const vertexShader = `
         float influence = visualHeight * exp(-distSq / SIGMA_SQ2);
         elevation += influence;
         
-        float colorWeight = exp(-distSq / (SIGMA_SQ2 * 2.0)); 
-        float declineTint = growthImpact < 0.0 ? min(${SHADER.DECLINE_TINT_MAX.toFixed(2)}, abs(growthImpact) * 0.08) : 0.0;
-        vec3 peakColor = mix(uColors[i], vec3(1.0, 0.28, 0.28), declineTint);
-        blendedColor += peakColor * colorWeight;
+        float colorWeight = exp(-distSq / (SIGMA_SQ2 * 2.0));
+        // Color = Job Security Index (uColors); decline is encoded by sinking peaks, not tint
+        blendedColor += uColors[i] * colorWeight;
         totalWeight += colorWeight;
     }
 
@@ -155,7 +154,7 @@ export const Terrain: React.FC = () => {
       if (i >= filteredJobs.length) return new Vector3(0, 0, 0);
       const job = filteredJobs[i];
       const originalIndex = jobs.findIndex(j => j.id === job.id);
-      const { x, z } = getTerrainPosition(originalIndex);
+      const { x, z } = getTerrainPosition(originalIndex, jobs);
       const employmentHeight = getVisualHeightForEmployment(job.employment);
       return new Vector3(x, -z, employmentHeight);
     });
@@ -164,12 +163,11 @@ export const Terrain: React.FC = () => {
       if (i >= filteredJobs.length) return new Vector3(0, 0, 0);
       const job = filteredJobs[i];
 
-      let c = new Color(0.13, 0.82, 0.93);
-      const hexColor = CLUSTER_COLORS[job.cluster]
-        ? parseInt(CLUSTER_COLORS[job.cluster].replace('#', '0x'))
-        : parseInt(FALLBACK_COLORS[(jobs.findIndex(j => j.id === job.id)) % FALLBACK_COLORS.length].replace('#', '0x'));
-      c.setHex(hexColor);
-      return new Vector3(c.r, c.g, c.b);
+      // Peak color encodes the Job Security Index (cyan→amber→red, matches Legend);
+      // neutral slate until Claude scoring has produced a real automationCostIndex.
+      const unscored = job.automationCostIndex === 0 && job.tasks.every(t => t.aiCapabilityScore === 0);
+      const [r, g, b] = unscored ? RISK_UNSCORED_RGB : riskColorRGB(job.automationCostIndex);
+      return new Vector3(r, g, b);
     });
 
     const forecasts = buildGrowthForecastFlatArray(filteredJobs);

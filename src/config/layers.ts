@@ -1,6 +1,6 @@
 export const Z = {
     base: 10,
-    /** Above drei Html job labels (zIndexRange ~100) so the year slider stays on top. */
+    /** Drei Html job labels are trapped in an isolated z-0 stacking context (App.tsx), so all Z.* layers sit above them. */
     timeBar: 110,
     header: 20,
     sidebar: 150,

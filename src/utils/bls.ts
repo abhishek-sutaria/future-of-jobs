@@ -7,7 +7,9 @@ export const BLSDataPointSchema = z.object({
     year: z.string(),
     period: z.string().regex(/^M\d{2}$/, "Period must match Mxx format"),
     periodName: z.string().optional(),
-    value: z.string().refine((val) => !isNaN(parseFloat(val)), "Value must be numeric")
+    // BLS uses placeholders like "-" for months without data — tolerated here,
+    // skipped at extraction time (rejecting them used to fail the whole batch).
+    value: z.string()
 });
 
 export const BLSSeriesSchema = z.object({
@@ -26,11 +28,69 @@ export const BLSResponseSchema = z.object({
 
 export type BLSResponse = z.infer<typeof BLSResponseSchema>;
 
-export async function fetchLaborStats(seriesIds: string[]): Promise<Map<string, number>> {
+const BLS_CACHE_KEY = 'foj_bls_cache_v1';
+const BLS_CACHE_TTL_MS = 24 * 60 * 60 * 1000; // BLS daily quota resets at midnight ET
+
+interface BlsCacheShape {
+    fetchedAt: number;
+    values: Record<string, number>;
+}
+
+export interface LaborStatsResult {
+    values: Map<string, number>;
+    source: 'live' | 'cache';
+    /** Epoch ms of the fetch that produced these values */
+    fetchedAt: number;
+}
+
+function readBlsCache(): BlsCacheShape | null {
+    try {
+        const raw = localStorage.getItem(BLS_CACHE_KEY);
+        if (!raw) return null;
+        const parsed = JSON.parse(raw);
+        if (typeof parsed?.fetchedAt !== 'number' || typeof parsed?.values !== 'object' || !parsed.values) {
+            return null;
+        }
+        return parsed as BlsCacheShape;
+    } catch {
+        return null;
+    }
+}
+
+function writeBlsCache(values: Map<string, number>): number {
+    const fetchedAt = Date.now();
+    try {
+        const record: BlsCacheShape = { fetchedAt, values: Object.fromEntries(values) };
+        localStorage.setItem(BLS_CACHE_KEY, JSON.stringify(record));
+    } catch {
+        // Storage full/unavailable — caching is best-effort
+    }
+    return fetchedAt;
+}
+
+function cacheToResult(cache: BlsCacheShape): LaborStatsResult {
+    return {
+        values: new Map(Object.entries(cache.values)),
+        source: 'cache',
+        fetchedAt: cache.fetchedAt,
+    };
+}
+
+export async function fetchLaborStats(seriesIds: string[]): Promise<LaborStatsResult> {
     const apiKey = import.meta.env.VITE_BLS_API_KEY;
 
     if (!apiKey) {
         console.warn('BLS API Key missing. Request may reach rate limits.');
+    }
+
+    // Fresh cache covering every requested series → no network call at all
+    const cache = readBlsCache();
+    if (
+        cache &&
+        Date.now() - cache.fetchedAt < BLS_CACHE_TTL_MS &&
+        seriesIds.every((id) => id in cache.values)
+    ) {
+        return cacheToResult(cache);
     }
 
     try {
@@ -61,13 +121,22 @@ export async function fetchLaborStats(seriesIds: string[]): Promise<Map<string, 
 
         const results = new Map<string, number>();
         json.Results.series.forEach(series => {
-            if (series.data.length > 0) {
-                results.set(series.seriesID, parseFloat(series.data[0].value));
+            // data is newest-first; take the most recent month with a real value
+            const firstNumeric = series.data.find(d => !isNaN(parseFloat(d.value)));
+            if (firstNumeric) {
+                results.set(series.seriesID, parseFloat(firstNumeric.value));
             }
         });
 
-        return results;
+        const fetchedAt = writeBlsCache(results);
+        return { values: results, source: 'live', fetchedAt };
     } catch (error) {
+        // Live fetch failed (rate limit, network, malformed payload) — fall back
+        // to the cache at any age rather than losing real data entirely.
+        if (cache) {
+            console.warn('BLS live fetch failed; using cached data from', new Date(cache.fetchedAt).toISOString());
+            return cacheToResult(cache);
+        }
         console.error('Failed to fetch BLS data:', error);
         throw error;
     }

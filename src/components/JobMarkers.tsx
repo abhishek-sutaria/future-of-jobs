@@ -1,9 +1,10 @@
-import React, { useMemo, useRef, useState } from 'react';
-import { useFrame } from '@react-three/fiber';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { useFrame, useThree } from '@react-three/fiber';
 import { Html, Line } from '@react-three/drei';
 import { useStore } from '../store';
+import type { Job } from '../types';
 import { getTerrainPosition, calculateGaussianHeight, buildGrowthForecastFlatArray, growthAtYearFromForecastFlat, getVisualHeightForGrowth, getVisualHeightForWorkersAtYear, type PeakData, TERRAIN_CONFIG } from '../utils/terrainMath';
-import { CLUSTER_COLORS, FALLBACK_COLORS } from '../config/theme';
+import { riskColorHex } from '../config/theme';
 import { SCENE } from '../config/constants';
 
 export const JobMarkers: React.FC = () => {
@@ -16,6 +17,48 @@ export const JobMarkers: React.FC = () => {
     const heightMode = useStore((state) => state.heightMode);
 
     const [hoveredJobId, setHoveredJobId] = useState<string | null>(null);
+    const gl = useThree((state) => state.gl);
+
+    // Clear stuck hover state when the window loses focus (pointerleave can be dropped mid-hover)
+    useEffect(() => {
+        const clear = () => setHoveredJobId(null);
+        window.addEventListener('blur', clear);
+        document.addEventListener('visibilitychange', clear);
+        return () => {
+            window.removeEventListener('blur', clear);
+            document.removeEventListener('visibilitychange', clear);
+        };
+    }, []);
+
+    // Drag-vs-click: forward the gesture to the canvas so OrbitControls rotates,
+    // and only open the detail panel if the pointer barely moved.
+    const handleLabelPointerDown = (job: Job) => (e: React.PointerEvent<HTMLDivElement>) => {
+        if (e.button !== 0) return;
+        const startX = e.clientX;
+        const startY = e.clientY;
+        const startTime = performance.now();
+
+        gl.domElement.dispatchEvent(new PointerEvent('pointerdown', {
+            pointerId: e.pointerId,
+            pointerType: e.pointerType,
+            clientX: e.clientX,
+            clientY: e.clientY,
+            button: 0,
+            buttons: 1,
+            bubbles: true,
+            cancelable: true,
+        }));
+
+        // OrbitControls pointer-captures the canvas, so the label's own pointerup won't fire
+        const onUp = (ue: PointerEvent) => {
+            window.removeEventListener('pointerup', onUp);
+            const moved = Math.hypot(ue.clientX - startX, ue.clientY - startY);
+            if (moved < 5 && performance.now() - startTime < 300) {
+                setSelectedJob(job);
+            }
+        };
+        window.addEventListener('pointerup', onUp);
+    };
 
     // LOD level stored in ref — avoids re-renders per frame
     const lodLevelRef = useRef<0 | 1 | 2>(2); // 0=Far, 1=Mid, 2=Close
@@ -46,7 +89,7 @@ export const JobMarkers: React.FC = () => {
             const h = heightMode === 'employment'
                 ? getVisualHeightForWorkersAtYear(job.employment, g)
                 : getVisualHeightForGrowth(g);
-            const { x, z } = getTerrainPosition(i);
+            const { x, z } = getTerrainPosition(i, jobs);
             return { x, z, height: h } as PeakData;
         });
         return nextPeaks;
@@ -106,7 +149,7 @@ export const JobMarkers: React.FC = () => {
                 if (!showLabel) return null;
 
                 const isHovered = hoveredJobId === job.id;
-                const pipColor = CLUSTER_COLORS[job.cluster] || FALLBACK_COLORS[originalIndex % FALLBACK_COLORS.length];
+                const pipColor = riskColorHex(job.automationCostIndex);
                 const labelHeight = SCENE.LABEL.BASE_HEIGHT + peak.offset;
 
                 const automationRisk = job.automationCostIndex >= 0.65 ? 'High' : job.automationCostIndex >= 0.4 ? 'Moderate' : 'Low';
@@ -151,10 +194,10 @@ export const JobMarkers: React.FC = () => {
                         {/* Label */}
                         <Html position={[0, labelHeight, 0]} center zIndexRange={[100, 0]}>
                             <div
-                                className={`flex flex-col max-w-[min(18rem,calc(100vw-2rem))] overflow-hidden bg-[#0F172A]/90 backdrop-blur-md rounded-md border shadow-md cursor-pointer transition-all duration-200 ${isSelected ? 'scale-110 ring-1 ring-white/20 border-slate-600/60' : 'border-slate-700/50'} ${isHovered ? 'border-cyan-500/40 shadow-cyan-500/10 shadow-lg' : ''}`}
-                                onClick={(e) => { e.stopPropagation(); setSelectedJob(job); }}
-                                onMouseEnter={() => setHoveredJobId(job.id)}
-                                onMouseLeave={() => setHoveredJobId(null)}
+                                className={`flex flex-col max-w-[min(18rem,calc(100vw-2rem))] overflow-hidden bg-[#0F172A]/90 backdrop-blur-md rounded-md border shadow-md cursor-pointer touch-none select-none transition-all duration-200 ${isSelected ? 'scale-110 ring-1 ring-white/20 border-slate-600/60' : 'border-slate-700/50'} ${isHovered ? 'border-cyan-500/40 shadow-cyan-500/10 shadow-lg' : ''}`}
+                                onPointerDown={handleLabelPointerDown(job)}
+                                onPointerEnter={() => setHoveredJobId(job.id)}
+                                onPointerLeave={() => setHoveredJobId(null)}
                             >
                                 {/* Title row */}
                                 <div className="flex items-center gap-2 px-3 py-2 min-w-0">

@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useCallback } from 'react';
+import React, { useMemo, useState, useCallback, useEffect } from 'react';
 import { ComposableMap, Geographies, Geography, Marker, ZoomableGroup } from 'react-simple-maps';
 import { scaleLinear } from 'd3-scale';
 import { useStore } from '../store';
@@ -83,6 +83,17 @@ export const MapView: React.FC = () => {
     }, []);
 
     const handleStateLeave = useCallback(() => setTooltip(null), []);
+
+    // Clear stuck tooltip when the window loses focus (mouseleave can be dropped mid-hover)
+    useEffect(() => {
+        const clear = () => setTooltip(null);
+        window.addEventListener('blur', clear);
+        document.addEventListener('visibilitychange', clear);
+        return () => {
+            window.removeEventListener('blur', clear);
+            document.removeEventListener('visibilitychange', clear);
+        };
+    }, []);
 
     const isDefault = position.zoom === 1;
 

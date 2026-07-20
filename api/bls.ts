@@ -52,6 +52,12 @@ export default async function handler(req: any, res: any) {
       res.setHeader('content-type', 'application/json');
     }
 
+    // CDN-cache successful GETs for 24h (POST is never CDN-cached by Vercel).
+    // BLS returns HTTP 200 with an error status when rate-limited, so gate on the body.
+    if (req.method === 'GET' && upstream.ok && text.includes('"REQUEST_SUCCEEDED"')) {
+      res.setHeader('Cache-Control', 's-maxage=86400, stale-while-revalidate=86400');
+    }
+
     return res.status(upstream.status).send(text);
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown proxy error';

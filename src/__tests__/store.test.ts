@@ -4,7 +4,7 @@ import { initialJobs } from '../data';
 
 // Mock dependencies
 vi.mock('../utils/bls', () => ({
-    fetchLaborStats: vi.fn(() => Promise.resolve(new Map())),
+    fetchLaborStats: vi.fn(() => Promise.resolve({ values: new Map(), source: 'live', fetchedAt: Date.now() })),
     getSeriesIdForJob: vi.fn(() => 'LEU0252881500'),
 }));
 

@@ -112,13 +112,6 @@ export const SCENE = {
     MAJOR_GROWTH_THRESHOLD: 5,
     /** Show every Nth job at far LOD */
     LOD_FILTER_MODULO: 5,
-    /** Camera fly-to animation for job selection */
-    CAMERA_FLY: {
-        HEIGHT: 15,
-        DISTANCE: 20,
-        LOOK_AT_HEIGHT: 2,
-        DURATION: 2.0,
-    },
     /** 3D anchor geometry for job label pins */
     ANCHOR: {
         RING_INNER: 0.1,

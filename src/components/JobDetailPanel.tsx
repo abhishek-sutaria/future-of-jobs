@@ -74,6 +74,17 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
         }
     };
 
+    const blsSource = useStore((state) => state.blsSource);
+    const blsFetchedAt = useStore((state) => state.blsFetchedAt);
+
+    const formatAge = (ms: number): string => {
+        const hours = Math.floor(ms / (60 * 60 * 1000));
+        if (hours < 1) return '<1h';
+        if (hours < 48) return `${hours}h`;
+        return `${Math.floor(hours / 24)}d`;
+    };
+    const blsAge = blsFetchedAt !== null ? formatAge(Date.now() - blsFetchedAt) : null;
+
     const riskValue = job.automationCostIndex;
 
     const sortedByRisk = [...job.tasks].sort((a, b) => b.aiCapabilityScore - a.aiCapabilityScore);
@@ -87,7 +98,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
     return (
         <>
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none p-2 md:p-8" style={{ zIndex: Z.detailPanel }}>
-                <div className="bg-gray-900/95 backdrop-blur-xl border border-white/[0.08] shadow-2xl rounded-2xl w-full max-w-6xl h-auto max-h-[85vh] flex flex-col pointer-events-auto overflow-hidden">
+                <div className="bg-gray-900/95 backdrop-blur-xl border border-cyan-400/20 shadow-2xl rounded-2xl w-full max-w-6xl h-auto max-h-[85vh] flex flex-col pointer-events-auto overflow-hidden">
 
                     {/* Header */}
                     <div className="flex-none p-4 md:p-6 border-b border-white/[0.06] flex justify-between items-start">
@@ -102,11 +113,15 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                 >
                                     Coverage {(job.confidenceScore * 100).toFixed(0)}%
                                 </span>
-                                {job.isStale && (
-                                    <span title="Stale Data: BLS API rate limit exceeded. Showing cached employment data." className="px-2 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wider bg-red-500/10 text-red-400 border border-red-500/20 flex items-center gap-1 cursor-help">
-                                        <IconAlertTriangle size={10} /> Stale
+                                {job.isStale ? (
+                                    <span title="Live BLS fetch unavailable (daily quota resets at midnight ET). Showing bundled BLS OES estimates from the build." className="px-2 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wider bg-red-500/10 text-red-400 border border-red-500/20 flex items-center gap-1 cursor-help">
+                                        <IconAlertTriangle size={10} /> Bundled data
                                     </span>
-                                )}
+                                ) : blsSource === 'cache' && blsAge ? (
+                                    <span title={`Cached BLS employment data from ${blsAge} ago. Refreshes automatically after 24h (BLS daily quota resets at midnight ET).`} className="px-2 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wider bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center gap-1 cursor-help">
+                                        <IconInfo size={10} /> BLS data {blsAge}
+                                    </span>
+                                ) : null}
                                 <span className="text-[10px] text-gray-500 font-mono">{job.id.slice(0, 8)}</span>
                             </div>
                             <h2 className="text-xl md:text-2xl font-bold text-white tracking-tight">{job.title}</h2>

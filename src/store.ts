@@ -105,6 +105,10 @@ interface AppState {
     // Real Data Integration
     isLoadingData: boolean;
     hasLoadedRealData: boolean;
+    /** Provenance of the currently displayed BLS employment values */
+    blsSource: 'live' | 'cache' | 'seed';
+    /** Epoch ms of the fetch that produced them (null when showing bundled seed data) */
+    blsFetchedAt: number | null;
     fetchRealData: () => Promise<void>;
     updateJobForecast: (jobId: string, forecast: { year: number, growthImpact: number, reasoning: string }[]) => void;
 
@@ -188,6 +192,8 @@ export const useStore = create<AppState>((set, get) => ({
 
     isLoadingData: false,
     hasLoadedRealData: false,
+    blsSource: 'seed',
+    blsFetchedAt: null,
 
     fetchRealData: async () => {
         const state = get();
@@ -212,8 +218,15 @@ export const useStore = create<AppState>((set, get) => ({
         });
 
         let blsResults = new Map<string, number>();
+        let blsSource: 'live' | 'cache' | 'seed' = 'seed';
+        let blsFetchedAt: number | null = null;
         try {
-            if (seriesIds.length > 0) blsResults = await fetchLaborStats(seriesIds);
+            if (seriesIds.length > 0) {
+                const result = await fetchLaborStats(seriesIds);
+                blsResults   = result.values;
+                blsSource    = result.source;
+                blsFetchedAt = result.fetchedAt;
+            }
         } catch (e) {
             console.error('Store: Failed to load BLS data', e);
         }
@@ -259,7 +272,7 @@ export const useStore = create<AppState>((set, get) => ({
         // PASS 2 + 3 — percentile labels
         const finalJobs = applyPercentileLabels(intermediateJobs);
 
-        set({ jobs: finalJobs, isLoadingData: false, hasLoadedRealData: true });
+        set({ jobs: finalJobs, isLoadingData: false, hasLoadedRealData: true, blsSource, blsFetchedAt });
     },
 
     updateJobForecast: (jobId, forecast) => set((state) => {

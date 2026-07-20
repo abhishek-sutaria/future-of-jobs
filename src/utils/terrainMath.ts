@@ -1,5 +1,7 @@
 import { SHADER, YEAR_MIN, YEAR_MAX, YEAR_COUNT } from '../config/constants';
 import type { Job } from '../types';
+import { CLUSTER_ORDER, getFunctionalCluster, type FunctionalCluster } from '../config/clusters';
+import { MAP_TITLE_TO_SOC } from './onet';
 
 // Per-year growth values come from Claude's forecast (cumulative percent change
 // from the 2025 baseline, grounded in real BLS + O*NET inputs). When Claude
@@ -8,11 +10,6 @@ import type { Job } from '../types';
 
 // Constants for Landscape Generation
 export const TERRAIN_CONFIG = {
-    // Spatial Layout
-    GRID_RADIUS_FACTOR: 4.5, // Keep outer peaks inside plane (70x70) — scaled for 50 jobs (max radius ~31.5)
-    /** Golden angle (°) for Fibonacci sunflower spiral — optimal point distribution */
-    GOLDEN_ANGLE: 137.5,
-
     // Gaussian Shape — derived from SHADER constants (single source of truth)
     /** Sigma (Gaussian spread). Must match SHADER.SIGMA_SQ2 = 2 * PEAK_WIDTH^2. */
     PEAK_WIDTH: Math.sqrt(SHADER.SIGMA_SQ2 / 2),
@@ -38,13 +35,90 @@ export interface PeakData {
     height: number; // 0 to 1 normalized
 }
 
-// Deterministic position (Spiral / Sunflower)
-export const getTerrainPosition = (index: number): { x: number, z: number } => {
-    const angle = index * TERRAIN_CONFIG.GOLDEN_ANGLE * (Math.PI / 180);
-    const radius = TERRAIN_CONFIG.GRID_RADIUS_FACTOR * Math.sqrt(index);
-    const x = radius * Math.cos(angle);
-    const z = radius * Math.sin(angle);
-    return { x, z };
+// Cluster-territory layout: each functional cluster owns a contiguous angular
+// sector of the disc (related clusters adjacent, see CLUSTER_ORDER), filled with
+// concentric arcs. Within a sector, jobs are ordered by SOC code so occupationally
+// similar roles sit next to each other.
+const TERRITORY_LAYOUT = {
+    /** Innermost arc radius */
+    R_MIN: 7,
+    /** Outermost usable radius — must stay inside the shader edge fade (~32 for the 70-unit plane) */
+    R_MAX: 30,
+    /** Radial gap between arcs; also min arc length per job (≥ 2× PEAK_WIDTH so peaks stay legible) */
+    RING_SPACING: 5,
+    /** Angular gap between adjacent sectors (radians) */
+    GAP_RAD: 0.06,
+    /** Smallest sector span before normalization (radians) */
+    MIN_SPAN_RAD: 0.25,
+};
+
+export function computeClusterTerritoryLayout(jobs: Job[]): Map<string, { x: number; z: number }> {
+    const positions = new Map<string, { x: number; z: number }>();
+    if (jobs.length === 0) return positions;
+
+    const groups = new Map<FunctionalCluster, Job[]>();
+    for (const job of jobs) {
+        const cluster = getFunctionalCluster(job.title);
+        const members = groups.get(cluster);
+        if (members) members.push(job);
+        else groups.set(cluster, [job]);
+    }
+
+    const ordered = CLUSTER_ORDER.filter((c) => groups.has(c));
+    const usable = Math.PI * 2 - TERRITORY_LAYOUT.GAP_RAD * ordered.length;
+
+    // Sector spans proportional to job count, clamped to a minimum, then renormalized
+    let spans = ordered.map((c) =>
+        Math.max(TERRITORY_LAYOUT.MIN_SPAN_RAD, (usable * groups.get(c)!.length) / jobs.length)
+    );
+    const spanSum = spans.reduce((a, b) => a + b, 0);
+    spans = spans.map((s) => (s * usable) / spanSum);
+
+    let theta0 = 0;
+    ordered.forEach((cluster, ci) => {
+        const span = spans[ci];
+        const members = [...groups.get(cluster)!].sort((a, b) => {
+            const socA = MAP_TITLE_TO_SOC[a.title] ?? a.title;
+            const socB = MAP_TITLE_TO_SOC[b.title] ?? b.title;
+            return socA === socB ? a.title.localeCompare(b.title) : socA.localeCompare(socB);
+        });
+
+        let placed = 0;
+        let r = TERRITORY_LAYOUT.R_MIN;
+        while (placed < members.length) {
+            const onOuterEdge = r >= TERRITORY_LAYOUT.R_MAX;
+            const capacity = Math.max(1, Math.floor((span * r) / TERRITORY_LAYOUT.RING_SPACING));
+            const ringCount = onOuterEdge
+                ? members.length - placed // overflow safety: everything left goes on the outer arc
+                : Math.min(capacity, members.length - placed);
+
+            for (let k = 0; k < ringCount; k++) {
+                const theta = theta0 + span * ((k + 0.5) / ringCount);
+                const job = members[placed + k];
+                positions.set(job.id, { x: r * Math.cos(theta), z: r * Math.sin(theta) });
+            }
+            placed += ringCount;
+            r = Math.min(r + TERRITORY_LAYOUT.RING_SPACING, TERRITORY_LAYOUT.R_MAX);
+        }
+
+        theta0 += span + TERRITORY_LAYOUT.GAP_RAD;
+    });
+
+    return positions;
+}
+
+// One layout per jobs array instance (store replaces the array on data updates;
+// ids/titles never change at runtime, so positions are stable across filtering).
+const layoutCache = new WeakMap<readonly Job[], Map<string, { x: number; z: number }>>();
+
+export const getTerrainPosition = (index: number, jobs: Job[]): { x: number, z: number } => {
+    let layout = layoutCache.get(jobs);
+    if (!layout) {
+        layout = computeClusterTerritoryLayout(jobs);
+        layoutCache.set(jobs, layout);
+    }
+    const job = jobs[index];
+    return (job && layout.get(job.id)) || { x: 0, z: 0 };
 };
 
 // Gaussian function: A * exp( -dist^2 / (2*sigma^2) )

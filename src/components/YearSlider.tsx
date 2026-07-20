@@ -16,7 +16,7 @@ export const YearSlider: React.FC = () => {
 
     return (
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 w-[90%] max-w-2xl pointer-events-auto" style={{ zIndex: Z.timeBar }}>
-            <div data-tour="tour-slider" className="bg-gray-900/60 backdrop-blur-xl border border-white/[0.08] rounded-2xl p-4 md:p-6 shadow-lg overflow-hidden">
+            <div data-tour="tour-slider" className="bg-gray-900/60 backdrop-blur-xl border border-cyan-400/25 rounded-2xl p-4 md:p-6 shadow-lg shadow-cyan-500/5 overflow-hidden">
                 {/* Peak height encoding toggle */}
                 <div className="flex items-center justify-between gap-3 mb-3 flex-wrap min-w-0">
                     <span className="text-[10px] text-gray-500 uppercase tracking-widest font-semibold">

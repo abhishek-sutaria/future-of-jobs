@@ -37,19 +37,20 @@ test('BLS response validation', () => {
     };
     expect(() => BLSResponseSchema.parse(emptyData)).toThrowError(/Data array cannot be empty/);
 
-    // 4. Non-numeric value fields
+    // 4. Non-numeric value fields are tolerated (BLS uses "-" placeholders for
+    // months without data); extraction skips them instead of failing the batch.
     const nonNumericValue = {
         status: "REQUEST_SUCCEEDED",
         Results: {
             series: [
                 {
                     seriesID: "LNU02032202",
-                    data: [{ year: "2023", period: "M05", value: "abc" }]
+                    data: [{ year: "2023", period: "M05", value: "-" }]
                 }
             ]
         }
     };
-    expect(() => BLSResponseSchema.parse(nonNumericValue)).toThrowError(/Value must be numeric/);
+    expect(() => BLSResponseSchema.parse(nonNumericValue)).not.toThrow();
 
     // 5. Malformed period strings (not matching Mxx)
     const malformedPeriod1 = {

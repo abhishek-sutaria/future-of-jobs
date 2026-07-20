@@ -96,9 +96,12 @@ function App() {
 
   return (
     <div className="relative w-full h-full bg-gray-900">
-      <ErrorBoundary fallback={<WebGLFallback />}>
-        <Landscape />
-      </ErrorBoundary>
+      {/* isolate creates a stacking context so drei <Html> label z-indexes (up to 100) can never escape above the fixed UI overlay */}
+      <div className="absolute inset-0 z-0 isolate">
+        <ErrorBoundary fallback={<WebGLFallback />}>
+          <Landscape />
+        </ErrorBoundary>
+      </div>
 
       <div className={`absolute inset-0 z-10 transition-opacity duration-300 ${mapView === 'map' ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
         {mapView === 'map' && <MapView />}

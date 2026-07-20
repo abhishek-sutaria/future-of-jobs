@@ -4,7 +4,7 @@ import { Z } from '../config/layers';
 export const Legend: React.FC = () => {
     return (
         <div
-            className="absolute bottom-6 right-6 flex flex-col items-end gap-2 pointer-events-none select-none p-4 rounded-xl border border-white/[0.08] bg-gray-900/60 backdrop-blur-md"
+            className="absolute bottom-6 right-6 flex flex-col items-end gap-2 pointer-events-none select-none p-4 rounded-xl border border-cyan-400/15 bg-gray-900/60 backdrop-blur-md"
             style={{ zIndex: Z.base }}
             role="complementary"
             aria-label="Job Security Index legend"
@@ -25,7 +25,7 @@ export const Legend: React.FC = () => {
 
             <div className="mt-1.5 pt-1.5 border-t border-white/[0.06] w-full text-right">
                 <div className="text-[9px] text-gray-600 uppercase tracking-widest">
-                    Y: Growth &middot; X/Z: Spiral index
+                    Y: Growth &middot; Color: Automation risk &middot; Regions: Career clusters
                 </div>
             </div>
         </div>
