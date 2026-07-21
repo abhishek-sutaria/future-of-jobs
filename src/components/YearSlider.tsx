@@ -15,7 +15,11 @@ export const YearSlider: React.FC = () => {
         : 'Height = projected growth at this year';
 
     return (
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 w-[90%] max-w-2xl pointer-events-auto" style={{ zIndex: Z.timeBar }}>
+        // Full-width flex wrapper reserves space on the right so the slider never
+        // overlaps the Legend (docked bottom-right) at common desktop widths —
+        // centering the slider on the viewport alone caused that overlap below ~1590px.
+        <div className="absolute inset-x-0 bottom-8 flex justify-center px-4 pr-[460px] pointer-events-none" style={{ zIndex: Z.timeBar }}>
+            <div className="w-full max-w-2xl pointer-events-auto">
             <div data-tour="tour-slider" className="bg-gray-900/60 backdrop-blur-xl border border-cyan-400/25 rounded-2xl p-4 md:p-6 shadow-lg shadow-cyan-500/5 overflow-hidden">
                 {/* Peak height encoding toggle */}
                 <div className="flex items-center justify-between gap-3 mb-3 flex-wrap min-w-0">
@@ -89,6 +93,7 @@ export const YearSlider: React.FC = () => {
                         className="relative w-full h-6 appearance-none bg-transparent cursor-pointer z-10 slider-input"
                     />
                 </div>
+            </div>
             </div>
         </div>
     );
