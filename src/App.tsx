@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Landscape } from './components/Landscape';
 import { UI } from './components/UI';
 import { MapView } from './components/MapView';
@@ -25,7 +25,27 @@ function WebGLFallback() {
   );
 }
 
+/**
+ * Feature-detect WebGL before mounting the 3D canvas.
+ *
+ * The ErrorBoundary below cannot cover this case: three.js raises "Error creating
+ * WebGL context" from its own render loop, outside React's render phase, so the
+ * boundary never trips and the user is left staring at UI chrome around an empty
+ * void — with no hint that the 2D map still works. Machines without a usable GPU
+ * (VMs, remote desktops, locked-down laptops) hit this.
+ */
+function hasWebGLSupport(): boolean {
+  try {
+    const canvas = document.createElement('canvas');
+    return !!(canvas.getContext('webgl2') || canvas.getContext('webgl'));
+  } catch {
+    return false;
+  }
+}
+
 function App() {
+  // Probed once — the answer cannot change for the life of the page.
+  const [webglSupported] = useState(hasWebGLSupport);
   const mapView = useStore((state) => state.mapView);
   const fetchRealData = useStore((state) => state.fetchRealData);
   const scoreAllJobsWithAI = useStore((state) => state.scoreAllJobsWithAI);
@@ -61,9 +81,13 @@ function App() {
     <div className="relative w-full h-full bg-gray-900">
       {/* isolate creates a stacking context so drei <Html> label z-indexes (up to 100) can never escape above the fixed UI overlay */}
       <div className="absolute inset-0 z-0 isolate">
-        <ErrorBoundary fallback={<WebGLFallback />}>
-          <Landscape />
-        </ErrorBoundary>
+        {webglSupported ? (
+          <ErrorBoundary fallback={<WebGLFallback />}>
+            <Landscape />
+          </ErrorBoundary>
+        ) : (
+          <WebGLFallback />
+        )}
       </div>
 
       <div className={`absolute inset-0 z-10 transition-opacity duration-300 ${mapView === 'map' ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
