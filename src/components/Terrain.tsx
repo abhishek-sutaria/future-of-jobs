@@ -143,58 +143,70 @@ export const Terrain: React.FC = () => {
   const selectedRoleIds = useStore((state) => state.selectedRoleIds);
   const heightMode = useStore((state) => state.heightMode);
 
-  const uniforms = useMemo(() => {
-    const filteredJobs = selectedRoleIds.size === 0
-      ? jobs
-      : jobs.filter(job => selectedRoleIds.has(job.id));
+  const filteredJobs = useMemo(() => (
+    selectedRoleIds.size === 0 ? jobs : jobs.filter(job => selectedRoleIds.has(job.id))
+  ), [jobs, selectedRoleIds]);
 
-    // uPeaks[i].xy = world position; uPeaks[i].z = Workers-mode height (useFrame
-    // updates .z from implied headcount at the current scrub year).
-    const peakVectors = new Array(SHADER.MAX_JOBS).fill(0).map((_, i) => {
-      if (i >= filteredJobs.length) return new Vector3(0, 0, 0);
+  // The uniforms OBJECT IDENTITY must never change after first render.
+  //
+  // three.js captures `materialProperties.uniforms = parameters.uniforms` once, when
+  // the shader program is acquired, and every later upload writes from that captured
+  // object. If a new uniforms object is assigned to the material afterwards, the
+  // renderer keeps uploading the original one, so per-frame writes (uGrowthNow, uTime)
+  // silently never reach the GPU and the terrain freezes.
+  //
+  // This used to be masked: the mesh carried a `key` derived from which jobs had a
+  // forecast, so the first AI scoring pass remounted the mesh and re-captured the
+  // uniforms. Now that every job ships with a precomputed forecast that key never
+  // changes, so nothing ever re-captures — hence a stable object mutated in place.
+  const uniforms = useMemo(() => ({
+    uTime: { value: 0 },
+    uMouse: { value: new Vector2(0, 0) },
+    uPeaks: { value: Array.from({ length: SHADER.MAX_JOBS }, () => new Vector3(0, 0, 0)) },
+    uColors: { value: Array.from({ length: SHADER.MAX_JOBS }, () => new Vector3(0, 0, 0)) },
+    uGrowthNow: { value: new Float32Array(SHADER.MAX_JOBS) },
+    uPeakCount: { value: 0 },
+    uHeightMode: { value: useStore.getState().heightMode === 'employment' ? 1.0 : 0.0 },
+  }), []);
+
+  // Write per-job data into that stable object whenever the job set changes.
+  // Runs during render (not in an effect) so the very first frame is already correct.
+  useMemo(() => {
+    const peaks = uniforms.uPeaks.value;
+    const colors = uniforms.uColors.value;
+
+    for (let i = 0; i < SHADER.MAX_JOBS; i++) {
       const job = filteredJobs[i];
+      if (!job) {
+        peaks[i].set(0, 0, 0);
+        colors[i].set(0, 0, 0);
+        continue;
+      }
       const originalIndex = jobs.findIndex(j => j.id === job.id);
       const { x, z } = getTerrainPosition(originalIndex, jobs);
-      const employmentHeight = getVisualHeightForEmployment(job.employment);
-      return new Vector3(x, -z, employmentHeight);
-    });
-
-    const colors = new Array(SHADER.MAX_JOBS).fill(0).map((_, i) => {
-      if (i >= filteredJobs.length) return new Vector3(0, 0, 0);
-      const job = filteredJobs[i];
+      // .xy = world position; .z = Workers-mode height (useFrame updates it per year)
+      peaks[i].set(x, -z, getVisualHeightForEmployment(job.employment));
 
       // Peak color encodes the Job Security Index (cyan→amber→red, matches Legend);
       // neutral slate until Claude scoring has produced a real automationCostIndex.
       const unscored = job.automationCostIndex === 0 && job.tasks.every(t => t.aiCapabilityScore === 0);
       const [r, g, b] = unscored ? RISK_UNSCORED_RGB : riskColorRGB(job.automationCostIndex);
-      return new Vector3(r, g, b);
-    });
+      colors[i].set(r, g, b);
+    }
 
     const forecasts = buildGrowthForecastFlatArray(filteredJobs);
-
     forecastsRef.current = forecasts;
     filteredJobsRef.current = filteredJobs;
+    uniforms.uPeakCount.value = filteredJobs.length;
 
-    const growthNow = new Float32Array(SHADER.MAX_JOBS);
     const yearNow = useStore.getState().year;
+    const growthNow = uniforms.uGrowthNow.value;
     for (let i = 0; i < filteredJobs.length; i++) {
       growthNow[i] = growthAtYearFromForecastFlat(forecasts, i, yearNow);
     }
 
-    return {
-      uTime: { value: 0 },
-      uMouse: { value: new Vector2(0, 0) },
-      uPeaks: { value: peakVectors },
-      uColors: { value: colors },
-      uGrowthNow: { value: growthNow },
-      uPeakCount: { value: filteredJobs.length },
-      uHeightMode: { value: useStore.getState().heightMode === 'employment' ? 1.0 : 0.0 },
-    };
-  }, [jobs, selectedRoleIds]);
-
-  const meshKey = useMemo(() =>
-    (Array.from(selectedRoleIds).sort().join(',') || 'all') + '-' + jobs.length + '-' + jobs.map(j => j.yearlyForecast ? 'Y' : 'N').join('')
-    , [selectedRoleIds, jobs]);
+    if (materialRef.current) materialRef.current.uniformsNeedUpdate = true;
+  }, [filteredJobs, jobs, uniforms]);
 
   // Keep uHeightMode in sync with the store toggle without remounting the mesh.
   React.useEffect(() => {
@@ -240,7 +252,6 @@ export const Terrain: React.FC = () => {
 
   return (
     <mesh
-      key={meshKey}
       rotation={[-Math.PI / 2, 0, 0]}
       position={[0, TERRAIN_CONFIG.TERRAIN_OFFSET_Y, 0]}
       onPointerMove={(e) => {
