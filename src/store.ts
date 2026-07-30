@@ -2,6 +2,8 @@ import { create } from 'zustand';
 import type { Job } from './types';
 
 import { initialJobs } from './data';
+import { resolveInitialScores, type ScoresSource } from './utils/bakedScores';
+import type { JobAnalysisResult } from './utils/taskScoring';
 import { UPSKILL_IMPACT } from './config/GameMechanics';
 import {
     YEAR_MIN, PERCENTILES, RESILIENCE_LABELS, VOLATILITY_LABELS,
@@ -78,6 +80,47 @@ function applyPercentileLabels(jobs: Job[]): Job[] {
     });
 }
 
+// ── Analysis merge ─────────────────────────────────────────────────────────
+//
+// Folds Claude analyses (per-task scores + yearly forecast) into jobs. Shared by
+// the startup seed (precomputed scores), the live scoring progress callback, and
+// the final scoring pass, so all three stay consistent.
+
+function applyAnalysesToJobs(jobs: Job[], analyses: Record<string, JobAnalysisResult>): Job[] {
+    return jobs.map(job => {
+        const analysis = analyses[job.id];
+        if (!analysis) return job;
+
+        const newTasks = job.tasks.map(task => {
+            const match = analysis.tasks.find(sc =>
+                sc.taskName === task.name ||
+                sc.taskName.startsWith(task.name.slice(0, 40))
+            );
+            if (!match) return task;
+            return {
+                ...task,
+                aiCapabilityScore:     match.aiCapabilityScore,
+                humanCriticalityScore: match.humanCriticalityScore,
+            };
+        });
+
+        const avgAi = newTasks.reduce((sum, t) => sum + t.aiCapabilityScore, 0) / newTasks.length;
+        return {
+            ...job,
+            tasks: newTasks,
+            automationCostIndex: parseFloat(avgAi.toFixed(2)),
+            yearlyForecast: analysis.yearlyForecast.length > 0
+                ? analysis.yearlyForecast
+                : job.yearlyForecast,
+        };
+    });
+}
+
+// Precomputed scores are applied synchronously at module load so the very first
+// render already has real risk colors and forecasts — no blocking startup pass.
+const INITIAL_SCORES = resolveInitialScores();
+const SEEDED_JOBS = applyPercentileLabels(applyAnalysesToJobs(initialJobs, INITIAL_SCORES.scores));
+
 // ── Store interface ────────────────────────────────────────────────────────
 
 interface AppState {
@@ -115,12 +158,16 @@ interface AppState {
     // AI Task Scoring
     isScoring: boolean;
     hasAIScores: boolean;
-    scoreAllJobsWithAI: () => Promise<void>;
-    startupAnalysisState: 'idle' | 'loading' | 'done';
-    hasShownStartupGate: boolean;
-    startStartupAnalysisGate: () => void;
-    finishStartupAnalysisGate: () => void;
-    dismissStartupAnalysisGate: () => void;
+    /** Where the currently displayed scores came from */
+    scoresSource: ScoresSource | 'live';
+    /** Epoch ms the scores were produced (build time for precomputed, refresh time for live) */
+    scoresGeneratedAt: number | null;
+    /** Live progress while re-scoring, for the header pill */
+    scoringProgress: { done: number; total: number } | null;
+    /** `force` bypasses the "already scored" guard — used by the manual refresh */
+    scoreAllJobsWithAI: (opts?: { force?: boolean }) => Promise<void>;
+    /** Discard cached scores and re-score everything from Claude */
+    refreshAIScores: () => Promise<void>;
 
     // Claude API key mode
     apiKeyMode: 'user' | 'default' | null;
@@ -147,7 +194,7 @@ export const useStore = create<AppState>((set, get) => ({
     },
     selectedJob: null,
     setSelectedJob: (selectedJob) => set({ selectedJob }),
-    jobs: initialJobs,
+    jobs: SEEDED_JOBS,
 
     upskillTask: (jobId, taskName) => set((state) => {
         const newJobs = state.jobs.map((job) => {
@@ -288,28 +335,15 @@ export const useStore = create<AppState>((set, get) => ({
     // ── AI Task Scoring ───────────────────────────────────────────────────
 
     isScoring: false,
-    hasAIScores: false,
-    startupAnalysisState: 'idle',
-    hasShownStartupGate: false,
+    // Precomputed scores are merged at module load, so the app starts already scored.
+    hasAIScores: INITIAL_SCORES.source !== 'none',
+    scoresSource: INITIAL_SCORES.source,
+    scoresGeneratedAt: INITIAL_SCORES.generatedAt,
+    scoringProgress: null,
     apiKeyMode: null,
     userClaudeApiKey: '',
     hasConfiguredAI: false,
     claudeKeyModalOpen: false,
-
-    startStartupAnalysisGate: () =>
-        set((state) => (state.hasShownStartupGate ? state : { startupAnalysisState: 'loading' })),
-
-    finishStartupAnalysisGate: () =>
-        set((state) => {
-            if (state.hasShownStartupGate || state.startupAnalysisState !== 'loading') return state;
-            return { startupAnalysisState: 'done' };
-        }),
-
-    dismissStartupAnalysisGate: () =>
-        set((state) => {
-            if (state.hasShownStartupGate) return state;
-            return { startupAnalysisState: 'idle', hasShownStartupGate: true };
-        }),
 
     openClaudeKeyModal: () => set({ claudeKeyModalOpen: true }),
     closeClaudeKeyModal: () => set({ claudeKeyModalOpen: false }),
@@ -366,16 +400,18 @@ export const useStore = create<AppState>((set, get) => ({
         });
     },
 
-    scoreAllJobsWithAI: async () => {
+    scoreAllJobsWithAI: async (opts) => {
         const state = get();
-        if (state.isScoring || state.hasAIScores || !state.hasConfiguredAI) return;
+        // `force` lets the manual refresh re-score even though scores already exist.
+        if (state.isScoring || !state.hasConfiguredAI) return;
+        if (state.hasAIScores && !opts?.force) return;
 
         const userKey = state.apiKeyMode === 'user' ? state.userClaudeApiKey : undefined;
         if (state.apiKeyMode === 'user' && !userKey) {
             console.log('[TaskScoring] User-key mode active but no key found.');
             return;
         }
-        set({ isScoring: true });
+        set({ isScoring: true, scoringProgress: { done: 0, total: get().jobs.length } });
 
         try {
             const { scoreAllJobTasks } = await import('./utils/taskScoring');
@@ -389,103 +425,58 @@ export const useStore = create<AppState>((set, get) => ({
             }));
 
             const allAnalyses = await scoreAllJobTasks(jobsToScore, userKey, (jobId, done, total, analysis) => {
-                console.log(`[TaskScoring] ${done}/${total} jobs analyzed`);
-
-                // Apply scores + forecast for this job immediately as they arrive
+                // Apply this job's scores as soon as they arrive so the map updates live.
                 set(s => {
-                    const updatedJobs = s.jobs.map(job => {
-                        if (job.id !== jobId) return job;
-
-                        const newTasks = job.tasks.map(task => {
-                            const match = analysis.tasks.find(sc =>
-                                sc.taskName === task.name ||
-                                sc.taskName.startsWith(task.name.slice(0, 40))
-                            );
-                            if (!match) return task;
-                            return {
-                                ...task,
-                                aiCapabilityScore:     match.aiCapabilityScore,
-                                humanCriticalityScore: match.humanCriticalityScore,
-                            };
-                        });
-
-                        const avgAi = newTasks.reduce((sum, t) => sum + t.aiCapabilityScore, 0) / newTasks.length;
-                        return {
-                            ...job,
-                            tasks: newTasks,
-                            automationCostIndex: parseFloat(avgAi.toFixed(2)),
-                            yearlyForecast: analysis.yearlyForecast.length > 0
-                                ? analysis.yearlyForecast
-                                : job.yearlyForecast,
-                        };
-                    });
-
-                    // Re-run percentile labels across all jobs after each update
-                    const relabelled    = applyPercentileLabels(updatedJobs);
-                    const newSelectedJob = s.selectedJob
-                        ? relabelled.find(j => j.id === s.selectedJob!.id) || s.selectedJob
-                        : null;
-
-                    return { jobs: relabelled, selectedJob: newSelectedJob };
+                    const relabelled = applyPercentileLabels(
+                        applyAnalysesToJobs(s.jobs, { [jobId]: analysis }),
+                    );
+                    return {
+                        jobs: relabelled,
+                        selectedJob: s.selectedJob
+                            ? relabelled.find(j => j.id === s.selectedJob!.id) || s.selectedJob
+                            : null,
+                        scoringProgress: { done, total },
+                    };
                 });
             });
 
-            // Final pass — apply any remaining analyses that arrived after the last callback
+            // Final pass — fold in anything that landed after the last callback.
             set(s => {
-                const before = s.jobs.map(j => ({
-                    id: j.id,
-                    fc: j.yearlyForecast?.length ?? 0,
-                    sum: j.tasks.reduce((a, t) => a + t.aiCapabilityScore + t.humanCriticalityScore, 0),
-                }));
+                const signature = (jobs: Job[]) =>
+                    jobs.map(j =>
+                        `${j.yearlyForecast?.length ?? 0}:` +
+                        j.tasks.reduce((a, t) => a + t.aiCapabilityScore + t.humanCriticalityScore, 0),
+                    ).join('|');
 
-                const finalJobs = s.jobs.map(job => {
-                    const analysis = allAnalyses[job.id];
-                    if (!analysis) return job;
+                const beforeSig = signature(s.jobs);
+                const finalJobs = applyAnalysesToJobs(s.jobs, allAnalyses);
+                const applied = Object.keys(allAnalyses).length > 0 || signature(finalJobs) !== beforeSig;
 
-                    const newTasks = job.tasks.map(task => {
-                        const match = analysis.tasks.find(sc =>
-                            sc.taskName === task.name ||
-                            sc.taskName.startsWith(task.name.slice(0, 40))
-                        );
-                        if (!match) return task;
-                        return {
-                            ...task,
-                            aiCapabilityScore:     match.aiCapabilityScore,
-                            humanCriticalityScore: match.humanCriticalityScore,
-                        };
-                    });
-
-                    const avgAi = newTasks.reduce((sum, t) => sum + t.aiCapabilityScore, 0) / newTasks.length;
-                    return {
-                        ...job,
-                        tasks: newTasks,
-                        automationCostIndex: parseFloat(avgAi.toFixed(2)),
-                        yearlyForecast: analysis.yearlyForecast.length > 0
-                            ? analysis.yearlyForecast
-                            : job.yearlyForecast,
-                    };
-                });
-
-                const hasAnyApplied = finalJobs.some(job => {
-                    const b = before.find(x => x.id === job.id);
-                    if (!b) return false;
-                    const fc = job.yearlyForecast?.length ?? 0;
-                    const sum = job.tasks.reduce((a, t) => a + t.aiCapabilityScore + t.humanCriticalityScore, 0);
-                    return fc > b.fc || sum !== b.sum;
-                });
-
-                const relabelled     = applyPercentileLabels(finalJobs);
-                const newSelectedJob = s.selectedJob
-                    ? relabelled.find(j => j.id === s.selectedJob!.id) || s.selectedJob
-                    : null;
-
-                return { jobs: relabelled, selectedJob: newSelectedJob, hasAIScores: hasAnyApplied };
+                const relabelled = applyPercentileLabels(finalJobs);
+                return {
+                    jobs: relabelled,
+                    selectedJob: s.selectedJob
+                        ? relabelled.find(j => j.id === s.selectedJob!.id) || s.selectedJob
+                        : null,
+                    hasAIScores: applied || s.hasAIScores,
+                    scoresSource: applied ? 'live' as const : s.scoresSource,
+                    scoresGeneratedAt: applied ? Date.now() : s.scoresGeneratedAt,
+                };
             });
 
         } catch (err) {
             console.error('[TaskScoring] Fatal error:', err);
         } finally {
-            set({ isScoring: false });
+            set({ isScoring: false, scoringProgress: null });
         }
+    },
+
+    refreshAIScores: async () => {
+        const { clearScoreCache } = await import('./utils/taskScoring');
+        clearScoreCache();
+        // hasAIScores must drop first or the guard below would short-circuit —
+        // this is what made the old header pill silently do nothing.
+        set({ hasAIScores: false });
+        await get().scoreAllJobsWithAI({ force: true });
     },
 }));

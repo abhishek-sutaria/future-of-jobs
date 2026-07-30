@@ -1,0 +1,3057 @@
+{
+  "version": 5,
+  "model": "claude-sonnet-5",
+  "generatedAt": "2026-07-30T00:22:38.382Z",
+  "scores": {
+    "job-15": {
+      "tasks": [
+        {
+          "taskName": "Identify, develop, or evaluate marketing strategy, based on knowledge of establishment objectives, market characteristics, and cost and markup factors.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.85
+        },
+        {
+          "taskName": "Formulate, direct, or coordinate marketing activities or policies to promote products or services, working with advertising or promotion managers.",
+          "aiCapabilityScore": 0.35,
+          "humanCriticalityScore": 0.88
+        },
+        {
+          "taskName": "Evaluate the financial aspects of product development, such as budgets, expenditures, research and development appropriations, or return-on-investment and profit-loss projections.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.75
+        },
+        {
+          "taskName": "Develop pricing strategies, balancing firm objectives and customer satisfaction.",
+          "aiCapabilityScore": 0.5,
+          "humanCriticalityScore": 0.78
+        },
+        {
+          "taskName": "Compile lists describing product or service offerings.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.3
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year for cumulative forecast."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 1.1,
+          "reasoning": "Modest hiring growth as AI tools assist but do not replace strategic roles."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 2.3,
+          "reasoning": "Continued demand for marketing managers despite productivity gains from AI."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 3.6,
+          "reasoning": "Steady growth as digital marketing complexity sustains managerial oversight needs."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 5,
+          "reasoning": "Gradual employment increase consistent with broader economic and BLS projections."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 6.2,
+          "reasoning": "Approaching the 7% BLS 10-year cap with AI augmenting rather than replacing the role."
+        }
+      ]
+    },
+    "job-2": {
+      "tasks": [
+        {
+          "taskName": "Prepare reports of findings, illustrating data graphically and translating complex findings into written text.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.35
+        },
+        {
+          "taskName": "Collect and analyze data on customer demographics, preferences, needs, and buying habits to identify potential markets and factors affecting product demand.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.4
+        },
+        {
+          "taskName": "Conduct research on consumer opinions and marketing strategies, collaborating with marketing professionals, statisticians, pollsters, and other professionals.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.65
+        },
+        {
+          "taskName": "Measure and assess customer and employee satisfaction.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.45
+        },
+        {
+          "taskName": "Devise and evaluate methods and procedures for collecting data, such as surveys, opinion polls, or questionnaires, or arrange to obtain existing data.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.55
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year for cumulative growth measurement."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 2.1,
+          "reasoning": "Continued demand for market insights despite growing AI-assisted analysis tools."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 4.4,
+          "reasoning": "Job growth moderates as AI automates routine data analysis and reporting tasks."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 6.6,
+          "reasoning": "Steady demand for strategic interpretation offsets automation of data collection tasks."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 8.9,
+          "reasoning": "Growth continues but AI tools increasingly handle survey design and reporting."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 10.8,
+          "reasoning": "Cumulative growth approaches BLS 10-year cap as human judgment remains valued for strategy."
+        }
+      ]
+    },
+    "job-3": {
+      "tasks": [
+        {
+          "taskName": "Create or review technical specifications for data dashboards, reports, or visualizations to ensure they meet business requirements.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.55
+        },
+        {
+          "taskName": "Query databases, using structured query language (SQL), to compile, manipulate, and retrieve data.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.3
+        },
+        {
+          "taskName": "Identify, communicate, and interpret business or operational data patterns and trends to guide strategic decisions.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.7
+        },
+        {
+          "taskName": "Design and develop key performance metrics, scorecards, and reporting frameworks aligned to business objectives.",
+          "aiCapabilityScore": 0.5,
+          "humanCriticalityScore": 0.65
+        },
+        {
+          "taskName": "Present findings and insights from data analysis to senior leadership, translating technical results into actionable business recommendations.",
+          "aiCapabilityScore": 0.35,
+          "humanCriticalityScore": 0.85
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year for cumulative forecast."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 1.6,
+          "reasoning": "Steady demand for BI skills offsets early AI-driven productivity gains."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 3.3,
+          "reasoning": "Continued data-driven decision-making needs support moderate hiring growth."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 5,
+          "reasoning": "Growth moderates as GenAI tools automate routine querying and reporting tasks."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 6.8,
+          "reasoning": "Demand for strategic interpretation and leadership presentation sustains headcount growth."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 8.5,
+          "reasoning": "Cumulative growth nears BLS 10-year cap as automation offsets some new role creation."
+        }
+      ]
+    },
+    "job-4": {
+      "tasks": [
+        {
+          "taskName": "Advise clients on aspects of capitalization, such as amounts, sources, or timing.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.8
+        },
+        {
+          "taskName": "Analyze financial or operational performance of companies facing financial difficulties to identify or recommend remedies.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.75
+        },
+        {
+          "taskName": "Assess companies as investments for clients by examining company facilities.",
+          "aiCapabilityScore": 0.25,
+          "humanCriticalityScore": 0.85
+        },
+        {
+          "taskName": "Collaborate with investment bankers to attract new corporate clients.",
+          "aiCapabilityScore": 0.15,
+          "humanCriticalityScore": 0.9
+        },
+        {
+          "taskName": "Collaborate on projects with other professionals, such as lawyers, accountants, or public relations experts.",
+          "aiCapabilityScore": 0.2,
+          "humanCriticalityScore": 0.88
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 1.3,
+          "reasoning": "Gradual hiring growth continues despite early AI tool adoption for data tasks."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 2.9,
+          "reasoning": "Demand for analysts remains steady as AI augments rather than replaces judgment-heavy work."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 4.5,
+          "reasoning": "Continued economic expansion and client advisory needs support headcount growth."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 6.1,
+          "reasoning": "AI efficiency gains offset by growing complexity of financial markets and client demand."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 7.6,
+          "reasoning": "Cumulative growth approaches BLS 10-year cap as human judgment remains central to advisory roles."
+        }
+      ]
+    },
+    "job-5": {
+      "tasks": [
+        {
+          "taskName": "Establish and maintain relationships with individual or business customers or provide assistance with problems these customers may encounter.",
+          "aiCapabilityScore": 0.35,
+          "humanCriticalityScore": 0.85
+        },
+        {
+          "taskName": "Oversee the flow of cash or financial instruments.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.65
+        },
+        {
+          "taskName": "Plan, direct, or coordinate the activities of workers in branches, offices, or departments of establishments, such as branch banks, brokerage firms, risk and insurance departments, or credit departments.",
+          "aiCapabilityScore": 0.25,
+          "humanCriticalityScore": 0.9
+        },
+        {
+          "taskName": "Recruit staff members.",
+          "aiCapabilityScore": 0.3,
+          "humanCriticalityScore": 0.8
+        },
+        {
+          "taskName": "Evaluate data pertaining to costs to plan budgets.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.55
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year for cumulative forecast."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 2.3,
+          "reasoning": "Steady demand growth from financial complexity and regulatory needs."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 5.1,
+          "reasoning": "Continued expansion in financial services offsetting AI-driven efficiency gains."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 8.2,
+          "reasoning": "Growth moderates slightly as automation handles more routine reporting tasks."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 11.5,
+          "reasoning": "Demand for strategic financial oversight sustains hiring despite AI adoption."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 14.8,
+          "reasoning": "Cumulative growth approaches BLS 10-year cap, reflecting long-term managerial demand."
+        }
+      ]
+    },
+    "job-6": {
+      "tasks": [
+        {
+          "taskName": "Gather and organize information on problems or procedures.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.35
+        },
+        {
+          "taskName": "Confer with personnel concerned to ensure successful functioning of newly implemented systems or procedures.",
+          "aiCapabilityScore": 0.25,
+          "humanCriticalityScore": 0.9
+        },
+        {
+          "taskName": "Analyze data gathered and develop solutions or alternative methods of proceeding.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.65
+        },
+        {
+          "taskName": "Document findings of study and prepare recommendations for implementation of new systems, procedures, or organizational changes.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.55
+        },
+        {
+          "taskName": "Plan study of work problems and procedures, such as organizational change, communications, information flow, integrated production methods, inventory control, or cost analysis.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.75
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year for cumulative forecast."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 1.4,
+          "reasoning": "Steady demand for consulting with early AI-driven efficiency gains."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 3,
+          "reasoning": "Continued hiring growth as firms expand advisory services amid AI adoption."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 4.8,
+          "reasoning": "Growth moderates slightly as AI tools handle more routine analysis tasks."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 6.9,
+          "reasoning": "Demand for strategic human judgment sustains headcount growth."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 9.2,
+          "reasoning": "Cumulative growth approaches BLS 10-year projection ceiling."
+        }
+      ]
+    },
+    "job-7": {
+      "tasks": [
+        {
+          "taskName": "Supervise the activities of workers engaged in receiving, storing, testing, and shipping products or materials.",
+          "aiCapabilityScore": 0.25,
+          "humanCriticalityScore": 0.8
+        },
+        {
+          "taskName": "Plan, develop, or implement warehouse safety and security programs and activities.",
+          "aiCapabilityScore": 0.35,
+          "humanCriticalityScore": 0.75
+        },
+        {
+          "taskName": "Inspect physical conditions of warehouses, vehicle fleets, or equipment and order testing, maintenance, repairs, or replacements.",
+          "aiCapabilityScore": 0.3,
+          "humanCriticalityScore": 0.7
+        },
+        {
+          "taskName": "Plan, organize, or manage the work of subordinate staff to ensure that the work is accomplished in a manner consistent with organizational requirements.",
+          "aiCapabilityScore": 0.3,
+          "humanCriticalityScore": 0.85
+        },
+        {
+          "taskName": "Collaborate with other departments to integrate logistics with business systems or processes, such as customer sales, order management, accounting, or shipping.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.65
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year for forecast."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 2.8,
+          "reasoning": "Steady demand growth in logistics with modest AI-driven efficiency gains."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 6,
+          "reasoning": "Continued supply chain expansion outpaces automation displacement."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 9.5,
+          "reasoning": "Growing e-commerce and logistics complexity sustain hiring needs."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 13.2,
+          "reasoning": "AI tools augment rather than replace managerial oversight roles."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 16.5,
+          "reasoning": "Employment growth nears BLS projected ceiling as automation supports rather than supplants managers."
+        }
+      ]
+    },
+    "job-8": {
+      "tasks": [
+        {
+          "taskName": "Maintain and develop positive business relationships with a customer's key personnel involved in, or directly relevant to, a logistics activity.",
+          "aiCapabilityScore": 0.15,
+          "humanCriticalityScore": 0.9
+        },
+        {
+          "taskName": "Develop an understanding of customers' needs and take actions to ensure that such needs are met.",
+          "aiCapabilityScore": 0.3,
+          "humanCriticalityScore": 0.85
+        },
+        {
+          "taskName": "Manage subcontractor activities, reviewing proposals, developing performance specifications, and serving as liaisons between subcontractors and organizations.",
+          "aiCapabilityScore": 0.35,
+          "humanCriticalityScore": 0.75
+        },
+        {
+          "taskName": "Develop proposals that include documentation for estimates.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.45
+        },
+        {
+          "taskName": "Review logistics performance with customers against targets, benchmarks, and service agreements.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.55
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year for cumulative forecast."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 2.8,
+          "reasoning": "Steady logistics demand growth with early AI tool adoption for reporting tasks."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 5.9,
+          "reasoning": "Continued sector expansion offsets modest task automation in proposal drafting."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 9.2,
+          "reasoning": "Growth moderates slightly as AI handles more documentation and performance reviews."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 12.6,
+          "reasoning": "Relationship and subcontractor management tasks remain human-driven, sustaining headcount growth."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 15.5,
+          "reasoning": "Cumulative growth nears BLS 10-year projection cap, reflecting continued demand tempered by automation."
+        }
+      ]
+    },
+    "job-9": {
+      "tasks": [
+        {
+          "taskName": "Analyze user needs and software requirements to determine feasibility of design within time and cost constraints.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.8
+        },
+        {
+          "taskName": "Develop or direct software system testing or validation procedures, programming, or documentation.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.6
+        },
+        {
+          "taskName": "Confer with systems analysts, engineers, programmers and others to design systems and to obtain information on project limitations and capabilities, performance requirements, and interfaces.",
+          "aiCapabilityScore": 0.3,
+          "humanCriticalityScore": 0.85
+        },
+        {
+          "taskName": "Modify existing software to correct errors, adapt it to new hardware, or upgrade interfaces and improve performance.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.55
+        },
+        {
+          "taskName": "Prepare reports or correspondence concerning project specifications, activities, or status.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.35
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year for cumulative forecast."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 3.2,
+          "reasoning": "Continued demand growth slightly offset by AI-assisted coding efficiency."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 7,
+          "reasoning": "Sustained hiring growth as software demand outpaces automation effects."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 11.5,
+          "reasoning": "Growth moderates as AI tools increase productivity per developer."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 16,
+          "reasoning": "Steady expansion in software roles despite task automation gains."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 20.5,
+          "reasoning": "Cumulative growth approaches but stays under BLS 10-year projection cap."
+        }
+      ]
+    },
+    "job-10": {
+      "tasks": [
+        {
+          "taskName": "Present the results of mathematical modeling and data analysis to management or other end users.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.7
+        },
+        {
+          "taskName": "Define data requirements, and gather and validate information, applying judgment and statistical tests.",
+          "aiCapabilityScore": 0.5,
+          "humanCriticalityScore": 0.75
+        },
+        {
+          "taskName": "Perform validation and testing of models to ensure adequacy, and reformulate models, as necessary.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.8
+        },
+        {
+          "taskName": "Prepare management reports defining and evaluating problems and recommending solutions.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.65
+        },
+        {
+          "taskName": "Collaborate with others in the organization to ensure successful implementation of chosen problem solutions.",
+          "aiCapabilityScore": 0.25,
+          "humanCriticalityScore": 0.9
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 3.2,
+          "reasoning": "Steady demand growth as analytics needs expand despite partial AI task assistance."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 7.1,
+          "reasoning": "Continued hiring growth aligned with BLS projections and rising data-driven decision needs."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 11.5,
+          "reasoning": "Growth moderates slightly as AI tools increase analyst productivity."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 16,
+          "reasoning": "Sustained occupational growth with AI augmenting rather than replacing analysts."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 20.5,
+          "reasoning": "Approaches BLS 10-year cap as demand for skilled human oversight remains strong."
+        }
+      ]
+    },
+    "job-11": {
+      "tasks": [
+        {
+          "taskName": "Make bids or offers to buy or sell securities.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.45
+        },
+        {
+          "taskName": "Monitor markets or positions.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.35
+        },
+        {
+          "taskName": "Agree on buying or selling prices at optimal levels for clients.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.65
+        },
+        {
+          "taskName": "Keep accurate records of transactions.",
+          "aiCapabilityScore": 0.9,
+          "humanCriticalityScore": 0.15
+        },
+        {
+          "taskName": "Buy or sell stocks, bonds, commodity futures, foreign currencies, or other securities on behalf of investment dealers.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.5
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year for cumulative forecast."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 1.1,
+          "reasoning": "Modest growth as trading volumes rise despite AI-driven efficiency gains."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 2.3,
+          "reasoning": "Continued demand for client-facing advisory roles offsets automation of routine trades."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 3.6,
+          "reasoning": "AI tools augment agents rather than replace them, supporting steady hiring."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 5,
+          "reasoning": "Market expansion and new financial products sustain moderate job growth."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 6.5,
+          "reasoning": "Growth nears BLS 10-year cap as human judgment remains critical for complex deals."
+        }
+      ]
+    },
+    "job-12": {
+      "tasks": [
+        {
+          "taskName": "Oversee regional and local sales managers and their staffs.",
+          "aiCapabilityScore": 0.2,
+          "humanCriticalityScore": 0.9
+        },
+        {
+          "taskName": "Resolve customer complaints regarding sales and service.",
+          "aiCapabilityScore": 0.35,
+          "humanCriticalityScore": 0.85
+        },
+        {
+          "taskName": "Monitor customer preferences to determine focus of sales efforts.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.45
+        },
+        {
+          "taskName": "Confer with potential customers regarding equipment needs, and advise customers on types of equipment to purchase.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.7
+        },
+        {
+          "taskName": "Review operational records and reports to project sales and determine profitability.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.4
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.6,
+          "reasoning": "Modest hiring growth as demand for sales oversight persists."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 1.3,
+          "reasoning": "Continued steady demand despite AI aiding reporting tasks."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 2,
+          "reasoning": "Growth slows slightly as AI tools handle more analytical tasks."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 2.8,
+          "reasoning": "Sales management roles remain resilient due to human relationship needs."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 3.5,
+          "reasoning": "Employment nears BLS 10-year cap with gradual AI-augmented efficiency gains."
+        }
+      ]
+    },
+    "job-13": {
+      "tasks": [
+        {
+          "taskName": "Prepare detailed reports on audit findings.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.45
+        },
+        {
+          "taskName": "Report to management about asset utilization and audit results, and recommend changes in operations and financial activities.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.7
+        },
+        {
+          "taskName": "Collect and analyze data to detect deficient controls, duplicated effort, extravagance, fraud, or non-compliance with laws, regulations, and management policies.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.6
+        },
+        {
+          "taskName": "Inspect account books and accounting systems for efficiency, effectiveness, and use of accepted accounting procedures to record transactions.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.55
+        },
+        {
+          "taskName": "Supervise auditing of establishments, and determine scope of investigation required.",
+          "aiCapabilityScore": 0.35,
+          "humanCriticalityScore": 0.85
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year for cumulative forecast."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.55,
+          "reasoning": "Modest hiring growth continues despite gradual AI-driven efficiency gains."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 1.15,
+          "reasoning": "Task automation reduces entry-level workload but demand for oversight persists."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 1.9,
+          "reasoning": "Steady demand growth from regulatory complexity partially offset by AI productivity tools."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 2.75,
+          "reasoning": "Continued economic expansion sustains need for auditors despite automation of routine tasks."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 3.6,
+          "reasoning": "Cumulative growth approaches BLS 10-year cap as AI augments rather than replaces core judgment tasks."
+        }
+      ]
+    },
+    "job-14": {
+      "tasks": [
+        {
+          "taskName": "Plan and prepare advertising and promotional material to increase sales of products or services, working with customers, company officials, sales departments, and advertising agencies.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.6
+        },
+        {
+          "taskName": "Inspect layouts and advertising copy, and edit scripts, audio, video, and other promotional material for adherence to specifications.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.5
+        },
+        {
+          "taskName": "Confer with department heads or staff to discuss topics such as contracts, selection of advertising media, or product to be advertised.",
+          "aiCapabilityScore": 0.25,
+          "humanCriticalityScore": 0.85
+        },
+        {
+          "taskName": "Coordinate with the media to disseminate advertising.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.55
+        },
+        {
+          "taskName": "Coordinate activities of departments, such as sales, graphic arts, media, finance, and research.",
+          "aiCapabilityScore": 0.3,
+          "humanCriticalityScore": 0.8
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year for cumulative forecast."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 1.1,
+          "reasoning": "Modest hiring growth as demand for brand strategy persists despite AI content tools."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 2.2,
+          "reasoning": "Continued steady growth in line with BLS outlook trajectory."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 3.3,
+          "reasoning": "AI adoption boosts efficiency but human-led strategy roles keep growing."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 4.5,
+          "reasoning": "Sustained demand for brand oversight and cross-department coordination."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 5.8,
+          "reasoning": "Approaching BLS 10-year cap as role evolves with AI-augmented workflows."
+        }
+      ]
+    },
+    "job-16": {
+      "tasks": [
+        {
+          "taskName": "Develop and implement public relations programs to promote a favorable image for the organization with the public, press, and other stakeholders.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.75
+        },
+        {
+          "taskName": "Manage media relations, including responding to press inquiries and pitching stories to journalists and media outlets.",
+          "aiCapabilityScore": 0.35,
+          "humanCriticalityScore": 0.8
+        },
+        {
+          "taskName": "Write and edit press releases, speeches, and other communications materials for executive and organizational use.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.55
+        },
+        {
+          "taskName": "Lead crisis communications planning and real-time response to reputational threats.",
+          "aiCapabilityScore": 0.25,
+          "humanCriticalityScore": 0.92
+        },
+        {
+          "taskName": "Build and maintain relationships with community organizations, media, government, and other external stakeholders.",
+          "aiCapabilityScore": 0.15,
+          "humanCriticalityScore": 0.9
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 1.6,
+          "reasoning": "Modest hiring growth as PR demand rises despite AI drafting tools reducing some writing workload."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 3.1,
+          "reasoning": "Continued steady growth as organizations expand strategic communications functions."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 4.6,
+          "reasoning": "Growth moderates slightly as AI absorbs more routine content tasks."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 6.1,
+          "reasoning": "Employment growth continues in line with BLS 10-year trajectory."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 7.5,
+          "reasoning": "Cumulative growth approaches but stays under the 8% BLS 10-year cap."
+        }
+      ]
+    },
+    "job-17": {
+      "tasks": [
+        {
+          "taskName": "Prepare and deliver sales presentations to new and existing customers to sell new advertising programs and to protect and increase existing advertising.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.75
+        },
+        {
+          "taskName": "Maintain assigned account bases while developing new accounts.",
+          "aiCapabilityScore": 0.35,
+          "humanCriticalityScore": 0.85
+        },
+        {
+          "taskName": "Provide clients with estimates of the costs of advertising products or services.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.4
+        },
+        {
+          "taskName": "Locate and contact potential clients to offer advertising services.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.55
+        },
+        {
+          "taskName": "Explain to customers how specific types of advertising will help promote their products or services in the most effective way possible.",
+          "aiCapabilityScore": 0.5,
+          "humanCriticalityScore": 0.7
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year for cumulative forecast."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.3,
+          "reasoning": "Slight growth as AI tools augment prospecting without displacing agents yet."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 0.75,
+          "reasoning": "Modest hiring continues alongside gradual AI-driven productivity gains."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 1.3,
+          "reasoning": "Demand for digital ad sales sustains growth despite automation of routine estimates."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 2,
+          "reasoning": "Continued but tempered growth as relationship-based selling remains human-led."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 2.7,
+          "reasoning": "Cumulative growth nears BLS 3% cap, reflecting steady but AI-tempered expansion."
+        }
+      ]
+    },
+    "job-18": {
+      "tasks": [
+        {
+          "taskName": "Consult with customers to determine objectives and requirements for events, such as meetings, conferences, and conventions.",
+          "aiCapabilityScore": 0.35,
+          "humanCriticalityScore": 0.9
+        },
+        {
+          "taskName": "Review event bills for accuracy and approve payment.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.4
+        },
+        {
+          "taskName": "Coordinate services for events, such as accommodation and transportation for participants, facilities, catering, signage, displays, and event security.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.75
+        },
+        {
+          "taskName": "Arrange the availability of audio-visual equipment, transportation, displays, and other event needs.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.6
+        },
+        {
+          "taskName": "Confer with staff at a chosen event site to coordinate details.",
+          "aiCapabilityScore": 0.3,
+          "humanCriticalityScore": 0.85
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year for cumulative forecast."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 1.1,
+          "reasoning": "Steady event demand with modest AI-driven efficiency gains in admin tasks."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 2.4,
+          "reasoning": "Continued industry growth outpaces AI displacement of coordination roles."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 3.8,
+          "reasoning": "Hybrid AI tools augment but don't replace client-facing coordination work."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 5.2,
+          "reasoning": "Event industry expansion sustains hiring despite automation of routine billing tasks."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 6.5,
+          "reasoning": "Cumulative growth approaches BLS 10-year projection ceiling, tempered by AI task automation."
+        }
+      ]
+    },
+    "job-19": {
+      "tasks": [
+        {
+          "taskName": "Answer customers' questions about services, prices, availability, or credit terms.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.35
+        },
+        {
+          "taskName": "Attend sales or trade meetings or read related publications to obtain information about market conditions, business trends, or industry developments.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.45
+        },
+        {
+          "taskName": "Compute and compare costs of services.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.25
+        },
+        {
+          "taskName": "Consult with clients after sales or contract signings to resolve problems and provide ongoing support.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.7
+        },
+        {
+          "taskName": "Contact prospective or existing customers to discuss how services can meet their needs.",
+          "aiCapabilityScore": 0.4,
+          "humanCriticalityScore": 0.75
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year for cumulative forecast."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.6,
+          "reasoning": "Modest hiring growth as AI tools assist but don't replace core sales relationships."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 1.4,
+          "reasoning": "Continued steady demand for account executives amid AI-augmented workflows."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 2.3,
+          "reasoning": "Growth moderates as AI absorbs some administrative and research tasks."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 3.3,
+          "reasoning": "Employment growth continues in line with BLS 10-year trajectory."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 4.2,
+          "reasoning": "Cumulative growth approaches BLS 5% cap while human relationship tasks remain resilient."
+        }
+      ]
+    },
+    "job-20": {
+      "tasks": [
+        {
+          "taskName": "Negotiate prices or terms of sales or service agreements.",
+          "aiCapabilityScore": 0.35,
+          "humanCriticalityScore": 0.85
+        },
+        {
+          "taskName": "Prepare and submit sales contracts for orders.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.35
+        },
+        {
+          "taskName": "Visit establishments to evaluate needs or to promote product or service sales.",
+          "aiCapabilityScore": 0.2,
+          "humanCriticalityScore": 0.9
+        },
+        {
+          "taskName": "Maintain customer records, using automated systems.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.2
+        },
+        {
+          "taskName": "Answer customers' questions about products, prices, availability, or credit terms.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.4
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year for cumulative forecast."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.55,
+          "reasoning": "Modest hiring growth as AI tools augment rather than replace reps."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 1.3,
+          "reasoning": "Continued demand for relationship-driven sales roles despite automation of admin tasks."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 2.1,
+          "reasoning": "Steady economic expansion supports gradual headcount growth."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 3,
+          "reasoning": "AI efficiency gains offset by broader market and product growth."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 3.8,
+          "reasoning": "Employment nears BLS 10-year cap as AI reshapes tasks without eliminating the role."
+        }
+      ]
+    },
+    "job-21": {
+      "tasks": [
+        {
+          "taskName": "Customize insurance programs to suit individual customers, often covering a variety of risks.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.65
+        },
+        {
+          "taskName": "Sell various types of insurance policies to businesses and individuals on behalf of insurance companies, including automobile, fire, life, property, and medical insurance.",
+          "aiCapabilityScore": 0.4,
+          "humanCriticalityScore": 0.75
+        },
+        {
+          "taskName": "Explain features, advantages, and disadvantages of various policies to promote sale of insurance plans.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.6
+        },
+        {
+          "taskName": "Perform administrative tasks, such as maintaining records and handling policy renewals.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.2
+        },
+        {
+          "taskName": "Seek out new clients and develop clientele by networking to find new customers and generate lists of prospective clients.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.7
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year for cumulative forecast."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 1.1,
+          "reasoning": "Modest hiring growth continues as AI adoption is still limited in sales roles."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 2.35,
+          "reasoning": "Gradual automation of administrative tasks slightly offsets demand growth."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 3.6,
+          "reasoning": "Continued steady demand for personalized advice sustains employment growth."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 5.1,
+          "reasoning": "Population and insurance product complexity growth outpace AI-driven efficiency gains."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 6.5,
+          "reasoning": "Cumulative growth approaches BLS 10-year projection ceiling of 7%."
+        }
+      ]
+    },
+    "job-22": {
+      "tasks": [
+        {
+          "taskName": "Interview clients to determine their current income, expenses, insurance coverage, tax status, financial objectives, and risk tolerance needed to develop a financial plan.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.85
+        },
+        {
+          "taskName": "Analyze financial information obtained from clients to determine strategies for meeting clients' financial objectives.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.7
+        },
+        {
+          "taskName": "Answer clients' questions about the purposes and details of financial plans and strategies.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.65
+        },
+        {
+          "taskName": "Review clients' accounts and plans regularly to determine whether life changes, economic changes, or financial performance indicate a need for plan reassessment.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.6
+        },
+        {
+          "taskName": "Manage client portfolios, keeping client plans up-to-date.",
+          "aiCapabilityScore": 0.5,
+          "humanCriticalityScore": 0.75
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year for cumulative forecast."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 2.1,
+          "reasoning": "Steady demand growth as advisors adopt AI tools for efficiency."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 4.6,
+          "reasoning": "Continued hiring supported by aging population needing financial planning."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 7,
+          "reasoning": "Growth moderates slightly as AI handles more routine analysis tasks."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 9.5,
+          "reasoning": "Demand for personalized human advice sustains job growth."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 11.8,
+          "reasoning": "Approaches BLS 10-year cap with strong human-advisor demand persisting."
+        }
+      ]
+    },
+    "job-23": {
+      "tasks": [
+        {
+          "taskName": "Analyze credit data and financial statements to determine the degree of risk involved in extending credit or lending money.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.55
+        },
+        {
+          "taskName": "Complete loan applications, including credit analyses and summaries of loan requests, and submit to loan committees for approval.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.6
+        },
+        {
+          "taskName": "Generate financial ratios, using computer programs, to evaluate customers' financial status.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.3
+        },
+        {
+          "taskName": "Prepare reports that include the degree of risk involved in extending credit or lending money.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.5
+        },
+        {
+          "taskName": "Analyze financial data, such as income growth, quality of management, and market share to determine expected profitability of loans.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.65
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.2,
+          "reasoning": "Slight growth as demand for credit services offsets early AI adoption."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 0.55,
+          "reasoning": "Modest job growth continues as AI tools augment rather than replace analysts."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 0.9,
+          "reasoning": "Efficiency gains from AI slow hiring growth but demand remains steady."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 1.4,
+          "reasoning": "Continued economic demand for credit analysis supports modest growth."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 1.8,
+          "reasoning": "Cumulative growth nears BLS 10-year projection cap as AI reshapes task mix."
+        }
+      ]
+    },
+    "job-24": {
+      "tasks": [
+        {
+          "taskName": "Develop and analyze annual budgets for departments or organizations, identifying areas where costs can be reduced or resources optimized.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.6
+        },
+        {
+          "taskName": "Analyze budget proposals submitted by departments to determine whether they comply with organizational goals and legal requirements.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.7
+        },
+        {
+          "taskName": "Monitor budget allocations and expenditures to ensure spending stays within approved budget limits.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.45
+        },
+        {
+          "taskName": "Forecast future financial needs of the organization based on economic trends, historical data, and operational requirements.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.55
+        },
+        {
+          "taskName": "Prepare budget variance reports comparing actual spending against forecasts, and recommend corrective actions.",
+          "aiCapabilityScore": 0.68,
+          "humanCriticalityScore": 0.58
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.45,
+          "reasoning": "Modest hiring growth despite partial task automation by GenAI tools."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 0.95,
+          "reasoning": "Continued steady demand as analysts shift toward oversight roles."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 1.5,
+          "reasoning": "Gradual employment growth in line with organizational budgeting needs."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 2.1,
+          "reasoning": "Growth slows slightly as automation offsets some headcount expansion."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 2.7,
+          "reasoning": "Cumulative growth approaches the BLS 10-year projection ceiling."
+        }
+      ]
+    },
+    "job-25": {
+      "tasks": [
+        {
+          "taskName": "Apply mathematical or statistical techniques to address practical issues in finance, such as derivative valuation, securities trading, and risk management.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.7
+        },
+        {
+          "taskName": "Research or develop analytical tools to address issues such as portfolio construction, performance measurement, or pricing models.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.75
+        },
+        {
+          "taskName": "Interpret results of financial analysis procedures.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.8
+        },
+        {
+          "taskName": "Develop core analytical capabilities or model libraries, using advanced statistical, quantitative, or econometric techniques.",
+          "aiCapabilityScore": 0.5,
+          "humanCriticalityScore": 0.78
+        },
+        {
+          "taskName": "Define or recommend model specifications or data collection methods.",
+          "aiCapabilityScore": 0.4,
+          "humanCriticalityScore": 0.82
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year per methodology."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 1.4,
+          "reasoning": "Steady demand for risk expertise amid gradual AI tool adoption."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 2.9,
+          "reasoning": "Continued growth in financial risk oversight roles alongside automation of routine analysis."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 4.5,
+          "reasoning": "Increasing regulatory complexity sustains hiring despite AI-assisted efficiency gains."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 6.2,
+          "reasoning": "Demand growth continues as human judgment remains critical in interpreting model outputs."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 8,
+          "reasoning": "Cumulative growth approaches but stays within BLS 10-year projection cap."
+        }
+      ]
+    },
+    "job-26": {
+      "tasks": [
+        {
+          "taskName": "Examine documents to determine degree of risk from factors such as applicant health, financial standing and value, and condition of property.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.35
+        },
+        {
+          "taskName": "Decline excessive risks based on established underwriting guidelines and loss experience data.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.55
+        },
+        {
+          "taskName": "Write to field representatives, medical personnel, or others to obtain further information, quote rates, or explain company underwriting policies.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.4
+        },
+        {
+          "taskName": "Evaluate possibility of losses due to catastrophe or excessive insurance using actuarial and statistical data.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.5
+        },
+        {
+          "taskName": "Review company records to determine amount of insurance in force on single risk or group of closely related risks.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.2
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year for cumulative forecast."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -0.7,
+          "reasoning": "Early AI adoption begins streamlining document review and risk data tasks."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -1.5,
+          "reasoning": "Growing use of automated underwriting tools reduces headcount growth."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -2.3,
+          "reasoning": "Wider AI integration in risk assessment continues to displace routine underwriting work."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -3.1,
+          "reasoning": "Automation matures, offsetting demand even as insurance volumes grow."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -3.8,
+          "reasoning": "Cumulative decline approaches BLS 10-year projection cap as AI reshapes underwriting roles."
+        }
+      ]
+    },
+    "job-27": {
+      "tasks": [
+        {
+          "taskName": "Ascertain premium rates required and cash reserves and liabilities necessary to ensure payment of future benefits.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.6
+        },
+        {
+          "taskName": "Collaborate with programmers, underwriters, accounts, claims experts, and senior management to help companies develop plans for new lines of business.",
+          "aiCapabilityScore": 0.35,
+          "humanCriticalityScore": 0.8
+        },
+        {
+          "taskName": "Analyze statistical information to estimate mortality, accident, sickness, disability, and retirement rates.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.55
+        },
+        {
+          "taskName": "Design, review, and help administer insurance, annuity and pension plans, determining financial soundness and calculating premiums.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.65
+        },
+        {
+          "taskName": "Determine company policy and explain complex technical matters to company executives, government officials, shareholders, and policyholders.",
+          "aiCapabilityScore": 0.25,
+          "humanCriticalityScore": 0.9
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year for cumulative growth measurement."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 3.8,
+          "reasoning": "Steady demand growth continues despite gradual AI-assisted efficiency gains."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 8.2,
+          "reasoning": "Actuarial demand rises with regulatory complexity as AI handles routine calculations."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 12.9,
+          "reasoning": "Continued job growth as human judgment remains central to risk decisions."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 17.5,
+          "reasoning": "Growth trajectory tracks BLS projections with modest AI-driven productivity offset."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 21.5,
+          "reasoning": "Near full realization of BLS 10-year growth cap, tempered by AI task automation."
+        }
+      ]
+    },
+    "job-28": {
+      "tasks": [
+        {
+          "taskName": "Meet with applicants to obtain information for loan applications and to answer questions about the process.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.75
+        },
+        {
+          "taskName": "Analyze applicants' financial status, credit, and property evaluations to determine feasibility of granting loans.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.55
+        },
+        {
+          "taskName": "Approve loans within specified limits, and refer loan applications outside those limits to management for approval.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.8
+        },
+        {
+          "taskName": "Explain to customers the different types of loans and credit options that are available, as well as the terms of those services.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.6
+        },
+        {
+          "taskName": "Submit applications to credit analysts for verification and recommendation.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.3
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year for cumulative forecast."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.35,
+          "reasoning": "Slight hiring growth as demand persists despite early AI tool adoption."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 0.75,
+          "reasoning": "Continued modest growth as automation handles routine tasks, freeing capacity."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 1.3,
+          "reasoning": "Growth moderates as AI-driven efficiency reduces need for additional headcount."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 1.9,
+          "reasoning": "Employment growth slows further as automation offsets some hiring needs."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 2.5,
+          "reasoning": "Cumulative growth approaches BLS 10-year cap as AI reshapes task allocation."
+        }
+      ]
+    },
+    "job-29": {
+      "tasks": [
+        {
+          "taskName": "Analyze, manipulate, or process large sets of data using statistical software to identify patterns and generate insights.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.55
+        },
+        {
+          "taskName": "Apply feature selection algorithms to models predicting outcomes of interest, such as sales, attrition, and customer behaviour.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.6
+        },
+        {
+          "taskName": "Apply sampling techniques to determine groups to be surveyed or use complete enumeration methods.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.65
+        },
+        {
+          "taskName": "Clean and manipulate raw data using statistical software to prepare it for analysis.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.4
+        },
+        {
+          "taskName": "Compare models using statistical performance metrics, such as loss functions or proportion of explained variance.",
+          "aiCapabilityScore": 0.72,
+          "humanCriticalityScore": 0.58
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year for cumulative growth measurement."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 5.2,
+          "reasoning": "Strong demand growth continues to outpace AI-driven task automation."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 11,
+          "reasoning": "Employment expands as data science roles evolve alongside AI tools."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 17.5,
+          "reasoning": "Continued industry adoption of data-driven decision-making sustains hiring."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 24.8,
+          "reasoning": "Growth moderates slightly as AI augments routine analytical tasks."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 32,
+          "reasoning": "Cumulative growth approaches BLS 10-year projection cap of 36%."
+        }
+      ]
+    },
+    "job-30": {
+      "tasks": [
+        {
+          "taskName": "Analyze and interpret statistical data to identify significant differences in relationships among sources of information.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.75
+        },
+        {
+          "taskName": "Evaluate the statistical methods and procedures used to obtain data to ensure validity, applicability, efficiency, and accuracy.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.85
+        },
+        {
+          "taskName": "Report results of statistical analyses, including information in the form of graphs, charts, and tables.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.45
+        },
+        {
+          "taskName": "Determine whether statistical methods are appropriate, based on user needs or research questions of interest.",
+          "aiCapabilityScore": 0.4,
+          "humanCriticalityScore": 0.85
+        },
+        {
+          "taskName": "Prepare data for processing by organizing information, checking for inaccuracies, and adjusting and weighting the raw data.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.4
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year per methodology."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 5.2,
+          "reasoning": "Steady demand growth as data-driven decision making expands."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 11,
+          "reasoning": "Continued hiring driven by analytics needs, tempered by AI-assisted efficiency."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 17.5,
+          "reasoning": "Growth continues though AI tools automate routine reporting tasks."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 24,
+          "reasoning": "Sustained expansion in data science and research roles requiring human oversight."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 30.5,
+          "reasoning": "Approaches BLS 10-year cap as demand for skilled statisticians remains strong."
+        }
+      ]
+    },
+    "job-31": {
+      "tasks": [
+        {
+          "taskName": "Troubleshoot program and system malfunctions to restore normal functioning.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.65
+        },
+        {
+          "taskName": "Provide staff and users with assistance solving computer-related problems, such as malfunctions and program problems.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.55
+        },
+        {
+          "taskName": "Test, maintain, and monitor computer programs and systems, including coordinating the installation of computer programs and systems.",
+          "aiCapabilityScore": 0.5,
+          "humanCriticalityScore": 0.6
+        },
+        {
+          "taskName": "Use the computer in the analysis and solution of business problems, such as development of integrated production and inventory control and cost analysis systems.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.7
+        },
+        {
+          "taskName": "Coordinate and link the computer systems within an organization to increase compatibility so that information can be shared.",
+          "aiCapabilityScore": 0.35,
+          "humanCriticalityScore": 0.75
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year per BLS snapshot."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 2.1,
+          "reasoning": "Steady demand growth as AI adoption slightly offsets hiring needs."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 4.3,
+          "reasoning": "Continued digital transformation projects sustain hiring despite AI tool integration."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 6.4,
+          "reasoning": "Growth moderates as AI assists routine troubleshooting, but demand for system analysis persists."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 8.6,
+          "reasoning": "Organizations continue expanding IT infrastructure needing human-led coordination."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 10.5,
+          "reasoning": "Cumulative growth nears BLS 10-year projection cap as AI complements rather than replaces analysts."
+        }
+      ]
+    },
+    "job-32": {
+      "tasks": [
+        {
+          "taskName": "Analyze blueprints and other documentation to prepare time, cost, materials, and labor estimates.",
+          "aiCapabilityScore": 0.72,
+          "humanCriticalityScore": 0.55
+        },
+        {
+          "taskName": "Confer with engineers, architects, owners, contractors, and subcontractors on changes and adjustments to cost estimates.",
+          "aiCapabilityScore": 0.3,
+          "humanCriticalityScore": 0.85
+        },
+        {
+          "taskName": "Collect historical cost data to estimate costs for current or future products.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.35
+        },
+        {
+          "taskName": "Assess cost effectiveness of products, projects or services, tracking actual costs relative to bids as the project develops.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.55
+        },
+        {
+          "taskName": "Consult with clients, vendors, or construction foremen to discuss and formulate estimates and resolve issues.",
+          "aiCapabilityScore": 0.25,
+          "humanCriticalityScore": 0.88
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year for cumulative forecast."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.12,
+          "reasoning": "Slow initial adoption of AI tools in estimating workflows."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 0.28,
+          "reasoning": "Gradual efficiency gains offset modest demand growth."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 0.45,
+          "reasoning": "Increased AI-assisted estimating slightly tempers hiring growth."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 0.65,
+          "reasoning": "Continued construction demand supports steady employment growth."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 0.85,
+          "reasoning": "Employment growth approaches BLS 10-year projected cap."
+        }
+      ]
+    },
+    "job-33": {
+      "tasks": [
+        {
+          "taskName": "Administer employee insurance, pension, and savings plans, working with insurance brokers and plan carriers.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.55
+        },
+        {
+          "taskName": "Ensure company compliance with federal and state laws, including reporting requirements.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.65
+        },
+        {
+          "taskName": "Research employee benefit and health and safety practices, and recommend changes or modifications to existing policies.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.55
+        },
+        {
+          "taskName": "Advise managers and employees on state and federal employment regulations, collective agreements, benefit and compensation policies, and classification programs.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.75
+        },
+        {
+          "taskName": "Plan and develop curricula and materials for training programs and conduct training.",
+          "aiCapabilityScore": 0.5,
+          "humanCriticalityScore": 0.6
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year for cumulative forecast."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.9,
+          "reasoning": "Modest hiring growth as demand for compensation expertise persists despite early AI tool adoption."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 2,
+          "reasoning": "Continued steady demand with partial task automation offsetting some headcount growth."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 3.2,
+          "reasoning": "AI tools handle more routine compliance and benefits research, tempering growth."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 4.4,
+          "reasoning": "Employment growth continues but plateaus as automation absorbs administrative tasks."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 5.5,
+          "reasoning": "Growth approaches BLS 10-year cap as human judgment tasks remain resistant to automation."
+        }
+      ]
+    },
+    "job-34": {
+      "tasks": [
+        {
+          "taskName": "Develop and implement purchasing and contract management instructions, policies, and procedures.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.75
+        },
+        {
+          "taskName": "Locate vendors of materials, equipment or supplies, and interview them to determine product availability and terms of sales.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.65
+        },
+        {
+          "taskName": "Prepare bid awards requiring board approval.",
+          "aiCapabilityScore": 0.5,
+          "humanCriticalityScore": 0.8
+        },
+        {
+          "taskName": "Direct and coordinate activities of personnel engaged in buying, selling, and distributing materials, equipment, machinery, and supplies.",
+          "aiCapabilityScore": 0.3,
+          "humanCriticalityScore": 0.85
+        },
+        {
+          "taskName": "Review purchase order claims and contracts for conformance to company policy.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.6
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year for cumulative forecast."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.6,
+          "reasoning": "Modest hiring growth as demand for procurement oversight persists despite AI tool adoption."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 1.3,
+          "reasoning": "Continued steady growth aligned with BLS 10-year trajectory."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 2,
+          "reasoning": "AI adoption offsets some headcount growth but managerial oversight roles remain needed."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 2.8,
+          "reasoning": "Growth continues but tempers as automation absorbs more routine sourcing tasks."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 3.6,
+          "reasoning": "Approaches BLS 10-year cap reflecting slow but positive employment growth."
+        }
+      ]
+    },
+    "job-35": {
+      "tasks": [
+        {
+          "taskName": "Buy merchandise or commodities for resale to wholesale or retail consumers.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.6
+        },
+        {
+          "taskName": "Negotiate prices, discount terms, or transportation arrangements with suppliers.",
+          "aiCapabilityScore": 0.4,
+          "humanCriticalityScore": 0.75
+        },
+        {
+          "taskName": "Examine, select, order, or purchase merchandise consistent with quality, quantity, specification requirements, or other factors.",
+          "aiCapabilityScore": 0.5,
+          "humanCriticalityScore": 0.65
+        },
+        {
+          "taskName": "Recommend mark-up rates, mark-down rates, or merchandise selling prices.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.45
+        },
+        {
+          "taskName": "Obtain information about customer needs or preferences by conferring with sales or purchasing personnel.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.7
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -0.7,
+          "reasoning": "Early adoption of AI analytics tools begins trimming buyer headcount growth."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -1.5,
+          "reasoning": "Increased use of AI for demand forecasting and pricing reduces need for some buyer tasks."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -2.3,
+          "reasoning": "Continued automation of procurement analytics slows hiring in the role."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -3.2,
+          "reasoning": "Broader retail tech adoption further consolidates buyer responsibilities."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -4,
+          "reasoning": "Cumulative decline reaches BLS projected 10-year contraction ceiling."
+        }
+      ]
+    },
+    "job-36": {
+      "tasks": [
+        {
+          "taskName": "Monitor and follow applicable laws and regulations related to procurement and contracting.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.75
+        },
+        {
+          "taskName": "Purchase the highest quality merchandise at the lowest possible price and in correct amounts.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.65
+        },
+        {
+          "taskName": "Formulate policies and procedures for bid proposals and procurement of goods and services.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.8
+        },
+        {
+          "taskName": "Prepare purchase orders, solicit bid proposals, and review requisitions for goods and services.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.45
+        },
+        {
+          "taskName": "Write and review product specifications, maintaining a working technical knowledge of the goods or services to be purchased.",
+          "aiCapabilityScore": 0.5,
+          "humanCriticalityScore": 0.7
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year for cumulative forecast."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.2,
+          "reasoning": "Slow initial adoption of AI tools in procurement workflows."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 0.55,
+          "reasoning": "Gradual efficiency gains offset by steady demand for procurement roles."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 0.95,
+          "reasoning": "Continued modest growth as AI augments rather than replaces agents."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 1.4,
+          "reasoning": "Employment growth tempers as automation handles more routine tasks."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 1.8,
+          "reasoning": "Cumulative growth approaches BLS 10-year projection cap."
+        }
+      ]
+    },
+    "job-37": {
+      "tasks": [
+        {
+          "taskName": "Set and monitor product standards, examining samples of raw products or directing testing during processing, to ensure finished products are of prescribed quality.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.6
+        },
+        {
+          "taskName": "Direct or coordinate production, processing, distribution, or marketing activities of industrial organizations.",
+          "aiCapabilityScore": 0.35,
+          "humanCriticalityScore": 0.85
+        },
+        {
+          "taskName": "Review processing schedules or production orders to make decisions concerning inventory requirements, staffing requirements, work procedures, or duty assignments.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.55
+        },
+        {
+          "taskName": "Review operations and confer with technical or administrative staff to resolve production or processing problems.",
+          "aiCapabilityScore": 0.3,
+          "humanCriticalityScore": 0.8
+        },
+        {
+          "taskName": "Hire, train, evaluate, or discharge staff or resolve personnel grievances.",
+          "aiCapabilityScore": 0.2,
+          "humanCriticalityScore": 0.9
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year for cumulative forecast."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.35,
+          "reasoning": "Modest growth as production demand slightly rises despite AI-assisted efficiency gains."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 0.75,
+          "reasoning": "Continued gradual employment growth consistent with OOH outlook."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 1.15,
+          "reasoning": "Slight deceleration as AI tools optimize scheduling and quality monitoring tasks."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 1.55,
+          "reasoning": "Growth continues but tempered by automation of routine oversight tasks."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 2,
+          "reasoning": "Reaches BLS 10-year cumulative cap reflecting steady but AI-moderated growth."
+        }
+      ]
+    },
+    "job-38": {
+      "tasks": [
+        {
+          "taskName": "Conduct user research, including usability testing, interviews, and surveys, to determine design requirements and user pain points.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.8
+        },
+        {
+          "taskName": "Collaborate with front-end and back-end developers to complete the full scope of digital product development projects.",
+          "aiCapabilityScore": 0.35,
+          "humanCriticalityScore": 0.75
+        },
+        {
+          "taskName": "Analyze user feedback and behavioral data to identify improvements to interface designs and user flows.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.55
+        },
+        {
+          "taskName": "Create wireframes, prototypes, and high-fidelity mockups to communicate design solutions to stakeholders.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.5
+        },
+        {
+          "taskName": "Confer with management or development teams to prioritize needs, resolve conflicts, develop content criteria, or choose solutions.",
+          "aiCapabilityScore": 0.25,
+          "humanCriticalityScore": 0.85
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year for cumulative forecast."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 2.1,
+          "reasoning": "Steady demand growth as AI tools augment but do not replace core design work."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 4.6,
+          "reasoning": "Continued digital product expansion supports moderate hiring growth."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 7.2,
+          "reasoning": "AI-assisted workflows increase designer productivity, tempering growth slightly while demand rises."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 10.1,
+          "reasoning": "Growing need for human-centered design oversight amid AI-generated design tools."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 13.5,
+          "reasoning": "Sustained industry growth keeps pace near BLS 10-year projection cap."
+        }
+      ]
+    },
+    "job-39": {
+      "tasks": [
+        {
+          "taskName": "Direct daily operations of department, analyzing workflow, establishing priorities, developing standards and setting deadlines.",
+          "aiCapabilityScore": 0.35,
+          "humanCriticalityScore": 0.85
+        },
+        {
+          "taskName": "Meet with department heads, managers, supervisors, vendors, and others, to solicit cooperation and resolve problems.",
+          "aiCapabilityScore": 0.15,
+          "humanCriticalityScore": 0.95
+        },
+        {
+          "taskName": "Review project plans to plan and coordinate project activity.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.75
+        },
+        {
+          "taskName": "Assign and review the work of systems analysts, programmers, and other computer-related workers.",
+          "aiCapabilityScore": 0.4,
+          "humanCriticalityScore": 0.8
+        },
+        {
+          "taskName": "Provide users with technical support for computer problems.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.5
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year for forecast."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 2.1,
+          "reasoning": "Steady demand for IT leadership amid gradual AI tool adoption."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 4.6,
+          "reasoning": "Continued growth in IT management roles as digital transformation persists."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 7.2,
+          "reasoning": "Rising need for oversight of AI-integrated systems and teams."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 10.1,
+          "reasoning": "Sustained hiring as organizations scale technology infrastructure."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 13.5,
+          "reasoning": "Approaching BLS 10-year cap with strong long-term demand for IT managers."
+        }
+      ]
+    },
+    "job-40": {
+      "tasks": [
+        {
+          "taskName": "Develop plans to safeguard computer files against accidental or unauthorized modification, destruction, or disclosure and to meet emergency data processing needs.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.8
+        },
+        {
+          "taskName": "Monitor current reports of computer viruses to determine when to update virus protection systems.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.45
+        },
+        {
+          "taskName": "Encrypt data transmissions and erect firewalls to conceal confidential information and to keep out tainted digital transfers.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.65
+        },
+        {
+          "taskName": "Perform risk assessments and execute tests of data processing system to ensure functioning of data processing activities and security measures.",
+          "aiCapabilityScore": 0.5,
+          "humanCriticalityScore": 0.75
+        },
+        {
+          "taskName": "Modify computer security files to incorporate new software, correct errors, or change individual access status.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.55
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year for cumulative growth measurement."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 5.1,
+          "reasoning": "Rising cyber threats and regulatory demands drive steady hiring despite AI tool adoption."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 10.8,
+          "reasoning": "Continued demand for skilled analysts as attack surfaces expand faster than automation can offset."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 16.9,
+          "reasoning": "Growth moderates slightly as AI-assisted monitoring absorbs routine detection tasks."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 23.5,
+          "reasoning": "Strong demand persists driven by critical infrastructure and compliance needs."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 29.8,
+          "reasoning": "Cumulative growth approaches BLS 10-year ceiling as workforce need remains high despite AI augmentation."
+        }
+      ]
+    },
+    "job-41": {
+      "tasks": [
+        {
+          "taskName": "Write supporting code for Web applications or Web sites.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.35
+        },
+        {
+          "taskName": "Design, build, or maintain Web sites, using authoring or scripting languages, content creation tools, management tools, and digital media.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.45
+        },
+        {
+          "taskName": "Back up files from Web sites to local directories for instant recovery in case of problems.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.2
+        },
+        {
+          "taskName": "Select programming languages, design tools, or applications.",
+          "aiCapabilityScore": 0.5,
+          "humanCriticalityScore": 0.55
+        },
+        {
+          "taskName": "Evaluate code to ensure that it is valid, is properly structured, meets industry standards, and is compatible with browsers, devices, or operating systems.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.5
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year for cumulative forecast."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 1.1,
+          "reasoning": "Modest hiring growth as AI coding tools boost productivity without displacing roles yet."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 2.3,
+          "reasoning": "Continued demand for web development offset by AI-driven efficiency gains."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 3.8,
+          "reasoning": "Steady growth as businesses expand digital presence despite automation of routine coding tasks."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 5.6,
+          "reasoning": "Growth moderates as AI handles more routine tasks, shifting demand toward higher-skill roles."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 7.2,
+          "reasoning": "Approaches BLS 10-year cap as AI reshapes but does not eliminate need for web developers."
+        }
+      ]
+    },
+    "job-42": {
+      "tasks": [
+        {
+          "taskName": "Modify existing databases and database management systems or direct programmers and analysts to make changes.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.55
+        },
+        {
+          "taskName": "Plan, coordinate, and implement security measures to safeguard information in computer files against accidental or unauthorized damage, modification or disclosure.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.8
+        },
+        {
+          "taskName": "Plan and install upgrades of database management system software to enhance database performance.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.65
+        },
+        {
+          "taskName": "Specify users and user access levels for each segment of database.",
+          "aiCapabilityScore": 0.5,
+          "humanCriticalityScore": 0.6
+        },
+        {
+          "taskName": "Test changes to database applications or systems.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.45
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 1.5,
+          "reasoning": "Gradual demand growth as data volumes increase despite AI-assisted efficiencies."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 3.2,
+          "reasoning": "Continued cloud migration and data governance needs support modest hiring growth."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 4.8,
+          "reasoning": "AI tools handle routine maintenance, but security and architecture roles keep expanding."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 6.5,
+          "reasoning": "Growth moderates as automation absorbs more routine administrative tasks."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 8,
+          "reasoning": "Employment nears BLS 10-year projected ceiling with steady but slowing growth."
+        }
+      ]
+    },
+    "job-43": {
+      "tasks": [
+        {
+          "taskName": "Define project scope, goals, and deliverables that support business objectives in collaboration with senior management and stakeholders.",
+          "aiCapabilityScore": 0.35,
+          "humanCriticalityScore": 0.9
+        },
+        {
+          "taskName": "Develop detailed project plans and manage all implementation processes including resource allocation, progress tracking, and risk mitigation.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.75
+        },
+        {
+          "taskName": "Communicate project status, issues, and changes to stakeholders and sponsors in a clear and timely manner.",
+          "aiCapabilityScore": 0.5,
+          "humanCriticalityScore": 0.8
+        },
+        {
+          "taskName": "Identify and manage project risks and issues, developing contingency plans as necessary.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.82
+        },
+        {
+          "taskName": "Coordinate cross-functional teams, facilitating collaboration across development, QA, operations, and business units.",
+          "aiCapabilityScore": 0.3,
+          "humanCriticalityScore": 0.88
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 1.6,
+          "reasoning": "Gradual demand growth as AI tools assist but don't replace PM roles."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 3.4,
+          "reasoning": "Continued project management demand with modest AI-driven efficiency gains."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 5.5,
+          "reasoning": "Steady industry growth outpaces automation-driven task consolidation."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 7.8,
+          "reasoning": "Sustained IT project demand keeps growth trending toward BLS projections."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 10.2,
+          "reasoning": "Cumulative growth approaches but stays within BLS 11% ten-year projection."
+        }
+      ]
+    },
+    "job-44": {
+      "tasks": [
+        {
+          "taskName": "Review financial statements, sales or activity reports, or other performance data to measure productivity or goal achievement or to identify areas needing cost reduction or program improvement.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.45
+        },
+        {
+          "taskName": "Direct and coordinate activities of businesses or departments concerned with the production, pricing, sales, or distribution of products.",
+          "aiCapabilityScore": 0.35,
+          "humanCriticalityScore": 0.8
+        },
+        {
+          "taskName": "Direct administrative activities directly related to making products or providing services.",
+          "aiCapabilityScore": 0.4,
+          "humanCriticalityScore": 0.7
+        },
+        {
+          "taskName": "Prepare staff work schedules and assign specific duties.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.5
+        },
+        {
+          "taskName": "Direct or coordinate financial or budget activities to fund operations, maximize investments, or increase efficiency.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.65
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year for cumulative forecast."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.35,
+          "reasoning": "Modest hiring growth slightly offset by AI-driven efficiency in reporting tasks."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 0.85,
+          "reasoning": "Continued gradual demand growth as AI augments rather than replaces managerial roles."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 1.4,
+          "reasoning": "Steady employment growth in line with BLS projections despite AI adoption."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 2.1,
+          "reasoning": "Slower growth as AI tools handle more routine administrative and analytical tasks."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 2.7,
+          "reasoning": "Approaches BLS 10-year cap as AI augments efficiency without displacing core leadership roles."
+        }
+      ]
+    },
+    "job-45": {
+      "tasks": [
+        {
+          "taskName": "Serve as a link between management and employees by handling questions, interpreting and administering contracts and helping resolve work-related problems.",
+          "aiCapabilityScore": 0.4,
+          "humanCriticalityScore": 0.85
+        },
+        {
+          "taskName": "Plan, direct, supervise, and coordinate work activities of subordinates and staff relating to employment, compensation, labor relations, and employee relations.",
+          "aiCapabilityScore": 0.3,
+          "humanCriticalityScore": 0.9
+        },
+        {
+          "taskName": "Perform difficult staffing duties, including dealing with understaffing, refereeing disputes, firing employees, and administering disciplinary procedures.",
+          "aiCapabilityScore": 0.15,
+          "humanCriticalityScore": 0.95
+        },
+        {
+          "taskName": "Represent organization at personnel-related hearings and investigations.",
+          "aiCapabilityScore": 0.2,
+          "humanCriticalityScore": 0.92
+        },
+        {
+          "taskName": "Negotiate bargaining agreements and help interpret labor contracts.",
+          "aiCapabilityScore": 0.25,
+          "humanCriticalityScore": 0.93
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year for cumulative forecast."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.75,
+          "reasoning": "Steady demand for HR managers amid modest AI adoption for routine tasks."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 1.6,
+          "reasoning": "Continued job growth as AI augments rather than replaces core HR judgment tasks."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 2.5,
+          "reasoning": "Gradual employment growth consistent with BLS occupational outlook trajectory."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 3.4,
+          "reasoning": "Sustained demand for human-centric HR functions despite AI tool integration."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 4.2,
+          "reasoning": "Cumulative growth approaches but stays within BLS 10-year projection cap."
+        }
+      ]
+    },
+    "job-46": {
+      "tasks": [
+        {
+          "taskName": "Assign duties or responsibilities to project personnel.",
+          "aiCapabilityScore": 0.35,
+          "humanCriticalityScore": 0.75
+        },
+        {
+          "taskName": "Communicate with key stakeholders to determine project requirements and objectives.",
+          "aiCapabilityScore": 0.3,
+          "humanCriticalityScore": 0.9
+        },
+        {
+          "taskName": "Confer with project personnel to identify and resolve problems.",
+          "aiCapabilityScore": 0.25,
+          "humanCriticalityScore": 0.85
+        },
+        {
+          "taskName": "Create project status presentations for delivery to customers or project personnel.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.4
+        },
+        {
+          "taskName": "Develop or update project plans including information such as objectives, technologies, schedules, funding, and staffing.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.65
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year per BLS snapshot."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 1.1,
+          "reasoning": "Steady demand growth with modest AI-driven efficiency gains."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 2.4,
+          "reasoning": "Continued project management demand outpaces automation displacement."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 3.8,
+          "reasoning": "AI tools augment reporting tasks but core coordination roles persist."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 5.3,
+          "reasoning": "Growth tracks toward BLS decade projection with slight AI-driven tempering."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 6.5,
+          "reasoning": "Approaches BLS 7% ceiling as demand growth slightly offsets automation."
+        }
+      ]
+    },
+    "job-47": {
+      "tasks": [
+        {
+          "taskName": "Present information with a variety of instructional techniques or formats, such as role playing, simulations, team exercises, group discussions, videos, or lectures.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.7
+        },
+        {
+          "taskName": "Obtain, organize, or develop training procedure manuals, guides, or course materials, such as handouts or visual materials.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.35
+        },
+        {
+          "taskName": "Evaluate modes of training delivery, such as in-person or virtual, to optimize training effectiveness, training costs, or environmental impacts.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.55
+        },
+        {
+          "taskName": "Offer specific training programs to help workers maintain or improve job skills.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.65
+        },
+        {
+          "taskName": "Assess training needs through surveys, interviews with employees, focus groups, or consultation with managers, instructors, or customer representatives.",
+          "aiCapabilityScore": 0.4,
+          "humanCriticalityScore": 0.75
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year for cumulative growth forecast."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 1.3,
+          "reasoning": "Modest hiring growth as AI tools assist content creation but demand for trainers persists."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 2.8,
+          "reasoning": "Continued steady growth as organizations expand upskilling programs amid AI adoption."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 4.3,
+          "reasoning": "Growth moderates as AI automates content/logistics tasks, tempering headcount needs."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 5.9,
+          "reasoning": "Demand growth continues driven by reskilling needs from workplace AI integration."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 7.2,
+          "reasoning": "Cumulative growth nears BLS 8% ceiling, reflecting sustained but AI-tempered occupational demand."
+        }
+      ]
+    },
+    "job-48": {
+      "tasks": [
+        {
+          "taskName": "Interpret and explain human resources policies, procedures, laws, standards, or regulations.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.55
+        },
+        {
+          "taskName": "Hire employees and process hiring-related paperwork.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.65
+        },
+        {
+          "taskName": "Maintain current knowledge of Equal Employment Opportunity (EEO) and affirmative action guidelines and laws.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.6
+        },
+        {
+          "taskName": "Prepare or maintain employment records related to events, such as hiring, termination, leaves, transfers, or promotions, using human resources management system software.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.3
+        },
+        {
+          "taskName": "Address employee relations issues, such as harassment allegations, work complaints, or other employee concerns.",
+          "aiCapabilityScore": 0.25,
+          "humanCriticalityScore": 0.95
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year for cumulative forecast."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.9,
+          "reasoning": "Modest hiring growth offset by early AI-driven efficiency in records tasks."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 1.8,
+          "reasoning": "Continued demand for employee relations work sustains headcount growth."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 2.7,
+          "reasoning": "AI automates more administrative tasks but overall role demand still expands."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 3.6,
+          "reasoning": "Growth moderates as AI tools handle more compliance and records work."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 4.5,
+          "reasoning": "Cumulative growth stays within BLS 6% cap, reflecting steady but tempered demand."
+        }
+      ]
+    },
+    "job-49": {
+      "tasks": [
+        {
+          "taskName": "Analyze training needs to develop new training programs or modify and improve existing programs.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.6
+        },
+        {
+          "taskName": "Evaluate instructor performance and the effectiveness of training programs, providing recommendations for improvement.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.7
+        },
+        {
+          "taskName": "Plan, develop, and provide training and staff development programs, using knowledge of the effectiveness of methods such as classroom training, demonstrations, on-the-job training, meetings, conferences, and workshops.",
+          "aiCapabilityScore": 0.5,
+          "humanCriticalityScore": 0.7
+        },
+        {
+          "taskName": "Confer with management and conduct surveys to identify training needs based on projected production processes, changes, and other factors.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.75
+        },
+        {
+          "taskName": "Conduct orientation sessions and arrange on-the-job training for new hires.",
+          "aiCapabilityScore": 0.4,
+          "humanCriticalityScore": 0.8
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year for cumulative forecast."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 1.1,
+          "reasoning": "Gradual demand growth as organizations expand training functions."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 2.3,
+          "reasoning": "Continued hiring growth with modest AI-driven efficiency offsets."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 3.6,
+          "reasoning": "Steady employment growth in line with BLS projections."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 5,
+          "reasoning": "Growth continues but tempered by AI adoption in content development."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 6.5,
+          "reasoning": "Approaches the 7% ceiling as demand for skilled trainers persists despite automation."
+        }
+      ]
+    },
+    "job-50": {
+      "tasks": [
+        {
+          "taskName": "Direct preparation and distribution of written and verbal information to inform employees of benefits, compensation, and personnel policies.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.35
+        },
+        {
+          "taskName": "Design, evaluate, and modify benefits policies to ensure that programs are current, competitive, and in compliance with legal requirements.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.8
+        },
+        {
+          "taskName": "Fulfill all reporting requirements of all relevant government rules and regulations, including ERISA.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.75
+        },
+        {
+          "taskName": "Analyze compensation policies, government regulations, and prevailing wage rates to develop competitive compensation plan.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.7
+        },
+        {
+          "taskName": "Identify and implement benefits to increase the quality of life for employees by working with brokers and researching benefits issues.",
+          "aiCapabilityScore": 0.4,
+          "humanCriticalityScore": 0.75
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year for cumulative forecast."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.65,
+          "reasoning": "Modest hiring growth as compliance and compensation needs persist despite AI-assisted drafting."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 1.35,
+          "reasoning": "Continued steady demand as firms expand benefits offerings amid competitive labor markets."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 2.05,
+          "reasoning": "AI tools handle routine communication tasks, slightly tempering but not reversing growth."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 2.8,
+          "reasoning": "Growing regulatory complexity sustains need for human oversight and expertise."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 3.6,
+          "reasoning": "Cumulative growth approaches but stays under the BLS 10-year projected ceiling."
+        }
+      ]
+    },
+    "job-51": {
+      "tasks": [
+        {
+          "taskName": "Analyze areas of potential risk to the assets, earning capacity, or success of organizations.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.8
+        },
+        {
+          "taskName": "Analyze new legislation to determine impact on risk exposure.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.75
+        },
+        {
+          "taskName": "Conduct statistical analyses to quantify risk, using statistical analysis software or econometric models.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.6
+        },
+        {
+          "taskName": "Confer with traders to identify and communicate risks associated with specific trading strategies or positions.",
+          "aiCapabilityScore": 0.3,
+          "humanCriticalityScore": 0.9
+        },
+        {
+          "taskName": "Consult financial literature to ensure use of the latest models or statistical techniques.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.55
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year for cumulative growth measurement."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 1.5,
+          "reasoning": "Steady demand growth slightly offset by early AI-driven efficiency gains."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 3.1,
+          "reasoning": "Continued hiring growth as regulatory complexity outpaces automation gains."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 4.8,
+          "reasoning": "Gradual AI adoption tempers headcount growth but demand remains positive."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 6.5,
+          "reasoning": "Firms increasingly integrate AI tools, moderating growth while employment still expands."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 8.2,
+          "reasoning": "Cumulative growth approaches BLS 10-year cap as AI augments rather than replaces analysts."
+        }
+      ]
+    }
+  }
+}

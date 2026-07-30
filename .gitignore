@@ -16,6 +16,10 @@ dist-ssr
 .env
 .env.*
 
+# Resume cache for `npm run generate-scores` (intermediate only —
+# the committed artifact is src/data/ai_scores.json)
+data/ai_scores_cache.json
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

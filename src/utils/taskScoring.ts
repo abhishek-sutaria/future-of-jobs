@@ -44,21 +44,26 @@ interface ScoreCache {
 const CACHE_KEY = 'foj_ai_scores_v1';
 // v4 = cumulative % from 2025 baseline (not YoY deltas).
 // v5 = prompts grounded in inlined BLS numbers; post-parse forecast cap validation.
-const CACHE_VERSION = 5;
+export const CACHE_VERSION = 5;
 const CACHE_TTL_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
 const RATE_LIMIT_MS = 1200; // stay under free-tier limits (~50 req/min)
 
-export function loadScoreCache(): Record<string, JobAnalysisResult> | null {
+/** Cached scores plus the time they were written, or null if absent/stale. */
+export function loadScoreCacheWithMeta(): { data: Record<string, JobAnalysisResult>; timestamp: number } | null {
     try {
         const raw = localStorage.getItem(CACHE_KEY);
         if (!raw) return null;
         const cache: ScoreCache = JSON.parse(raw);
         if (cache.version !== CACHE_VERSION) { localStorage.removeItem(CACHE_KEY); return null; }
         if (Date.now() - cache.timestamp > CACHE_TTL_MS) { localStorage.removeItem(CACHE_KEY); return null; }
-        return cache.data;
+        return { data: cache.data, timestamp: cache.timestamp };
     } catch {
         return null;
     }
+}
+
+export function loadScoreCache(): Record<string, JobAnalysisResult> | null {
+    return loadScoreCacheWithMeta()?.data ?? null;
 }
 
 export function saveScoreCache(data: Record<string, JobAnalysisResult>): void {
@@ -106,16 +111,23 @@ function assertValidYearlyForecast(projectedGrowth: number, points: ForecastPoin
     }
 }
 
-async function callAIForJobAnalysis(
+/**
+ * Builds the job-analysis prompt. Pure — no I/O.
+ *
+ * Shared by the in-app scoring path (via callClaudeJSON) and the build-time
+ * generator (scripts/generate_ai_scores.ts) so precomputed scores and
+ * user-refreshed scores can never drift apart.
+ */
+export function buildJobAnalysisPrompt(
     jobTitle: string,
     taskNames: string[],
     employment: number,
     projectedGrowth: number,
-): Promise<JobAnalysisResult> {
+): string {
     const growthLabel = `${projectedGrowth >= 0 ? '+' : ''}${projectedGrowth}%`;
     const years = Array.from({ length: YEAR_MAX - YEAR_MIN + 1 }, (_, i) => YEAR_MIN + i);
 
-    const prompt = `You are an expert labor economist analyzing the impact of Generative AI on job tasks.
+    return `You are an expert labor economist analyzing the impact of Generative AI on job tasks.
 
 Job Title: "${jobTitle}"
 
@@ -152,9 +164,24 @@ Return ONLY a valid JSON object. No markdown, no extra text:
 ${years.map(y => `    { "year": ${y}, "growthImpact": 0.00, "reasoning": "<one short sentence>" }`).join(',\n')}
   ]
 }`;
+}
 
-    const parsed = await callClaudeJSON(prompt, JobTaskScoringSchema);
+/** Raw shape returned by JobTaskScoringSchema — see ./claude. */
+type RawJobAnalysis = {
+    tasks: { taskName?: string; aiCapabilityScore: number; humanCriticalityScore: number }[];
+    yearlyForecast: { year: number; growthImpact: number; reasoning?: string }[];
+};
 
+/**
+ * Normalizes + validates a parsed Claude response into a JobAnalysisResult.
+ * Pure — no I/O. Throws if the forecast violates the BLS cap / baseline rules.
+ * Shared by the runtime and the build-time generator (see buildJobAnalysisPrompt).
+ */
+export function parseJobAnalysis(
+    parsed: RawJobAnalysis,
+    taskNames: string[],
+    projectedGrowth: number,
+): JobAnalysisResult {
     const tasks: TaskScore[] = parsed.tasks.map((s, i) => ({
         taskName: taskNames[i] ?? s.taskName ?? '',
         aiCapabilityScore: Math.max(0, Math.min(1, Number(s.aiCapabilityScore) || 0)),
@@ -173,6 +200,17 @@ ${years.map(y => `    { "year": ${y}, "growthImpact": 0.00, "reasoning": "<one s
     assertValidYearlyForecast(projectedGrowth, yearlyForecast);
 
     return { tasks, yearlyForecast };
+}
+
+async function callAIForJobAnalysis(
+    jobTitle: string,
+    taskNames: string[],
+    employment: number,
+    projectedGrowth: number,
+): Promise<JobAnalysisResult> {
+    const prompt = buildJobAnalysisPrompt(jobTitle, taskNames, employment, projectedGrowth);
+    const parsed = await callClaudeJSON(prompt, JobTaskScoringSchema);
+    return parseJobAnalysis(parsed, taskNames, projectedGrowth);
 }
 
 function sleep(ms: number) { return new Promise(r => setTimeout(r, ms)); }

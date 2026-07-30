@@ -1,10 +1,9 @@
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { Landscape } from './components/Landscape';
 import { UI } from './components/UI';
 import { MapView } from './components/MapView';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { ApiKeyModal } from './components/ApiKeyModal';
-import { StartupAnalysisOverlay } from './components/StartupAnalysisOverlay';
 import { useStore } from './store';
 
 function WebGLFallback() {
@@ -34,65 +33,29 @@ function App() {
   const hasAIScores = useStore((state) => state.hasAIScores);
   const isScoring = useStore((state) => state.isScoring);
   const hydrateAIConfig = useStore((state) => state.hydrateAIConfig);
-  const startupAnalysisState = useStore((state) => state.startupAnalysisState);
-  const hasShownStartupGate = useStore((state) => state.hasShownStartupGate);
-  const startStartupAnalysisGate = useStore((state) => state.startStartupAnalysisGate);
-  const finishStartupAnalysisGate = useStore((state) => state.finishStartupAnalysisGate);
-  const dismissStartupAnalysisGate = useStore((state) => state.dismissStartupAnalysisGate);
-  const startupGateTimerRef = useRef<number | null>(null);
-  const postGateScoreAttemptsRef = useRef(0);
+  const scoresSource = useStore((state) => state.scoresSource);
 
   useEffect(() => {
     hydrateAIConfig();
   }, [hydrateAIConfig]);
 
+  // BLS employment refresh. Deliberately not awaited and not gated behind any
+  // overlay — it's one batched call with a 24h cache, and the app is fully
+  // usable from bundled values while it lands.
+  useEffect(() => {
+    void fetchRealData();
+  }, [fetchRealData]);
+
+  // Scores normally come precomputed from src/data/ai_scores.json (applied at
+  // store init), so nothing to do here. Only fall back to live scoring when that
+  // file is missing/stale — and even then in the background, never blocking.
   useEffect(() => {
     if (!hasConfiguredAI) return;
-    if (hasShownStartupGate) return;
-
-    // Load BLS employment data first, then score all job tasks with Claude.
-    // scoreAllJobsWithAI reads from localStorage cache on repeat visits
-    // so the API is only called once per 30 days.
-    startStartupAnalysisGate();
-    fetchRealData()
-      .then(() => scoreAllJobsWithAI())
-      .finally(() => finishStartupAnalysisGate());
-  }, [
-    hasConfiguredAI,
-    hasShownStartupGate,
-    fetchRealData,
-    scoreAllJobsWithAI,
-    startStartupAnalysisGate,
-    finishStartupAnalysisGate,
-  ]);
-
-  // If startup bulk scoring produced no merged AI data (API errors, no key, etc.),
-  // hasAIScores stays false but the gate effect above never runs again. Retry a
-  // limited number of times after the gate dismisses so peaks get forecasts
-  // without requiring a full page refresh.
-  useEffect(() => {
-    if (!hasConfiguredAI || !hasShownStartupGate) return;
+    if (scoresSource !== 'none') return;
     if (hasAIScores || isScoring) return;
-    if (postGateScoreAttemptsRef.current >= 2) return;
-    postGateScoreAttemptsRef.current += 1;
+    console.warn('[Scores] No precomputed scores found — falling back to live scoring. Run `npm run generate-scores`.');
     void scoreAllJobsWithAI();
-  }, [hasConfiguredAI, hasShownStartupGate, hasAIScores, isScoring, scoreAllJobsWithAI]);
-
-  useEffect(() => {
-
-    if (startupAnalysisState !== 'done' || hasShownStartupGate) return;
-    startupGateTimerRef.current = window.setTimeout(() => {
-      dismissStartupAnalysisGate();
-      startupGateTimerRef.current = null;
-    }, 2000);
-
-    return () => {
-      if (startupGateTimerRef.current !== null) {
-        window.clearTimeout(startupGateTimerRef.current);
-        startupGateTimerRef.current = null;
-      }
-    };
-  }, [startupAnalysisState, hasShownStartupGate, dismissStartupAnalysisGate]);
+  }, [hasConfiguredAI, scoresSource, hasAIScores, isScoring, scoreAllJobsWithAI]);
 
   return (
     <div className="relative w-full h-full bg-gray-900">
@@ -109,7 +72,6 @@ function App() {
 
       <UI />
       <ApiKeyModal />
-      <StartupAnalysisOverlay />
     </div>
   );
 }

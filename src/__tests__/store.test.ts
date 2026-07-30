@@ -26,6 +26,28 @@ describe('Store Logic: Truth in Data', () => {
         });
     });
 
+    // Guards the fix for the ~5-minute cold start: scores must come precomputed
+    // from src/data/ai_scores.json at module load, not from a blocking live pass.
+    // If this fails, either the file is missing or its schema version drifted —
+    // run `npm run generate-scores`.
+    it('seeds precomputed AI scores at store init, with no live scoring needed', () => {
+        const initial = useStore.getInitialState();
+
+        expect(initial.scoresSource).toBe('baked');
+        expect(initial.hasAIScores).toBe(true);
+        expect(initial.scoresGeneratedAt).toBeTypeOf('number');
+
+        const scored = initial.jobs.filter((j) => j.automationCostIndex > 0);
+        expect(scored.length).toBe(initial.jobs.length);
+
+        const withFullForecast = initial.jobs.filter((j) => (j.yearlyForecast?.length ?? 0) >= 6);
+        expect(withFullForecast.length).toBe(initial.jobs.length);
+
+        // Risk must actually vary, otherwise the terrain renders one flat color.
+        const indices = initial.jobs.map((j) => j.automationCostIndex);
+        expect(Math.max(...indices) - Math.min(...indices)).toBeGreaterThan(0.1);
+    });
+
     it('should initialize seed data with expected structure', () => {
         const jobs = useStore.getState().jobs;
         expect(jobs.length).toBeGreaterThan(0);
