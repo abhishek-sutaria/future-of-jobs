@@ -75,7 +75,21 @@ export function resolveInitialScores(): ResolvedScores {
 
     if (baked && cached) {
         // Missing timestamps sort oldest so a dated source always wins.
-        return (cached.generatedAt ?? 0) >= (baked.generatedAt ?? 0) ? cached : baked;
+        const cacheIsNewer = (cached.generatedAt ?? 0) >= (baked.generatedAt ?? 0);
+
+        // Layer the fresher source *over* the other rather than replacing it.
+        // A re-score skips any job whose response fails validation, so its cache
+        // can cover fewer jobs than the precomputed file; picking one wholesale
+        // would strip those jobs' scores and render them unscored after reload.
+        const scores = cacheIsNewer
+            ? { ...baked.scores, ...cached.scores }
+            : { ...cached.scores, ...baked.scores };
+
+        return {
+            scores,
+            source: cacheIsNewer ? 'cache' : 'baked',
+            generatedAt: cacheIsNewer ? cached.generatedAt : baked.generatedAt,
+        };
     }
     return cached ?? baked ?? EMPTY;
 }
