@@ -20,14 +20,19 @@ export const YearSlider: React.FC = () => {
         // centered instead of shifted left, while never overlapping it. Below md the
         // Legend is hidden, so the slider takes the full width — reserving 230px on a
         // 390px screen left it only 144px wide with a barely-scrubbable 110px track.
-        <div className="absolute inset-x-0 bottom-8 flex justify-center px-4 md:pr-[264px] pointer-events-none" style={{ zIndex: Z.timeBar }}>
+        <div className="absolute inset-x-0 bottom-6 flex justify-center px-4 md:pr-[264px] pointer-events-none" style={{ zIndex: Z.timeBar }}>
             <div className="w-full max-w-2xl pointer-events-auto">
-            <div data-tour="tour-slider" className="bg-gray-900/60 backdrop-blur-xl border border-cyan-400/25 rounded-2xl p-4 md:p-6 shadow-lg shadow-cyan-500/5 overflow-hidden">
-                {/* Peak height encoding toggle */}
-                <div className="flex items-center justify-between gap-3 mb-3 flex-wrap min-w-0">
-                    <span className="text-[10px] text-gray-500 uppercase tracking-widest font-semibold">
-                        Peak Height
-                    </span>
+            <div data-tour="tour-slider" className="bg-gray-900/60 backdrop-blur-xl border border-cyan-400/25 rounded-2xl px-4 py-3 md:px-6 md:py-4 shadow-lg shadow-cyan-500/5 overflow-hidden">
+                {/* Peak height encoding toggle. The mode hint sits beside the label instead
+                    of on its own line, so the card stays short and more terrain is visible.
+                    Font sizes are deliberately unchanged — only spacing was tightened. */}
+                <div className="flex items-start justify-between gap-3 mb-2 flex-wrap min-w-0">
+                    <div className="min-w-0">
+                        <p className="text-[10px] text-gray-500 uppercase tracking-widest font-semibold">
+                            Peak Height
+                        </p>
+                        <p className="text-[10px] text-gray-500 leading-snug break-words">{modeHint}</p>
+                    </div>
                     <div
                         role="radiogroup"
                         aria-label="Peak height encoding"
@@ -61,9 +66,8 @@ export const YearSlider: React.FC = () => {
                         </button>
                     </div>
                 </div>
-                <p className="text-[10px] text-gray-500 mb-3 leading-snug break-words">{modeHint}</p>
 
-                <div className="flex justify-between items-center mb-3 text-sm font-medium tracking-widest gap-2 min-w-0">
+                <div className="flex justify-between items-center mb-2 text-sm font-medium tracking-widest gap-2 min-w-0">
                     <span className="text-gray-500 text-xs">{YEAR_MIN}</span>
                     <span className="text-cyan-400 text-lg font-bold tabular-nums shrink-0 min-w-0 text-center" aria-live="polite">
                         {year.toFixed(0)}
@@ -92,7 +96,7 @@ export const YearSlider: React.FC = () => {
                         aria-valuemin={YEAR_MIN}
                         aria-valuemax={YEAR_MAX}
                         aria-valuenow={Math.round(year)}
-                        className="relative w-full h-6 appearance-none bg-transparent cursor-pointer z-10 slider-input"
+                        className="relative w-full h-5 appearance-none bg-transparent cursor-pointer z-10 slider-input"
                     />
                 </div>
             </div>
