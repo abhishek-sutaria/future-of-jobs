@@ -15,10 +15,12 @@ export const YearSlider: React.FC = () => {
         : 'Height = projected growth at this year';
 
     return (
-        // Full-width flex wrapper reserves just enough space on the right to clear
-        // the Legend (docked bottom-right, ~210px wide) so the slider stays visually
-        // centered instead of shifted left, while still never overlapping it.
-        <div className="absolute inset-x-0 bottom-8 flex justify-center px-4 pr-[230px] pointer-events-none" style={{ zIndex: Z.timeBar }}>
+        // At md+ the wrapper reserves just enough space on the right to clear the
+        // Legend (210px wide + its 24px right margin, plus a gap) so the slider stays visually
+        // centered instead of shifted left, while never overlapping it. Below md the
+        // Legend is hidden, so the slider takes the full width — reserving 230px on a
+        // 390px screen left it only 144px wide with a barely-scrubbable 110px track.
+        <div className="absolute inset-x-0 bottom-8 flex justify-center px-4 md:pr-[264px] pointer-events-none" style={{ zIndex: Z.timeBar }}>
             <div className="w-full max-w-2xl pointer-events-auto">
             <div data-tour="tour-slider" className="bg-gray-900/60 backdrop-blur-xl border border-cyan-400/25 rounded-2xl p-4 md:p-6 shadow-lg shadow-cyan-500/5 overflow-hidden">
                 {/* Peak height encoding toggle */}

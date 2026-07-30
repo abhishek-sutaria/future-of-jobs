@@ -1,10 +1,13 @@
 import React from 'react';
 import { Z } from '../config/layers';
 
+// Hidden below md: at 390px this 210px panel covers the terrain and squeezes the
+// time slider down to an unusable width. The colour scale is also explained in the
+// intro modal, so phones lose nothing critical.
 export const Legend: React.FC = () => {
     return (
         <div
-            className="absolute bottom-6 right-6 flex flex-col items-end gap-2 pointer-events-none select-none p-4 rounded-xl border border-cyan-400/15 bg-gray-900/60 backdrop-blur-md max-w-[210px]"
+            className="absolute bottom-6 right-6 hidden md:flex flex-col items-end gap-2 pointer-events-none select-none p-4 rounded-xl border border-cyan-400/15 bg-gray-900/60 backdrop-blur-md max-w-[210px]"
             style={{ zIndex: Z.base }}
             role="complementary"
             aria-label="Job Security Index legend"
