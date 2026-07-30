@@ -244,8 +244,15 @@ async function main(): Promise<void> {
     if (failed.length > 0) {
         console.log(`\n⚠️   ${failed.length} job(s) failed:`);
         for (const f of failed) console.log(`     · ${f.title}: ${f.reason.slice(0, 100)}`);
-        console.log('\n    Re-run to retry only the failures (successes are cached).');
+        console.log('\n    Re-run to retry only the failures (successes are kept in the resume cache).');
         process.exit(1);
+    }
+
+    // Drop the resume cache on a clean run. It exists to survive an interrupted
+    // run — keeping it would make the *next* run skip every job and merely
+    // re-stamp identical scores, defeating the point of re-running to refresh.
+    if (limit === null && fs.existsSync(CACHE_FILE)) {
+        fs.rmSync(CACHE_FILE);
     }
     console.log('✅  All jobs scored. Commit src/data/ai_scores.json so deploys include it.');
 }
