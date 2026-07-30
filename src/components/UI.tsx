@@ -36,28 +36,49 @@ export const UI: React.FC = () => {
     const [analysisError, setAnalysisError] = useState<string | null>(null);
     const missingApiKey = false;
 
+    // Jobs already auto-analyzed this session. This used to be inferred from
+    // `selectedJob.yearlyForecast` being absent, but forecasts now ship
+    // precomputed for every job, which made that check always short-circuit and
+    // silently stopped the deep-dive fields (resilience, volatility, traits)
+    // from ever loading. Track the intent directly instead.
+    const autoAnalyzedJobIdsRef = React.useRef<Set<string>>(new Set());
+
     // Auto-analyze selected job
     React.useEffect(() => {
-        if (!selectedJob || selectedJob.yearlyForecast || analysisLoading) return;
+        if (!selectedJob) return;
+        const jobId = selectedJob.id;
+        const { title, tasks, employment, projectedGrowth } = selectedJob;
+
+        // Don't leave the previously opened job's analysis on screen under this one.
+        setAnalysisResult(null);
+        setAnalysisError(null);
+
+        if (analysisLoading) return;
+        if (autoAnalyzedJobIdsRef.current.has(jobId)) return;
+        autoAnalyzedJobIdsRef.current.add(jobId);
+
+        const isStale = () => useStore.getState().selectedJob?.id !== jobId;
 
         const runAnalysis = async () => {
             setAnalysisLoading(true);
             setAnalysisError(null);
 
             try {
-                const taskList = selectedJob.tasks.map(t => t.name);
-                const res = await analyzeJob(selectedJob.title, taskList, {
-                    employment: selectedJob.employment,
-                    projectedGrowth: selectedJob.projectedGrowth,
-                });
+                const taskList = tasks.map(t => t.name);
+                const res = await analyzeJob(title, taskList, { employment, projectedGrowth });
+                // A slow response for a job the user already navigated away from
+                // must not overwrite the panel they're looking at now.
+                if (isStale()) return;
                 setAnalysisResult(res);
                 if (res?.yearlyForecast) {
-
-                    useStore.getState().updateJobForecast(selectedJob.id, res.yearlyForecast);
+                    useStore.getState().updateJobForecast(jobId, res.yearlyForecast);
                 }
                 toast.success('AI analysis complete');
             } catch (e: unknown) {
                 console.error('Auto-analysis failed', e);
+                // Allow a retry the next time this job is opened.
+                autoAnalyzedJobIdsRef.current.delete(jobId);
+                if (isStale()) return;
                 const msg = e instanceof Error ? e.message : 'Failed to analyze';
                 if (msg.includes('429') || msg.includes('quota')) {
                     toast.warning('AI analysis rate limited. Try again in a moment.');
