@@ -15,12 +15,17 @@ export const YearSlider: React.FC = () => {
         : 'Height = projected growth at this year';
 
     return (
-        // At md+ the wrapper reserves just enough space on the right to clear the
-        // Legend (210px wide + its 24px right margin, plus a gap) so the slider stays visually
-        // centered instead of shifted left, while never overlapping it. Below md the
-        // Legend is hidden, so the slider takes the full width — reserving 230px on a
-        // 390px screen left it only 144px wide with a barely-scrubbable 110px track.
-        <div className="absolute inset-x-0 bottom-6 flex justify-center px-4 md:pr-[264px] pointer-events-none" style={{ zIndex: Z.timeBar }}>
+        // Horizontal placement is width-dependent, in three bands:
+        //  • below md  — Legend is hidden, so the slider uses the full width.
+        //  • md–1200px — reserve room on the right so the slider clears the Legend
+        //    (210px wide + 24px margin). It sits left of centre, but never overlaps.
+        //  • ≥1200px   — enough room for the card (max-w-2xl, 672px) to be truly
+        //    centred on the viewport and still clear the Legend, so no reservation.
+        // The middle band is expressed as a bounded range rather than as a wider
+        // breakpoint overriding a narrower one: Tailwind emits arbitrary min-[…]
+        // blocks *before* the standard md block, so an override would lose on
+        // source order and silently never apply.
+        <div className="absolute inset-x-0 bottom-6 flex justify-center px-4 md:max-[1199px]:pr-[264px] pointer-events-none" style={{ zIndex: Z.timeBar }}>
             <div className="w-full max-w-2xl pointer-events-auto">
             <div data-tour="tour-slider" className="bg-gray-900/60 backdrop-blur-xl border border-cyan-400/25 rounded-2xl px-4 py-3 md:px-6 md:py-4 shadow-lg shadow-cyan-500/5 overflow-hidden">
                 {/* Peak height encoding toggle. The mode hint sits beside the label instead
