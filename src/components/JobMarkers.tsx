@@ -4,7 +4,7 @@ import { Html, Line } from '@react-three/drei';
 import { useStore } from '../store';
 import type { Job } from '../types';
 import { getTerrainPosition, calculateGaussianHeight, buildGrowthForecastFlatArray, growthAtYearFromForecastFlat, getVisualHeightForGrowth, getVisualHeightForWorkersAtYear, type PeakData, TERRAIN_CONFIG } from '../utils/terrainMath';
-import { riskColorHex } from '../config/theme';
+import { buildRiskScale, riskBandColor } from '../config/theme';
 import { SCENE } from '../config/constants';
 
 export const JobMarkers: React.FC = () => {
@@ -81,6 +81,13 @@ export const JobMarkers: React.FC = () => {
         [filteredJobs],
     );
 
+    // Built from ALL jobs, never `filteredJobs` — a role's risk colour must not
+    // shift just because other roles were filtered out of view.
+    const riskScale = useMemo(
+        () => buildRiskScale(jobs.map(j => j.automationCostIndex)),
+        [jobs],
+    );
+
     // Peak positions & heights (synced with Terrain.tsx shader + forecast flat buffer)
     const peaks = useMemo(() => {
         const nextPeaks = filteredJobs.map((job, filteredIndex) => {
@@ -98,6 +105,10 @@ export const JobMarkers: React.FC = () => {
     // Stagger: vertical offset to separate overlapping labels
     const staggeredPeaks = useMemo(() => {
         const withOffsets = peaks.map((p, i) => ({ ...p, offset: 0, id: filteredJobs[i].id }));
+
+        // Disabled by default so every leader line is the same length and label
+        // height tracks the terrain. See SCENE.LABEL.STAGGER_ENABLED.
+        if (!SCENE.LABEL.STAGGER_ENABLED) return withOffsets;
 
         for (let iter = 0; iter < 3; iter++) {
             for (let i = 0; i < withOffsets.length; i++) {
@@ -149,20 +160,16 @@ export const JobMarkers: React.FC = () => {
                 if (!showLabel) return null;
 
                 const isHovered = hoveredJobId === job.id;
-                const pipColor = riskColorHex(job.automationCostIndex);
+                const pipColor = riskBandColor(job.automationCostIndex, riskScale);
                 const labelHeight = SCENE.LABEL.BASE_HEIGHT + peak.offset;
 
-                const automationRisk = job.automationCostIndex >= 0.65 ? 'High' : job.automationCostIndex >= 0.4 ? 'Moderate' : 'Low';
-                const riskColor = automationRisk === 'High' ? '#f87171' : automationRisk === 'Moderate' ? '#fb923c' : '#4ade80';
                 const sampledGrowth = growthAtYearFromForecastFlat(forecastsFlat, filteredIndex, year);
-                const growthSource: 'ai' | 'baseline' = job.yearlyForecast?.length ? 'ai' : 'baseline';
                 const roundedYear = Math.round(year);
                 const isDeclining = sampledGrowth < 0;
                 const isGrowing = sampledGrowth > 0;
                 const growthStr = `${sampledGrowth >= 0 ? '+' : ''}${sampledGrowth.toFixed(1)}%`;
                 const growthColor = isGrowing ? '#4ade80' : isDeclining ? '#f87171' : '#94a3b8';
                 const growthLabel = `${roundedYear} Forecast`;
-                const growthSourceLabel = growthSource === 'ai' ? 'AI Forecast' : 'Baseline Estimate';
                 const workersStr = job.employment >= 1_000_000
                     ? (job.employment / 1_000_000).toFixed(1) + 'M'
                     : job.employment >= 1_000
@@ -201,14 +208,18 @@ export const JobMarkers: React.FC = () => {
                             >
                                 {/* Title row */}
                                 <div className="flex items-center gap-2 px-3 py-2 min-w-0">
+                                    {/* The only risk indicator on the label now, so it reads
+                                        bold and discrete rather than a point on a ramp. */}
                                     <div
-                                        className="w-2 h-2 rounded-full flex-shrink-0"
-                                        style={{ backgroundColor: pipColor, boxShadow: `0 0 4px ${pipColor}` }}
+                                        className="w-2.5 h-2.5 rounded-full flex-shrink-0 ring-1 ring-black/30"
+                                        style={{ backgroundColor: pipColor, boxShadow: `0 0 7px ${pipColor}` }}
                                     />
                                     <span className="text-white text-xs font-semibold leading-snug tracking-wide font-sans truncate min-w-0" title={job.title}>{job.title}</span>
                                 </div>
 
-                                {/* BLS Stats — shown on hover or when selected */}
+                                {/* Stats on hover/selection. Deliberately just workers + forecast:
+                                    AI risk is carried by the colour of the dot above, and the old
+                                    Sector row always read "Business" for every role. */}
                                 {(isHovered || isSelected) && (
                                     <div className="px-3 pb-2.5 pt-0 border-t border-slate-700/50 mt-0.5 grid grid-cols-2 gap-x-3 gap-y-1.5 min-w-0">
                                         <div className="flex flex-col min-w-0">
@@ -220,15 +231,6 @@ export const JobMarkers: React.FC = () => {
                                             <span className="text-[11px] font-mono font-medium leading-none truncate" style={{ color: growthColor }}>
                                                 {isDeclining ? `${growthStr} Decline` : growthStr}
                                             </span>
-                                            <span className="text-[9px] text-slate-600 uppercase tracking-widest leading-none mt-1 truncate">{growthSourceLabel}</span>
-                                        </div>
-                                        <div className="flex flex-col min-w-0">
-                                            <span className="text-[9px] text-slate-500 uppercase tracking-widest leading-none mb-0.5">AI Risk</span>
-                                            <span className="text-[11px] font-medium leading-none truncate" style={{ color: riskColor }}>{automationRisk}</span>
-                                        </div>
-                                        <div className="flex flex-col min-w-0">
-                                            <span className="text-[9px] text-slate-500 uppercase tracking-widest leading-none mb-0.5">Sector</span>
-                                            <span className="text-[11px] text-slate-300 font-medium leading-snug truncate" title={job.cluster}>{job.cluster}</span>
                                         </div>
                                     </div>
                                 )}

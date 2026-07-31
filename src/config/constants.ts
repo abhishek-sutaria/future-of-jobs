@@ -36,10 +36,16 @@ export const BLS_API = {
 
 // ── Risk & Classification Thresholds ───────────────────────────────
 export const RISK_THRESHOLDS = {
-    /** AI capability score above which a task is considered automatable */
-    AUTOMATABLE_AI_SCORE: 0.6,
-    /** Human criticality score above which a task is human-critical */
-    HUMAN_CRITICAL_SCORE: 0.6,
+    /**
+     * AI capability score above which a task is considered automatable.
+     * 0.5, not 0.6: the AI and human scores for a task sum to ~1.0, so a 0.6
+     * cutoff left mid-range tasks (e.g. 0.53 AI / 0.47 human) failing BOTH tests
+     * and silently missing from the risk AND the human-skills card. At 0.5 every
+     * task lands in exactly one of the two.
+     */
+    AUTOMATABLE_AI_SCORE: 0.5,
+    /** Human criticality score above which a task is human-critical. Paired with the above. */
+    HUMAN_CRITICAL_SCORE: 0.5,
     /** Human score below which a task is considered automatable (combined with AI score) */
     AUTOMATABLE_HUMAN_CEILING: 0.5,
     /** Projected AI capability above which future risk is flagged */
@@ -107,6 +113,14 @@ export const SCENE = {
         COLLISION_DISTANCE: 6.0,
         VERTICAL_OFFSET: 1.8,
         BASE_HEIGHT: 2.5,
+        /**
+         * When false every leader line is BASE_HEIGHT, so a label's height on screen
+         * mirrors the terrain beneath it — the tallest labels are the fastest-growing
+         * roles. When true, crowded labels are lifted in VERTICAL_OFFSET steps to stop
+         * them overlapping, which reads more cleanly but makes label height meaningless.
+         * Flip this single value to switch between the two.
+         */
+        STAGGER_ENABLED: false,
     },
     /** Major job visibility threshold at far LOD */
     MAJOR_GROWTH_THRESHOLD: 5,
@@ -215,8 +229,16 @@ export const TASK_CATEGORY_COLORS = {
 export const SHADER_VISUAL = {
     GRID_FREQUENCY: 60,
     GRID_THRESHOLD: 0.98,
-    HEIGHT_MIX_MIN: 1.5,
-    HEIGHT_MIX_MAX: 4.0,
+    /**
+     * Elevation range over which a peak's risk colour fades in. Previously 1.5→4.0,
+     * which tied colour strength to height: at 2025 every peak sits at the baseline,
+     * so the average peak showed only ~38% of its colour and none reached full — the
+     * whole terrain read as an undifferentiated wash exactly where users start.
+     * Starting at 0 means risk colour is legible at any height; the ceiling is kept
+     * low so tall peaks still saturate.
+     */
+    HEIGHT_MIX_MIN: 0.0,
+    HEIGHT_MIX_MAX: 2.0,
     ISOLINE_FREQUENCY: 4.0,
     ISOLINE_THRESHOLD: 0.95,
     MOUSE_HIGHLIGHT_FALLOFF: 3.0,

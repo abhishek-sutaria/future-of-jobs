@@ -162,7 +162,9 @@ export const UI: React.FC = () => {
                 </ErrorBoundary>
             )}
 
-            <YearSlider />
+            {/* Both are 3D-terrain controls/keys — they do nothing over the 2D map, so
+                they are hidden there rather than floating inertly above it. */}
+            {mapView !== 'map' && <YearSlider />}
 
             <div className="absolute bottom-4 left-4 md:left-8 pointer-events-auto" style={{ zIndex: Z.base }}>
                 <button
@@ -176,7 +178,7 @@ export const UI: React.FC = () => {
             </div>
 
             <SkillsModal isOpen={showSkillsModal} onClose={() => setShowSkillsModal(false)} />
-            <Legend />
+            {mapView !== 'map' && <Legend />}
             <GuidedTour isActive={tourActive} onClose={() => setTourActive(false)} />
         </>
     );

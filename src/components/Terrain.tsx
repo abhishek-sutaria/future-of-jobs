@@ -4,7 +4,7 @@ import { ShaderMaterial, DoubleSide, Vector3, Vector2 } from 'three';
 import { useStore } from '../store';
 import type { Job } from '../types';
 import { getTerrainPosition, getVisualHeightForEmployment, getVisualHeightForWorkersAtYear, buildGrowthForecastFlatArray, growthAtYearFromForecastFlat, TERRAIN_CONFIG } from '../utils/terrainMath';
-import { riskColorRGB, RISK_UNSCORED_RGB } from '../config/theme';
+import { riskColorRGB, RISK_UNSCORED_RGB, buildRiskScale, normalizeRisk } from '../config/theme';
 import { SHADER, SHADER_VISUAL, SHADER_COLORS, SCENE } from '../config/constants';
 
 // SHADERS
@@ -109,9 +109,12 @@ const fragmentShader = `
 
     vec3 gridColor = ${SHADER_COLORS.GRID};
 
-    float heightMix = smoothstep(${SHADER_VISUAL.HEIGHT_MIX_MIN}, ${SHADER_VISUAL.HEIGHT_MIX_MAX.toFixed(1)}, vElevation);
+    // .toFixed(1) on both: a bare 0 would emit an int literal and fail to compile.
+    float heightMix = smoothstep(${SHADER_VISUAL.HEIGHT_MIX_MIN.toFixed(1)}, ${SHADER_VISUAL.HEIGHT_MIX_MAX.toFixed(1)}, vElevation);
 
-    vec3 dataPeakColor = mix(baseColor, vColor, heightMix * 0.8);
+    // 0.92 rather than 0.8 so risk colour reads strongly instead of staying
+    // half-blended into the dark base.
+    vec3 dataPeakColor = mix(baseColor, vColor, heightMix * 0.92);
 
     float isoline = step(${SHADER_VISUAL.ISOLINE_THRESHOLD}, fract(vElevation * ${SHADER_VISUAL.ISOLINE_FREQUENCY.toFixed(1)}));
     vec3 isolineColor = mix(${SHADER_COLORS.ISOLINE_DARK}, ${SHADER_COLORS.ISOLINE_BRIGHT}, heightMix);
@@ -146,6 +149,13 @@ export const Terrain: React.FC = () => {
   const filteredJobs = useMemo(() => (
     selectedRoleIds.size === 0 ? jobs : jobs.filter(job => selectedRoleIds.has(job.id))
   ), [jobs, selectedRoleIds]);
+
+  // From ALL jobs, so filtering never changes a peak's colour. Shared basis with
+  // the label dots in JobMarkers, keeping the two readings consistent.
+  const riskScale = useMemo(
+    () => buildRiskScale(jobs.map(j => j.automationCostIndex)),
+    [jobs],
+  );
 
   // The uniforms OBJECT IDENTITY must never change after first render.
   //
@@ -190,7 +200,11 @@ export const Terrain: React.FC = () => {
       // Peak color encodes the Job Security Index (cyan→amber→red, matches Legend);
       // neutral slate until Claude scoring has produced a real automationCostIndex.
       const unscored = job.automationCostIndex === 0 && job.tasks.every(t => t.aiCapabilityScore === 0);
-      const [r, g, b] = unscored ? RISK_UNSCORED_RGB : riskColorRGB(job.automationCostIndex);
+      const [r, g, b] = unscored
+        ? RISK_UNSCORED_RGB
+        // Normalised first: raw scores span only ~0.26–0.72, so colouring them
+        // directly never reaches the green or red ends of the ramp.
+        : riskColorRGB(normalizeRisk(job.automationCostIndex, riskScale));
       colors[i].set(r, g, b);
     }
 
@@ -206,7 +220,7 @@ export const Terrain: React.FC = () => {
     }
 
     if (materialRef.current) materialRef.current.uniformsNeedUpdate = true;
-  }, [filteredJobs, jobs, uniforms]);
+  }, [filteredJobs, jobs, uniforms, riskScale]);
 
   // Keep uHeightMode in sync with the store toggle without remounting the mesh.
   React.useEffect(() => {
