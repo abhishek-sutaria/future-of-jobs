@@ -120,7 +120,7 @@ export const SCENE = {
          * them overlapping, which reads more cleanly but makes label height meaningless.
          * Flip this single value to switch between the two.
          */
-        STAGGER_ENABLED: false,
+        STAGGER_ENABLED: true,
     },
     /** Major job visibility threshold at far LOD */
     MAJOR_GROWTH_THRESHOLD: 5,
