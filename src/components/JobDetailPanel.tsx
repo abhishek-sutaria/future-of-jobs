@@ -9,7 +9,7 @@ import { Skeleton } from './ui/Skeleton';
 import { Z } from '../config/layers';
 import { RISK_THRESHOLDS, UI, CHART } from '../config/constants';
 import { getSeriesIdForJob, getSeriesLabel } from '../utils/bls';
-import { jobSourceProvenanceChips, dataCoverageTooltip, provenanceLabel } from '../utils/provenance';
+import { jobSourceProvenanceChips, provenanceLabel } from '../utils/provenance';
 import type { Job } from '../types';
 
 interface JobDetailPanelProps {
@@ -106,12 +106,6 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                             <div className="flex items-center gap-2 mb-1.5">
                                 <span className="px-2 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wider bg-blue-500/10 text-blue-400 border border-blue-500/20">
                                     {job.cluster}
-                                </span>
-                                <span
-                                    title={dataCoverageTooltip()}
-                                    className="px-2 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wider bg-slate-500/10 text-slate-300 border border-slate-500/25 cursor-help"
-                                >
-                                    Coverage {(job.confidenceScore * 100).toFixed(0)}%
                                 </span>
                                 {job.isStale ? (
                                     <span title="Live BLS fetch unavailable (daily quota resets at midnight ET). Showing bundled BLS OES estimates from the build." className="px-2 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wider bg-red-500/10 text-red-400 border border-red-500/20 flex items-center gap-1 cursor-help">

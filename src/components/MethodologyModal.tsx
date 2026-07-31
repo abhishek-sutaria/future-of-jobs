@@ -30,11 +30,6 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                         explicitly conditioned on those inputs. Claude is probabilistic: treat its scores
                         and year curves as structured judgment, not additional official statistics.
                     </p>
-                    <p className="text-sm text-gray-300 leading-relaxed">
-                        The <strong>Coverage</strong> percentage on job cards is a simple index of how many
-                        fields are populated from live BLS versus the static snapshot — it is not a BLS
-                        accuracy or confidence grade.
-                    </p>
 
                     <div className="mt-3 rounded-lg border border-white/[0.08] overflow-hidden">
                         <table className="w-full text-xs">
