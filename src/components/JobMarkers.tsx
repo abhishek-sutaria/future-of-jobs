@@ -198,37 +198,37 @@ export const JobMarkers: React.FC = () => {
                             opacity={0.6}
                         />
 
-                        {/* Label */}
+                        {/* Label — kept compact/thin so more topography stays visible. */}
                         <Html position={[0, labelHeight, 0]} center zIndexRange={[100, 0]}>
                             <div
-                                className={`flex flex-col max-w-[min(18rem,calc(100vw-2rem))] overflow-hidden bg-[#0F172A]/90 backdrop-blur-md rounded-md border shadow-md cursor-pointer touch-none select-none transition-all duration-200 ${isSelected ? 'scale-110 ring-1 ring-white/20 border-slate-600/60' : 'border-slate-700/50'} ${isHovered ? 'border-cyan-500/40 shadow-cyan-500/10 shadow-lg' : ''}`}
+                                className={`flex flex-col max-w-[min(11rem,calc(100vw-2rem))] overflow-hidden bg-[#0F172A]/72 backdrop-blur-[2px] rounded border shadow-sm cursor-pointer touch-none select-none transition-all duration-200 ${isSelected ? 'scale-105 ring-1 ring-white/20 border-slate-500/60' : 'border-slate-600/40'} ${isHovered ? 'border-cyan-500/40 bg-[#0F172A]/85' : ''}`}
                                 onPointerDown={handleLabelPointerDown(job)}
                                 onPointerEnter={() => setHoveredJobId(job.id)}
                                 onPointerLeave={() => setHoveredJobId(null)}
                             >
                                 {/* Title row */}
-                                <div className="flex items-center gap-2 px-3 py-2 min-w-0">
+                                <div className="flex items-center gap-1.5 px-1.5 py-0.5 min-w-0">
                                     {/* The only risk indicator on the label now, so it reads
                                         bold and discrete rather than a point on a ramp. */}
                                     <div
-                                        className="w-2.5 h-2.5 rounded-full flex-shrink-0 ring-1 ring-black/30"
-                                        style={{ backgroundColor: pipColor, boxShadow: `0 0 7px ${pipColor}` }}
+                                        className="w-1.5 h-1.5 rounded-full flex-shrink-0 ring-1 ring-black/30"
+                                        style={{ backgroundColor: pipColor, boxShadow: `0 0 4px ${pipColor}` }}
                                     />
-                                    <span className="text-white text-xs font-semibold leading-snug tracking-wide font-sans truncate min-w-0" title={job.title}>{job.title}</span>
+                                    <span className="text-white text-[10px] font-medium leading-tight tracking-wide font-sans truncate min-w-0" title={job.title}>{job.title}</span>
                                 </div>
 
                                 {/* Stats on hover/selection. Deliberately just workers + forecast:
                                     AI risk is carried by the colour of the dot above, and the old
                                     Sector row always read "Business" for every role. */}
                                 {(isHovered || isSelected) && (
-                                    <div className="px-3 pb-2.5 pt-0 border-t border-slate-700/50 mt-0.5 grid grid-cols-2 gap-x-3 gap-y-1.5 min-w-0">
+                                    <div className="px-1.5 pb-1 pt-0 border-t border-slate-700/40 grid grid-cols-2 gap-x-2 gap-y-0.5 min-w-0">
                                         <div className="flex flex-col min-w-0">
-                                            <span className="text-[9px] text-slate-500 uppercase tracking-widest leading-none mb-0.5">Workers</span>
-                                            <span className="text-[11px] text-slate-200 font-mono font-medium leading-none truncate">{workersStr}</span>
+                                            <span className="text-[8px] text-slate-500 uppercase tracking-wider leading-none">Workers</span>
+                                            <span className="text-[10px] text-slate-200 font-mono font-medium leading-none truncate">{workersStr}</span>
                                         </div>
                                         <div className="flex flex-col min-w-0">
-                                            <span className="text-[9px] text-slate-500 uppercase tracking-widest leading-none mb-0.5">{growthLabel}</span>
-                                            <span className="text-[11px] font-mono font-medium leading-none truncate" style={{ color: growthColor }}>
+                                            <span className="text-[8px] text-slate-500 uppercase tracking-wider leading-none">{growthLabel}</span>
+                                            <span className="text-[10px] font-mono font-medium leading-none truncate" style={{ color: growthColor }}>
                                                 {isDeclining ? `${growthStr} Decline` : growthStr}
                                             </span>
                                         </div>

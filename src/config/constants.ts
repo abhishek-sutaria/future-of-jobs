@@ -112,7 +112,12 @@ export const SCENE = {
     LABEL: {
         COLLISION_DISTANCE: 6.0,
         VERTICAL_OFFSET: 1.8,
-        BASE_HEIGHT: 2.5,
+        /**
+         * Equal-length leader line height above the peak surface. Raised so labels
+         * sit clear of the topography (Ray feedback). Keep STAGGER_ENABLED false
+         * while evaluating; flip to true if overlap returns.
+         */
+        BASE_HEIGHT: 5.2,
         /**
          * When false every leader line is BASE_HEIGHT, so a label's height on screen
          * mirrors the terrain beneath it — the tallest labels are the fastest-growing
