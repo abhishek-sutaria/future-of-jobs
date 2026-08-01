@@ -217,8 +217,9 @@ export const useStore = create<AppState>((set, get) => ({
         return { jobs: newJobs, selectedJob: newSelectedJob };
     }),
 
-    // Peak height encoding
-    heightMode: 'growth',
+    // Peak height encoding — default Workers so 2025 already has height variance
+    // (equal-length leader lines then stay readable; Growth is flat at the baseline).
+    heightMode: 'employment',
     setHeightMode: (mode) => set({ heightMode: mode }),
 
     // Map state

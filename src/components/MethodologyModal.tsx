@@ -85,7 +85,7 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                                 <tr className="border-t border-white/[0.06]">
                                     <td className="px-3 py-2">Year-by-year forecast</td>
                                     <td className="px-3 py-2 text-gray-400">
-                                        <SourceLink href="https://www.anthropic.com/claude">Claude</SourceLink>, reasoning over the BLS projection + O*NET tasks
+                                        <SourceLink href="https://www.anthropic.com/claude">Claude</SourceLink>, reasoning over the BLS projection + O*NET tasks — cumulative % change in <em>total employment for the role</em> (human workforce level), not an "AI + human jobs" total and not a pure residual after full automation
                                     </td>
                                 </tr>
                                 <tr className="border-t border-white/[0.06]">

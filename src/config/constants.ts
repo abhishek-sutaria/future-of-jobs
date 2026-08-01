@@ -37,11 +37,11 @@ export const BLS_API = {
 // ── Risk & Classification Thresholds ───────────────────────────────
 export const RISK_THRESHOLDS = {
     /**
-     * AI capability score above which a task is considered automatable.
-     * 0.5, not 0.6: the AI and human scores for a task sum to ~1.0, so a 0.6
-     * cutoff left mid-range tasks (e.g. 0.53 AI / 0.47 human) failing BOTH tests
-     * and silently missing from the risk AND the human-skills card. At 0.5 every
-     * task lands in exactly one of the two.
+     * AI capability score above which a task may be considered automatable.
+     * 0.5, not 0.6: a 0.6 cutoff left mid-range tasks (e.g. 0.53 AI / 0.47 human)
+     * failing BOTH tests and silently missing from the risk AND human-skills cards.
+     * Report cards must still use getTaskCategory() so mixed-score tasks never appear
+     * in both buckets.
      */
     AUTOMATABLE_AI_SCORE: 0.5,
     /** Human criticality score above which a task is human-critical. Paired with the above. */
@@ -120,7 +120,7 @@ export const SCENE = {
          * them overlapping, which reads more cleanly but makes label height meaningless.
          * Flip this single value to switch between the two.
          */
-        STAGGER_ENABLED: true,
+        STAGGER_ENABLED: false,
     },
     /** Major job visibility threshold at far LOD */
     MAJOR_GROWTH_THRESHOLD: 5,

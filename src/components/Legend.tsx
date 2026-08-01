@@ -1,4 +1,5 @@
 import React from 'react';
+import { useStore } from '../store';
 import { Z } from '../config/layers';
 import { RISK_BAND_COLORS } from '../config/theme';
 
@@ -6,6 +7,11 @@ import { RISK_BAND_COLORS } from '../config/theme';
 // time slider down to an unusable width. The colour scale is also explained in the
 // intro modal, so phones lose nothing critical.
 export const Legend: React.FC = () => {
+    const heightMode = useStore((state) => state.heightMode);
+    const heightCaption = heightMode === 'employment'
+        ? 'implied workforce'
+        : 'growth vs 2025';
+
     return (
         <div
             className="absolute bottom-6 right-6 hidden md:flex flex-col items-end gap-1.5 pointer-events-none select-none p-3 rounded-xl border border-cyan-400/15 bg-gray-900/60 backdrop-blur-md max-w-[210px]"
@@ -38,7 +44,7 @@ export const Legend: React.FC = () => {
                 percentage — saying so keeps the scale honest. */}
             <div className="mt-1 pt-1.5 border-t border-white/[0.06] w-full text-right">
                 <div className="text-[9px] text-gray-600 uppercase tracking-wide">
-                    Height: growth vs 2025 &middot; Colour: automation risk, relative to all roles &middot; Regions: career clusters
+                    Height: {heightCaption} &middot; Colour: automation risk, relative to all roles &middot; Regions: career clusters
                 </div>
             </div>
         </div>

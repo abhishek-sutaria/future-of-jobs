@@ -7,7 +7,8 @@ import { generateJobScenario, analyzeJob, getClaudeUserFriendlyMessage, type Sce
 import { IconBrain, IconSparkles, IconAlertTriangle, IconShield, IconTarget, IconInfo, IconTrendingDown, IconCheck } from './ui/Icons';
 import { Skeleton } from './ui/Skeleton';
 import { Z } from '../config/layers';
-import { RISK_THRESHOLDS, UI, CHART } from '../config/constants';
+import { UI, CHART } from '../config/constants';
+import { getTaskCategory } from '../data';
 import { getSeriesIdForJob, getSeriesLabel } from '../utils/bls';
 import { jobSourceProvenanceChips, provenanceLabel } from '../utils/provenance';
 import type { Job } from '../types';
@@ -92,8 +93,17 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
     const riskTask = sortedByRisk[0];
     const safeTask = sortedByHuman[0];
 
-    const highRiskTasks = job.tasks.filter(t => t.aiCapabilityScore > RISK_THRESHOLDS.AUTOMATABLE_AI_SCORE).slice(0, UI.MAX_TASK_PREVIEW);
-    const safeTasks = job.tasks.filter(t => t.humanCriticalityScore > RISK_THRESHOLDS.HUMAN_CRITICAL_SCORE).slice(0, UI.MAX_TASK_PREVIEW);
+    // Mutually exclusive buckets (same rules as getTaskCategory / TaskCompositionChart).
+    // Independent AI>0.5 and human>0.5 filters let mixed-score tasks appear in both cards —
+    // e.g. Cybersecurity "Encrypt data transmissions…" at 0.55 / 0.65.
+    const highRiskTasks = job.tasks
+        .filter((t) => getTaskCategory(t) === 'Automatable')
+        .sort((a, b) => b.aiCapabilityScore - a.aiCapabilityScore)
+        .slice(0, UI.MAX_TASK_PREVIEW);
+    const safeTasks = job.tasks
+        .filter((t) => getTaskCategory(t) === 'Human-Critical')
+        .sort((a, b) => b.humanCriticalityScore - a.humanCriticalityScore)
+        .slice(0, UI.MAX_TASK_PREVIEW);
 
     return (
         <>
