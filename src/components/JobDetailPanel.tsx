@@ -43,7 +43,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
         setAnalysisModalError(null);
         try {
             const taskList = job.tasks.map(t => t.name);
-            const res = await analyzeJob(job.title, taskList, {
+            const res = await analyzeJob(job.id, job.title, taskList, {
                 employment: job.employment,
                 projectedGrowth: job.projectedGrowth,
             });

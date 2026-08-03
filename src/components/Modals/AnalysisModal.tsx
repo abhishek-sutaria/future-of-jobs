@@ -55,7 +55,7 @@ export const AnalysisModal: React.FC<AnalysisModalProps> = ({ isOpen, isLoading,
                 return (
                     <div className="space-y-6 animate-in fade-in duration-300">
                         <p className="text-[11px] text-gray-500 leading-relaxed">
-                            These live scores replace the role panel&apos;s Automation Risk % and task cards when you close this window, so Analyze and the panel stay consistent.
+                            Scores are cached per role after the first Analyze (and Claude is pinned to temperature 0), so re-opening Analyze for the same job returns the same numbers. Closing this window also updates the role panel so both stay consistent.
                         </p>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-5 flex items-center gap-4">

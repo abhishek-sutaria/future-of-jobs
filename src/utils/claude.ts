@@ -75,6 +75,9 @@ export async function callClaudeJSON<T>(prompt: string, schema?: z.ZodType<T>): 
         body: JSON.stringify({
             model: CLAUDE_MODEL,
             max_tokens: 4096,
+            // Pin sampling so structured scores don't drift run-to-run (Analyze was
+            // re-rolling ~43–50% for the same role on every click).
+            temperature: 0,
             // Claude Sonnet 5 runs adaptive thinking by default when this is omitted,
             // which silently eats into max_tokens on structured-output calls that
             // don't need deep reasoning — disable it so the full budget goes to JSON.
