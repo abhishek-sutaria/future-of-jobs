@@ -109,8 +109,8 @@ async function checkLiveData(): Promise<CheckOutcome> {
         if (!response.ok) {
             return {
                 status: 'fail',
-                message: 'Live job statistics are not loading right now.',
-                detail: 'Try again in a few minutes.',
+                message: 'Live national unemployment data is not loading right now.',
+                detail: 'Try again in a few minutes. This check is only the US unemployment rate — not occupation employment by SOC code.',
             };
         }
         const json = await response.json();
@@ -118,24 +118,24 @@ async function checkLiveData(): Promise<CheckOutcome> {
             const series = json.Results?.series?.[0] || json.result?.series?.[0];
             const latest = series?.data?.[0];
             const detail = latest
-                ? `Latest US unemployment rate: ${latest.value}% (${latest.periodName} ${latest.year}).`
-                : undefined;
+                ? `US unemployment rate: ${latest.value}% (${latest.periodName} ${latest.year}). This is the national CPS rate only — not individual BLS job counts by occupation.`
+                : 'Connected to BLS CPS unemployment feed.';
             return {
                 status: 'pass',
-                message: 'Live job statistics from the US government loaded.',
+                message: 'Live US unemployment rate from BLS loaded.',
                 detail,
             };
         }
         return {
             status: 'warn',
-            message: 'Live data answered, but the response looked unusual.',
-            detail: 'The numbers in the app may be slightly out of date.',
+            message: 'Live unemployment feed answered, but the response looked unusual.',
+            detail: 'The unemployment chip in the header may be slightly out of date.',
         };
     } catch {
         return {
             status: 'fail',
-            message: 'Could not reach the live job statistics feed.',
-            detail: 'Your internet may be off, or the data site may be temporarily down.',
+            message: 'Could not reach the live unemployment feed.',
+            detail: 'Your internet may be off, or the BLS data site may be temporarily down.',
         };
     }
 }
@@ -173,6 +173,7 @@ async function checkAppData(): Promise<CheckOutcome> {
     return {
         status: 'pass',
         message: `All ${initialJobs.length} jobs and the US map data are ready.`,
+        detail: 'Occupation employment on the 3D map comes from the bundled BLS OES May 2023 extract — separate from the live unemployment check above.',
     };
 }
 
@@ -236,8 +237,8 @@ export const HEALTH_CHECKS: CheckRunner[] = [
     },
     {
         id: 'live-data',
-        name: 'Live Data',
-        description: 'Whether live job statistics from the US government are loading.',
+        name: 'Live Unemployment',
+        description: 'Whether the live US unemployment rate (BLS CPS) is loading — not occupation employment by job/SOC.',
         run: checkLiveData,
     },
     {

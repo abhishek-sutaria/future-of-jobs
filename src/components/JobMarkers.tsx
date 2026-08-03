@@ -133,50 +133,68 @@ export const JobMarkers: React.FC = () => {
 
     if (mapView === 'map') return null;
 
+    const isGlobalSelectionActive = !!selectedJob;
+
+    const markerItems = filteredJobs.flatMap((job) => {
+        const filteredIndex = filteredJobs.findIndex(j => j.id === job.id);
+        const peak = staggeredPeaks[filteredIndex];
+        const isSelected = selectedJob?.id === job.id;
+        if (isGlobalSelectionActive && !isSelected) return [];
+
+        const originalIndex = jobs.findIndex(j => j.id === job.id);
+
+        // LOD: at very far distance show only major/prominent jobs
+        let isVisibleByLOD = true;
+        if (!isSelected) {
+            if (lodLevelRef.current === 0) {
+                const isMajor = Math.abs(job.projectedGrowth) > SCENE.MAJOR_GROWTH_THRESHOLD || originalIndex % SCENE.LOD_FILTER_MODULO === 0;
+                if (!isMajor) isVisibleByLOD = false;
+            }
+        }
+
+        const showLabel = isVisibleByLOD && (isSelected || job.employment > 0);
+        if (!showLabel) return [];
+
+        const isHovered = hoveredJobId === job.id;
+        const pipColor = riskBandColor(job.automationCostIndex, riskScale);
+        const labelHeight = SCENE.LABEL.BASE_HEIGHT + peak.offset;
+        const surfaceY = calculateGaussianHeight(peak.x, peak.z, peaks) + TERRAIN_CONFIG.TERRAIN_OFFSET_Y;
+
+        const sampledGrowth = growthAtYearFromForecastFlat(forecastsFlat, filteredIndex, year);
+        const roundedYear = Math.round(year);
+        const isDeclining = sampledGrowth < 0;
+        const isGrowing = sampledGrowth > 0;
+        const growthStr = `${sampledGrowth >= 0 ? '+' : ''}${sampledGrowth.toFixed(1)}%`;
+        const growthColor = isGrowing ? '#4ade80' : isDeclining ? '#f87171' : '#94a3b8';
+        const growthLabel = `${roundedYear} Forecast`;
+        const workersStr = job.employment >= 1_000_000
+            ? (job.employment / 1_000_000).toFixed(1) + 'M'
+            : job.employment >= 1_000
+            ? Math.round(job.employment / 1_000) + 'K'
+            : job.employment.toString();
+
+        return [{
+            job,
+            peak,
+            surfaceY,
+            isSelected,
+            isHovered,
+            pipColor,
+            labelHeight,
+            isDeclining,
+            growthStr,
+            growthColor,
+            growthLabel,
+            workersStr,
+        }];
+    }).sort((a, b) => Number(a.isHovered || a.isSelected) - Number(b.isHovered || b.isSelected));
+
     return (
         <group>
-            {filteredJobs.map((job) => {
-                const filteredIndex = filteredJobs.findIndex(j => j.id === job.id);
-                const peak = staggeredPeaks[filteredIndex];
-                const surfaceY = calculateGaussianHeight(peak.x, peak.z, peaks) + TERRAIN_CONFIG.TERRAIN_OFFSET_Y;
-                const isSelected = selectedJob?.id === job.id;
-                const isGlobalSelectionActive = !!selectedJob;
-
-                if (isGlobalSelectionActive && !isSelected) return null;
-
-                const originalIndex = jobs.findIndex(j => j.id === job.id);
-
-                // LOD: at very far distance show only major/prominent jobs
-                let isVisibleByLOD = true;
-                if (!isSelected) {
-                    if (lodLevelRef.current === 0) {
-                        const isMajor = Math.abs(job.projectedGrowth) > SCENE.MAJOR_GROWTH_THRESHOLD || originalIndex % SCENE.LOD_FILTER_MODULO === 0;
-                        if (!isMajor) isVisibleByLOD = false;
-                    }
-                    // LOD 1 and 2: show all labels
-                }
-
-                const showLabel = isVisibleByLOD && (isSelected || job.employment > 0);
-                if (!showLabel) return null;
-
-                const isHovered = hoveredJobId === job.id;
-                const pipColor = riskBandColor(job.automationCostIndex, riskScale);
-                const labelHeight = SCENE.LABEL.BASE_HEIGHT + peak.offset;
-
-                const sampledGrowth = growthAtYearFromForecastFlat(forecastsFlat, filteredIndex, year);
-                const roundedYear = Math.round(year);
-                const isDeclining = sampledGrowth < 0;
-                const isGrowing = sampledGrowth > 0;
-                const growthStr = `${sampledGrowth >= 0 ? '+' : ''}${sampledGrowth.toFixed(1)}%`;
-                const growthColor = isGrowing ? '#4ade80' : isDeclining ? '#f87171' : '#94a3b8';
-                const growthLabel = `${roundedYear} Forecast`;
-                const workersStr = job.employment >= 1_000_000
-                    ? (job.employment / 1_000_000).toFixed(1) + 'M'
-                    : job.employment >= 1_000
-                    ? Math.round(job.employment / 1_000) + 'K'
-                    : job.employment.toString();
-
-                return (
+            {markerItems.map(({
+                job, peak, surfaceY, isSelected, isHovered, pipColor, labelHeight,
+                isDeclining, growthStr, growthColor, growthLabel, workersStr,
+            }) => (
                     <group key={job.id} position={[peak.x, surfaceY, peak.z]}>
                         {/* Anchor ring */}
                         <mesh rotation={[-Math.PI / 2, 0, 0]}>
@@ -198,8 +216,15 @@ export const JobMarkers: React.FC = () => {
                             opacity={0.6}
                         />
 
-                        {/* Label — kept compact/thin so more topography stays visible. */}
-                        <Html position={[0, labelHeight, 0]} center zIndexRange={[100, 0]}>
+                        {/* Label — kept compact/thin so more topography stays visible.
+                            Hover/selection bumps zIndexRange so the expanded popup paints
+                            above neighboring titles (distance-based z alone is not enough). */}
+                        <Html
+                            position={[0, labelHeight, 0]}
+                            center
+                            zIndexRange={isHovered || isSelected ? [1000, 900] : [100, 0]}
+                            style={{ zIndex: isHovered || isSelected ? 1000 : undefined }}
+                        >
                             <div
                                 className={`flex flex-col max-w-[min(11rem,calc(100vw-2rem))] overflow-hidden bg-[#0F172A]/72 backdrop-blur-[2px] rounded border shadow-sm cursor-pointer touch-none select-none transition-all duration-200 ${isSelected ? 'scale-105 ring-1 ring-white/20 border-slate-500/60' : 'border-slate-600/40'} ${isHovered ? 'border-cyan-500/40 bg-[#0F172A]/85' : ''}`}
                                 onPointerDown={handleLabelPointerDown(job)}
@@ -237,8 +262,7 @@ export const JobMarkers: React.FC = () => {
                             </div>
                         </Html>
                     </group>
-                );
-            })}
+            ))}
         </group>
     );
 };

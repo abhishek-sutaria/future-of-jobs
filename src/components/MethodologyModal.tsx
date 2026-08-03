@@ -44,12 +44,14 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                                     <td className="px-3 py-2">Employment headcount</td>
                                     <td className="px-3 py-2 text-gray-400">
                                         <SourceLink href="https://www.bls.gov/oes/">BLS OES May 2023</SourceLink>
+                                        {' '}(bundled national + state extract that drives the 3D map and US map). BLS has since published newer OES releases (through May 2025); a refresh is planned.
                                     </td>
                                 </tr>
                                 <tr className="border-t border-white/[0.06]">
                                     <td className="px-3 py-2">10-year growth projection</td>
                                     <td className="px-3 py-2 text-gray-400">
-                                        <SourceLink href="https://www.bls.gov/ooh/">BLS OOH 2022–2032</SourceLink>
+                                        Bundled figures are from <SourceLink href="https://www.bls.gov/ooh/">BLS OOH 2022–2032</SourceLink>.
+                                        The current handbook vintage is 2024–2034 — labels and rates will be refreshed to match.
                                     </td>
                                 </tr>
                                 <tr className="border-t border-white/[0.06]">

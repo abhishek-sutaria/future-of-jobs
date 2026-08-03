@@ -14,13 +14,13 @@ export type DataProvenance =
     | 'UNAVAILABLE';
 
 const PROVENANCE_LABEL: Record<DataProvenance, string> = {
-    BLS_OES: 'BLS OES (occupation employment)',
-    BLS_OOH: 'BLS OOH (10-year outlook)',
-    BLS_CPS: 'BLS CPS (live series, when loaded)',
-    BLS_STATE: 'BLS OES state/geo extract',
-    ONET: 'O*NET (tasks & importance)',
-    CLAUDE_TASK_SCORE: 'Claude (task-level scores from O*NET text)',
-    CLAUDE_FORECAST: 'Claude (cumulative employment path)',
+    BLS_OES: 'National employment headcount from BLS Occupational Employment and Wage Statistics (OES)',
+    BLS_OOH: '10-year employment growth outlook from the BLS Occupational Outlook Handbook (OOH)',
+    BLS_CPS: 'Live national figures from BLS Current Population Survey (e.g. unemployment rate)',
+    BLS_STATE: 'State-level employment from BLS OES (powers the US map)',
+    ONET: 'Day-to-day task descriptions from O*NET',
+    CLAUDE_TASK_SCORE: 'AI capability and human-criticality scores for each task, scored by Claude from the O*NET text',
+    CLAUDE_FORECAST: 'Year-by-year employment path estimated by Claude, grounded in the BLS outlook',
     COVERAGE_FORMULA: 'App (source coverage index, not a BLS statistic)',
     UNAVAILABLE: 'Unavailable',
 };
