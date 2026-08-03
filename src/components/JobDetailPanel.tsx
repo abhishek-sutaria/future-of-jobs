@@ -48,8 +48,9 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                 projectedGrowth: job.projectedGrowth,
             });
             onSetAnalysisResult(res);
-            if (res?.yearlyForecast) {
-                useStore.getState().updateJobForecast(job.id, res.yearlyForecast);
+            if (res) {
+                // Keep role panel Automation Risk % / task cards in sync with Analyze.
+                useStore.getState().updateJobFromLiveAnalysis(job.id, res);
             }
         } catch (e) {
             console.error(e);
@@ -134,12 +135,15 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                     <span
                                         key={c.key}
                                         title={provenanceLabel(c.provenance)}
-                                        className="px-2 py-0.5 rounded text-[9px] font-medium uppercase tracking-wide bg-white/[0.06] text-gray-400 border border-white/[0.08]"
+                                        className="px-2 py-0.5 rounded text-[9px] font-medium uppercase tracking-wide bg-white/[0.06] text-gray-400 border border-white/[0.08] cursor-help"
                                     >
                                         {c.label}
                                     </span>
                                 ))}
                             </div>
+                            <p className="text-[10px] text-gray-600 mt-1.5 leading-snug max-w-xl">
+                                Source badges show which datasets back this role. Hover a badge for a plain-English explanation.
+                            </p>
                         </div>
 
                         <div className="flex items-center gap-2">

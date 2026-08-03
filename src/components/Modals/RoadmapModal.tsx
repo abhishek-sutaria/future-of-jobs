@@ -60,7 +60,7 @@ export default function RoadmapModal({ job, riskTask, targetTask, onClose }: Roa
                     </div>
                 </div>
 
-                <div className="flex items-center justify-center text-gray-600">
+                <div className="flex items-center justify-center text-white">
                     <IconArrowRight size={20} className="rotate-90 md:rotate-0" />
                 </div>
 
