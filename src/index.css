@@ -171,10 +171,17 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
-/* drei <Html> labels — outer host z-index is rewritten from camera distance each
-   move, so hover/selection must win with !important or the expanded popup stays
-   buried under nearer titles until the camera moves. */
+/* drei <Html> labels — outer host z-index is rewritten from camera distance.
+   Hover must both promote the active host and demote every other host, or
+   leftover --front classes (same max z) let later siblings cover the popup. */
+.foj-job-label {
+  z-index: auto;
+}
 .foj-job-label--front {
   z-index: 2147483000 !important;
+}
+.foj-job-label--recessed {
+  z-index: 1 !important;
+  opacity: 0.28;
 }
 
