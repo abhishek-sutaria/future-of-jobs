@@ -59,6 +59,67 @@ export interface JobAnalysis {
     salary_forecast: number[];
 }
 
+// Analyze used to re-call Claude on every click with no sampling pin, so the same
+// role bounced ~43–50%. Cache + temperature:0 (in callClaudeJSON) keep it stable.
+const ANALYZE_CACHE_KEY = 'foj_analyze_cache_v1';
+const ANALYZE_CACHE_VERSION = 1;
+const ANALYZE_CACHE_TTL_MS = 30 * 24 * 60 * 60 * 1000;
+
+type AnalyzeCacheFile = {
+    version: number;
+    entries: Record<string, { fingerprint: string; savedAt: number; result: JobAnalysis }>;
+};
+
+export function analyzeFingerprint(
+    jobTitle: string,
+    tasks: string[],
+    bls: { employment: number; projectedGrowth: number },
+): string {
+    return JSON.stringify({
+        jobTitle,
+        tasks,
+        employment: bls.employment,
+        projectedGrowth: bls.projectedGrowth,
+    });
+}
+
+function readAnalyzeCacheFile(): AnalyzeCacheFile {
+    try {
+        const raw = localStorage.getItem(ANALYZE_CACHE_KEY);
+        if (!raw) return { version: ANALYZE_CACHE_VERSION, entries: {} };
+        const parsed = JSON.parse(raw) as AnalyzeCacheFile;
+        if (parsed.version !== ANALYZE_CACHE_VERSION || !parsed.entries) {
+            return { version: ANALYZE_CACHE_VERSION, entries: {} };
+        }
+        return parsed;
+    } catch {
+        return { version: ANALYZE_CACHE_VERSION, entries: {} };
+    }
+}
+
+export function loadAnalyzeCacheEntry(jobId: string, fingerprint: string): JobAnalysis | null {
+    try {
+        const file = readAnalyzeCacheFile();
+        const hit = file.entries[jobId];
+        if (!hit) return null;
+        if (hit.fingerprint !== fingerprint) return null;
+        if (Date.now() - hit.savedAt > ANALYZE_CACHE_TTL_MS) return null;
+        return hit.result;
+    } catch {
+        return null;
+    }
+}
+
+export function saveAnalyzeCacheEntry(jobId: string, fingerprint: string, result: JobAnalysis): void {
+    try {
+        const file = readAnalyzeCacheFile();
+        file.entries[jobId] = { fingerprint, savedAt: Date.now(), result };
+        localStorage.setItem(ANALYZE_CACHE_KEY, JSON.stringify(file));
+    } catch (e) {
+        console.warn('[Analyze] Could not write cache:', e);
+    }
+}
+
 // --- API call layer ---
 
 async function callAnalysis(prompt: string): Promise<unknown> {
@@ -176,10 +237,18 @@ export async function generateUpskillCourses(jobTitle: string, taskName: string)
 }
 
 export async function analyzeJob(
+    jobId: string,
     jobTitle: string,
     tasks: string[],
     bls: { employment: number; projectedGrowth: number },
+    opts?: { forceRefresh?: boolean },
 ): Promise<JobAnalysis | null> {
+    const fingerprint = analyzeFingerprint(jobTitle, tasks, bls);
+    if (!opts?.forceRefresh) {
+        const cached = loadAnalyzeCacheEntry(jobId, fingerprint);
+        if (cached) return cached;
+    }
+
     const prompt = `
     Analyze the following job tasks for a "${jobTitle}" role.
 
@@ -227,5 +296,7 @@ export async function analyzeJob(
     - "salary_volatility_label" MUST match the data. High variance = "High".
   `;
 
-    return callAnalysis(prompt) as Promise<JobAnalysis>;
+    const result = await callAnalysis(prompt) as JobAnalysis;
+    if (result) saveAnalyzeCacheEntry(jobId, fingerprint, result);
+    return result;
 }

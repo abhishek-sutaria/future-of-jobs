@@ -65,13 +65,13 @@ export const UI: React.FC = () => {
 
             try {
                 const taskList = tasks.map(t => t.name);
-                const res = await analyzeJob(title, taskList, { employment, projectedGrowth });
+                const res = await analyzeJob(jobId, title, taskList, { employment, projectedGrowth });
                 // A slow response for a job the user already navigated away from
                 // must not overwrite the panel they're looking at now.
                 if (isStale()) return;
                 setAnalysisResult(res);
-                if (res?.yearlyForecast) {
-                    useStore.getState().updateJobForecast(jobId, res.yearlyForecast);
+                if (res) {
+                    useStore.getState().updateJobFromLiveAnalysis(jobId, res);
                 }
                 toast.success('AI analysis complete');
             } catch (e: unknown) {
