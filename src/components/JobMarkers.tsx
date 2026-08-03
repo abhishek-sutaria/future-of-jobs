@@ -217,16 +217,17 @@ export const JobMarkers: React.FC = () => {
                         />
 
                         {/* Label — kept compact/thin so more topography stays visible.
-                            Hover/selection bumps zIndexRange so the expanded popup paints
-                            above neighboring titles (distance-based z alone is not enough). */}
+                            drei rewrites host z-index from camera distance (and only when
+                            the label moves), so hover/selection also sets wrapperClass with
+                            !important CSS — otherwise the popup stays behind nearer titles. */}
                         <Html
                             position={[0, labelHeight, 0]}
                             center
-                            zIndexRange={isHovered || isSelected ? [1000, 900] : [100, 0]}
-                            style={{ zIndex: isHovered || isSelected ? 1000 : undefined }}
+                            wrapperClass={isHovered || isSelected ? 'foj-job-label--front' : undefined}
+                            zIndexRange={isHovered || isSelected ? [16777271, 16777000] : [100, 0]}
                         >
                             <div
-                                className={`flex flex-col max-w-[min(11rem,calc(100vw-2rem))] overflow-hidden bg-[#0F172A]/72 backdrop-blur-[2px] rounded border shadow-sm cursor-pointer touch-none select-none transition-all duration-200 ${isSelected ? 'scale-105 ring-1 ring-white/20 border-slate-500/60' : 'border-slate-600/40'} ${isHovered ? 'border-cyan-500/40 bg-[#0F172A]/85' : ''}`}
+                                className={`flex flex-col max-w-[min(11rem,calc(100vw-2rem))] overflow-hidden rounded border shadow-sm cursor-pointer touch-none select-none transition-all duration-200 ${isSelected || isHovered ? 'bg-[#0F172A]/95 backdrop-blur-sm scale-105 ring-1 ring-white/20 border-slate-400/50 shadow-lg shadow-black/40' : 'bg-[#0F172A]/72 backdrop-blur-[2px] border-slate-600/40'} ${isHovered ? 'border-cyan-400/50' : ''}`}
                                 onPointerDown={handleLabelPointerDown(job)}
                                 onPointerEnter={() => setHoveredJobId(job.id)}
                                 onPointerLeave={() => setHoveredJobId(null)}
