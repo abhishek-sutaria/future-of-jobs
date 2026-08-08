@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
-import * as pdfjsLib from 'pdfjs-dist';
-import pdfWorker from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
 import { Modal } from './ui/Modal';
 import { IconUpload, IconShield, IconAlertTriangle, IconCheck } from './ui/Icons';
 import { Skeleton } from './ui/Skeleton';
 import { toast } from './ui/Toast';
-
-pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
+import { useResumeInput } from '../hooks/useResumeInput';
+import { getClaudeUserFriendlyMessage } from '../utils/analysis';
 
 interface SkillsModalProps {
     isOpen: boolean;
@@ -14,42 +12,10 @@ interface SkillsModalProps {
 }
 
 export const SkillsModal: React.FC<SkillsModalProps> = ({ isOpen, onClose }) => {
-    const [skillInput, setSkillInput] = useState('');
+    const { resumeText: skillInput, setResumeText: setSkillInput, handleFileUpload, isParsing } = useResumeInput();
     const [analysisResult, setAnalysisResult] = useState<import('../utils/analysis').ResumeAnalysisResult | null>(null);
     const [step, setStep] = useState<'input' | 'analyzing' | 'result' | 'error'>('input');
     const [errorMessage, setErrorMessage] = useState('');
-
-    const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
-
-        if (file.type === 'application/pdf') {
-            try {
-                const arrayBuffer = await file.arrayBuffer();
-                const pdf = await pdfjsLib.getDocument(arrayBuffer).promise;
-                let fullText = '';
-                for (let i = 1; i <= pdf.numPages; i++) {
-                    const page = await pdf.getPage(i);
-                    const textContent = await page.getTextContent();
-                    const pageText = textContent.items.map((item) => ('str' in item ? item.str : '')).join(' ');
-                    fullText += pageText + '\n';
-                }
-                setSkillInput(fullText);
-                toast.success('Resume extracted successfully');
-            } catch {
-                toast.error('Failed to parse PDF. Try pasting text manually.');
-            }
-        } else {
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                const text = event.target?.result as string;
-                setSkillInput(text);
-                toast.success('File loaded');
-            };
-            reader.onerror = () => toast.error('Failed to read file');
-            reader.readAsText(file);
-        }
-    };
 
     const handleAnalyze = async () => {
         if (!skillInput.trim()) return;
@@ -64,7 +30,7 @@ export const SkillsModal: React.FC<SkillsModalProps> = ({ isOpen, onClose }) => 
             toast.success('Analysis complete');
         } catch (error: unknown) {
             console.error('Analysis failed', error);
-            setErrorMessage(error instanceof Error ? error.message : 'Unknown error occurred');
+            setErrorMessage(getClaudeUserFriendlyMessage(error));
             setStep('error');
             toast.error('Analysis failed');
         }
@@ -98,7 +64,7 @@ export const SkillsModal: React.FC<SkillsModalProps> = ({ isOpen, onClose }) => 
                             <div className="w-14 h-14 rounded-full bg-white/[0.04] border border-white/[0.08] flex items-center justify-center mb-4 group-hover:border-cyan-500/30 transition-all">
                                 <IconUpload size={24} className="text-gray-400 group-hover:text-cyan-400 transition-colors" />
                             </div>
-                            <h3 className="text-sm font-semibold text-white mb-1">Upload your Resume</h3>
+                            <h3 className="text-sm font-semibold text-white mb-1">{isParsing ? 'Reading file…' : 'Upload your Resume'}</h3>
                             <p className="text-xs text-gray-500 mb-3">Drag & drop or click to browse</p>
                             <div className="flex items-center gap-2">
                                 <span className="px-2 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wider bg-red-500/10 text-red-400 border border-red-500/20">PDF</span>
@@ -200,7 +166,7 @@ export const SkillsModal: React.FC<SkillsModalProps> = ({ isOpen, onClose }) => 
                     <IconAlertTriangle size={40} className="text-red-400" />
                     <h3 className="text-lg font-semibold text-white">Analysis Failed</h3>
                     <p className="text-gray-400 text-sm max-w-xs">{errorMessage}</p>
-                    {(errorMessage.includes('429') || errorMessage.includes('quota')) && (
+                    {(errorMessage.includes('429') || /quota|rate limit/i.test(errorMessage)) && (
                         <div className="p-3 bg-white/[0.03] rounded-lg border border-amber-500/20 text-xs text-amber-200 text-left max-w-sm">
                             <strong>Tip:</strong> The free AI quota may be exhausted. Wait a minute and retry, or add your own API key.
                         </div>

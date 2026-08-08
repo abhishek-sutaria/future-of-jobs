@@ -58,8 +58,64 @@ export function validateClaudeResponse(jsonText: string) {
     return ClaudeResponseSchema.parse(parsed);
 }
 
+/** Score fields from Claude sometimes arrive as strings ("8") or out of range; coerce + clamp. */
+const StartupScore = z.coerce.number().catch(0).transform((n) => Math.max(0, Math.min(10, Math.round(n))));
+const StringList = z.array(z.string()).catch([]).default([]);
 
-export async function callClaudeJSON<T>(prompt: string, schema?: z.ZodType<T>): Promise<T> {
+const StartupIdeaSchema = z.object({
+    name: z.string().default('Untitled idea'),
+    summary: z.string().default(''),
+    customer: z.string().default(''),
+    problem: z.string().default(''),
+    whyNow: z.string().default(''),
+    whyAI: z.string().default(''),
+    whyYou: z.string().default(''),
+    applicableSkills: StringList,
+    skillsNeeded: StringList,
+    mvpPlan: z.string().default(''),
+    firstCustomerPath: z.string().default(''),
+    pricingModel: z.string().default(''),
+    pathTo10kMrr: z.string().default(''),
+    pathToScale: z.string().default(''),
+    risks: StringList,
+    validation: z.string().default(''),
+    difficultyScore: StartupScore,
+    resumeFitScore: StartupScore,
+    revenuePotentialScore: StartupScore,
+    recommendation: z.string().default('Test'),
+});
+
+const StartupTopThreeSchema = z.object({
+    name: z.string().default(''),
+    validation48h: z.string().default(''),
+    mvp7day: z.string().default(''),
+    launch30day: z.string().default(''),
+    revenue90day: z.string().default(''),
+    techStack: StringList,
+    firstCustomers: StringList,
+    outreachScript: z.string().default(''),
+    killCriteria: z.string().default(''),
+});
+
+/** Personalized startup-idea dashboard (StartupIdeasModal). */
+export const StartupIdeasSchema = z.object({
+    founderProfile: z.object({
+        summary: z.string().default(''),
+        coreSkills: StringList,
+        domains: StringList,
+        unfairAdvantages: StringList,
+        gaps: StringList,
+    }).default({ summary: '', coreSkills: [], domains: [], unfairAdvantages: [], gaps: [] }),
+    ideas: z.array(StartupIdeaSchema).min(1),
+    topThree: z.array(StartupTopThreeSchema).catch([]).default([]),
+    startHere: z.string().default(''),
+});
+
+interface CallClaudeOptions {
+    maxTokens?: number;
+}
+
+export async function callClaudeJSON<T>(prompt: string, schema?: z.ZodType<T>, opts?: CallClaudeOptions): Promise<T> {
     const userKey = getUserKeyFromStorage();
     const headers: Record<string, string> = {
         'Content-Type': 'application/json',
@@ -74,7 +130,7 @@ export async function callClaudeJSON<T>(prompt: string, schema?: z.ZodType<T>): 
         headers,
         body: JSON.stringify({
             model: CLAUDE_MODEL,
-            max_tokens: 4096,
+            max_tokens: opts?.maxTokens ?? 4096,
             // Pin sampling so structured scores don't drift run-to-run (Analyze was
             // re-rolling ~43–50% for the same role on every click).
             temperature: 0,

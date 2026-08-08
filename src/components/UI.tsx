@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useStore } from '../store';
 import { IntroModal } from './IntroModal';
 import { SkillsModal } from './SkillsModal';
+import { StartupIdeasModal } from './StartupIdeasModal';
 import { MethodologyModal } from './MethodologyModal';
 import { StudentGuideModal } from './Modals/StudentGuideModal';
 import { HealthCheckModal } from './Modals/HealthCheckModal';
@@ -23,6 +24,7 @@ export const UI: React.FC = () => {
     const mapView = useStore((state) => state.mapView);
 
     const [showSkillsModal, setShowSkillsModal] = useState(false);
+    const [showStartupIdeasModal, setShowStartupIdeasModal] = useState(false);
     const [showMethodologyModal, setShowMethodologyModal] = useState(false);
     const [showStudentGuide, setShowStudentGuide] = useState(false);
     const [showHealthCheck, setShowHealthCheck] = useState(false);
@@ -135,6 +137,7 @@ export const UI: React.FC = () => {
                 economyData={economyData}
                 loadingEconomy={loadingEconomy}
                 onOpenSkillsModal={() => setShowSkillsModal(true)}
+                onOpenStartupIdeasModal={() => setShowStartupIdeasModal(true)}
                 onStartTour={() => setTourActive(true)}
                 onOpenStudentGuide={() => setShowStudentGuide(true)}
                 onOpenHealthCheck={() => setShowHealthCheck(true)}
@@ -178,6 +181,7 @@ export const UI: React.FC = () => {
             </div>
 
             <SkillsModal isOpen={showSkillsModal} onClose={() => setShowSkillsModal(false)} />
+            <StartupIdeasModal isOpen={showStartupIdeasModal} onClose={() => setShowStartupIdeasModal(false)} />
             {mapView !== 'map' && <Legend />}
             <GuidedTour isActive={tourActive} onClose={() => setTourActive(false)} />
         </>

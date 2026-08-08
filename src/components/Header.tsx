@@ -1,6 +1,6 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { useStore } from '../store';
-import { IconZap, IconGlobe, IconMap, IconSearch, IconInfo, IconKey, IconX, IconActivity } from './ui/Icons';
+import { IconZap, IconGlobe, IconMap, IconSearch, IconInfo, IconKey, IconX, IconActivity, IconRocket } from './ui/Icons';
 import { Z } from '../config/layers';
 import { YEAR_MIN, YEAR_MAX, UI } from '../config/constants';
 import type { Job } from '../types';
@@ -9,12 +9,13 @@ interface HeaderProps {
     economyData: { value: string; period: string; color: string } | null;
     loadingEconomy: boolean;
     onOpenSkillsModal: () => void;
+    onOpenStartupIdeasModal: () => void;
     onStartTour: () => void;
     onOpenStudentGuide: () => void;
     onOpenHealthCheck: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onOpenSkillsModal, onStartTour, onOpenStudentGuide, onOpenHealthCheck }) => {
+export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onOpenSkillsModal, onOpenStartupIdeasModal, onStartTour, onOpenStudentGuide, onOpenHealthCheck }) => {
     const mapView = useStore((state) => state.mapView);
     const setMapView = useStore((state) => state.setMapView);
     const setSelectedJob = useStore((state) => state.setSelectedJob);
@@ -118,6 +119,14 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
                         className="hidden md:flex shrink-0 items-center gap-2 px-3 py-2.5 rounded-lg border border-cyan-500/20 bg-cyan-500/[0.06] hover:bg-cyan-500/15 text-cyan-400 text-xs font-semibold uppercase tracking-wider transition-colors min-h-[44px]"
                     >
                         <IconZap size={14} /> My Skills
+                    </button>
+                    <button
+                        data-tour="tour-startup-ideas"
+                        onClick={onOpenStartupIdeasModal}
+                        title="Startup Ideas — personalized startup opportunities from your resume"
+                        className="hidden md:flex shrink-0 items-center gap-2 px-3 py-2.5 rounded-lg border border-violet-500/25 bg-violet-500/[0.06] hover:bg-violet-500/15 text-violet-300 text-xs font-semibold uppercase tracking-wider transition-colors min-h-[44px]"
+                    >
+                        <IconRocket size={14} /> Startup Ideas
                     </button>
                     <button
                         type="button"
