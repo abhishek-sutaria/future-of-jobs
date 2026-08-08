@@ -131,9 +131,10 @@ export async function callClaudeJSON<T>(prompt: string, schema?: z.ZodType<T>, o
         body: JSON.stringify({
             model: CLAUDE_MODEL,
             max_tokens: opts?.maxTokens ?? 4096,
-            // Pin sampling so structured scores don't drift run-to-run (Analyze was
-            // re-rolling ~43–50% for the same role on every click).
-            temperature: 0,
+            // NOTE: claude-sonnet-5 rejects `temperature` ("temperature is deprecated
+            // for this model"), which was making every AI call fail with a 400. Do not
+            // re-add it. Run-to-run stability for Analyze is preserved by the per-job
+            // fingerprint cache in analysis.ts (re-opening a role returns cached scores).
             // Claude Sonnet 5 runs adaptive thinking by default when this is omitted,
             // which silently eats into max_tokens on structured-output calls that
             // don't need deep reasoning — disable it so the full budget goes to JSON.

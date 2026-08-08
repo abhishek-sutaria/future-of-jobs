@@ -64,8 +64,9 @@ export interface JobAnalysis {
     salary_forecast: number[];
 }
 
-// Analyze used to re-call Claude on every click with no sampling pin, so the same
-// role bounced ~43–50%. Cache + temperature:0 (in callClaudeJSON) keep it stable.
+// Analyze used to re-call Claude on every click with no caching, so the same
+// role bounced ~43–50%. The per-job fingerprint cache below keeps it stable
+// (claude-sonnet-5 no longer accepts a temperature pin — see claude.ts).
 const ANALYZE_CACHE_KEY = 'foj_analyze_cache_v1';
 const ANALYZE_CACHE_VERSION = 1;
 const ANALYZE_CACHE_TTL_MS = 30 * 24 * 60 * 60 * 1000;
