@@ -2,36 +2,9 @@ import { useCallback, useState } from 'react';
 import * as pdfjsLib from 'pdfjs-dist';
 import pdfWorker from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
 import { toast } from '../components/ui/Toast';
+import { looksBinary, isWordDoc } from '../utils/fileText';
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
-
-// Word/other Office documents are ZIP archives; reading them as plain text used
-// to silently produce mojibake that then got sent to Claude as if it were a CV.
-// Detect that up front so the user gets an actionable message instead.
-function looksBinary(text: string): boolean {
-    if (!text) return false;
-    if (text.startsWith('PK\u0003\u0004') || text.startsWith('%PDF')) return true;
-    const sample = text.slice(0, 4000);
-    let nonPrintable = 0;
-    for (const ch of sample) {
-        const code = ch.codePointAt(0) ?? 0;
-        if (code === 9 || code === 10 || code === 13) continue; // tab, LF, CR
-        if (code < 32 || ch === '\uFFFD') nonPrintable++;
-    }
-    return sample.length > 0 && nonPrintable / sample.length > 0.1;
-}
-
-function isWordDoc(file: File): boolean {
-    const name = file.name.toLowerCase();
-    return (
-        name.endsWith('.docx') ||
-        name.endsWith('.doc') ||
-        name.endsWith('.pages') ||
-        name.endsWith('.rtf') ||
-        file.type.includes('officedocument') ||
-        file.type === 'application/msword'
-    );
-}
 
 interface UseResumeInputResult {
     resumeText: string;
