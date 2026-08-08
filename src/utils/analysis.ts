@@ -1,7 +1,12 @@
+import type { z } from 'zod';
 import { RISK_THRESHOLDS } from '../config/constants';
-import { callClaudeJSON } from './claude';
+import { callClaudeJSON, StartupIdeasSchema } from './claude';
 
 export { getClaudeUserFriendlyMessage } from './claude';
+
+export type StartupIdeasResult = z.infer<typeof StartupIdeasSchema>;
+export type StartupIdea = StartupIdeasResult['ideas'][number];
+export type StartupTopThree = StartupIdeasResult['topThree'][number];
 
 export interface ScenarioResult {
     story: string;
@@ -59,8 +64,9 @@ export interface JobAnalysis {
     salary_forecast: number[];
 }
 
-// Analyze used to re-call Claude on every click with no sampling pin, so the same
-// role bounced ~43–50%. Cache + temperature:0 (in callClaudeJSON) keep it stable.
+// Analyze used to re-call Claude on every click with no caching, so the same
+// role bounced ~43–50%. The per-job fingerprint cache below keeps it stable
+// (claude-sonnet-5 no longer accepts a temperature pin — see claude.ts).
 const ANALYZE_CACHE_KEY = 'foj_analyze_cache_v1';
 const ANALYZE_CACHE_VERSION = 1;
 const ANALYZE_CACHE_TTL_MS = 30 * 24 * 60 * 60 * 1000;
@@ -299,4 +305,84 @@ export async function analyzeJob(
     const result = await callAnalysis(prompt) as JobAnalysis;
     if (result) saveAnalyzeCacheEntry(jobId, fingerprint, result);
     return result;
+}
+
+export async function generateStartupIdeas(
+    resumeText: string,
+    onProgress?: (accumulatedText: string) => void,
+): Promise<StartupIdeasResult> {
+    const prompt = `
+You are the user's AI co-founder, startup strategist, and brutally honest entrepreneurial advisor.
+
+Carefully review the RESUME/CV below. Do NOT give generic startup ideas — every recommendation must be specifically tailored to this person's real skills, domain experience, credibility, network, and unfair advantages. Be direct and realistic about what they can and cannot execute in the next 12 months. If they are better suited to a services-first business than a technical SaaS, say so.
+
+First, extract a founder profile: core skills, industry/domain knowledge, unfair advantages, and honest gaps or weaknesses.
+
+Then propose EXACTLY 5 tailored startup ideas. Each idea should be able to plausibly reach ~$10,000 MRR within 12 months with focused execution, and have a path to a $1M+ business. For every idea explain why THIS person is a strong or weak fit based on the resume, why AI makes it possible now, and how to validate demand quickly. Rank the ideas best-first (idea #1 is the strongest fit).
+
+Base your reasoning on the resume plus your general knowledge of current startup/AI market trends (Y Combinator, Product Hunt, Indie Hackers, common B2B/prosumer pain points). Do not claim to have performed live web research. Avoid vague "build an AI chatbot / AI automation agency" answers — be specific about the niche, the buyer, and the first product.
+
+Then provide a concrete execution plan for the top 3 ideas.
+
+Be concise so the response stays complete: every string field is ONE sentence, and every array has at most 3 short items. Scores are integers from 1 to 10. "recommendation" must be exactly one of: "Pursue", "Test", or "Avoid".
+
+RESUME/CV:
+"""
+${resumeText}
+"""
+
+Output JSON ONLY, matching this exact shape:
+{
+  "founderProfile": {
+    "summary": "2-3 sentence honest summary of who this founder is and what they can realistically build.",
+    "coreSkills": ["skill", "skill", "skill"],
+    "domains": ["domain/industry", "..."],
+    "unfairAdvantages": ["advantage", "..."],
+    "gaps": ["gap or weakness", "..."]
+  },
+  "ideas": [
+    {
+      "name": "Startup name",
+      "summary": "One-sentence summary.",
+      "customer": "Who the customer is.",
+      "problem": "The painful problem being solved.",
+      "whyNow": "Why this problem is worth solving now.",
+      "whyAI": "Why AI makes this possible or better.",
+      "whyYou": "Why THIS person (per the resume) is suited to build it.",
+      "applicableSkills": ["resume skill that applies", "..."],
+      "skillsNeeded": ["skill or resource still needed", "..."],
+      "mvpPlan": "MVP / proof-of-concept plan.",
+      "firstCustomerPath": "Fastest path to the first paying customer.",
+      "pricingModel": "Suggested pricing model.",
+      "pathTo10kMrr": "How to reach $10k MRR within 12 months.",
+      "pathToScale": "How it could become a $1M+ business.",
+      "risks": ["main risk", "..."],
+      "validation": "How to validate demand in 7-14 days.",
+      "difficultyScore": 6,
+      "resumeFitScore": 8,
+      "revenuePotentialScore": 7,
+      "recommendation": "Pursue"
+    }
+  ],
+  "topThree": [
+    {
+      "name": "Must match one of the idea names above",
+      "validation48h": "48-hour validation plan.",
+      "mvp7day": "7-day MVP plan.",
+      "launch30day": "30-day launch plan.",
+      "revenue90day": "90-day revenue plan.",
+      "techStack": ["recommended tool/stack", "..."],
+      "firstCustomers": ["specific first customer to target", "..."],
+      "outreachScript": "A short cold email or LinkedIn outreach script.",
+      "killCriteria": "When to abandon the idea."
+    }
+  ],
+  "startHere": "Clear 'start here' guidance: the single most important first action for this founder."
+}
+`;
+
+    // Stream this one: it's a ~5k-token / ~55s response, and an unstreamed request
+    // sends nothing until it finishes, so any idle/proxy timeout drops it mid-flight.
+    // Headroom of 16k (model stops at end_turn ~5-6k) prevents truncated JSON.
+    return callClaudeJSON(prompt, StartupIdeasSchema, { maxTokens: 16000, stream: true, onProgress });
 }

@@ -58,9 +58,138 @@ export function validateClaudeResponse(jsonText: string) {
     return ClaudeResponseSchema.parse(parsed);
 }
 
+/** Score fields from Claude sometimes arrive as strings ("8") or out of range; coerce + clamp. */
+const StartupScore = z.coerce.number().catch(0).transform((n) => Math.max(0, Math.min(10, Math.round(n))));
+const StringList = z.array(z.string()).catch([]).default([]);
 
-export async function callClaudeJSON<T>(prompt: string, schema?: z.ZodType<T>): Promise<T> {
+const StartupIdeaSchema = z.object({
+    name: z.string().default('Untitled idea'),
+    summary: z.string().default(''),
+    customer: z.string().default(''),
+    problem: z.string().default(''),
+    whyNow: z.string().default(''),
+    whyAI: z.string().default(''),
+    whyYou: z.string().default(''),
+    applicableSkills: StringList,
+    skillsNeeded: StringList,
+    mvpPlan: z.string().default(''),
+    firstCustomerPath: z.string().default(''),
+    pricingModel: z.string().default(''),
+    pathTo10kMrr: z.string().default(''),
+    pathToScale: z.string().default(''),
+    risks: StringList,
+    validation: z.string().default(''),
+    difficultyScore: StartupScore,
+    resumeFitScore: StartupScore,
+    revenuePotentialScore: StartupScore,
+    recommendation: z.string().default('Test'),
+});
+
+const StartupTopThreeSchema = z.object({
+    name: z.string().default(''),
+    validation48h: z.string().default(''),
+    mvp7day: z.string().default(''),
+    launch30day: z.string().default(''),
+    revenue90day: z.string().default(''),
+    techStack: StringList,
+    firstCustomers: StringList,
+    outreachScript: z.string().default(''),
+    killCriteria: z.string().default(''),
+});
+
+/** Personalized startup-idea dashboard (StartupIdeasModal). */
+export const StartupIdeasSchema = z.object({
+    founderProfile: z.object({
+        summary: z.string().default(''),
+        coreSkills: StringList,
+        domains: StringList,
+        unfairAdvantages: StringList,
+        gaps: StringList,
+    }).default({ summary: '', coreSkills: [], domains: [], unfairAdvantages: [], gaps: [] }),
+    ideas: z.array(StartupIdeaSchema).min(1),
+    topThree: z.array(StartupTopThreeSchema).catch([]).default([]),
+    startHere: z.string().default(''),
+});
+
+interface CallClaudeOptions {
+    maxTokens?: number;
+    /**
+     * Stream the response via SSE. Long generations (e.g. the Startup Ideas
+     * dashboard, ~55s / ~5k tokens) send no bytes until finished when
+     * unstreamed, so any idle/proxy timeout in the user's path drops them mid-
+     * flight ("slow, then fails"). Streaming keeps bytes flowing continuously.
+     */
+    stream?: boolean;
+    /** Called with the accumulated text so far, for progress UI while streaming. */
+    onProgress?: (accumulatedText: string) => void;
+}
+
+function friendlyHttpError(status: number, message: string): Error {
+    const lower = String(message).toLowerCase();
+    const missingProxyKey =
+        status === 401 &&
+        (lower.includes('x-api-key') || lower.includes('api key')) &&
+        (lower.includes('required') || lower.includes('missing'));
+    if (missingProxyKey) {
+        return new Error(
+            'No default AI key is configured on the dev server. Add ANTHROPIC_API_KEY to a .env file in the project root and restart the dev server, or use your own key from the Claude setup screen.',
+        );
+    }
+    return new Error(`Claude ${status}: ${message}`);
+}
+
+/** Read an Anthropic SSE stream into the final text + stop_reason. */
+async function readClaudeStream(
+    response: Response,
+    onProgress?: (text: string) => void,
+): Promise<{ text: string; stopReason: string | null }> {
+    const reader = response.body?.getReader();
+    if (!reader) throw new Error('Empty response from Claude');
+    const decoder = new TextDecoder();
+    let buffer = '';
+    let text = '';
+    let stopReason: string | null = null;
+
+    const handleData = (raw: string) => {
+        if (!raw || raw === '[DONE]') return;
+        let evt: {
+            type?: string;
+            delta?: { type?: string; text?: string; stop_reason?: string };
+            error?: { message?: string };
+        };
+        try {
+            evt = JSON.parse(raw);
+        } catch {
+            return; // keepalive / partial line
+        }
+        if (evt.type === 'content_block_delta' && evt.delta?.type === 'text_delta') {
+            text += evt.delta.text ?? '';
+            onProgress?.(text);
+        } else if (evt.type === 'message_delta' && evt.delta?.stop_reason) {
+            stopReason = evt.delta.stop_reason;
+        } else if (evt.type === 'error') {
+            throw new Error(evt.error?.message || 'Claude streaming error');
+        }
+    };
+
+    for (;;) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+        buffer = lines.pop() ?? '';
+        for (const line of lines) {
+            const trimmed = line.trim();
+            if (trimmed.startsWith('data:')) handleData(trimmed.slice(5).trim());
+        }
+    }
+    if (buffer.trim().startsWith('data:')) handleData(buffer.trim().slice(5).trim());
+    return { text, stopReason };
+}
+
+export async function callClaudeJSON<T>(prompt: string, schema?: z.ZodType<T>, opts?: CallClaudeOptions): Promise<T> {
     const userKey = getUserKeyFromStorage();
+    const stream = opts?.stream ?? false;
     const headers: Record<string, string> = {
         'Content-Type': 'application/json',
     };
@@ -74,14 +203,16 @@ export async function callClaudeJSON<T>(prompt: string, schema?: z.ZodType<T>): 
         headers,
         body: JSON.stringify({
             model: CLAUDE_MODEL,
-            max_tokens: 4096,
-            // Pin sampling so structured scores don't drift run-to-run (Analyze was
-            // re-rolling ~43–50% for the same role on every click).
-            temperature: 0,
+            max_tokens: opts?.maxTokens ?? 4096,
+            // NOTE: claude-sonnet-5 rejects `temperature` ("temperature is deprecated
+            // for this model"), which was making every AI call fail with a 400. Do not
+            // re-add it. Run-to-run stability for Analyze is preserved by the per-job
+            // fingerprint cache in analysis.ts (re-opening a role returns cached scores).
             // Claude Sonnet 5 runs adaptive thinking by default when this is omitted,
             // which silently eats into max_tokens on structured-output calls that
             // don't need deep reasoning — disable it so the full budget goes to JSON.
             thinking: { type: 'disabled' },
+            ...(stream ? { stream: true } : {}),
             messages: [{ role: 'user', content: prompt }],
         }),
     });
@@ -94,21 +225,20 @@ export async function callClaudeJSON<T>(prompt: string, schema?: z.ZodType<T>): 
         } catch {
             // no-op
         }
-        const lower = String(message).toLowerCase();
-        const missingProxyKey =
-            response.status === 401 &&
-            (lower.includes('x-api-key') || lower.includes('api key')) &&
-            (lower.includes('required') || lower.includes('missing'));
-        if (missingProxyKey) {
-            throw new Error(
-                'No default AI key is configured on the dev server. Add ANTHROPIC_API_KEY to a .env file in the project root and restart the dev server, or use your own key from the Claude setup screen.',
-            );
-        }
-        throw new Error(`Claude ${response.status}: ${message}`);
+        throw friendlyHttpError(response.status, message);
     }
 
-    const body = await response.json();
-    const text = body?.content?.map((part: { type?: string; text?: string }) => part?.text || '').join('\n').trim();
+    let text: string;
+    let stopReason: string | null;
+    if (stream) {
+        const result = await readClaudeStream(response, opts?.onProgress);
+        text = result.text.trim();
+        stopReason = result.stopReason;
+    } else {
+        const body = await response.json();
+        text = body?.content?.map((part: { type?: string; text?: string }) => part?.text || '').join('\n').trim();
+        stopReason = body?.stop_reason ?? null;
+    }
     if (!text) {
         throw new Error('Empty response from Claude');
     }
@@ -122,7 +252,7 @@ export async function callClaudeJSON<T>(prompt: string, schema?: z.ZodType<T>): 
     } catch (e) {
         // A truncated response (hit max_tokens mid-JSON) surfaces as a generic
         // SyntaxError otherwise — give a diagnosable message instead.
-        if (body?.stop_reason === 'max_tokens') {
+        if (stopReason === 'max_tokens') {
             throw new Error('Claude response truncated: hit max_tokens before finishing the JSON output.');
         }
         throw e;
