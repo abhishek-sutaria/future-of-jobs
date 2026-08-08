@@ -321,7 +321,7 @@ Base your reasoning on the resume plus your general knowledge of current startup
 
 Then provide a concrete execution plan for the top 3 ideas.
 
-Keep every string field concise (1-3 sentences). Scores are integers from 1 to 10. "recommendation" must be exactly one of: "Pursue", "Test", or "Avoid".
+Be concise so the response stays complete: every string field is ONE sentence, and every array has at most 3 short items. Scores are integers from 1 to 10. "recommendation" must be exactly one of: "Pursue", "Test", or "Avoid".
 
 RESUME/CV:
 """
@@ -378,5 +378,8 @@ Output JSON ONLY, matching this exact shape:
 }
 `;
 
-    return callClaudeJSON(prompt, StartupIdeasSchema, { maxTokens: 8000 });
+    // Headroom well above the ~6k tokens a full dashboard needs, so a verbose run
+    // can't hit max_tokens and return truncated (unparseable) JSON. The model stops
+    // at end_turn well before this, so raising the ceiling doesn't slow typical runs.
+    return callClaudeJSON(prompt, StartupIdeasSchema, { maxTokens: 16000 });
 }

@@ -238,7 +238,7 @@ export const StartupIdeasModal: React.FC<StartupIdeasModalProps> = ({ isOpen, on
                     <div className="w-10 h-10 border-2 border-violet-500/30 border-t-violet-400 rounded-full animate-spin"></div>
                     <div>
                         <p className="text-white font-medium mb-1">Building your startup dashboard</p>
-                        <p className="text-gray-500 text-xs">Analyzing your resume and scanning market opportunities…</p>
+                        <p className="text-gray-500 text-xs">Analyzing your resume and 5 tailored ideas — this can take up to a minute.</p>
                     </div>
                     <div className="w-full max-w-xs space-y-3">
                         <Skeleton className="h-3 w-full" />
