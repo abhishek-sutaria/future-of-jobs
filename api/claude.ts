@@ -41,15 +41,27 @@ export default async function handler(req: any, res: any) {
       body: JSON.stringify(req.body || {}),
     });
 
-    const text = await upstream.text();
-    const contentType = upstream.headers.get('content-type');
-    if (contentType) {
-      res.setHeader('content-type', contentType);
-    } else {
-      res.setHeader('content-type', 'application/json');
+    const contentType = upstream.headers.get('content-type') || 'application/json';
+    res.status(upstream.status);
+    res.setHeader('content-type', contentType);
+    // Long generations (e.g. Startup Ideas, ~55s) stream over SSE. Buffering the
+    // whole body used to hold the request until finished with no bytes flowing,
+    // which trips idle/proxy timeouts. Pipe chunks straight through instead so
+    // the connection stays alive and the browser receives tokens as they arrive.
+    res.setHeader('cache-control', 'no-cache, no-transform');
+
+    if (!upstream.body) {
+      const text = await upstream.text();
+      return res.send(text);
     }
 
-    return res.status(upstream.status).send(text);
+    const reader = upstream.body.getReader();
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      if (value) res.write(Buffer.from(value));
+    }
+    return res.end();
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Unknown proxy error';
     return res.status(502).json({ error: { message } });
