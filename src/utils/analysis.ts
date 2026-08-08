@@ -307,7 +307,10 @@ export async function analyzeJob(
     return result;
 }
 
-export async function generateStartupIdeas(resumeText: string): Promise<StartupIdeasResult> {
+export async function generateStartupIdeas(
+    resumeText: string,
+    onProgress?: (accumulatedText: string) => void,
+): Promise<StartupIdeasResult> {
     const prompt = `
 You are the user's AI co-founder, startup strategist, and brutally honest entrepreneurial advisor.
 
@@ -378,8 +381,8 @@ Output JSON ONLY, matching this exact shape:
 }
 `;
 
-    // Headroom well above the ~6k tokens a full dashboard needs, so a verbose run
-    // can't hit max_tokens and return truncated (unparseable) JSON. The model stops
-    // at end_turn well before this, so raising the ceiling doesn't slow typical runs.
-    return callClaudeJSON(prompt, StartupIdeasSchema, { maxTokens: 16000 });
+    // Stream this one: it's a ~5k-token / ~55s response, and an unstreamed request
+    // sends nothing until it finishes, so any idle/proxy timeout drops it mid-flight.
+    // Headroom of 16k (model stops at end_turn ~5-6k) prevents truncated JSON.
+    return callClaudeJSON(prompt, StartupIdeasSchema, { maxTokens: 16000, stream: true, onProgress });
 }

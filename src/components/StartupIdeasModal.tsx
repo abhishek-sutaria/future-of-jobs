@@ -153,14 +153,21 @@ export const StartupIdeasModal: React.FC<StartupIdeasModalProps> = ({ isOpen, on
     const [result, setResult] = useState<StartupIdeasResult | null>(null);
     const [step, setStep] = useState<'input' | 'analyzing' | 'result' | 'error'>('input');
     const [errorMessage, setErrorMessage] = useState('');
+    const [ideasDrafted, setIdeasDrafted] = useState(0);
 
     const handleGenerate = async () => {
         if (!resumeText.trim()) return;
         setStep('analyzing');
         setErrorMessage('');
+        setIdeasDrafted(0);
         try {
             const { generateStartupIdeas } = await import('../utils/analysis');
-            const res = await generateStartupIdeas(resumeText);
+            // Each idea object contains exactly one "recommendation" field, so counting
+            // them in the streamed text is a cheap, honest progress signal.
+            const res = await generateStartupIdeas(resumeText, (text) => {
+                const matches = text.match(/"recommendation"/g);
+                setIdeasDrafted(Math.min(5, matches ? matches.length : 0));
+            });
             setResult(res);
             setStep('result');
             toast.success('Startup ideas ready');
@@ -176,6 +183,7 @@ export const StartupIdeasModal: React.FC<StartupIdeasModalProps> = ({ isOpen, on
         setResumeText('');
         setResult(null);
         setErrorMessage('');
+        setIdeasDrafted(0);
         setStep('input');
         onClose();
     };
@@ -238,7 +246,11 @@ export const StartupIdeasModal: React.FC<StartupIdeasModalProps> = ({ isOpen, on
                     <div className="w-10 h-10 border-2 border-violet-500/30 border-t-violet-400 rounded-full animate-spin"></div>
                     <div>
                         <p className="text-white font-medium mb-1">Building your startup dashboard</p>
-                        <p className="text-gray-500 text-xs">Analyzing your resume and 5 tailored ideas — this can take up to a minute.</p>
+                        <p className="text-gray-500 text-xs">
+                            {ideasDrafted > 0
+                                ? `Drafted ${ideasDrafted} of 5 ideas…`
+                                : 'Analyzing your resume and market fit — this can take up to a minute.'}
+                        </p>
                     </div>
                     <div className="w-full max-w-xs space-y-3">
                         <Skeleton className="h-3 w-full" />

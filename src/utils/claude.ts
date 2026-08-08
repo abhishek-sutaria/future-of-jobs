@@ -113,10 +113,83 @@ export const StartupIdeasSchema = z.object({
 
 interface CallClaudeOptions {
     maxTokens?: number;
+    /**
+     * Stream the response via SSE. Long generations (e.g. the Startup Ideas
+     * dashboard, ~55s / ~5k tokens) send no bytes until finished when
+     * unstreamed, so any idle/proxy timeout in the user's path drops them mid-
+     * flight ("slow, then fails"). Streaming keeps bytes flowing continuously.
+     */
+    stream?: boolean;
+    /** Called with the accumulated text so far, for progress UI while streaming. */
+    onProgress?: (accumulatedText: string) => void;
+}
+
+function friendlyHttpError(status: number, message: string): Error {
+    const lower = String(message).toLowerCase();
+    const missingProxyKey =
+        status === 401 &&
+        (lower.includes('x-api-key') || lower.includes('api key')) &&
+        (lower.includes('required') || lower.includes('missing'));
+    if (missingProxyKey) {
+        return new Error(
+            'No default AI key is configured on the dev server. Add ANTHROPIC_API_KEY to a .env file in the project root and restart the dev server, or use your own key from the Claude setup screen.',
+        );
+    }
+    return new Error(`Claude ${status}: ${message}`);
+}
+
+/** Read an Anthropic SSE stream into the final text + stop_reason. */
+async function readClaudeStream(
+    response: Response,
+    onProgress?: (text: string) => void,
+): Promise<{ text: string; stopReason: string | null }> {
+    const reader = response.body?.getReader();
+    if (!reader) throw new Error('Empty response from Claude');
+    const decoder = new TextDecoder();
+    let buffer = '';
+    let text = '';
+    let stopReason: string | null = null;
+
+    const handleData = (raw: string) => {
+        if (!raw || raw === '[DONE]') return;
+        let evt: {
+            type?: string;
+            delta?: { type?: string; text?: string; stop_reason?: string };
+            error?: { message?: string };
+        };
+        try {
+            evt = JSON.parse(raw);
+        } catch {
+            return; // keepalive / partial line
+        }
+        if (evt.type === 'content_block_delta' && evt.delta?.type === 'text_delta') {
+            text += evt.delta.text ?? '';
+            onProgress?.(text);
+        } else if (evt.type === 'message_delta' && evt.delta?.stop_reason) {
+            stopReason = evt.delta.stop_reason;
+        } else if (evt.type === 'error') {
+            throw new Error(evt.error?.message || 'Claude streaming error');
+        }
+    };
+
+    for (;;) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split('\n');
+        buffer = lines.pop() ?? '';
+        for (const line of lines) {
+            const trimmed = line.trim();
+            if (trimmed.startsWith('data:')) handleData(trimmed.slice(5).trim());
+        }
+    }
+    if (buffer.trim().startsWith('data:')) handleData(buffer.trim().slice(5).trim());
+    return { text, stopReason };
 }
 
 export async function callClaudeJSON<T>(prompt: string, schema?: z.ZodType<T>, opts?: CallClaudeOptions): Promise<T> {
     const userKey = getUserKeyFromStorage();
+    const stream = opts?.stream ?? false;
     const headers: Record<string, string> = {
         'Content-Type': 'application/json',
     };
@@ -139,6 +212,7 @@ export async function callClaudeJSON<T>(prompt: string, schema?: z.ZodType<T>, o
             // which silently eats into max_tokens on structured-output calls that
             // don't need deep reasoning — disable it so the full budget goes to JSON.
             thinking: { type: 'disabled' },
+            ...(stream ? { stream: true } : {}),
             messages: [{ role: 'user', content: prompt }],
         }),
     });
@@ -151,21 +225,20 @@ export async function callClaudeJSON<T>(prompt: string, schema?: z.ZodType<T>, o
         } catch {
             // no-op
         }
-        const lower = String(message).toLowerCase();
-        const missingProxyKey =
-            response.status === 401 &&
-            (lower.includes('x-api-key') || lower.includes('api key')) &&
-            (lower.includes('required') || lower.includes('missing'));
-        if (missingProxyKey) {
-            throw new Error(
-                'No default AI key is configured on the dev server. Add ANTHROPIC_API_KEY to a .env file in the project root and restart the dev server, or use your own key from the Claude setup screen.',
-            );
-        }
-        throw new Error(`Claude ${response.status}: ${message}`);
+        throw friendlyHttpError(response.status, message);
     }
 
-    const body = await response.json();
-    const text = body?.content?.map((part: { type?: string; text?: string }) => part?.text || '').join('\n').trim();
+    let text: string;
+    let stopReason: string | null;
+    if (stream) {
+        const result = await readClaudeStream(response, opts?.onProgress);
+        text = result.text.trim();
+        stopReason = result.stopReason;
+    } else {
+        const body = await response.json();
+        text = body?.content?.map((part: { type?: string; text?: string }) => part?.text || '').join('\n').trim();
+        stopReason = body?.stop_reason ?? null;
+    }
     if (!text) {
         throw new Error('Empty response from Claude');
     }
@@ -179,7 +252,7 @@ export async function callClaudeJSON<T>(prompt: string, schema?: z.ZodType<T>, o
     } catch (e) {
         // A truncated response (hit max_tokens mid-JSON) surfaces as a generic
         // SyntaxError otherwise — give a diagnosable message instead.
-        if (body?.stop_reason === 'max_tokens') {
+        if (stopReason === 'max_tokens') {
             throw new Error('Claude response truncated: hit max_tokens before finishing the JSON output.');
         }
         throw e;
