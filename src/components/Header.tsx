@@ -4,7 +4,6 @@ import { IconZap, IconGlobe, IconMap, IconSearch, IconInfo, IconKey, IconX, Icon
 import { Z } from '../config/layers';
 import { YEAR_MIN, YEAR_MAX, UI } from '../config/constants';
 import type { Job } from '../types';
-import { RescoreConfirmModal } from './RescoreConfirmModal';
 
 interface HeaderProps {
     economyData: { value: string; period: string; color: string } | null;
@@ -25,9 +24,7 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
     const scoringProgress = useStore((state) => state.scoringProgress);
     const scoresGeneratedAt = useStore((state) => state.scoresGeneratedAt);
     const openClaudeKeyModal = useStore((state) => state.openClaudeKeyModal);
-
-    // Re-scoring all roles is ~50 Claude calls — confirm with cost estimate + user API key.
-    const [confirmingRescore, setConfirmingRescore] = useState(false);
+    const openRescoreModal = useStore((state) => state.openRescoreModal);
 
     const scoresAgeLabel = scoresGeneratedAt
         ? new Date(scoresGeneratedAt).toLocaleDateString(undefined, { month: 'short', year: 'numeric' })
@@ -66,17 +63,12 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
                                     ? `AI ratings computed ${scoresAgeLabel}. Click to re-score all roles with fresh Claude data (uses your API key).`
                                     : 'Click to re-score all roles with fresh Claude data (uses your API key).'
                             }
-                            onClick={() => setConfirmingRescore(true)}
+                            onClick={() => openRescoreModal()}
                         >
                             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
                             {scoresAgeLabel ? `AI Scores · ${scoresAgeLabel}` : 'AI Scores Live'}
                         </span>
                     )}
-
-                    <RescoreConfirmModal
-                        isOpen={confirmingRescore}
-                        onClose={() => setConfirmingRescore(false)}
-                    />
 
                     {(economyData || loadingEconomy) && (
                         <div className="hidden md:flex items-center gap-2 px-2.5 py-1 rounded-md bg-white/[0.03] border border-white/[0.06] pointer-events-auto" title="Live Data from Bureau of Labor Statistics">

@@ -188,6 +188,11 @@ interface AppState {
     openClaudeKeyModal: () => void;
     closeClaudeKeyModal: () => void;
 
+    /** Full re-score confirm dialog (must mount outside the pointer-events-none header). */
+    rescoreModalOpen: boolean;
+    openRescoreModal: () => void;
+    closeRescoreModal: () => void;
+
     /** True while the user is dragging to orbit/pan/zoom the 3D globe (suppress hover popups). */
     isOrbiting: boolean;
     setIsOrbiting: (orbiting: boolean) => void;
@@ -378,6 +383,10 @@ export const useStore = create<AppState>((set, get) => ({
 
     openClaudeKeyModal: () => set({ claudeKeyModalOpen: true }),
     closeClaudeKeyModal: () => set({ claudeKeyModalOpen: false }),
+
+    rescoreModalOpen: false,
+    openRescoreModal: () => set({ rescoreModalOpen: true }),
+    closeRescoreModal: () => set({ rescoreModalOpen: false }),
 
     isOrbiting: false,
     setIsOrbiting: (orbiting) => set({ isOrbiting: orbiting }),

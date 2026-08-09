@@ -4,6 +4,7 @@ import { UI } from './components/UI';
 import { MapView } from './components/MapView';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { ApiKeyModal } from './components/ApiKeyModal';
+import { RescoreConfirmModal } from './components/RescoreConfirmModal';
 import { useStore } from './store';
 
 function WebGLFallback() {
@@ -96,6 +97,7 @@ function App() {
 
       <UI />
       <ApiKeyModal />
+      <RescoreConfirmModal />
     </div>
   );
 }
