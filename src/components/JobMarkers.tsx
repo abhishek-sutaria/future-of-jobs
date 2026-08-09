@@ -15,6 +15,7 @@ export const JobMarkers: React.FC = () => {
     const selectedRoleIds = useStore((state) => state.selectedRoleIds);
     const mapView = useStore((state) => state.mapView);
     const heightMode = useStore((state) => state.heightMode);
+    const isOrbiting = useStore((state) => state.isOrbiting);
 
     const [hoveredJobId, setHoveredJobId] = useState<string | null>(null);
     const gl = useThree((state) => state.gl);
@@ -29,6 +30,11 @@ export const JobMarkers: React.FC = () => {
             document.removeEventListener('visibilitychange', clear);
         };
     }, []);
+
+    // While the user holds LMB (or touch) to rotate/pan/zoom, suppress foreground hover popups.
+    useEffect(() => {
+        if (isOrbiting) setHoveredJobId(null);
+    }, [isOrbiting]);
 
     // Drag-vs-click: forward the gesture to the canvas so OrbitControls rotates,
     // and only open the detail panel if the pointer barely moved.
@@ -155,7 +161,8 @@ export const JobMarkers: React.FC = () => {
         const showLabel = isVisibleByLOD && (isSelected || job.employment > 0);
         if (!showLabel) return [];
 
-        const isHovered = hoveredJobId === job.id;
+        // Expanded hover stats are disabled during orbit so popups don't fight the camera.
+        const isHovered = !isOrbiting && hoveredJobId === job.id;
         const pipColor = riskBandColor(job.automationCostIndex, riskScale);
         const labelHeight = SCENE.LABEL.BASE_HEIGHT + peak.offset;
         const surfaceY = calculateGaussianHeight(peak.x, peak.z, peaks) + TERRAIN_CONFIG.TERRAIN_OFFSET_Y;
@@ -235,7 +242,9 @@ export const JobMarkers: React.FC = () => {
                             <div
                                 className={`flex flex-col max-w-[min(11rem,calc(100vw-2rem))] overflow-hidden rounded border shadow-sm cursor-pointer touch-none select-none transition-all duration-200 ${isSelected || isHovered ? 'bg-[#0F172A]/95 backdrop-blur-sm scale-105 ring-1 ring-white/25 border-slate-300/40 shadow-xl shadow-black/50' : 'bg-[#0F172A]/72 backdrop-blur-[2px] border-slate-600/40'} ${isHovered ? 'border-cyan-400/60' : ''}`}
                                 onPointerDown={handleLabelPointerDown(job)}
-                                onPointerEnter={() => setHoveredJobId(job.id)}
+                                onPointerEnter={() => {
+                                    if (!isOrbiting) setHoveredJobId(job.id);
+                                }}
                                 onPointerLeave={() => setHoveredJobId(null)}
                             >
                                 {/* Title row */}

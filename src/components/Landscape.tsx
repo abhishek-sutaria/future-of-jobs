@@ -5,8 +5,11 @@ import { MOUSE, TOUCH } from 'three';
 import { Terrain } from './Terrain';
 import { JobMarkers } from './JobMarkers';
 import { SCENE } from '../config/constants';
+import { useStore } from '../store';
 
 export const Landscape: React.FC = () => {
+    const setIsOrbiting = useStore((s) => s.setIsOrbiting);
+
     return (
         <Canvas camera={{ position: [...SCENE.CAMERA_INITIAL_POSITION], fov: SCENE.CAMERA_FOV }}>
             <fog attach="fog" args={[SCENE.FOG_COLOR, SCENE.FOG_NEAR, SCENE.FOG_FAR]} />
@@ -27,6 +30,8 @@ export const Landscape: React.FC = () => {
                 maxPolarAngle={SCENE.MAX_POLAR_ANGLE}
                 minDistance={SCENE.MIN_CAMERA_DISTANCE}
                 maxDistance={SCENE.MAX_CAMERA_DISTANCE}
+                onStart={() => setIsOrbiting(true)}
+                onEnd={() => setIsOrbiting(false)}
             />
         </Canvas>
     );

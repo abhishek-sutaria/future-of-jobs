@@ -187,6 +187,10 @@ interface AppState {
     claudeKeyModalOpen: boolean;
     openClaudeKeyModal: () => void;
     closeClaudeKeyModal: () => void;
+
+    /** True while the user is dragging to orbit/pan/zoom the 3D globe (suppress hover popups). */
+    isOrbiting: boolean;
+    setIsOrbiting: (orbiting: boolean) => void;
 }
 
 const AI_MODE_STORAGE_KEY = 'foj_ai_mode';
@@ -375,6 +379,9 @@ export const useStore = create<AppState>((set, get) => ({
     openClaudeKeyModal: () => set({ claudeKeyModalOpen: true }),
     closeClaudeKeyModal: () => set({ claudeKeyModalOpen: false }),
 
+    isOrbiting: false,
+    setIsOrbiting: (orbiting) => set({ isOrbiting: orbiting }),
+
     hydrateAIConfig: () => {
         const savedMode = (localStorage.getItem(AI_MODE_STORAGE_KEY) as 'user' | 'default' | null);
         const savedUserKey = localStorage.getItem(AI_USER_KEY_STORAGE_KEY) || '';
@@ -499,6 +506,13 @@ export const useStore = create<AppState>((set, get) => ({
     },
 
     refreshAIScores: async () => {
+        const state = get();
+        // Full re-score must use the user's own Claude key (keeps shared/default
+        // token spend down — see RescoreConfirmModal).
+        if (state.apiKeyMode !== 'user' || !state.userClaudeApiKey.trim()) {
+            console.warn('[TaskScoring] Re-score blocked: user Claude API key required.');
+            return;
+        }
         const { clearScoreCache } = await import('./utils/taskScoring');
         clearScoreCache();
         // hasAIScores must drop first or the guard below would short-circuit —
