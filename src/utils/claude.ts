@@ -61,6 +61,13 @@ export function validateClaudeResponse(jsonText: string) {
 /** Score fields from Claude sometimes arrive as strings ("8") or out of range; coerce + clamp. */
 const StartupScore = z.coerce.number().catch(0).transform((n) => Math.max(0, Math.min(10, Math.round(n))));
 const StringList = z.array(z.string()).catch([]).default([]);
+/** Normalize to exactly Pursue/Test/Avoid even if the model returns a full sentence. */
+const Recommendation = z.string().default('Test').transform((s) => {
+    const t = s.toLowerCase();
+    if (t.includes('avoid')) return 'Avoid';
+    if (t.includes('pursue')) return 'Pursue';
+    return 'Test';
+});
 
 const StartupIdeaSchema = z.object({
     name: z.string().default('Untitled idea'),
@@ -82,7 +89,7 @@ const StartupIdeaSchema = z.object({
     difficultyScore: StartupScore,
     resumeFitScore: StartupScore,
     revenuePotentialScore: StartupScore,
-    recommendation: z.string().default('Test'),
+    recommendation: Recommendation,
 });
 
 const StartupTopThreeSchema = z.object({
@@ -97,15 +104,57 @@ const StartupTopThreeSchema = z.object({
     killCriteria: z.string().default(''),
 });
 
-/** Personalized startup-idea dashboard (StartupIdeasModal). */
+const FounderProfileSchema = z.object({
+    summary: z.string().default(''),
+    coreSkills: StringList,
+    domains: StringList,
+    unfairAdvantages: StringList,
+    gaps: StringList,
+}).default({ summary: '', coreSkills: [], domains: [], unfairAdvantages: [], gaps: [] });
+
+/**
+ * The Startup Ideas dashboard is generated in TWO calls so neither approaches
+ * Vercel's function time limit (a single combined call ran ~46-56s, right at the
+ * 60s cap, so cold/heavy runs timed out → "Couldn't generate ideas"):
+ *   1. StartupCoreSchema  — founder profile + 5 ranked ideas (~35s)
+ *   2. StartupPlansSchema — top-3 execution plans (~18s)
+ */
+export const StartupCoreSchema = z.object({
+    founderProfile: FounderProfileSchema,
+    ideas: z.array(StartupIdeaSchema).min(1),
+    startHere: z.string().default(''),
+});
+
+// Call 2 returns, for the top 3 ideas, the heavy per-idea detail AND the
+// execution plan. Keeping these out of call 1 is what keeps each call fast.
+const StartupDetailSchema = z.object({
+    name: z.string().default(''),
+    applicableSkills: StringList,
+    skillsNeeded: StringList,
+    mvpPlan: z.string().default(''),
+    firstCustomerPath: z.string().default(''),
+    pricingModel: z.string().default(''),
+    pathTo10kMrr: z.string().default(''),
+    pathToScale: z.string().default(''),
+    risks: StringList,
+    validation: z.string().default(''),
+    validation48h: z.string().default(''),
+    mvp7day: z.string().default(''),
+    launch30day: z.string().default(''),
+    revenue90day: z.string().default(''),
+    techStack: StringList,
+    firstCustomers: StringList,
+    outreachScript: z.string().default(''),
+    killCriteria: z.string().default(''),
+});
+
+export const StartupPlansSchema = z.object({
+    topThree: z.array(StartupDetailSchema).catch([]).default([]),
+});
+
+/** Full dashboard shape (core + plans merged) used for the result type. */
 export const StartupIdeasSchema = z.object({
-    founderProfile: z.object({
-        summary: z.string().default(''),
-        coreSkills: StringList,
-        domains: StringList,
-        unfairAdvantages: StringList,
-        gaps: StringList,
-    }).default({ summary: '', coreSkills: [], domains: [], unfairAdvantages: [], gaps: [] }),
+    founderProfile: FounderProfileSchema,
     ideas: z.array(StartupIdeaSchema).min(1),
     topThree: z.array(StartupTopThreeSchema).catch([]).default([]),
     startHere: z.string().default(''),
