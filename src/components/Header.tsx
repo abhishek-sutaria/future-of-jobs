@@ -4,6 +4,7 @@ import { IconZap, IconGlobe, IconMap, IconSearch, IconInfo, IconKey, IconX, Icon
 import { Z } from '../config/layers';
 import { YEAR_MIN, YEAR_MAX, UI } from '../config/constants';
 import type { Job } from '../types';
+import { RescoreConfirmModal } from './RescoreConfirmModal';
 
 interface HeaderProps {
     economyData: { value: string; period: string; color: string } | null;
@@ -23,10 +24,9 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
     const hasAIScores = useStore((state) => state.hasAIScores);
     const scoringProgress = useStore((state) => state.scoringProgress);
     const scoresGeneratedAt = useStore((state) => state.scoresGeneratedAt);
-    const refreshAIScores = useStore((state) => state.refreshAIScores);
     const openClaudeKeyModal = useStore((state) => state.openClaudeKeyModal);
 
-    // Re-scoring all 50 roles costs ~50 Claude calls / ~4-5 min, so confirm first.
+    // Re-scoring all roles is ~50 Claude calls — confirm with cost estimate + user API key.
     const [confirmingRescore, setConfirmingRescore] = useState(false);
 
     const scoresAgeLabel = scoresGeneratedAt
@@ -58,13 +58,13 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
                         </span>
                     )}
 
-                    {!isScoring && hasAIScores && !confirmingRescore && (
+                    {!isScoring && hasAIScores && (
                         <span
                             className="hidden md:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-[10px] text-emerald-400 font-semibold uppercase tracking-wider pointer-events-auto cursor-pointer hover:bg-emerald-500/20 transition-colors"
                             title={
                                 scoresAgeLabel
-                                    ? `AI ratings computed ${scoresAgeLabel}. Click to re-score all roles with fresh Claude data.`
-                                    : 'Click to re-score all roles with fresh Claude data.'
+                                    ? `AI ratings computed ${scoresAgeLabel}. Click to re-score all roles with fresh Claude data (uses your API key).`
+                                    : 'Click to re-score all roles with fresh Claude data (uses your API key).'
                             }
                             onClick={() => setConfirmingRescore(true)}
                         >
@@ -73,27 +73,10 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
                         </span>
                     )}
 
-                    {!isScoring && confirmingRescore && (
-                        <span className="hidden md:inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-gray-900/90 border border-cyan-400/30 text-[10px] pointer-events-auto">
-                            <span className="text-gray-300 normal-case tracking-normal">
-                                Re-score all roles? Takes ~4–5 min in the background.
-                            </span>
-                            <button
-                                type="button"
-                                className="text-gray-400 hover:text-white font-semibold uppercase tracking-wider"
-                                onClick={() => setConfirmingRescore(false)}
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                type="button"
-                                className="text-cyan-300 hover:text-cyan-200 font-semibold uppercase tracking-wider"
-                                onClick={() => { setConfirmingRescore(false); void refreshAIScores(); }}
-                            >
-                                Re-score
-                            </button>
-                        </span>
-                    )}
+                    <RescoreConfirmModal
+                        isOpen={confirmingRescore}
+                        onClose={() => setConfirmingRescore(false)}
+                    />
 
                     {(economyData || loadingEconomy) && (
                         <div className="hidden md:flex items-center gap-2 px-2.5 py-1 rounded-md bg-white/[0.03] border border-white/[0.06] pointer-events-auto" title="Live Data from Bureau of Labor Statistics">
