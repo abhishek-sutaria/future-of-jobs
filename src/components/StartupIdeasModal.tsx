@@ -154,23 +154,40 @@ export const StartupIdeasModal: React.FC<StartupIdeasModalProps> = ({ isOpen, on
     const [step, setStep] = useState<'input' | 'analyzing' | 'result' | 'error'>('input');
     const [errorMessage, setErrorMessage] = useState('');
     const [ideasDrafted, setIdeasDrafted] = useState(0);
+    const [plansLoading, setPlansLoading] = useState(false);
 
     const handleGenerate = async () => {
         if (!resumeText.trim()) return;
         setStep('analyzing');
         setErrorMessage('');
         setIdeasDrafted(0);
+        setPlansLoading(false);
         try {
-            const { generateStartupIdeas } = await import('../utils/analysis');
-            // Each idea object contains exactly one "recommendation" field, so counting
-            // them in the streamed text is a cheap, honest progress signal.
-            const res = await generateStartupIdeas(resumeText, (text) => {
+            const { generateStartupCore, generateStartupTopThree, mergeStartupResult } = await import('../utils/analysis');
+            // Call 1: founder profile + 5 light ideas (name/summary/why/scores). Each
+            // idea has one "recommendation" field, so counting them in the stream is a
+            // cheap progress signal. Kept light so it stays well under Vercel's limit.
+            const core = await generateStartupCore(resumeText, (text) => {
                 const matches = text.match(/"recommendation"/g);
                 setIdeasDrafted(Math.min(5, matches ? matches.length : 0));
             });
-            setResult(res);
+            // Render the ideas immediately, then fill in the deep detail + execution
+            // plans for the top 3 from a second (shorter) call so neither request
+            // nears the 60s function limit.
+            setResult({ ...core, topThree: [] });
             setStep('result');
             toast.success('Startup ideas ready');
+
+            setPlansLoading(true);
+            try {
+                const details = await generateStartupTopThree(resumeText, core.ideas.map((i) => i.name));
+                setResult(mergeStartupResult(core, details));
+            } catch (planErr) {
+                // Ideas are already shown; the deep top-3 detail is a bonus, so don't fail hard.
+                console.error('Top-3 detail failed (ideas still shown)', planErr);
+            } finally {
+                setPlansLoading(false);
+            }
         } catch (error: unknown) {
             console.error('Startup idea generation failed', error);
             setErrorMessage(getClaudeUserFriendlyMessage(error));
@@ -184,6 +201,7 @@ export const StartupIdeasModal: React.FC<StartupIdeasModalProps> = ({ isOpen, on
         setResult(null);
         setErrorMessage('');
         setIdeasDrafted(0);
+        setPlansLoading(false);
         setStep('input');
         onClose();
     };
@@ -346,6 +364,14 @@ export const StartupIdeasModal: React.FC<StartupIdeasModalProps> = ({ isOpen, on
                             <IdeaCard key={i} idea={idea} rank={i + 1} />
                         ))}
                     </div>
+
+                    {/* Execution plans still generating (second call) */}
+                    {plansLoading && result.topThree.length === 0 && (
+                        <div className="flex items-center gap-3 p-4 rounded-xl bg-violet-500/[0.04] border border-violet-500/15">
+                            <div className="w-5 h-5 border-2 border-violet-500/30 border-t-violet-400 rounded-full animate-spin shrink-0" />
+                            <p className="text-sm text-gray-300">Building the Top 3 execution plans…</p>
+                        </div>
+                    )}
 
                     {/* Top 3 execution plans */}
                     {result.topThree.length > 0 && (

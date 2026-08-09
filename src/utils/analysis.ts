@@ -1,12 +1,14 @@
 import type { z } from 'zod';
 import { RISK_THRESHOLDS } from '../config/constants';
-import { callClaudeJSON, StartupIdeasSchema } from './claude';
+import { callClaudeJSON, StartupIdeasSchema, StartupCoreSchema, StartupPlansSchema } from './claude';
 
 export { getClaudeUserFriendlyMessage } from './claude';
 
 export type StartupIdeasResult = z.infer<typeof StartupIdeasSchema>;
 export type StartupIdea = StartupIdeasResult['ideas'][number];
 export type StartupTopThree = StartupIdeasResult['topThree'][number];
+export type StartupCoreResult = z.infer<typeof StartupCoreSchema>;
+export type StartupDetail = z.infer<typeof StartupPlansSchema>['topThree'][number];
 
 export interface ScenarioResult {
     story: string;
@@ -307,10 +309,14 @@ export async function analyzeJob(
     return result;
 }
 
-export async function generateStartupIdeas(
+// The dashboard is generated in two streamed calls so neither nears Vercel's 60s
+// function limit (a single combined call ran ~46-56s and timed out on cold/heavy
+// runs). Call 1 = founder profile + 5 ranked ideas; call 2 = top-3 execution plans.
+
+export async function generateStartupCore(
     resumeText: string,
     onProgress?: (accumulatedText: string) => void,
-): Promise<StartupIdeasResult> {
+): Promise<StartupCoreResult> {
     const prompt = `
 You are the user's AI co-founder, startup strategist, and brutally honest entrepreneurial advisor.
 
@@ -318,13 +324,11 @@ Carefully review the RESUME/CV below. Do NOT give generic startup ideas — ever
 
 First, extract a founder profile: core skills, industry/domain knowledge, unfair advantages, and honest gaps or weaknesses.
 
-Then propose EXACTLY 5 tailored startup ideas. Each idea should be able to plausibly reach ~$10,000 MRR within 12 months with focused execution, and have a path to a $1M+ business. For every idea explain why THIS person is a strong or weak fit based on the resume, why AI makes it possible now, and how to validate demand quickly. Rank the ideas best-first (idea #1 is the strongest fit).
+Then propose EXACTLY 5 tailored startup ideas. Each idea should be able to plausibly reach ~$10,000 MRR within 12 months with focused execution, and have a path to a $1M+ business. For every idea explain why THIS person is a strong or weak fit based on the resume, why AI makes it possible now, and why the problem is worth solving now. Rank the ideas best-first (idea #1 is the strongest fit).
 
 Base your reasoning on the resume plus your general knowledge of current startup/AI market trends (Y Combinator, Product Hunt, Indie Hackers, common B2B/prosumer pain points). Do not claim to have performed live web research. Avoid vague "build an AI chatbot / AI automation agency" answers — be specific about the niche, the buyer, and the first product.
 
-Then provide a concrete execution plan for the top 3 ideas.
-
-Be concise so the response stays complete: every string field is ONE sentence, and every array has at most 3 short items. Scores are integers from 1 to 10. "recommendation" must be exactly one of: "Pursue", "Test", or "Avoid".
+Be concise so the response stays complete: every string field is ONE sentence. Scores are integers from 1 to 10. "recommendation" must be exactly one of: "Pursue", "Test", or "Avoid".
 
 RESUME/CV:
 """
@@ -349,6 +353,43 @@ Output JSON ONLY, matching this exact shape:
       "whyNow": "Why this problem is worth solving now.",
       "whyAI": "Why AI makes this possible or better.",
       "whyYou": "Why THIS person (per the resume) is suited to build it.",
+      "difficultyScore": 6,
+      "resumeFitScore": 8,
+      "revenuePotentialScore": 7,
+      "recommendation": "Pursue"
+    }
+  ],
+  "startHere": "Clear 'start here' guidance: the single most important first action for this founder."
+}
+`;
+
+    return callClaudeJSON(prompt, StartupCoreSchema, { maxTokens: 6000, stream: true, onProgress });
+}
+
+/**
+ * Call 2: deep detail + execution plan for the top 3 ideas only. Returned so the
+ * modal can both enrich those idea cards and render the Top-3 execution section.
+ */
+export async function generateStartupTopThree(
+    resumeText: string,
+    ideaNames: string[],
+): Promise<StartupDetail[]> {
+    const names = ideaNames.slice(0, 3);
+    const prompt = `
+You are the user's startup execution coach. For the founder described by the RESUME below, produce a detailed build/execution plan for EACH of these 3 startup ideas (use these exact names): ${names.map((n) => `"${n}"`).join(', ')}.
+
+Be concise and practical: every string field is ONE sentence, every array has at most 3 short items.
+
+RESUME/CV:
+"""
+${resumeText}
+"""
+
+Output JSON ONLY, matching this exact shape:
+{
+  "topThree": [
+    {
+      "name": "Must exactly match one of: ${names.join(', ')}",
       "applicableSkills": ["resume skill that applies", "..."],
       "skillsNeeded": ["skill or resource still needed", "..."],
       "mvpPlan": "MVP / proof-of-concept plan.",
@@ -358,15 +399,6 @@ Output JSON ONLY, matching this exact shape:
       "pathToScale": "How it could become a $1M+ business.",
       "risks": ["main risk", "..."],
       "validation": "How to validate demand in 7-14 days.",
-      "difficultyScore": 6,
-      "resumeFitScore": 8,
-      "revenuePotentialScore": 7,
-      "recommendation": "Pursue"
-    }
-  ],
-  "topThree": [
-    {
-      "name": "Must match one of the idea names above",
       "validation48h": "48-hour validation plan.",
       "mvp7day": "7-day MVP plan.",
       "launch30day": "30-day launch plan.",
@@ -376,13 +408,58 @@ Output JSON ONLY, matching this exact shape:
       "outreachScript": "A short cold email or LinkedIn outreach script.",
       "killCriteria": "When to abandon the idea."
     }
-  ],
-  "startHere": "Clear 'start here' guidance: the single most important first action for this founder."
+  ]
 }
 `;
 
-    // Stream this one: it's a ~5k-token / ~55s response, and an unstreamed request
-    // sends nothing until it finishes, so any idle/proxy timeout drops it mid-flight.
-    // Headroom of 16k (model stops at end_turn ~5-6k) prevents truncated JSON.
-    return callClaudeJSON(prompt, StartupIdeasSchema, { maxTokens: 16000, stream: true, onProgress });
+    const result = await callClaudeJSON(prompt, StartupPlansSchema, { maxTokens: 6000, stream: true });
+    return result.topThree;
+}
+
+/** Merge Call-2 detail into the light ideas (by name) and split out the plan fields. */
+export function mergeStartupResult(core: StartupCoreResult, details: StartupDetail[]): StartupIdeasResult {
+    const byName = new Map(details.map((d) => [d.name.trim().toLowerCase(), d]));
+    const ideas = core.ideas.map((idea) => {
+        const d = byName.get(idea.name.trim().toLowerCase());
+        if (!d) return idea;
+        return {
+            ...idea,
+            applicableSkills: d.applicableSkills,
+            skillsNeeded: d.skillsNeeded,
+            mvpPlan: d.mvpPlan,
+            firstCustomerPath: d.firstCustomerPath,
+            pricingModel: d.pricingModel,
+            pathTo10kMrr: d.pathTo10kMrr,
+            pathToScale: d.pathToScale,
+            risks: d.risks,
+            validation: d.validation,
+        };
+    });
+    const topThree: StartupTopThree[] = details.map((d) => ({
+        name: d.name,
+        validation48h: d.validation48h,
+        mvp7day: d.mvp7day,
+        launch30day: d.launch30day,
+        revenue90day: d.revenue90day,
+        techStack: d.techStack,
+        firstCustomers: d.firstCustomers,
+        outreachScript: d.outreachScript,
+        killCriteria: d.killCriteria,
+    }));
+    return { ...core, ideas, topThree };
+}
+
+/** Convenience orchestrator (core + detail). The modal calls the pieces separately
+ *  so it can render ideas as soon as the core call returns. */
+export async function generateStartupIdeas(
+    resumeText: string,
+    onProgress?: (accumulatedText: string) => void,
+): Promise<StartupIdeasResult> {
+    const core = await generateStartupCore(resumeText, onProgress);
+    try {
+        const details = await generateStartupTopThree(resumeText, core.ideas.map((i) => i.name));
+        return mergeStartupResult(core, details);
+    } catch {
+        return { ...core, topThree: [] };
+    }
 }
