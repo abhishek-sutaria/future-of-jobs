@@ -1,17 +1,21 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { useStore } from '../store';
 import { estimateRescoreCost, formatRescoreCostSummary } from '../utils/rescoreCost';
-
-interface RescoreConfirmModalProps {
-    isOpen: boolean;
-    onClose: () => void;
-}
+import { Z } from '../config/layers';
 
 /**
  * Gate for the expensive full re-score: show a token/USD estimate and require
  * the user's own Claude API key (not the app default) before proceeding.
+ *
+ * IMPORTANT: Must NOT render under Header's `pointer-events-none` ancestor —
+ * that made the backdrop look modal while clicks fell through to the globe,
+ * year slider, and job labels (Close appeared to "open" roles). Portaled to
+ * document.body with an explicit high z-index + pointer-events-auto.
  */
-export const RescoreConfirmModal: React.FC<RescoreConfirmModalProps> = ({ isOpen, onClose }) => {
+export const RescoreConfirmModal: React.FC = () => {
+    const isOpen = useStore((s) => s.rescoreModalOpen);
+    const onClose = useStore((s) => s.closeRescoreModal);
     const jobs = useStore((s) => s.jobs);
     const apiKeyMode = useStore((s) => s.apiKeyMode);
     const userClaudeApiKey = useStore((s) => s.userClaudeApiKey);
@@ -42,7 +46,17 @@ export const RescoreConfirmModal: React.FC<RescoreConfirmModalProps> = ({ isOpen
         setInputKey('');
         setInputError(null);
         setStarting(false);
-    }, [isOpen]);
+        const prevOverflow = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
+        const onKey = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') onClose();
+        };
+        document.addEventListener('keydown', onKey);
+        return () => {
+            document.body.style.overflow = prevOverflow;
+            document.removeEventListener('keydown', onKey);
+        };
+    }, [isOpen, onClose]);
 
     if (!isOpen) return null;
 
@@ -70,12 +84,21 @@ export const RescoreConfirmModal: React.FC<RescoreConfirmModalProps> = ({ isOpen
         }
     };
 
-    return (
-        <div className="fixed inset-0 z-[5000] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+    const tree = (
+        <div
+            className="fixed inset-0 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 pointer-events-auto"
+            style={{ zIndex: Z.toast }}
+            role="presentation"
+            // Stop wheel/drag from reaching the WebGL canvas underneath.
+            onPointerDown={(e) => e.stopPropagation()}
+            onWheel={(e) => e.stopPropagation()}
+        >
             <div
                 role="dialog"
+                aria-modal="true"
                 aria-labelledby="rescore-confirm-title"
                 className="w-full max-w-lg rounded-2xl border border-white/10 bg-gray-900 p-6 shadow-2xl relative"
+                onClick={(e) => e.stopPropagation()}
             >
                 <button
                     type="button"
@@ -124,6 +147,7 @@ export const RescoreConfirmModal: React.FC<RescoreConfirmModalProps> = ({ isOpen
                         placeholder={hasSavedUserKey ? '••••••••  (saved key will be used if left blank)' : 'sk-ant-...'}
                         className="dark-field w-full rounded-lg border border-white/10 px-3 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-cyan-500/40 focus:border-cyan-500/40"
                         autoComplete="off"
+                        autoFocus
                     />
                     {hasSavedUserKey && !inputKey.trim() && (
                         <p className="mt-2 text-xs text-emerald-400/90">Using your previously saved Claude API key.</p>
@@ -151,4 +175,6 @@ export const RescoreConfirmModal: React.FC<RescoreConfirmModalProps> = ({ isOpen
             </div>
         </div>
     );
+
+    return createPortal(tree, document.body);
 };
