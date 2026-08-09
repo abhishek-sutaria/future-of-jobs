@@ -90,7 +90,7 @@ export const ApiKeyModal: React.FC = () => {
                             if (inputError) setInputError(null);
                         }}
                         placeholder="sk-ant-..."
-                        className="w-full rounded-lg border border-white/10 bg-white/[0.03] px-3 py-2.5 text-sm text-white placeholder-gray-600 focus:outline-none focus:ring-1 focus:ring-cyan-500/40 focus:border-cyan-500/40"
+                        className="dark-field w-full rounded-lg border border-white/10 px-3 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-cyan-500/40 focus:border-cyan-500/40"
                     />
                     {inputError && <p className="mt-2 text-xs text-red-400">{inputError}</p>}
                 </div>

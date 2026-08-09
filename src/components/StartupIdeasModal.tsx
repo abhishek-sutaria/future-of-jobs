@@ -243,7 +243,7 @@ export const StartupIdeasModal: React.FC<StartupIdeasModalProps> = ({ isOpen, on
                     </div>
 
                     <textarea
-                        className="w-full h-32 bg-white/[0.03] border border-white/[0.08] rounded-lg p-3 text-white focus:border-violet-500/40 focus:ring-1 focus:ring-violet-500/20 outline-none transition-all placeholder-gray-600 text-sm resize-none"
+                        className="dark-field w-full h-32 border border-white/[0.08] rounded-lg p-3 focus:border-violet-500/40 focus:ring-1 focus:ring-violet-500/20 outline-none transition-all text-sm resize-none"
                         placeholder="Paste your CV, work history, or a summary of your skills and experience..."
                         value={resumeText}
                         onChange={(e) => setResumeText(e.target.value)}

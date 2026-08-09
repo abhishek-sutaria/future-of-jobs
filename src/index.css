@@ -12,6 +12,7 @@ html {
   background: #111827;
   background: radial-gradient(circle at 50% 50%, #111b2b 0%, #0a0e17 100%);
   color: white;
+  color-scheme: dark;
   font-family: 'Inter', sans-serif;
 
   --color-primary: #06b6d4;
@@ -28,6 +29,29 @@ h1, h2, h3, h4, h5, h6 {
 #root {
   width: 100%;
   height: 100%;
+}
+
+/* Dark form fields: Chromium/Safari can force light-mode control colors on dark
+   pages, which makes typed text look black-on-near-black (or invisible). Pin the
+   color scheme and text fill so inputs/textareas stay readable. */
+.dark-field {
+  color-scheme: dark;
+  color: #f3f4f6;
+  caret-color: #f3f4f6;
+  -webkit-text-fill-color: #f3f4f6;
+  background-color: rgba(255, 255, 255, 0.06);
+}
+.dark-field::placeholder {
+  color: #6b7280;
+  -webkit-text-fill-color: #6b7280;
+  opacity: 1;
+}
+.dark-field:-webkit-autofill,
+.dark-field:-webkit-autofill:hover,
+.dark-field:-webkit-autofill:focus {
+  -webkit-text-fill-color: #f3f4f6;
+  caret-color: #f3f4f6;
+  transition: background-color 99999s ease-in-out 0s;
 }
 
 /* Typography */
