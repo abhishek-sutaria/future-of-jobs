@@ -87,6 +87,19 @@ describe('StartupIdeasSchema', () => {
         expect(parsed.startHere).toBe('');
     });
 
+    test('normalizes verbose recommendation strings to Pursue/Test/Avoid', () => {
+        const parsed = StartupIdeasSchema.parse({
+            ideas: [
+                { name: 'A', recommendation: 'Pursue this first — it monetizes your rarest expertise.' },
+                { name: 'B', recommendation: 'Avoid for now; too capital intensive.' },
+                { name: 'C', recommendation: 'worth a quick test' },
+            ],
+        });
+        expect(parsed.ideas[0].recommendation).toBe('Pursue');
+        expect(parsed.ideas[1].recommendation).toBe('Avoid');
+        expect(parsed.ideas[2].recommendation).toBe('Test');
+    });
+
     test('rejects a response with no ideas', () => {
         expect(() => StartupIdeasSchema.parse({ ideas: [] })).toThrow();
     });

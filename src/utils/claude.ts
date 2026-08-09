@@ -61,6 +61,13 @@ export function validateClaudeResponse(jsonText: string) {
 /** Score fields from Claude sometimes arrive as strings ("8") or out of range; coerce + clamp. */
 const StartupScore = z.coerce.number().catch(0).transform((n) => Math.max(0, Math.min(10, Math.round(n))));
 const StringList = z.array(z.string()).catch([]).default([]);
+/** Normalize to exactly Pursue/Test/Avoid even if the model returns a full sentence. */
+const Recommendation = z.string().default('Test').transform((s) => {
+    const t = s.toLowerCase();
+    if (t.includes('avoid')) return 'Avoid';
+    if (t.includes('pursue')) return 'Pursue';
+    return 'Test';
+});
 
 const StartupIdeaSchema = z.object({
     name: z.string().default('Untitled idea'),
@@ -82,7 +89,7 @@ const StartupIdeaSchema = z.object({
     difficultyScore: StartupScore,
     resumeFitScore: StartupScore,
     revenuePotentialScore: StartupScore,
-    recommendation: z.string().default('Test'),
+    recommendation: Recommendation,
 });
 
 const StartupTopThreeSchema = z.object({

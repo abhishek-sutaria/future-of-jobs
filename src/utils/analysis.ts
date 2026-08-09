@@ -328,7 +328,7 @@ Then propose EXACTLY 5 tailored startup ideas. Each idea should be able to plaus
 
 Base your reasoning on the resume plus your general knowledge of current startup/AI market trends (Y Combinator, Product Hunt, Indie Hackers, common B2B/prosumer pain points). Do not claim to have performed live web research. Avoid vague "build an AI chatbot / AI automation agency" answers — be specific about the niche, the buyer, and the first product.
 
-Be concise so the response stays complete: every string field is ONE sentence. Scores are integers from 1 to 10. "recommendation" must be exactly one of: "Pursue", "Test", or "Avoid".
+Be concise so the response stays complete: every string field is ONE sentence, EXCEPT "recommendation" which must be exactly one word — either "Pursue", "Test", or "Avoid" (no other text). Scores are integers from 1 to 10.
 
 RESUME/CV:
 """
