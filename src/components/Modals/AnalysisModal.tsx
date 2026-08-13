@@ -45,17 +45,28 @@ export const AnalysisModal: React.FC<AnalysisModalProps> = ({ isOpen, isLoading,
                     <p className="text-red-400 text-sm leading-relaxed">{errorMessage}</p>
                 </div>
             ) : result ? (() => {
-                // Average of Claude's live task scores — same definition as panel Automation Risk
-                // (mean AI capability). Closing this modal writes these scores back to the role.
-                const liveAiAvg = result.tasks.reduce((sum, task) => sum + task.ai_exposure_score, 0) / (result.tasks.length || 1);
-                const liveHumanAvg = result.tasks.reduce((sum, task) => sum + task.human_criticality_score, 0) / (result.tasks.length || 1);
-                const aiDisplay = Math.round(liveAiAvg * 100);
-                const humanDisplay = Math.round(liveHumanAvg * 100);
+                // Align Claude rows to the role's task list (name, then index) and use the
+                // same two-decimal mean the role panel shows as Automation Risk.
+                const aligned = job.tasks.map((task, index) => {
+                    const match = result.tasks.find((t) =>
+                        t.task_text === task.name ||
+                        t.task_text.startsWith(task.name.slice(0, 40))
+                    ) ?? result.tasks[index];
+                    return {
+                        ai: match?.ai_exposure_score ?? task.aiCapabilityScore,
+                        human: match?.human_criticality_score ?? task.humanCriticalityScore,
+                    };
+                });
+                const liveAiAvg = aligned.reduce((sum, t) => sum + t.ai, 0) / (aligned.length || 1);
+                const liveHumanAvg = aligned.reduce((sum, t) => sum + t.human, 0) / (aligned.length || 1);
+                const aiDisplay = (parseFloat(liveAiAvg.toFixed(2)) * 100).toFixed(0);
+                const humanDisplay = (parseFloat(liveHumanAvg.toFixed(2)) * 100).toFixed(0);
 
                 return (
                     <div className="space-y-6 animate-in fade-in duration-300">
                         <p className="text-[11px] text-gray-500 leading-relaxed">
-                            Scores are cached per role after the first Analyze, so re-opening Analyze for the same job returns the same numbers. Closing this window also updates the role panel so both stay consistent.
+                            AI Automation Score uses the same average as Automation Risk on the role panel.
+                            Scores are cached per role after the first Analyze, and the panel updates as soon as this analysis finishes.
                         </p>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-5 flex items-center gap-4">
@@ -64,7 +75,7 @@ export const AnalysisModal: React.FC<AnalysisModalProps> = ({ isOpen, isLoading,
                                 </div>
                                 <div>
                                     <h4 className="text-gray-300 text-sm font-semibold uppercase tracking-wider">AI Automation Score</h4>
-                                    <p className="text-gray-500 text-xs mt-0.5">Average AI capability across tasks</p>
+                                    <p className="text-gray-500 text-xs mt-0.5">Same as panel Automation Risk (mean AI capability)</p>
                                 </div>
                             </div>
                             <div className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-5 flex items-center gap-4">

@@ -116,58 +116,57 @@ MAP_TITLE_TO_SOC = {
 # Unique SOC codes to extract (some titles share a code; extract each code once)
 UNIQUE_SOC_CODES = sorted(set(MAP_TITLE_TO_SOC.values()))
 
-# BLS Employment Projections 2022-2032
-# Source: https://www.bls.gov/ooh/ (Occupational Outlook Handbook)
-# These are the OFFICIAL projected percent change in employment, 2022-32
+# BLS Employment Projections 2024-2034
+# Source: https://www.bls.gov/emp/tables/occupational-projections-and-characteristics.htm
+# Official projected percent change in employment, 2024-34 (rounded to nearest integer)
 BLS_GROWTH_PROJECTIONS = {
-    "11-2021": 7,     # Marketing Managers: 7% (faster than average)
-    "13-1161": 13,    # Market Research Analysts: 13% (much faster than average)
-    "15-2051": 35,    # Data Scientists / BI Analysts: 35% (much faster than average)
-    "13-2051": 8,     # Financial Analysts: 8% (faster than average)
-    "11-3031": 16,    # Financial Managers: 16% (much faster than average)
-    "15-1252": 25,    # Software Developers: 25% (much faster than average)
-    "13-1111": 10,    # Management Analysts/Consultants: 10% (faster than average)
-    "11-2022": 4,     # Sales Managers: 4% (as fast as average)
-    "13-2011": 4,     # Accountants and Auditors: 4% (as fast as average)
-    "15-2031": 23,    # Operations Research Analysts: 23% (much faster)
-    "13-1081": 18,    # Logisticians: 18% (much faster than average)
-    "41-3031": 7,     # Securities/Financial Services Sales Agents: 7%
-    "11-3071": 18,    # Transportation/Storage/Distribution Managers: 18%
-    "11-2032": 6,     # Public Relations Managers: 6% (BLS OOH)
-    "41-3091": 4,     # Sales Representatives of Services, Except Advertising/Insurance/Financial/Travel: 4%
-    "41-3011": -3,    # Advertising Sales Agents: -3% (decline)
-    "13-1121": 8,     # Meeting/Convention/Event Planners: 8%
-    # 41-3099 removed — not a valid BLS OES detailed code; replaced by 41-3091
-    "41-4012": 2,     # Sales Representatives, Wholesale: 2%
-    "41-3021": 5,     # Insurance Sales Agents: 5%
-    "13-2052": 13,    # Personal Financial Advisors: 13%
-    "13-2041": 8,     # Credit Analysts: 8%
-    "13-2031": 3,     # Budget Analysts: 3%
-    "13-2099": 6,     # Financial Specialists, All Other: 6%
-    "13-2053": -4,    # Insurance Underwriters: -4% (decline)
-    "15-2011": 24,    # Actuaries: 24%
-    "13-2072": 3,     # Loan Officers: 3%
-    "15-2041": 31,    # Statisticians: 31%
-    "15-1211": 10,    # Computer Systems Analysts: 10%
-    "13-1051": -6,    # Cost Estimators: -6% (decline)
-    "13-1141": 5,     # Compensation/Benefits/Job Analysis Specialists: 5%
-    "11-3061": 4,     # Purchasing Managers: 4%
-    "13-1022": 4,     # Wholesale and Retail Buyers: 4%
-    "13-1023": 4,     # Purchasing Agents: 4%
-    "11-3051": 3,     # Industrial Production Managers: 3%
-    "15-1255": 16,    # Web and Digital Interface Designers: 16%
-    "11-3021": 15,    # Computer and IT Managers: 15%
-    "15-1212": 33,    # Information Security Analysts: 33%
-    "15-1254": 16,    # Web Developers: 16%
-    "15-1242": 9,     # Database Administrators: 9%
-    "15-1299": 6,     # Computer Occupations, All Other: 6%
-    "11-1021": 3,     # General and Operations Managers: 3%
-    "11-3121": 5,     # Human Resources Managers: 5%
-    "13-1082": 6,     # Project Management Specialists: 6%
-    "13-1151": 8,     # Training and Development Specialists: 8%
-    "13-1071": 6,     # Human Resources Specialists: 6%
-    "11-3131": 7,     # Training and Development Managers: 7%
-    "11-3111": 3,     # Compensation and Benefits Managers: 3%
+    "11-2021": 7,     # Marketing Managers: 7% (BLS OOH 2024-34)
+    "13-1161": 7,     # Market Research Analysts: 7% (BLS OOH 2024-34)
+    "15-2051": 34,     # Data Scientists / BI Analysts: 34% (BLS OOH 2024-34)
+    "13-2051": 6,     # Financial Analysts: 6% (BLS OOH 2024-34)
+    "11-3031": 15,     # Financial Managers: 15% (BLS OOH 2024-34)
+    "15-1252": 16,     # Software Developers: 16% (BLS OOH 2024-34)
+    "13-1111": 9,     # Management Analysts/Consultants: 9% (BLS OOH 2024-34)
+    "11-2022": 5,     # Sales Managers: 5% (BLS OOH 2024-34)
+    "13-2011": 5,     # Accountants and Auditors: 5% (BLS OOH 2024-34)
+    "15-2031": 22,     # Operations Research Analysts: 22% (BLS OOH 2024-34)
+    "13-1081": 17,     # Logisticians: 17% (BLS OOH 2024-34)
+    "41-3031": 3,     # Securities/Financial Services Sales Agents: 3% (BLS OOH 2024-34)
+    "11-3071": 6,     # Transportation/Storage/Distribution Managers: 6% (BLS OOH 2024-34)
+    "11-2032": 5,     # Public Relations Managers: 5% (BLS OOH 2024-34)
+    "41-3091": 3,     # Sales Representatives of Services: 3% (BLS OOH 2024-34)
+    "41-3011": -6,     # Advertising Sales Agents: -6% (BLS OOH 2024-34)
+    "13-1121": 5,     # Meeting/Convention/Event Planners: 5% (BLS OOH 2024-34)
+    "41-4012": 0,     # Sales Representatives, Wholesale: 0% (BLS OOH 2024-34)
+    "41-3021": 4,     # Insurance Sales Agents: 4% (BLS OOH 2024-34)
+    "13-2052": 10,     # Personal Financial Advisors: 10% (BLS OOH 2024-34)
+    "13-2041": -4,     # Credit Analysts: -4% (BLS OOH 2024-34)
+    "13-2031": 1,     # Budget Analysts: 1% (BLS OOH 2024-34)
+    "13-2099": 3,     # Financial Specialists, All Other: 3% (BLS OOH 2024-34)
+    "13-2053": -3,     # Insurance Underwriters: -3% (BLS OOH 2024-34)
+    "15-2011": 22,     # Actuaries: 22% (BLS OOH 2024-34)
+    "13-2072": 2,     # Loan Officers: 2% (BLS OOH 2024-34)
+    "15-2041": 9,     # Statisticians: 9% (BLS OOH 2024-34)
+    "15-1211": 9,     # Computer Systems Analysts: 9% (BLS OOH 2024-34)
+    "13-1051": -4,     # Cost Estimators: -4% (BLS OOH 2024-34)
+    "13-1141": 5,     # Compensation/Benefits/Job Analysis Specialists: 5% (BLS OOH 2024-34)
+    "11-3061": 3,     # Purchasing Managers: 3% (BLS OOH 2024-34)
+    "13-1022": 6,     # Wholesale and Retail Buyers (use 13-1020 rollup): 6% (BLS OOH 2024-34)
+    "13-1023": 6,     # Purchasing Agents (use 13-1020 rollup): 6% (BLS OOH 2024-34)
+    "11-3051": 2,     # Industrial Production Managers: 2% (BLS OOH 2024-34)
+    "15-1255": 7,     # Web and Digital Interface Designers: 7% (BLS OOH 2024-34)
+    "11-3021": 15,     # Computer and IT Managers: 15% (BLS OOH 2024-34)
+    "15-1212": 29,     # Information Security Analysts: 29% (BLS OOH 2024-34)
+    "15-1254": 8,     # Web Developers: 8% (BLS OOH 2024-34)
+    "15-1242": -1,     # Database Administrators: -1% (BLS OOH 2024-34)
+    "15-1299": 8,     # Computer Occupations, All Other: 8% (BLS OOH 2024-34)
+    "11-1021": 4,     # General and Operations Managers: 4% (BLS OOH 2024-34)
+    "11-3121": 5,     # Human Resources Managers: 5% (BLS OOH 2024-34)
+    "13-1082": 6,     # Project Management Specialists: 6% (BLS OOH 2024-34)
+    "13-1151": 11,     # Training and Development Specialists: 11% (BLS OOH 2024-34)
+    "13-1071": 6,     # Human Resources Specialists: 6% (BLS OOH 2024-34)
+    "11-3131": 6,     # Training and Development Managers: 6% (BLS OOH 2024-34)
+    "11-3111": 0,     # Compensation and Benefits Managers: 0% (BLS OOH 2024-34)
 }
 
 # US State centroid coordinates

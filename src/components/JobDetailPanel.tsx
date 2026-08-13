@@ -232,7 +232,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                     data = forecast;
                                 } else {
                                     // Derive baseline from real BLS growth + automation risk
-                                    // projectedGrowth is total growth over 2022-2032 (10yr), scale to 5yr
+                                    // projectedGrowth is total growth over 2024-2034 (10yr); scale to a 5yr window
                                     const annualRate = (job.projectedGrowth / 100) / 10;
                                     const riskDrag = job.automationCostIndex * 0.015;
                                     data = Array.from({ length: 6 }, (_, i) => {
@@ -443,8 +443,10 @@ function EmptyState({ loading, error, missingKey, type }: { loading: boolean; er
             ) : (
                 <>
                     {type === 'risk' ? <IconShield size={20} className="text-emerald-500" /> : <IconAlertTriangle size={20} className="text-amber-500" />}
-                    <p className="text-gray-400 text-xs">
-                        {type === 'risk' ? 'No high-risk tasks found' : 'No specific safe zones found'}
+                    <p className="text-gray-400 text-xs max-w-[14rem] leading-relaxed">
+                        {type === 'risk'
+                            ? 'No automatable tasks — high AI alone is not enough; human criticality must also be low'
+                            : 'No specific safe zones found'}
                     </p>
                 </>
             )}

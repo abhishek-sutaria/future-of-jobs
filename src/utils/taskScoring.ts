@@ -133,7 +133,7 @@ Job Title: "${jobTitle}"
 
 Official BLS / snapshot context (do not invent different national totals; your forecast must stay consistent with these inputs):
 - US employment level (OES snapshot used in app): ${employment.toLocaleString()}
-- BLS Occupational Outlook 2022-2032 projected employment change for this occupation group: ${growthLabel} (10-year total)
+- BLS Occupational Outlook 2024-2034 projected employment change for this occupation group: ${growthLabel} (10-year total)
 
 TWO outputs are needed:
 

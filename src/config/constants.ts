@@ -12,7 +12,7 @@ export const YEAR_COUNT = YEAR_RANGE + 1;             // 6 years (2025–2030 in
 // ── Data Sources (metadata for seed data) ──────────────────────────
 export const DATA_SOURCES = {
     BLS_OES: 'BLS-OES-2023',
-    BLS_OOH: 'BLS-OOH-2022-32',
+    BLS_OOH: 'BLS-OOH-2024-34',
     BLS_CPS: 'BLS-CPS (Live)',
     BLS_STATE: 'BLS-OES-State',
     ONET: 'ONET',

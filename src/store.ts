@@ -91,11 +91,13 @@ function applyAnalysesToJobs(jobs: Job[], analyses: Record<string, JobAnalysisRe
         const analysis = analyses[job.id];
         if (!analysis) return job;
 
-        const newTasks = job.tasks.map(task => {
+        // Prefer exact/prefix name match; fall back to task index so a paraphrased
+        // Claude task_text still updates the role (fixes Analyze % vs panel drift).
+        const newTasks = job.tasks.map((task, index) => {
             const match = analysis.tasks.find(sc =>
                 sc.taskName === task.name ||
                 sc.taskName.startsWith(task.name.slice(0, 40))
-            );
+            ) ?? analysis.tasks[index];
             if (!match) return task;
             return {
                 ...task,
@@ -105,13 +107,22 @@ function applyAnalysesToJobs(jobs: Job[], analyses: Record<string, JobAnalysisRe
         });
 
         const avgAi = newTasks.reduce((sum, t) => sum + t.aiCapabilityScore, 0) / newTasks.length;
+        const cap = Math.abs(job.projectedGrowth);
+        const yearlyForecast = (analysis.yearlyForecast.length > 0
+            ? analysis.yearlyForecast
+            : job.yearlyForecast
+        )?.map((pt) => {
+            if (!Number.isFinite(pt.growthImpact) || cap < 1e-9) return pt;
+            const clamped = Math.sign(pt.growthImpact) * Math.min(Math.abs(pt.growthImpact), cap);
+            return clamped === pt.growthImpact ? pt : { ...pt, growthImpact: clamped };
+        });
+
         return {
             ...job,
             tasks: newTasks,
+            // Same display math the role panel uses: two-decimal mean AI capability.
             automationCostIndex: parseFloat(avgAi.toFixed(2)),
-            yearlyForecast: analysis.yearlyForecast.length > 0
-                ? analysis.yearlyForecast
-                : job.yearlyForecast,
+            yearlyForecast,
         };
     });
 }
