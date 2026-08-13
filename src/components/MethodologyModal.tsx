@@ -50,8 +50,8 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                                 <tr className="border-t border-white/[0.06]">
                                     <td className="px-3 py-2">10-year growth projection</td>
                                     <td className="px-3 py-2 text-gray-400">
-                                        Bundled figures are from <SourceLink href="https://www.bls.gov/ooh/">BLS OOH 2022–2032</SourceLink>.
-                                        The current handbook vintage is 2024–2034 — labels and rates will be refreshed to match.
+                                        <SourceLink href="https://www.bls.gov/emp/tables/occupational-projections-and-characteristics.htm">BLS OOH / Employment Projections 2024–2034</SourceLink>
+                                        {' '}(official 10-year percent change by occupation; rounded to the nearest integer in-app).
                                     </td>
                                 </tr>
                                 <tr className="border-t border-white/[0.06]">

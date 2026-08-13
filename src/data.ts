@@ -12,7 +12,7 @@ import {
  *
  * Real data (BLS / O*NET):
  *   - title, cluster, employment      → BLS OES May 2023
- *   - projectedGrowth                  → BLS OOH 2022-2032 (10-year projection)
+ *   - projectedGrowth                  → BLS OOH 2024-2034 (10-year projection)
  *   - tasks[].name, tasks[].importance → O*NET 28.2 (April 2024)
  *
  * Runtime-populated (Claude API analyzing the real O*NET tasks):
@@ -38,7 +38,7 @@ export const initialJobs: Job[] = [
         "confidenceScore": 0.5,
         "dataSources": [
             "BLS-OES-2023",
-            "BLS-OOH-2022-32"
+            "BLS-OOH-2024-34"
         ],
         "isAlias": true,
         "tasks": [
@@ -80,13 +80,13 @@ export const initialJobs: Job[] = [
         "cluster": "Business",
         "employment": 846370,
         "automationCostIndex": 0,
-        "projectedGrowth": 13,
+        "projectedGrowth": 7,
         "salaryVolatilityLabel": "—",
         "humanResilienceLabel": "—",
         "confidenceScore": 0.5,
         "dataSources": [
             "BLS-OES-2023",
-            "BLS-OOH-2022-32"
+            "BLS-OOH-2024-34"
         ],
         "isAlias": true,
         "tasks": [
@@ -128,13 +128,13 @@ export const initialJobs: Job[] = [
         "cluster": "Business",
         "employment": 1103440,
         "automationCostIndex": 0,
-        "projectedGrowth": 10,
+        "projectedGrowth": 34,
         "salaryVolatilityLabel": "—",
         "humanResilienceLabel": "—",
         "confidenceScore": 0.5,
         "dataSources": [
             "BLS-OES-2023",
-            "BLS-OOH-2022-32"
+            "BLS-OOH-2024-34"
         ],
         "isAlias": true,
         "tasks": [
@@ -176,13 +176,13 @@ export const initialJobs: Job[] = [
         "cluster": "Business",
         "employment": 325220,
         "automationCostIndex": 0,
-        "projectedGrowth": 8,
+        "projectedGrowth": 6,
         "salaryVolatilityLabel": "—",
         "humanResilienceLabel": "—",
         "confidenceScore": 0.5,
         "dataSources": [
             "BLS-OES-2023",
-            "BLS-OOH-2022-32"
+            "BLS-OOH-2024-34"
         ],
         "isAlias": true,
         "tasks": [
@@ -224,13 +224,13 @@ export const initialJobs: Job[] = [
         "cluster": "Business",
         "employment": 787340,
         "automationCostIndex": 0,
-        "projectedGrowth": 16,
+        "projectedGrowth": 15,
         "salaryVolatilityLabel": "—",
         "humanResilienceLabel": "—",
         "confidenceScore": 0.5,
         "dataSources": [
             "BLS-OES-2023",
-            "BLS-OOH-2022-32"
+            "BLS-OOH-2024-34"
         ],
         "isAlias": true,
         "tasks": [
@@ -272,13 +272,13 @@ export const initialJobs: Job[] = [
         "cluster": "Business",
         "employment": 838140,
         "automationCostIndex": 0,
-        "projectedGrowth": 10,
+        "projectedGrowth": 9,
         "salaryVolatilityLabel": "—",
         "humanResilienceLabel": "—",
         "confidenceScore": 0.5,
         "dataSources": [
             "BLS-OES-2023",
-            "BLS-OOH-2022-32"
+            "BLS-OOH-2024-34"
         ],
         "isAlias": true,
         "tasks": [
@@ -320,13 +320,13 @@ export const initialJobs: Job[] = [
         "cluster": "Business",
         "employment": 198780,
         "automationCostIndex": 0,
-        "projectedGrowth": 18,
+        "projectedGrowth": 6,
         "salaryVolatilityLabel": "—",
         "humanResilienceLabel": "—",
         "confidenceScore": 0.5,
         "dataSources": [
             "BLS-OES-2023",
-            "BLS-OOH-2022-32"
+            "BLS-OOH-2024-34"
         ],
         "isAlias": true,
         "tasks": [
@@ -368,13 +368,13 @@ export const initialJobs: Job[] = [
         "cluster": "Business",
         "employment": 228470,
         "automationCostIndex": 0,
-        "projectedGrowth": 18,
+        "projectedGrowth": 17,
         "salaryVolatilityLabel": "—",
         "humanResilienceLabel": "—",
         "confidenceScore": 0.5,
         "dataSources": [
             "BLS-OES-2023",
-            "BLS-OOH-2022-32"
+            "BLS-OOH-2024-34"
         ],
         "isAlias": true,
         "tasks": [
@@ -416,13 +416,13 @@ export const initialJobs: Job[] = [
         "cluster": "Business",
         "employment": 1656880,
         "automationCostIndex": 0,
-        "projectedGrowth": 25,
+        "projectedGrowth": 16,
         "salaryVolatilityLabel": "—",
         "humanResilienceLabel": "—",
         "confidenceScore": 0.5,
         "dataSources": [
             "BLS-OES-2023",
-            "BLS-OOH-2022-32"
+            "BLS-OOH-2024-34"
         ],
         "isAlias": true,
         "tasks": [
@@ -464,13 +464,13 @@ export const initialJobs: Job[] = [
         "cluster": "Business",
         "employment": 117880,
         "automationCostIndex": 0,
-        "projectedGrowth": 23,
+        "projectedGrowth": 22,
         "salaryVolatilityLabel": "—",
         "humanResilienceLabel": "—",
         "confidenceScore": 0.5,
         "dataSources": [
             "BLS-OES-2023",
-            "BLS-OOH-2022-32"
+            "BLS-OOH-2024-34"
         ],
         "isAlias": true,
         "tasks": [
@@ -512,13 +512,13 @@ export const initialJobs: Job[] = [
         "cluster": "Business",
         "employment": 479630,
         "automationCostIndex": 0,
-        "projectedGrowth": 7,
+        "projectedGrowth": 3,
         "salaryVolatilityLabel": "—",
         "humanResilienceLabel": "—",
         "confidenceScore": 0.5,
         "dataSources": [
             "BLS-OES-2023",
-            "BLS-OOH-2022-32"
+            "BLS-OOH-2024-34"
         ],
         "isAlias": true,
         "tasks": [
@@ -560,13 +560,13 @@ export const initialJobs: Job[] = [
         "cluster": "Business",
         "employment": 575880,
         "automationCostIndex": 0,
-        "projectedGrowth": 4,
+        "projectedGrowth": 5,
         "salaryVolatilityLabel": "—",
         "humanResilienceLabel": "—",
         "confidenceScore": 0.5,
         "dataSources": [
             "BLS-OES-2023",
-            "BLS-OOH-2022-32"
+            "BLS-OOH-2024-34"
         ],
         "isAlias": true,
         "tasks": [
@@ -608,13 +608,13 @@ export const initialJobs: Job[] = [
         "cluster": "Business",
         "employment": 1435770,
         "automationCostIndex": 0,
-        "projectedGrowth": 4,
+        "projectedGrowth": 5,
         "salaryVolatilityLabel": "—",
         "humanResilienceLabel": "—",
         "confidenceScore": 0.5,
         "dataSources": [
             "BLS-OES-2023",
-            "BLS-OOH-2022-32"
+            "BLS-OOH-2024-34"
         ],
         "isAlias": true,
         "tasks": [
@@ -657,13 +657,13 @@ export const initialJobs: Job[] = [
     "cluster": "Business",
     "employment": 27100,
     "automationCostIndex": 0,
-    "projectedGrowth": 6,
+    "projectedGrowth": 7,
     "salaryVolatilityLabel": "—",
     "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
-        "BLS-OOH-2022-32",
+        "BLS-OOH-2024-34",
         "O*NET-30.1"
     ],
     "isAlias": false,
@@ -706,13 +706,13 @@ export const initialJobs: Job[] = [
     "cluster": "Business",
     "employment": 84100,
     "automationCostIndex": 0,
-    "projectedGrowth": 8,
+    "projectedGrowth": 5,
     "salaryVolatilityLabel": "—",
     "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
-        "BLS-OOH-2022-32",
+        "BLS-OOH-2024-34",
         "O*NET-30.1"
     ],
     "isAlias": false,
@@ -755,13 +755,13 @@ export const initialJobs: Job[] = [
     "cluster": "Business",
     "employment": 100700,
     "automationCostIndex": 0,
-    "projectedGrowth": 3,
+    "projectedGrowth": -6,
     "salaryVolatilityLabel": "—",
     "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
-        "BLS-OOH-2022-32",
+        "BLS-OOH-2024-34",
         "O*NET-30.1"
     ],
     "isAlias": false,
@@ -804,13 +804,13 @@ export const initialJobs: Job[] = [
     "cluster": "Business",
     "employment": 164800,
     "automationCostIndex": 0,
-    "projectedGrowth": 8,
+    "projectedGrowth": 5,
     "salaryVolatilityLabel": "—",
     "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
-        "BLS-OOH-2022-32",
+        "BLS-OOH-2024-34",
         "O*NET-30.1"
     ],
     "isAlias": false,
@@ -853,13 +853,13 @@ export const initialJobs: Job[] = [
     "cluster": "Business",
     "employment": 1040500,
     "automationCostIndex": 0,
-    "projectedGrowth": 5,
+    "projectedGrowth": 3,
     "salaryVolatilityLabel": "—",
     "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
-        "BLS-OOH-2022-32",
+        "BLS-OOH-2024-34",
         "O*NET-30.1"
     ],
     "isAlias": false,
@@ -902,13 +902,13 @@ export const initialJobs: Job[] = [
     "cluster": "Business",
     "employment": 286960,
     "automationCostIndex": 0,
-    "projectedGrowth": 4,
+    "projectedGrowth": 0,
     "salaryVolatilityLabel": "—",
     "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
-        "BLS-OOH-2022-32",
+        "BLS-OOH-2024-34",
         "O*NET-30.1"
     ],
     "isAlias": false,
@@ -951,13 +951,13 @@ export const initialJobs: Job[] = [
     "cluster": "Business",
     "employment": 427720,
     "automationCostIndex": 0,
-    "projectedGrowth": 7,
+    "projectedGrowth": 4,
     "salaryVolatilityLabel": "—",
     "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
-        "BLS-OOH-2022-32",
+        "BLS-OOH-2024-34",
         "O*NET-30.1"
     ],
     "isAlias": false,
@@ -1000,13 +1000,13 @@ export const initialJobs: Job[] = [
     "cluster": "Business",
     "employment": 330300,
     "automationCostIndex": 0,
-    "projectedGrowth": 13,
+    "projectedGrowth": 10,
     "salaryVolatilityLabel": "—",
     "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
-        "BLS-OOH-2022-32",
+        "BLS-OOH-2024-34",
         "O*NET-30.1"
     ],
     "isAlias": false,
@@ -1049,13 +1049,13 @@ export const initialJobs: Job[] = [
     "cluster": "Business",
     "employment": 86100,
     "automationCostIndex": 0,
-    "projectedGrowth": 2,
+    "projectedGrowth": -4,
     "salaryVolatilityLabel": "—",
     "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
-        "BLS-OOH-2022-32",
+        "BLS-OOH-2024-34",
         "O*NET-30.1"
     ],
     "isAlias": false,
@@ -1098,13 +1098,13 @@ export const initialJobs: Job[] = [
     "cluster": "Business",
     "employment": 57800,
     "automationCostIndex": 0,
-    "projectedGrowth": 3,
+    "projectedGrowth": 1,
     "salaryVolatilityLabel": "—",
     "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
-        "BLS-OOH-2022-32",
+        "BLS-OOH-2024-34",
         "O*NET-30.1"
     ],
     "isAlias": false,
@@ -1147,13 +1147,13 @@ export const initialJobs: Job[] = [
     "cluster": "Business",
     "employment": 84800,
     "automationCostIndex": 0,
-    "projectedGrowth": 9,
+    "projectedGrowth": 3,
     "salaryVolatilityLabel": "—",
     "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
-        "BLS-OOH-2022-32",
+        "BLS-OOH-2024-34",
         "O*NET-30.1"
     ],
     "isAlias": false,
@@ -1196,13 +1196,13 @@ export const initialJobs: Job[] = [
     "cluster": "Business",
     "employment": 100000,
     "automationCostIndex": 0,
-    "projectedGrowth": -4,
+    "projectedGrowth": -3,
     "salaryVolatilityLabel": "—",
     "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
-        "BLS-OOH-2022-32",
+        "BLS-OOH-2024-34",
         "O*NET-30.1"
     ],
     "isAlias": false,
@@ -1245,13 +1245,13 @@ export const initialJobs: Job[] = [
     "cluster": "Business",
     "employment": 28800,
     "automationCostIndex": 0,
-    "projectedGrowth": 23,
+    "projectedGrowth": 22,
     "salaryVolatilityLabel": "—",
     "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
-        "BLS-OOH-2022-32",
+        "BLS-OOH-2024-34",
         "O*NET-30.1"
     ],
     "isAlias": false,
@@ -1294,13 +1294,13 @@ export const initialJobs: Job[] = [
     "cluster": "Business",
     "employment": 325900,
     "automationCostIndex": 0,
-    "projectedGrowth": 3,
+    "projectedGrowth": 2,
     "salaryVolatilityLabel": "—",
     "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
-        "BLS-OOH-2022-32",
+        "BLS-OOH-2024-34",
         "O*NET-30.1"
     ],
     "isAlias": false,
@@ -1343,13 +1343,13 @@ export const initialJobs: Job[] = [
     "cluster": "Business",
     "employment": 168900,
     "automationCostIndex": 0,
-    "projectedGrowth": 36,
+    "projectedGrowth": 34,
     "salaryVolatilityLabel": "—",
     "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
-        "BLS-OOH-2022-32",
+        "BLS-OOH-2024-34",
         "O*NET-30.1"
     ],
     "isAlias": false,
@@ -1392,13 +1392,13 @@ export const initialJobs: Job[] = [
     "cluster": "Business",
     "employment": 42800,
     "automationCostIndex": 0,
-    "projectedGrowth": 32,
+    "projectedGrowth": 9,
     "salaryVolatilityLabel": "—",
     "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
-        "BLS-OOH-2022-32",
+        "BLS-OOH-2024-34",
         "O*NET-30.1"
     ],
     "isAlias": false,
@@ -1441,13 +1441,13 @@ export const initialJobs: Job[] = [
     "cluster": "Business",
     "employment": 635000,
     "automationCostIndex": 0,
-    "projectedGrowth": 11,
+    "projectedGrowth": 9,
     "salaryVolatilityLabel": "—",
     "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
-        "BLS-OOH-2022-32",
+        "BLS-OOH-2024-34",
         "O*NET-30.1"
     ],
     "isAlias": false,
@@ -1490,13 +1490,13 @@ export const initialJobs: Job[] = [
     "cluster": "Business",
     "employment": 196400,
     "automationCostIndex": 0,
-    "projectedGrowth": 1,
+    "projectedGrowth": -4,
     "salaryVolatilityLabel": "—",
     "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
-        "BLS-OOH-2022-32",
+        "BLS-OOH-2024-34",
         "O*NET-30.1"
     ],
     "isAlias": false,
@@ -1539,13 +1539,13 @@ export const initialJobs: Job[] = [
     "cluster": "Business",
     "employment": 90700,
     "automationCostIndex": 0,
-    "projectedGrowth": 6,
+    "projectedGrowth": 5,
     "salaryVolatilityLabel": "—",
     "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
-        "BLS-OOH-2022-32",
+        "BLS-OOH-2024-34",
         "O*NET-30.1"
     ],
     "isAlias": false,
@@ -1588,13 +1588,13 @@ export const initialJobs: Job[] = [
     "cluster": "Business",
     "employment": 75100,
     "automationCostIndex": 0,
-    "projectedGrowth": 4,
+    "projectedGrowth": 3,
     "salaryVolatilityLabel": "—",
     "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
-        "BLS-OOH-2022-32",
+        "BLS-OOH-2024-34",
         "O*NET-30.1"
     ],
     "isAlias": false,
@@ -1637,13 +1637,13 @@ export const initialJobs: Job[] = [
     "cluster": "Business",
     "employment": 113400,
     "automationCostIndex": 0,
-    "projectedGrowth": -4,
+    "projectedGrowth": 6,
     "salaryVolatilityLabel": "—",
     "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
-        "BLS-OOH-2022-32",
+        "BLS-OOH-2024-34",
         "O*NET-30.1"
     ],
     "isAlias": false,
@@ -1686,13 +1686,13 @@ export const initialJobs: Job[] = [
     "cluster": "Business",
     "employment": 278300,
     "automationCostIndex": 0,
-    "projectedGrowth": 2,
+    "projectedGrowth": 6,
     "salaryVolatilityLabel": "—",
     "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
-        "BLS-OOH-2022-32",
+        "BLS-OOH-2024-34",
         "O*NET-30.1"
     ],
     "isAlias": false,
@@ -1741,7 +1741,7 @@ export const initialJobs: Job[] = [
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
-        "BLS-OOH-2022-32",
+        "BLS-OOH-2024-34",
         "O*NET-30.1"
     ],
     "isAlias": false,
@@ -1784,13 +1784,13 @@ export const initialJobs: Job[] = [
     "cluster": "Business",
     "employment": 208700,
     "automationCostIndex": 0,
-    "projectedGrowth": 16,
+    "projectedGrowth": 7,
     "salaryVolatilityLabel": "—",
     "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
-        "BLS-OOH-2022-32",
+        "BLS-OOH-2024-34",
         "O*NET-30.1"
     ],
     "isAlias": false,
@@ -1839,7 +1839,7 @@ export const initialJobs: Job[] = [
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
-        "BLS-OOH-2022-32",
+        "BLS-OOH-2024-34",
         "O*NET-30.1"
     ],
     "isAlias": false,
@@ -1882,13 +1882,13 @@ export const initialJobs: Job[] = [
     "cluster": "Business",
     "employment": 168900,
     "automationCostIndex": 0,
-    "projectedGrowth": 32,
+    "projectedGrowth": 29,
     "salaryVolatilityLabel": "—",
     "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
-        "BLS-OOH-2022-32",
+        "BLS-OOH-2024-34",
         "O*NET-30.1"
     ],
     "isAlias": false,
@@ -1937,7 +1937,7 @@ export const initialJobs: Job[] = [
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
-        "BLS-OOH-2022-32",
+        "BLS-OOH-2024-34",
         "O*NET-30.1"
     ],
     "isAlias": false,
@@ -1980,13 +1980,13 @@ export const initialJobs: Job[] = [
     "cluster": "Business",
     "employment": 105000,
     "automationCostIndex": 0,
-    "projectedGrowth": 9,
+    "projectedGrowth": -1,
     "salaryVolatilityLabel": "—",
     "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
-        "BLS-OOH-2022-32",
+        "BLS-OOH-2024-34",
         "O*NET-30.1"
     ],
     "isAlias": false,
@@ -2029,13 +2029,13 @@ export const initialJobs: Job[] = [
     "cluster": "Business",
     "employment": 147900,
     "automationCostIndex": 0,
-    "projectedGrowth": 11,
+    "projectedGrowth": 8,
     "salaryVolatilityLabel": "—",
     "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
-        "BLS-OOH-2022-32",
+        "BLS-OOH-2024-34",
         "O*NET-30.1"
     ],
     "isAlias": false,
@@ -2078,13 +2078,13 @@ export const initialJobs: Job[] = [
     "cluster": "Business",
     "employment": 3223900,
     "automationCostIndex": 0,
-    "projectedGrowth": 3,
+    "projectedGrowth": 4,
     "salaryVolatilityLabel": "—",
     "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
-        "BLS-OOH-2022-32",
+        "BLS-OOH-2024-34",
         "O*NET-30.1"
     ],
     "isAlias": false,
@@ -2133,7 +2133,7 @@ export const initialJobs: Job[] = [
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
-        "BLS-OOH-2022-32",
+        "BLS-OOH-2024-34",
         "O*NET-30.1"
     ],
     "isAlias": false,
@@ -2176,13 +2176,13 @@ export const initialJobs: Job[] = [
     "cluster": "Business",
     "employment": 904600,
     "automationCostIndex": 0,
-    "projectedGrowth": 7,
+    "projectedGrowth": 6,
     "salaryVolatilityLabel": "—",
     "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
-        "BLS-OOH-2022-32",
+        "BLS-OOH-2024-34",
         "O*NET-30.1"
     ],
     "isAlias": false,
@@ -2225,13 +2225,13 @@ export const initialJobs: Job[] = [
     "cluster": "Business",
     "employment": 285200,
     "automationCostIndex": 0,
-    "projectedGrowth": 8,
+    "projectedGrowth": 11,
     "salaryVolatilityLabel": "—",
     "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
-        "BLS-OOH-2022-32",
+        "BLS-OOH-2024-34",
         "O*NET-30.1"
     ],
     "isAlias": false,
@@ -2280,7 +2280,7 @@ export const initialJobs: Job[] = [
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
-        "BLS-OOH-2022-32",
+        "BLS-OOH-2024-34",
         "O*NET-30.1"
     ],
     "isAlias": false,
@@ -2323,13 +2323,13 @@ export const initialJobs: Job[] = [
     "cluster": "Business",
     "employment": 43100,
     "automationCostIndex": 0,
-    "projectedGrowth": 7,
+    "projectedGrowth": 6,
     "salaryVolatilityLabel": "—",
     "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
-        "BLS-OOH-2022-32",
+        "BLS-OOH-2024-34",
         "O*NET-30.1"
     ],
     "isAlias": false,
@@ -2372,13 +2372,13 @@ export const initialJobs: Job[] = [
     "cluster": "Business",
     "employment": 20100,
     "automationCostIndex": 0,
-    "projectedGrowth": 4,
+    "projectedGrowth": 0,
     "salaryVolatilityLabel": "—",
     "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
-        "BLS-OOH-2022-32",
+        "BLS-OOH-2024-34",
         "O*NET-30.1"
     ],
     "isAlias": false,
@@ -2421,13 +2421,13 @@ export const initialJobs: Job[] = [
     "cluster": "Business",
     "employment": 35400,
     "automationCostIndex": 0,
-    "projectedGrowth": 9,
+    "projectedGrowth": 3,
     "salaryVolatilityLabel": "—",
     "humanResilienceLabel": "—",
     "confidenceScore": 0.9,
     "dataSources": [
         "BLS-OES-2023",
-        "BLS-OOH-2022-32",
+        "BLS-OOH-2024-34",
         "O*NET-30.1"
     ],
     "isAlias": false,

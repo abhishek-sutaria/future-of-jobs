@@ -15,7 +15,7 @@ export type DataProvenance =
 
 const PROVENANCE_LABEL: Record<DataProvenance, string> = {
     BLS_OES: 'National employment headcount from BLS Occupational Employment and Wage Statistics (OES)',
-    BLS_OOH: '10-year employment growth outlook from the BLS Occupational Outlook Handbook (OOH)',
+    BLS_OOH: '10-year employment growth outlook (2024–2034) from the BLS Occupational Outlook Handbook (OOH)',
     BLS_CPS: 'Live national figures from BLS Current Population Survey (e.g. unemployment rate)',
     BLS_STATE: 'State-level employment from BLS OES (powers the US map)',
     ONET: 'Day-to-day task descriptions from O*NET',

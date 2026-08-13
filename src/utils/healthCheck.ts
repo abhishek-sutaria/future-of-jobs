@@ -238,13 +238,13 @@ export const HEALTH_CHECKS: CheckRunner[] = [
     {
         id: 'live-data',
         name: 'Live Unemployment',
-        description: 'Whether the live US unemployment rate (BLS CPS) is loading — not occupation employment by job/SOC.',
+        description: 'National US unemployment rate only (BLS CPS series LNS14000000). Not per-job or per-SOC employment.',
         run: checkLiveData,
     },
     {
         id: 'app-data',
         name: 'App Data',
-        description: "Whether the app's built-in job and map data are loaded.",
+        description: 'Bundled occupation employment (BLS OES May 2023) and US map data — separate from live unemployment.',
         run: checkAppData,
     },
     {

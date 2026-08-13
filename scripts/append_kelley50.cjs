@@ -15,7 +15,7 @@ const NEW_JOBS = [
     id: 'job-14', title: 'Brand Manager', cluster: 'Business',
     employment: 27100, automationCostIndex: 0.42, projectedGrowth: 6,
     salaryVolatilityLabel: 'Medium', humanResilienceLabel: 'High',
-    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2024-34', 'O*NET-30.1'],
     isAlias: false,
     tasks: [
       { name: 'Plan and prepare advertising and promotional material to increase sales of products or services, working with customers, company officials, sales departments, and advertising agencies.', aiCapabilityScore: 0.55, humanCriticalityScore: 0.65, importance: 3 },
@@ -29,7 +29,7 @@ const NEW_JOBS = [
     id: 'job-16', title: 'Public Relations Manager', cluster: 'Business',
     employment: 84100, automationCostIndex: 0.35, projectedGrowth: 8,
     salaryVolatilityLabel: 'Medium', humanResilienceLabel: 'High',
-    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2024-34', 'O*NET-30.1'],
     isAlias: false,
     tasks: [
       { name: 'Develop and implement public relations programs to promote a favorable image for the organization with the public, press, and other stakeholders.', aiCapabilityScore: 0.50, humanCriticalityScore: 0.75, importance: 3 },
@@ -43,7 +43,7 @@ const NEW_JOBS = [
     id: 'job-17', title: 'Advertising Sales Agent', cluster: 'Business',
     employment: 100700, automationCostIndex: 0.62, projectedGrowth: 3,
     salaryVolatilityLabel: 'Very High', humanResilienceLabel: 'High',
-    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2024-34', 'O*NET-30.1'],
     isAlias: false,
     tasks: [
       { name: 'Prepare and deliver sales presentations to new and existing customers to sell new advertising programs and to protect and increase existing advertising.', aiCapabilityScore: 0.58, humanCriticalityScore: 0.60, importance: 3 },
@@ -57,7 +57,7 @@ const NEW_JOBS = [
     id: 'job-18', title: 'Event Coordinator', cluster: 'Business',
     employment: 164800, automationCostIndex: 0.50, projectedGrowth: 8,
     salaryVolatilityLabel: 'Medium', humanResilienceLabel: 'High',
-    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2024-34', 'O*NET-30.1'],
     isAlias: false,
     tasks: [
       { name: 'Consult with customers to determine objectives and requirements for events, such as meetings, conferences, and conventions.', aiCapabilityScore: 0.40, humanCriticalityScore: 0.78, importance: 3 },
@@ -71,7 +71,7 @@ const NEW_JOBS = [
     id: 'job-19', title: 'Account Executive', cluster: 'Business',
     employment: 1040500, automationCostIndex: 0.45, projectedGrowth: 5,
     salaryVolatilityLabel: 'Very High', humanResilienceLabel: 'High',
-    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2024-34', 'O*NET-30.1'],
     isAlias: false,
     tasks: [
       { name: 'Answer customers\' questions about services, prices, availability, or credit terms.', aiCapabilityScore: 0.58, humanCriticalityScore: 0.58, importance: 3 },
@@ -85,7 +85,7 @@ const NEW_JOBS = [
     id: 'job-20', title: 'Sales Representative', cluster: 'Business',
     employment: 286960, automationCostIndex: 0.58, projectedGrowth: 4,
     salaryVolatilityLabel: 'Very High', humanResilienceLabel: 'High',
-    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2024-34', 'O*NET-30.1'],
     isAlias: false,
     tasks: [
       { name: 'Negotiate prices or terms of sales or service agreements.', aiCapabilityScore: 0.45, humanCriticalityScore: 0.80, importance: 3 },
@@ -99,7 +99,7 @@ const NEW_JOBS = [
     id: 'job-21', title: 'Insurance Sales Agent', cluster: 'Business',
     employment: 427720, automationCostIndex: 0.60, projectedGrowth: 7,
     salaryVolatilityLabel: 'Very High', humanResilienceLabel: 'High',
-    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2024-34', 'O*NET-30.1'],
     isAlias: false,
     tasks: [
       { name: 'Customize insurance programs to suit individual customers, often covering a variety of risks.', aiCapabilityScore: 0.55, humanCriticalityScore: 0.65, importance: 3 },
@@ -113,7 +113,7 @@ const NEW_JOBS = [
     id: 'job-22', title: 'Personal Financial Advisor', cluster: 'Business',
     employment: 330300, automationCostIndex: 0.55, projectedGrowth: 13,
     salaryVolatilityLabel: 'Very High', humanResilienceLabel: 'High',
-    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2024-34', 'O*NET-30.1'],
     isAlias: false,
     tasks: [
       { name: 'Interview clients to determine their current income, expenses, insurance coverage, tax status, financial objectives, and risk tolerance needed to develop a financial plan.', aiCapabilityScore: 0.40, humanCriticalityScore: 0.85, importance: 3 },
@@ -127,7 +127,7 @@ const NEW_JOBS = [
     id: 'job-23', title: 'Credit Analyst', cluster: 'Business',
     employment: 86100, automationCostIndex: 0.72, projectedGrowth: 2,
     salaryVolatilityLabel: 'Very High', humanResilienceLabel: 'At Risk',
-    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2024-34', 'O*NET-30.1'],
     isAlias: false,
     tasks: [
       { name: 'Analyze credit data and financial statements to determine the degree of risk involved in extending credit or lending money.', aiCapabilityScore: 0.82, humanCriticalityScore: 0.25, importance: 3 },
@@ -141,7 +141,7 @@ const NEW_JOBS = [
     id: 'job-24', title: 'Budget Analyst', cluster: 'Business',
     employment: 57800, automationCostIndex: 0.70, projectedGrowth: 3,
     salaryVolatilityLabel: 'Very High', humanResilienceLabel: 'At Risk',
-    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2024-34', 'O*NET-30.1'],
     isAlias: false,
     tasks: [
       { name: 'Develop and analyze annual budgets for departments or organizations, identifying areas where costs can be reduced or resources optimized.', aiCapabilityScore: 0.78, humanCriticalityScore: 0.30, importance: 3 },
@@ -155,7 +155,7 @@ const NEW_JOBS = [
     id: 'job-25', title: 'Risk Specialist', cluster: 'Business',
     employment: 84800, automationCostIndex: 0.68, projectedGrowth: 9,
     salaryVolatilityLabel: 'Very High', humanResilienceLabel: 'At Risk',
-    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2024-34', 'O*NET-30.1'],
     isAlias: false,
     tasks: [
       { name: 'Apply mathematical or statistical techniques to address practical issues in finance, such as derivative valuation, securities trading, and risk management.', aiCapabilityScore: 0.78, humanCriticalityScore: 0.30, importance: 3 },
@@ -169,7 +169,7 @@ const NEW_JOBS = [
     id: 'job-26', title: 'Insurance Underwriter', cluster: 'Business',
     employment: 100000, automationCostIndex: 0.78, projectedGrowth: -4,
     salaryVolatilityLabel: 'Very High', humanResilienceLabel: 'At Risk',
-    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2024-34', 'O*NET-30.1'],
     isAlias: false,
     tasks: [
       { name: 'Examine documents to determine degree of risk from factors such as applicant health, financial standing and value, and condition of property.', aiCapabilityScore: 0.82, humanCriticalityScore: 0.25, importance: 3 },
@@ -183,7 +183,7 @@ const NEW_JOBS = [
     id: 'job-27', title: 'Actuary', cluster: 'Business',
     employment: 28800, automationCostIndex: 0.62, projectedGrowth: 23,
     salaryVolatilityLabel: 'Very High', humanResilienceLabel: 'High',
-    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2024-34', 'O*NET-30.1'],
     isAlias: false,
     tasks: [
       { name: 'Ascertain premium rates required and cash reserves and liabilities necessary to ensure payment of future benefits.', aiCapabilityScore: 0.72, humanCriticalityScore: 0.38, importance: 3 },
@@ -197,7 +197,7 @@ const NEW_JOBS = [
     id: 'job-28', title: 'Loan Officer', cluster: 'Business',
     employment: 325900, automationCostIndex: 0.68, projectedGrowth: 3,
     salaryVolatilityLabel: 'Very High', humanResilienceLabel: 'At Risk',
-    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2024-34', 'O*NET-30.1'],
     isAlias: false,
     tasks: [
       { name: 'Meet with applicants to obtain information for loan applications and to answer questions about the process.', aiCapabilityScore: 0.45, humanCriticalityScore: 0.75, importance: 3 },
@@ -211,7 +211,7 @@ const NEW_JOBS = [
     id: 'job-29', title: 'Data Scientist', cluster: 'Business',
     employment: 168900, automationCostIndex: 0.60, projectedGrowth: 36,
     salaryVolatilityLabel: 'Very High', humanResilienceLabel: 'High',
-    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2024-34', 'O*NET-30.1'],
     isAlias: false,
     tasks: [
       { name: 'Analyze, manipulate, or process large sets of data using statistical software to identify patterns and generate insights.', aiCapabilityScore: 0.72, humanCriticalityScore: 0.35, importance: 3 },
@@ -225,7 +225,7 @@ const NEW_JOBS = [
     id: 'job-30', title: 'Statistician', cluster: 'Business',
     employment: 42800, automationCostIndex: 0.65, projectedGrowth: 32,
     salaryVolatilityLabel: 'Very High', humanResilienceLabel: 'At Risk',
-    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2024-34', 'O*NET-30.1'],
     isAlias: false,
     tasks: [
       { name: 'Analyze and interpret statistical data to identify significant differences in relationships among sources of information.', aiCapabilityScore: 0.72, humanCriticalityScore: 0.35, importance: 3 },
@@ -239,7 +239,7 @@ const NEW_JOBS = [
     id: 'job-31', title: 'Computer Systems Analyst', cluster: 'Business',
     employment: 635000, automationCostIndex: 0.62, projectedGrowth: 11,
     salaryVolatilityLabel: 'Very High', humanResilienceLabel: 'High',
-    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2024-34', 'O*NET-30.1'],
     isAlias: false,
     tasks: [
       { name: 'Troubleshoot program and system malfunctions to restore normal functioning.', aiCapabilityScore: 0.65, humanCriticalityScore: 0.50, importance: 3 },
@@ -253,7 +253,7 @@ const NEW_JOBS = [
     id: 'job-32', title: 'Cost Estimator', cluster: 'Business',
     employment: 196400, automationCostIndex: 0.72, projectedGrowth: 1,
     salaryVolatilityLabel: 'Very High', humanResilienceLabel: 'At Risk',
-    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2024-34', 'O*NET-30.1'],
     isAlias: false,
     tasks: [
       { name: 'Analyze blueprints and other documentation to prepare time, cost, materials, and labor estimates.', aiCapabilityScore: 0.80, humanCriticalityScore: 0.28, importance: 3 },
@@ -267,7 +267,7 @@ const NEW_JOBS = [
     id: 'job-33', title: 'Compensation Analyst', cluster: 'Business',
     employment: 90700, automationCostIndex: 0.62, projectedGrowth: 6,
     salaryVolatilityLabel: 'Very High', humanResilienceLabel: 'High',
-    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2024-34', 'O*NET-30.1'],
     isAlias: false,
     tasks: [
       { name: 'Administer employee insurance, pension, and savings plans, working with insurance brokers and plan carriers.', aiCapabilityScore: 0.65, humanCriticalityScore: 0.45, importance: 3 },
@@ -281,7 +281,7 @@ const NEW_JOBS = [
     id: 'job-34', title: 'Purchasing Manager', cluster: 'Business',
     employment: 75100, automationCostIndex: 0.52, projectedGrowth: 4,
     salaryVolatilityLabel: 'Medium', humanResilienceLabel: 'High',
-    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2024-34', 'O*NET-30.1'],
     isAlias: false,
     tasks: [
       { name: 'Develop and implement purchasing and contract management instructions, policies, and procedures.', aiCapabilityScore: 0.45, humanCriticalityScore: 0.70, importance: 3 },
@@ -295,7 +295,7 @@ const NEW_JOBS = [
     id: 'job-35', title: 'Wholesale & Retail Buyer', cluster: 'Business',
     employment: 113400, automationCostIndex: 0.58, projectedGrowth: -4,
     salaryVolatilityLabel: 'Very High', humanResilienceLabel: 'High',
-    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2024-34', 'O*NET-30.1'],
     isAlias: false,
     tasks: [
       { name: 'Buy merchandise or commodities for resale to wholesale or retail consumers.', aiCapabilityScore: 0.55, humanCriticalityScore: 0.58, importance: 3 },
@@ -309,7 +309,7 @@ const NEW_JOBS = [
     id: 'job-36', title: 'Purchasing Agent', cluster: 'Business',
     employment: 278300, automationCostIndex: 0.62, projectedGrowth: 2,
     salaryVolatilityLabel: 'Very High', humanResilienceLabel: 'High',
-    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2024-34', 'O*NET-30.1'],
     isAlias: false,
     tasks: [
       { name: 'Monitor and follow applicable laws and regulations related to procurement and contracting.', aiCapabilityScore: 0.58, humanCriticalityScore: 0.55, importance: 3 },
@@ -323,7 +323,7 @@ const NEW_JOBS = [
     id: 'job-37', title: 'Industrial Production Manager', cluster: 'Business',
     employment: 196900, automationCostIndex: 0.42, projectedGrowth: 2,
     salaryVolatilityLabel: 'Medium', humanResilienceLabel: 'High',
-    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2024-34', 'O*NET-30.1'],
     isAlias: false,
     tasks: [
       { name: 'Set and monitor product standards, examining samples of raw products or directing testing during processing, to ensure finished products are of prescribed quality.', aiCapabilityScore: 0.55, humanCriticalityScore: 0.65, importance: 3 },
@@ -337,7 +337,7 @@ const NEW_JOBS = [
     id: 'job-38', title: 'UX Designer', cluster: 'Business',
     employment: 208700, automationCostIndex: 0.52, projectedGrowth: 16,
     salaryVolatilityLabel: 'Very High', humanResilienceLabel: 'High',
-    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2024-34', 'O*NET-30.1'],
     isAlias: false,
     tasks: [
       { name: 'Conduct user research, including usability testing, interviews, and surveys, to determine design requirements and user pain points.', aiCapabilityScore: 0.45, humanCriticalityScore: 0.78, importance: 3 },
@@ -351,7 +351,7 @@ const NEW_JOBS = [
     id: 'job-39', title: 'IT Manager', cluster: 'Business',
     employment: 482000, automationCostIndex: 0.32, projectedGrowth: 15,
     salaryVolatilityLabel: 'Very High', humanResilienceLabel: 'Future-Proof',
-    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2024-34', 'O*NET-30.1'],
     isAlias: false,
     tasks: [
       { name: 'Direct daily operations of department, analyzing workflow, establishing priorities, developing standards and setting deadlines.', aiCapabilityScore: 0.38, humanCriticalityScore: 0.78, importance: 3 },
@@ -365,7 +365,7 @@ const NEW_JOBS = [
     id: 'job-40', title: 'Cybersecurity Analyst', cluster: 'Business',
     employment: 168900, automationCostIndex: 0.48, projectedGrowth: 32,
     salaryVolatilityLabel: 'Very High', humanResilienceLabel: 'High',
-    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2024-34', 'O*NET-30.1'],
     isAlias: false,
     tasks: [
       { name: 'Develop plans to safeguard computer files against accidental or unauthorized modification, destruction, or disclosure and to meet emergency data processing needs.', aiCapabilityScore: 0.55, humanCriticalityScore: 0.65, importance: 3 },
@@ -379,7 +379,7 @@ const NEW_JOBS = [
     id: 'job-41', title: 'Web Developer', cluster: 'Business',
     employment: 193200, automationCostIndex: 0.75, projectedGrowth: 8,
     salaryVolatilityLabel: 'Very High', humanResilienceLabel: 'At Risk',
-    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2024-34', 'O*NET-30.1'],
     isAlias: false,
     tasks: [
       { name: 'Write supporting code for Web applications or Web sites.', aiCapabilityScore: 0.88, humanCriticalityScore: 0.15, importance: 3 },
@@ -393,7 +393,7 @@ const NEW_JOBS = [
     id: 'job-42', title: 'Database Administrator', cluster: 'Business',
     employment: 105000, automationCostIndex: 0.70, projectedGrowth: 9,
     salaryVolatilityLabel: 'Very High', humanResilienceLabel: 'At Risk',
-    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2024-34', 'O*NET-30.1'],
     isAlias: false,
     tasks: [
       { name: 'Modify existing databases and database management systems or direct programmers and analysts to make changes.', aiCapabilityScore: 0.72, humanCriticalityScore: 0.35, importance: 3 },
@@ -407,7 +407,7 @@ const NEW_JOBS = [
     id: 'job-43', title: 'IT Project Manager', cluster: 'Business',
     employment: 147900, automationCostIndex: 0.50, projectedGrowth: 11,
     salaryVolatilityLabel: 'Very High', humanResilienceLabel: 'High',
-    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2024-34', 'O*NET-30.1'],
     isAlias: false,
     tasks: [
       { name: 'Define project scope, goals, and deliverables that support business objectives in collaboration with senior management and stakeholders.', aiCapabilityScore: 0.50, humanCriticalityScore: 0.72, importance: 3 },
@@ -421,7 +421,7 @@ const NEW_JOBS = [
     id: 'job-44', title: 'General Manager', cluster: 'Business',
     employment: 3223900, automationCostIndex: 0.28, projectedGrowth: 3,
     salaryVolatilityLabel: 'Medium', humanResilienceLabel: 'Future-Proof',
-    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2024-34', 'O*NET-30.1'],
     isAlias: false,
     tasks: [
       { name: 'Review financial statements, sales or activity reports, or other performance data to measure productivity or goal achievement or to identify areas needing cost reduction or program improvement.', aiCapabilityScore: 0.65, humanCriticalityScore: 0.50, importance: 3 },
@@ -435,7 +435,7 @@ const NEW_JOBS = [
     id: 'job-45', title: 'HR Manager', cluster: 'Business',
     employment: 172100, automationCostIndex: 0.32, projectedGrowth: 5,
     salaryVolatilityLabel: 'Medium', humanResilienceLabel: 'Future-Proof',
-    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2024-34', 'O*NET-30.1'],
     isAlias: false,
     tasks: [
       { name: 'Serve as a link between management and employees by handling questions, interpreting and administering contracts and helping resolve work-related problems.', aiCapabilityScore: 0.30, humanCriticalityScore: 0.90, importance: 3 },
@@ -449,7 +449,7 @@ const NEW_JOBS = [
     id: 'job-46', title: 'Project Management Specialist', cluster: 'Business',
     employment: 904600, automationCostIndex: 0.50, projectedGrowth: 7,
     salaryVolatilityLabel: 'Very High', humanResilienceLabel: 'High',
-    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2024-34', 'O*NET-30.1'],
     isAlias: false,
     tasks: [
       { name: 'Assign duties or responsibilities to project personnel.', aiCapabilityScore: 0.45, humanCriticalityScore: 0.70, importance: 3 },
@@ -463,7 +463,7 @@ const NEW_JOBS = [
     id: 'job-47', title: 'Training & Development Specialist', cluster: 'Business',
     employment: 285200, automationCostIndex: 0.48, projectedGrowth: 8,
     salaryVolatilityLabel: 'Medium', humanResilienceLabel: 'High',
-    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2024-34', 'O*NET-30.1'],
     isAlias: false,
     tasks: [
       { name: 'Present information with a variety of instructional techniques or formats, such as role playing, simulations, team exercises, group discussions, videos, or lectures.', aiCapabilityScore: 0.55, humanCriticalityScore: 0.65, importance: 3 },
@@ -477,7 +477,7 @@ const NEW_JOBS = [
     id: 'job-48', title: 'HR Specialist', cluster: 'Business',
     employment: 878900, automationCostIndex: 0.55, projectedGrowth: 6,
     salaryVolatilityLabel: 'Medium', humanResilienceLabel: 'High',
-    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2024-34', 'O*NET-30.1'],
     isAlias: false,
     tasks: [
       { name: 'Interpret and explain human resources policies, procedures, laws, standards, or regulations.', aiCapabilityScore: 0.55, humanCriticalityScore: 0.65, importance: 3 },
@@ -491,7 +491,7 @@ const NEW_JOBS = [
     id: 'job-49', title: 'Training & Development Manager', cluster: 'Business',
     employment: 43100, automationCostIndex: 0.38, projectedGrowth: 7,
     salaryVolatilityLabel: 'Medium', humanResilienceLabel: 'High',
-    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2024-34', 'O*NET-30.1'],
     isAlias: false,
     tasks: [
       { name: 'Analyze training needs to develop new training programs or modify and improve existing programs.', aiCapabilityScore: 0.55, humanCriticalityScore: 0.65, importance: 3 },
@@ -505,7 +505,7 @@ const NEW_JOBS = [
     id: 'job-50', title: 'Compensation & Benefits Manager', cluster: 'Business',
     employment: 20100, automationCostIndex: 0.55, projectedGrowth: 4,
     salaryVolatilityLabel: 'Very High', humanResilienceLabel: 'High',
-    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2024-34', 'O*NET-30.1'],
     isAlias: false,
     tasks: [
       { name: 'Direct preparation and distribution of written and verbal information to inform employees of benefits, compensation, and personnel policies.', aiCapabilityScore: 0.60, humanCriticalityScore: 0.55, importance: 3 },
@@ -519,7 +519,7 @@ const NEW_JOBS = [
     id: 'job-51', title: 'Financial Risk Analyst', cluster: 'Business',
     employment: 35400, automationCostIndex: 0.70, projectedGrowth: 9,
     salaryVolatilityLabel: 'Very High', humanResilienceLabel: 'At Risk',
-    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2022-32', 'O*NET-30.1'],
+    confidenceScore: 0.9, dataSources: ['BLS-OES-2023', 'BLS-OOH-2024-34', 'O*NET-30.1'],
     isAlias: false,
     tasks: [
       { name: 'Analyze areas of potential risk to the assets, earning capacity, or success of organizations.', aiCapabilityScore: 0.75, humanCriticalityScore: 0.35, importance: 3 },

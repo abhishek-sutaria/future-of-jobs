@@ -82,11 +82,13 @@ export const HealthCheckModal: React.FC<Props> = ({ isOpen, onClose }) => {
                 </div>
 
                 <p className="text-xs text-gray-400 leading-relaxed">
-                    This checks every part of the app to make sure it's working — the AI features,
-                    the live data, your browser. <span className="text-emerald-300">Green</span> means
-                    good, <span className="text-amber-300">yellow</span> means a minor issue, and{' '}
-                    <span className="text-red-300">red</span> means something needs fixing. You can
-                    re-run the checks any time with the button at the bottom.
+                    This checks AI features, the live US unemployment rate, bundled job/map data, and your browser.{' '}
+                    <span className="text-white/80">“Live Unemployment”</span> is only the national CPS rate
+                    (for example “June 2026”) — not individual BLS employment by occupation/SOC. Occupation
+                    headcounts on the 3D map come from the bundled OES extract under <span className="text-white/80">App Data</span>.{' '}
+                    <span className="text-emerald-300">Green</span> means good,{' '}
+                    <span className="text-amber-300">yellow</span> means a minor issue, and{' '}
+                    <span className="text-red-300">red</span> means something needs fixing.
                 </p>
 
                 {/* Per-check rows */}
