@@ -14,15 +14,15 @@ export type DataProvenance =
     | 'UNAVAILABLE';
 
 const PROVENANCE_LABEL: Record<DataProvenance, string> = {
-    BLS_OES: 'National employment headcount from BLS Occupational Employment and Wage Statistics (OES)',
-    BLS_OOH: '10-year employment growth outlook (2024–2034) from the BLS Occupational Outlook Handbook (OOH)',
-    BLS_CPS: 'Live national figures from BLS Current Population Survey (e.g. unemployment rate)',
-    BLS_STATE: 'State-level employment from BLS OES (powers the US map)',
-    ONET: 'Day-to-day task descriptions from O*NET',
-    CLAUDE_TASK_SCORE: 'AI capability and human-criticality scores for each task, scored by Claude from the O*NET text',
-    CLAUDE_FORECAST: 'Year-by-year employment path estimated by Claude, grounded in the BLS outlook',
-    COVERAGE_FORMULA: 'App (source coverage index, not a BLS statistic)',
-    UNAVAILABLE: 'Unavailable',
+    BLS_OES: 'How many people in the U.S. have this job today. Comes from the government’s main employment survey (BLS OES).',
+    BLS_OOH: 'How much this job is expected to grow or shrink over the next 10 years (2024–2034). Comes from the government’s job outlook handbook (BLS OOH).',
+    BLS_CPS: 'Live U.S. unemployment rate from the government’s household survey (BLS CPS). This is the national rate — not a count of people in this specific job.',
+    BLS_STATE: 'How many people have this job in each U.S. state. Used to color the U.S. map view.',
+    ONET: 'The day-to-day tasks listed for this job. Comes from O*NET, a government job-description database.',
+    CLAUDE_TASK_SCORE: 'For each task, AI rated how easy it is to automate and how much a human is still needed. Those scores power the risk numbers you see.',
+    CLAUDE_FORECAST: 'A year-by-year guess of how employment for this job may change, created by AI using the government’s 10-year outlook as a guide.',
+    COVERAGE_FORMULA: 'An in-app score for how complete our data is for this job. Not an official government statistic.',
+    UNAVAILABLE: 'This information is not available right now.',
 };
 
 export function provenanceLabel(p: DataProvenance): string {
@@ -48,5 +48,5 @@ export function jobSourceProvenanceChips(job: Job): { key: string; label: string
 }
 
 export function dataCoverageTooltip(): string {
-    return 'Coverage index: baseline plus bonuses when BLS live and O*NET-backed fields are present. It is not a statistical margin of error from BLS.';
+    return 'Shows how complete our data is for this job. It is not a government accuracy rating.';
 }
