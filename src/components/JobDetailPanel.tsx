@@ -36,6 +36,14 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
     const [showAnalysisModal, setShowAnalysisModal] = React.useState(false);
     const [analysisModalError, setAnalysisModalError] = React.useState<string | null>(null);
     const [showRoadmapModal, setShowRoadmapModal] = React.useState(false);
+    const [activeSourceKey, setActiveSourceKey] = React.useState<string | null>(null);
+
+    React.useEffect(() => {
+        setActiveSourceKey(null);
+    }, [job.id]);
+
+    const sourceChips = React.useMemo(() => jobSourceProvenanceChips(job), [job]);
+    const activeSourceChip = sourceChips.find((c) => c.key === activeSourceKey) ?? null;
 
     const handleAnalyze = async () => {
         onSetAnalysisLoading(true);
@@ -131,18 +139,36 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                             </div>
                             <h2 className="text-xl md:text-2xl font-bold text-white tracking-tight">{job.title}</h2>
                             <div className="flex flex-wrap gap-1.5 mt-2" aria-label="Data sources for this role">
-                                {jobSourceProvenanceChips(job).map((c) => (
-                                    <span
-                                        key={c.key}
-                                        title={provenanceLabel(c.provenance)}
-                                        className="px-2 py-0.5 rounded text-[9px] font-medium uppercase tracking-wide bg-white/[0.06] text-gray-400 border border-white/[0.08] cursor-help"
-                                    >
-                                        {c.label}
-                                    </span>
-                                ))}
+                                {sourceChips.map((c) => {
+                                    const isActive = activeSourceKey === c.key;
+                                    return (
+                                        <button
+                                            key={c.key}
+                                            type="button"
+                                            aria-pressed={isActive}
+                                            aria-describedby={isActive ? 'job-source-badge-explain' : undefined}
+                                            onMouseEnter={() => setActiveSourceKey(c.key)}
+                                            onFocus={() => setActiveSourceKey(c.key)}
+                                            onClick={() => setActiveSourceKey(c.key)}
+                                            className={`px-2 py-0.5 rounded text-[9px] font-medium uppercase tracking-wide border transition-colors ${
+                                                isActive
+                                                    ? 'bg-cyan-500/15 text-cyan-300 border-cyan-400/40'
+                                                    : 'bg-white/[0.06] text-gray-400 border-white/[0.08] hover:bg-white/[0.1] hover:text-gray-200'
+                                            }`}
+                                        >
+                                            {c.label}
+                                        </button>
+                                    );
+                                })}
                             </div>
-                            <p className="text-[10px] text-gray-600 mt-1.5 leading-snug max-w-xl">
-                                Source badges show which datasets back this role. Hover a badge for a plain-English explanation.
+                            <p
+                                id="job-source-badge-explain"
+                                className="text-[11px] text-gray-400 mt-1.5 leading-snug max-w-xl min-h-[2.5rem]"
+                                role="status"
+                            >
+                                {activeSourceChip
+                                    ? <><span className="text-cyan-300/90 font-medium">{activeSourceChip.label}:</span> {provenanceLabel(activeSourceChip.provenance)}</>
+                                    : 'Hover or tap a source badge (OES, OOH, …) to see what it means in plain English.'}
                             </p>
                         </div>
 
