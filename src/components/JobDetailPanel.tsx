@@ -43,7 +43,6 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
     }, [job.id]);
 
     const sourceChips = React.useMemo(() => jobSourceProvenanceChips(job), [job]);
-    const activeSourceChip = sourceChips.find((c) => c.key === activeSourceKey) ?? null;
 
     const handleAnalyze = async () => {
         onSetAnalysisLoading(true);
@@ -120,8 +119,8 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                 <div className="bg-gray-900/95 backdrop-blur-xl border border-cyan-400/20 shadow-2xl rounded-2xl w-full max-w-6xl h-auto max-h-[85vh] flex flex-col pointer-events-auto overflow-hidden">
 
                     {/* Header */}
-                    <div className="flex-none p-4 md:p-6 border-b border-white/[0.06] flex justify-between items-start">
-                        <div>
+                    <div className="flex-none p-4 md:p-6 border-b border-white/[0.06] flex justify-between items-start gap-4">
+                        <div className="min-w-0 flex-1">
                             <div className="flex items-center gap-2 mb-1.5">
                                 <span className="px-2 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wider bg-blue-500/10 text-blue-400 border border-blue-500/20">
                                     {job.cluster}
@@ -138,38 +137,49 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                 <span className="text-[10px] text-gray-500 font-mono">{job.id.slice(0, 8)}</span>
                             </div>
                             <h2 className="text-xl md:text-2xl font-bold text-white tracking-tight">{job.title}</h2>
-                            <div className="flex flex-wrap gap-1.5 mt-2" aria-label="Data sources for this role">
-                                {sourceChips.map((c) => {
-                                    const isActive = activeSourceKey === c.key;
-                                    return (
-                                        <button
-                                            key={c.key}
-                                            type="button"
-                                            aria-pressed={isActive}
-                                            aria-describedby={isActive ? 'job-source-badge-explain' : undefined}
-                                            onMouseEnter={() => setActiveSourceKey(c.key)}
-                                            onFocus={() => setActiveSourceKey(c.key)}
-                                            onClick={() => setActiveSourceKey(c.key)}
-                                            className={`px-2 py-0.5 rounded text-[9px] font-medium uppercase tracking-wide border transition-colors ${
-                                                isActive
-                                                    ? 'bg-cyan-500/15 text-cyan-300 border-cyan-400/40'
-                                                    : 'bg-white/[0.06] text-gray-400 border-white/[0.08] hover:bg-white/[0.1] hover:text-gray-200'
-                                            }`}
-                                        >
-                                            {c.label}
-                                        </button>
-                                    );
-                                })}
+                            <div className="mt-2 space-y-2 max-w-xl">
+                                <p className="text-[10px] uppercase tracking-wider text-gray-500 font-semibold">
+                                    What these source badges mean
+                                </p>
+                                <div className="flex flex-wrap gap-1.5" aria-label="Data sources for this role">
+                                    {sourceChips.map((c) => {
+                                        const isActive = activeSourceKey === c.key;
+                                        return (
+                                            <button
+                                                key={c.key}
+                                                type="button"
+                                                aria-pressed={isActive}
+                                                onMouseEnter={() => setActiveSourceKey(c.key)}
+                                                onFocus={() => setActiveSourceKey(c.key)}
+                                                onClick={() => setActiveSourceKey(c.key)}
+                                                className={`px-2 py-0.5 rounded text-[9px] font-medium uppercase tracking-wide border transition-colors ${
+                                                    isActive
+                                                        ? 'bg-cyan-500/20 text-cyan-200 border-cyan-400/50'
+                                                        : 'bg-white/[0.06] text-gray-300 border-white/[0.12] hover:bg-white/[0.1] hover:text-white'
+                                                }`}
+                                            >
+                                                {c.label}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                                <ul className="rounded-lg border border-white/[0.08] bg-black/30 px-3 py-2 space-y-1.5">
+                                    {sourceChips.map((c) => {
+                                        const isActive = activeSourceKey === c.key;
+                                        return (
+                                            <li
+                                                key={`legend-${c.key}`}
+                                                className={`text-[11px] leading-snug ${isActive ? 'text-white' : 'text-gray-400'}`}
+                                            >
+                                                <span className={`font-semibold uppercase tracking-wide mr-1.5 ${isActive ? 'text-cyan-300' : 'text-gray-300'}`}>
+                                                    {c.label}
+                                                </span>
+                                                {provenanceLabel(c.provenance)}
+                                            </li>
+                                        );
+                                    })}
+                                </ul>
                             </div>
-                            <p
-                                id="job-source-badge-explain"
-                                className="text-[11px] text-gray-400 mt-1.5 leading-snug max-w-xl min-h-[2.5rem]"
-                                role="status"
-                            >
-                                {activeSourceChip
-                                    ? <><span className="text-cyan-300/90 font-medium">{activeSourceChip.label}:</span> {provenanceLabel(activeSourceChip.provenance)}</>
-                                    : 'Hover or tap a source badge (OES, OOH, …) to see what it means in plain English.'}
-                            </p>
                         </div>
 
                         <div className="flex items-center gap-2">
