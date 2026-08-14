@@ -139,7 +139,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                 ))}
                             </div>
                             <p className="text-[10px] text-gray-500 mt-1.5">
-                                Hover a badge to see what it means.
+                                Hover any badge for a simple explanation.
                             </p>
                         </div>
 
