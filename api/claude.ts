@@ -49,6 +49,9 @@ export default async function handler(req: any, res: any) {
     // which trips idle/proxy timeouts. Pipe chunks straight through instead so
     // the connection stays alive and the browser receives tokens as they arrive.
     res.setHeader('cache-control', 'no-cache, no-transform');
+    // Tells nginx-family reverse proxies (e.g. the IU frontend) to disable
+    // response buffering, so SSE chunks aren't held until the stream ends.
+    res.setHeader('x-accel-buffering', 'no');
 
     if (!upstream.body) {
       const text = await upstream.text();
