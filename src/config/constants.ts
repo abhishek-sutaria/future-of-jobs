@@ -21,12 +21,15 @@ export const DATA_SOURCES = {
 export const DEFAULT_DATA_SOURCES = [DATA_SOURCES.BLS_OES, DATA_SOURCES.BLS_OOH] as const;
 
 // ── BLS API ────────────────────────────────────────────────────────
+const CURRENT_YEAR = new Date().getFullYear();
+
 export const BLS_API = {
     PROXY_URL: '/api/bls',
-    START_YEAR: '2023',
-    END_YEAR: '2025',
-    /** BLS returns employment in thousands */
-    EMPLOYMENT_MULTIPLIER: 1000,
+    // Derived from the current date rather than hardcoded — the previous
+    // literal ('2023'..'2025') silently went stale as the calendar moved on.
+    // A 3-year window is plenty for a live unemployment-rate fetch.
+    START_YEAR: String(CURRENT_YEAR - 2),
+    END_YEAR: String(CURRENT_YEAR),
     /** Unemployment rate threshold — green below, red above */
     UNEMPLOYMENT_THRESHOLD: 4.5,
     /** BLS unemployment rate series ID */

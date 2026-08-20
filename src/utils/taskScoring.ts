@@ -81,9 +81,20 @@ export function clearScoreCache(): void {
 
 // ── Claude call ────────────────────────────────────────────────────────────
 
-/** Reject forecasts that violate BLS OOH cap or baseline rules (post-Zod). */
+/**
+ * Reject forecasts that violate BLS OOH direction/cap or baseline rules (post-Zod).
+ *
+ * A valid forecast travels from the 2025 baseline (0%) toward the BLS 10-year
+ * endpoint and never overshoots or reverses past it — so every year must sit
+ * within the interval [0, projectedGrowth] (order-independent: this covers
+ * both positive and negative BLS projections). Checking |g| against |cap|
+ * alone — the previous rule — only bounds magnitude, not direction, and lets
+ * a forecast land on the wrong side of zero (e.g. BLS +6% but g = -4%) pass
+ * silently. That's not a hypothetical: it happened for 5 real roles.
+ */
 function assertValidYearlyForecast(projectedGrowth: number, points: ForecastPoint[]): void {
-    const cap = Math.abs(projectedGrowth);
+    const lo = Math.min(0, projectedGrowth);
+    const hi = Math.max(0, projectedGrowth);
     const baselineTol = 0.08;
     const expectedYears = Array.from({ length: YEAR_MAX - YEAR_MIN + 1 }, (_, i) => YEAR_MIN + i);
     const byYear = new Map<number, ForecastPoint>();
@@ -96,12 +107,14 @@ function assertValidYearlyForecast(projectedGrowth: number, points: ForecastPoin
         if (!pt) throw new Error(`Forecast missing year ${y}`);
         const g = pt.growthImpact;
         if (!Number.isFinite(g)) throw new Error(`Invalid growthImpact for ${y}`);
-        if (cap < 1e-9) {
+        if (hi - lo < 1e-9) {
             if (Math.abs(g) > baselineTol) {
                 throw new Error(`BLS 10-year growth ~0%: year ${y} must stay near 0, got ${g}`);
             }
-        } else if (Math.abs(g) > cap + 1e-6) {
-            throw new Error(`Year ${y}: |cumulative ${g}| exceeds BLS |${projectedGrowth}|`);
+        } else if (g < lo - 1e-6 || g > hi + 1e-6) {
+            throw new Error(
+                `Year ${y}: cumulative ${g}% is outside the BLS envelope [${lo}, ${hi}] implied by projectedGrowth ${projectedGrowth}%`,
+            );
         }
     }
 
@@ -147,8 +160,8 @@ TWO outputs are needed:
   - growthImpact: CUMULATIVE percent change in this role's total US employment
     from the ${YEAR_MIN} baseline. NOT year-over-year — cumulative from ${YEAR_MIN}.
   - Year ${YEAR_MIN} MUST be exactly 0.00 (baseline).
-  - For EVERY year in the window, cumulative |growthImpact| must NOT exceed |${projectedGrowth}| (the BLS OOH 10-year % above).
-  - Years ${YEAR_MIN + 1} through ${YEAR_MAX}: smooth progression toward a plausible 2030 endpoint that still respects the cap at every year.
+  - For EVERY year in the window, growthImpact MUST fall between 0.00 and ${projectedGrowth} inclusive (the BLS OOH 10-year % above) — moving monotonically from the ${YEAR_MIN} baseline toward that endpoint. Do not cross zero, and do not go past ${projectedGrowth} in either direction.
+  - Years ${YEAR_MIN + 1} through ${YEAR_MAX}: smooth progression toward a plausible 2030 endpoint that still respects that range at every year.
   - Use two-decimal precision (e.g. 2.40, -3.85).
   - Do not invent other macro statistics (GDP, national unemployment) unless they appear in a task description below.
 

@@ -79,8 +79,15 @@ function cacheToResult(cache: BlsCacheShape): LaborStatsResult {
 export async function fetchLaborStats(seriesIds: string[]): Promise<LaborStatsResult> {
     const apiKey = import.meta.env.VITE_BLS_API_KEY;
 
-    if (!apiKey) {
-        console.warn('BLS API Key missing. Request may reach rate limits.');
+    // This only reflects the CLIENT bundle's own env var, which the client
+    // never actually needs: the /api/bls proxy applies its own server-side
+    // VITE_BLS_API_KEY independently (see api/bls.ts), so a missing key here
+    // says nothing about production. It previously warned unconditionally,
+    // which fired misleadingly on every production page load even when the
+    // server key was correctly configured. Gate it to local dev, where it's
+    // still a useful hint if .env has no key and requests hit BLS unregistered.
+    if (!apiKey && import.meta.env.DEV) {
+        console.warn('VITE_BLS_API_KEY not set locally — dev server will call BLS unregistered (25 req/day cap). Add it to .env if you hit rate limits.');
     }
 
     // Fresh cache covering every requested series → no network call at all
