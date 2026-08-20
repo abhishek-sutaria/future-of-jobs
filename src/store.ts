@@ -7,7 +7,7 @@ import type { JobAnalysisResult } from './utils/taskScoring';
 import { UPSKILL_IMPACT } from './config/GameMechanics';
 import {
     YEAR_MIN, PERCENTILES, RESILIENCE_LABELS, VOLATILITY_LABELS,
-    CONFIDENCE, BLS_API, DATA_SOURCES,
+    CONFIDENCE, DATA_SOURCES,
 } from './config/constants';
 
 // ── Percentile helper (used by both fetchRealData and scoreAllJobsWithAI) ──
@@ -310,18 +310,21 @@ export const useStore = create<AppState>((set, get) => ({
         // PASS 1 — apply raw BLS employment + compute automationCostIndex
         const intermediateJobs = get().jobs.map(job => {
             const item        = { ...job };
-            let dataSources   = [...job.dataSources];
+            const dataSources   = [...job.dataSources];
 
+            // CPS series here are broad occupation-category employment counts
+            // (see getSeriesIdForJob's own comment) — e.g. LNU02032202 covers every
+            // Management occupation combined (~30M), not this specific role's real
+            // headcount (OES puts Marketing Manager at ~369K). A live response only
+            // confirms the BLS connection is up; it must never overwrite
+            // item.employment, which stays the per-role OES figure from data.ts.
+            // The CPS provenance chip is intentionally not added here either — its
+            // own tooltip copy describes the national unemployment rate, not
+            // occupation headcounts, so attaching it to this job would be its own
+            // separate source of confusion.
             const sid = getSeriesIdForJob(job.title, '01');
             if (sid) {
-                if (blsResults.has(sid)) {
-                    const raw         = blsResults.get(sid)!;
-                    item.employment   = raw * BLS_API.EMPLOYMENT_MULTIPLIER;
-                    dataSources       = [...dataSources.filter(s => !s.startsWith('BLS')), DATA_SOURCES.BLS_CPS];
-                    item.isStale      = false;
-                } else {
-                    item.isStale      = true;
-                }
+                item.isStale = !blsResults.has(sid);
             }
 
             if (item.tasks.length > 0) {
