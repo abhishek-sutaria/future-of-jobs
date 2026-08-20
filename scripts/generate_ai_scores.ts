@@ -13,6 +13,8 @@
  *   npm run generate-scores -- --proxy https://futureofjobs.vercel.app/api/claude/messages
  *
  * Add `--limit N` to score only N jobs (cheap validation run).
+ * Cached entries are re-validated against current rules on every run and
+ * re-scored if they fail; add `--force` to re-score everything regardless.
  *
  * Progress is cached in data/ai_scores_cache.json so an interrupted run
  * resumes instead of re-paying for jobs that already succeeded.
@@ -93,12 +95,38 @@ function getLimit(): number | null {
     return Number.isFinite(n) && n > 0 ? Math.floor(n) : null;
 }
 
+/** `--force` re-scores every job regardless of cache state. */
+const FORCE = process.argv.includes('--force');
+
 function loadCache(): Record<string, JobAnalysisResult> {
     if (!fs.existsSync(CACHE_FILE)) return {};
     try {
         const parsed = JSON.parse(fs.readFileSync(CACHE_FILE, 'utf-8'));
         if (parsed?.version !== CACHE_VERSION) {
             console.log(`ℹ️   Resume cache is v${parsed?.version} but schema is v${CACHE_VERSION} — ignoring it.`);
+            return {};
+        }
+        return parsed.scores ?? {};
+    } catch {
+        return {};
+    }
+}
+
+/**
+ * The shipped app-facing file (OUT_FILE) and the local resume-progress file
+ * (CACHE_FILE) are NOT the same thing: CACHE_FILE is gitignored and only
+ * exists on a machine that has run this script before, so a fresh checkout
+ * has none — loadCache() alone would then see every job as "unscored" and
+ * silently re-score all 50, even though the real committed data is right
+ * here in OUT_FILE. Load it as the baseline so re-validation checks what's
+ * actually shipping, not just what happens to be in a local resume file.
+ */
+function loadExistingOutput(): Record<string, JobAnalysisResult> {
+    if (!fs.existsSync(OUT_FILE)) return {};
+    try {
+        const parsed = JSON.parse(fs.readFileSync(OUT_FILE, 'utf-8'));
+        if (parsed?.version !== CACHE_VERSION) {
+            console.log(`ℹ️   Shipped ${path.relative(ROOT, OUT_FILE)} is schema v${parsed?.version} but expected v${CACHE_VERSION} — ignoring it.`);
             return {};
         }
         return parsed.scores ?? {};
@@ -178,12 +206,39 @@ async function main(): Promise<void> {
     const auth = getAuth();
     console.log(auth.mode === 'direct' ? '🔑  Using local ANTHROPIC_API_KEY\n' : `🔑  Using proxy ${auth.url}\n`);
 
-    const scores = loadCache();
-    const cachedCount = Object.keys(scores).length;
-    if (cachedCount > 0) console.log(`📂  Resuming: ${cachedCount} job(s) already scored.\n`);
+    // Committed output is the real baseline; a local resume cache (if this
+    // machine has an interrupted run in progress) layers on top and wins,
+    // since it may be newer than what's currently committed.
+    const shipped = loadExistingOutput();
+    const resumed = loadCache();
+    const scores = { ...shipped, ...resumed };
+    const shippedCount = Object.keys(shipped).length;
+    const resumedCount = Object.keys(resumed).length;
+    if (shippedCount > 0) console.log(`📦  Loaded ${shippedCount} job(s) from the committed file.`);
+    if (resumedCount > 0) console.log(`📂  Resuming: ${resumedCount} job(s) from an in-progress local run.`);
+    console.log();
 
+    // Cached entries are re-validated against today's rules on every run —
+    // not just trusted because they're present. A cache written before a
+    // validation rule existed (or tightened) would otherwise never get
+    // re-checked, which is exactly how 28 stale/invalid forecasts shipped
+    // silently in the past. --force re-scores everything regardless.
+    let revalidated = 0;
     const limit = getLimit();
-    let pending = initialJobs.filter(j => !scores[j.id]);
+    let pending = initialJobs.filter(j => {
+        if (FORCE || !scores[j.id]) return true;
+        try {
+            const taskNames = j.tasks.map(t => t.name);
+            parseJobAnalysis(scores[j.id], taskNames, j.projectedGrowth);
+            return false; // cached entry still passes today's rules — skip
+        } catch (err) {
+            revalidated++;
+            const reason = err instanceof Error ? err.message : String(err);
+            console.log(`♻️   ${j.title}: cached entry failed re-validation (${reason.slice(0, 90)}) — re-scoring`);
+            return true;
+        }
+    });
+    if (revalidated > 0) console.log(`\n🔎  Re-validation queued ${revalidated} previously-cached job(s) for re-scoring.\n`);
     if (limit !== null && pending.length > limit) {
         console.log(`⚠️   --limit ${limit}: scoring only the first ${limit} of ${pending.length} pending job(s).`);
         pending = pending.slice(0, limit);

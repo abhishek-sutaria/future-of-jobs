@@ -244,6 +244,29 @@ export async function generateUpskillCourses(jobTitle: string, taskName: string)
     return callAnalysis(prompt) as Promise<UpskillCoursesResult>;
 }
 
+/**
+ * The live Analyze path has no schema validation (unlike the offline
+ * generator's assertValidYearlyForecast, which throws and retries) — a
+ * throwing check here would turn a successful Analyze into a user-facing
+ * error. Instead, clamp any year that falls outside the BLS envelope
+ * [0, projectedGrowth] back to the nearest edge, so the UI can never render
+ * a forecast that overshoots or reverses the BLS projection it's grounded in.
+ */
+function clampForecastToEnvelope(jobTitle: string, projectedGrowth: number, result: JobAnalysis): void {
+    if (!result.yearlyForecast) return;
+    const lo = Math.min(0, projectedGrowth);
+    const hi = Math.max(0, projectedGrowth);
+    for (const f of result.yearlyForecast) {
+        const clamped = Math.min(hi, Math.max(lo, f.growthImpact));
+        if (clamped !== f.growthImpact) {
+            console.warn(
+                `[Analyze] ${jobTitle} ${f.year}: clamped ${f.growthImpact}% into BLS envelope [${lo}, ${hi}]`,
+            );
+            f.growthImpact = clamped;
+        }
+    }
+}
+
 export async function analyzeJob(
     jobId: string,
     jobTitle: string,
@@ -296,7 +319,7 @@ export async function analyzeJob(
     IMPORTANT COHERENCE INSTRUCTIONS:
     - Provide precise, granular two-decimal scores (e.g., 0.73, 0.41, 0.88). DO NOT round to the nearest tenth or quarter.
     - "yearlyForecast.growthImpact" is CUMULATIVE percent change in employment from the 2025 baseline. NOT year-over-year. Year 2025 MUST be 0.00. Use two-decimal precision (e.g. 2.40, -3.85).
-    - For every forecast year, cumulative |growthImpact| must NOT exceed |${bls.projectedGrowth}| (the BLS OOH 10-year % for this role). Intermediate years must interpolate smoothly toward the 2030 endpoint without violating that cap at any year.
+    - For every forecast year, growthImpact MUST fall between 0.00 and ${bls.projectedGrowth} inclusive (the BLS OOH 10-year % for this role) — moving monotonically from the 2025 baseline toward that endpoint. Do not cross zero, and do not go past ${bls.projectedGrowth} in either direction.
     - Do not introduce other macro statistics (GDP, national unemployment, wages) unless they appear in the task text you were given.
     - "salary_forecast" should be an array of 6 numbers representing a salary index from 2025 to 2030. Start at 100.
     - If the role's tasks have high automation exposure, the salary forecast should show VOLATILITY (ups and downs) or DECLINE.
@@ -305,6 +328,7 @@ export async function analyzeJob(
   `;
 
     const result = await callAnalysis(prompt) as JobAnalysis;
+    if (result) clampForecastToEnvelope(jobTitle, bls.projectedGrowth, result);
     if (result) saveAnalyzeCacheEntry(jobId, fingerprint, result);
     return result;
 }
