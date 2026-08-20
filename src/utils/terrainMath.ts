@@ -163,6 +163,18 @@ export const getVisualHeightForEmployment = (employment: number): number => {
 };
 
 /**
+ * Implied headcount at a given point on the forecast: baseline × (1 + cumulative%/100).
+ * Shared by the Workers-mode terrain height below and the job popup's Workers stat —
+ * both must derive the same number from the same forecast sample.
+ */
+export function impliedEmploymentAtYear(
+    baselineEmployment: number,
+    cumulativePctFromBaseline: number,
+): number {
+    return Math.max(1, baselineEmployment * (1 + cumulativePctFromBaseline / 100));
+}
+
+/**
  * Workers mode: mostly log-scaled **implied** headcount (baseline × (1 + cumulative%/100)),
  * with amplified delta from baseline employment height, plus a small blend of the same
  * Growth-mode height mapping so the year scrub reads clearly. Cumulative % in data is unchanged.
@@ -171,7 +183,7 @@ export function getVisualHeightForWorkersAtYear(
     baselineEmployment: number,
     cumulativePctFromBaseline: number,
 ): number {
-    const implied = Math.max(1, baselineEmployment * (1 + cumulativePctFromBaseline / 100));
+    const implied = impliedEmploymentAtYear(baselineEmployment, cumulativePctFromBaseline);
     const hBase = getVisualHeightForEmployment(baselineEmployment);
     const hImplied = getVisualHeightForEmployment(implied);
     const delta = hImplied - hBase;
