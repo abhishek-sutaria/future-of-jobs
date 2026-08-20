@@ -112,6 +112,29 @@ function loadCache(): Record<string, JobAnalysisResult> {
     }
 }
 
+/**
+ * The shipped app-facing file (OUT_FILE) and the local resume-progress file
+ * (CACHE_FILE) are NOT the same thing: CACHE_FILE is gitignored and only
+ * exists on a machine that has run this script before, so a fresh checkout
+ * has none — loadCache() alone would then see every job as "unscored" and
+ * silently re-score all 50, even though the real committed data is right
+ * here in OUT_FILE. Load it as the baseline so re-validation checks what's
+ * actually shipping, not just what happens to be in a local resume file.
+ */
+function loadExistingOutput(): Record<string, JobAnalysisResult> {
+    if (!fs.existsSync(OUT_FILE)) return {};
+    try {
+        const parsed = JSON.parse(fs.readFileSync(OUT_FILE, 'utf-8'));
+        if (parsed?.version !== CACHE_VERSION) {
+            console.log(`ℹ️   Shipped ${path.relative(ROOT, OUT_FILE)} is schema v${parsed?.version} but expected v${CACHE_VERSION} — ignoring it.`);
+            return {};
+        }
+        return parsed.scores ?? {};
+    } catch {
+        return {};
+    }
+}
+
 function saveCache(scores: Record<string, JobAnalysisResult>): void {
     fs.mkdirSync(path.dirname(CACHE_FILE), { recursive: true });
     fs.writeFileSync(CACHE_FILE, JSON.stringify({ version: CACHE_VERSION, scores }, null, 2));
@@ -183,9 +206,17 @@ async function main(): Promise<void> {
     const auth = getAuth();
     console.log(auth.mode === 'direct' ? '🔑  Using local ANTHROPIC_API_KEY\n' : `🔑  Using proxy ${auth.url}\n`);
 
-    const scores = loadCache();
-    const cachedCount = Object.keys(scores).length;
-    if (cachedCount > 0) console.log(`📂  Resuming: ${cachedCount} job(s) already scored.\n`);
+    // Committed output is the real baseline; a local resume cache (if this
+    // machine has an interrupted run in progress) layers on top and wins,
+    // since it may be newer than what's currently committed.
+    const shipped = loadExistingOutput();
+    const resumed = loadCache();
+    const scores = { ...shipped, ...resumed };
+    const shippedCount = Object.keys(shipped).length;
+    const resumedCount = Object.keys(resumed).length;
+    if (shippedCount > 0) console.log(`📦  Loaded ${shippedCount} job(s) from the committed file.`);
+    if (resumedCount > 0) console.log(`📂  Resuming: ${resumedCount} job(s) from an in-progress local run.`);
+    console.log();
 
     // Cached entries are re-validated against today's rules on every run —
     // not just trusted because they're present. A cache written before a

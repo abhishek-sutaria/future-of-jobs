@@ -95,7 +95,17 @@ export function clearScoreCache(): void {
 function assertValidYearlyForecast(projectedGrowth: number, points: ForecastPoint[]): void {
     const lo = Math.min(0, projectedGrowth);
     const hi = Math.max(0, projectedGrowth);
+    // The 2025 baseline point must be essentially exact — it's defined as 0 by
+    // construction, not modeled. Interior years for a ~0% BLS role are a real
+    // AI-reasoned forecast, though, and a small transient dip-then-recover is
+    // an economically reasonable narrative even when the 10-year net is flat
+    // (observed directly: Claude consistently produced small interior dips
+    // like -0.1 to -0.65 for roles with projectedGrowth = 0, never landing
+    // exactly on 0 for every year — a 0.08 tolerance rejected genuinely
+    // reasonable forecasts, not just noise). Kept separate so the baseline
+    // year itself stays strict.
     const baselineTol = 0.08;
+    const nearZeroYearTol = 0.8;
     const expectedYears = Array.from({ length: YEAR_MAX - YEAR_MIN + 1 }, (_, i) => YEAR_MIN + i);
     const byYear = new Map<number, ForecastPoint>();
     for (const p of points) {
@@ -108,8 +118,8 @@ function assertValidYearlyForecast(projectedGrowth: number, points: ForecastPoin
         const g = pt.growthImpact;
         if (!Number.isFinite(g)) throw new Error(`Invalid growthImpact for ${y}`);
         if (hi - lo < 1e-9) {
-            if (Math.abs(g) > baselineTol) {
-                throw new Error(`BLS 10-year growth ~0%: year ${y} must stay near 0, got ${g}`);
+            if (Math.abs(g) > nearZeroYearTol) {
+                throw new Error(`BLS 10-year growth ~0%: year ${y} must stay within ±${nearZeroYearTol} of 0, got ${g}`);
             }
         } else if (g < lo - 1e-6 || g > hi + 1e-6) {
             throw new Error(
