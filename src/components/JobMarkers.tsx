@@ -3,9 +3,9 @@ import { useFrame, useThree } from '@react-three/fiber';
 import { Html, Line } from '@react-three/drei';
 import { useStore } from '../store';
 import type { Job } from '../types';
-import { getTerrainPosition, calculateGaussianHeight, buildGrowthForecastFlatArray, growthAtYearFromForecastFlat, getVisualHeightForGrowth, getVisualHeightForWorkersAtYear, type PeakData, TERRAIN_CONFIG } from '../utils/terrainMath';
+import { getTerrainPosition, calculateGaussianHeight, buildGrowthForecastFlatArray, growthAtYearFromForecastFlat, getVisualHeightForGrowth, getVisualHeightForWorkersAtYear, impliedEmploymentAtYear, type PeakData, TERRAIN_CONFIG } from '../utils/terrainMath';
 import { buildRiskScale, riskBandColor } from '../config/theme';
-import { SCENE } from '../config/constants';
+import { SCENE, YEAR_MAX } from '../config/constants';
 
 export const JobMarkers: React.FC = () => {
     const jobs = useStore((state) => state.jobs);
@@ -167,18 +167,27 @@ export const JobMarkers: React.FC = () => {
         const labelHeight = SCENE.LABEL.BASE_HEIGHT + peak.offset;
         const surfaceY = calculateGaussianHeight(peak.x, peak.z, peaks) + TERRAIN_CONFIG.TERRAIN_OFFSET_Y;
 
-        const sampledGrowth = growthAtYearFromForecastFlat(forecastsFlat, filteredIndex, year);
-        const roundedYear = Math.round(year);
-        const isDeclining = sampledGrowth < 0;
-        const isGrowing = sampledGrowth > 0;
-        const growthStr = `${sampledGrowth >= 0 ? '+' : ''}${sampledGrowth.toFixed(1)}%`;
+        // Forecast stat is pinned to the terminal year (2030) regardless of the
+        // slider, so it reads as "where this role ends up" instead of always
+        // showing the 2025 baseline (0% by definition) when the slider starts there.
+        const forecastGrowth = growthAtYearFromForecastFlat(forecastsFlat, filteredIndex, YEAR_MAX);
+        const isDeclining = forecastGrowth < 0;
+        const isGrowing = forecastGrowth > 0;
+        const growthStr = `${forecastGrowth >= 0 ? '+' : ''}${forecastGrowth.toFixed(1)}%`;
         const growthColor = isGrowing ? '#4ade80' : isDeclining ? '#f87171' : '#94a3b8';
-        const growthLabel = `${roundedYear} Forecast`;
-        const workersStr = job.employment >= 1_000_000
-            ? (job.employment / 1_000_000).toFixed(1) + 'M'
-            : job.employment >= 1_000
-            ? Math.round(job.employment / 1_000) + 'K'
-            : job.employment.toString();
+        const growthLabel = `${YEAR_MAX} Forecast`;
+
+        // Workers stat tracks the slider: implied headcount at the scrubbed year,
+        // using the same formula that drives the terrain peak in Workers mode.
+        const sliderGrowth = growthAtYearFromForecastFlat(forecastsFlat, filteredIndex, year);
+        const roundedYear = Math.round(year);
+        const impliedWorkers = impliedEmploymentAtYear(job.employment, sliderGrowth);
+        const workersStr = impliedWorkers >= 1_000_000
+            ? (impliedWorkers / 1_000_000).toFixed(1) + 'M'
+            : impliedWorkers >= 1_000
+            ? Math.round(impliedWorkers / 1_000) + 'K'
+            : Math.round(impliedWorkers).toString();
+        const workersLabel = `${roundedYear} Workers`;
 
         return [{
             job,
@@ -188,11 +197,11 @@ export const JobMarkers: React.FC = () => {
             isHovered,
             pipColor,
             labelHeight,
-            isDeclining,
             growthStr,
             growthColor,
             growthLabel,
             workersStr,
+            workersLabel,
         }];
     }).sort((a, b) => Number(a.isHovered || a.isSelected) - Number(b.isHovered || b.isSelected));
 
@@ -200,7 +209,7 @@ export const JobMarkers: React.FC = () => {
         <group>
             {markerItems.map(({
                 job, peak, surfaceY, isSelected, isHovered, pipColor, labelHeight,
-                isDeclining, growthStr, growthColor, growthLabel, workersStr,
+                growthStr, growthColor, growthLabel, workersStr, workersLabel,
             }) => (
                     <group key={job.id} position={[peak.x, surfaceY, peak.z]}>
                         {/* Anchor ring */}
@@ -240,7 +249,7 @@ export const JobMarkers: React.FC = () => {
                             zIndexRange={isHovered || isSelected ? [16777271, 16777000] : [100, 0]}
                         >
                             <div
-                                className={`flex flex-col max-w-[min(11rem,calc(100vw-2rem))] overflow-hidden rounded border shadow-sm cursor-pointer touch-none select-none transition-all duration-200 ${isSelected || isHovered ? 'bg-[#0F172A]/95 backdrop-blur-sm scale-105 ring-1 ring-white/25 border-slate-300/40 shadow-xl shadow-black/50' : 'bg-[#0F172A]/72 backdrop-blur-[2px] border-slate-600/40'} ${isHovered ? 'border-cyan-400/60' : ''}`}
+                                className={`flex flex-col max-w-[min(13rem,calc(100vw-2rem))] overflow-hidden rounded border shadow-sm cursor-pointer touch-none select-none transition-all duration-200 ${isSelected || isHovered ? 'bg-[#0F172A]/95 backdrop-blur-sm scale-105 ring-1 ring-white/25 border-slate-300/40 shadow-xl shadow-black/50' : 'bg-[#0F172A]/72 backdrop-blur-[2px] border-slate-600/40'} ${isHovered ? 'border-cyan-400/60' : ''}`}
                                 onPointerDown={handleLabelPointerDown(job)}
                                 onPointerEnter={() => {
                                     if (!isOrbiting) setHoveredJobId(job.id);
@@ -262,15 +271,20 @@ export const JobMarkers: React.FC = () => {
                                     AI risk is carried by the colour of the dot above, and the old
                                     Sector row always read "Business" for every role. */}
                                 {(isHovered || isSelected) && (
-                                    <div className="px-1.5 pb-1 pt-0 border-t border-slate-700/40 grid grid-cols-2 gap-x-2 gap-y-0.5 min-w-0">
-                                        <div className="flex flex-col min-w-0">
-                                            <span className="text-[8px] text-slate-500 uppercase tracking-wider leading-none">Workers</span>
-                                            <span className="text-[10px] text-slate-200 font-mono font-medium leading-none truncate">{workersStr}</span>
+                                    // Stacked rows, not side-by-side columns: "2030 WORKERS" /
+                                    // "2030 FORECAST" labels are long enough that splitting the
+                                    // box in half made one label's text overflow into the other
+                                    // column. A full-width row per stat has room for either label
+                                    // at any year without competing for horizontal space.
+                                    <div className="px-2 pb-1 pt-0 border-t border-slate-700/40 flex flex-col gap-y-0.5 min-w-0">
+                                        <div className="flex items-baseline justify-between gap-2 min-w-0">
+                                            <span className="text-[8px] text-slate-500 uppercase tracking-wider leading-none whitespace-nowrap">{workersLabel}</span>
+                                            <span className="text-[10px] text-slate-200 font-mono font-medium leading-none whitespace-nowrap">{workersStr}</span>
                                         </div>
-                                        <div className="flex flex-col min-w-0">
-                                            <span className="text-[8px] text-slate-500 uppercase tracking-wider leading-none">{growthLabel}</span>
-                                            <span className="text-[10px] font-mono font-medium leading-none truncate" style={{ color: growthColor }}>
-                                                {isDeclining ? `${growthStr} Decline` : growthStr}
+                                        <div className="flex items-baseline justify-between gap-2 min-w-0">
+                                            <span className="text-[8px] text-slate-500 uppercase tracking-wider leading-none whitespace-nowrap">{growthLabel}</span>
+                                            <span className="text-[10px] font-mono font-medium leading-none whitespace-nowrap" style={{ color: growthColor }}>
+                                                {growthStr}
                                             </span>
                                         </div>
                                     </div>
