@@ -104,6 +104,28 @@ describe('session lifecycle', () => {
         );
     });
 
+    it('handles Supabase\'s actual updateUser conflict wording ("...has already been registered")', async () => {
+        await useUserStore.getState().hydrateUserSession();
+        // This is the literal message Supabase's GoTrue API returns from
+        // updateUser() on an email conflict — confirmed against the real
+        // error a user hit in production. It differs from the wording in
+        // the test above ("already exists") by the inserted "been", which
+        // previously fell through the regex and surfaced as a dead-end
+        // raw error instead of triggering the sign-in-link fallback.
+        fake.auth.updateUser = vi.fn(async () => ({
+            data: { user: null },
+            error: { message: 'A user with this email address has already been registered' },
+        }));
+
+        const res = await useUserStore.getState().signInWithEmail('absutari@iu.edu');
+
+        expect(res.ok).toBe(true);
+        expect(res.message).toMatch(/already linked/i);
+        expect(fake.auth.signInWithOtp).toHaveBeenCalledWith(
+            expect.objectContaining({ email: 'absutari@iu.edu' })
+        );
+    });
+
     it('rejects an invalid email without calling the backend', async () => {
         await useUserStore.getState().hydrateUserSession();
         const res = await useUserStore.getState().signInWithEmail('not-an-email');
