@@ -306,7 +306,7 @@ export async function loadUserActivity(): Promise<UserActivity> {
         c.db.from('job_views').select('job_id, job_title, view_count, last_viewed_at')
             .eq('user_id', c.userId).order('last_viewed_at', { ascending: false }).limit(50),
         c.db.from('upskill_completions').select('job_id, task_name, completed_at')
-            .eq('user_id', c.userId),
+            .eq('user_id', c.userId).order('completed_at', { ascending: false }),
         c.db.from('generated_artifacts').select('id, kind, job_id, job_title, cache_key, payload, updated_at')
             .eq('user_id', c.userId).order('updated_at', { ascending: false }),
     ]);

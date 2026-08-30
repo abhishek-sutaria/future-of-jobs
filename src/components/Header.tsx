@@ -26,11 +26,11 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
     const scoresGeneratedAt = useStore((state) => state.scoresGeneratedAt);
     const openClaudeKeyModal = useStore((state) => state.openClaudeKeyModal);
     const openRescoreModal = useStore((state) => state.openRescoreModal);
+    const navigate = useStore((state) => state.navigate);
 
     // Account state. Deliberately read from the separate user store — identity
     // is not part of the visualisation store and must stay decoupled from the
     // Claude API-key mechanism above.
-    const openAccountModal = useUserStore((state) => state.openAccountModal);
     const authStatus = useUserStore((state) => state.authStatus);
     const savedCount = useUserStore((state) => state.activity.savedRoles.length);
 
@@ -157,7 +157,7 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
                         an unconfigured deploy shows no dead control. */}
                     {authStatus !== 'disabled' && (
                         <button
-                            onClick={openAccountModal}
+                            onClick={() => navigate('dashboard')}
                             title={
                                 authStatus === 'identified'
                                     ? 'Your activity — saved roles, history and reports'

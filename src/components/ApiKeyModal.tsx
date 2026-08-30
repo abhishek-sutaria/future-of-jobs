@@ -1,5 +1,6 @@
 import React from 'react';
 import { useStore } from '../store';
+import { Z } from '../config/layers';
 
 export const ApiKeyModal: React.FC = () => {
     const hasConfiguredAI = useStore((state) => state.hasConfiguredAI);
@@ -8,12 +9,18 @@ export const ApiKeyModal: React.FC = () => {
     const useDefaultClaudeKey = useStore((state) => state.useDefaultClaudeKey);
     const claudeKeyModalOpen = useStore((state) => state.claudeKeyModalOpen);
     const closeClaudeKeyModal = useStore((state) => state.closeClaudeKeyModal);
+    const route = useStore((state) => state.route);
     const hasDefaultClaudeKey = import.meta.env.VITE_HAS_DEFAULT_CLAUDE_KEY;
 
     const [inputKey, setInputKey] = React.useState('');
     const [inputError, setInputError] = React.useState<string | null>(null);
 
-    const showModal = !hasConfiguredAI || claudeKeyModalOpen;
+    // The dashboard needs no Claude access at all, so the otherwise-undismissable
+    // "configure a key" gate must never block reaching it. A voluntary re-open
+    // (claudeKeyModalOpen, e.g. from the header's "Claude API" button) still
+    // works on the dashboard — only the involuntary !hasConfiguredAI gate is
+    // suppressed there.
+    const showModal = (!hasConfiguredAI && route !== 'dashboard') || claudeKeyModalOpen;
     const canDismiss = hasConfiguredAI && claudeKeyModalOpen;
 
     React.useEffect(() => {
@@ -47,7 +54,7 @@ export const ApiKeyModal: React.FC = () => {
     };
 
     return (
-        <div className="fixed inset-0 z-[5000] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+        <div className="fixed inset-0 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4" style={{ zIndex: Z.apiKey }}>
             <div className="w-full max-w-lg rounded-2xl border border-white/10 bg-gray-900 p-6 shadow-2xl relative">
                 {canDismiss && (
                     <button

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Landscape } from './components/Landscape';
 import { UI } from './components/UI';
 import { MapView } from './components/MapView';
+import { DashboardPage } from './components/dashboard/DashboardPage';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { ApiKeyModal } from './components/ApiKeyModal';
 import { RescoreConfirmModal } from './components/RescoreConfirmModal';
@@ -57,10 +58,21 @@ function App() {
   const hydrateAIConfig = useStore((state) => state.hydrateAIConfig);
   const scoresSource = useStore((state) => state.scoresSource);
   const hydrateUserSession = useUserStore((state) => state.hydrateUserSession);
+  const route = useStore((state) => state.route);
+  const syncRouteFromLocation = useStore((state) => state.syncRouteFromLocation);
 
   useEffect(() => {
     hydrateAIConfig();
   }, [hydrateAIConfig]);
+
+  // The single popstate listener for the whole app. `route` itself is seeded
+  // synchronously from window.location at store creation (store.ts), so a
+  // direct hit on /dashboard already renders correctly before this effect
+  // even runs — this only needs to catch the browser Back/Forward buttons.
+  useEffect(() => {
+    window.addEventListener('popstate', syncRouteFromLocation);
+    return () => window.removeEventListener('popstate', syncRouteFromLocation);
+  }, [syncRouteFromLocation]);
 
   // Establish the user session (anonymous by default) and load their saved
   // activity. Never awaited and never blocking: exploration must stay available
@@ -106,7 +118,8 @@ function App() {
         {mapView === 'map' && <MapView />}
       </div>
 
-      <UI />
+      <UI dashboardOpen={route === 'dashboard'} />
+      {route === 'dashboard' && <DashboardPage />}
       <ApiKeyModal />
       <RescoreConfirmModal />
     </div>

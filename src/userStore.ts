@@ -75,11 +75,6 @@ interface UserState {
     activitySource: ActivitySource;
     activityLoadedAt: number | null;
 
-    // ── ui ──
-    accountModalOpen: boolean;
-    openAccountModal: () => void;
-    closeAccountModal: () => void;
-
     // ── actions ──
     hydrateUserSession: () => Promise<void>;
     refreshActivity: () => Promise<void>;
@@ -107,6 +102,16 @@ function statusForUser(user: User | null): AuthStatus {
  */
 let hydrationInFlight: Promise<void> | null = null;
 
+/**
+ * Where a magic link should return the browser. Includes the current path
+ * (not just origin) — a user requesting a link from /dashboard who lands back
+ * on / after clicking it would otherwise be dropped back on the map for no
+ * reason. Supabase appends the session token as a URL hash on return.
+ */
+function currentRedirectUrl(): string {
+    return `${window.location.origin}${window.location.pathname}`;
+}
+
 export const useUserStore = create<UserState>((set, get) => ({
     user: null,
     authStatus: HAS_SUPABASE ? 'loading' : 'disabled',
@@ -116,10 +121,6 @@ export const useUserStore = create<UserState>((set, get) => ({
     isLoadingActivity: false,
     activitySource: 'none',
     activityLoadedAt: null,
-
-    accountModalOpen: false,
-    openAccountModal: () => set({ accountModalOpen: true }),
-    closeAccountModal: () => set({ accountModalOpen: false, authError: null }),
 
     hydrateUserSession: async () => {
         if (!HAS_SUPABASE) {
@@ -223,7 +224,7 @@ export const useUserStore = create<UserState>((set, get) => ({
                     if (/already (registered|exists)/i.test(error.message)) {
                         const { error: otpError } = await db.auth.signInWithOtp({
                             email: trimmed,
-                            options: { emailRedirectTo: window.location.origin },
+                            options: { emailRedirectTo: currentRedirectUrl() },
                         });
                         if (otpError) {
                             set({ authError: otpError.message });
@@ -248,7 +249,7 @@ export const useUserStore = create<UserState>((set, get) => ({
 
             const { error } = await db.auth.signInWithOtp({
                 email: trimmed,
-                options: { emailRedirectTo: window.location.origin },
+                options: { emailRedirectTo: currentRedirectUrl() },
             });
             if (error) {
                 set({ authError: error.message });
@@ -280,7 +281,6 @@ export const useUserStore = create<UserState>((set, get) => ({
             activity: EMPTY_ACTIVITY,
             activitySource: 'none',
             activityLoadedAt: null,
-            accountModalOpen: false,
         });
         // Start a fresh anonymous session so saving still works right away.
         void get().hydrateUserSession();

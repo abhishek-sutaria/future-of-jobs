@@ -9,9 +9,21 @@ import { useStore } from '../store';
 
 export const Landscape: React.FC = () => {
     const setIsOrbiting = useStore((s) => s.setIsOrbiting);
+    const route = useStore((s) => s.route);
 
     return (
-        <Canvas camera={{ position: [...SCENE.CAMERA_INITIAL_POSITION], fov: SCENE.CAMERA_FOV }}>
+        <Canvas
+            // Halts the render loop while the dashboard covers the screen — an
+            // opaque DOM overlay does NOT stop requestAnimationFrame (browsers
+            // only throttle rAF for hidden tabs, not occluded canvases), and
+            // Terrain.tsx runs a ~37k-vertex shader with a per-vertex loop over
+            // up to 50 peaks every frame regardless of visibility. 'never'
+            // preserves the GL context, compiled shaders, geometry and the
+            // OrbitControls camera position, so returning to the map is instant
+            // and the user's orbit is exactly where they left it.
+            frameloop={route === 'dashboard' ? 'never' : 'always'}
+            camera={{ position: [...SCENE.CAMERA_INITIAL_POSITION], fov: SCENE.CAMERA_FOV }}
+        >
             <fog attach="fog" args={[SCENE.FOG_COLOR, SCENE.FOG_NEAR, SCENE.FOG_FAR]} />
 
             <ambientLight intensity={0.5} />
