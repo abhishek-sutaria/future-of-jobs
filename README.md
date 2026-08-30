@@ -197,18 +197,40 @@ configured, the app behaves exactly as a stateless, anonymous SPA.
 ### Setup
 
 1. Create a free project at [supabase.com](https://supabase.com).
-2. In the SQL editor, run `supabase/migrations/0001_user_activity.sql`. This
-   creates the tables and RLS policies — read the file's own header comment
-   for what it does before running it.
+2. In the SQL editor, run **both** migrations in `supabase/migrations/`, in
+   order — read each file's own header comment for what it does before running
+   it:
+   - `0001_user_activity.sql` — creates the tables and RLS policies.
+   - `0002_grant_authenticated_privileges.sql` — **required.** RLS decides
+     *which rows* a role may touch, but Postgres needs a separate, more basic
+     `GRANT` before a role may query a table at all. Skipping this leaves every
+     request from a signed-in (including anonymous) user failing with a 403
+     before RLS is ever evaluated — the app looks completely broken while the
+     policies themselves are perfectly correct.
 3. In **Authentication → Settings**, enable **Allow anonymous sign-ins** (off
    by default). If you want the email-upgrade flow to work, also confirm your
    email provider is configured.
-4. Copy the **Project URL** and **anon/public key** (Project Settings → API)
+4. In **Authentication → URL Configuration**, set the redirect targets for
+   magic links. Both fields ship with defaults that silently break sign-in in
+   production, and the failure is invisible from the app side — the link
+   arrives fine and simply lands nowhere useful, leaving the user as a guest:
+   - **Site URL** defaults to `http://localhost:3000`. Set it to your deployed
+     origin (e.g. `https://your-app.vercel.app`), or every emailed link points
+     at a dev server that isn't running.
+   - **Redirect URLs** is **empty** by default, and an empty allow-list matches
+     nothing — so Supabase discards the app's requested `emailRedirectTo` and
+     falls back to the Site URL. Add your origins with a wildcard so any path
+     (the app requests `/dashboard`) is permitted:
+     ```
+     https://your-app.vercel.app/**
+     http://localhost:5173/**
+     ```
+5. Copy the **Project URL** and **anon/public key** (Project Settings → API)
    into `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY` — locally in `.env.local`
    and in Vercel Project Settings → Environment Variables for production.
    The anon key is meant to be public: it carries no privileges of its own,
    and every table denies all access until RLS explicitly grants it.
-5. (Optional, not part of CI) After setup, prove isolation against your real
+6. (Optional, not part of CI) After setup, prove isolation against your real
    project:
    ```bash
    VITE_SUPABASE_URL=... VITE_SUPABASE_ANON_KEY=... node scripts/verify_rls.mjs
