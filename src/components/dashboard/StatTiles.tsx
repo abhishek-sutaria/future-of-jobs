@@ -37,9 +37,13 @@ export const StatTiles: React.FC<{ stats: PortfolioStats }> = ({ stats }) => (
             label="Trained"
             value={stats.trainedCount}
         />
-        <div className="bg-white/[0.03] rounded-xl p-3 border border-white/[0.06] flex items-center justify-center">
+        <div className="bg-white/[0.03] rounded-xl p-3 border border-white/[0.06] flex items-center justify-center overflow-hidden">
             {stats.averageRisk !== null ? (
-                <RadialGauge value={stats.averageRisk} label="Portfolio Risk" sublabel={`${stats.savedCount} saved roles`} size={88} />
+                // No sublabel: "N saved roles" is already the adjacent tile,
+                // and RadialGauge's fixed-size text box (tuned for its 120px
+                // default) clips/overflows a third line at this compact size —
+                // confirmed live, the sublabel bled past the tile's edge.
+                <RadialGauge value={stats.averageRisk} label="Portfolio Risk" size={96} />
             ) : (
                 <div className="text-center py-2">
                     <div className="text-[10px] uppercase text-gray-500 font-semibold tracking-wider">Portfolio Risk</div>
