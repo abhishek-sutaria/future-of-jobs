@@ -154,7 +154,16 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
     return (
         <>
             <div className="absolute inset-0 flex items-center justify-center pointer-events-none p-2 md:p-8" style={{ zIndex: Z.detailPanel }}>
-                <div className="bg-gray-900/95 backdrop-blur-xl border border-cyan-400/20 shadow-2xl rounded-2xl w-full max-w-6xl h-auto max-h-[85vh] flex flex-col pointer-events-auto overflow-hidden">
+                {/* Backdrop — dims and blurs the terrain/header/legend behind the
+                    panel so focus stays on the report, matching ui/Modal's own
+                    backdrop convention. Click-through closes, same as every
+                    other modal in the app. */}
+                <div
+                    className="absolute inset-0 bg-black/60 backdrop-blur-sm pointer-events-auto"
+                    onClick={onClose}
+                    aria-hidden="true"
+                />
+                <div className="relative bg-gray-900/95 backdrop-blur-xl border border-cyan-400/20 shadow-2xl rounded-2xl w-full max-w-6xl h-auto max-h-[85vh] flex flex-col pointer-events-auto overflow-hidden">
 
                     {/* Header */}
                     <div className="flex-none p-4 md:p-6 border-b border-white/[0.06] flex justify-between items-start gap-4">
