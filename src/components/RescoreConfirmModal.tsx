@@ -91,7 +91,10 @@ export const RescoreConfirmModal: React.FC = () => {
     const tree = (
         <div
             className="fixed inset-0 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4 pointer-events-auto"
-            style={{ zIndex: Z.toast }}
+            // Was Z.toast (9000) — sharing a token with actual toast
+            // notifications was never intentional; this is a modal (a real
+            // spend-confirmation dialog), so it belongs with the other modals.
+            style={{ zIndex: Z.modalTop }}
             role="presentation"
             // Stop wheel/drag from reaching the WebGL canvas underneath.
             onPointerDown={(e) => e.stopPropagation()}

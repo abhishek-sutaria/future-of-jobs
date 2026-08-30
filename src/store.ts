@@ -207,6 +207,26 @@ interface AppState {
     /** True while the user is dragging to orbit/pan/zoom the 3D globe (suppress hover popups). */
     isOrbiting: boolean;
     setIsOrbiting: (orbiting: boolean) => void;
+
+    /**
+     * Which full-page view is showing. 'map' is the default 3D/2D visualization
+     * experience (unchanged); 'dashboard' is the full-page user-activity view.
+     * Backed by the History API so /dashboard is a real, bookmarkable,
+     * back-button-able URL — see App.tsx's popstate listener.
+     */
+    route: Route;
+    /** Pushes (or replaces) history and updates `route`, plus closes anything that would otherwise float on top of a full-page view (rescore/API-key dialogs) and clears a stuck orbit-drag flag. */
+    navigate: (route: Route, opts?: { replace?: boolean }) => void;
+    /** Reads the current route from window.location — call once on boot and from the popstate listener. Never mutates history itself. */
+    syncRouteFromLocation: () => void;
+}
+
+export type Route = 'map' | 'dashboard';
+
+const ROUTE_PATH: Record<Route, string> = { map: '/', dashboard: '/dashboard' };
+
+function routeFromPathname(pathname: string): Route {
+    return pathname.replace(/\/+$/, '') === '/dashboard' ? 'dashboard' : 'map';
 }
 
 const AI_MODE_STORAGE_KEY = 'foj_ai_mode';
@@ -405,6 +425,32 @@ export const useStore = create<AppState>((set, get) => ({
 
     isOrbiting: false,
     setIsOrbiting: (orbiting) => set({ isOrbiting: orbiting }),
+
+    route: typeof window !== 'undefined' ? routeFromPathname(window.location.pathname) : 'map',
+
+    navigate: (route, opts) => {
+        const path = ROUTE_PATH[route];
+        if (typeof window !== 'undefined' && window.location.pathname !== path) {
+            const args: [unknown, string, string] = [{}, '', path];
+            if (opts?.replace) window.history.replaceState(...args);
+            else window.history.pushState(...args);
+        }
+        set({
+            route,
+            // A full-page view must not have a dialog floating above it, and a
+            // stuck orbit-drag (if the dashboard opened mid-drag, OrbitControls'
+            // onEnd may never fire) would otherwise suppress 3D label hover
+            // forever after returning to the map.
+            rescoreModalOpen: false,
+            claudeKeyModalOpen: false,
+            isOrbiting: false,
+        });
+    },
+
+    syncRouteFromLocation: () => {
+        if (typeof window === 'undefined') return;
+        set({ route: routeFromPathname(window.location.pathname) });
+    },
 
     hydrateAIConfig: () => {
         const savedMode = (localStorage.getItem(AI_MODE_STORAGE_KEY) as 'user' | 'default' | null);

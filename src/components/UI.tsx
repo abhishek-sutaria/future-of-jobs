@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useStore } from '../store';
 import { IntroModal } from './IntroModal';
 import { SkillsModal } from './SkillsModal';
-import { AccountModal } from './AccountModal';
 import { useUserStore, reapplyUpskillCompletions } from '../userStore';
 import { StartupIdeasModal } from './StartupIdeasModal';
 import { MethodologyModal } from './MethodologyModal';
@@ -20,7 +19,16 @@ import { GuidedTour } from './GuidedTour';
 import { toast } from './ui/Toast';
 import { Z } from '../config/layers';
 
-export const UI: React.FC = () => {
+interface UIProps {
+    /** True while /dashboard is showing. The map/3D chrome stays mounted
+     * (unmounting would drop economyData, autoAnalyzedJobIdsRef, and
+     * re-trigger the BLS fetch on return) but must become inert: invisible to
+     * screen readers and unreachable by click/tab, since a full-page view is
+     * covering it visually. */
+    dashboardOpen: boolean;
+}
+
+export const UI: React.FC<UIProps> = ({ dashboardOpen }) => {
     const selectedJob = useStore((state) => state.selectedJob);
     const setSelectedJob = useStore((state) => state.setSelectedJob);
     const mapView = useStore((state) => state.mapView);
@@ -31,6 +39,14 @@ export const UI: React.FC = () => {
     const [showStudentGuide, setShowStudentGuide] = useState(false);
     const [showHealthCheck, setShowHealthCheck] = useState(false);
     const [tourActive, setTourActive] = useState(false);
+
+    // The tour's spotlight targets data-tour selectors on chrome that is
+    // covered (and inert) while the dashboard is open — its getBoundingClientRect
+    // math would highlight nothing. inert alone only blocks interaction/a11y,
+    // not this component's own effects, so it must be stopped explicitly.
+    React.useEffect(() => {
+        if (dashboardOpen) setTourActive(false);
+    }, [dashboardOpen]);
 
     const [economyData, setEconomyData] = useState<{ value: string, period: string, color: string } | null>(null);
     const [loadingEconomy, setLoadingEconomy] = useState(true);
@@ -138,7 +154,14 @@ export const UI: React.FC = () => {
     }, []);
 
     return (
-        <>
+        // Plain, non-positioned wrapper — deliberately not `relative`/`absolute`
+        // so it stays transparent to its children's own `absolute` positioning,
+        // which resolves against the App root two levels up exactly as it did
+        // when this returned a bare fragment. `inert` (React 19) removes the
+        // whole subtree from the accessibility tree and blocks all pointer/
+        // keyboard interaction — the belt to the individual suppressions
+        // already applied to IntroModal/ApiKeyModal/RescoreConfirmModal/tour.
+        <div inert={dashboardOpen}>
             <IntroModal />
             <MethodologyModal isOpen={showMethodologyModal} onClose={() => setShowMethodologyModal(false)} />
             <StudentGuideModal isOpen={showStudentGuide} onClose={() => setShowStudentGuide(false)} />
@@ -161,7 +184,7 @@ export const UI: React.FC = () => {
             )}
 
             {selectedJob && (
-                <ErrorBoundary fallback={<div className="fixed inset-0 flex items-center justify-center z-[200] pointer-events-auto"><div className="bg-gray-900 border border-white/10 rounded-xl p-6 text-center"><p className="text-white mb-3">Panel encountered an error</p><button onClick={() => setSelectedJob(null)} className="px-4 py-2 bg-white/10 rounded-lg text-sm text-white">Close</button></div></div>}>
+                <ErrorBoundary fallback={<div className="fixed inset-0 flex items-center justify-center pointer-events-auto" style={{ zIndex: Z.detailPanel }}><div className="bg-gray-900 border border-white/10 rounded-xl p-6 text-center"><p className="text-white mb-3">Panel encountered an error</p><button onClick={() => setSelectedJob(null)} className="px-4 py-2 bg-white/10 rounded-lg text-sm text-white">Close</button></div></div>}>
                     <JobDetailPanel
                         job={selectedJob}
                         analysisResult={analysisResult}
@@ -193,9 +216,8 @@ export const UI: React.FC = () => {
 
             <SkillsModal isOpen={showSkillsModal} onClose={() => setShowSkillsModal(false)} />
             <StartupIdeasModal isOpen={showStartupIdeasModal} onClose={() => setShowStartupIdeasModal(false)} />
-            <AccountModal />
             {mapView !== 'map' && <Legend />}
             <GuidedTour isActive={tourActive} onClose={() => setTourActive(false)} />
-        </>
+        </div>
     );
 };

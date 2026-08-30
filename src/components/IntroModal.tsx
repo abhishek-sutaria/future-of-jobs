@@ -1,17 +1,26 @@
 import React from 'react';
 import { Modal } from './ui/Modal';
 import { IconLayers, IconAlertTriangle, IconSearch } from './ui/Icons';
+import { useStore } from '../store';
 
 import { UI } from '../config/constants';
 
 const STORAGE_KEY = UI.INTRO_STORAGE_KEY;
 
 export const IntroModal: React.FC = () => {
-    const [isOpen, setIsOpen] = React.useState(() => !localStorage.getItem(STORAGE_KEY));
+    const [dismissed, setDismissed] = React.useState(() => !!localStorage.getItem(STORAGE_KEY));
+    const route = useStore((s) => s.route);
+
+    // This modal explains 3D terrain and marker colour — entirely irrelevant
+    // (and, since IntroModal previously had no external close path at all,
+    // previously unsuppressable) on the dashboard. A first-time visitor who
+    // deep-links straight to /dashboard should not see it; it still shows,
+    // once, the first time they return to the map.
+    const isOpen = !dismissed && route !== 'dashboard';
 
     const handleClose = () => {
         localStorage.setItem(STORAGE_KEY, '1');
-        setIsOpen(false);
+        setDismissed(true);
     };
 
     return (
