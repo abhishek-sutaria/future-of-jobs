@@ -288,11 +288,27 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                             <p className="text-[10px] uppercase text-gray-500 font-semibold tracking-wider mb-1">Human Resilience</p>
                             {(() => {
                                 const val = analysisResult?.human_resilience_label;
-                                const color = val ? ((val === 'Critical' || val === 'Very High') ? 'text-emerald-400' : val === 'High' ? 'text-cyan-400' : 'text-amber-400') : 'text-gray-600';
-                                return val ? (
-                                    <div className={`text-xl font-bold ${color}`}>{val}</div>
-                                ) : (
-                                    <Skeleton className="h-6 w-20" />
+                                if (val) {
+                                    const color = (val === 'Critical' || val === 'Very High') ? 'text-emerald-400' : val === 'High' ? 'text-cyan-400' : 'text-amber-400';
+                                    return <div className={`text-xl font-bold ${color}`}>{val}</div>;
+                                }
+                                // A Skeleton is a *loading* affordance, so only show it while a
+                                // call is actually in flight. This value comes solely from a live
+                                // Claude analysis (unlike the other three tiles, which render from
+                                // baked/BLS data), so with no key, a failed call, or before Analyze
+                                // is ever run there is nothing arriving — an indefinite skeleton
+                                // there reads as a hung app. Fall back to an explicit placeholder,
+                                // matching how EmptyState distinguishes these cases below.
+                                if (analysisLoading) return <Skeleton className="h-6 w-20" />;
+                                return (
+                                    <div
+                                        className="text-xl font-bold text-gray-600 cursor-help"
+                                        title={missingApiKey || analysisError
+                                            ? 'Needs a working Claude key — run Analyze to compute this'
+                                            : 'Run Analyze to compute this'}
+                                    >
+                                        —
+                                    </div>
                                 );
                             })()}
                             <p className="text-[10px] text-gray-600 mt-0.5">Social Intel Priority</p>
