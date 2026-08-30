@@ -5,8 +5,13 @@ export interface OnetTask {
 }
 
 // Map of job titles to Standard Occupational Classification (SOC) codes
-// Used for linking to BLS OES geographic employment data
-// SOC codes sourced from O*NET 28.2 / BLS OES standard classification
+// Used for linking to BLS OEWS employment data (national + state).
+// SOC codes sourced from O*NET 30.1 / BLS OEWS 2018 SOC structure.
+//
+// This map is the single source of truth for the OEWS refresh
+// (scripts/refresh_oes_data.mjs). Titles sharing a SOC are true aliases:
+// each carries its occupation's full published headcount, and the map
+// aggregation layer de-dupes by SOC so state totals are never double counted.
 export const MAP_TITLE_TO_SOC: Record<string, string> = {
     // Original 13 jobs
     "Marketing Manager":               "11-2021",
@@ -40,7 +45,11 @@ export const MAP_TITLE_TO_SOC: Record<string, string> = {
     "Insurance Underwriter":           "13-2053",
     "Actuary":                         "15-2011",
     "Loan Officer":                    "13-2072",
-    "Financial Risk Analyst":          "13-2099",
+    // O*NET 13-2054.00 "Financial Risk Specialists" lists "Financial Risk Analyst"
+    // as an explicit Alternate Title, and BLS publishes 13-2054 at the detailed
+    // level. Previously 13-2099 ("Financial Specialists, All Other"), a residual
+    // catch-all that also collided with Risk Specialist above.
+    "Financial Risk Analyst":          "13-2054",
 
     // Data & Technology
     "Data Scientist":                  "15-2051",
@@ -57,8 +66,13 @@ export const MAP_TITLE_TO_SOC: Record<string, string> = {
     "Cost Estimator":                  "13-1051",
     "Compensation Analyst":            "13-1141",
     "Purchasing Manager":              "11-3061",
-    "Wholesale & Retail Buyer":        "13-1022",
-    "Purchasing Agent":                "13-1023",
+    // BLS retired the detailed codes 13-1022 (Wholesale and Retail Buyers) and
+    // 13-1023 (Purchasing Agents) and now publishes only the combined broad code
+    // 13-1020 "Buyers and Purchasing Agents". Verified against OEWS May 2025:
+    // 13-1021/13-1022/13-1023 return no series; 13-1020 does, including state
+    // level. Both titles therefore share the broad-group estimate as aliases.
+    "Wholesale & Retail Buyer":        "13-1020",
+    "Purchasing Agent":                "13-1020",
     "Industrial Production Manager":   "11-3051",
 
     // HR & Management

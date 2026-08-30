@@ -75,7 +75,7 @@ const FEATURES: Feature[] = [
         emoji: '🗺️',
         title: 'US Map View',
         description:
-            'Switch from the 3D terrain to a flat 2D US map. State colour and circle size both encode BLS employment volume — darker and larger means more workers in that state for the selected roles. Hover a state to see the exact BLS OES May 2023 employment count and Location Quotient (LQ) per occupation.',
+            'Switch from the 3D terrain to a flat 2D US map. State colour and circle size both encode BLS employment volume — darker and larger means more workers in that state for the selected roles. Hover a state to see the exact BLS OEWS May 2025 employment count and Location Quotient (LQ) per occupation.',
         tip: 'Select specific roles using the role filter before opening the map to compare which states are most exposed for those jobs in particular.',
         color: 'teal',
     },
@@ -91,7 +91,7 @@ const FEATURES: Feature[] = [
         emoji: '📚',
         title: 'Data Sources',
         description:
-            'Employment numbers come from the Bureau of Labor Statistics (BLS) Occupational Employment & Wage Statistics. Task descriptions are sourced from O*NET 28.2. AI risk scores are generated live by Anthropic Claude.',
+            'Employment numbers come from the Bureau of Labor Statistics (BLS) Occupational Employment & Wage Statistics. Task descriptions are sourced from O*NET 30.1. AI risk scores are generated live by Anthropic Claude.',
         tip: 'Click "Methodology & Data" at the bottom of the screen to read the full sourcing and calculation methodology.',
         color: 'gray',
     },
@@ -121,7 +121,7 @@ export const StudentGuideModal: React.FC<Props> = ({ isOpen, onClose }) => {
             footer={
                 <div className="flex items-center justify-between gap-4">
                     <p className="text-gray-500 text-[11px]">
-                        futureofjobs.vercel.app &nbsp;·&nbsp; BLS OES, O*NET 28.2, Anthropic Claude
+                        futureofjobs.vercel.app &nbsp;·&nbsp; BLS OES, O*NET 30.1, Anthropic Claude
                     </p>
                     <div className="flex gap-2">
                         <a
@@ -146,7 +146,7 @@ export const StudentGuideModal: React.FC<Props> = ({ isOpen, onClose }) => {
             <div className="hidden print:block mb-6 pb-4 border-b border-gray-300">
                 <h1 className="text-2xl font-bold text-gray-900">AI & Future of Work — Feature Guide</h1>
                 <p className="text-gray-600 text-sm mt-1">
-                    futureofjobs.vercel.app &nbsp;·&nbsp; All data: BLS, O*NET 28.2, Anthropic Claude
+                    futureofjobs.vercel.app &nbsp;·&nbsp; All data: BLS, O*NET 30.1, Anthropic Claude
                 </p>
             </div>
 

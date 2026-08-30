@@ -6,6 +6,7 @@ import { ErrorBoundary } from './components/ErrorBoundary';
 import { ApiKeyModal } from './components/ApiKeyModal';
 import { RescoreConfirmModal } from './components/RescoreConfirmModal';
 import { useStore } from './store';
+import { useUserStore, reapplyUpskillCompletions } from './userStore';
 
 function WebGLFallback() {
   return (
@@ -55,10 +56,19 @@ function App() {
   const isScoring = useStore((state) => state.isScoring);
   const hydrateAIConfig = useStore((state) => state.hydrateAIConfig);
   const scoresSource = useStore((state) => state.scoresSource);
+  const hydrateUserSession = useUserStore((state) => state.hydrateUserSession);
 
   useEffect(() => {
     hydrateAIConfig();
   }, [hydrateAIConfig]);
+
+  // Establish the user session (anonymous by default) and load their saved
+  // activity. Never awaited and never blocking: exploration must stay available
+  // whether or not accounts are configured or reachable. Internally guarded
+  // against StrictMode's double-invoked effects.
+  useEffect(() => {
+    void hydrateUserSession();
+  }, [hydrateUserSession]);
 
   // BLS employment refresh. Deliberately not awaited and not gated behind any
   // overlay — it's one batched call with a 24h cache, and the app is fully
@@ -75,7 +85,8 @@ function App() {
     if (scoresSource !== 'none') return;
     if (hasAIScores || isScoring) return;
     console.warn('[Scores] No precomputed scores found — falling back to live scoring. Run `npm run generate-scores`.');
-    void scoreAllJobsWithAI();
+    // A returning user's persisted upskill boosts must survive this full pass too.
+    void scoreAllJobsWithAI().then(() => reapplyUpskillCompletions());
   }, [hasConfiguredAI, scoresSource, hasAIScores, isScoring, scoreAllJobsWithAI]);
 
   return (

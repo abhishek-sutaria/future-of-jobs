@@ -5,8 +5,11 @@
  * that alias titles sharing a SOC (e.g. "Marketing Manager" and "Brand Manager"
  * both map to 11-2021) are counted once per state rather than twice.
  *
- * Employment values come directly from BLS OES May 2023 (TOT_EMP).
- * Location Quotient (lq) values come from BLS OES LOC_QUOTIENT.
+ * Employment and Location Quotient (lq) values come from the state-level
+ * extract in src/data/geo_real.json (BLS OEWS TOT_EMP / LOC_QUOTIENT) — see
+ * that file's _meta.bls_release for the current vintage. This is a SEPARATE
+ * vintage from the national per-job employment in src/data.ts; they are not
+ * guaranteed to match (see src/config/constants.ts DATA_SOURCES comment).
  */
 
 import { MAP_TITLE_TO_SOC } from './onet';
