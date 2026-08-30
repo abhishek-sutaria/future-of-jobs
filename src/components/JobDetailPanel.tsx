@@ -57,6 +57,20 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
 
     const sourceChips = React.useMemo(() => jobSourceProvenanceChips(job), [job]);
 
+    // Match every other modal in the app (ui/Modal, RescoreConfirmModal):
+    // Escape closes it. Skipped while a nested modal (Scenario/Analysis/
+    // Roadmap/Upskill) is open so Escape closes that top layer first, not
+    // this panel out from under it.
+    const hasNestedModalOpen = showScenarioModal || showAnalysisModal || showRoadmapModal || upskillTaskName !== null;
+    React.useEffect(() => {
+        if (hasNestedModalOpen) return;
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') onClose();
+        };
+        document.addEventListener('keydown', handleKeyDown);
+        return () => document.removeEventListener('keydown', handleKeyDown);
+    }, [hasNestedModalOpen, onClose]);
+
     const handleAnalyze = async () => {
         onSetAnalysisLoading(true);
         setShowAnalysisModal(true);
