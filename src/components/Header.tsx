@@ -1,6 +1,7 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { useStore } from '../store';
-import { IconZap, IconGlobe, IconMap, IconSearch, IconInfo, IconKey, IconX, IconActivity, IconRocket } from './ui/Icons';
+import { IconZap, IconGlobe, IconMap, IconSearch, IconInfo, IconKey, IconX, IconActivity, IconRocket, IconUser } from './ui/Icons';
+import { useUserStore } from '../userStore';
 import { Z } from '../config/layers';
 import { YEAR_MIN, YEAR_MAX, UI } from '../config/constants';
 import type { Job } from '../types';
@@ -25,6 +26,13 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
     const scoresGeneratedAt = useStore((state) => state.scoresGeneratedAt);
     const openClaudeKeyModal = useStore((state) => state.openClaudeKeyModal);
     const openRescoreModal = useStore((state) => state.openRescoreModal);
+
+    // Account state. Deliberately read from the separate user store — identity
+    // is not part of the visualisation store and must stay decoupled from the
+    // Claude API-key mechanism above.
+    const openAccountModal = useUserStore((state) => state.openAccountModal);
+    const authStatus = useUserStore((state) => state.authStatus);
+    const savedCount = useUserStore((state) => state.activity.savedRoles.length);
 
     const scoresAgeLabel = scoresGeneratedAt
         ? new Date(scoresGeneratedAt).toLocaleDateString(undefined, { month: 'short', year: 'numeric' })
@@ -144,6 +152,30 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
                     >
                         <span className="text-sm leading-none">📋</span> Guide
                     </button>
+
+                    {/* Hidden entirely when this build has no account backend, so
+                        an unconfigured deploy shows no dead control. */}
+                    {authStatus !== 'disabled' && (
+                        <button
+                            onClick={openAccountModal}
+                            title={
+                                authStatus === 'identified'
+                                    ? 'Your activity — saved roles, history and reports'
+                                    : 'Your activity — saved to this browser; add an email to keep it'
+                            }
+                            className="shrink-0 flex items-center gap-2 px-3 py-2.5 rounded-lg border border-indigo-500/25 bg-indigo-500/[0.06] hover:bg-indigo-500/15 text-indigo-300 text-xs font-semibold uppercase tracking-wider transition-colors min-h-[44px]"
+                        >
+                            <IconUser size={14} />
+                            <span className="hidden md:inline">
+                                {authStatus === 'identified' ? 'Account' : 'Saved'}
+                            </span>
+                            {savedCount > 0 && (
+                                <span className="px-1.5 py-0.5 rounded bg-indigo-500/20 text-[10px] leading-none">
+                                    {savedCount}
+                                </span>
+                            )}
+                        </button>
+                    )}
                 </div>
 
                 <div className="flex items-center gap-2 w-full md:w-auto justify-end">

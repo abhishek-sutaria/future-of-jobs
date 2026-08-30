@@ -6,6 +6,7 @@ import type { Job } from '../../types';
 import { getClaudeUserFriendlyMessage, type RoadmapResult } from '../../utils/analysis';
 import { UI } from '../../config/constants';
 import { PHASE_COLORS } from '../../config/theme';
+import { loadRoadmap, saveRoadmap } from '../../lib/userData';
 
 interface RoadmapModalProps {
     job: Job;
@@ -24,10 +25,21 @@ export default function RoadmapModal({ job, riskTask, targetTask, onClose }: Roa
         const fetchRoadmap = async () => {
             setRoadmapError(null);
             setRoadmapData(null);
+            setIsLoading(true);
             try {
+                // A saved roadmap for this exact (job, riskTask, targetTask) transition
+                // restores instantly with no Claude call — previously this modal
+                // re-generated on every single open, including reopening the same
+                // transition (see src/lib/userData.ts roadmapCacheKey).
+                const saved = await loadRoadmap(job.id, riskTask.name, targetTask.name);
+                if (saved) {
+                    if (mounted) setRoadmapData(saved);
+                    return;
+                }
                 const { generateRoadmap } = await import('../../utils/analysis');
                 const result = await generateRoadmap(job.title, riskTask.name, targetTask.name);
                 if (mounted) setRoadmapData(result);
+                void saveRoadmap(job.id, job.title, riskTask.name, targetTask.name, result);
             } catch (err) {
                 console.error(err);
                 if (mounted) setRoadmapError(getClaudeUserFriendlyMessage(err));
@@ -37,7 +49,7 @@ export default function RoadmapModal({ job, riskTask, targetTask, onClose }: Roa
         };
         fetchRoadmap();
         return () => { mounted = false; };
-    }, [job.title, riskTask.name, targetTask.name]);
+    }, [job.id, job.title, riskTask.name, targetTask.name]);
 
     // PHASE_COLORS imported from config/theme
 

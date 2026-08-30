@@ -15,6 +15,8 @@ import { Skeleton } from './ui/Skeleton';
 import { toast } from './ui/Toast';
 import { useResumeInput } from '../hooks/useResumeInput';
 import { getClaudeUserFriendlyMessage, type StartupIdeasResult, type StartupIdea } from '../utils/analysis';
+import { useUserStore } from '../userStore';
+import { resumeCacheKey, loadStartupIdeas, saveStartupIdeas } from '../lib/userData';
 
 interface StartupIdeasModalProps {
     isOpen: boolean;
@@ -155,6 +157,10 @@ export const StartupIdeasModal: React.FC<StartupIdeasModalProps> = ({ isOpen, on
     const [errorMessage, setErrorMessage] = useState('');
     const [ideasDrafted, setIdeasDrafted] = useState(0);
     const [plansLoading, setPlansLoading] = useState(false);
+    const [restoredFromSaved, setRestoredFromSaved] = useState(false);
+    const [saved, setSaved] = useState(false);
+    const [cacheKey, setCacheKey] = useState<string | null>(null);
+    const authStatus = useUserStore((s) => s.authStatus);
 
     const handleGenerate = async () => {
         if (!resumeText.trim()) return;
@@ -162,7 +168,23 @@ export const StartupIdeasModal: React.FC<StartupIdeasModalProps> = ({ isOpen, on
         setErrorMessage('');
         setIdeasDrafted(0);
         setPlansLoading(false);
+        setRestoredFromSaved(false);
+        setSaved(false);
         try {
+            // Resume text is never stored — only a content hash, to look up a
+            // previously SAVED (opt-in) dashboard for this exact input and skip
+            // ~55s / two Claude calls. See src/lib/userData.ts.
+            const key = await resumeCacheKey(resumeText);
+            setCacheKey(key);
+            const existing = authStatus !== 'disabled' ? await loadStartupIdeas(key) : null;
+            if (existing) {
+                setResult(existing);
+                setStep('result');
+                setRestoredFromSaved(true);
+                setSaved(true);
+                return;
+            }
+
             const { generateStartupCore, generateStartupTopThree, mergeStartupResult } = await import('../utils/analysis');
             // Call 1: founder profile + 5 light ideas (name/summary/why/scores). Each
             // idea has one "recommendation" field, so counting them in the stream is a
@@ -196,12 +218,28 @@ export const StartupIdeasModal: React.FC<StartupIdeasModalProps> = ({ isOpen, on
         }
     };
 
+    const handleSaveDashboard = async () => {
+        if (!cacheKey || !result) return;
+        const ok = await saveStartupIdeas(cacheKey, result);
+        if (ok) {
+            setSaved(true);
+            toast.success('Dashboard saved to your activity');
+        } else {
+            toast.warning('Could not save the dashboard. Please try again.');
+        }
+    };
+
     const handleClose = () => {
+        // resumeText lives only in this component's state (via useResumeInput)
+        // and is discarded here — never written to localStorage or a backend.
         setResumeText('');
         setResult(null);
         setErrorMessage('');
         setIdeasDrafted(0);
         setPlansLoading(false);
+        setRestoredFromSaved(false);
+        setSaved(false);
+        setCacheKey(null);
         setStep('input');
         onClose();
     };
@@ -280,6 +318,20 @@ export const StartupIdeasModal: React.FC<StartupIdeasModalProps> = ({ isOpen, on
 
             {step === 'result' && result && (
                 <div className="space-y-6 animate-in fade-in duration-300">
+                    {restoredFromSaved && (
+                        <p className="text-xs text-indigo-300 bg-indigo-500/10 border border-indigo-500/20 rounded-lg px-3 py-2">
+                            Restored from your saved dashboards for this exact resume — no new AI calls were made.
+                        </p>
+                    )}
+                    {authStatus !== 'disabled' && !plansLoading && result.topThree.length > 0 && (
+                        <button
+                            onClick={() => void handleSaveDashboard()}
+                            disabled={saved}
+                            className="w-full py-2.5 border border-indigo-500/25 bg-indigo-500/[0.06] hover:bg-indigo-500/15 disabled:opacity-50 disabled:cursor-default rounded-lg text-xs font-semibold uppercase tracking-wider text-indigo-300 transition-colors"
+                        >
+                            {saved ? 'Saved to your activity' : 'Save this dashboard'}
+                        </button>
+                    )}
                     {/* Founder profile */}
                     <div className="p-4 bg-white/[0.03] rounded-xl border border-white/[0.06]">
                         <h3 className="text-xs font-semibold text-violet-300 uppercase tracking-wider mb-2 flex items-center gap-2">

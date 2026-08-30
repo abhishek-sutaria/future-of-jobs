@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useStore } from '../store';
 import { IntroModal } from './IntroModal';
 import { SkillsModal } from './SkillsModal';
+import { AccountModal } from './AccountModal';
+import { useUserStore, reapplyUpskillCompletions } from '../userStore';
 import { StartupIdeasModal } from './StartupIdeasModal';
 import { MethodologyModal } from './MethodologyModal';
 import { StudentGuideModal } from './Modals/StudentGuideModal';
@@ -45,6 +47,14 @@ export const UI: React.FC = () => {
     // from ever loading. Track the intent directly instead.
     const autoAnalyzedJobIdsRef = React.useRef<Set<string>>(new Set());
 
+    // Record the view as user activity. Kept in its own effect rather than
+    // folded into auto-analysis below, which short-circuits for already-analyzed
+    // jobs and would therefore miss most repeat visits.
+    React.useEffect(() => {
+        if (!selectedJob) return;
+        void useUserStore.getState().recordJobView(selectedJob.id, selectedJob.title);
+    }, [selectedJob?.id]);
+
     // Auto-analyze selected job
     React.useEffect(() => {
         if (!selectedJob) return;
@@ -74,6 +84,7 @@ export const UI: React.FC = () => {
                 setAnalysisResult(res);
                 if (res) {
                     useStore.getState().updateJobFromLiveAnalysis(jobId, res);
+                    reapplyUpskillCompletions(jobId);
                 }
                 toast.success('AI analysis complete');
             } catch (e: unknown) {
@@ -182,6 +193,7 @@ export const UI: React.FC = () => {
 
             <SkillsModal isOpen={showSkillsModal} onClose={() => setShowSkillsModal(false)} />
             <StartupIdeasModal isOpen={showStartupIdeasModal} onClose={() => setShowStartupIdeasModal(false)} />
+            <AccountModal />
             {mapView !== 'map' && <Legend />}
             <GuidedTour isActive={tourActive} onClose={() => setTourActive(false)} />
         </>

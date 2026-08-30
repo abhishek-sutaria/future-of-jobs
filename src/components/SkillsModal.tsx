@@ -5,6 +5,8 @@ import { Skeleton } from './ui/Skeleton';
 import { toast } from './ui/Toast';
 import { useResumeInput } from '../hooks/useResumeInput';
 import { getClaudeUserFriendlyMessage } from '../utils/analysis';
+import { useUserStore } from '../userStore';
+import { resumeCacheKey, loadSkillsAnalysis, saveSkillsAnalysis } from '../lib/userData';
 
 interface SkillsModalProps {
     isOpen: boolean;
@@ -16,13 +18,33 @@ export const SkillsModal: React.FC<SkillsModalProps> = ({ isOpen, onClose }) => 
     const [analysisResult, setAnalysisResult] = useState<import('../utils/analysis').ResumeAnalysisResult | null>(null);
     const [step, setStep] = useState<'input' | 'analyzing' | 'result' | 'error'>('input');
     const [errorMessage, setErrorMessage] = useState('');
+    const [restoredFromSaved, setRestoredFromSaved] = useState(false);
+    const [saved, setSaved] = useState(false);
+    const [cacheKey, setCacheKey] = useState<string | null>(null);
+    const authStatus = useUserStore((s) => s.authStatus);
 
     const handleAnalyze = async () => {
         if (!skillInput.trim()) return;
         setStep('analyzing');
         setErrorMessage('');
+        setRestoredFromSaved(false);
+        setSaved(false);
 
         try {
+            // The resume text itself is never stored — only a content hash, used
+            // to look up a previously SAVED (opt-in) report for this exact input
+            // without re-billing a Claude call. See src/lib/userData.ts.
+            const key = await resumeCacheKey(skillInput);
+            setCacheKey(key);
+            const existing = authStatus !== 'disabled' ? await loadSkillsAnalysis(key) : null;
+            if (existing) {
+                setAnalysisResult(existing);
+                setStep('result');
+                setRestoredFromSaved(true);
+                setSaved(true);
+                return;
+            }
+
             const { analyzeResume } = await import('../utils/analysis');
             const result = await analyzeResume(skillInput);
             setAnalysisResult(result);
@@ -36,11 +58,27 @@ export const SkillsModal: React.FC<SkillsModalProps> = ({ isOpen, onClose }) => 
         }
     };
 
+    const handleSaveReport = async () => {
+        if (!cacheKey || !analysisResult) return;
+        const ok = await saveSkillsAnalysis(cacheKey, analysisResult);
+        if (ok) {
+            setSaved(true);
+            toast.success('Report saved to your activity');
+        } else {
+            toast.warning('Could not save the report. Please try again.');
+        }
+    };
+
     const handleClose = () => {
+        // The resume text lives only in this component's state and is discarded
+        // here — it is never written to localStorage or any backend.
         setSkillInput('');
         setAnalysisResult(null);
         setErrorMessage('');
         setStep('input');
+        setRestoredFromSaved(false);
+        setSaved(false);
+        setCacheKey(null);
         onClose();
     };
 
@@ -114,6 +152,11 @@ export const SkillsModal: React.FC<SkillsModalProps> = ({ isOpen, onClose }) => 
 
             {step === 'result' && analysisResult && (
                 <div className="space-y-5 animate-in fade-in duration-300">
+                    {restoredFromSaved && (
+                        <p className="text-xs text-indigo-300 bg-indigo-500/10 border border-indigo-500/20 rounded-lg px-3 py-2">
+                            Restored from your saved reports for this exact resume — no new AI call was made.
+                        </p>
+                    )}
                     <div className="p-4 bg-white/[0.03] rounded-xl border border-white/[0.06]">
                         <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Executive Summary</h3>
                         <p className="text-gray-200 text-sm leading-relaxed">{analysisResult.feedback}</p>
@@ -151,6 +194,16 @@ export const SkillsModal: React.FC<SkillsModalProps> = ({ isOpen, onClose }) => 
                         <h3 className="text-cyan-300 font-semibold uppercase tracking-wider text-xs mb-2">5-Year Strategic Outlook</h3>
                         <p className="text-gray-200 text-sm leading-relaxed">{analysisResult.plan}</p>
                     </div>
+
+                    {authStatus !== 'disabled' && (
+                        <button
+                            onClick={() => void handleSaveReport()}
+                            disabled={saved}
+                            className="w-full py-2.5 border border-indigo-500/25 bg-indigo-500/[0.06] hover:bg-indigo-500/15 disabled:opacity-50 disabled:cursor-default rounded-lg text-xs font-semibold uppercase tracking-wider text-indigo-300 transition-colors"
+                        >
+                            {saved ? 'Saved to your activity' : 'Save this report'}
+                        </button>
+                    )}
 
                     <button
                         onClick={handleClose}

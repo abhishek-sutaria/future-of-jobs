@@ -124,6 +124,14 @@ export const IconArrowRight = ({ size, ...p }: IconProps) => (
     <svg {...d(size)} {...p}><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg>
 );
 
+export const IconUser = ({ size, ...p }: IconProps) => (
+    <svg {...d(size)} {...p}><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
+);
+
+export const IconBookmark = ({ size, ...p }: IconProps) => (
+    <svg {...d(size)} {...p}><path d="m19 21-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" /></svg>
+);
+
 export const IconRocket = ({ size, ...p }: IconProps) => (
     <svg {...d(size)} {...p}>
         <path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z" />

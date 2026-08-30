@@ -4,7 +4,7 @@ import RoadmapModal from './Modals/RoadmapModal';
 import { ScenarioModal } from './Modals/ScenarioModal';
 import { AnalysisModal } from './Modals/AnalysisModal';
 import { generateJobScenario, analyzeJob, getClaudeUserFriendlyMessage, type ScenarioResult, type JobAnalysis } from '../utils/analysis';
-import { IconBrain, IconSparkles, IconAlertTriangle, IconShield, IconTarget, IconInfo, IconTrendingDown, IconCheck } from './ui/Icons';
+import { IconBrain, IconSparkles, IconAlertTriangle, IconShield, IconTarget, IconInfo, IconTrendingDown, IconCheck, IconBookmark } from './ui/Icons';
 import { Skeleton } from './ui/Skeleton';
 import { Z } from '../config/layers';
 import { UI, CHART } from '../config/constants';
@@ -12,6 +12,8 @@ import { getTaskCategory } from '../data';
 import { getSeriesIdForJob, getSeriesLabel } from '../utils/bls';
 import { jobSourceProvenanceChips } from '../utils/provenance';
 import { ProvenanceBadge } from './ProvenanceBadge';
+import { useUserStore, reapplyUpskillCompletions } from '../userStore';
+import { loadScenario, saveScenario } from '../lib/userData';
 import type { Job } from '../types';
 
 interface JobDetailPanelProps {
@@ -54,6 +56,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
             if (res) {
                 // Keep role panel Automation Risk % / task cards in sync with Analyze.
                 useStore.getState().updateJobFromLiveAnalysis(job.id, res);
+                reapplyUpskillCompletions(job.id);
             }
         } catch (e) {
             console.error(e);
@@ -64,13 +67,24 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
     };
 
     const handleCrystalBall = async () => {
-        setScenarioLoading(true);
         setShowScenarioModal(true);
         setScenarioError(null);
         setScenarioResult(null);
+
+        // A saved scenario restores instantly with no Claude call — this is a
+        // ~1KB artifact that previously had zero caching and was re-billed on
+        // every single open (see src/lib/userData.ts scenarioCacheKey).
+        const saved = await loadScenario(job.id);
+        if (saved) {
+            setScenarioResult(saved);
+            return;
+        }
+
+        setScenarioLoading(true);
         try {
             const result = await generateJobScenario(job.title, job.automationCostIndex, job.tasks);
             setScenarioResult(result);
+            void saveScenario(job.id, job.title, result);
         } catch (err) {
             console.error(err);
             setScenarioError(getClaudeUserFriendlyMessage(err));
@@ -78,6 +92,10 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
             setScenarioLoading(false);
         }
     };
+
+    const isRoleSaved = useUserStore((state) => state.isRoleSaved(job.id));
+    const toggleSavedRole = useUserStore((state) => state.toggleSavedRole);
+    const authStatus = useUserStore((state) => state.authStatus);
 
     const blsSource = useStore((state) => state.blsSource);
     const blsFetchedAt = useStore((state) => state.blsFetchedAt);
@@ -144,6 +162,20 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                         </div>
 
                         <div className="flex items-center gap-2">
+                            {authStatus !== 'disabled' && (
+                                <button
+                                    onClick={() => void toggleSavedRole(job.id, job.title)}
+                                    title={isRoleSaved ? 'Remove from saved roles' : 'Save this role to your activity'}
+                                    aria-pressed={isRoleSaved}
+                                    className={`hidden md:flex items-center justify-center w-11 h-11 rounded-lg transition-colors ${
+                                        isRoleSaved
+                                            ? 'bg-indigo-500/20 text-indigo-300 hover:bg-indigo-500/30'
+                                            : 'bg-white/[0.04] text-gray-400 hover:bg-white/[0.08] hover:text-white'
+                                    }`}
+                                >
+                                    <IconBookmark size={16} {...(isRoleSaved ? { fill: 'currentColor' } : {})} />
+                                </button>
+                            )}
                             <button
                                 onClick={handleAnalyze}
                                 className="hidden md:flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-semibold text-xs uppercase tracking-wider transition-colors min-h-[44px]"

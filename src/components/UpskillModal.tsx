@@ -5,6 +5,7 @@ import { IconAward, IconArrowRight, IconInfo, IconBook } from './ui/Icons';
 import { Skeleton, SkeletonText } from './ui/Skeleton';
 import { UPSKILL_IMPACT } from '../config/GameMechanics';
 import type { UpskillCoursesResult } from '../utils/analysis';
+import { useUserStore } from '../userStore';
 
 interface UpskillModalProps {
     isOpen: boolean;
@@ -16,6 +17,7 @@ interface UpskillModalProps {
 export const UpskillModal: React.FC<UpskillModalProps> = ({ isOpen, onClose, jobId, taskName }) => {
     const upskillTask = useStore((state) => state.upskillTask);
     const job = useStore((state) => state.jobs.find(j => j.id === jobId));
+    const recordUpskillCompletion = useUserStore((state) => state.recordUpskillCompletion);
 
     const [courses, setCourses] = React.useState<UpskillCoursesResult | null>(null);
     const [isLoading, setIsLoading] = React.useState(true);
@@ -41,6 +43,11 @@ export const UpskillModal: React.FC<UpskillModalProps> = ({ isOpen, onClose, job
 
     const handleComplete = () => {
         upskillTask(jobId, taskName);
+        // Persisted separately from the store's in-memory score boost above —
+        // without this, the boost is lost on reload AND silently erased by any
+        // later Analyze run that overwrites task scores wholesale (store.ts
+        // applyAnalysesToJobs). See App.tsx's re-apply effect.
+        void recordUpskillCompletion(jobId, taskName);
         onClose();
     };
 
