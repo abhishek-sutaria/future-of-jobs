@@ -3,8 +3,9 @@ import { useStore } from '../store';
 import RoadmapModal from './Modals/RoadmapModal';
 import { ScenarioModal } from './Modals/ScenarioModal';
 import { AnalysisModal } from './Modals/AnalysisModal';
+import { UpskillModal } from './UpskillModal';
 import { generateJobScenario, analyzeJob, getClaudeUserFriendlyMessage, type ScenarioResult, type JobAnalysis } from '../utils/analysis';
-import { IconBrain, IconSparkles, IconAlertTriangle, IconShield, IconTarget, IconInfo, IconTrendingDown, IconCheck, IconBookmark } from './ui/Icons';
+import { IconBrain, IconSparkles, IconAlertTriangle, IconShield, IconTarget, IconInfo, IconTrendingDown, IconCheck, IconBookmark, IconAward } from './ui/Icons';
 import { Skeleton } from './ui/Skeleton';
 import { Z } from '../config/layers';
 import { UI, CHART } from '../config/constants';
@@ -39,6 +40,20 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
     const [showAnalysisModal, setShowAnalysisModal] = React.useState(false);
     const [analysisModalError, setAnalysisModalError] = React.useState<string | null>(null);
     const [showRoadmapModal, setShowRoadmapModal] = React.useState(false);
+    const [upskillTaskName, setUpskillTaskName] = React.useState<string | null>(null);
+
+    // Which of THIS job's tasks the signed-in user has already trained on —
+    // drives the "Trained" badge vs "Train for this" button below. Select the
+    // raw array (stable reference unless it actually changes) and derive the
+    // Set with useMemo — building a new Set directly inside the selector
+    // returns a new object every call, which Zustand's default reference
+    // check sees as "always changed" and sends React into an infinite render
+    // loop (confirmed: crashed the panel via ErrorBoundary in testing).
+    const upskillCompletions = useUserStore((s) => s.activity.upskillCompletions);
+    const completedTaskNames = React.useMemo(
+        () => new Set(upskillCompletions.filter((u) => u.jobId === job.id).map((u) => u.taskName)),
+        [upskillCompletions, job.id]
+    );
 
     const sourceChips = React.useMemo(() => jobSourceProvenanceChips(job), [job]);
 
@@ -118,12 +133,21 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
     // Mutually exclusive buckets (same rules as getTaskCategory / TaskCompositionChart).
     // Independent AI>0.5 and human>0.5 filters let mixed-score tasks appear in both cards —
     // e.g. Cybersecurity "Encrypt data transmissions…" at 0.55 / 0.65.
+    // A trained task always stays visible here, in the card where the user
+    // took action — even if its post-boost scores land in neither the
+    // 'Automatable' nor 'Human-Critical' bucket (UPSKILL_IMPACT.HUMAN_SCORE_BOOST
+    // is a flat +0.2; a task that started well below the 0.5 threshold can land
+    // in the unrendered 'Augmentable' middle category, where it would otherwise
+    // vanish from both cards with no visible reward for the effort).
     const highRiskTasks = job.tasks
-        .filter((t) => getTaskCategory(t) === 'Automatable')
-        .sort((a, b) => b.aiCapabilityScore - a.aiCapabilityScore)
+        .filter((t) => getTaskCategory(t) === 'Automatable' || completedTaskNames.has(t.name))
+        .sort((a, b) => {
+            const trainedDiff = Number(completedTaskNames.has(b.name)) - Number(completedTaskNames.has(a.name));
+            return trainedDiff !== 0 ? trainedDiff : b.aiCapabilityScore - a.aiCapabilityScore;
+        })
         .slice(0, UI.MAX_TASK_PREVIEW);
     const safeTasks = job.tasks
-        .filter((t) => getTaskCategory(t) === 'Human-Critical')
+        .filter((t) => getTaskCategory(t) === 'Human-Critical' && !completedTaskNames.has(t.name))
         .sort((a, b) => b.humanCriticalityScore - a.humanCriticalityScore)
         .slice(0, UI.MAX_TASK_PREVIEW);
 
@@ -319,14 +343,31 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                     <IconAlertTriangle size={14} /> Automation Risk
                                 </h3>
                                 <div className="space-y-3">
-                                    {highRiskTasks.map((task, i) => (
-                                        <div key={i} className="bg-white/[0.02] border border-red-500/10 hover:border-red-500/25 p-3.5 rounded-lg flex justify-between items-start gap-3 transition-colors">
-                                            <div className="text-gray-200 text-sm font-medium flex-1">{task.name}</div>
-                                            <div className="text-[10px] font-semibold text-red-400 bg-red-500/10 px-2 py-1 rounded border border-red-500/15 tabular-nums shrink-0 mt-0.5">
-                                                {(task.aiCapabilityScore * 100).toFixed(0)}% RISK
+                                    {highRiskTasks.map((task, i) => {
+                                        const trained = completedTaskNames.has(task.name);
+                                        return (
+                                            <div key={i} className="bg-white/[0.02] border border-red-500/10 hover:border-red-500/25 p-3.5 rounded-lg flex justify-between items-start gap-3 transition-colors">
+                                                <div className="text-gray-200 text-sm font-medium flex-1">{task.name}</div>
+                                                <div className="flex flex-col items-end gap-1.5 shrink-0">
+                                                    <div className="text-[10px] font-semibold text-red-400 bg-red-500/10 px-2 py-1 rounded border border-red-500/15 tabular-nums mt-0.5">
+                                                        {(task.aiCapabilityScore * 100).toFixed(0)}% RISK
+                                                    </div>
+                                                    {trained ? (
+                                                        <span className="flex items-center gap-1 text-[10px] font-semibold text-emerald-400 uppercase tracking-wider">
+                                                            <IconAward size={11} /> Trained
+                                                        </span>
+                                                    ) : (
+                                                        <button
+                                                            onClick={() => setUpskillTaskName(task.name)}
+                                                            className="text-[10px] font-semibold text-cyan-400 hover:text-cyan-300 uppercase tracking-wider underline decoration-cyan-400/30 hover:decoration-cyan-300 underline-offset-2 transition-colors"
+                                                        >
+                                                            Train for this
+                                                        </button>
+                                                    )}
+                                                </div>
                                             </div>
-                                        </div>
-                                    ))}
+                                        );
+                                    })}
                                     {highRiskTasks.length === 0 && (
                                         <EmptyState loading={analysisLoading} error={analysisError} missingKey={missingApiKey} type="risk" />
                                     )}
@@ -351,15 +392,17 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                     <IconShield size={14} /> Human Skills
                                 </h3>
                                 <div className="space-y-3">
-                                    {safeTasks.map((task, i) => (
-                                        <div key={i} className="bg-white/[0.02] border border-emerald-500/10 hover:border-emerald-500/25 p-3.5 rounded-lg flex justify-between items-start gap-3 transition-colors">
-                                            <div className="text-white text-sm font-medium flex-1">{task.name}</div>
-                                            <div className="flex items-center gap-1.5 shrink-0 mt-1">
-                                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                                                <span className="text-[10px] font-semibold text-emerald-400 uppercase tracking-wider hidden md:inline">Safe</span>
+                                    {safeTasks.map((task, i) => {
+                                        return (
+                                            <div key={i} className="bg-white/[0.02] border border-emerald-500/10 hover:border-emerald-500/25 p-3.5 rounded-lg flex justify-between items-start gap-3 transition-colors">
+                                                <div className="text-white text-sm font-medium flex-1">{task.name}</div>
+                                                <div className="flex items-center gap-1.5 shrink-0 mt-1">
+                                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                                    <span className="text-[10px] font-semibold text-emerald-400 uppercase tracking-wider hidden md:inline">Safe</span>
+                                                </div>
                                             </div>
-                                        </div>
-                                    ))}
+                                        );
+                                    })}
                                     {safeTasks.length === 0 && (
                                         <EmptyState loading={analysisLoading} error={analysisError} missingKey={missingApiKey} type="safe" />
                                     )}
@@ -441,6 +484,14 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
             />
             {showRoadmapModal && riskTask && safeTask && (
                 <RoadmapModal job={job} riskTask={riskTask} targetTask={safeTask} onClose={() => setShowRoadmapModal(false)} />
+            )}
+            {upskillTaskName && (
+                <UpskillModal
+                    isOpen={true}
+                    onClose={() => setUpskillTaskName(null)}
+                    jobId={job.id}
+                    taskName={upskillTaskName}
+                />
             )}
             <AnalysisModal
                 isOpen={showAnalysisModal}

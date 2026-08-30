@@ -6,6 +6,7 @@ import { Skeleton, SkeletonText } from './ui/Skeleton';
 import { UPSKILL_IMPACT } from '../config/GameMechanics';
 import type { UpskillCoursesResult } from '../utils/analysis';
 import { useUserStore } from '../userStore';
+import { toast } from './ui/Toast';
 
 interface UpskillModalProps {
     isOpen: boolean;
@@ -48,6 +49,9 @@ export const UpskillModal: React.FC<UpskillModalProps> = ({ isOpen, onClose, job
         // later Analyze run that overwrites task scores wholesale (store.ts
         // applyAnalysesToJobs). See App.tsx's re-apply effect.
         void recordUpskillCompletion(jobId, taskName);
+        toast.success(
+            `🏆 Leveled up! "${taskName}" is now a human-strength skill — Automation Risk just dropped.`
+        );
         onClose();
     };
 
