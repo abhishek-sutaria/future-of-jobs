@@ -221,7 +221,7 @@ export const useUserStore = create<UserState>((set, get) => ({
                     // Note: this browser's guest activity does NOT auto-merge
                     // into it; that would require a server-side migration this
                     // app doesn't perform, since it would need a privileged key.
-                    if (/already (registered|exists)/i.test(error.message)) {
+                    if (/already (been )?registered|already exists/i.test(error.message)) {
                         const { error: otpError } = await db.auth.signInWithOtp({
                             email: trimmed,
                             options: { emailRedirectTo: currentRedirectUrl() },
