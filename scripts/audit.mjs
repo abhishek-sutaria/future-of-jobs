@@ -721,14 +721,18 @@ heading('CAT-9', 'Geographic Map Data Integrity (geo_real.json ↔ onet.ts)');
         `Found ${totalRows}`
       );
 
-      // T57: every SOC in MAP_TITLE_TO_SOC has an entry in geo (or is documented as BLS-suppressed)
+      // T57: every SOC in MAP_TITLE_TO_SOC has an entry in geo_real.json.
+      // No suppression allowlist needed any more: a SOC pending its state-level
+      // refresh (e.g. 13-1020, 13-2054 — see geo_real.json _meta.note_pending_refresh)
+      // still gets an empty-array KEY from refresh_oes_data.mjs, which satisfies
+      // this check while remaining honestly empty. A code truly absent as a key
+      // means the SOC map and geo_real.json have drifted and must be reconciled.
       const titleToSocMatches = [...onetSrc.matchAll(/"[^"]+"\s*:\s*"(\d{2}-\d{4})"/g)];
       const appSocSet = new Set(titleToSocMatches.map(m => m[1]));
       const geoSocSet = new Set(socKeys);
-      const knownSuppressed = new Set(['13-1022', '13-1023']); // BLS does not publish detailed-level data
-      const missingInGeo = [...appSocSet].filter(s => !geoSocSet.has(s) && !knownSuppressed.has(s));
+      const missingInGeo = [...appSocSet].filter(s => !geoSocSet.has(s));
       check(
-        'T57 — Every MAP_TITLE_TO_SOC code is in geo_real.json (excl. BLS-suppressed 13-1022/13-1023)',
+        'T57 — Every MAP_TITLE_TO_SOC code has a key in geo_real.json',
         missingInGeo.length === 0,
         missingInGeo.length > 0 ? `Missing: ${missingInGeo.join(', ')}` : ''
       );
@@ -798,16 +802,61 @@ heading('CAT-9', 'Geographic Map Data Integrity (geo_real.json ↔ onet.ts)');
   );
 }
 
-// T64: Deprecated onet.ts SOC codes are gone (11-2031, 41-3099)
+// T64: Deprecated/retired onet.ts SOC codes are gone.
+// 11-2031, 41-3099: pre-2018 SOC codes superseded by their current equivalents.
+// 13-1022, 13-1023: BLS retired both (Wholesale & Retail Buyer / Purchasing
+// Agent) and now publishes only the combined broad code 13-1020.
 {
   const onetSrc = read('src/utils/onet.ts');
-  const badCodes = ['11-2031', '41-3099'];
+  const badCodes = ['11-2031', '41-3099', '13-1022', '13-1023'];
   const found = badCodes.filter(c => onetSrc.includes(`"${c}"`));
   check(
-    'T64 — Deprecated SOC codes 11-2031 and 41-3099 removed from onet.ts',
+    `T64 — Deprecated SOC codes removed from onet.ts (${badCodes.join(', ')})`,
     found.length === 0,
     found.length > 0 ? `Still present: ${found.join(', ')}` : ''
   );
+}
+
+// =============================================================================
+heading('CAT-11', 'OES Vintage Consistency (data.ts ↔ constants.ts ↔ geo_real.json)');
+
+{
+  const dataSrc = read('src/data.ts');
+  const constantsSrc = read('src/config/constants.ts');
+
+  // T65: DATA_SOURCES.BLS_OES matches the literal baked into every job's
+  // dataSources array. A partial rename here silently drops the OES
+  // provenance badge for every job with no test failure elsewhere
+  // (src/utils/provenance.ts matches on exact string equality).
+  const constMatch = constantsSrc.match(/BLS_OES:\s*'([^']+)'/);
+  const constValue = constMatch?.[1];
+  const jobCount = (dataSrc.match(/"employment":\s*\d+/g) || []).length;
+  const literalCount = constValue ? (dataSrc.match(new RegExp(`"${constValue}"`, 'g')) || []).length : 0;
+  check(
+    `T65 — DATA_SOURCES.BLS_OES ('${constValue}') appears in data.ts exactly once per job (${literalCount}/${jobCount})`,
+    !!constValue && literalCount === jobCount && jobCount > 0,
+    !constValue ? 'Could not find BLS_OES in constants.ts' : `Expected ${jobCount}, found ${literalCount}`
+  );
+
+  // T66: no stale prior-vintage literal left behind by an incomplete rename.
+  const staleHits = (dataSrc.match(/"BLS-OES-\d{4}"/g) || []).filter(s => s !== `"${constValue}"`);
+  check(
+    'T66 — No stale BLS-OES-<year> literal in data.ts other than the current DATA_SOURCES.BLS_OES value',
+    staleHits.length === 0,
+    staleHits.length > 0 ? `Stale: ${[...new Set(staleHits)].join(', ')}` : ''
+  );
+
+  // T67: geo_real.json's own vintage is independently well-formed — it is a
+  // SEPARATE extract from DATA_SOURCES.BLS_OES and is not asserted to match it
+  // (see AGENTS.md "OES vintage is SPLIT"). Only checked for basic sanity.
+  if (exists('src/data/geo_real.json')) {
+    const geo = JSON.parse(read('src/data/geo_real.json'));
+    check(
+      'T67 — geo_real.json._meta.bls_release is a non-empty, plausible OES vintage string',
+      typeof geo._meta?.bls_release === 'string' && /\b(19|20)\d{2}\b/.test(geo._meta.bls_release),
+      `Found: ${JSON.stringify(geo._meta?.bls_release)}`
+    );
+  }
 }
 
 // =============================================================================

@@ -10,8 +10,16 @@ export const YEAR_RANGE = YEAR_MAX - YEAR_MIN;       // 5
 export const YEAR_COUNT = YEAR_RANGE + 1;             // 6 years (2025–2030 inclusive)
 
 // ── Data Sources (metadata for seed data) ──────────────────────────
+// BLS_OES is the NATIONAL per-role headcount baked into src/data.ts (drives
+// terrain height, the Workers stat, and the "OES" provenance badge). BLS_STATE
+// is a SEPARATE vintage: the state-level breakdown in src/data/geo_real.json
+// that drives the 2D map (see that file's own _meta.bls_release for its
+// current vintage — it is not guaranteed to match BLS_OES). Keep this literal
+// in sync with every `dataSources` array in src/data.ts; a mismatch silently
+// removes the OES badge (see src/utils/provenance.ts) with no test failure —
+// src/__tests__/oesVintage.test.ts guards this.
 export const DATA_SOURCES = {
-    BLS_OES: 'BLS-OES-2023',
+    BLS_OES: 'BLS-OES-2025',
     BLS_OOH: 'BLS-OOH-2024-34',
     BLS_CPS: 'BLS-CPS (Live)',
     BLS_STATE: 'BLS-OES-State',

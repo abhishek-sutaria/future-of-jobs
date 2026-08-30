@@ -1,11 +1,21 @@
 #!/usr/bin/env python3
 """
-Geographic Data Verification Script
-=====================================
+Geographic Data Verification Script (workbook path — STALE as of the May 2025 refresh)
+=========================================================================================
 Verifies that every employment and lq value in src/data/geo_real.json matches
 the corresponding value in the BLS OES May 2023 source workbook.
 
-This script is the automated proof that the map numbers are traceable to BLS.
+WARNING: src/data/geo_real.json was refreshed to BLS OEWS May 2025 via
+scripts/refresh_oes_data.mjs (pulls api.bls.gov directly — see that script's
+header comment for why the workbook path can no longer be used to fetch a new
+vintage). Running THIS script now will report every value as a "mismatch",
+because it is comparing the current (2025) file against the old (2023)
+workbook — that is expected, not a data bug. This script is kept for whenever
+a workbook-based vintage is in use again; it is not the current proof of
+correctness. For the current extract, correctness comes from
+scripts/refresh_oes_data.mjs reading directly from BLS's own API responses
+(see src/__tests__/oesVintage.test.ts and scripts/audit.mjs T65–T67 for the
+automated checks that do apply today).
 
 Usage:
   python3 scripts/verify_geo_data.py

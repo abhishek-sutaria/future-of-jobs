@@ -73,18 +73,46 @@ describe('SOC-level de-duplication', () => {
     });
 });
 
-// Risk Specialist and Financial Risk Analyst both map to 13-2099.
-describe('Risk Specialist + Financial Risk Analyst (both → 13-2099)', () => {
+// Wholesale & Retail Buyer and Purchasing Agent both map to 13-1020.
+//
+// BLS retired the detailed codes 13-1022/13-1023 and now publishes only the
+// combined broad code 13-1020 "Buyers and Purchasing Agents" (verified against
+// OEWS May 2025). Both titles therefore share one published estimate, and the
+// de-dup rule must stop that estimate being counted twice on the map.
+describe('Wholesale & Retail Buyer + Purchasing Agent (both → 13-1020)', () => {
     it('Texas employment counted once', () => {
+        const buyer = makeJob('Wholesale & Retail Buyer', [
+            { name: 'Texas', lat: 31.97, lng: -99.9, employment: 44030, lq: 0.95 },
+        ]);
+        const agent = makeJob('Purchasing Agent', [
+            { name: 'Texas', lat: 31.97, lng: -99.9, employment: 44030, lq: 0.95 },
+        ]);
+
+        const { stateData } = aggregateByState([buyer, agent]);
+        expect(stateData['Texas']?.totalEmployment).toBe(44030);
+        expect(stateData['Texas']?.bySoc).toHaveLength(1);
+    });
+});
+
+// Risk Specialist (13-2099) and Financial Risk Analyst (13-2054) are DISTINCT.
+//
+// These previously both mapped to 13-2099 "Financial Specialists, All Other",
+// a residual catch-all. O*NET lists "Financial Risk Analyst" as an explicit
+// Alternate Title of 13-2054.00 "Financial Risk Specialists", which BLS
+// publishes at the detailed level, so they are no longer aliases and their
+// employment must sum rather than de-dupe.
+describe('Risk Specialist (13-2099) vs Financial Risk Analyst (13-2054)', () => {
+    it('are separate SOC codes and sum independently', () => {
         const riskSpec = makeJob('Risk Specialist', [
             { name: 'Texas', lat: 31.97, lng: -99.9, employment: 8000, lq: 0.95 },
         ]);
         const finRisk = makeJob('Financial Risk Analyst', [
-            { name: 'Texas', lat: 31.97, lng: -99.9, employment: 8000, lq: 0.95 },
+            { name: 'Texas', lat: 31.97, lng: -99.9, employment: 5000, lq: 0.9 },
         ]);
 
         const { stateData } = aggregateByState([riskSpec, finRisk]);
-        expect(stateData['Texas']?.totalEmployment).toBe(8000);
+        expect(stateData['Texas']?.totalEmployment).toBe(13000);
+        expect(stateData['Texas']?.bySoc).toHaveLength(2);
     });
 });
 

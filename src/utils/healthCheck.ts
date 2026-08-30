@@ -173,7 +173,9 @@ async function checkAppData(): Promise<CheckOutcome> {
     return {
         status: 'pass',
         message: `All ${initialJobs.length} jobs and the US map data are ready.`,
-        detail: 'Occupation employment on the 3D map comes from the bundled BLS OES May 2023 extract — separate from the live unemployment check above.',
+        detail:
+            'Both the 3D terrain (per-job employment) and the 2D US map (state-level employment) ' +
+            'come from the bundled BLS OEWS May 2025 extract — separate from the live unemployment check above.',
     };
 }
 
@@ -244,7 +246,7 @@ export const HEALTH_CHECKS: CheckRunner[] = [
     {
         id: 'app-data',
         name: 'App Data',
-        description: 'Bundled occupation employment (BLS OES May 2023) and US map data — separate from live unemployment.',
+        description: 'Bundled occupation employment and US map data (BLS OEWS May 2025) — separate from live unemployment.',
         run: checkAppData,
     },
     {

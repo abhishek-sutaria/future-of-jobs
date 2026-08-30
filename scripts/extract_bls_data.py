@@ -1,9 +1,17 @@
 #!/usr/bin/env python3
 """
-BLS Data Extraction Script
-===========================
+BLS Data Extraction Script (workbook path)
+============================================
 Extracts REAL data from BLS OES May 2023 (all_data_M_2023.xlsx) and
 merges with existing project data to replace all hardcoded values.
+
+NOTE: national employment (src/data.ts) has since been refreshed to May 2025
+via scripts/refresh_oes_data.mjs, which pulls api.bls.gov directly — the
+www.bls.gov/download.bls.gov workbook download blocks automated clients
+(Akamai bot protection), so a newer workbook cannot be fetched here. This
+script's OUTPUT for state-level data (src/data/geo_real.json) is still the
+one in use; the state-level equivalent of refresh_oes_data.mjs's national
+pass has not been run yet. See AGENTS.md "OES vintage is SPLIT".
 
 Inputs:
   - data/all_data_M_2023.xlsx (BLS OES May 2023 - 413K rows)

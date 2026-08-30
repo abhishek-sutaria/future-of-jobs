@@ -315,9 +315,10 @@ export const useStore = create<AppState>((set, get) => ({
             // CPS series here are broad occupation-category employment counts
             // (see getSeriesIdForJob's own comment) — e.g. LNU02032202 covers every
             // Management occupation combined (~30M), not this specific role's real
-            // headcount (OES puts Marketing Manager at ~369K). A live response only
-            // confirms the BLS connection is up; it must never overwrite
-            // item.employment, which stays the per-role OES figure from data.ts.
+            // headcount (OES puts Marketing Manager at ~395K, May 2025). A live
+            // response only confirms the BLS connection is up; it must never
+            // overwrite item.employment, which stays the per-role OES figure from
+            // data.ts.
             // The CPS provenance chip is intentionally not added here either — its
             // own tooltip copy describes the national unemployment rate, not
             // occupation headcounts, so attaching it to this job would be its own

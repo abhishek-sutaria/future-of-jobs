@@ -41,10 +41,10 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                             </thead>
                             <tbody className="text-gray-300">
                                 <tr className="border-t border-white/[0.06]">
-                                    <td className="px-3 py-2">Employment headcount</td>
+                                    <td className="px-3 py-2">Employment headcount (per role)</td>
                                     <td className="px-3 py-2 text-gray-400">
-                                        <SourceLink href="https://www.bls.gov/oes/">BLS OES May 2023</SourceLink>
-                                        {' '}(bundled national + state extract that drives the 3D map and US map). BLS has since published newer OES releases (through May 2025); a refresh is planned.
+                                        <SourceLink href="https://www.bls.gov/oes/">BLS OEWS May 2025</SourceLink>
+                                        {' '}(bundled national extract that drives 3D terrain height and the Workers stat).
                                     </td>
                                 </tr>
                                 <tr className="border-t border-white/[0.06]">
@@ -61,15 +61,15 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                                     </td>
                                 </tr>
                                 <tr className="border-t border-white/[0.06]">
-                                    <td className="px-3 py-2">State-level employment</td>
+                                    <td className="px-3 py-2">State-level employment (US map)</td>
                                     <td className="px-3 py-2 text-gray-400">
-                                        <SourceLink href="https://www.bls.gov/oes/current/oessrcst.htm">BLS OES State (May 2023)</SourceLink>
+                                        <SourceLink href="https://www.bls.gov/oes/current/oessrcst.htm">BLS OEWS State (May 2025)</SourceLink>
                                     </td>
                                 </tr>
                                 <tr className="border-t border-white/[0.06]">
                                     <td className="px-3 py-2">Day-to-day task descriptions</td>
                                     <td className="px-3 py-2 text-gray-400">
-                                        <SourceLink href="https://www.onetcenter.org/database.html">O*NET 28.2 (April 2024)</SourceLink>
+                                        <SourceLink href="https://www.onetcenter.org/database.html">O*NET 30.1</SourceLink>
                                     </td>
                                 </tr>
                                 <tr className="border-t border-white/[0.06]">
@@ -163,7 +163,7 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                     </div>
                     <p className="text-sm text-gray-300 leading-relaxed">
                         The map shows state-level employment for each selected role, sourced from{' '}
-                        <SourceLink href="https://www.bls.gov/oes/current/oessrcst.htm">BLS OES May 2023 state data</SourceLink>.
+                        <SourceLink href="https://www.bls.gov/oes/current/oessrcst.htm">BLS OEWS May 2025 state data</SourceLink>.
                         Values are the BLS <code className="text-[10px] bg-white/[0.06] rounded px-1">TOT_EMP</code> column
                         (cross-industry, detailed occupation level). The Location Quotient (LQ) shown in tooltips
                         comes from the BLS <code className="text-[10px] bg-white/[0.06] rounded px-1">LOC_QUOTIENT</code> column;
@@ -171,7 +171,7 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                     </p>
                     <ul className="list-disc list-inside text-xs text-gray-400 ml-1 space-y-1">
                         <li><strong>Aggregation</strong>: employment is summed once per unique SOC code. Alias titles sharing a SOC (e.g. Marketing Manager and Brand Manager both map to 11-2021) are counted once per state.</li>
-                        <li><strong>Coverage</strong>: 45 of 47 SOC codes have BLS state-level data. Two codes (13-1022, 13-1023) are not published at the detailed level in BLS OES May 2023.</li>
+                        <li><strong>Coverage</strong>: all 47 SOC codes have BLS state-level data, including 13-1020 (Wholesale &amp; Retail Buyer / Purchasing Agent), the broad group BLS now publishes after retiring the two detailed codes it used to comprise.</li>
                         <li><strong>Map coordinates</strong>: state centroid lat/lng values are US Census Bureau geographic centroids — display-only, not BLS data.</li>
                         <li><strong>Circle labels</strong>: only the top 15 states by total employment receive a circle marker. All states with data still receive a choropleth fill.</li>
                         <li><strong>Automation risk is not encoded</strong> in the map — colour and circle size both represent employment volume only.</li>

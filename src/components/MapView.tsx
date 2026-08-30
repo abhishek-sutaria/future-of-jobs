@@ -125,7 +125,7 @@ export const MapView: React.FC = () => {
 
             {/* Source attribution */}
             <div className="absolute bottom-6 right-6 z-10 text-[10px] text-gray-600 font-mono">
-                BLS OES May 2023 · Aggregated by SOC code
+                BLS OEWS May 2025 · Aggregated by SOC code
             </div>
 
             {/* Composable US Map */}
@@ -241,7 +241,7 @@ export const MapView: React.FC = () => {
                                     </div>
                                 ))}
                                 <p className="text-[8px] text-gray-700 border-t border-white/[0.04] pt-1.5 mt-1.5">
-                                    BLS OES May 2023 · TOT_EMP by SOC
+                                    BLS OEWS May 2025 · TOT_EMP by SOC
                                 </p>
                             </div>
                         ) : (

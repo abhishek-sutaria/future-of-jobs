@@ -20,6 +20,11 @@ dist-ssr
 # the committed artifact is src/data/ai_scores.json)
 data/ai_scores_cache.json
 
+# Raw BLS API response cache for `node scripts/refresh_oes_data.mjs`
+# (resume/quota aid only — the committed artifacts are src/data/geo_real.json
+# and src/data/national_employment.json)
+data/.oes_api_cache.json
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
