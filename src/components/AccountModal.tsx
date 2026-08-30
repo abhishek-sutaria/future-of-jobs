@@ -13,14 +13,6 @@ import { Modal } from './ui/Modal';
 import { useUserStore } from '../userStore';
 import { useStore } from '../store';
 import { toast } from './ui/Toast';
-import type { ArtifactKind } from '../lib/userData';
-
-const ARTIFACT_LABEL: Record<ArtifactKind, string> = {
-    scenario: 'Day in the Life',
-    roadmap: 'Career Roadmap',
-    startup_ideas: 'Startup Ideas',
-    skills_analysis: 'Skills Analysis',
-};
 
 const Section: React.FC<{ title: string; count?: number; children: React.ReactNode }> = ({
     title, count, children,
@@ -86,10 +78,7 @@ export const AccountModal: React.FC = () => {
         else toast.warning('Could not delete your data. Please try again.');
     };
 
-    const totalSaved =
-        activity.savedRoles.length +
-        activity.upskillCompletions.length +
-        activity.artifacts.length;
+    const totalSaved = activity.savedRoles.length + activity.upskillCompletions.length;
 
     return (
         <Modal isOpen={isOpen} onClose={closeModal} title="Your Activity" size="lg" layer="top">
@@ -133,6 +122,10 @@ export const AccountModal: React.FC = () => {
                                 {busy ? 'Sending…' : 'Keep my activity'}
                             </button>
                         </form>
+                        <p className="mt-2 text-[11px] text-gray-500">
+                            No password — we’ll email a one-click link. Nothing happens until you actually
+                            click it, so typing someone else’s email can’t get into their account.
+                        </p>
                     </>
                 )}
 
@@ -214,26 +207,6 @@ export const AccountModal: React.FC = () => {
                                     <li key={`${u.jobId}|${u.taskName}`} className="text-xs text-gray-300 flex gap-2">
                                         <span className="text-emerald-400 shrink-0">✓</span>
                                         <span className="line-clamp-2">{u.taskName}</span>
-                                    </li>
-                                ))}
-                            </ul>
-                        )}
-                    </Section>
-
-                    <Section title="Saved reports" count={activity.artifacts.length}>
-                        {activity.artifacts.length === 0 ? (
-                            <Empty>
-                                Scenarios and roadmaps are saved automatically. Startup Ideas and Skills
-                                analyses are saved only when you choose to.
-                            </Empty>
-                        ) : (
-                            <ul className="space-y-1.5">
-                                {activity.artifacts.map((a) => (
-                                    <li key={a.id} className="text-xs text-gray-300 flex items-center gap-2">
-                                        <span className="px-1.5 py-0.5 rounded border border-white/10 bg-white/[0.04] text-[10px] uppercase tracking-wider text-gray-400 shrink-0">
-                                            {ARTIFACT_LABEL[a.kind]}
-                                        </span>
-                                        <span className="truncate">{a.jobTitle || '—'}</span>
                                     </li>
                                 ))}
                             </ul>
