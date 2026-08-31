@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Modal } from './ui/Modal';
+import { ResumePrivacyNote } from './ui/ResumePrivacyNote';
 import {
     IconUpload,
     IconAlertTriangle,
@@ -251,6 +252,8 @@ export const StartupIdeasModal: React.FC<StartupIdeasModalProps> = ({ isOpen, on
                     <p className="text-gray-400 text-sm">
                         Upload your resume or paste your experience to get a <strong className="text-white">personalized startup opportunity dashboard</strong> — tailored ideas, resume-fit scores, and a 90-day action plan, powered by AI.
                     </p>
+
+                    <ResumePrivacyNote />
 
                     <div className="relative group border border-white/[0.08] hover:border-violet-500/30 bg-white/[0.02] hover:bg-white/[0.04] rounded-xl p-8 text-center transition-all cursor-pointer overflow-hidden">
                         <input

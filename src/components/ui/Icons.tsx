@@ -72,14 +72,6 @@ export const IconInfo = ({ size, ...p }: IconProps) => (
     <svg {...d(size)} {...p}><circle cx="12" cy="12" r="10" /><path d="M12 16v-4" /><path d="M12 8h.01" /></svg>
 );
 
-export const IconKey = ({ size, ...p }: IconProps) => (
-    <svg {...d(size)} {...p}>
-        <circle cx="7.5" cy="15.5" r="5.5" />
-        <path d="m21 2-9.6 9.6" />
-        <path d="m15.5 7.5 3 3L22 7l-3-3" />
-    </svg>
-);
-
 export const IconUpload = ({ size, ...p }: IconProps) => (
     <svg {...d(size)} {...p}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" /></svg>
 );

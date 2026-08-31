@@ -9,8 +9,6 @@ export const Z = {
     page: 230,
     modal: 250,
     modalTop: 300,
-    /** Gate that blocks the whole app until a Claude key is chosen. Was a bare `z-[5000]` in ApiKeyModal.tsx; tokenized so its position in the stack is deliberate, not an arbitrary "big number". Deliberately above every modal — it must win when it needs to be shown at all — but see App.tsx for why it's suppressed while the dashboard is open. */
-    apiKey: 400,
     toast: 9000,
     errorBoundary: 9999,
 } as const;

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Modal } from './ui/Modal';
+import { ResumePrivacyNote } from './ui/ResumePrivacyNote';
 import { IconUpload, IconShield, IconAlertTriangle, IconCheck } from './ui/Icons';
 import { Skeleton } from './ui/Skeleton';
 import { toast } from './ui/Toast';
@@ -89,6 +90,8 @@ export const SkillsModal: React.FC<SkillsModalProps> = ({ isOpen, onClose }) => 
                     <p className="text-gray-400 text-sm">
                         Upload your resume or paste your skills to get a <strong className="text-white">qualitative 5-year relevance check</strong> powered by AI.
                     </p>
+
+                    <ResumePrivacyNote />
 
                     <div className="relative group border border-white/[0.08] hover:border-cyan-500/30 bg-white/[0.02] hover:bg-white/[0.04] rounded-xl p-8 text-center transition-all cursor-pointer overflow-hidden">
                         <input

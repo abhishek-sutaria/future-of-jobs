@@ -160,7 +160,7 @@ export const UI: React.FC<UIProps> = ({ dashboardOpen }) => {
         // when this returned a bare fragment. `inert` (React 19) removes the
         // whole subtree from the accessibility tree and blocks all pointer/
         // keyboard interaction — the belt to the individual suppressions
-        // already applied to IntroModal/ApiKeyModal/RescoreConfirmModal/tour.
+        // already applied to IntroModal/RescoreConfirmModal/tour.
         <div inert={dashboardOpen}>
             <IntroModal />
             <MethodologyModal isOpen={showMethodologyModal} onClose={() => setShowMethodologyModal(false)} />
