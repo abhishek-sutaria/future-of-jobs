@@ -4,7 +4,6 @@ import { UI } from './components/UI';
 import { MapView } from './components/MapView';
 import { DashboardPage } from './components/dashboard/DashboardPage';
 import { ErrorBoundary } from './components/ErrorBoundary';
-import { ApiKeyModal } from './components/ApiKeyModal';
 import { RescoreConfirmModal } from './components/RescoreConfirmModal';
 import { useStore } from './store';
 import { useUserStore, reapplyUpskillCompletions } from './userStore';
@@ -120,7 +119,6 @@ function App() {
 
       <UI dashboardOpen={route === 'dashboard'} />
       {route === 'dashboard' && <DashboardPage />}
-      <ApiKeyModal />
       <RescoreConfirmModal />
     </div>
   );

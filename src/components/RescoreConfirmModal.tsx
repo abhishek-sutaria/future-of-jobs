@@ -141,7 +141,9 @@ export const RescoreConfirmModal: React.FC = () => {
                     </label>
                     <p className="text-xs text-gray-500 mb-2 leading-relaxed">
                         Re-scoring bills <span className="text-gray-400">your</span> key so shared app usage
-                        stays low. The default server key is not used for this operation.
+                        stays low — everything else in the app runs on the built-in key with no setup.
+                        Your key is stored only in this browser and sent only to Anthropic, never saved
+                        to any account.
                     </p>
                     <input
                         id="rescore-claude-api-key"

@@ -1,6 +1,6 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { useStore } from '../store';
-import { IconZap, IconGlobe, IconMap, IconSearch, IconInfo, IconKey, IconX, IconActivity, IconRocket, IconUser } from './ui/Icons';
+import { IconZap, IconGlobe, IconMap, IconSearch, IconInfo, IconX, IconActivity, IconRocket, IconUser } from './ui/Icons';
 import { useUserStore } from '../userStore';
 import { Z } from '../config/layers';
 import { YEAR_MIN, YEAR_MAX, UI } from '../config/constants';
@@ -24,7 +24,6 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
     const hasAIScores = useStore((state) => state.hasAIScores);
     const scoringProgress = useStore((state) => state.scoringProgress);
     const scoresGeneratedAt = useStore((state) => state.scoresGeneratedAt);
-    const openClaudeKeyModal = useStore((state) => state.openClaudeKeyModal);
     const openRescoreModal = useStore((state) => state.openRescoreModal);
     const navigate = useStore((state) => state.navigate);
 
@@ -111,15 +110,6 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
                     >
                         <IconRocket size={14} /> Startup Ideas
                     </button>
-                    <button
-                        type="button"
-                        onClick={openClaudeKeyModal}
-                        title="Claude API key — change or switch default vs. your key"
-                        className="hidden md:flex shrink-0 items-center gap-2 px-3 py-2.5 rounded-lg border border-cyan-500/20 bg-cyan-500/[0.06] hover:bg-cyan-500/15 text-cyan-400 text-xs font-semibold uppercase tracking-wider transition-colors min-h-[44px]"
-                    >
-                        <IconKey size={14} /> Claude API
-                    </button>
-
                     <button
                         data-tour="tour-toggle"
                         onClick={() => setMapView(mapView === 'map' ? 'globe' : 'map')}

@@ -193,11 +193,7 @@ interface AppState {
     userClaudeApiKey: string;
     hasConfiguredAI: boolean;
     hydrateAIConfig: () => void;
-    useDefaultClaudeKey: () => void;
     setUserClaudeApiKey: (key: string) => void;
-    claudeKeyModalOpen: boolean;
-    openClaudeKeyModal: () => void;
-    closeClaudeKeyModal: () => void;
 
     /** Full re-score confirm dialog (must mount outside the pointer-events-none header). */
     rescoreModalOpen: boolean;
@@ -414,10 +410,6 @@ export const useStore = create<AppState>((set, get) => ({
     apiKeyMode: null,
     userClaudeApiKey: '',
     hasConfiguredAI: false,
-    claudeKeyModalOpen: false,
-
-    openClaudeKeyModal: () => set({ claudeKeyModalOpen: true }),
-    closeClaudeKeyModal: () => set({ claudeKeyModalOpen: false }),
 
     rescoreModalOpen: false,
     openRescoreModal: () => set({ rescoreModalOpen: true }),
@@ -442,7 +434,6 @@ export const useStore = create<AppState>((set, get) => ({
             // onEnd may never fire) would otherwise suppress 3D label hover
             // forever after returning to the map.
             rescoreModalOpen: false,
-            claudeKeyModalOpen: false,
             isOrbiting: false,
         });
     },
@@ -452,42 +443,28 @@ export const useStore = create<AppState>((set, get) => ({
         set({ route: routeFromPathname(window.location.pathname) });
     },
 
+    // Runs on app boot (App.tsx). A saved user key (e.g. from the re-score
+    // flow) always wins, since it's the key the user explicitly chose to
+    // spend against. Otherwise every visitor runs on the server key with
+    // zero prompt — api/claude.ts already falls back to ANTHROPIC_API_KEY
+    // regardless of this flag, so this just tells the store what the network
+    // layer already does. With no server key configured (a contributor's
+    // fresh clone), AI calls fail gracefully via JobDetailPanel's EmptyState;
+    // the app stays fully usable, and the re-score modal still asks for a
+    // key explicitly since it never uses the server key.
     hydrateAIConfig: () => {
-        const savedMode = (localStorage.getItem(AI_MODE_STORAGE_KEY) as 'user' | 'default' | null);
         const savedUserKey = localStorage.getItem(AI_USER_KEY_STORAGE_KEY) || '';
-
-        if (savedMode === 'default' && HAS_DEFAULT_CLAUDE_KEY) {
-            set({ apiKeyMode: 'default', userClaudeApiKey: '', hasConfiguredAI: true });
-            return;
-        }
-
-        if (savedMode === 'default' && !HAS_DEFAULT_CLAUDE_KEY) {
-            localStorage.removeItem(AI_MODE_STORAGE_KEY);
-            set({ apiKeyMode: null, userClaudeApiKey: '', hasConfiguredAI: false });
-            return;
-        }
+        const savedMode = localStorage.getItem(AI_MODE_STORAGE_KEY);
 
         if (savedMode === 'user' && savedUserKey.trim()) {
             set({ apiKeyMode: 'user', userClaudeApiKey: savedUserKey.trim(), hasConfiguredAI: true });
             return;
         }
 
-        set({ apiKeyMode: null, userClaudeApiKey: '', hasConfiguredAI: false });
-    },
-
-    useDefaultClaudeKey: () => {
-        if (!HAS_DEFAULT_CLAUDE_KEY) {
-            set({ apiKeyMode: null, userClaudeApiKey: '', hasConfiguredAI: false });
-            return;
-        }
-        localStorage.setItem(AI_MODE_STORAGE_KEY, 'default');
-        localStorage.removeItem(AI_USER_KEY_STORAGE_KEY);
-        set({ apiKeyMode: 'default', userClaudeApiKey: '', hasConfiguredAI: true });
-        queueMicrotask(() => {
-            const st = get();
-            if (!st.hasConfiguredAI || st.hasAIScores || st.isScoring) return;
-            if (st.apiKeyMode === 'user' && !st.userClaudeApiKey.trim()) return;
-            void st.scoreAllJobsWithAI();
+        set({
+            apiKeyMode: HAS_DEFAULT_CLAUDE_KEY ? 'default' : null,
+            userClaudeApiKey: '',
+            hasConfiguredAI: HAS_DEFAULT_CLAUDE_KEY,
         });
     },
 
