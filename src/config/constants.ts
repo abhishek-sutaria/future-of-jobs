@@ -284,6 +284,11 @@ export const ANIMATIONS = {
     COLOR_LERP_SPEED: 0.1,
     /** Employment threshold above which floating labels always show */
     MAJOR_EMPLOYMENT_THRESHOLD: 1500000,
+    /** On mobile, only this many highest-employment roles get a floating
+     * terrain label by default (plus whichever is selected/hovered) — all 50
+     * fully rendered labels overlap into an unreadable mass on a phone
+     * screen. Every role stays reachable via search regardless. */
+    MOBILE_LABEL_COUNT: 5,
     /** Automation cost index above which a "saved" job is flagged */
     SAVED_AUTOMATION_THRESHOLD: 0.7,
     /** Emissive intensity for highlighted (saved) mesh state */
