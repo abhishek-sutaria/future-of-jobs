@@ -5,7 +5,8 @@ import { useStore } from '../store';
 import type { Job } from '../types';
 import { getTerrainPosition, calculateGaussianHeight, buildGrowthForecastFlatArray, growthAtYearFromForecastFlat, getVisualHeightForGrowth, getVisualHeightForWorkersAtYear, impliedEmploymentAtYear, type PeakData, TERRAIN_CONFIG } from '../utils/terrainMath';
 import { buildRiskScale, riskBandColor } from '../config/theme';
-import { SCENE, YEAR_MAX } from '../config/constants';
+import { SCENE, YEAR_MAX, ANIMATIONS } from '../config/constants';
+import { useIsMobile } from '../hooks/useIsMobile';
 
 export const JobMarkers: React.FC = () => {
     const jobs = useStore((state) => state.jobs);
@@ -19,6 +20,7 @@ export const JobMarkers: React.FC = () => {
 
     const [hoveredJobId, setHoveredJobId] = useState<string | null>(null);
     const gl = useThree((state) => state.gl);
+    const isMobile = useIsMobile();
 
     // Clear stuck hover state when the window loses focus (pointerleave can be dropped mid-hover)
     useEffect(() => {
@@ -81,6 +83,19 @@ export const JobMarkers: React.FC = () => {
         if (selectedRoleIds.size === 0) return jobs;
         return jobs.filter(job => selectedRoleIds.has(job.id));
     }, [jobs, selectedRoleIds]);
+
+    // Mobile only: which roles get a floating text label by default (top N by
+    // employment). Every role still gets its anchor ring/dot on the terrain
+    // and is reachable via search — this only thins the overlapping text.
+    const mobileLabelIds = useMemo(() => {
+        if (!isMobile) return null;
+        return new Set(
+            [...filteredJobs]
+                .sort((a, b) => b.employment - a.employment)
+                .slice(0, ANIMATIONS.MOBILE_LABEL_COUNT)
+                .map(j => j.id)
+        );
+    }, [isMobile, filteredJobs]);
 
     const forecastsFlat = useMemo(
         () => buildGrowthForecastFlatArray(filteredJobs),
@@ -158,11 +173,19 @@ export const JobMarkers: React.FC = () => {
             }
         }
 
-        const showLabel = isVisibleByLOD && (isSelected || job.employment > 0);
-        if (!showLabel) return [];
+        // Every job has employment > 0 (verified in data.ts), so this is
+        // effectively just the LOD gate — kept explicit for readability.
+        if (!isVisibleByLOD) return [];
 
         // Expanded hover stats are disabled during orbit so popups don't fight the camera.
         const isHovered = !isOrbiting && hoveredJobId === job.id;
+
+        // The anchor ring/dot/leader-line always render for every LOD-visible
+        // job — they carry the risk colour and keep the terrain legible at a
+        // glance. Only the floating TEXT label is thinned on mobile, where all
+        // 50 overlap into unreadable mush; every job stays one search away.
+        const showLabelText = !mobileLabelIds || isSelected || isHovered || mobileLabelIds.has(job.id);
+
         const pipColor = riskBandColor(job.automationCostIndex, riskScale);
         const labelHeight = SCENE.LABEL.BASE_HEIGHT + peak.offset;
         const surfaceY = calculateGaussianHeight(peak.x, peak.z, peaks) + TERRAIN_CONFIG.TERRAIN_OFFSET_Y;
@@ -195,6 +218,7 @@ export const JobMarkers: React.FC = () => {
             surfaceY,
             isSelected,
             isHovered,
+            showLabelText,
             pipColor,
             labelHeight,
             growthStr,
@@ -208,7 +232,7 @@ export const JobMarkers: React.FC = () => {
     return (
         <group>
             {markerItems.map(({
-                job, peak, surfaceY, isSelected, isHovered, pipColor, labelHeight,
+                job, peak, surfaceY, isSelected, isHovered, showLabelText, pipColor, labelHeight,
                 growthStr, growthColor, growthLabel, workersStr, workersLabel,
             }) => (
                     <group key={job.id} position={[peak.x, surfaceY, peak.z]}>
@@ -235,7 +259,11 @@ export const JobMarkers: React.FC = () => {
                         {/* Label — drei rewrites host z-index from camera distance. On hover we
                             force this host to the front AND pin every other host to the back
                             (previously --front stuck forever when wrapperClass went undefined,
-                            so many labels shared max z and later DOM siblings covered the popup). */}
+                            so many labels shared max z and later DOM siblings covered the popup).
+                            showLabelText is always true on desktop; on mobile it's thinned to
+                            the top employers + selected/hovered so the terrain stays readable —
+                            every job is still one search away. */}
+                        {showLabelText && (
                         <Html
                             position={[0, labelHeight, 0]}
                             center
@@ -291,6 +319,7 @@ export const JobMarkers: React.FC = () => {
                                 )}
                             </div>
                         </Html>
+                        )}
                     </group>
             ))}
         </group>
