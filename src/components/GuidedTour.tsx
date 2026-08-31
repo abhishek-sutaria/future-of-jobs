@@ -8,7 +8,7 @@ interface Step {
     padding?: number;
 }
 
-const STEPS: Step[] = [
+const ALL_STEPS: Step[] = [
     {
         target: null,
         title: 'Welcome — quick tour',
@@ -59,8 +59,9 @@ const CARD_H = 260;
 export const GuidedTour: React.FC<Props> = ({ isActive, onClose }) => {
     const [step, setStep] = useState(0);
     const [rect, setRect] = useState<Rect | null>(null);
+    const [steps, setSteps] = useState<Step[]>(ALL_STEPS);
 
-    const current = STEPS[step];
+    const current = steps[step];
 
     const updateRect = useCallback(() => {
         if (!current.target) { setRect(null); return; }
@@ -71,8 +72,22 @@ export const GuidedTour: React.FC<Props> = ({ isActive, onClose }) => {
         setRect({ top: r.top - p, left: r.left - p, width: r.width + p * 2, height: r.height + p * 2 });
     }, [current]);
 
-    // Reset to step 0 every time tour opens
-    useEffect(() => { if (isActive) setStep(0); }, [isActive]);
+    // Reset to step 0 every time the tour opens, and drop any step whose
+    // target is a `hidden md:flex` header button — a `display:none` element
+    // is still found by querySelector, so without this the spotlight would
+    // land on a zero-size rect at that element's collapsed position instead
+    // of properly hiding. (offsetParent is null for display:none, but also
+    // for position:fixed elements — none of these targets are fixed, so it's
+    // a safe visibility check here.)
+    useEffect(() => {
+        if (!isActive) return;
+        setStep(0);
+        setSteps(ALL_STEPS.filter(s => {
+            if (!s.target) return true;
+            const el = document.querySelector(`[data-tour="${s.target}"]`) as HTMLElement | null;
+            return !!el && el.offsetParent !== null;
+        }));
+    }, [isActive]);
 
     // Recalculate spotlight rect on step change and window resize
     useEffect(() => {
@@ -83,7 +98,7 @@ export const GuidedTour: React.FC<Props> = ({ isActive, onClose }) => {
 
     if (!isActive) return null;
 
-    const isLast = step === STEPS.length - 1;
+    const isLast = step === steps.length - 1;
 
     let cardStyle: React.CSSProperties;
     if (rect) {
@@ -133,7 +148,7 @@ export const GuidedTour: React.FC<Props> = ({ isActive, onClose }) => {
             <div style={{ ...cardStyle, zIndex: Z.modal + 1 }} className="bg-gray-900 border border-white/10 rounded-xl p-5 shadow-2xl">
                 {/* Progress dots */}
                 <div className="flex gap-1.5 mb-4">
-                    {STEPS.map((_, i) => (
+                    {steps.map((_, i) => (
                         <div
                             key={i}
                             className={`h-1 rounded-full transition-all duration-300 ${
@@ -144,7 +159,7 @@ export const GuidedTour: React.FC<Props> = ({ isActive, onClose }) => {
                 </div>
 
                 <p className="text-[10px] text-cyan-500 uppercase tracking-widest font-bold mb-1">
-                    {step + 1} / {STEPS.length}
+                    {step + 1} / {steps.length}
                 </p>
                 <h3 className="text-white font-bold text-[15px] mb-2">{current.title}</h3>
                 <p className="text-gray-400 text-sm leading-relaxed mb-5">{current.description}</p>
