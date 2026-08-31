@@ -1,6 +1,7 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { useStore } from '../store';
-import { IconZap, IconGlobe, IconMap, IconSearch, IconInfo, IconX, IconActivity, IconRocket, IconUser } from './ui/Icons';
+import { IconZap, IconGlobe, IconMap, IconSearch, IconInfo, IconX, IconActivity, IconRocket, IconUser, IconMenu } from './ui/Icons';
+import { MobileMoreSheet } from './MobileMoreSheet';
 import { useUserStore } from '../userStore';
 import { Z } from '../config/layers';
 import { YEAR_MIN, YEAR_MAX, UI } from '../config/constants';
@@ -37,7 +38,10 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
         ? new Date(scoresGeneratedAt).toLocaleDateString(undefined, { month: 'short', year: 'numeric' })
         : null;
 
+    const [showMoreSheet, setShowMoreSheet] = useState(false);
+
     return (
+        <>
         <header className="absolute top-0 left-0 w-full px-5 md:px-8 py-4 md:py-5 flex flex-col md:flex-row justify-between items-start md:items-center pointer-events-none gap-4" style={{ zIndex: Z.header }}>
             <div className="flex flex-col ml-0" style={{ marginLeft: mapView === 'map' ? '21rem' : 0 }}>
                 <h1 className="text-lg md:text-xl font-semibold text-white tracking-wide flex items-center gap-2.5">
@@ -143,6 +147,18 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
                         <span className="text-sm leading-none">📋</span> Guide
                     </button>
 
+                    {/* My Skills, Startup Ideas, and Guide above are all
+                        `hidden md:flex` — this is their only way in on a
+                        phone. The tour and Methodology & Data don't need a
+                        spot here; both are already visible on mobile. */}
+                    <button
+                        onClick={() => setShowMoreSheet(true)}
+                        title="More"
+                        className="md:hidden shrink-0 w-11 h-11 flex items-center justify-center rounded-lg border border-white/[0.08] bg-white/[0.03] hover:bg-white/[0.08] text-gray-300 transition-colors"
+                    >
+                        <IconMenu size={16} />
+                    </button>
+
                     {/* Hidden entirely when this build has no account backend, so
                         an unconfigured deploy shows no dead control. */}
                     {authStatus !== 'disabled' && (
@@ -185,6 +201,14 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
                 </div>
             </div>
         </header>
+        <MobileMoreSheet
+            isOpen={showMoreSheet}
+            onClose={() => setShowMoreSheet(false)}
+            onOpenSkillsModal={onOpenSkillsModal}
+            onOpenStartupIdeasModal={onOpenStartupIdeasModal}
+            onOpenStudentGuide={onOpenStudentGuide}
+        />
+        </>
     );
 };
 

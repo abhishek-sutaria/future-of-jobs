@@ -140,3 +140,7 @@ export const IconArrowUpDown = ({ size, ...p }: IconProps) => (
 export const IconTrash = ({ size, ...p }: IconProps) => (
     <svg {...d(size)} {...p}><path d="M3 6h18" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /></svg>
 );
+
+export const IconMenu = ({ size, ...p }: IconProps) => (
+    <svg {...d(size)} {...p}><line x1="4" x2="20" y1="12" y2="12" /><line x1="4" x2="20" y1="6" y2="6" /><line x1="4" x2="20" y1="18" y2="18" /></svg>
+);
