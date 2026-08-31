@@ -2,6 +2,7 @@ import React, { useState, useRef, useCallback } from 'react';
 import { useStore } from '../store';
 import { IconZap, IconGlobe, IconMap, IconSearch, IconInfo, IconX, IconActivity, IconRocket, IconUser, IconMenu } from './ui/Icons';
 import { MobileMoreSheet } from './MobileMoreSheet';
+import { useIsMobile } from '../hooks/useIsMobile';
 import { useUserStore } from '../userStore';
 import { Z } from '../config/layers';
 import { YEAR_MIN, YEAR_MAX, UI } from '../config/constants';
@@ -39,17 +40,22 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
         : null;
 
     const [showMoreSheet, setShowMoreSheet] = useState(false);
+    const isMobile = useIsMobile();
 
     return (
         <>
-        <header className="absolute top-0 left-0 w-full px-5 md:px-8 py-4 md:py-5 flex flex-col md:flex-row justify-between items-start md:items-center pointer-events-none gap-4" style={{ zIndex: Z.header }}>
-            <div className="flex flex-col ml-0" style={{ marginLeft: mapView === 'map' ? '21rem' : 0 }}>
+        <header className="absolute top-0 left-0 w-full px-5 md:px-8 py-2.5 md:py-5 flex flex-col md:flex-row justify-between items-start md:items-center pointer-events-none gap-2 md:gap-4" style={{ zIndex: Z.header }}>
+            {/* The 21rem reservation clears RoleSelector's w-80 desktop sidebar
+                when the 2D map is open — meaningless on mobile, where that
+                sidebar is full-width regardless, and previously shoved this
+                title almost entirely off a phone screen for no benefit. */}
+            <div className="flex flex-col ml-0" style={{ marginLeft: mapView === 'map' && !isMobile ? '21rem' : 0 }}>
                 <h1 className="text-lg md:text-xl font-semibold text-white tracking-wide flex items-center gap-2.5">
                     <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-300 font-bold">AI</span>
                     <span className="text-white/80 font-light">&</span>
                     <span>Future of Work</span>
                 </h1>
-                <div className="flex items-center gap-3 mt-1.5 flex-wrap">
+                <div className="hidden md:flex items-center gap-3 mt-1.5 flex-wrap">
                     <div className="flex items-center gap-2">
                         <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                         <p className="text-[10px] md:text-xs text-gray-500 font-medium tracking-widest uppercase">

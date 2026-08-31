@@ -36,7 +36,10 @@ export const YearSlider: React.FC = () => {
                         <p className="text-[10px] text-gray-500 uppercase tracking-widest font-semibold">
                             Peak Height
                         </p>
-                        <p className="text-[10px] text-gray-500 leading-snug break-words">{modeHint}</p>
+                        {/* The explainer sentence is what pushed this card tall enough to
+                            crowd the terrain on a phone; the Growth/Workers toggle alone
+                            is self-explanatory day-to-day, so only desktop keeps the hint. */}
+                        <p className="hidden md:block text-[10px] text-gray-500 leading-snug break-words">{modeHint}</p>
                     </div>
                     <div
                         role="radiogroup"
@@ -48,7 +51,7 @@ export const YearSlider: React.FC = () => {
                             role="radio"
                             aria-checked={heightMode === 'growth'}
                             onClick={() => setHeightMode('growth')}
-                            className={`px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider rounded-md transition-colors ${
+                            className={`px-2.5 py-1 max-md:min-h-[44px] max-md:px-3 text-[10px] font-semibold uppercase tracking-wider rounded-md transition-colors ${
                                 heightMode === 'growth'
                                     ? 'bg-cyan-500/20 text-cyan-200'
                                     : 'text-gray-400 hover:text-white'
@@ -61,7 +64,7 @@ export const YearSlider: React.FC = () => {
                             role="radio"
                             aria-checked={heightMode === 'employment'}
                             onClick={() => setHeightMode('employment')}
-                            className={`px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wider rounded-md transition-colors ${
+                            className={`px-2.5 py-1 max-md:min-h-[44px] max-md:px-3 text-[10px] font-semibold uppercase tracking-wider rounded-md transition-colors ${
                                 heightMode === 'employment'
                                     ? 'bg-cyan-500/20 text-cyan-200'
                                     : 'text-gray-400 hover:text-white'
