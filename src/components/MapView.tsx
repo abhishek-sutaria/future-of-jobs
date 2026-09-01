@@ -111,8 +111,12 @@ export const MapView: React.FC = () => {
                 </div>
             )}
 
-            {/* Legend */}
-            <div className="absolute bottom-6 left-6 z-10 flex flex-col gap-2">
+            {/* Legend. Hidden below md, matching Legend.tsx's own precedent for
+                the 3D view: at 390px there's no room left in the bottom band
+                once the Sources/Methodology button (visible in every view,
+                UI.tsx) is accounted for, and colour/circle size are already
+                explained in the Methodology modal that button opens. */}
+            <div className="hidden md:flex absolute bottom-6 left-6 z-10 flex-col gap-2">
                 <p className="text-[10px] text-gray-500 uppercase tracking-widest font-semibold">Employment volume</p>
                 <div className="flex items-center gap-2">
                     <div className="w-28 h-2.5 rounded-full" style={{ background: 'linear-gradient(to right, #1e293b, #0e7490)' }} />
@@ -123,8 +127,10 @@ export const MapView: React.FC = () => {
                 </p>
             </div>
 
-            {/* Source attribution */}
-            <div className="absolute bottom-6 right-6 z-10 text-[10px] text-gray-600 font-mono">
+            {/* Source attribution — decorative, and redundant with the
+                interactive Sources button (UI.tsx) which the legend above
+                also defers to; hidden on mobile for the same reason. */}
+            <div className="hidden md:block absolute bottom-6 right-6 z-10 text-[10px] text-gray-600 font-mono">
                 BLS OEWS May 2025 · Aggregated by SOC code
             </div>
 
