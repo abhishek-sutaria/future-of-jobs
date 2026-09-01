@@ -3,6 +3,7 @@ import { ComposableMap, Geographies, Geography, Marker, ZoomableGroup } from 're
 import { scaleLinear } from 'd3-scale';
 import { useStore } from '../store';
 import { aggregateByState } from '../utils/mapAggregation';
+import { MAP_SIDEBAR } from '../config/constants';
 
 // Low-res US state boundaries from the public us-atlas CDN
 const GEO_URL = 'https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json';
@@ -115,8 +116,15 @@ export const MapView: React.FC = () => {
                 the 3D view: at 390px there's no room left in the bottom band
                 once the Sources/Methodology button (visible in every view,
                 UI.tsx) is accounted for, and colour/circle size are already
-                explained in the Methodology modal that button opens. */}
-            <div className="hidden md:flex absolute bottom-6 left-6 z-10 flex-col gap-2">
+                explained in the Methodology modal that button opens.
+                Offset by MAP_SIDEBAR.CLEARANCE_PX so RoleSelector's desktop
+                sidebar (only ever rendered at the same md+ widths this is
+                visible at) doesn't cover it — confirmed live it always has,
+                on every desktop width, until now. */}
+            <div
+                className="hidden md:flex absolute bottom-6 z-10 flex-col gap-2"
+                style={{ left: MAP_SIDEBAR.CLEARANCE_PX }}
+            >
                 <p className="text-[10px] text-gray-500 uppercase tracking-widest font-semibold">Employment volume</p>
                 <div className="flex items-center gap-2">
                     <div className="w-28 h-2.5 rounded-full" style={{ background: 'linear-gradient(to right, #1e293b, #0e7490)' }} />
