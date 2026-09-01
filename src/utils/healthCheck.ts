@@ -2,7 +2,7 @@
  * healthCheck.ts
  * --------------
  * Four high-level checks, each covering one clear category:
- *   1. AI         — is AI set up AND responding?
+ *   1. AI         — is the AI service responding?
  *   2. Live Data  — is the live government data feed reachable?
  *   3. App Data   — did the app's built-in data load?
  *   4. Browser    — does the browser support what the app needs?
@@ -38,23 +38,22 @@ const AI_MODE_KEY = 'foj_ai_mode';
 const AI_USER_KEY = 'foj_user_claude_key';
 
 // ── 1. AI ───────────────────────────────────────────────────────────────────
-//    Combines: is AI configured + is the AI service responding.
+//    Pings the proxy and reports what came back. There is no separate
+//    "is it configured?" state any more — see the note in checkAI.
 
 async function checkAI(): Promise<CheckOutcome> {
     const mode = localStorage.getItem(AI_MODE_KEY);
     const userKey = (localStorage.getItem(AI_USER_KEY) || '').trim();
-    const isConfigured = (mode === 'user' && !!userKey) || mode === 'default';
+    const hasUserKey = mode === 'user' && !!userKey;
 
-    if (!isConfigured) {
-        return {
-            status: 'warn',
-            message: 'AI features have not been turned on yet.',
-            detail: 'Click the "Claude API" button at the top of the page to set up AI.',
-        };
-    }
-
+    // Deliberately no "is it configured?" pre-check. Nobody configures a key
+    // any more — api/claude.ts falls back to the server's ANTHROPIC_API_KEY,
+    // so the only honest test is to actually call it and report what came
+    // back. Inferring "configured" from localStorage used to report "AI has
+    // not been turned on yet" to every first-time visitor, whose localStorage
+    // is empty, while AI was in fact working fine.
     const headers: Record<string, string> = { 'Content-Type': 'application/json' };
-    if (mode === 'user' && userKey) {
+    if (hasUserKey) {
         headers['x-user-api-key'] = userKey;
         headers['x-foj-key-source'] = 'user';
     }
@@ -71,14 +70,24 @@ async function checkAI(): Promise<CheckOutcome> {
         });
 
         if (response.ok) {
-            return { status: 'pass', message: 'AI features are set up and responding.' };
+            return { status: 'pass', message: 'AI features are working.' };
         }
         if (response.status === 401) {
-            return {
-                status: 'fail',
-                message: 'The AI key is missing or no longer valid.',
-                detail: 'Click the "Claude API" button at the top of the page to fix it.',
-            };
+            // Only re-score asks for a key, so a bad key is only the user's
+            // problem to fix if they actually saved one there. Otherwise the
+            // server's own key is missing or expired, which no student can
+            // fix from the page — say so rather than sending them hunting.
+            return hasUserKey
+                ? {
+                    status: 'fail',
+                    message: 'The Claude API key you saved is no longer valid.',
+                    detail: 'Re-enter it from the "Re-score all roles" dialog, or clear it to fall back to the app’s built-in key.',
+                }
+                : {
+                    status: 'fail',
+                    message: 'The app’s built-in AI key is missing or expired.',
+                    detail: 'This is a server-side setting, not something you can fix here — please report it.',
+                };
         }
         if (response.status === 429) {
             return {
@@ -89,13 +98,13 @@ async function checkAI(): Promise<CheckOutcome> {
         }
         return {
             status: 'fail',
-            message: 'AI is set up but did not respond properly.',
+            message: 'AI did not respond properly.',
             detail: 'Refresh the page and try again.',
         };
     } catch {
         return {
             status: 'fail',
-            message: 'AI is set up, but we could not reach it.',
+            message: 'We could not reach the AI service.',
             detail: 'Your internet may be off, or the AI service may be temporarily down.',
         };
     }
