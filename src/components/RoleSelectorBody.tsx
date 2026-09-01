@@ -32,6 +32,7 @@ export default function RoleSelectorBody({ scroll = true }: RoleSelectorBodyProp
                 <input
                     type="text"
                     placeholder="Search roles..."
+                    aria-label="Search roles"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="w-full px-4 py-2 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500"
@@ -54,10 +55,17 @@ export default function RoleSelectorBody({ scroll = true }: RoleSelectorBodyProp
                 </button>
             </div>
 
-            {/* Selected Count */}
+            {/* Selected Count. Zero selected does not mean nothing is shown —
+                MapView.tsx renders every role when the set is empty — so the
+                zero-state copy says that explicitly rather than reading like
+                the map is blank. */}
             <div className="px-4 py-2 bg-gray-800/50">
                 <p className="text-gray-400 text-xs">
-                    <span className="text-blue-400 font-bold">{selectedRoleIds.size}</span> of {jobs.length} roles selected
+                    {selectedRoleIds.size === 0 ? (
+                        <>Showing <span className="text-blue-400 font-bold">all {jobs.length}</span> roles</>
+                    ) : (
+                        <><span className="text-blue-400 font-bold">{selectedRoleIds.size}</span> of {jobs.length} roles selected</>
+                    )}
                 </p>
             </div>
         </>
@@ -85,10 +93,14 @@ export default function RoleSelectorBody({ scroll = true }: RoleSelectorBodyProp
                     const roleColor = ROLE_COLORS[index % ROLE_COLORS.length];
 
                     return (
-                        <div
+                        <button
                             key={job.id}
+                            type="button"
+                            role="checkbox"
+                            aria-checked={isSelected}
                             onClick={() => toggleRoleOnMap(job.id)}
                             className={`
+                                w-full block text-left
                                 p-3 rounded-lg border transition-all cursor-pointer
                                 ${isSelected
                                     ? 'bg-blue-500/10 border-blue-500/50 shadow-lg shadow-blue-500/20'
@@ -97,8 +109,10 @@ export default function RoleSelectorBody({ scroll = true }: RoleSelectorBodyProp
                             `}
                         >
                             <div className="flex items-center gap-3">
-                                {/* Checkbox */}
-                                <div className={`
+                                {/* Checkbox — decorative once the button carries
+                                    role="checkbox"/aria-checked; without aria-hidden
+                                    a screen reader would announce the state twice. */}
+                                <div aria-hidden="true" className={`
                                     w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0
                                     ${isSelected ? 'bg-blue-500 border-blue-500' : 'border-gray-600'}
                                 `}>
@@ -111,6 +125,7 @@ export default function RoleSelectorBody({ scroll = true }: RoleSelectorBodyProp
 
                                 {/* Color indicator */}
                                 <div
+                                    aria-hidden="true"
                                     className="w-3 h-3 rounded-full flex-shrink-0"
                                     style={{ backgroundColor: roleColor }}
                                 />
@@ -123,7 +138,7 @@ export default function RoleSelectorBody({ scroll = true }: RoleSelectorBodyProp
 
                                 </div>
                             </div>
-                        </div>
+                        </button>
                     );
                 })}
             </div>
