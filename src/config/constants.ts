@@ -304,6 +304,18 @@ export const MAP_VIEW = {
     MARKER_SCALE_MULTIPLIER: 4,
 } as const;
 
+/**
+ * RoleSelector (src/components/RoleSelector.tsx) is a fixed w-80 sidebar
+ * only ever rendered on desktop (mobile uses RoleFilterButton/Sheet
+ * instead — see UI.tsx). Anything else that must sit clear of it in 2D map
+ * view on desktop offsets by CLEARANCE_PX. Keep WIDTH_PX in sync with
+ * RoleSelector's root w-80 class if that ever changes.
+ */
+export const MAP_SIDEBAR = {
+    WIDTH_PX: 320,
+    CLEARANCE_PX: 336,
+} as const;
+
 // ── Job Icon Keyword Mappings ─────────────────────────────────────
 export const JOB_ICON_KEYWORDS: [string[], string][] = [
     [['Nurse', 'Health', 'Doctor'], '⚕️'],

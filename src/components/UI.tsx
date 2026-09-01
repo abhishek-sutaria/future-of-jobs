@@ -7,7 +7,7 @@ import { StartupIdeasModal } from './StartupIdeasModal';
 import { MethodologyModal } from './MethodologyModal';
 import { StudentGuideModal } from './Modals/StudentGuideModal';
 import { HealthCheckModal } from './Modals/HealthCheckModal';
-import { BLS_API } from '../config/constants';
+import { BLS_API, MAP_SIDEBAR } from '../config/constants';
 import RoleSelector from './RoleSelector';
 import { RoleFilterButton } from './RoleFilterButton';
 import { RoleFilterSheet } from './RoleFilterSheet';
@@ -223,7 +223,18 @@ export const UI: React.FC<UIProps> = ({ dashboardOpen }) => {
                 they are hidden there rather than floating inertly above it. */}
             {mapView !== 'map' && <YearSlider />}
 
-            <div className="absolute bottom-4 left-4 md:left-8 pointer-events-auto" style={{ zIndex: Z.base }}>
+            {/* left-4/md:left-8 covers the 3D view; in 2D map view on desktop
+                this sat directly under RoleSelector's sidebar and was never
+                clickable there — confirmed live via elementFromPoint, and
+                it's this button's own tour-methodology target, so the
+                guided tour's final step also spotlit nothing reachable. */}
+            <div
+                className="absolute bottom-4 left-4 md:left-8 pointer-events-auto"
+                style={{
+                    zIndex: Z.base,
+                    ...(mapView === 'map' && !isMobile ? { left: MAP_SIDEBAR.CLEARANCE_PX } : {}),
+                }}
+            >
                 <button
                     data-tour="tour-methodology"
                     onClick={() => setShowMethodologyModal(true)}
