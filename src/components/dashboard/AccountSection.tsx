@@ -132,10 +132,15 @@ export const AccountSection: React.FC = () => {
                             </button>
                         </div>
                     )}
+                    {/* Deliberately conditional: almost nobody has a key now
+                        that only re-score asks for one, and asserting "your
+                        Claude API key" to a student who never entered one
+                        re-raises exactly the "do I need to buy an API key?"
+                        worry this app just removed. */}
                     <p className="mt-2 text-[11px] text-gray-500">
-                        Your Claude API key is stored separately in this browser and is never part of
-                        your account. Résumé text is never uploaded or stored — only the reports you
-                        explicitly save.
+                        If you’ve entered a Claude API key for re-scoring, it stays in this browser
+                        only and is never part of your account. Résumé text is never uploaded or
+                        stored — only the reports you explicitly save.
                     </p>
                 </div>
             )}
