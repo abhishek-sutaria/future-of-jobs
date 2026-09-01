@@ -25,7 +25,7 @@ export default function RoleSelectorBody({ scroll = true }: RoleSelectorBodyProp
 
     const ROLE_COLORS = FALLBACK_COLORS;
 
-    return (
+    const searchAndActions = (
         <>
             {/* Search */}
             <div className="p-4 border-b border-gray-700/50">
@@ -60,6 +60,23 @@ export default function RoleSelectorBody({ scroll = true }: RoleSelectorBodyProp
                     <span className="text-blue-400 font-bold">{selectedRoleIds.size}</span> of {jobs.length} roles selected
                 </p>
             </div>
+        </>
+    );
+
+    return (
+        <>
+            {scroll ? (
+                searchAndActions
+            ) : (
+                // The mobile sheet has exactly one scroll container (ui/Modal's
+                // own), and search/actions/count would otherwise scroll away
+                // with the 50 role rows — confirmed live before adding this.
+                // Desktop never takes this branch, so its markup here is
+                // untouched from what PR #31 already verified byte-identical.
+                <div className="sticky top-0 z-10 bg-gray-900">
+                    {searchAndActions}
+                </div>
+            )}
 
             {/* Role List */}
             <div className={`${scroll ? 'flex-1 overflow-y-auto' : ''} p-4 space-y-2`}>

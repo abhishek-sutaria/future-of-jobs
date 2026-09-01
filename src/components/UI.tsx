@@ -9,6 +9,9 @@ import { StudentGuideModal } from './Modals/StudentGuideModal';
 import { HealthCheckModal } from './Modals/HealthCheckModal';
 import { BLS_API } from '../config/constants';
 import RoleSelector from './RoleSelector';
+import { RoleFilterButton } from './RoleFilterButton';
+import { RoleFilterSheet } from './RoleFilterSheet';
+import { useIsMobile } from '../hooks/useIsMobile';
 import { analyzeJob, getClaudeUserFriendlyMessage, type JobAnalysis } from '../utils/analysis';
 import { Legend } from './Legend';
 import { Header } from './Header';
@@ -39,6 +42,16 @@ export const UI: React.FC<UIProps> = ({ dashboardOpen }) => {
     const [showStudentGuide, setShowStudentGuide] = useState(false);
     const [showHealthCheck, setShowHealthCheck] = useState(false);
     const [tourActive, setTourActive] = useState(false);
+    const [roleFilterOpen, setRoleFilterOpen] = useState(false);
+    const isMobile = useIsMobile();
+
+    // Rotating back to mobile with the sheet open should not leave it primed
+    // to silently reopen if the user rotates away and back; rotating INTO
+    // mobile mid-session and out again should not carry stale open state
+    // either, since the desktop sidebar takes over immediately in that case.
+    React.useEffect(() => {
+        setRoleFilterOpen(false);
+    }, [isMobile]);
 
     // The tour's spotlight targets data-tour selectors on chrome that is
     // covered (and inert) while the dashboard is open — its getBoundingClientRect
@@ -178,9 +191,16 @@ export const UI: React.FC<UIProps> = ({ dashboardOpen }) => {
             />
 
             {mapView === 'map' && (
-                <div className="absolute left-0 top-0 bottom-0" style={{ zIndex: Z.sidebar }}>
-                    <RoleSelector />
-                </div>
+                isMobile ? (
+                    <>
+                        <RoleFilterButton onClick={() => setRoleFilterOpen(true)} />
+                        <RoleFilterSheet isOpen={roleFilterOpen} onClose={() => setRoleFilterOpen(false)} />
+                    </>
+                ) : (
+                    <div className="absolute left-0 top-0 bottom-0" style={{ zIndex: Z.sidebar }}>
+                        <RoleSelector />
+                    </div>
+                )
             )}
 
             {selectedJob && (
