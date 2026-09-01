@@ -104,8 +104,17 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
                 </div>
             </div>
 
-            <div className="flex flex-col items-end gap-2 pointer-events-auto w-full md:w-auto">
-                <div className="flex items-center gap-1.5 sm:gap-2 flex-nowrap justify-end shrink-0">
+            <div className="flex flex-col items-end gap-2 pointer-events-auto w-full md:w-auto max-[1149px]:min-w-0">
+                {/* Below 1150px this row wraps instead of spilling off the right
+                    edge. Every button is shrink-0 and the row was flex-nowrap, so
+                    on iPad portrait (768px) 7 of them were unreachable in map
+                    view — the title reserves 336px there for the sidebar — and 2
+                    were still cut off at 1024px. Measured: clipping starts below
+                    1150px, so the wrap (and the min-w-0 that lets it actually
+                    engage rather than just overflow) is capped there. At 1150px
+                    and up nothing changes; verified header heights are identical
+                    to before at 1150/1280/1440 in both views. */}
+                <div className="flex items-center gap-1.5 sm:gap-2 flex-nowrap max-[1149px]:flex-wrap justify-end shrink-0 max-[1149px]:shrink max-[1149px]:min-w-0">
                     <button
                         data-tour="tour-skills"
                         onClick={onOpenSkillsModal}
@@ -121,13 +130,20 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
                     >
                         <IconRocket size={14} /> Startup Ideas
                     </button>
+                    {/* Labels collapse to icon-only below 380px. This row is
+                        flex-nowrap + justify-end, so on a 320px phone (iPhone
+                        SE, Galaxy S9+) the extra text pushed this button 42px
+                        off the left edge — clipped, though still tappable at
+                        its centre, which is why a hit-test alone didn't catch
+                        it. title= keeps the meaning available. */}
                     <button
                         data-tour="tour-toggle"
                         onClick={() => setMapView(mapView === 'map' ? 'globe' : 'map')}
+                        title={mapView === 'map' ? 'Switch to the 3D view' : 'Switch to the 2D US map'}
                         className="shrink-0 flex items-center gap-2 px-3 py-2.5 rounded-lg border border-blue-500/20 bg-blue-500/[0.06] hover:bg-blue-500/15 text-blue-400 text-xs font-semibold uppercase tracking-wider transition-colors min-h-[44px]"
                     >
                         {mapView === 'map' ? <IconGlobe size={14} /> : <IconMap size={14} />}
-                        {mapView === 'map' ? 'Globe' : 'Map'}
+                        <span className="max-[379px]:hidden">{mapView === 'map' ? 'Globe' : 'Map'}</span>
                     </button>
 
                     <button
@@ -143,7 +159,8 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
                         title="Health Check — verify all app systems are working"
                         className="shrink-0 flex items-center gap-2 px-3 py-2.5 rounded-lg border border-emerald-500/25 bg-emerald-500/[0.06] hover:bg-emerald-500/15 text-emerald-400 text-xs font-semibold uppercase tracking-wider transition-colors min-h-[44px]"
                     >
-                        <IconActivity size={14} /> Health
+                        <IconActivity size={14} />
+                        <span className="max-[379px]:hidden">Health</span>
                     </button>
 
                     <button
