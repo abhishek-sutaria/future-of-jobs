@@ -104,17 +104,29 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
                 </div>
             </div>
 
-            <div className="flex flex-col items-end gap-2 pointer-events-auto w-full md:w-auto max-[1149px]:min-w-0">
-                {/* Below 1150px this row wraps instead of spilling off the right
+            <div className="flex flex-col items-end gap-2 pointer-events-auto w-full md:w-auto max-[1365px]:min-w-0">
+                {/* Below 1366px this row wraps instead of spilling off the right
                     edge. Every button is shrink-0 and the row was flex-nowrap, so
                     on iPad portrait (768px) 7 of them were unreachable in map
                     view — the title reserves 336px there for the sidebar — and 2
-                    were still cut off at 1024px. Measured: clipping starts below
-                    1150px, so the wrap (and the min-w-0 that lets it actually
-                    engage rather than just overflow) is capped there. At 1150px
-                    and up nothing changes; verified header heights are identical
-                    to before at 1150/1280/1440 in both views. */}
-                <div className="flex items-center gap-1.5 sm:gap-2 flex-nowrap max-[1149px]:flex-wrap justify-end shrink-0 max-[1149px]:shrink max-[1149px]:min-w-0">
+                    were still cut off at 1024px.
+
+                    This threshold was originally measured and shipped at 1150px.
+                    That measurement was wrong: the button that decides the real
+                    boundary — Saved/Account (useUserStore, authStatus-dependent)
+                    — resolves asynchronously, and a fast pass caught it before it
+                    settled, missing real clipping from 1149px through 1220px.
+                    Re-measured properly (explicitly waited for that button to
+                    render) and it's *still* not fully stable — 1250px clipped in
+                    one run and not another, same code, same width. That's the
+                    actual finding: this row's safe width isn't a fixed number,
+                    it moves with whatever the account button happens to render.
+                    Rather than chase the exact edge again, this is set well past
+                    every clipping width observed (1220px), comfortably under the
+                    common 1366px laptop resolution — margin instead of precision.
+                    If this box's content changes again, re-verify empirically;
+                    don't trust a single quick pass at any one width. */}
+                <div className="flex items-center gap-1.5 sm:gap-2 flex-nowrap max-[1365px]:flex-wrap justify-end shrink-0 max-[1365px]:shrink max-[1365px]:min-w-0">
                     <button
                         data-tour="tour-skills"
                         onClick={onOpenSkillsModal}
