@@ -114,6 +114,20 @@ export const SCENE = {
     MAX_CAMERA_DISTANCE: 100,
     MAX_POLAR_ANGLE: Math.PI / 2.2,
     PLANE_SIZE: 70,
+    /** OrbitControls' pan target has no built-in bound — a real two-finger
+     * touch gesture (pinch + drag combined, since touches use TOUCH.DOLLY_PAN)
+     * easily imparts an unintended pan alongside the intended zoom. With
+     * nothing stopping it, the target can end up anywhere, and since the
+     * terrain is a *finite* PLANE_SIZE=70 plane (not infinite), a large
+     * enough pan pushes it entirely out of frame — reported directly:
+     * "zoomed out, the entire landscape disappeared." Confirmed by moving
+     * the target 80 units from origin: the terrain fully vanishes, while
+     * floating job labels (drei's Html, not frustum-culled) can still
+     * render somewhere on screen, exactly matching "I can just see four
+     * labels". Peaks sit at radius 7-30 from origin (terrain.ts), so
+     * clamping the target inside that keeps at least the nearer peaks
+     * framed no matter how a gesture drifts. */
+    MAX_PAN_RADIUS: 25,
     /** Camera distance thresholds for Level-of-Detail */
     LOD: {
         FAR: 80,
