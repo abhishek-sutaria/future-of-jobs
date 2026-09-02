@@ -289,6 +289,19 @@ export const ANIMATIONS = {
      * fully rendered labels overlap into an unreadable mass on a phone
      * screen. Every role stays reachable via search regardless. */
     MOBILE_LABEL_COUNT: 5,
+    /** Camera looks straight down +z at the origin (Landscape.tsx), with no
+     * x-tilt, so a peak's terrain x maps directly to screen-horizontal —
+     * |x| near 0 sits near the centre, large |x| sits near the left/right
+     * edge. Mobile's portrait aspect gives a much narrower horizontal FOV
+     * than desktop's landscape one (confirmed: roughly 27° vs 67° at this
+     * camera's fixed distance/FOV), so before this threshold existed,
+     * picking mobile's 5 labels by employment alone regularly chose peaks
+     * that were off past the edge of a phone screen by default — verified
+     * live, only 1 of 5 was ever fully on-screen. Peaks span roughly
+     * x=[-22, 22] across the 50 roles; this keeps the mobile candidate pool
+     * to the centre third-ish, which for the current layout leaves dozens
+     * of candidates to pick the top 5 employers from. */
+    MOBILE_LABEL_CENTER_X: 10,
     /** Automation cost index above which a "saved" job is flagged */
     SAVED_AUTOMATION_THRESHOLD: 0.7,
     /** Emissive intensity for highlighted (saved) mesh state */
