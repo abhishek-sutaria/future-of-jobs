@@ -87,15 +87,37 @@ export const JobMarkers: React.FC = () => {
     // Mobile only: which roles get a floating text label by default (top N by
     // employment). Every role still gets its anchor ring/dot on the terrain
     // and is reachable via search — this only thins the overlapping text.
+    //
+    // Employment rank alone isn't enough: a peak's terrain x-position is
+    // unrelated to its employment, and mobile's narrow default FOV crops most
+    // of the terrain's horizontal spread — confirmed live, picking the raw
+    // top 5 by employment left 4 of them clipped at the screen edges,
+    // sometimes entirely off-screen. Prefer candidates near screen-centre
+    // (small |x|); only fall back to off-centre ones if the centred pool runs
+    // short, so the count shown never drops below MOBILE_LABEL_COUNT.
     const mobileLabelIds = useMemo(() => {
         if (!isMobile) return null;
-        return new Set(
-            [...filteredJobs]
-                .sort((a, b) => b.employment - a.employment)
-                .slice(0, ANIMATIONS.MOBILE_LABEL_COUNT)
-                .map(j => j.id)
-        );
-    }, [isMobile, filteredJobs]);
+        const withPos = filteredJobs.map(job => {
+            const i = jobs.findIndex(j => j.id === job.id);
+            const { x } = getTerrainPosition(i, jobs);
+            return { job, x };
+        });
+        const centered = withPos
+            .filter(({ x }) => Math.abs(x) <= ANIMATIONS.MOBILE_LABEL_CENTER_X)
+            .sort((a, b) => b.job.employment - a.job.employment)
+            .slice(0, ANIMATIONS.MOBILE_LABEL_COUNT);
+        const chosen = new Set(centered.map(({ job }) => job.id));
+        if (chosen.size < ANIMATIONS.MOBILE_LABEL_COUNT) {
+            const remainder = withPos
+                .filter(({ job }) => !chosen.has(job.id))
+                .sort((a, b) => b.job.employment - a.job.employment);
+            for (const { job } of remainder) {
+                if (chosen.size >= ANIMATIONS.MOBILE_LABEL_COUNT) break;
+                chosen.add(job.id);
+            }
+        }
+        return chosen;
+    }, [isMobile, filteredJobs, jobs]);
 
     const forecastsFlat = useMemo(
         () => buildGrowthForecastFlatArray(filteredJobs),
