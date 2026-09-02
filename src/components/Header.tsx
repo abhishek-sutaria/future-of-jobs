@@ -28,6 +28,8 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
     const scoresGeneratedAt = useStore((state) => state.scoresGeneratedAt);
     const openRescoreModal = useStore((state) => state.openRescoreModal);
     const navigate = useStore((state) => state.navigate);
+    const isDefaultView = useStore((state) => state.isDefaultView);
+    const triggerResetView = useStore((state) => state.triggerResetView);
 
     // Account state. Deliberately read from the separate user store — identity
     // is not part of the visualisation store and must stay decoupled from the
@@ -157,6 +159,25 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
                         {mapView === 'map' ? <IconGlobe size={14} /> : <IconMap size={14} />}
                         <span className="max-[379px]:hidden">{mapView === 'map' ? 'Globe' : 'Map'}</span>
                     </button>
+
+                    {/* Mirrors MapView's own "Reset view" (same conditional-only-
+                        when-not-default pattern, same plain-text style). The 3D
+                        view has no bottom-line "am I at the default framing"
+                        signal the way the 2D map's `zoom === 1` does, so
+                        Landscape.tsx derives isDefaultView from pan-target
+                        distance and reports it here via the store — reported
+                        directly: a two-finger touch gesture panned the camera
+                        far enough to lose the terrain entirely with no way back
+                        short of reloading the page. */}
+                    {mapView !== 'map' && !isDefaultView && (
+                        <button
+                            onClick={triggerResetView}
+                            title="Return the 3D view to its starting position"
+                            className="shrink-0 px-3 py-2.5 rounded-lg border border-white/[0.08] bg-white/[0.03] hover:bg-white/[0.08] text-gray-300 hover:text-white text-xs font-semibold uppercase tracking-wider transition-colors min-h-[44px]"
+                        >
+                            Reset view
+                        </button>
+                    )}
 
                     <button
                         onClick={onStartTour}

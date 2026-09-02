@@ -205,6 +205,20 @@ interface AppState {
     setIsOrbiting: (orbiting: boolean) => void;
 
     /**
+     * Whether the 3D camera is at (or very close to) its initial framing.
+     * Landscape.tsx owns the actual OrbitControls instance (a ref, not
+     * store-friendly state) and updates this on every camera change; a
+     * header "Reset view" button (mirroring MapView's existing one) reads
+     * it to decide whether to show itself, and calls triggerResetView() —
+     * incrementing a counter Landscape.tsx watches — rather than reaching
+     * into Three.js internals from outside the component that owns them.
+     */
+    isDefaultView: boolean;
+    setIsDefaultView: (isDefault: boolean) => void;
+    resetViewRequestId: number;
+    triggerResetView: () => void;
+
+    /**
      * Which full-page view is showing. 'map' is the default 3D/2D visualization
      * experience (unchanged); 'dashboard' is the full-page user-activity view.
      * Backed by the History API so /dashboard is a real, bookmarkable,
@@ -417,6 +431,11 @@ export const useStore = create<AppState>((set, get) => ({
 
     isOrbiting: false,
     setIsOrbiting: (orbiting) => set({ isOrbiting: orbiting }),
+
+    isDefaultView: true,
+    setIsDefaultView: (isDefault) => set({ isDefaultView: isDefault }),
+    resetViewRequestId: 0,
+    triggerResetView: () => set((state) => ({ resetViewRequestId: state.resetViewRequestId + 1 })),
 
     route: typeof window !== 'undefined' ? routeFromPathname(window.location.pathname) : 'map',
 
