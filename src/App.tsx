@@ -5,27 +5,9 @@ import { MapView } from './components/MapView';
 import { DashboardPage } from './components/dashboard/DashboardPage';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { RescoreConfirmModal } from './components/RescoreConfirmModal';
+import { WebGLFallback } from './components/WebGLFallback';
 import { useStore } from './store';
 import { useUserStore, reapplyUpskillCompletions } from './userStore';
-
-function WebGLFallback() {
-  return (
-    <div className="absolute inset-0 flex items-center justify-center bg-gray-900">
-      <div className="text-center max-w-md p-8">
-        <h2 className="text-xl font-bold text-white mb-2">3D View Unavailable</h2>
-        <p className="text-gray-400 text-sm mb-4">
-          Your browser doesn't support WebGL or the 3D renderer encountered an error. You can still use the 2D map view.
-        </p>
-        <button
-          onClick={() => useStore.getState().setMapView('map')}
-          className="px-6 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-medium text-sm transition-colors"
-        >
-          Switch to Map View
-        </button>
-      </div>
-    </div>
-  );
-}
 
 /**
  * Feature-detect WebGL before mounting the 3D canvas.
