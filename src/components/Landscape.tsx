@@ -1,10 +1,11 @@
-import React, { useRef, useCallback, useEffect } from 'react';
-import { Canvas } from '@react-three/fiber';
+import React, { useRef, useCallback, useEffect, useState } from 'react';
+import { Canvas, type RootState } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import { MOUSE, TOUCH } from 'three';
 import { Terrain } from './Terrain';
 import { JobMarkers } from './JobMarkers';
+import { WebGLFallback } from './WebGLFallback';
 import { SCENE } from '../config/constants';
 import { useStore } from '../store';
 
@@ -14,6 +15,20 @@ import { useStore } from '../store';
  * that alone decides whether "Reset view" offers itself. */
 const DEFAULT_VIEW_EPSILON = 0.5;
 
+/** How many times to silently remount the canvas on WebGL context loss
+ * before giving up and showing WebGLFallback instead. Reported directly, on
+ * a real iPhone: terrain gone, camera target confirmed still at origin (no
+ * "Reset view" — ruling out the pan bug above), reproducible neither by pure
+ * zoom nor by a grazing-angle+zoom combination in headless testing. iOS
+ * WebKit reclaims WebGL contexts under memory pressure more aggressively
+ * than desktop Chromium, which this app never listened for at all — a lost
+ * context leaves the canvas blank while every DOM element (labels, header,
+ * UI) keeps rendering normally, which is exactly what was reported. A bound
+ * here isn't optional: without one, a device that keeps losing context
+ * (e.g. a deeper memory problem) would remount in a tight, battery-draining
+ * loop forever instead of ever settling on the fallback. */
+const MAX_CONTEXT_LOSS_RETRIES = 2;
+
 export const Landscape: React.FC = () => {
     const setIsOrbiting = useStore((s) => s.setIsOrbiting);
     const route = useStore((s) => s.route);
@@ -21,6 +36,37 @@ export const Landscape: React.FC = () => {
     const resetViewRequestId = useStore((s) => s.resetViewRequestId);
     const controlsRef = useRef<OrbitControlsImpl>(null);
     const isDefaultViewRef = useRef(true);
+    const [canvasKey, setCanvasKey] = useState(0);
+    const [contextLossGivenUp, setContextLossGivenUp] = useState(false);
+    const contextLossCountRef = useRef(0);
+
+    const handleContextLost = useCallback((event: Event) => {
+        // Without this, the browser assumes the page doesn't want to recover
+        // and may never fire 'webglcontextrestored' at all.
+        event.preventDefault();
+        contextLossCountRef.current += 1;
+        console.warn(`[Landscape] WebGL context lost (attempt ${contextLossCountRef.current}/${MAX_CONTEXT_LOSS_RETRIES}).`);
+        if (contextLossCountRef.current > MAX_CONTEXT_LOSS_RETRIES) {
+            setContextLossGivenUp(true);
+            return;
+        }
+        // Remounting (not attempting in-place restoration) is deliberate:
+        // three.js/R3F have no official "rebuild every buffer, texture and
+        // compiled shader program" API, so a fresh Canvas is the only fully
+        // reliable recovery. Camera position resets to the initial framing
+        // as a result — acceptable, since the alternative is a permanently
+        // blank 3D view. The fresh OrbitControls instance starts at that
+        // default framing too, so the "Reset view" button's own state needs
+        // to follow — otherwise it would keep offering to reset a view
+        // that's already back at default.
+        isDefaultViewRef.current = true;
+        setIsDefaultView(true);
+        setCanvasKey((k) => k + 1);
+    }, [setIsDefaultView]);
+
+    const handleCreated = useCallback((state: RootState) => {
+        state.gl.domElement.addEventListener('webglcontextlost', handleContextLost);
+    }, [handleContextLost]);
 
     // Pan has no built-in bound, and a two-finger touch gesture easily imparts
     // an unintended pan alongside the intended zoom (TOUCH.DOLLY_PAN handles
@@ -73,8 +119,19 @@ export const Landscape: React.FC = () => {
         setIsDefaultView(true);
     }, [resetViewRequestId, setIsDefaultView]);
 
+    // Safe to bail out here (and only here): every hook above has already run
+    // unconditionally on this render, so this doesn't change hook order/count
+    // between renders the way an earlier return would.
+    if (contextLossGivenUp) {
+        return <WebGLFallback />;
+    }
+
     return (
         <Canvas
+            // key: forces a full remount (fresh GL context, shaders, buffers)
+            // on WebGL context loss — see MAX_CONTEXT_LOSS_RETRIES above.
+            key={canvasKey}
+            onCreated={handleCreated}
             // Halts the render loop while the dashboard covers the screen — an
             // opaque DOM overlay does NOT stop requestAnimationFrame (browsers
             // only throttle rAF for hidden tabs, not occluded canvases), and
