@@ -4,7 +4,7 @@ import { Modal } from './ui/Modal';
 import { IconAward, IconArrowRight, IconInfo, IconBook } from './ui/Icons';
 import { Skeleton, SkeletonText } from './ui/Skeleton';
 import { UPSKILL_IMPACT } from '../config/GameMechanics';
-import type { UpskillCoursesResult } from '../utils/analysis';
+import type { UpskillCoursesResult, UpskillMode } from '../utils/analysis';
 import { useUserStore } from '../userStore';
 import { toast } from './ui/Toast';
 
@@ -13,9 +13,13 @@ interface UpskillModalProps {
     onClose: () => void;
     jobId: string;
     taskName: string;
+    /** Which column launched this — decides the strategy, and the prompt. */
+    mode: UpskillMode;
+    /** This task's automation exposure, 0-100. Sent to the model as fact. */
+    aiRiskPercent: number;
 }
 
-export const UpskillModal: React.FC<UpskillModalProps> = ({ isOpen, onClose, jobId, taskName }) => {
+export const UpskillModal: React.FC<UpskillModalProps> = ({ isOpen, onClose, jobId, taskName, mode, aiRiskPercent }) => {
     const upskillTask = useStore((state) => state.upskillTask);
     const job = useStore((state) => state.jobs.find(j => j.id === jobId));
     const recordUpskillCompletion = useUserStore((state) => state.recordUpskillCompletion);
@@ -30,7 +34,7 @@ export const UpskillModal: React.FC<UpskillModalProps> = ({ isOpen, onClose, job
         setCourses(null);
 
         import('../utils/analysis').then(({ generateUpskillCourses }) =>
-            generateUpskillCourses(job.title, taskName)
+            generateUpskillCourses(job.title, taskName, mode, aiRiskPercent)
         ).then(result => {
             if (mounted) { setCourses(result); setIsLoading(false); }
         }).catch(() => {
@@ -38,7 +42,7 @@ export const UpskillModal: React.FC<UpskillModalProps> = ({ isOpen, onClose, job
         });
 
         return () => { mounted = false; };
-    }, [isOpen, job?.title, taskName]);
+    }, [isOpen, job?.title, taskName, mode, aiRiskPercent]);
 
     if (!job) return null;
 
@@ -50,7 +54,9 @@ export const UpskillModal: React.FC<UpskillModalProps> = ({ isOpen, onClose, job
         // applyAnalysesToJobs). See App.tsx's re-apply effect.
         void recordUpskillCompletion(jobId, taskName);
         toast.success(
-            `🏆 Leveled up! "${taskName}" is now a human-strength skill — Automation Risk just dropped.`
+            mode === 'defend'
+                ? `Logged. You're building oversight on "${taskName}" — tracked in your dashboard.`
+                : `Logged. You're deepening "${taskName}" as a human strength — tracked in your dashboard.`
         );
         onClose();
     };
@@ -69,12 +75,22 @@ export const UpskillModal: React.FC<UpskillModalProps> = ({ isOpen, onClose, job
                     <IconAward size={56} />
                 </div>
                 <div>
-                    <p className="text-blue-100/80 text-xs font-bold uppercase tracking-wider mb-1">Recommended Training</p>
+                    <p className="text-blue-100/80 text-xs font-bold uppercase tracking-wider mb-1">
+                        {mode === 'defend' ? `Defending this task · ${Math.round(aiRiskPercent)}% automation exposure` : 'Building on a human strength'}
+                    </p>
                     <h2 className="text-xl font-bold text-white leading-snug">{taskName}</h2>
                 </div>
             </div>
 
             <div className="space-y-5">
+                {/* The strategy, stated before the courses — without it, training on a
+                    high-risk task reads as "learn the thing AI is about to do". */}
+                <p className="text-sm text-gray-300 leading-relaxed">
+                    {mode === 'defend'
+                        ? "AI can already do much of this task, so the goal isn't to do it faster. It's to move into the part that lasts: directing the output, catching where it fails, and owning the judgment calls it can't."
+                        : 'This task resists automation. These build it from something you can do into something that sets you apart.'}
+                </p>
+
                 {/* Course list */}
                 <div>
                     <p className="text-[10px] text-gray-500 uppercase tracking-widest font-semibold mb-3 flex items-center gap-1.5">
@@ -129,8 +145,9 @@ export const UpskillModal: React.FC<UpskillModalProps> = ({ isOpen, onClose, job
                     <p className="text-xs text-blue-300 flex items-start gap-2">
                         <IconInfo size={14} className="shrink-0 mt-0.5" />
                         <span>
-                            Completing this training will increase your <strong>Human Criticality</strong> score
-                            by +{UPSKILL_IMPACT.HUMAN_SCORE_BOOST * 100}% and reduce Automation Risk.
+                            Marking this complete records it against <strong>your</strong> profile and lowers
+                            your personal exposure on this task by {UPSKILL_IMPACT.AI_SCORE_REDUCTION * 100}%.
+                            It doesn't change the automation risk of the occupation itself.
                         </span>
                     </p>
                 </div>

@@ -4,6 +4,7 @@ import RoadmapModal from './Modals/RoadmapModal';
 import { ScenarioModal } from './Modals/ScenarioModal';
 import { AnalysisModal } from './Modals/AnalysisModal';
 import { UpskillModal } from './UpskillModal';
+import type { UpskillMode } from '../utils/analysis';
 import { generateJobScenario, analyzeJob, getClaudeUserFriendlyMessage, type ScenarioResult, type JobAnalysis } from '../utils/analysis';
 import { IconBrain, IconSparkles, IconAlertTriangle, IconShield, IconTarget, IconInfo, IconTrendingDown, IconCheck, IconBookmark, IconAward } from './ui/Icons';
 import { Skeleton } from './ui/Skeleton';
@@ -40,10 +41,12 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
     const [showAnalysisModal, setShowAnalysisModal] = React.useState(false);
     const [analysisModalError, setAnalysisModalError] = React.useState<string | null>(null);
     const [showRoadmapModal, setShowRoadmapModal] = React.useState(false);
-    const [upskillTaskName, setUpskillTaskName] = React.useState<string | null>(null);
+    // Carries the mode and the task's real exposure, because both are sent to
+    // the model as fact — see UpskillMode in utils/analysis.
+    const [upskillTarget, setUpskillTarget] = React.useState<{ name: string; mode: UpskillMode; riskPercent: number } | null>(null);
 
     // Which of THIS job's tasks the signed-in user has already trained on —
-    // drives the "Trained" badge vs "Train for this" button below. Select the
+    // drives the "Trained" badge vs the Defend/Build button below. Select the
     // raw array (stable reference unless it actually changes) and derive the
     // Set with useMemo — building a new Set directly inside the selector
     // returns a new object every call, which Zustand's default reference
@@ -61,7 +64,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
     // Escape closes it. Skipped while a nested modal (Scenario/Analysis/
     // Roadmap/Upskill) is open so Escape closes that top layer first, not
     // this panel out from under it.
-    const hasNestedModalOpen = showScenarioModal || showAnalysisModal || showRoadmapModal || upskillTaskName !== null;
+    const hasNestedModalOpen = showScenarioModal || showAnalysisModal || showRoadmapModal || upskillTarget !== null;
     React.useEffect(() => {
         if (hasNestedModalOpen) return;
         const handleKeyDown = (e: KeyboardEvent) => {
@@ -378,9 +381,13 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
 
                             {/* Automation Risk Card */}
                             <div className="rounded-xl p-5 border border-red-500/15 bg-red-500/[0.03]">
-                                <h3 className="text-red-400 font-semibold uppercase tracking-wider text-xs mb-4 flex items-center gap-2">
+                                <h3 className="text-red-400 font-semibold uppercase tracking-wider text-xs mb-2 flex items-center gap-2">
                                     <IconAlertTriangle size={14} /> Automation Risk
                                 </h3>
+                                <p className="text-[11px] text-gray-400 leading-relaxed mb-4">
+                                    AI can do much of this already. Defending a task means moving into the
+                                    judgment around it — reviewing the output and owning the calls it can't.
+                                </p>
                                 <div className="space-y-3">
                                     {highRiskTasks.map((task, i) => {
                                         const trained = completedTaskNames.has(task.name);
@@ -397,10 +404,11 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                                         </span>
                                                     ) : (
                                                         <button
-                                                            onClick={() => setUpskillTaskName(task.name)}
+                                                            onClick={() => setUpskillTarget({ name: task.name, mode: 'defend', riskPercent: task.aiCapabilityScore * 100 })}
+                                                            title="Move from performing this task to owning the judgment around it"
                                                             className="text-[10px] font-semibold text-cyan-400 hover:text-cyan-300 uppercase tracking-wider underline decoration-cyan-400/30 hover:decoration-cyan-300 underline-offset-2 transition-colors"
                                                         >
-                                                            Train for this
+                                                            Defend this task
                                                         </button>
                                                     )}
                                                 </div>
@@ -427,17 +435,36 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
 
                             {/* Human Skills Card */}
                             <div className="rounded-xl p-5 border border-emerald-500/15 bg-emerald-500/[0.03]">
-                                <h3 className="text-emerald-400 font-semibold uppercase tracking-wider text-xs mb-4 flex items-center gap-2">
+                                <h3 className="text-emerald-400 font-semibold uppercase tracking-wider text-xs mb-2 flex items-center gap-2">
                                     <IconShield size={14} /> Human Skills
                                 </h3>
+                                <p className="text-[11px] text-gray-400 leading-relaxed mb-4">
+                                    These resist automation. This is where deepening your skill compounds.
+                                </p>
                                 <div className="space-y-3">
                                     {safeTasks.map((task, i) => {
+                                        const trained = completedTaskNames.has(task.name);
                                         return (
                                             <div key={i} className="bg-white/[0.02] border border-emerald-500/10 hover:border-emerald-500/25 p-3.5 rounded-lg flex justify-between items-start gap-3 transition-colors">
                                                 <div className="text-white text-sm font-medium flex-1">{task.name}</div>
-                                                <div className="flex items-center gap-1.5 shrink-0 mt-1">
+                                                <div className="flex flex-col items-end gap-1.5 shrink-0 mt-1">
+                                                    <div className="flex items-center gap-1.5">
                                                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
                                                     <span className="text-[10px] font-semibold text-emerald-400 uppercase tracking-wider hidden md:inline">Safe</span>
+                                                    </div>
+                                                    {trained ? (
+                                                        <span className="flex items-center gap-1 text-[10px] font-semibold text-emerald-400 uppercase tracking-wider">
+                                                            <IconAward size={11} /> Trained
+                                                        </span>
+                                                    ) : (
+                                                        <button
+                                                            onClick={() => setUpskillTarget({ name: task.name, mode: 'build', riskPercent: task.aiCapabilityScore * 100 })}
+                                                            title="Deepen this into a durable advantage"
+                                                            className="text-[10px] font-semibold text-emerald-400 hover:text-emerald-300 uppercase tracking-wider underline decoration-emerald-400/30 hover:decoration-emerald-300 underline-offset-2 transition-colors"
+                                                        >
+                                                            Build on this
+                                                        </button>
+                                                    )}
                                                 </div>
                                             </div>
                                         );
@@ -483,7 +510,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                                 <div className="space-y-2 text-sm text-gray-300">
                                                     <div className="flex items-start gap-2">
                                                         <IconTrendingDown size={14} className="text-red-400 mt-0.5 shrink-0" />
-                                                        <span>Reduce focus on <span className="text-red-300 font-medium">{riskItem.name}</span></span>
+                                                        <span>Shift <span className="text-red-300 font-medium">{riskItem.name}</span> toward oversight rather than execution</span>
                                                     </div>
                                                     <div className="flex items-start gap-2">
                                                         <IconCheck size={14} className="text-emerald-400 mt-0.5 shrink-0" />
@@ -524,12 +551,14 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
             {showRoadmapModal && riskTask && safeTask && (
                 <RoadmapModal job={job} riskTask={riskTask} targetTask={safeTask} onClose={() => setShowRoadmapModal(false)} />
             )}
-            {upskillTaskName && (
+            {upskillTarget && (
                 <UpskillModal
                     isOpen={true}
-                    onClose={() => setUpskillTaskName(null)}
+                    onClose={() => setUpskillTarget(null)}
                     jobId={job.id}
-                    taskName={upskillTaskName}
+                    taskName={upskillTarget.name}
+                    mode={upskillTarget.mode}
+                    aiRiskPercent={upskillTarget.riskPercent}
                 />
             )}
             <AnalysisModal
