@@ -14,7 +14,7 @@ import { getTaskCategory } from '../data';
 import { getSeriesIdForJob, getSeriesLabel } from '../utils/bls';
 import { jobSourceProvenanceChips, panelSourceList } from '../utils/provenance';
 import { ProvenanceBadge } from './ProvenanceBadge';
-import { useUserStore, reapplyUpskillCompletions } from '../userStore';
+import { useUserStore } from '../userStore';
 import { loadScenario, saveScenario } from '../lib/userData';
 import type { Job } from '../types';
 
@@ -88,7 +88,6 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
             if (res) {
                 // Keep role panel Automation Risk % / task cards in sync with Analyze.
                 useStore.getState().updateJobFromLiveAnalysis(job.id, res);
-                reapplyUpskillCompletions(job.id);
             }
         } catch (e) {
             console.error(e);
@@ -150,22 +149,22 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
     // Mutually exclusive buckets (same rules as getTaskCategory / TaskCompositionChart).
     // Independent AI>0.5 and human>0.5 filters let mixed-score tasks appear in both cards —
     // e.g. Cybersecurity "Encrypt data transmissions…" at 0.55 / 0.65.
-    // A trained task always stays visible here, in the card where the user
-    // took action — even if its post-boost scores land in neither the
-    // 'Automatable' nor 'Human-Critical' bucket (UPSKILL_IMPACT.HUMAN_SCORE_BOOST
-    // is a flat +0.2; a task that started well below the 0.5 threshold can land
-    // in the unrendered 'Augmentable' middle category, where it would otherwise
-    // vanish from both cards with no visible reward for the effort).
+    // Category alone decides the column. Completing training used to shift a
+    // task's scores, which could migrate it into the unrendered 'Augmentable'
+    // middle, so both lists carried a completed-task escape hatch to keep it
+    // on screen. Training no longer touches any score, so the buckets are
+    // stable — and the escape hatch would now be actively wrong, pulling a
+    // "Build on this" human strength across into the Automation Risk card.
+    // Trained tasks still sort first, so the user's own work stays visible.
+    const byTrainedFirst = (a: typeof job.tasks[number], b: typeof job.tasks[number]) =>
+        Number(completedTaskNames.has(b.name)) - Number(completedTaskNames.has(a.name));
     const highRiskTasks = job.tasks
-        .filter((t) => getTaskCategory(t) === 'Automatable' || completedTaskNames.has(t.name))
-        .sort((a, b) => {
-            const trainedDiff = Number(completedTaskNames.has(b.name)) - Number(completedTaskNames.has(a.name));
-            return trainedDiff !== 0 ? trainedDiff : b.aiCapabilityScore - a.aiCapabilityScore;
-        })
+        .filter((t) => getTaskCategory(t) === 'Automatable')
+        .sort((a, b) => byTrainedFirst(a, b) || b.aiCapabilityScore - a.aiCapabilityScore)
         .slice(0, UI.MAX_TASK_PREVIEW);
     const safeTasks = job.tasks
-        .filter((t) => getTaskCategory(t) === 'Human-Critical' && !completedTaskNames.has(t.name))
-        .sort((a, b) => b.humanCriticalityScore - a.humanCriticalityScore)
+        .filter((t) => getTaskCategory(t) === 'Human-Critical')
+        .sort((a, b) => byTrainedFirst(a, b) || b.humanCriticalityScore - a.humanCriticalityScore)
         .slice(0, UI.MAX_TASK_PREVIEW);
 
     return (

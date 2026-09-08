@@ -13,9 +13,8 @@ interface TrainingLogProps {
 }
 
 /**
- * Read-only by design: there is no inverse of store.ts's upskillTask boost —
- * the only way to undo a completion is a full re-score — so this view must
- * never imply a completion can be removed from here.
+ * Read-only by design: nothing in the app removes a recorded completion, so
+ * this view must never imply one can be deleted from here.
  */
 export const TrainingLog: React.FC<TrainingLogProps> = ({ groups, onOpenJob }) => {
     if (groups.length === 0) {

@@ -3,7 +3,6 @@ import { useStore } from '../store';
 import { Modal } from './ui/Modal';
 import { IconAward, IconArrowRight, IconInfo, IconBook } from './ui/Icons';
 import { Skeleton, SkeletonText } from './ui/Skeleton';
-import { UPSKILL_IMPACT } from '../config/GameMechanics';
 import type { UpskillCoursesResult, UpskillMode } from '../utils/analysis';
 import { useUserStore } from '../userStore';
 import { toast } from './ui/Toast';
@@ -20,7 +19,6 @@ interface UpskillModalProps {
 }
 
 export const UpskillModal: React.FC<UpskillModalProps> = ({ isOpen, onClose, jobId, taskName, mode, aiRiskPercent }) => {
-    const upskillTask = useStore((state) => state.upskillTask);
     const job = useStore((state) => state.jobs.find(j => j.id === jobId));
     const recordUpskillCompletion = useUserStore((state) => state.recordUpskillCompletion);
 
@@ -47,11 +45,9 @@ export const UpskillModal: React.FC<UpskillModalProps> = ({ isOpen, onClose, job
     if (!job) return null;
 
     const handleComplete = () => {
-        upskillTask(jobId, taskName);
-        // Persisted separately from the store's in-memory score boost above —
-        // without this, the boost is lost on reload AND silently erased by any
-        // later Analyze run that overwrites task scores wholesale (store.ts
-        // applyAnalysesToJobs). See App.tsx's re-apply effect.
+        // Recorded against the user, not the occupation. Completing training
+        // says something about this person's readiness; it says nothing about
+        // how automatable the task itself is, so no job score moves here.
         void recordUpskillCompletion(jobId, taskName);
         toast.success(
             mode === 'defend'
@@ -145,9 +141,9 @@ export const UpskillModal: React.FC<UpskillModalProps> = ({ isOpen, onClose, job
                     <p className="text-xs text-blue-300 flex items-start gap-2">
                         <IconInfo size={14} className="shrink-0 mt-0.5" />
                         <span>
-                            Marking this complete records it against <strong>your</strong> profile and lowers
-                            your personal exposure on this task by {UPSKILL_IMPACT.AI_SCORE_REDUCTION * 100}%.
-                            It doesn't change the automation risk of the occupation itself.
+                            Marking this complete records it against <strong>your</strong> profile and adds it
+                            to your dashboard's training log. The role's own risk scores stay as measured —
+                            they describe the occupation, not your progress against it.
                         </span>
                     </p>
                 </div>

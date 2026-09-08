@@ -7,7 +7,7 @@ import { ErrorBoundary } from './components/ErrorBoundary';
 import { RescoreConfirmModal } from './components/RescoreConfirmModal';
 import { WebGLFallback } from './components/WebGLFallback';
 import { useStore } from './store';
-import { useUserStore, reapplyUpskillCompletions } from './userStore';
+import { useUserStore } from './userStore';
 
 /**
  * Feature-detect WebGL before mounting the 3D canvas.
@@ -78,8 +78,7 @@ function App() {
     if (scoresSource !== 'none') return;
     if (hasAIScores || isScoring) return;
     console.warn('[Scores] No precomputed scores found — falling back to live scoring. Run `npm run generate-scores`.');
-    // A returning user's persisted upskill boosts must survive this full pass too.
-    void scoreAllJobsWithAI().then(() => reapplyUpskillCompletions());
+    void scoreAllJobsWithAI();
   }, [hasConfiguredAI, scoresSource, hasAIScores, isScoring, scoreAllJobsWithAI]);
 
   return (

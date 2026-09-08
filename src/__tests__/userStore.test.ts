@@ -1,7 +1,7 @@
 /**
- * Tests src/userStore.ts session lifecycle and the upskill-persistence
- * interaction with src/store.ts (applyAnalysesToJobs wiping in-memory boosts —
- * see AGENTS.md and reapplyUpskillCompletions's own comment).
+ * Tests src/userStore.ts session lifecycle, and the invariant that a user's
+ * training is recorded against the user alone and never edits the shared job
+ * model that the app presents as measured properties of an occupation.
  */
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
@@ -35,7 +35,7 @@ vi.mock('../utils/onet', () => ({ getRealOnetTasks: vi.fn(() => []), MAP_TITLE_T
 vi.mock('../data/geo_real.json', () => ({ default: {} }));
 
 // Imported after the mocks so both stores pick up the mocked Supabase module.
-import { useUserStore, reapplyUpskillCompletions } from '../userStore';
+import { useUserStore } from '../userStore';
 import { useStore } from '../store';
 import { initialJobs } from '../data';
 
@@ -191,7 +191,7 @@ describe('saved-role toggle (optimistic update)', () => {
     });
 });
 
-describe('reapplyUpskillCompletions (survives applyAnalysesToJobs overwriting task scores)', () => {
+describe('training is personal and never rewrites the occupation', () => {
     beforeEach(async () => {
         setHasSupabase(true);
         setFake(createFakeSupabase(null));
@@ -201,84 +201,43 @@ describe('reapplyUpskillCompletions (survives applyAnalysesToJobs overwriting ta
             activitySource: 'none', activityLoadedAt: null,
         });
         await useUserStore.getState().hydrateUserSession();
-        // useStore is a module-scoped singleton, not re-created per test — reset
-        // it to pristine seed data so upskillTask boosts from one test don't
-        // accumulate into (and clamp out) the next.
+        // useStore is a module-scoped singleton, not re-created per test.
         useStore.setState({ jobs: initialJobs, selectedJob: null });
     });
 
-    it('a fresh analysis wipes the boost, and reapplyUpskillCompletions restores it', () => {
-        const job = useStore.getState().jobs[0];
-        const task = job.tasks[0];
+    /**
+     * The store used to apply a score boost to the shared job model on every
+     * completion, so one person's training moved the risk %, terrain height and
+     * map colour that the app presents as a measured property of the
+     * occupation. An entire re-apply mechanism existed only to defend that
+     * boost from being wiped by the next Analyze run. Both are gone: a
+     * completion is recorded against the user and nothing else.
+     */
+    it('recording a completion leaves every task score untouched', async () => {
+        const before = structuredClone(useStore.getState().jobs);
+        const job = before[0];
 
-        // Complete an upskill: this is the same mutation UpskillModal triggers.
-        useStore.getState().upskillTask(job.id, task.name);
-        const boosted = useStore.getState().jobs.find((j) => j.id === job.id)!.tasks[0];
-        expect(boosted.humanCriticalityScore).toBeGreaterThan(task.humanCriticalityScore);
+        await useUserStore.getState().recordUpskillCompletion(job.id, job.tasks[0].name);
 
-        // Record it as persisted activity (what UpskillModal does after upskillTask).
-        useUserStore.setState({
-            activity: {
-                ...useUserStore.getState().activity,
-                upskillCompletions: [{ jobId: job.id, taskName: task.name, completedAt: new Date().toISOString() }],
-            },
-        });
-
-        // Simulate a fresh Analyze overwriting scores wholesale for this job —
-        // same store.ts helper applyAnalysesToJobs uses internally, reached here
-        // via updateJobFromLiveAnalysis with a result that reverts the score.
-        useStore.getState().updateJobFromLiveAnalysis(job.id, {
-            strategic_insight: '',
-            tasks: job.tasks.map((t) => ({
-                task_text: t.name,
-                ai_exposure_score: t.aiCapabilityScore,
-                human_criticality_score: t.humanCriticalityScore, // back to pre-boost value
-                reasoning: '',
-            })),
-            yearlyForecast: [],
-            likely_replacements: [],
-            human_centric_traits: [],
-            human_resilience_label: '—',
-            salary_volatility_label: '—',
-            salary_forecast: [],
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        } as any);
-
-        const wiped = useStore.getState().jobs.find((j) => j.id === job.id)!.tasks[0];
-        expect(wiped.humanCriticalityScore).toBe(task.humanCriticalityScore); // boost gone
-
-        reapplyUpskillCompletions(job.id);
-
-        const restored = useStore.getState().jobs.find((j) => j.id === job.id)!.tasks[0];
-        expect(restored.humanCriticalityScore).toBeGreaterThan(task.humanCriticalityScore);
-        expect(restored.humanCriticalityScore).toBe(boosted.humanCriticalityScore);
+        expect(useStore.getState().jobs).toEqual(before);
     });
 
-    it('does nothing when there are no persisted completions', () => {
+    it('keeps the completion on the user, where it belongs', async () => {
         const job = useStore.getState().jobs[0];
-        const before = useStore.getState().jobs.find((j) => j.id === job.id);
-        reapplyUpskillCompletions(job.id);
-        const after = useStore.getState().jobs.find((j) => j.id === job.id);
-        expect(after).toEqual(before);
+        await useUserStore.getState().recordUpskillCompletion(job.id, job.tasks[0].name);
+
+        const completions = useUserStore.getState().activity.upskillCompletions;
+        expect(completions).toHaveLength(1);
+        expect(completions[0]).toMatchObject({ jobId: job.id, taskName: job.tasks[0].name });
     });
 
-    it('scoped to jobId only re-applies that job\'s completions, not another job\'s', () => {
-        const [jobA, jobB] = useStore.getState().jobs;
-        useUserStore.setState({
-            activity: {
-                ...useUserStore.getState().activity,
-                upskillCompletions: [
-                    { jobId: jobA.id, taskName: jobA.tasks[0].name, completedAt: new Date().toISOString() },
-                    { jobId: jobB.id, taskName: jobB.tasks[0].name, completedAt: new Date().toISOString() },
-                ],
-            },
-        });
+    it('leaves the occupation-level risk index identical for trained and untrained users', async () => {
+        const job = useStore.getState().jobs[0];
+        const indexBefore = job.automationCostIndex;
 
-        reapplyUpskillCompletions(jobA.id);
+        await useUserStore.getState().recordUpskillCompletion(job.id, job.tasks[0].name);
 
-        const a = useStore.getState().jobs.find((j) => j.id === jobA.id)!.tasks[0];
-        const b = useStore.getState().jobs.find((j) => j.id === jobB.id)!.tasks[0];
-        expect(a.humanCriticalityScore).toBeGreaterThan(jobA.tasks[0].humanCriticalityScore);
-        expect(b.humanCriticalityScore).toBe(jobB.tasks[0].humanCriticalityScore); // untouched
+        const after = useStore.getState().jobs.find((j) => j.id === job.id)!;
+        expect(after.automationCostIndex).toBe(indexBefore);
     });
 });
