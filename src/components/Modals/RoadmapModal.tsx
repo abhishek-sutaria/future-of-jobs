@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { Modal } from '../ui/Modal';
-import { IconAlertTriangle, IconTarget, IconBook, IconCheck, IconArrowRight, IconAward } from '../ui/Icons';
+import { IconAlertTriangle, IconTarget, IconBook, IconArrowRight } from '../ui/Icons';
 import { Skeleton, SkeletonText } from '../ui/Skeleton';
 import type { Job } from '../../types';
 import { getClaudeUserFriendlyMessage, type RoadmapResult } from '../../utils/analysis';
 import { UI } from '../../config/constants';
-import { PHASE_COLORS } from '../../config/theme';
 import { loadRoadmap, saveRoadmap } from '../../lib/userData';
+import { RoadmapReport } from '../reports/RoadmapReport';
 
 interface RoadmapModalProps {
     job: Job;
@@ -122,20 +122,8 @@ export default function RoadmapModal({ job, riskTask, targetTask, onClose }: Roa
                         <p className="text-red-400 text-sm leading-relaxed">{roadmapError}</p>
                     </div>
                 ) : roadmapData ? (
-                    <div className="space-y-4 animate-in fade-in duration-300">
-                        {roadmapData.phases.map((phase, idx) => (
-                            <div key={idx} className={`border-l-2 ${PHASE_COLORS[idx] || 'border-gray-500'} pl-4`}>
-                                <h4 className="text-white font-medium text-sm mb-2">{phase.title}</h4>
-                                <ul className="text-gray-300 text-sm space-y-1.5">
-                                    {phase.items.map((item, i) => (
-                                        <li key={i} className="flex items-start gap-2">
-                                            <span className="text-gray-600 mt-1 shrink-0">&bull;</span>
-                                            <span>{item}</span>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                        ))}
+                    <div className="animate-in fade-in duration-300">
+                        <RoadmapReport result={roadmapData} />
                     </div>
                 ) : (
                     <div className="flex flex-col items-center py-8 text-center bg-red-500/[0.04] border border-red-500/15 rounded-xl">
@@ -146,47 +134,6 @@ export default function RoadmapModal({ job, riskTask, targetTask, onClose }: Roa
                 )}
             </div>
 
-            {/* Resources */}
-            {roadmapData && roadmapData.resources?.length > 0 && (
-                <div className="bg-white/[0.02] border border-white/[0.06] rounded-xl p-5 mb-6">
-                    <h3 className="text-blue-400 font-semibold text-xs uppercase tracking-wider mb-3 flex items-center gap-2">
-                        <IconBook size={14} /> Recommended Resources
-                    </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {roadmapData.resources.map((resource, i) => (
-                            <div key={i}>
-                                <p className="text-gray-400 font-medium mb-1 text-xs">{resource.category}</p>
-                                <ul className="space-y-1">
-                                    {resource.items.map((item, j) => (
-                                        <li key={j} className="text-gray-300 text-sm flex items-start gap-1.5">
-                                            <span className="text-blue-500 mt-1 shrink-0 text-xs">›</span>
-                                            {item}
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            )}
-
-            {/* Success Metrics */}
-            {roadmapData && roadmapData.successMetrics?.length > 0 && (
-                <div className="bg-amber-500/[0.03] border border-amber-500/15 rounded-xl p-5">
-                    <h3 className="text-amber-400 font-semibold text-xs uppercase tracking-wider mb-1 flex items-center gap-2">
-                        <IconAward size={14} /> Success Milestones
-                    </h3>
-                    <p className="text-[10px] text-gray-500 mb-3">Role-specific targets for this transition</p>
-                    <ul className="text-gray-300 text-sm space-y-2">
-                        {roadmapData.successMetrics.map((item, i) => (
-                            <li key={i} className="flex items-start gap-2">
-                                <IconCheck size={14} className="text-amber-400 mt-0.5 shrink-0" />
-                                <span>{item}</span>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            )}
         </Modal>
     );
 }

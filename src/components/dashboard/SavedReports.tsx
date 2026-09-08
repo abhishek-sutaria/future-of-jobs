@@ -3,8 +3,13 @@ import { Modal } from '../ui/Modal';
 import { Empty } from '../ui/EmptyState';
 import { IconSparkles, IconTarget, IconRocket, IconShield } from '../ui/Icons';
 import type { StoredArtifact, ArtifactKind } from '../../lib/userData';
-import type { ResumeAnalysisResult, StartupIdeasResult } from '../../utils/analysis';
+import type { ResumeAnalysisResult, StartupIdeasResult, ScenarioResult, RoadmapResult } from '../../utils/analysis';
 import { summarizeArtifacts } from '../../utils/dashboardSelectors';
+import { reportToMarkdown, reportFilename } from '../../utils/reportExport';
+import { ScenarioReport } from '../reports/ScenarioReport';
+import { RoadmapReport } from '../reports/RoadmapReport';
+import { SkillsReport } from '../reports/SkillsReport';
+import { StartupIdeasReport } from '../reports/StartupIdeasReport';
 
 const KIND_META: Record<ArtifactKind, { label: string; icon: React.ReactNode; color: string }> = {
     scenario: { label: 'Day in the Life', icon: <IconSparkles size={13} />, color: 'text-violet-300 border-violet-500/25 bg-violet-500/[0.06]' },
@@ -18,54 +23,36 @@ function formatDate(iso: string): string {
 }
 
 /**
- * scenario/roadmap are role-specific — reopening means going to that role and
- * clicking Scenario/Roadmap again, which restores instantly from the same
- * cache this dashboard is reading (loadScenario/loadRoadmap check the saved
- * artifact before calling Claude). startup_ideas/skills_analysis are
- * resume-based, not role-based, so there is no "role" to navigate to — those
- * open a lightweight read-only viewer here instead.
+ * Every kind renders here, in full. Previously scenario/roadmap navigated the
+ * user out of the dashboard to the map, and startup_ideas rendered only each
+ * idea's name and summary — so most of a saved report was unreachable from the
+ * place it was saved. Ray asked whether these can be viewed, printed or
+ * downloaded from the dashboard; this is the "viewed" half.
  */
 const ReportDetail: React.FC<{ artifact: StoredArtifact }> = ({ artifact }) => {
-    if (artifact.kind === 'skills_analysis') {
-        const r = artifact.payload as ResumeAnalysisResult;
-        return (
-            <div className="space-y-4 text-sm">
-                <p className="text-gray-200 leading-relaxed">{r.feedback}</p>
-                <div className="grid sm:grid-cols-2 gap-4">
-                    <div>
-                        <h4 className="text-[10px] uppercase tracking-wider text-emerald-400 font-semibold mb-2">Strengths</h4>
-                        <ul className="space-y-1.5">{r.strengths.map((s, i) => <li key={i} className="text-gray-300 text-xs">• {s}</li>)}</ul>
-                    </div>
-                    <div>
-                        <h4 className="text-[10px] uppercase tracking-wider text-red-400 font-semibold mb-2">Gaps</h4>
-                        <ul className="space-y-1.5">{r.gaps.map((s, i) => <li key={i} className="text-gray-300 text-xs">• {s}</li>)}</ul>
-                    </div>
-                </div>
-                <div>
-                    <h4 className="text-[10px] uppercase tracking-wider text-cyan-400 font-semibold mb-2">5-Year Plan</h4>
-                    <p className="text-gray-300 text-xs leading-relaxed">{r.plan}</p>
-                </div>
-            </div>
-        );
+    switch (artifact.kind) {
+        case 'scenario':
+            return <ScenarioReport result={artifact.payload as ScenarioResult} />;
+        case 'roadmap':
+            return <RoadmapReport result={artifact.payload as RoadmapResult} />;
+        case 'skills_analysis':
+            return <SkillsReport result={artifact.payload as ResumeAnalysisResult} />;
+        case 'startup_ideas':
+            return <StartupIdeasReport result={artifact.payload as StartupIdeasResult} />;
     }
-
-    // startup_ideas — a summary view; full per-idea execution detail lives in
-    // StartupIdeasModal itself and isn't duplicated here.
-    const r = artifact.payload as StartupIdeasResult;
-    return (
-        <div className="space-y-4 text-sm">
-            {r.founderProfile?.summary && <p className="text-gray-200 leading-relaxed">{r.founderProfile.summary}</p>}
-            <div className="space-y-2">
-                {(r.ideas ?? []).map((idea, i) => (
-                    <div key={i} className="bg-white/[0.02] border border-white/[0.06] rounded-lg p-3">
-                        <p className="text-white font-medium text-sm">{idea.name}</p>
-                        {idea.summary && <p className="text-gray-400 text-xs mt-1">{idea.summary}</p>}
-                    </div>
-                ))}
-            </div>
-        </div>
-    );
 };
+
+function downloadMarkdown(artifact: StoredArtifact): void {
+    const blob = new Blob([reportToMarkdown(artifact)], { type: 'text/markdown;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = reportFilename(artifact);
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+}
 
 interface SavedReportsProps {
     artifacts: StoredArtifact[];
@@ -93,17 +80,11 @@ export const SavedReports: React.FC<SavedReportsProps> = ({ artifacts, onOpenJob
                     const summary = summaries.find((s) => s.id === artifact.id);
                     const isRoleBased = artifact.kind === 'scenario' || artifact.kind === 'roadmap';
                     return (
-                        <button
+                        <div
                             key={artifact.id}
-                            onClick={() => {
-                                if (isRoleBased && artifact.jobId && artifact.jobTitle) {
-                                    onOpenJob(artifact.jobId, artifact.jobTitle);
-                                } else {
-                                    setViewing(artifact);
-                                }
-                            }}
                             className="text-left bg-white/[0.02] border border-white/[0.06] hover:border-white/15 rounded-xl p-4 transition-colors"
                         >
+                        <button onClick={() => setViewing(artifact)} className="text-left w-full">
                             <div className="flex items-center justify-between gap-2 mb-2">
                                 <span className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wider border ${meta.color}`}>
                                     {meta.icon} {meta.label}
@@ -113,6 +94,15 @@ export const SavedReports: React.FC<SavedReportsProps> = ({ artifacts, onOpenJob
                             {artifact.jobTitle && <p className="text-white font-medium text-sm mb-1">{artifact.jobTitle}</p>}
                             <p className="text-gray-400 text-xs leading-relaxed line-clamp-3">{summary?.preview || 'Open to view full report.'}</p>
                         </button>
+                        {isRoleBased && artifact.jobId && artifact.jobTitle && (
+                            <button
+                                onClick={() => onOpenJob(artifact.jobId!, artifact.jobTitle!)}
+                                className="mt-2 text-[10px] font-semibold uppercase tracking-wider text-gray-500 hover:text-gray-300 transition-colors"
+                            >
+                                Open this role &rsaquo;
+                            </button>
+                        )}
+                        </div>
                     );
                 })}
             </div>
@@ -124,7 +114,36 @@ export const SavedReports: React.FC<SavedReportsProps> = ({ artifacts, onOpenJob
                     title={KIND_META[viewing.kind].label}
                     size="lg"
                     layer="top"
+                    printable
+                    footer={
+                        <div className="flex items-center justify-between gap-4">
+                            <p className="text-gray-500 text-[11px]">futureofjobs.vercel.app</p>
+                            <div className="flex gap-2 print:hidden">
+                                <button
+                                    onClick={() => downloadMarkdown(viewing)}
+                                    className="px-4 py-2 bg-white/[0.06] hover:bg-white/10 text-gray-300 text-sm font-semibold rounded-lg transition-colors"
+                                >
+                                    Download
+                                </button>
+                                <button
+                                    onClick={() => window.print()}
+                                    className="px-4 py-2 bg-cyan-600 hover:bg-cyan-500 text-white text-sm font-semibold rounded-lg transition-colors"
+                                >
+                                    Print / Save as PDF
+                                </button>
+                            </div>
+                        </div>
+                    }
                 >
+                    {/* Print-only header, so a printed page identifies itself. */}
+                    <div className="hidden print:block mb-6 pb-4 border-b border-gray-300">
+                        <h1 className="text-2xl font-bold text-gray-900">
+                            {KIND_META[viewing.kind].label}{viewing.jobTitle ? `: ${viewing.jobTitle}` : ''}
+                        </h1>
+                        <p className="text-gray-600 text-sm mt-1">
+                            Saved {formatDate(viewing.updatedAt)} &middot; futureofjobs.vercel.app
+                        </p>
+                    </div>
                     <ReportDetail artifact={viewing} />
                 </Modal>
             )}
