@@ -66,15 +66,22 @@ export const UpskillModal: React.FC<UpskillModalProps> = ({ isOpen, onClose, job
     return (
         <Modal isOpen={isOpen} onClose={onClose} title="" size="md">
             {/* Header */}
-            <div className="h-32 bg-gradient-to-br from-blue-600 to-purple-700 relative flex items-end p-6 -mx-6 -mt-14 mb-4">
-                <div className="absolute top-4 right-4 text-white/20">
+            {/* Full-bleed banner: the negative margins must match the modal body's
+                own padding (ui/Modal renders it as `overflow-y-auto p-6`, i.e. 24px).
+                -mt-14 pulled up 56px against 24px of padding, so 32px of the banner
+                was clipped by the scroll container and the text sat flush against the
+                cut edge. min-h rather than a fixed h-32 so a long task name (or the
+                longer "Defending this task" kicker) grows the banner instead of
+                overflowing it. */}
+            <div className="min-h-32 bg-gradient-to-br from-blue-600 to-purple-700 relative flex items-end p-6 -mx-6 -mt-6 mb-4">
+                <div className="absolute top-4 right-4 text-white/20 pointer-events-none">
                     <IconAward size={56} />
                 </div>
                 <div>
                     <p className="text-blue-100/80 text-xs font-bold uppercase tracking-wider mb-1">
                         {mode === 'defend' ? `Defending this task · ${Math.round(aiRiskPercent)}% automation exposure` : 'Building on a human strength'}
                     </p>
-                    <h2 className="text-xl font-bold text-white leading-snug">{taskName}</h2>
+                    <h2 className="text-xl font-bold text-white leading-snug pr-16">{taskName}</h2>
                 </div>
             </div>
 
