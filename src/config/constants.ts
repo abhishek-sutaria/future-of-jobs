@@ -18,12 +18,16 @@ export const YEAR_COUNT = YEAR_RANGE + 1;             // 6 years (2025–2030 in
 // in sync with every `dataSources` array in src/data.ts; a mismatch silently
 // removes the OES badge (see src/utils/provenance.ts) with no test failure —
 // src/__tests__/oesVintage.test.ts guards this.
+// ONET carried exactly that bug until 2026-09: this read 'ONET' while the data
+// says 'O*NET-30.1', so the O*NET badge could never render for any role, and
+// the substring test that awarded ONET_BONUS never matched either (the '*'
+// breaks it). src/__tests__/provenance.test.ts now guards every literal here.
 export const DATA_SOURCES = {
     BLS_OES: 'BLS-OES-2025',
     BLS_OOH: 'BLS-OOH-2024-34',
     BLS_CPS: 'BLS-CPS (Live)',
     BLS_STATE: 'BLS-OES-State',
-    ONET: 'ONET',
+    ONET: 'O*NET-30.1',
 } as const;
 
 export const DEFAULT_DATA_SOURCES = [DATA_SOURCES.BLS_OES, DATA_SOURCES.BLS_OOH] as const;

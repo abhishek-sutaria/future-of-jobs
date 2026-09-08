@@ -43,7 +43,8 @@ export const initialJobs: Job[] = [
         "confidenceScore": 0.5,
         "dataSources": [
             "BLS-OES-2025",
-            "BLS-OOH-2024-34"
+            "BLS-OOH-2024-34",
+            "O*NET-30.1"
         ],
         "isAlias": true,
         "tasks": [
@@ -91,7 +92,8 @@ export const initialJobs: Job[] = [
         "confidenceScore": 0.5,
         "dataSources": [
             "BLS-OES-2025",
-            "BLS-OOH-2024-34"
+            "BLS-OOH-2024-34",
+            "O*NET-30.1"
         ],
         "isAlias": true,
         "tasks": [
@@ -139,7 +141,8 @@ export const initialJobs: Job[] = [
         "confidenceScore": 0.5,
         "dataSources": [
             "BLS-OES-2025",
-            "BLS-OOH-2024-34"
+            "BLS-OOH-2024-34",
+            "O*NET-30.1"
         ],
         "isAlias": true,
         "tasks": [
@@ -187,7 +190,8 @@ export const initialJobs: Job[] = [
         "confidenceScore": 0.5,
         "dataSources": [
             "BLS-OES-2025",
-            "BLS-OOH-2024-34"
+            "BLS-OOH-2024-34",
+            "O*NET-30.1"
         ],
         "isAlias": true,
         "tasks": [
@@ -235,7 +239,8 @@ export const initialJobs: Job[] = [
         "confidenceScore": 0.5,
         "dataSources": [
             "BLS-OES-2025",
-            "BLS-OOH-2024-34"
+            "BLS-OOH-2024-34",
+            "O*NET-30.1"
         ],
         "isAlias": true,
         "tasks": [
@@ -283,7 +288,8 @@ export const initialJobs: Job[] = [
         "confidenceScore": 0.5,
         "dataSources": [
             "BLS-OES-2025",
-            "BLS-OOH-2024-34"
+            "BLS-OOH-2024-34",
+            "O*NET-30.1"
         ],
         "isAlias": true,
         "tasks": [
@@ -331,7 +337,8 @@ export const initialJobs: Job[] = [
         "confidenceScore": 0.5,
         "dataSources": [
             "BLS-OES-2025",
-            "BLS-OOH-2024-34"
+            "BLS-OOH-2024-34",
+            "O*NET-30.1"
         ],
         "isAlias": true,
         "tasks": [
@@ -379,7 +386,8 @@ export const initialJobs: Job[] = [
         "confidenceScore": 0.5,
         "dataSources": [
             "BLS-OES-2025",
-            "BLS-OOH-2024-34"
+            "BLS-OOH-2024-34",
+            "O*NET-30.1"
         ],
         "isAlias": true,
         "tasks": [
@@ -427,7 +435,8 @@ export const initialJobs: Job[] = [
         "confidenceScore": 0.5,
         "dataSources": [
             "BLS-OES-2025",
-            "BLS-OOH-2024-34"
+            "BLS-OOH-2024-34",
+            "O*NET-30.1"
         ],
         "isAlias": true,
         "tasks": [
@@ -475,7 +484,8 @@ export const initialJobs: Job[] = [
         "confidenceScore": 0.5,
         "dataSources": [
             "BLS-OES-2025",
-            "BLS-OOH-2024-34"
+            "BLS-OOH-2024-34",
+            "O*NET-30.1"
         ],
         "isAlias": true,
         "tasks": [
@@ -523,7 +533,8 @@ export const initialJobs: Job[] = [
         "confidenceScore": 0.5,
         "dataSources": [
             "BLS-OES-2025",
-            "BLS-OOH-2024-34"
+            "BLS-OOH-2024-34",
+            "O*NET-30.1"
         ],
         "isAlias": true,
         "tasks": [
@@ -571,7 +582,8 @@ export const initialJobs: Job[] = [
         "confidenceScore": 0.5,
         "dataSources": [
             "BLS-OES-2025",
-            "BLS-OOH-2024-34"
+            "BLS-OOH-2024-34",
+            "O*NET-30.1"
         ],
         "isAlias": true,
         "tasks": [
@@ -619,7 +631,8 @@ export const initialJobs: Job[] = [
         "confidenceScore": 0.5,
         "dataSources": [
             "BLS-OES-2025",
-            "BLS-OOH-2024-34"
+            "BLS-OOH-2024-34",
+            "O*NET-30.1"
         ],
         "isAlias": true,
         "tasks": [
