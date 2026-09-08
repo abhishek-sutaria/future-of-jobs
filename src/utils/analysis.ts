@@ -220,16 +220,30 @@ export async function generateRoadmap(jobTitle: string, riskTask: string, target
     return callAnalysis(prompt) as Promise<RoadmapResult>;
 }
 
-export async function generateUpskillCourses(jobTitle: string, taskName: string): Promise<UpskillCoursesResult> {
-    const prompt = `
-        A professional working as a "${jobTitle}" wants to upskill in this specific task:
-        "${taskName}"
+/**
+ * Which side of the panel the training was launched from.
+ *   'defend' — a high-automation-risk task. The user is NOT being taught to
+ *              perform it faster; they're being moved into the judgment layer
+ *              around it, which is the part that survives.
+ *   'build'  — a human-critical task, deepened into a durable advantage.
+ *
+ * This distinction exists because the prompt used to assert, for every call,
+ * that the task "has high human value and helps them stay resilient against
+ * automation" — while the only button wired to it sat on the HIGH-RISK list.
+ * Claude was being asked to justify resilience for tasks the app had just
+ * flagged as automatable, so it did. Ray caught the contradiction on screen;
+ * the false premise was underneath it.
+ */
+export type UpskillMode = 'defend' | 'build';
 
-        This task has high human value and helps them stay resilient against automation.
-
-        Recommend exactly 3 real, specific courses or certifications they should take.
-        Each must reference a real platform and real course title that exists today.
-
+/** Exported for tests: the prompt is the thing that was wrong, so assert on it directly. */
+export function buildUpskillPrompt(
+    jobTitle: string,
+    taskName: string,
+    mode: UpskillMode,
+    aiRiskPercent: number,
+): string {
+    const shape = `
         Output JSON only:
         {
             "courses": [
@@ -237,11 +251,46 @@ export async function generateUpskillCourses(jobTitle: string, taskName: string)
                 { "title": "...", "provider": "...", "duration": "...", "level": "..." },
                 { "title": "...", "provider": "...", "duration": "...", "level": "..." }
             ],
-            "whyTheseCourses": "One sentence explaining why these specific courses build resilience for a ${jobTitle}."
+            "whyTheseCourses": "REPLACE_WHY"
         }
     `;
 
-    return callAnalysis(prompt) as Promise<UpskillCoursesResult>;
+    if (mode === 'defend') {
+        return `
+        A professional working as a "${jobTitle}" has this task in their role:
+        "${taskName}"
+
+        This task carries roughly ${Math.round(aiRiskPercent)}% automation exposure — AI can already do much of it.
+
+        Do NOT recommend training that teaches them to perform this task faster or more cheaply by hand. That is precisely the part being automated.
+
+        Recommend training that moves them UP the value chain on this exact task: directing and reviewing automated output, recognising where it fails, handling the exceptions and edge cases it cannot, carrying the accountability and judgment a model cannot own, and holding enough domain depth to know when the output is wrong.
+
+        Recommend exactly 3 real, specific courses or certifications that make that shift.
+        Each must reference a real platform and a real course title that exists today.
+        ${shape.replace('REPLACE_WHY', `One sentence on how these move a ${jobTitle} from performing this task to owning the judgment around it.`)}
+    `;
+    }
+
+    return `
+        A professional working as a "${jobTitle}" wants to go deeper on this task:
+        "${taskName}"
+
+        This task is assessed as human-critical: it resists automation, and it is where this person's durable advantage lies. The goal is to deepen it from something they can do into something that clearly distinguishes them.
+
+        Recommend exactly 3 real, specific courses or certifications that build that depth.
+        Each must reference a real platform and a real course title that exists today.
+        ${shape.replace('REPLACE_WHY', `One sentence on why these compound the human advantage a ${jobTitle} already has here.`)}
+    `;
+}
+
+export async function generateUpskillCourses(
+    jobTitle: string,
+    taskName: string,
+    mode: UpskillMode,
+    aiRiskPercent: number,
+): Promise<UpskillCoursesResult> {
+    return callAnalysis(buildUpskillPrompt(jobTitle, taskName, mode, aiRiskPercent)) as Promise<UpskillCoursesResult>;
 }
 
 /**
