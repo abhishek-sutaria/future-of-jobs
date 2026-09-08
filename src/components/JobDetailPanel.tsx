@@ -11,7 +11,7 @@ import { Z } from '../config/layers';
 import { UI, CHART } from '../config/constants';
 import { getTaskCategory } from '../data';
 import { getSeriesIdForJob, getSeriesLabel } from '../utils/bls';
-import { jobSourceProvenanceChips } from '../utils/provenance';
+import { jobSourceProvenanceChips, panelSourceList } from '../utils/provenance';
 import { ProvenanceBadge } from './ProvenanceBadge';
 import { useUserStore, reapplyUpskillCompletions } from '../userStore';
 import { loadScenario, saveScenario } from '../lib/userData';
@@ -508,7 +508,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
 
                     {/* Footer */}
                     <div className="flex-none p-3 border-t border-white/[0.04] flex justify-end text-[10px] text-gray-600 font-mono uppercase tracking-wider">
-                        <span>Sources: {(job.dataSources || ['Modeled']).join(', ')}</span>
+                        <span>Sources: {panelSourceList(job).join(', ')}</span>
                     </div>
                 </div>
             </div>

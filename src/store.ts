@@ -366,14 +366,13 @@ export const useStore = create<AppState>((set, get) => ({
             const socCode = MAP_TITLE_TO_SOC[job.title];
             if (socCode && locationData[socCode]) {
                 item.locations = locationData[socCode];
-                dataSources.push(DATA_SOURCES.BLS_STATE);
             }
 
             item.dataSources = [...new Set(dataSources)];
 
             let confidence = CONFIDENCE.BASELINE;
             if (item.dataSources.some(s => s.includes('BLS')))  confidence += CONFIDENCE.BLS_BONUS;
-            if (item.dataSources.some(s => s.includes('ONET'))) confidence += CONFIDENCE.ONET_BONUS;
+            if (item.dataSources.includes(DATA_SOURCES.ONET)) confidence += CONFIDENCE.ONET_BONUS;
             item.confidenceScore = confidence;
 
             return item;
