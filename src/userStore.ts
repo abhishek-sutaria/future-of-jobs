@@ -18,7 +18,6 @@
 import { create } from 'zustand';
 import type { User } from '@supabase/supabase-js';
 import { getSupabase, HAS_SUPABASE } from './lib/supabase';
-import { useStore } from './store';
 import {
     loadUserActivity,
     saveRole as dbSaveRole,
@@ -30,28 +29,6 @@ import {
     type UserActivity,
 } from './lib/userData';
 
-/**
- * Re-apply persisted upskill boosts for one job (or every job when omitted) by
- * replaying store.ts's own `upskillTask` mutation.
- *
- * WHY THIS EXISTS: store.ts's `applyAnalysesToJobs` overwrites a job's task
- * scores wholesale from a fresh Claude analysis (see its comment in
- * src/store.ts), which silently erases any in-memory upskill boost. Call this
- * right after any store.ts action that runs `applyAnalysesToJobs` — auto/manual
- * Analyze, or a full re-score — to restore boosts for tasks the user has
- * actually completed. Lives here, not in store.ts, so store.ts never needs to
- * import the user store (auth stays a one-way dependency: this layer knows
- * about the visualisation store, never the reverse).
- */
-export function reapplyUpskillCompletions(jobId?: string): void {
-    const completions = useUserStore.getState().activity.upskillCompletions;
-    if (completions.length === 0) return;
-    const upskillTask = useStore.getState().upskillTask;
-    for (const c of completions) {
-        if (jobId && c.jobId !== jobId) continue;
-        upskillTask(c.jobId, c.taskName);
-    }
-}
 
 /**
  * disabled  — no Supabase configured; app runs exactly as it did pre-accounts

@@ -3,7 +3,6 @@ import { createPortal } from 'react-dom';
 import { useStore } from '../store';
 import { estimateRescoreCost, formatRescoreCostSummary } from '../utils/rescoreCost';
 import { Z } from '../config/layers';
-import { reapplyUpskillCompletions } from '../userStore';
 
 /**
  * Gate for the expensive full re-score: show a token/USD estimate and require
@@ -82,7 +81,6 @@ export const RescoreConfirmModal: React.FC = () => {
             await refreshAIScores();
             // A full re-score overwrites every job's task scores wholesale —
             // restore any upskill boosts the user has earned, for every job.
-            reapplyUpskillCompletions();
         } finally {
             setStarting(false);
         }

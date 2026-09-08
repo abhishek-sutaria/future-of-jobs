@@ -195,8 +195,8 @@ export { buildRiskScale };
 //
 // upskill_completions has no job_title column (see migration) — every
 // completion must be joined to a Job by id to get a displayable title.
-// Read-only by design: there is no inverse of store.ts's upskillTask, so the
-// dashboard must not imply completions can be undone here.
+// Read-only by design: nothing offers a way to remove a completion, so the
+// dashboard must not imply one can be undone here.
 
 export interface TrainingGroup {
     jobId: string;

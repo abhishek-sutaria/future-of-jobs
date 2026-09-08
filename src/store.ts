@@ -4,7 +4,6 @@ import type { Job } from './types';
 import { initialJobs } from './data';
 import { resolveInitialScores, type ScoresSource } from './utils/bakedScores';
 import type { JobAnalysisResult } from './utils/taskScoring';
-import { UPSKILL_IMPACT } from './config/GameMechanics';
 import {
     YEAR_MIN, PERCENTILES, RESILIENCE_LABELS, VOLATILITY_LABELS,
     CONFIDENCE, DATA_SOURCES,
@@ -140,7 +139,6 @@ interface AppState {
     selectedJob: Job | null;
     setSelectedJob: (job: Job | null) => void;
     jobs: Job[];
-    upskillTask: (jobId: string, taskName: string) => void;
 
     // Peak height encoding — what does mountain height represent in the 3D view?
     //   'growth'     → cumulative % → damped shader height (timeline scrub)
@@ -254,26 +252,6 @@ export const useStore = create<AppState>((set, get) => ({
     setSelectedJob: (selectedJob) => set({ selectedJob }),
     jobs: SEEDED_JOBS,
 
-    upskillTask: (jobId, taskName) => set((state) => {
-        const newJobs = state.jobs.map((job) => {
-            if (job.id !== jobId) return job;
-            const newTasks = job.tasks.map((task) => {
-                if (task.name !== taskName) return task;
-                return {
-                    ...task,
-                    humanCriticalityScore: Math.min(1, task.humanCriticalityScore + UPSKILL_IMPACT.HUMAN_SCORE_BOOST),
-                    aiCapabilityScore: Math.max(0, task.aiCapabilityScore - UPSKILL_IMPACT.AI_SCORE_REDUCTION)
-                };
-            });
-            return { ...job, tasks: newTasks };
-        });
-
-        const newSelectedJob = state.selectedJob?.id === jobId
-            ? newJobs.find(j => j.id === jobId) || null
-            : state.selectedJob;
-
-        return { jobs: newJobs, selectedJob: newSelectedJob };
-    }),
 
     // Peak height encoding — default Workers so 2025 already has height variance
     // (equal-length leader lines then stay readable; Growth is flat at the baseline).

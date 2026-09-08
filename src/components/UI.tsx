@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useStore } from '../store';
 import { IntroModal } from './IntroModal';
 import { SkillsModal } from './SkillsModal';
-import { useUserStore, reapplyUpskillCompletions } from '../userStore';
+import { useUserStore } from '../userStore';
 import { StartupIdeasModal } from './StartupIdeasModal';
 import { MethodologyModal } from './MethodologyModal';
 import { StudentGuideModal } from './Modals/StudentGuideModal';
@@ -113,7 +113,6 @@ export const UI: React.FC<UIProps> = ({ dashboardOpen }) => {
                 setAnalysisResult(res);
                 if (res) {
                     useStore.getState().updateJobFromLiveAnalysis(jobId, res);
-                    reapplyUpskillCompletions(jobId);
                 }
                 toast.success('AI analysis complete');
             } catch (e: unknown) {
