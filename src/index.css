@@ -137,7 +137,7 @@ h1, h2, h3, h4, h5, h6 {
   scrollbar-color: rgba(255, 255, 255, 0.08) transparent;
 }
 
-/* ── Print styles (Student Guide) ─────────────────────────────────────────── */
+/* ── Print styles (Student Guide + saved dashboard reports) ───────────────── */
 @media print {
   /* The modal is portaled to document.body when printable, so it's a direct
      child of <body>. Hide every other body child, then strip the modal's
@@ -148,6 +148,11 @@ h1, h2, h3, h4, h5, h6 {
 
   [data-print-backdrop] {
     display: none !important;
+  }
+
+  /* The page itself still paints its dark ground behind the printed sheet. */
+  html, body {
+    background: #ffffff !important;
   }
 
   [data-print-modal-overlay] {
@@ -192,6 +197,37 @@ h1, h2, h3, h4, h5, h6 {
   [data-print-card] {
     break-inside: avoid;
     page-break-inside: avoid;
+  }
+
+  /* Controls don't belong on paper. */
+  [data-print-modal] [aria-label="Close dialog"] {
+    display: none !important;
+  }
+
+  /* Saved reports are authored for the dark UI: translucent white fills and
+     hairline borders that vanish on paper, over text coloured for a dark
+     ground. Flatten both so a printed report is legible. Individual elements
+     opt back in with Tailwind's print: variants where colour carries meaning. */
+  [data-print-modal] [class*="bg-white/"],
+  [data-print-modal] [class*="bg-amber-"],
+  [data-print-modal] [class*="bg-purple-"] {
+    background: transparent !important;
+  }
+
+  [data-print-modal] [class*="border-"] {
+    border-color: #d1d5db !important;
+  }
+
+  [data-print-modal] .text-gray-200,
+  [data-print-modal] .text-gray-300,
+  [data-print-modal] .text-gray-400,
+  [data-print-modal] .text-white {
+    color: #111827 !important;
+  }
+
+  [data-print-modal] .text-gray-500,
+  [data-print-modal] .text-gray-600 {
+    color: #4b5563 !important;
   }
 }
 

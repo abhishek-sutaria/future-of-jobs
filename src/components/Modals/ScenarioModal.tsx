@@ -4,6 +4,7 @@ import { IconSparkles } from '../ui/Icons';
 import { Skeleton, SkeletonText } from '../ui/Skeleton';
 import { YEAR_MAX } from '../../config/constants';
 import type { ScenarioResult } from '../../utils/analysis';
+import { ScenarioReport } from '../reports/ScenarioReport';
 
 interface ScenarioModalProps {
     isOpen: boolean;
@@ -37,22 +38,8 @@ export const ScenarioModal: React.FC<ScenarioModalProps> = ({ isOpen, isLoading,
                     <p className="text-red-400 text-sm leading-relaxed">{errorMessage}</p>
                 </div>
             ) : result ? (
-                <div className="space-y-6 animate-in fade-in duration-300">
-                    <div className="border-l-2 border-purple-500/50 pl-4 py-1">
-                        <p className="text-gray-200 leading-relaxed italic">"{result.story}"</p>
-                    </div>
-
-                    <div className="space-y-3">
-                        <h4 className="text-xs font-semibold text-purple-400 uppercase tracking-wider">Key Shifts</h4>
-                        <div className="space-y-2">
-                            {result.keyChanges.map((change: string, i: number) => (
-                                <div key={i} className="flex items-center gap-3 p-3 rounded-lg bg-white/[0.03] border border-white/[0.06]">
-                                    <span className="text-purple-400 font-bold text-sm tabular-nums w-6">{String(i + 1).padStart(2, '0')}</span>
-                                    <span className="text-gray-300 text-sm">{change}</span>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
+                <div className="animate-in fade-in duration-300">
+                    <ScenarioReport result={result} />
                 </div>
             ) : (
                 <p className="text-red-400 text-sm">Failed to generate scenario. Check your Claude setup or try again.</p>
