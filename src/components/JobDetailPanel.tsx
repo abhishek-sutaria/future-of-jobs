@@ -9,8 +9,8 @@ import { generateJobScenario, analyzeJob, getClaudeUserFriendlyMessage, type Sce
 import { IconBrain, IconSparkles, IconAlertTriangle, IconShield, IconTarget, IconInfo, IconTrendingDown, IconCheck, IconBookmark, IconAward } from './ui/Icons';
 import { Skeleton } from './ui/Skeleton';
 import { Z } from '../config/layers';
-import { UI, CHART } from '../config/constants';
-import { getTaskCategory } from '../data';
+import { UI, CHART, RISK_THRESHOLDS } from '../config/constants';
+import { partitionRoleTasks, isHybridTask } from '../utils/taskPartition';
 import { getSeriesIdForJob, getSeriesLabel } from '../utils/bls';
 import { jobSourceProvenanceChips, panelSourceList } from '../utils/provenance';
 import { ProvenanceBadge } from './ProvenanceBadge';
@@ -146,26 +146,15 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
     const riskTask = sortedByRisk[0];
     const safeTask = sortedByHuman[0];
 
-    // Mutually exclusive buckets (same rules as getTaskCategory / TaskCompositionChart).
-    // Independent AI>0.5 and human>0.5 filters let mixed-score tasks appear in both cards —
-    // e.g. Cybersecurity "Encrypt data transmissions…" at 0.55 / 0.65.
-    // Category alone decides the column. Completing training used to shift a
-    // task's scores, which could migrate it into the unrendered 'Augmentable'
-    // middle, so both lists carried a completed-task escape hatch to keep it
-    // on screen. Training no longer touches any score, so the buckets are
-    // stable — and the escape hatch would now be actively wrong, pulling a
-    // "Build on this" human strength across into the Automation Risk card.
-    // Trained tasks still sort first, so the user's own work stays visible.
-    const byTrainedFirst = (a: typeof job.tasks[number], b: typeof job.tasks[number]) =>
-        Number(completedTaskNames.has(b.name)) - Number(completedTaskNames.has(a.name));
-    const highRiskTasks = job.tasks
-        .filter((t) => getTaskCategory(t) === 'Automatable')
-        .sort((a, b) => byTrainedFirst(a, b) || b.aiCapabilityScore - a.aiCapabilityScore)
-        .slice(0, UI.MAX_TASK_PREVIEW);
-    const safeTasks = job.tasks
-        .filter((t) => getTaskCategory(t) === 'Human-Critical')
-        .sort((a, b) => byTrainedFirst(a, b) || b.humanCriticalityScore - a.humanCriticalityScore)
-        .slice(0, UI.MAX_TASK_PREVIEW);
+    // See utils/taskPartition: the panel splits on AI exposure, the same axis
+    // the Automation Risk gauge averages, so the gauge and the columns can
+    // never contradict each other. Every task lands in exactly one column.
+    const { exposed, resistant } = React.useMemo(
+        () => partitionRoleTasks(job.tasks, (t) => completedTaskNames.has(t.name)),
+        [job.tasks, completedTaskNames],
+    );
+    const highRiskTasks = exposed.slice(0, UI.MAX_TASK_PREVIEW);
+    const safeTasks = resistant.slice(0, UI.MAX_TASK_PREVIEW);
 
     return (
         <>
@@ -275,7 +264,13 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                     </span>
                                 </div>
                             </div>
-                            <p className="text-[10px] uppercase text-gray-500 font-semibold tracking-wider mt-2">Automation Risk</p>
+                            <div className="relative group/gauge flex items-center gap-1 mt-2">
+                                <p className="text-[10px] uppercase text-gray-500 font-semibold tracking-wider">Automation Risk</p>
+                                <IconInfo size={10} className="text-gray-500" />
+                                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 p-2 bg-gray-900 border border-gray-700 rounded-lg text-[9px] text-gray-300 opacity-0 group-hover/gauge:opacity-100 pointer-events-none transition-opacity z-10 text-center leading-tight">
+                                    The average share of this role&rsquo;s tasks that AI can already perform, across every task. It is not the number of tasks at risk, so it can sit in the middle even when no single task is mostly automated.
+                                </div>
+                            </div>
                         </div>
 
                         {/* Growth */}
@@ -383,20 +378,30 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                 <h3 className="text-red-400 font-semibold uppercase tracking-wider text-xs mb-2 flex items-center gap-2">
                                     <IconAlertTriangle size={14} /> Automation Risk
                                 </h3>
-                                <p className="text-[11px] text-gray-400 leading-relaxed mb-4">
-                                    AI can do much of this already. Defending a task means moving into the
-                                    judgment around it — reviewing the output and owning the calls it can't.
-                                </p>
+                                {highRiskTasks.length > 0 && (
+                                    <p className="text-[11px] text-gray-400 leading-relaxed mb-4">
+                                        AI is automating the following tasks. Defending one means moving into the
+                                        judgment around it: reviewing the output and owning the calls it can't.
+                                    </p>
+                                )}
                                 <div className="space-y-3">
-                                    {highRiskTasks.map((task, i) => {
+                                    {highRiskTasks.map((task) => {
                                         const trained = completedTaskNames.has(task.name);
                                         return (
-                                            <div key={i} className="bg-white/[0.02] border border-red-500/10 hover:border-red-500/25 p-3.5 rounded-lg flex justify-between items-start gap-3 transition-colors">
+                                            <div key={task.name} className="bg-white/[0.02] border border-red-500/10 hover:border-red-500/25 p-3.5 rounded-lg flex justify-between items-start gap-3 transition-colors">
                                                 <div className="text-gray-200 text-sm font-medium flex-1">{task.name}</div>
                                                 <div className="flex flex-col items-end gap-1.5 shrink-0">
                                                     <div className="text-[10px] font-semibold text-red-400 bg-red-500/10 px-2 py-1 rounded border border-red-500/15 tabular-nums mt-0.5">
                                                         {(task.aiCapabilityScore * 100).toFixed(0)}% RISK
                                                     </div>
+                                                    {isHybridTask(task) && (
+                                                        <span
+                                                            title="AI can do much of this task, but human judgment still decides the outcome. This is where defending it pays off most."
+                                                            className="text-[9px] font-semibold text-amber-400/90 bg-amber-500/10 px-1.5 py-0.5 rounded border border-amber-500/20 uppercase tracking-wider cursor-help"
+                                                        >
+                                                            Hybrid
+                                                        </span>
+                                                    )}
                                                     {trained ? (
                                                         <span className="flex items-center gap-1 text-[10px] font-semibold text-emerald-400 uppercase tracking-wider">
                                                             <IconAward size={11} /> Trained
@@ -437,14 +442,16 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                 <h3 className="text-emerald-400 font-semibold uppercase tracking-wider text-xs mb-2 flex items-center gap-2">
                                     <IconShield size={14} /> Human Skills
                                 </h3>
-                                <p className="text-[11px] text-gray-400 leading-relaxed mb-4">
-                                    These resist automation. This is where deepening your skill compounds.
-                                </p>
+                                {safeTasks.length > 0 && (
+                                    <p className="text-[11px] text-gray-400 leading-relaxed mb-4">
+                                        The following tasks resist automation. This is where deepening your skill compounds.
+                                    </p>
+                                )}
                                 <div className="space-y-3">
-                                    {safeTasks.map((task, i) => {
+                                    {safeTasks.map((task) => {
                                         const trained = completedTaskNames.has(task.name);
                                         return (
-                                            <div key={i} className="bg-white/[0.02] border border-emerald-500/10 hover:border-emerald-500/25 p-3.5 rounded-lg flex justify-between items-start gap-3 transition-colors">
+                                            <div key={task.name} className="bg-white/[0.02] border border-emerald-500/10 hover:border-emerald-500/25 p-3.5 rounded-lg flex justify-between items-start gap-3 transition-colors">
                                                 <div className="text-white text-sm font-medium flex-1">{task.name}</div>
                                                 <div className="flex flex-col items-end gap-1.5 shrink-0 mt-1">
                                                     <div className="flex items-center gap-1.5">
@@ -590,10 +597,14 @@ function EmptyState({ loading, error, missingKey, type }: { loading: boolean; er
             ) : (
                 <>
                     {type === 'risk' ? <IconShield size={20} className="text-emerald-500" /> : <IconAlertTriangle size={20} className="text-amber-500" />}
-                    <p className="text-gray-400 text-xs max-w-[14rem] leading-relaxed">
+                    {/* Must never read as "zero risk": the gauge above averages AI
+                        exposure across every task, so it can legitimately show 30-40%
+                        while no single task passes the 50% line. Say that plainly
+                        rather than leaving the two looking contradictory. */}
+                    <p className="text-gray-400 text-xs max-w-[16rem] leading-relaxed">
                         {type === 'risk'
-                            ? 'No automatable tasks — high AI alone is not enough; human criticality must also be low'
-                            : 'No specific safe zones found'}
+                            ? `No single task here reaches ${RISK_THRESHOLDS.AUTOMATABLE_AI_SCORE * 100}% automation exposure. This role’s risk score comes from AI handling parts of many tasks rather than taking over any one of them.`
+                            : 'Every task in this role carries significant AI exposure. Those marked Hybrid still depend on human judgment.'}
                     </p>
                 </>
             )}

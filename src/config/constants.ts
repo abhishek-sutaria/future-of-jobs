@@ -247,7 +247,11 @@ export const UI = {
     SIDEBAR_WIDTH_REM: 20,    // w-80 = 20rem
     INTRO_STORAGE_KEY: 'foj_intro_dismissed',
     /** Max tasks to show in filtered lists */
-    MAX_TASK_PREVIEW: 3,
+    /** Every role carries exactly 5 tasks. A cap of 3 silently hid the other
+     *  two whenever a column held them all, which is the same credibility
+     *  problem as a gauge disagreeing with its own task list: what the panel
+     *  shows must be the whole task list, not a sample of it. */
+    MAX_TASK_PREVIEW: 5,
     /** Word count above which text renders as paragraph vs chips */
     LONG_TEXT_WORD_THRESHOLD: 8,
 } as const;
