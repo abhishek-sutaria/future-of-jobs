@@ -3,7 +3,7 @@ import { Modal } from '../ui/Modal';
 import { IconBrain } from '../ui/Icons';
 import { Skeleton, SkeletonText } from '../ui/Skeleton';
 import type { JobAnalysis } from '../../utils/analysis';
-import { getTaskCategory } from '../../data';
+import { RISK_THRESHOLDS } from '../../config/constants';
 
 import type { Job } from '../../types';
 
@@ -97,18 +97,18 @@ export const AnalysisModal: React.FC<AnalysisModalProps> = ({ isOpen, isLoading,
                         <div className="space-y-3">
                             <h4 className="text-gray-400 text-xs font-semibold uppercase tracking-wider border-b border-white/[0.06] pb-2">Task-by-Task Breakdown</h4>
                             <p className="text-[11px] text-gray-500">
-                                Red AI badges mark tasks classified as Automatable: high AI capability and low human criticality. The role panel groups tasks by AI exposure alone, so a task can appear under its Automation Risk column without being flagged here.
+                                A red AI badge marks a task at or above 50% AI exposure, the same line the role panel uses for its Automation Risk column. A green Human badge marks a task where human judgment stays critical. A task can carry both: AI does much of the work, a person still owns the outcome.
                             </p>
                             <div className="space-y-2">
                                 {result.tasks.map((task, i) => {
                                     const taskAiDisplay = Math.round(task.ai_exposure_score * 100);
                                     const taskHumanDisplay = Math.round(task.human_criticality_score * 100);
-                                    const category = getTaskCategory({
-                                        aiCapabilityScore: task.ai_exposure_score,
-                                        humanCriticalityScore: task.human_criticality_score,
-                                    });
-                                    const isAutomatable = category === 'Automatable';
-                                    const isHumanCritical = category === 'Human-Critical';
+                                    // Same exposure line as the role panel (utils/taskPartition), so a
+                                    // task flagged red here is exactly a task in that panel's Automation
+                                    // Risk column. The two axes are read independently, which lets a
+                                    // hybrid task light up both badges instead of being forced into one.
+                                    const isAutomatable = task.ai_exposure_score >= RISK_THRESHOLDS.AUTOMATABLE_AI_SCORE;
+                                    const isHumanCritical = task.human_criticality_score > RISK_THRESHOLDS.HUMAN_CRITICAL_SCORE;
 
                                     return (
                                         <div key={i} className="p-4 bg-white/[0.02] hover:bg-white/[0.04] border border-white/[0.06] rounded-lg transition-colors">
