@@ -14,7 +14,7 @@
 import { describe, it, expect } from 'vitest';
 import { initialJobs } from '../data';
 import { RISK_THRESHOLDS, UI } from '../config/constants';
-import { partitionRoleTasks, isHybridTask } from '../utils/taskPartition';
+import { partitionRoleTasks, isHybridTask, pickRoadmapPair, emptyColumnNote } from '../utils/taskPartition';
 import bakedScores from '../data/ai_scores.json';
 
 type Task = { name: string; aiCapabilityScore: number; humanCriticalityScore: number };
@@ -61,16 +61,34 @@ describe('every task is visible somewhere', () => {
 });
 
 describe('the gauge and the columns agree', () => {
-    it('never shows a mid or high gauge above an empty Automation Risk column', () => {
-        const offenders: string[] = [];
+    it('always puts a task in the risk column once the gauge reaches the exposure line', () => {
+        // The exact guarantee: an average at or above the line needs at least one
+        // task at or above it. Below the line an empty column is allowed and the
+        // panel explains it on screen.
         for (const job of initialJobs) {
             const tasks = displayedTasks(job.id, job.tasks);
-            const { exposed } = partitionRoleTasks(tasks);
-            if (exposed.length === 0 && gauge(tasks) >= RISK_THRESHOLDS.AUTOMATABLE_AI_SCORE * 0.9) {
-                offenders.push(`${job.title} (${Math.round(gauge(tasks) * 100)}%)`);
+            if (gauge(tasks) >= RISK_THRESHOLDS.AUTOMATABLE_AI_SCORE) {
+                expect(partitionRoleTasks(tasks).exposed.length).toBeGreaterThan(0);
             }
         }
-        expect(offenders).toEqual([]);
+    });
+
+    it('holds for any scores, not just the bundled ones', () => {
+        // A live Analyze run can return any scores, so test the property itself.
+        // Park-Miller: 16807 * (2^31 - 1) stays below 2^53, so every step is exact.
+        let seed = 42;
+        const rand = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+        for (let n = 0; n < 2000; n++) {
+            const tasks: Task[] = Array.from({ length: 5 }, (_, i) => ({
+                name: `t${i}`, aiCapabilityScore: rand(), humanCriticalityScore: rand(),
+            }));
+            const { exposed, resistant } = partitionRoleTasks(tasks);
+            expect(exposed.length + resistant.length).toBe(5);
+            if (gauge(tasks) >= RISK_THRESHOLDS.AUTOMATABLE_AI_SCORE) expect(exposed.length).toBeGreaterThan(0);
+            if (exposed.length === 0) {
+                expect(Math.max(...tasks.map((t) => t.aiCapabilityScore))).toBeLessThan(RISK_THRESHOLDS.AUTOMATABLE_AI_SCORE);
+            }
+        }
     });
 
     it('only leaves the risk column empty when no task is meaningfully exposed', () => {
@@ -162,6 +180,67 @@ describe('one definition of automatable across the app', () => {
             const { exposed } = partitionRoleTasks(tasks);
             const flaggedByModal = tasks.filter((t) => t.aiCapabilityScore >= RISK_THRESHOLDS.AUTOMATABLE_AI_SCORE);
             expect(new Set(flaggedByModal.map((t) => t.name))).toEqual(new Set(exposed.map((t) => t.name)));
+        }
+    });
+});
+
+describe('the gauge is the average of the numbers on screen', () => {
+    // Same formulas as the app: the gauge is automationCostIndex (mean rounded to
+    // 2dp, store.ts) shown via toFixed(0); each chip is one task's score rounded to
+    // a whole percent. Rounding each chip moves their average by under half a
+    // point, rounding the mean by at most half a point, so they can differ by 1.
+    const gaugeShown = (scores: number[]) =>
+        Number((parseFloat((scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(2)) * 100).toFixed(0));
+    const chipAverage = (scores: number[]) =>
+        scores.map((s) => Number((s * 100).toFixed(0))).reduce((a, b) => a + b, 0) / scores.length;
+
+    it('stays within one point of the chip average for any scores', () => {
+        let seed = 7;
+        const rand = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+        for (let n = 0; n < 5000; n++) {
+            const scores = Array.from({ length: 5 }, () => rand());
+            expect(Math.abs(gaugeShown(scores) - chipAverage(scores))).toBeLessThanOrEqual(1 + 1e-9);
+        }
+    });
+
+    it('stays within one point for every bundled role', () => {
+        for (const job of initialJobs) {
+            const scores = displayedTasks(job.id, job.tasks).map((t) => t.aiCapabilityScore);
+            expect(Math.abs(gaugeShown(scores) - chipAverage(scores))).toBeLessThanOrEqual(1 + 1e-9);
+        }
+    });
+});
+
+describe('empty column notes', () => {
+    it('explains an empty risk column against the gauge, using the real threshold', () => {
+        const note = emptyColumnNote('exposed', false);
+        expect(note).toContain(`${RISK_THRESHOLDS.AUTOMATABLE_AI_SCORE * 100}%`);
+        expect(note).toMatch(/parts of many tasks/);
+    });
+
+    it('only mentions Hybrid when a task on screen is marked Hybrid', () => {
+        expect(emptyColumnNote('resistant', true)).toMatch(/marked Hybrid/);
+        expect(emptyColumnNote('resistant', false)).not.toMatch(/Hybrid/);
+    });
+});
+
+describe('roadmap pairing', () => {
+    it('never asks a user to pivot from a task to itself', () => {
+        const tasks: Task[] = [
+            { name: 'both', aiCapabilityScore: 0.9, humanCriticalityScore: 0.9 },
+            { name: 'human', aiCapabilityScore: 0.1, humanCriticalityScore: 0.8 },
+            { name: 'ai', aiCapabilityScore: 0.7, humanCriticalityScore: 0.2 },
+        ];
+        const { riskTask, safeTask } = pickRoadmapPair(tasks);
+        expect(riskTask?.name).toBe('both');
+        expect(safeTask?.name).toBe('human');
+    });
+
+    it('picks two distinct tasks for every bundled role', () => {
+        for (const job of initialJobs) {
+            const { riskTask, safeTask } = pickRoadmapPair(displayedTasks(job.id, job.tasks));
+            expect(riskTask && safeTask).toBeTruthy();
+            expect(riskTask!.name).not.toBe(safeTask!.name);
         }
     });
 });

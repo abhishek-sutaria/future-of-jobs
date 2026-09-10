@@ -9,8 +9,8 @@ import { generateJobScenario, analyzeJob, getClaudeUserFriendlyMessage, type Sce
 import { IconBrain, IconSparkles, IconAlertTriangle, IconShield, IconTarget, IconInfo, IconTrendingDown, IconCheck, IconBookmark, IconAward } from './ui/Icons';
 import { Skeleton } from './ui/Skeleton';
 import { Z } from '../config/layers';
-import { UI, CHART, RISK_THRESHOLDS } from '../config/constants';
-import { partitionRoleTasks, isHybridTask } from '../utils/taskPartition';
+import { UI, CHART } from '../config/constants';
+import { partitionRoleTasks, isHybridTask, pickRoadmapPair, emptyColumnNote } from '../utils/taskPartition';
 import { getSeriesIdForJob, getSeriesLabel } from '../utils/bls';
 import { jobSourceProvenanceChips, panelSourceList } from '../utils/provenance';
 import { ProvenanceBadge } from './ProvenanceBadge';
@@ -141,14 +141,10 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
 
     const riskValue = job.automationCostIndex;
 
-    const sortedByRisk = [...job.tasks].sort((a, b) => b.aiCapabilityScore - a.aiCapabilityScore);
-    const sortedByHuman = [...job.tasks].sort((a, b) => b.humanCriticalityScore - a.humanCriticalityScore);
-    const riskTask = sortedByRisk[0];
-    const safeTask = sortedByHuman[0];
+    const { riskTask, safeTask } = pickRoadmapPair(job.tasks);
 
-    // See utils/taskPartition: the panel splits on AI exposure, the same axis
-    // the Automation Risk gauge averages, so the gauge and the columns can
-    // never contradict each other. Every task lands in exactly one column.
+    // The gauge is the mean of these same per-task scores, and every task shows
+    // its score in one of the two columns (see utils/taskPartition).
     const { exposed, resistant } = React.useMemo(
         () => partitionRoleTasks(job.tasks, (t) => completedTaskNames.has(t.name)),
         [job.tasks, completedTaskNames],
@@ -268,7 +264,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                 <p className="text-[10px] uppercase text-gray-500 font-semibold tracking-wider">Automation Risk</p>
                                 <IconInfo size={10} className="text-gray-500" />
                                 <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 p-2 bg-gray-900 border border-gray-700 rounded-lg text-[9px] text-gray-300 opacity-0 group-hover/gauge:opacity-100 pointer-events-none transition-opacity z-10 text-center leading-tight">
-                                    The average share of this role&rsquo;s tasks that AI can already perform, across every task. It is not the number of tasks at risk, so it can sit in the middle even when no single task is mostly automated.
+                                    The average of the risk scores shown on each of this role&rsquo;s tasks below. It is not a count of tasks at risk, so it can sit in the middle even when no single task is mostly automated.
                                 </div>
                             </div>
                         </div>
@@ -380,7 +376,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                 </h3>
                                 {highRiskTasks.length > 0 && (
                                     <p className="text-[11px] text-gray-400 leading-relaxed mb-4">
-                                        AI is automating the following tasks. Defending one means moving into the
+                                        AI is automating much of the following tasks. Defending one means moving into the
                                         judgment around it: reviewing the output and owning the calls it can't.
                                     </p>
                                 )}
@@ -454,9 +450,8 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                             <div key={task.name} className="bg-white/[0.02] border border-emerald-500/10 hover:border-emerald-500/25 p-3.5 rounded-lg flex justify-between items-start gap-3 transition-colors">
                                                 <div className="text-white text-sm font-medium flex-1">{task.name}</div>
                                                 <div className="flex flex-col items-end gap-1.5 shrink-0 mt-1">
-                                                    <div className="flex items-center gap-1.5">
-                                                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                                                    <span className="text-[10px] font-semibold text-emerald-400 uppercase tracking-wider hidden md:inline">Safe</span>
+                                                    <div className="text-[10px] font-semibold text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded border border-emerald-500/15 tabular-nums">
+                                                        {(task.aiCapabilityScore * 100).toFixed(0)}% RISK
                                                     </div>
                                                     {trained ? (
                                                         <span className="flex items-center gap-1 text-[10px] font-semibold text-emerald-400 uppercase tracking-wider">
@@ -476,7 +471,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                         );
                                     })}
                                     {safeTasks.length === 0 && (
-                                        <EmptyState loading={analysisLoading} error={analysisError} missingKey={missingApiKey} type="safe" />
+                                        <EmptyState loading={analysisLoading} error={analysisError} missingKey={missingApiKey} type="safe" hasHybrid={exposed.some(isHybridTask)} />
                                     )}
                                 </div>
                                 <div className="mt-5 pt-3 border-t border-white/[0.04]">
@@ -579,7 +574,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
     );
 };
 
-function EmptyState({ loading, error, missingKey, type }: { loading: boolean; error: string | null; missingKey: boolean; type: 'risk' | 'safe' }) {
+function EmptyState({ loading, error, missingKey, type, hasHybrid = false }: { loading: boolean; error: string | null; missingKey: boolean; type: 'risk' | 'safe'; hasHybrid?: boolean }) {
     return (
         <div className="flex flex-col items-center justify-center py-6 text-center space-y-2 opacity-70">
             {loading ? (
@@ -597,14 +592,8 @@ function EmptyState({ loading, error, missingKey, type }: { loading: boolean; er
             ) : (
                 <>
                     {type === 'risk' ? <IconShield size={20} className="text-emerald-500" /> : <IconAlertTriangle size={20} className="text-amber-500" />}
-                    {/* Must never read as "zero risk": the gauge above averages AI
-                        exposure across every task, so it can legitimately show 30-40%
-                        while no single task passes the 50% line. Say that plainly
-                        rather than leaving the two looking contradictory. */}
                     <p className="text-gray-400 text-xs max-w-[16rem] leading-relaxed">
-                        {type === 'risk'
-                            ? `No single task here reaches ${RISK_THRESHOLDS.AUTOMATABLE_AI_SCORE * 100}% automation exposure. This role’s risk score comes from AI handling parts of many tasks rather than taking over any one of them.`
-                            : 'Every task in this role carries significant AI exposure. Those marked Hybrid still depend on human judgment.'}
+                        {emptyColumnNote(type === 'risk' ? 'exposed' : 'resistant', hasHybrid)}
                     </p>
                 </>
             )}

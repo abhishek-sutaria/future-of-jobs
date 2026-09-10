@@ -97,7 +97,7 @@ export const AnalysisModal: React.FC<AnalysisModalProps> = ({ isOpen, isLoading,
                         <div className="space-y-3">
                             <h4 className="text-gray-400 text-xs font-semibold uppercase tracking-wider border-b border-white/[0.06] pb-2">Task-by-Task Breakdown</h4>
                             <p className="text-[11px] text-gray-500">
-                                A red AI badge marks a task at or above 50% AI exposure, the same line the role panel uses for its Automation Risk column. A green Human badge marks a task where human judgment stays critical. A task can carry both: AI does much of the work, a person still owns the outcome.
+                                A red AI badge marks a task at or above {RISK_THRESHOLDS.AUTOMATABLE_AI_SCORE * 100}% AI exposure, the same line the role panel uses for its Automation Risk column. A green Human badge marks a task where human judgment stays critical. A task can carry both: AI does much of the work, a person still owns the outcome.
                             </p>
                             <div className="space-y-2">
                                 {result.tasks.map((task, i) => {
