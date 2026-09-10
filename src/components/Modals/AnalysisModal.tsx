@@ -97,7 +97,7 @@ export const AnalysisModal: React.FC<AnalysisModalProps> = ({ isOpen, isLoading,
                         <div className="space-y-3">
                             <h4 className="text-gray-400 text-xs font-semibold uppercase tracking-wider border-b border-white/[0.06] pb-2">Task-by-Task Breakdown</h4>
                             <p className="text-[11px] text-gray-500">
-                                Red AI badges mark tasks classified as Automatable (high AI capability and low human criticality) — the same rule the role panel uses for Automation Risk tasks.
+                                Red AI badges mark tasks classified as Automatable: high AI capability and low human criticality. The role panel groups tasks by AI exposure alone, so a task can appear under its Automation Risk column without being flagged here.
                             </p>
                             <div className="space-y-2">
                                 {result.tasks.map((task, i) => {
