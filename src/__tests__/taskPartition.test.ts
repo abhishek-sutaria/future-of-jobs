@@ -152,6 +152,20 @@ describe('the panel shows the whole task list, not a sample', () => {
     });
 });
 
+describe('one definition of automatable across the app', () => {
+    it('the Analyze modal flags exactly the tasks the panel puts in its risk column', () => {
+        // AnalysisModal red-badges a task when ai >= AUTOMATABLE_AI_SCORE, which
+        // must stay identical to the panel's partition or the same task reads as
+        // automatable in one view and not the other.
+        for (const job of initialJobs) {
+            const tasks = displayedTasks(job.id, job.tasks);
+            const { exposed } = partitionRoleTasks(tasks);
+            const flaggedByModal = tasks.filter((t) => t.aiCapabilityScore >= RISK_THRESHOLDS.AUTOMATABLE_AI_SCORE);
+            expect(new Set(flaggedByModal.map((t) => t.name))).toEqual(new Set(exposed.map((t) => t.name)));
+        }
+    });
+});
+
 describe("Ray's reported roles specifically", () => {
     it.each(['Financial Analyst', 'Operations Research Analyst'])(
         '%s no longer shows a non-zero gauge above an empty risk column',
