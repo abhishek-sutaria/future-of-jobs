@@ -72,7 +72,7 @@ export const UI: React.FC<UIProps> = ({ dashboardOpen }) => {
     // Jobs already auto-analyzed this session. This used to be inferred from
     // `selectedJob.yearlyForecast` being absent, but forecasts now ship
     // precomputed for every job, which made that check always short-circuit and
-    // silently stopped the deep-dive fields (resilience, volatility, traits)
+    // silently stopped the deep-dive prose (traits, replacements, insight)
     // from ever loading. Track the intent directly instead.
     const autoAnalyzedJobIdsRef = React.useRef<Set<string>>(new Set());
 
@@ -110,10 +110,9 @@ export const UI: React.FC<UIProps> = ({ dashboardOpen }) => {
                 // A slow response for a job the user already navigated away from
                 // must not overwrite the panel they're looking at now.
                 if (isStale()) return;
+                // Prose only: reasoning, insight, replacements, traits. The role's
+                // numbers stay the published ones, identical for every visitor.
                 setAnalysisResult(res);
-                if (res) {
-                    useStore.getState().updateJobFromLiveAnalysis(jobId, res);
-                }
                 toast.success('AI analysis complete');
             } catch (e: unknown) {
                 console.error('Auto-analysis failed', e);

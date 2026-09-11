@@ -536,3 +536,27 @@ export async function generateStartupIdeas(
         return { ...core, topThree: [] };
     }
 }
+
+/**
+ * Rows for the Analyze modal: the role's published scores, with the live run's
+ * reasoning attached. Matched by exact name, then 40-char prefix, then position,
+ * because Claude sometimes paraphrases task_text. The live scores are ignored on
+ * purpose, so the modal can never show a number the role page doesn't.
+ */
+export function alignAnalysisToTasks(
+    jobTasks: { name: string; aiCapabilityScore: number; humanCriticalityScore: number }[],
+    liveTasks: { task_text: string; reasoning?: string }[],
+): { name: string; ai: number; human: number; reasoning: string }[] {
+    return jobTasks.map((task, index) => {
+        const match =
+            liveTasks.find((t) => t.task_text === task.name) ??
+            liveTasks.find((t) => t.task_text.startsWith(task.name.slice(0, 40))) ??
+            liveTasks[index];
+        return {
+            name: task.name,
+            ai: task.aiCapabilityScore,
+            human: task.humanCriticalityScore,
+            reasoning: match?.reasoning ?? '',
+        };
+    });
+}

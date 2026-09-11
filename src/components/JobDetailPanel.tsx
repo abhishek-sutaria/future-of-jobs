@@ -7,11 +7,10 @@ import { UpskillModal } from './UpskillModal';
 import type { UpskillMode } from '../utils/analysis';
 import { generateJobScenario, analyzeJob, getClaudeUserFriendlyMessage, type ScenarioResult, type JobAnalysis } from '../utils/analysis';
 import { IconBrain, IconSparkles, IconAlertTriangle, IconShield, IconTarget, IconInfo, IconTrendingDown, IconCheck, IconBookmark, IconAward } from './ui/Icons';
-import { Skeleton } from './ui/Skeleton';
 import { Z } from '../config/layers';
-import { UI, CHART } from '../config/constants';
+import { UI, CHART, RESILIENCE_LABELS } from '../config/constants';
 import { partitionRoleTasks, isHybridTask, pickRoadmapPair, emptyColumnNote } from '../utils/taskPartition';
-import { getSeriesIdForJob, getSeriesLabel } from '../utils/bls';
+import { forecastPathPoints } from '../utils/terrainMath';
 import { jobSourceProvenanceChips, panelSourceList } from '../utils/provenance';
 import { ProvenanceBadge } from './ProvenanceBadge';
 import { useUserStore } from '../userStore';
@@ -29,6 +28,12 @@ interface JobDetailPanelProps {
     onSetAnalysisLoading: (loading: boolean) => void;
     onShowMethodology: () => void;
 }
+
+const RESILIENCE_COLOR: Record<string, string> = {
+    [RESILIENCE_LABELS.TOP]: 'text-emerald-400',
+    [RESILIENCE_LABELS.MID]: 'text-cyan-400',
+    [RESILIENCE_LABELS.BOTTOM]: 'text-amber-400',
+};
 
 export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
     job, analysisResult, analysisLoading, analysisError, missingApiKey,
@@ -85,10 +90,6 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                 projectedGrowth: job.projectedGrowth,
             });
             onSetAnalysisResult(res);
-            if (res) {
-                // Keep role panel Automation Risk % / task cards in sync with Analyze.
-                useStore.getState().updateJobFromLiveAnalysis(job.id, res);
-            }
         } catch (e) {
             console.error(e);
             setAnalysisModalError(getClaudeUserFriendlyMessage(e));
@@ -273,92 +274,51 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                         <div className="bg-white/[0.03] rounded-xl p-4 border border-white/[0.06] flex flex-col justify-center">
                             <p className="text-[10px] uppercase text-gray-500 font-semibold tracking-wider mb-1">Growth Outlook</p>
                             <div className="text-2xl font-bold text-white tabular-nums">{job.projectedGrowth > 0 ? '+' : ''}{job.projectedGrowth}%</div>
-                            <p className="text-[10px] text-gray-600">projected by 2030</p>
+                            <p className="text-[10px] text-gray-600">BLS outlook, 2024–34</p>
                         </div>
 
                         {/* Human Resilience */}
                         <div className="bg-white/[0.03] rounded-xl p-4 border border-white/[0.06] flex flex-col justify-center">
                             <p className="text-[10px] uppercase text-gray-500 font-semibold tracking-wider mb-1">Human Resilience</p>
-                            {(() => {
-                                const val = analysisResult?.human_resilience_label;
-                                if (val) {
-                                    const color = (val === 'Critical' || val === 'Very High') ? 'text-emerald-400' : val === 'High' ? 'text-cyan-400' : 'text-amber-400';
-                                    return <div className={`text-xl font-bold ${color}`}>{val}</div>;
-                                }
-                                // A Skeleton is a *loading* affordance, so only show it while a
-                                // call is actually in flight. This value comes solely from a live
-                                // Claude analysis (unlike the other three tiles, which render from
-                                // baked/BLS data), so with no key, a failed call, or before Analyze
-                                // is ever run there is nothing arriving — an indefinite skeleton
-                                // there reads as a hung app. Fall back to an explicit placeholder,
-                                // matching how EmptyState distinguishes these cases below.
-                                if (analysisLoading) return <Skeleton className="h-6 w-20" />;
-                                return (
-                                    <div
-                                        className="text-xl font-bold text-gray-600 cursor-help"
-                                        title={missingApiKey || analysisError
-                                            ? 'Needs a working Claude key — run Analyze to compute this'
-                                            : 'Run Analyze to compute this'}
-                                    >
-                                        —
-                                    </div>
-                                );
-                            })()}
-                            <p className="text-[10px] text-gray-600 mt-0.5">Social Intel Priority</p>
+                            {/* Published percentile label (store.ts applyPercentileLabels), the same
+                                one the 3D view colours by. A live Analyze run no longer overrides it. */}
+                            <div
+                                title="How this role's average need for human judgment ranks among all 50 roles: top quarter Future-Proof, middle half High, bottom quarter At Risk."
+                                className={`text-xl font-bold cursor-help ${RESILIENCE_COLOR[job.humanResilienceLabel] ?? 'text-gray-600'}`}
+                            >
+                                {job.humanResilienceLabel}
+                            </div>
+                            <p className="text-[10px] text-gray-600 mt-0.5">Rank among all 50 roles</p>
                         </div>
 
-                        {/* Salary Sparkline */}
+                        {/* Projected employment path */}
                         <div className="bg-white/[0.03] rounded-xl p-4 border border-white/[0.06] flex flex-col items-center justify-center">
                             {(() => {
-                                const val = analysisResult?.salary_volatility_label;
-                                const forecast = analysisResult?.salary_forecast;
-                                let data: number[] = [];
-                                if (forecast && forecast.length >= 2) {
-                                    data = forecast;
-                                } else {
-                                    // Derive baseline from real BLS growth + automation risk
-                                    // projectedGrowth is total growth over 2024-2034 (10yr); scale to a 5yr window
-                                    const annualRate = (job.projectedGrowth / 100) / 10;
-                                    const riskDrag = job.automationCostIndex * 0.015;
-                                    data = Array.from({ length: 6 }, (_, i) => {
-                                        const trend = 100 * Math.pow(1 + annualRate - riskDrag, i);
-                                        const volatility = job.automationCostIndex > 0.6
-                                            ? Math.sin(i * 1.8) * job.automationCostIndex * 4
-                                            : 0;
-                                        return parseFloat((trend + volatility).toFixed(1));
-                                    });
-                                }
-                                const isHighRisk = val === 'High' || val === 'Very High' || (data[data.length - 1] < data[0]);
-                                const color = isHighRisk ? '#ef4444' : '#22c55e';
+                                const points = forecastPathPoints(job.yearlyForecast);
+                                if (!points) return <div className="text-xl font-bold text-gray-600">—</div>;
+                                const end = points[points.length - 1];
+                                const color = end < 0 ? '#ef4444' : '#22c55e';
+                                const lo = Math.min(0, ...points);
+                                const span = Math.max(0, ...points) - lo || 1;
+                                const y = (v: number) => 32 - ((v - lo) / span) * 28;
                                 return (
                                     <>
-                                        <svg width="90" height="36" className="overflow-visible mb-2">
-                                            <line x1="0" y1="18" x2="90" y2="18" stroke="rgba(255,255,255,0.06)" strokeWidth="1" strokeDasharray="3 2" />
+                                        <svg width="90" height="36" className="overflow-visible mb-2" aria-hidden="true">
+                                            <line x1="0" y1={y(0)} x2="90" y2={y(0)} stroke="rgba(255,255,255,0.08)" strokeWidth="1" strokeDasharray="3 2" />
                                             <polyline
-                                                fill="none" stroke={color} strokeWidth="1.5"
-                                                points={data.map((d, i) => {
-                                                    const x = i * (90 / (data.length - 1));
-                                                    const y = Math.max(2, Math.min(34, 18 - (d - 100)));
-                                                    return `${x},${y}`;
-                                                }).join(' ')}
-                                                strokeLinecap="round" strokeLinejoin="round"
+                                                fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
+                                                points={points.map((v, i) => `${i * (90 / (points.length - 1))},${y(v)}`).join(' ')}
                                             />
-                                            <circle
-                                                cx="90"
-                                                cy={Math.max(2, Math.min(34, 18 - (data[data.length - 1] - 100)))}
-                                                r="2.5" fill={color}
-                                            />
+                                            <circle cx="90" cy={y(end)} r="2.5" fill={color} />
                                         </svg>
                                         <div className="flex items-center gap-1 mt-1 cursor-help group/tooltip relative">
-                                            <p className="text-[10px] uppercase text-gray-500 font-semibold tracking-wider text-center max-w-[100px] leading-tight">
-                                                {getSeriesLabel(getSeriesIdForJob(job.title)) || 'Employment Trend'}
-                                            </p>
+                                            <p className="text-[10px] uppercase text-gray-500 font-semibold tracking-wider text-center max-w-[110px] leading-tight">Projected jobs 2025–30</p>
                                             <IconInfo size={10} className="text-gray-500" />
-                                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-gray-900 border border-gray-700 rounded-lg text-[9px] text-gray-300 opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity z-10 text-center leading-tight">
-                                                This sparkline shows employment for the broader occupation group, not this specific role. BLS does not provide high-frequency per-occupation data.
+                                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-52 p-2 bg-gray-900 border border-gray-700 rounded-lg text-[9px] text-gray-300 opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity z-10 text-center leading-tight">
+                                                This role&rsquo;s year-by-year employment forecast: an AI prediction anchored to the BLS 2024&ndash;34 outlook, the same one the 3D view plots in Growth mode. It is not a BLS data series.
                                             </div>
                                         </div>
-                                        <div className="text-xs font-semibold tabular-nums" style={{ color }}>{val || '--'}</div>
+                                        <div className="text-xs font-semibold tabular-nums" style={{ color }}>{end > 0 ? '+' : ''}{end.toFixed(1)}% by 2030</div>
                                     </>
                                 );
                             })()}

@@ -2,7 +2,7 @@ import React from 'react';
 import { Modal } from '../ui/Modal';
 import { IconBrain } from '../ui/Icons';
 import { Skeleton, SkeletonText } from '../ui/Skeleton';
-import type { JobAnalysis } from '../../utils/analysis';
+import { alignAnalysisToTasks, type JobAnalysis } from '../../utils/analysis';
 import { RISK_THRESHOLDS } from '../../config/constants';
 
 import type { Job } from '../../types';
@@ -31,8 +31,8 @@ export const AnalysisModal: React.FC<AnalysisModalProps> = ({ isOpen, isLoading,
                         <div className="w-12 h-12 border-2 border-blue-500/40 border-t-blue-400 rounded-full animate-spin"></div>
                     </div>
                     <div className="text-center space-y-1">
-                        <p className="text-blue-300 font-medium">Deconstructing Role...</p>
-                        <p className="text-gray-500 text-xs">Evaluating Automation Potential vs. Human Criticality</p>
+                        <p className="text-blue-300 font-medium">Asking Claude about this role...</p>
+                        <p className="text-gray-500 text-xs">Reasoning for each task, strategic insight, likely replacements and required traits</p>
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                         <Skeleton className="h-20 rounded-xl" />
@@ -45,28 +45,19 @@ export const AnalysisModal: React.FC<AnalysisModalProps> = ({ isOpen, isLoading,
                     <p className="text-red-400 text-sm leading-relaxed">{errorMessage}</p>
                 </div>
             ) : result ? (() => {
-                // Align Claude rows to the role's task list (name, then index) and use the
-                // same two-decimal mean the role panel shows as Automation Risk.
-                const aligned = job.tasks.map((task, index) => {
-                    const match = result.tasks.find((t) =>
-                        t.task_text === task.name ||
-                        t.task_text.startsWith(task.name.slice(0, 40))
-                    ) ?? result.tasks[index];
-                    return {
-                        ai: match?.ai_exposure_score ?? task.aiCapabilityScore,
-                        human: match?.human_criticality_score ?? task.humanCriticalityScore,
-                    };
-                });
-                const liveAiAvg = aligned.reduce((sum, t) => sum + t.ai, 0) / (aligned.length || 1);
-                const liveHumanAvg = aligned.reduce((sum, t) => sum + t.human, 0) / (aligned.length || 1);
-                const aiDisplay = (parseFloat(liveAiAvg.toFixed(2)) * 100).toFixed(0);
-                const humanDisplay = (parseFloat(liveHumanAvg.toFixed(2)) * 100).toFixed(0);
+                // Published scores only (see alignAnalysisToTasks): the headline is the
+                // exact figure the role page shows, and Claude contributes the prose.
+                const rows = alignAnalysisToTasks(job.tasks, result.tasks);
+                const aiAvg = rows.reduce((sum, r) => sum + r.ai, 0) / (rows.length || 1);
+                const humanAvg = rows.reduce((sum, r) => sum + r.human, 0) / (rows.length || 1);
+                const aiDisplay = (parseFloat(aiAvg.toFixed(2)) * 100).toFixed(0);
+                const humanDisplay = (parseFloat(humanAvg.toFixed(2)) * 100).toFixed(0);
 
                 return (
                     <div className="space-y-6 animate-in fade-in duration-300">
                         <p className="text-[11px] text-gray-500 leading-relaxed">
-                            AI Automation Score uses the same average as Automation Risk on the role panel.
-                            Scores are cached per role after the first Analyze, and the panel updates as soon as this analysis finishes.
+                            These are the published scores shown on the role page, the same for every visitor.
+                            Claude adds the reasoning for each task, the strategic insight, and the likely replacements and required traits.
                         </p>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-5 flex items-center gap-4">
@@ -100,30 +91,27 @@ export const AnalysisModal: React.FC<AnalysisModalProps> = ({ isOpen, isLoading,
                                 A red AI badge marks a task at or above {RISK_THRESHOLDS.AUTOMATABLE_AI_SCORE * 100}% AI exposure, the same line the role panel uses for its Automation Risk column. A green Human badge marks a task where human judgment stays critical. A task can carry both: AI does much of the work, a person still owns the outcome.
                             </p>
                             <div className="space-y-2">
-                                {result.tasks.map((task, i) => {
-                                    const taskAiDisplay = Math.round(task.ai_exposure_score * 100);
-                                    const taskHumanDisplay = Math.round(task.human_criticality_score * 100);
-                                    // Same exposure line as the role panel (utils/taskPartition), so a
-                                    // task flagged red here is exactly a task in that panel's Automation
-                                    // Risk column. The two axes are read independently, which lets a
-                                    // hybrid task light up both badges instead of being forced into one.
-                                    const isAutomatable = task.ai_exposure_score >= RISK_THRESHOLDS.AUTOMATABLE_AI_SCORE;
-                                    const isHumanCritical = task.human_criticality_score > RISK_THRESHOLDS.HUMAN_CRITICAL_SCORE;
-
+                                {rows.map((row) => {
+                                    // Same exposure line as the role panel (utils/taskPartition); the two
+                                    // axes are read independently so a hybrid task lights up both badges.
+                                    const isAutomatable = row.ai >= RISK_THRESHOLDS.AUTOMATABLE_AI_SCORE;
+                                    const isHumanCritical = row.human > RISK_THRESHOLDS.HUMAN_CRITICAL_SCORE;
                                     return (
-                                        <div key={i} className="p-4 bg-white/[0.02] hover:bg-white/[0.04] border border-white/[0.06] rounded-lg transition-colors">
+                                        <div key={row.name} className="p-4 bg-white/[0.02] hover:bg-white/[0.04] border border-white/[0.06] rounded-lg transition-colors">
                                             <div className="flex justify-between items-start gap-4">
-                                                <p className="text-gray-200 font-medium text-sm flex-1">{task.task_text}</p>
+                                                <p className="text-gray-200 font-medium text-sm flex-1">{row.name}</p>
                                                 <div className="flex gap-2 shrink-0">
                                                     <span className={`px-2 py-1 rounded text-[10px] font-semibold uppercase border ${isAutomatable ? 'bg-red-500/10 text-red-400 border-red-500/20' : 'bg-white/[0.04] text-gray-500 border-white/[0.08]'}`}>
-                                                        AI {taskAiDisplay}%
+                                                        AI {(row.ai * 100).toFixed(0)}%
                                                     </span>
                                                     <span className={`px-2 py-1 rounded text-[10px] font-semibold uppercase border ${isHumanCritical ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-white/[0.04] text-gray-500 border-white/[0.08]'}`}>
-                                                        Human {taskHumanDisplay}%
+                                                        Human {(row.human * 100).toFixed(0)}%
                                                     </span>
                                                 </div>
                                             </div>
-                                            <p className="text-xs text-gray-500 mt-2 pl-2 border-l-2 border-white/[0.06] italic">{task.reasoning}</p>
+                                            {row.reasoning && (
+                                                <p className="text-xs text-gray-500 mt-2 pl-2 border-l-2 border-white/[0.06] italic">{row.reasoning}</p>
+                                            )}
                                         </div>
                                     );
                                 })}
