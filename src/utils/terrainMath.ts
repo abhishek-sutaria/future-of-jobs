@@ -269,3 +269,18 @@ export function growthAtYearFromForecastFlat(
     const f = t - y1;
     return val1 * (1 - f) + val2 * f;
 }
+
+/** A role's published forecast as one cumulative value per year, YEAR_MIN..YEAR_MAX.
+ *  Null when any year is missing, so a tile never draws a line it has to invent. */
+export function forecastPathPoints(
+    forecast: { year: number; growthImpact: number }[] | undefined,
+): number[] | null {
+    if (!forecast?.length) return null;
+    const points: number[] = [];
+    for (let year = YEAR_MIN; year <= YEAR_MAX; year++) {
+        const hit = forecast.find((f) => f.year === year);
+        if (!hit || !Number.isFinite(hit.growthImpact)) return null;
+        points.push(hit.growthImpact);
+    }
+    return points;
+}

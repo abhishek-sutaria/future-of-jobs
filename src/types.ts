@@ -12,8 +12,8 @@ export type Job = {
   employment: number; // Proxy for BLS volume
   automationCostIndex: number; // 0-1 (Higher = more expensive to automate)
   projectedGrowth: number; // Percentage (e.g., 5.2)
-  salaryVolatilityLabel: string; // e.g., "High", "Medium", "Low"
-  humanResilienceLabel: string; // "Low", "Medium", "High"
+  salaryVolatilityLabel: string; // Percentile label: Critical | High | Moderate | Stable (store.ts)
+  humanResilienceLabel: string; // Percentile label: Future-Proof | High | At Risk (store.ts)
 
   // Accuracy Metadata
   confidenceScore: number; // Source coverage index (store formula), not a BLS accuracy metric

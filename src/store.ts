@@ -162,15 +162,6 @@ interface AppState {
     /** Epoch ms of the fetch that produced them (null when showing bundled seed data) */
     blsFetchedAt: number | null;
     fetchRealData: () => Promise<void>;
-    updateJobForecast: (jobId: string, forecast: { year: number, growthImpact: number, reasoning: string }[]) => void;
-    /** Merge a live Analyze modal result into the job so panel risk % / task cards match. */
-    updateJobFromLiveAnalysis: (
-        jobId: string,
-        analysis: {
-            tasks: { task_text: string; ai_exposure_score: number; human_criticality_score: number }[];
-            yearlyForecast?: { year: number; growthImpact: number; reasoning: string }[];
-        },
-    ) => void;
 
     // AI Task Scoring
     isScoring: boolean;
@@ -361,34 +352,6 @@ export const useStore = create<AppState>((set, get) => ({
 
         set({ jobs: finalJobs, isLoadingData: false, hasLoadedRealData: true, blsSource, blsFetchedAt });
     },
-
-    updateJobForecast: (jobId, forecast) => set((state) => {
-        const newJobs = state.jobs.map(job =>
-            job.id !== jobId ? job : { ...job, yearlyForecast: forecast }
-        );
-        const newSelected = state.selectedJob?.id === jobId
-            ? newJobs.find(j => j.id === jobId) || null
-            : state.selectedJob;
-        return { jobs: newJobs, selectedJob: newSelected };
-    }),
-
-    updateJobFromLiveAnalysis: (jobId, analysis) => set((state) => {
-        const asResult: JobAnalysisResult = {
-            tasks: analysis.tasks.map((t) => ({
-                taskName: t.task_text,
-                aiCapabilityScore: t.ai_exposure_score,
-                humanCriticalityScore: t.human_criticality_score,
-            })),
-            yearlyForecast: analysis.yearlyForecast ?? [],
-        };
-        const merged = applyPercentileLabels(
-            applyAnalysesToJobs(state.jobs, { [jobId]: asResult }),
-        );
-        const newSelected = state.selectedJob?.id === jobId
-            ? merged.find((j) => j.id === jobId) || null
-            : state.selectedJob;
-        return { jobs: merged, selectedJob: newSelected };
-    }),
 
     // ── AI Task Scoring ───────────────────────────────────────────────────
 
