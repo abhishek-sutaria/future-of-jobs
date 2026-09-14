@@ -101,10 +101,9 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                     </div>
 
                     <p className="text-[11px] text-gray-500 leading-relaxed mt-2 italic">
-                        Before Claude finishes scoring a role, task-level AI / human scores stay at
-                        their pending baseline. In <strong>Growth</strong> mode, peak motion follows
-                        Claude&apos;s stored year-by-year forecast when present; otherwise a linear
-                        cumulative path from 0% at 2025 to the BLS OOH 10-year % at 2030.{' '}
+                        In <strong>Growth</strong> mode, peak motion follows each role&apos;s published
+                        year-by-year forecast, which is checked to stay within that role&apos;s BLS OOH
+                        2024&ndash;34 outlook before it is published.{' '}
                         <strong>Workers</strong> mode uses the same cumulative % to scale baseline
                         BLS employment into an implied headcount, then log-scales that for peak height,
                         with a modest display-only boost to the height change so the scrub reads clearly,
@@ -128,8 +127,8 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                         score — the role-level number is just the average.
                     </p>
                     <ul className="list-disc list-inside text-xs text-gray-400 ml-1 space-y-1">
-                        <li><strong>Relative Risk labels</strong> are dynamic — they grade jobs on a curve (top 25% by AI capability = "High Risk") rather than against absolute thresholds.</li>
-                        <li>Scores are cached for 30 days in your browser; click the green "AI Scores Live" badge in the header to re-score with fresh Claude data.</li>
+                        <li><strong>Relative labels</strong> grade each role against the other 49 rather than against absolute thresholds. Human Resilience ranks a role&apos;s average human-criticality score (top quarter Future-Proof, middle half High, bottom quarter At Risk), and peak colours grade its Automation Risk against the full range of roles.</li>
+                        <li>The scores for all 50 roles are published with the app as one dated set, so every visitor sees the same figures; the &ldquo;AI Scores&rdquo; badge in the header shows the month they were produced. Clicking <strong>Analyze</strong> on a role adds Claude&apos;s reasoning without changing any score. Re-scoring from that badge uses your own Claude key and changes the figures only in your browser, until a newer published set arrives or 30 days pass.</li>
                     </ul>
                 </div>
 
@@ -138,18 +137,16 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                 <div className="space-y-2">
                     <div className="flex items-center gap-2.5">
                         <IconActivity size={18} className="text-blue-400" />
-                        <h3 className="text-base font-semibold text-blue-400">
-                            Economic viability: <SourceLink href="https://futuretech.mit.edu/">MIT Iceberg Index</SourceLink>
-                        </h3>
+                        <h3 className="text-base font-semibold text-blue-400">Capability is not adoption</h3>
                     </div>
                     <p className="text-sm text-gray-300 leading-relaxed">
                         Just because a task <em>can</em> be automated doesn't mean it <em>will</em>{' '}
-                        be. We reference the{' '}
+                        be. The AI capability score measures how easily current GenAI could do a task
+                        today. It does not model cost, regulation, or how quickly employers adopt the
+                        technology. For a cost-based view of which automation pays off, see the{' '}
                         <SourceLink href="https://futuretech.mit.edu/">
-                            <strong>Iceberg Index cost model</strong>
-                        </SourceLink>{' '}
-                        to filter out automation that isn't ROI-positive yet — high cost/complexity
-                        tasks remain human-led even when AI is technically capable.
+                            <strong>MIT Iceberg Index</strong>
+                        </SourceLink>.
                     </p>
                 </div>
 
@@ -189,7 +186,7 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                         Use the toggle on the year-slider panel to flip peak height between:
                     </p>
                     <ul className="list-disc list-inside text-xs text-gray-400 ml-1 space-y-1">
-                        <li><strong>Growth</strong>: per-year cumulative % from Claude&apos;s forecast when available; otherwise a linear path from 0% at 2025 to the BLS OOH 10-year % for that role at 2030 (until Claude fills in a forecast).</li>
+                        <li><strong>Growth</strong>: per-year cumulative % from the role&apos;s published forecast. Before publishing, each forecast is checked to start at 0% in 2025 and stay within the role&apos;s BLS OOH 2024&ndash;34 ten-year change.</li>
                         <li><strong>Workers</strong>: log-scaled implied headcount (BLS baseline × cumulative % at the selected year), with a stronger height-delta boost and a partial blend of the Growth height curve so the scrub feels responsive. Labels still show the real cumulative %.</li>
                     </ul>
                 </div>

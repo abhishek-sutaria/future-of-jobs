@@ -27,15 +27,15 @@ const FEATURES: Feature[] = [
         emoji: '⏱️',
         title: 'AI Timeline Slider',
         description:
-            'Drag the slider from 2025 → 2030 to simulate how AI displaces workers over time. Peaks fall faster for high-risk roles. The animation shows where the biggest structural changes are expected.',
-        tip: 'Compare a Marketing Manager to a Sales Manager at 2030 — notice which peak drops faster and by how much.',
+            'Drag the slider from 2025 → 2030 to watch each role\'s projected employment change year by year. Every peak follows its role\'s published forecast, which stays within the official BLS 2024–34 outlook for that occupation.',
+        tip: 'Compare a Marketing Manager to a Sales Manager at 2030. Notice which peak moves more, then open both roles to compare their task-level risk.',
         color: 'purple',
     },
     {
         emoji: '📋',
         title: 'Job Detail Panel',
         description:
-            'Click any peak to open a role\'s full profile: automation risk %, growth outlook to 2032, a list of its most human-critical tasks, and a BLS employment trend sparkline.',
+            'Click any peak to open a role\'s full profile: its Automation Risk, the BLS 2024–34 growth outlook, its Human Resilience rank among all 50 roles, and its projected jobs path to 2030. Below that, each of the role\'s O*NET tasks appears with its own risk score. Automation Risk is the plain average of those task scores, so you can check it yourself.',
         tip: 'The "Human Skills" section shows what AI cannot easily replace. These are the tasks worth developing.',
         color: 'blue',
     },
@@ -43,15 +43,15 @@ const FEATURES: Feature[] = [
         emoji: '🤖',
         title: 'AI Analysis (Analyze)',
         description:
-            'Tap the Analyze button on any role. Claude AI reads the O*NET task list and scores each task individually for AI replaceability vs. human criticality — in real time, not from a pre-written database.',
-        tip: 'Every score is freshly generated. The AI reasons about each specific task, so results reflect genuine capability assessment.',
+            'Tap the Analyze button on any role and Claude explains its published scores: the reasoning behind each task\'s score, a strategic insight for the role, and the likely replacements and human traits it calls for. Analyze adds the explanation; it never changes the numbers.',
+        tip: 'Every student sees the same published scores for a role, dated in the header badge, so you can compare notes. Analyze is where you get the why behind them.',
         color: 'red',
     },
     {
         emoji: '🔮',
         title: 'Scenario Planning',
         description:
-            'The Scenario button asks "what if" — what happens to this role if AI adoption accelerates, if regulation tightens, or if economic conditions shift? It generates a written strategic brief.',
+            'The Scenario button asks "what if": what happens to this role if AI adoption accelerates, if regulation tightens, or if economic conditions shift? It generates a written strategic brief.',
         tip: 'Use this to stress-test career choices. Ask the same role under two different scenarios and compare the outlooks.',
         color: 'violet',
     },
@@ -59,8 +59,8 @@ const FEATURES: Feature[] = [
         emoji: '🗺️',
         title: 'Career Roadmap',
         description:
-            'Identifies the highest-risk task in a role and builds a personalised 6-month upskilling plan to move away from it — covering specific skills, tools, and learning resources.',
-        tip: 'Available from the Job Detail Panel after running an AI Analysis. The plan is tailored to that specific role\'s risk profile.',
+            'Identifies the highest-risk task in a role and builds a personalised 6-month upskilling plan to move away from it, covering specific skills, tools, and learning resources.',
+        tip: 'Open it with View Roadmap at the bottom of the Job Detail Panel. The plan pairs that role\'s highest-risk task with its most human-critical one.',
         color: 'orange',
     },
     {
@@ -75,7 +75,7 @@ const FEATURES: Feature[] = [
         emoji: '🗺️',
         title: 'US Map View',
         description:
-            'Switch from the 3D terrain to a flat 2D US map. State colour and circle size both encode BLS employment volume — darker and larger means more workers in that state for the selected roles. Hover a state to see the exact BLS OEWS May 2025 employment count and Location Quotient (LQ) per occupation.',
+            'Switch from the 3D terrain to a flat 2D US map. State colour and circle size both encode BLS employment volume: darker and larger means more workers in that state for the selected roles. Hover a state to see the exact BLS OEWS May 2025 employment count and Location Quotient (LQ) per occupation.',
         tip: 'Select specific roles using the role filter before opening the map to compare which states are most exposed for those jobs in particular.',
         color: 'teal',
     },
@@ -83,15 +83,15 @@ const FEATURES: Feature[] = [
         emoji: '📊',
         title: 'Job Security Index',
         description:
-            'The colour legend on the right of the screen maps roles into three bands: High Automation Risk (red), Hybrid/Augmented (amber), and Safe Human-Centric (green). Bands are relative — graded on a curve across all 50 roles shown.',
-        tip: 'A "green" role here means it is safer than most others in this dataset — not that it is completely immune to automation.',
+            'The colour legend at the bottom right of the screen maps roles into three bands: High Automation Risk (red), Hybrid/Augmented (amber), and Safe Human-Centric (green). Bands are relative, graded on a curve across all 50 roles shown.',
+        tip: 'A "green" role here means it is safer than most others in this dataset, not that it is completely immune to automation.',
         color: 'green',
     },
     {
         emoji: '📚',
         title: 'Data Sources',
         description:
-            'Employment numbers come from the Bureau of Labor Statistics (BLS) Occupational Employment & Wage Statistics. Task descriptions are sourced from O*NET 30.1. AI risk scores are generated live by Anthropic Claude.',
+            'Employment numbers come from the Bureau of Labor Statistics (BLS) Occupational Employment & Wage Statistics, and growth outlooks from the BLS 2024–34 Employment Projections. Task descriptions are sourced from O*NET 30.1. AI risk scores are Claude\'s ratings of each O*NET task, published with the app as one dated set, so every student sees the same numbers.',
         tip: 'Click "Methodology & Data" at the bottom of the screen to read the full sourcing and calculation methodology.',
         color: 'gray',
     },
@@ -144,7 +144,7 @@ export const StudentGuideModal: React.FC<Props> = ({ isOpen, onClose }) => {
         >
             {/* Print-only header */}
             <div className="hidden print:block mb-6 pb-4 border-b border-gray-300">
-                <h1 className="text-2xl font-bold text-gray-900">AI & Future of Work — Feature Guide</h1>
+                <h1 className="text-2xl font-bold text-gray-900">AI & Future of Work: Feature Guide</h1>
                 <p className="text-gray-600 text-sm mt-1">
                     futureofjobs.vercel.app &nbsp;·&nbsp; All data: BLS, O*NET 30.1, Anthropic Claude
                 </p>
@@ -154,7 +154,7 @@ export const StudentGuideModal: React.FC<Props> = ({ isOpen, onClose }) => {
             <div className="mb-5 p-4 rounded-xl bg-white/[0.03] border border-white/[0.07] print:bg-gray-50 print:border-gray-200">
                 <p className="text-gray-300 text-sm leading-relaxed print:text-gray-700">
                     This guide explains every feature of the <strong className="text-white print:text-gray-900">AI & Future of Work</strong> visualisation tool.
-                    Each feature is designed to help you analyse how artificial intelligence is reshaping specific job roles — so you can make strategic decisions about your career or studies.
+                    Each feature is designed to help you analyse how artificial intelligence is reshaping specific job roles, so you can make strategic decisions about your career or studies.
                 </p>
             </div>
 
