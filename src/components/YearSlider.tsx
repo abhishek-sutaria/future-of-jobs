@@ -51,7 +51,7 @@ export const YearSlider: React.FC = () => {
                             role="radio"
                             aria-checked={heightMode === 'growth'}
                             onClick={() => setHeightMode('growth')}
-                            className={`px-2.5 py-1 max-md:min-h-[44px] max-md:px-3 text-[10px] font-semibold uppercase tracking-wider rounded-md transition-colors ${
+                            className={`px-2.5 py-1 [@media(pointer:coarse)]:min-h-[44px] max-md:min-h-[44px] max-md:px-3 text-[10px] font-semibold uppercase tracking-wider rounded-md transition-colors ${
                                 heightMode === 'growth'
                                     ? 'bg-cyan-500/20 text-cyan-200'
                                     : 'text-gray-400 hover:text-white'
@@ -64,7 +64,7 @@ export const YearSlider: React.FC = () => {
                             role="radio"
                             aria-checked={heightMode === 'employment'}
                             onClick={() => setHeightMode('employment')}
-                            className={`px-2.5 py-1 max-md:min-h-[44px] max-md:px-3 text-[10px] font-semibold uppercase tracking-wider rounded-md transition-colors ${
+                            className={`px-2.5 py-1 [@media(pointer:coarse)]:min-h-[44px] max-md:min-h-[44px] max-md:px-3 text-[10px] font-semibold uppercase tracking-wider rounded-md transition-colors ${
                                 heightMode === 'employment'
                                     ? 'bg-cyan-500/20 text-cyan-200'
                                     : 'text-gray-400 hover:text-white'
@@ -104,7 +104,7 @@ export const YearSlider: React.FC = () => {
                         aria-valuemin={YEAR_MIN}
                         aria-valuemax={YEAR_MAX}
                         aria-valuenow={Math.round(year)}
-                        className="relative w-full h-5 appearance-none bg-transparent cursor-pointer z-10 slider-input max-md:h-11 max-md:-my-3"
+                        className="relative w-full h-5 appearance-none bg-transparent cursor-pointer z-10 slider-input [@media(pointer:coarse)]:h-11 [@media(pointer:coarse)]:-my-3"
                     />
                 </div>
             </div>
