@@ -303,7 +303,13 @@ export const useStore = create<AppState>((set, get) => ({
                 blsFetchedAt = result.fetchedAt;
             }
         } catch (e) {
-            console.error('Store: Failed to load BLS data', e);
+            // Checked by name, not instanceof: this module is imported dynamically
+            // and store.test.ts mocks it, so the class identity is not guaranteed.
+            if (e instanceof Error && e.name === 'BlsUnavailableError') {
+                console.warn('Store: BLS live data unavailable; bundled employment figures kept.');
+            } else {
+                console.error('Store: Failed to load BLS data', e);
+            }
         }
 
         // PASS 1 — apply raw BLS employment + compute automationCostIndex
