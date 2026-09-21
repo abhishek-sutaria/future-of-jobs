@@ -111,6 +111,18 @@ export const CONFIDENCE = {
 export const SCENE = {
     CAMERA_INITIAL_POSITION: [0, 35, 55] as readonly [number, number, number],
     CAMERA_FOV: 45,
+    /**
+     * Portrait (phone) framing. fov is VERTICAL, so the horizontal view is
+     * fov x aspect: at 393x852 the default 45deg leaves only ~22deg across,
+     * which showed ~40% of the terrain's width and pushed 14 of 50 role
+     * labels entirely off-screen. Fitting the 30-unit terrain radius needs
+     * distance x tan(fov/2) >= ~67, hence 70deg at ~96 units out.
+     */
+    CAMERA_PORTRAIT_POSITION: [0, 74, 58] as readonly [number, number, number],
+    CAMERA_PORTRAIT_FOV: 70,
+    /** The far terrain edge sits ~126 units from the portrait camera, past the
+     *  landscape FOG_FAR, so it would otherwise dissolve into fog. */
+    FOG_FAR_PORTRAIT: 200,
     FOG_COLOR: '#0a0e17',
     FOG_NEAR: 20,
     FOG_FAR: 120,

@@ -1,12 +1,18 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { useFrame, useThree } from '@react-three/fiber';
+import React, { useEffect, useMemo, useState } from 'react';
+import { useThree } from '@react-three/fiber';
+import { Vector3 } from 'three';
 import { Html, Line } from '@react-three/drei';
 import { useStore } from '../store';
 import type { Job } from '../types';
 import { getTerrainPosition, calculateGaussianHeight, buildGrowthForecastFlatArray, growthAtYearFromForecastFlat, getVisualHeightForGrowth, getVisualHeightForWorkersAtYear, impliedEmploymentAtYear, type PeakData, TERRAIN_CONFIG } from '../utils/terrainMath';
 import { buildRiskScale, riskBandColor } from '../config/theme';
-import { SCENE, YEAR_MAX, ANIMATIONS } from '../config/constants';
+import { SCENE, YEAR_MAX } from '../config/constants';
 import { useIsMobile } from '../hooks/useIsMobile';
+import { clampLabelCenterX, clampLabelCenterY } from '../utils/labelLayout';
+
+/** Scratch vector for label projection: reused so the per-frame position
+ *  callback allocates nothing. */
+const projected = new Vector3();
 
 export const JobMarkers: React.FC = () => {
     const jobs = useStore((state) => state.jobs);
@@ -19,6 +25,10 @@ export const JobMarkers: React.FC = () => {
     const isOrbiting = useStore((state) => state.isOrbiting);
 
     const [hoveredJobId, setHoveredJobId] = useState<string | null>(null);
+    // Half-size of each rendered label, measured from the DOM once per render
+    // and read back when projecting, so a label near an edge can be nudged
+    // fully into view instead of hanging off it.
+    const labelHalfSize = React.useRef<Map<string, { x: number; y: number }>>(new Map());
     const gl = useThree((state) => state.gl);
     const isMobile = useIsMobile();
 
@@ -68,56 +78,11 @@ export const JobMarkers: React.FC = () => {
         window.addEventListener('pointerup', onUp);
     };
 
-    // LOD level stored in ref — avoids re-renders per frame
-    const lodLevelRef = useRef<0 | 1 | 2>(2); // 0=Far, 1=Mid, 2=Close
-
-    useFrame((state) => {
-        const dist = state.camera.position.length();
-        if (dist > SCENE.LOD.FAR) lodLevelRef.current = 0;
-        else if (dist > SCENE.LOD.MID) lodLevelRef.current = 1;
-        else lodLevelRef.current = 2;
-    });
-
     // Roles to display (filtered by selection)
     const filteredJobs = useMemo(() => {
         if (selectedRoleIds.size === 0) return jobs;
         return jobs.filter(job => selectedRoleIds.has(job.id));
     }, [jobs, selectedRoleIds]);
-
-    // Mobile only: which roles get a floating text label by default (top N by
-    // employment). Every role still gets its anchor ring/dot on the terrain
-    // and is reachable via search — this only thins the overlapping text.
-    //
-    // Employment rank alone isn't enough: a peak's terrain x-position is
-    // unrelated to its employment, and mobile's narrow default FOV crops most
-    // of the terrain's horizontal spread — confirmed live, picking the raw
-    // top 5 by employment left 4 of them clipped at the screen edges,
-    // sometimes entirely off-screen. Prefer candidates near screen-centre
-    // (small |x|); only fall back to off-centre ones if the centred pool runs
-    // short, so the count shown never drops below MOBILE_LABEL_COUNT.
-    const mobileLabelIds = useMemo(() => {
-        if (!isMobile) return null;
-        const withPos = filteredJobs.map(job => {
-            const i = jobs.findIndex(j => j.id === job.id);
-            const { x } = getTerrainPosition(i, jobs);
-            return { job, x };
-        });
-        const centered = withPos
-            .filter(({ x }) => Math.abs(x) <= ANIMATIONS.MOBILE_LABEL_CENTER_X)
-            .sort((a, b) => b.job.employment - a.job.employment)
-            .slice(0, ANIMATIONS.MOBILE_LABEL_COUNT);
-        const chosen = new Set(centered.map(({ job }) => job.id));
-        if (chosen.size < ANIMATIONS.MOBILE_LABEL_COUNT) {
-            const remainder = withPos
-                .filter(({ job }) => !chosen.has(job.id))
-                .sort((a, b) => b.job.employment - a.job.employment);
-            for (const { job } of remainder) {
-                if (chosen.size >= ANIMATIONS.MOBILE_LABEL_COUNT) break;
-                chosen.add(job.id);
-            }
-        }
-        return chosen;
-    }, [isMobile, filteredJobs, jobs]);
 
     const forecastsFlat = useMemo(
         () => buildGrowthForecastFlatArray(filteredJobs),
@@ -149,11 +114,19 @@ export const JobMarkers: React.FC = () => {
     const staggeredPeaks = useMemo(() => {
         const withOffsets = peaks.map((p, i) => ({ ...p, offset: 0, id: filteredJobs[i].id }));
 
-        // Disabled by default so every leader line is the same length and label
-        // height tracks the terrain. See SCENE.LABEL.STAGGER_ENABLED.
-        if (!SCENE.LABEL.STAGGER_ENABLED) return withOffsets;
+        // Off on desktop so every leader line is the same length and label height
+        // mirrors the terrain (see SCENE.LABEL.STAGGER_ENABLED). On a phone all 50
+        // titles share 393px, so separation matters more than that mapping.
+        if (!SCENE.LABEL.STAGGER_ENABLED && !isMobile) return withOffsets;
 
-        for (let iter = 0; iter < 3; iter++) {
+        // A phone views the terrain from much further back, so peaks that are far
+        // apart in world units still land on top of each other on screen. Both the
+        // collision radius and the separation step scale up to compensate.
+        const collision = isMobile ? SCENE.LABEL.COLLISION_DISTANCE * 1.8 : SCENE.LABEL.COLLISION_DISTANCE;
+        const step = isMobile ? SCENE.LABEL.VERTICAL_OFFSET * 1.7 : SCENE.LABEL.VERTICAL_OFFSET;
+        const passes = isMobile ? 6 : 3;
+
+        for (let iter = 0; iter < passes; iter++) {
             for (let i = 0; i < withOffsets.length; i++) {
                 for (let j = i + 1; j < withOffsets.length; j++) {
                     const p1 = withOffsets[i];
@@ -162,17 +135,17 @@ export const JobMarkers: React.FC = () => {
                     const dz = p1.z - p2.z;
                     const dist = Math.sqrt(dx * dx + dz * dz);
 
-                    if (dist < SCENE.LABEL.COLLISION_DISTANCE) {
+                    if (dist < collision) {
                         const offsetDiff = Math.abs(p1.offset - p2.offset);
-                        if (offsetDiff < SCENE.LABEL.VERTICAL_OFFSET) {
-                            withOffsets[j].offset += SCENE.LABEL.VERTICAL_OFFSET;
+                        if (offsetDiff < step) {
+                            withOffsets[j].offset += step;
                         }
                     }
                 }
             }
         }
         return withOffsets;
-    }, [peaks, filteredJobs]);
+    }, [peaks, filteredJobs, isMobile]);
 
     if (mapView === 'map') return null;
 
@@ -184,20 +157,9 @@ export const JobMarkers: React.FC = () => {
         const isSelected = selectedJob?.id === job.id;
         if (isGlobalSelectionActive && !isSelected) return [];
 
-        const originalIndex = jobs.findIndex(j => j.id === job.id);
-
-        // LOD: at very far distance show only major/prominent jobs
-        let isVisibleByLOD = true;
-        if (!isSelected) {
-            if (lodLevelRef.current === 0) {
-                const isMajor = Math.abs(job.projectedGrowth) > SCENE.MAJOR_GROWTH_THRESHOLD || originalIndex % SCENE.LOD_FILTER_MODULO === 0;
-                if (!isMajor) isVisibleByLOD = false;
-            }
-        }
-
-        // Every job has employment > 0 (verified in data.ts), so this is
-        // effectively just the LOD gate — kept explicit for readability.
-        if (!isVisibleByLOD) return [];
+        // Distance used to drop ~2 in 5 labels beyond SCENE.LOD.FAR, so zooming
+        // out to see the whole terrain silently removed roles from view. Every
+        // role keeps its label at every distance now, matching the desktop view.
 
         // Expanded hover stats are disabled during orbit so popups don't fight the camera.
         const isHovered = !isOrbiting && hoveredJobId === job.id;
@@ -206,12 +168,9 @@ export const JobMarkers: React.FC = () => {
         // job — they carry the risk colour and keep the terrain legible at a
         // glance. Only the floating TEXT label is thinned on mobile, where all
         // 50 overlap into unreadable mush; every job stays one search away.
-        // On a phone the selected role's label is drawn at its peak, which is
-        // usually outside the narrow viewport while the detail panel covers the
-        // screen and already shows the same numbers. Skip it there.
-        const showLabelText = isMobile && isGlobalSelectionActive
-            ? false
-            : !mobileLabelIds || isSelected || isHovered || mobileLabelIds.has(job.id);
+        // Every role carries its label on every device, matching the desktop
+        // view. The old phone-only thinning hid 45 of 50 titles.
+        const showLabelText = isMobile && isGlobalSelectionActive ? false : true;
 
         const pipColor = riskBandColor(job.automationCostIndex, riskScale);
         const labelHeight = SCENE.LABEL.BASE_HEIGHT + peak.offset;
@@ -294,6 +253,20 @@ export const JobMarkers: React.FC = () => {
                         <Html
                             position={[0, labelHeight, 0]}
                             center
+                            // drei's default projection lets a label overhang the
+                            // viewport when its peak sits near an edge. Same maths,
+                            // then clamped so the whole box stays on screen.
+                            calculatePosition={(obj, camera, size) => {
+                                projected.setFromMatrixPosition(obj.matrixWorld).project(camera);
+                                const x = (projected.x * size.width) / 2 + size.width / 2;
+                                const y = -((projected.y * size.height) / 2) + size.height / 2;
+                                const half = labelHalfSize.current.get(job.id);
+                                if (!half) return [x, y];
+                                return [
+                                    clampLabelCenterX(x, half.x, size.width),
+                                    clampLabelCenterY(y, half.y, size.height),
+                                ];
+                            }}
                             wrapperClass={
                                 isHovered || isSelected
                                     ? 'foj-job-label foj-job-label--front'
@@ -304,7 +277,10 @@ export const JobMarkers: React.FC = () => {
                             zIndexRange={isHovered || isSelected ? [16777271, 16777000] : [100, 0]}
                         >
                             <div
-                                className={`flex flex-col max-w-[min(13rem,calc(100vw-2rem))] overflow-hidden rounded border shadow-sm cursor-pointer touch-none select-none transition-all duration-200 ${isSelected || isHovered ? 'bg-[#0F172A]/95 backdrop-blur-sm scale-105 ring-1 ring-white/25 border-slate-300/40 shadow-xl shadow-black/50' : 'bg-[#0F172A]/72 backdrop-blur-[2px] border-slate-600/40'} ${isHovered ? 'border-cyan-400/60' : ''}`}
+                                ref={(el) => {
+                                    if (el) labelHalfSize.current.set(job.id, { x: el.offsetWidth / 2, y: el.offsetHeight / 2 });
+                                }}
+                                className={`flex flex-col max-w-[min(13rem,calc(100vw-2rem))] overflow-hidden rounded border shadow-sm cursor-pointer touch-none select-none transition-all duration-200 ${isSelected || isHovered ? 'bg-[#0F172A]/95 scale-105 ring-1 ring-white/25 border-slate-300/40 shadow-xl shadow-black/50' : 'bg-[#0F172A]/90 border-slate-600/40'} ${isHovered ? 'border-cyan-400/60' : ''}`}
                                 onPointerDown={handleLabelPointerDown(job)}
                                 onPointerEnter={() => {
                                     if (!isOrbiting) setHoveredJobId(job.id);
@@ -312,14 +288,14 @@ export const JobMarkers: React.FC = () => {
                                 onPointerLeave={() => setHoveredJobId(null)}
                             >
                                 {/* Title row */}
-                                <div className="flex items-center gap-1.5 px-1.5 py-0.5 min-w-0">
+                                <div className="flex items-center gap-1.5 px-1.5 py-0.5 max-md:gap-1 max-md:px-1 min-w-0">
                                     {/* The only risk indicator on the label now, so it reads
                                         bold and discrete rather than a point on a ramp. */}
                                     <div
                                         className="w-1.5 h-1.5 rounded-full flex-shrink-0 ring-1 ring-black/30"
                                         style={{ backgroundColor: pipColor, boxShadow: `0 0 4px ${pipColor}` }}
                                     />
-                                    <span className="text-white text-[10px] font-medium leading-tight tracking-wide font-sans truncate min-w-0" title={job.title}>{job.title}</span>
+                                    <span className="text-white text-[10px] max-md:text-[9px] font-medium leading-tight tracking-wide font-sans truncate min-w-0" title={job.title}>{job.title}</span>
                                 </div>
 
                                 {/* Stats on hover/selection. Deliberately just workers + forecast:
