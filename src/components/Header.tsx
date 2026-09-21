@@ -47,7 +47,7 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
 
     return (
         <>
-        <header className="absolute top-0 left-0 w-full px-5 md:px-8 py-2.5 md:py-5 flex flex-col md:flex-row justify-between items-start md:items-center pointer-events-none gap-2 md:gap-4" style={{ zIndex: Z.header }}>
+        <header className="absolute top-0 left-0 w-full px-5 md:px-8 py-2.5 md:py-5 [@media(max-height:480px)]:!py-1.5 flex flex-col md:flex-row justify-between items-start md:items-center pointer-events-none gap-2 md:gap-4 [@media(max-height:480px)]:!gap-2" style={{ zIndex: Z.header }}>
             {/* MAP_SIDEBAR.CLEARANCE_PX clears RoleSelector's desktop sidebar
                 when the 2D map is open. Skipped on mobile, where that sidebar
                 doesn't render at all (RoleFilterButton/Sheet takes over) —
@@ -59,7 +59,7 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
                     <span className="text-white/80 font-light">&</span>
                     <span>Future of Work</span>
                 </h1>
-                <div className="hidden md:flex items-center gap-3 mt-1.5 flex-wrap">
+                <div className="hidden md:flex [@media(max-height:480px)]:!hidden items-center gap-3 mt-1.5 flex-wrap">
                     <div className="flex items-center gap-2">
                         <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
                         <p className="text-[10px] md:text-xs text-gray-500 font-medium tracking-widest uppercase">

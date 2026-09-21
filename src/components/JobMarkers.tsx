@@ -35,8 +35,11 @@ export const JobMarkers: React.FC = () => {
     const gl = useThree((state) => state.gl);
     const isMobile = useIsMobile();
 
+    // Measured on every viewport, not just phones: a short, wide window (1280x800,
+    // 1024x768, a landscape phone at 844x390) puts the terrain's label band right
+    // under the header too. Verified on production before this change: 5 labels
+    // over the header at 1280x800, 6 at 1024x768 and 41 at 844x390.
     useEffect(() => {
-        if (!isMobile) { safeBand.current = { top: 4, bottom: 4 }; return; }
         const measure = () => {
             const box = (sel: string) => document.querySelector(sel)?.getBoundingClientRect();
             const header = box('header');
@@ -50,8 +53,13 @@ export const JobMarkers: React.FC = () => {
         // The chrome mounts after the canvas, so measure again once it settles.
         const t = setTimeout(measure, 1200);
         window.addEventListener('resize', measure);
-        return () => { clearTimeout(t); window.removeEventListener('resize', measure); };
-    }, [isMobile]);
+        window.addEventListener('orientationchange', measure);
+        return () => {
+            clearTimeout(t);
+            window.removeEventListener('resize', measure);
+            window.removeEventListener('orientationchange', measure);
+        };
+    }, []);
 
     // Clear stuck hover state when the window loses focus (pointerleave can be dropped mid-hover)
     useEffect(() => {
