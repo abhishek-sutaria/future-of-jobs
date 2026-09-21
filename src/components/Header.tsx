@@ -16,9 +16,10 @@ interface HeaderProps {
     onStartTour: () => void;
     onOpenStudentGuide: () => void;
     onOpenHealthCheck: () => void;
+    onShowMethodology: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onOpenSkillsModal, onOpenStartupIdeasModal, onStartTour, onOpenStudentGuide, onOpenHealthCheck }) => {
+export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onOpenSkillsModal, onOpenStartupIdeasModal, onStartTour, onOpenStudentGuide, onOpenHealthCheck, onShowMethodology }) => {
     const mapView = useStore((state) => state.mapView);
     const setMapView = useStore((state) => state.setMapView);
     const setSelectedJob = useStore((state) => state.setSelectedJob);
@@ -132,7 +133,7 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
                     <button
                         data-tour="tour-skills"
                         onClick={onOpenSkillsModal}
-                        className="hidden md:flex shrink-0 items-center gap-2 px-3 py-2.5 rounded-lg border border-cyan-500/20 bg-cyan-500/[0.06] hover:bg-cyan-500/15 text-cyan-400 text-xs font-semibold uppercase tracking-wider transition-colors min-h-[44px]"
+                        className="hidden md:flex shrink-0 items-center gap-2 px-3 py-2.5 rounded-lg border border-cyan-500/20 bg-cyan-500/[0.06] hover:bg-cyan-500/15 text-cyan-400 text-xs font-semibold uppercase tracking-wider transition-colors min-h-[44px] max-md:min-w-[44px] max-md:justify-center"
                     >
                         <IconZap size={14} /> My Skills
                     </button>
@@ -140,7 +141,7 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
                         data-tour="tour-startup-ideas"
                         onClick={onOpenStartupIdeasModal}
                         title="Startup Ideas — personalized startup opportunities from your resume"
-                        className="hidden md:flex shrink-0 items-center gap-2 px-3 py-2.5 rounded-lg border border-violet-500/25 bg-violet-500/[0.06] hover:bg-violet-500/15 text-violet-300 text-xs font-semibold uppercase tracking-wider transition-colors min-h-[44px]"
+                        className="hidden md:flex shrink-0 items-center gap-2 px-3 py-2.5 rounded-lg border border-violet-500/25 bg-violet-500/[0.06] hover:bg-violet-500/15 text-violet-300 text-xs font-semibold uppercase tracking-wider transition-colors min-h-[44px] max-md:min-w-[44px] max-md:justify-center"
                     >
                         <IconRocket size={14} /> Startup Ideas
                     </button>
@@ -154,7 +155,7 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
                         data-tour="tour-toggle"
                         onClick={() => setMapView(mapView === 'map' ? 'globe' : 'map')}
                         title={mapView === 'map' ? 'Switch to the 3D view' : 'Switch to the 2D US map'}
-                        className="shrink-0 flex items-center gap-2 px-3 py-2.5 rounded-lg border border-blue-500/20 bg-blue-500/[0.06] hover:bg-blue-500/15 text-blue-400 text-xs font-semibold uppercase tracking-wider transition-colors min-h-[44px]"
+                        className="shrink-0 flex items-center gap-2 px-3 py-2.5 rounded-lg border border-blue-500/20 bg-blue-500/[0.06] hover:bg-blue-500/15 text-blue-400 text-xs font-semibold uppercase tracking-wider transition-colors min-h-[44px] max-md:min-w-[44px] max-md:justify-center"
                     >
                         {mapView === 'map' ? <IconGlobe size={14} /> : <IconMap size={14} />}
                         <span className="max-[379px]:hidden">{mapView === 'map' ? 'Globe' : 'Map'}</span>
@@ -173,7 +174,7 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
                         <button
                             onClick={triggerResetView}
                             title="Return the 3D view to its starting position"
-                            className="shrink-0 px-3 py-2.5 rounded-lg border border-white/[0.08] bg-white/[0.03] hover:bg-white/[0.08] text-gray-300 hover:text-white text-xs font-semibold uppercase tracking-wider transition-colors min-h-[44px]"
+                            className="shrink-0 px-3 py-2.5 rounded-lg border border-white/[0.08] bg-white/[0.03] hover:bg-white/[0.08] text-gray-300 hover:text-white text-xs font-semibold uppercase tracking-wider transition-colors min-h-[44px] max-md:min-w-[44px] max-md:justify-center"
                         >
                             Reset view
                         </button>
@@ -190,7 +191,7 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
                     <button
                         onClick={onOpenHealthCheck}
                         title="Health Check — verify all app systems are working"
-                        className="shrink-0 flex items-center gap-2 px-3 py-2.5 rounded-lg border border-emerald-500/25 bg-emerald-500/[0.06] hover:bg-emerald-500/15 text-emerald-400 text-xs font-semibold uppercase tracking-wider transition-colors min-h-[44px]"
+                        className="shrink-0 flex items-center gap-2 px-3 py-2.5 rounded-lg border border-emerald-500/25 bg-emerald-500/[0.06] hover:bg-emerald-500/15 text-emerald-400 text-xs font-semibold uppercase tracking-wider transition-colors min-h-[44px] max-md:min-w-[44px] max-md:justify-center"
                     >
                         <IconActivity size={14} />
                         <span className="max-[379px]:hidden">Health</span>
@@ -199,7 +200,7 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
                     <button
                         onClick={onOpenStudentGuide}
                         title="Student Feature Guide — printable reference"
-                        className="hidden md:flex shrink-0 items-center gap-2 px-3 py-2.5 rounded-lg border border-amber-500/25 bg-amber-500/[0.06] hover:bg-amber-500/15 text-amber-400 text-xs font-semibold uppercase tracking-wider transition-colors min-h-[44px]"
+                        className="hidden md:flex shrink-0 items-center gap-2 px-3 py-2.5 rounded-lg border border-amber-500/25 bg-amber-500/[0.06] hover:bg-amber-500/15 text-amber-400 text-xs font-semibold uppercase tracking-wider transition-colors min-h-[44px] max-md:min-w-[44px] max-md:justify-center"
                     >
                         <span className="text-sm leading-none">📋</span> Guide
                     </button>
@@ -226,7 +227,7 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
                                     ? 'Your activity — saved roles, history and reports'
                                     : 'Your activity — saved to this browser; add an email to keep it'
                             }
-                            className="shrink-0 flex items-center gap-2 px-3 py-2.5 rounded-lg border border-indigo-500/25 bg-indigo-500/[0.06] hover:bg-indigo-500/15 text-indigo-300 text-xs font-semibold uppercase tracking-wider transition-colors min-h-[44px]"
+                            className="shrink-0 flex items-center gap-2 px-3 py-2.5 rounded-lg border border-indigo-500/25 bg-indigo-500/[0.06] hover:bg-indigo-500/15 text-indigo-300 text-xs font-semibold uppercase tracking-wider transition-colors min-h-[44px] max-md:min-w-[44px] max-md:justify-center"
                         >
                             <IconUser size={14} />
                             <span className="hidden md:inline">
@@ -264,6 +265,7 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
             onOpenSkillsModal={onOpenSkillsModal}
             onOpenStartupIdeasModal={onOpenStartupIdeasModal}
             onOpenStudentGuide={onOpenStudentGuide}
+            onShowMethodology={onShowMethodology}
         />
         </>
     );
@@ -311,7 +313,7 @@ const SearchBar: React.FC<{ onSelectJob: (job: Job) => void }> = ({ onSelectJob 
                 onFocus={() => { if (query.length > 1) setIsOpen(true); }}
                 onBlur={() => setTimeout(() => setIsOpen(false), UI.SEARCH_DEBOUNCE_MS)}
                 aria-label="Search jobs"
-                className="block w-full pl-9 pr-3 py-2.5 border border-white/[0.06] rounded-lg bg-white/[0.03] text-gray-300 placeholder-gray-600 focus:outline-none focus:bg-white/[0.06] focus:border-white/15 focus:ring-1 focus:ring-white/10 text-sm transition-all min-h-[44px]"
+                className="block w-full pl-9 pr-3 py-2.5 border border-white/[0.06] rounded-lg bg-white/[0.03] text-gray-300 placeholder-gray-600 focus:outline-none focus:bg-white/[0.06] focus:border-white/15 focus:ring-1 focus:ring-white/10 text-sm transition-all min-h-[44px] max-md:min-w-[44px] max-md:justify-center"
             />
             {isOpen && matches.length > 0 && (
                 <div className="absolute mt-2 w-full bg-gray-900/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl max-h-[300px] overflow-y-auto text-sm custom-scrollbar" style={{ zIndex: Z.sidebar }}>

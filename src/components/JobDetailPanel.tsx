@@ -183,7 +183,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                         <IconInfo size={10} /> BLS data {blsAge}
                                     </span>
                                 ) : null}
-                                <span className="text-[10px] text-gray-500 font-mono">{job.id.slice(0, 8)}</span>
+                                <span className="hidden md:inline text-[10px] text-gray-500 font-mono">{job.id.slice(0, 8)}</span>
                             </div>
                             <h2 className="text-xl md:text-2xl font-bold text-white tracking-tight">{job.title}</h2>
                             <div className="flex flex-wrap gap-1.5 mt-2" aria-label="Data sources for this role">
@@ -192,7 +192,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                 ))}
                             </div>
                             <p className="text-[10px] text-gray-500 mt-1.5">
-                                Hover any badge for a simple explanation.
+                                Tap any badge for a simple explanation.
                             </p>
                         </div>
 
@@ -225,7 +225,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                             </button>
                             <button
                                 onClick={onClose}
-                                className="w-10 h-10 md:w-11 md:h-11 flex items-center justify-center rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-gray-400 hover:text-white transition-colors"
+                                className="w-11 h-11 flex items-center justify-center rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-gray-400 hover:text-white transition-colors"
                                 aria-label="Close panel"
                             >
                                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6L6 18M6 6l12 12" /></svg>
@@ -233,6 +233,12 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                         </div>
                     </div>
 
+                    {/* On a phone the metrics grid alone is ~300px and, being flex-none,
+                        it pushed the action row and footer outside the panel box (where
+                        overflow-hidden clipped them). This wrapper makes the metrics scroll
+                        with the content on phones; `md:contents` removes the wrapper from
+                        layout at md and up, so the desktop panel is byte-for-byte unchanged. */}
+                    <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar md:contents">
                     {/* Metrics Row */}
                     <div className="flex-none grid grid-cols-2 md:grid-cols-4 gap-3 p-4 md:p-6 border-b border-white/[0.04]">
                         {/* Risk Gauge */}
@@ -326,7 +332,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                     </div>
 
                     {/* Main Content */}
-                    <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-6 custom-scrollbar">
+                    <div className="flex-1 min-h-0 overflow-y-auto p-4 md:p-6 space-y-6 custom-scrollbar">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
 
                             {/* Automation Risk Card */}
@@ -366,7 +372,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                                         <button
                                                             onClick={() => setUpskillTarget({ name: task.name, mode: 'defend', riskPercent: task.aiCapabilityScore * 100 })}
                                                             title="Move from performing this task to owning the judgment around it"
-                                                            className="text-[10px] font-semibold text-cyan-400 hover:text-cyan-300 uppercase tracking-wider underline decoration-cyan-400/30 hover:decoration-cyan-300 underline-offset-2 transition-colors"
+                                                            className="inline-flex items-center max-md:min-h-[44px] text-[10px] font-semibold text-cyan-400 hover:text-cyan-300 uppercase tracking-wider underline decoration-cyan-400/30 hover:decoration-cyan-300 underline-offset-2 transition-colors"
                                                         >
                                                             Defend this task
                                                         </button>
@@ -421,7 +427,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                                         <button
                                                             onClick={() => setUpskillTarget({ name: task.name, mode: 'build', riskPercent: task.aiCapabilityScore * 100 })}
                                                             title="Deepen this into a durable advantage"
-                                                            className="text-[10px] font-semibold text-emerald-400 hover:text-emerald-300 uppercase tracking-wider underline decoration-emerald-400/30 hover:decoration-emerald-300 underline-offset-2 transition-colors"
+                                                            className="inline-flex items-center max-md:min-h-[44px] text-[10px] font-semibold text-emerald-400 hover:text-emerald-300 uppercase tracking-wider underline decoration-emerald-400/30 hover:decoration-emerald-300 underline-offset-2 transition-colors"
                                                         >
                                                             Build on this
                                                         </button>
@@ -493,9 +499,45 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                             </div>
                         </div>
                     </div>
+                    </div>
+
+                    {/* Mobile action row. Analyze, Scenario and save live in the panel
+                        header, which is `hidden md:flex` — on a phone the two headline AI
+                        features were unreachable. Same handlers; no desktop class touched. */}
+                    <div className="flex-none md:hidden flex items-center gap-2 p-3 border-t border-white/[0.04]">
+                        <button
+                            onClick={handleAnalyze}
+                            className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 min-h-[44px] bg-blue-600 active:bg-blue-500 text-white rounded-lg font-semibold text-xs uppercase tracking-wider transition-colors"
+                        >
+                            <IconBrain size={14} /> Analyze
+                        </button>
+                        <button
+                            onClick={handleCrystalBall}
+                            className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 min-h-[44px] bg-purple-600 active:bg-purple-500 text-white rounded-lg font-semibold text-xs uppercase tracking-wider transition-colors"
+                        >
+                            <IconSparkles size={14} /> Scenario
+                        </button>
+                        {authStatus !== 'disabled' && (
+                            <button
+                                onClick={() => void toggleSavedRole(job.id, job.title)}
+                                aria-pressed={isRoleSaved}
+                                aria-label={isRoleSaved ? 'Remove from saved roles' : 'Save this role to your activity'}
+                                className={`flex items-center justify-center w-11 h-11 shrink-0 rounded-lg transition-colors ${
+                                    isRoleSaved
+                                        ? 'bg-indigo-500/20 text-indigo-300'
+                                        : 'bg-white/[0.04] text-gray-400'
+                                }`}
+                            >
+                                <IconBookmark size={16} {...(isRoleSaved ? { fill: 'currentColor' } : {})} />
+                            </button>
+                        )}
+                    </div>
 
                     {/* Footer */}
-                    <div className="flex-none p-3 border-t border-white/[0.04] flex justify-end text-[10px] text-gray-600 font-mono uppercase tracking-wider">
+                    <div
+                        className="flex-none p-3 border-t border-white/[0.04] flex justify-end text-[10px] text-gray-600 font-mono uppercase tracking-wider"
+                        style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))' }}
+                    >
                         <span>Sources: {panelSourceList(job).join(', ')}</span>
                     </div>
                 </div>

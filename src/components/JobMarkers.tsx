@@ -206,7 +206,12 @@ export const JobMarkers: React.FC = () => {
         // job — they carry the risk colour and keep the terrain legible at a
         // glance. Only the floating TEXT label is thinned on mobile, where all
         // 50 overlap into unreadable mush; every job stays one search away.
-        const showLabelText = !mobileLabelIds || isSelected || isHovered || mobileLabelIds.has(job.id);
+        // On a phone the selected role's label is drawn at its peak, which is
+        // usually outside the narrow viewport while the detail panel covers the
+        // screen and already shows the same numbers. Skip it there.
+        const showLabelText = isMobile && isGlobalSelectionActive
+            ? false
+            : !mobileLabelIds || isSelected || isHovered || mobileLabelIds.has(job.id);
 
         const pipColor = riskBandColor(job.automationCostIndex, riskScale);
         const labelHeight = SCENE.LABEL.BASE_HEIGHT + peak.offset;
