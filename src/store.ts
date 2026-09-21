@@ -275,7 +275,7 @@ export const useStore = create<AppState>((set, get) => ({
         if (state.isLoadingData || state.hasLoadedRealData) return;
         set({ isLoadingData: true });
 
-        const { fetchLaborStats, getSeriesIdForJob, BlsUnavailableError } = await import('./utils/bls');
+        const { fetchLaborStats, getSeriesIdForJob } = await import('./utils/bls');
         const { MAP_TITLE_TO_SOC }                   = await import('./utils/onet');
         const locationModule                          = await import('./data/geo_real.json');
         // Strip the _meta provenance block — it is not a SOC → locations array entry.
@@ -303,7 +303,9 @@ export const useStore = create<AppState>((set, get) => ({
                 blsFetchedAt = result.fetchedAt;
             }
         } catch (e) {
-            if (e instanceof BlsUnavailableError) {
+            // Checked by name, not instanceof: this module is imported dynamically
+            // and store.test.ts mocks it, so the class identity is not guaranteed.
+            if (e instanceof Error && e.name === 'BlsUnavailableError') {
                 console.warn('Store: BLS live data unavailable; bundled employment figures kept.');
             } else {
                 console.error('Store: Failed to load BLS data', e);
