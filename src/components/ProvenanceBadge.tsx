@@ -35,6 +35,11 @@ export const ProvenanceBadge: React.FC<ProvenanceBadgeProps> = ({ label, provena
         setPos({ top, left, flipAbove });
     };
 
+    // A tap fires no hover, so on a phone the explanation was unreachable. The
+    // ref suppresses the emulated focus/mouseenter Chromium sends after a tap,
+    // which would otherwise open the popup and let the click close it again.
+    const viaTouch = useRef(false);
+
     const show = () => {
         place();
         setOpen(true);
@@ -57,12 +62,14 @@ export const ProvenanceBadge: React.FC<ProvenanceBadgeProps> = ({ label, provena
             <button
                 ref={btnRef}
                 type="button"
-                className="px-2 py-0.5 rounded text-[9px] font-medium uppercase tracking-wide bg-white/[0.06] text-gray-400 border border-white/[0.08] hover:bg-white/[0.1] hover:text-gray-200 transition-colors"
+                className="relative inline-flex items-center px-2 py-0.5 rounded text-[9px] font-medium uppercase tracking-wide bg-white/[0.06] text-gray-400 border border-white/[0.08] hover:bg-white/[0.1] hover:text-gray-200 transition-colors max-md:after:absolute max-md:after:-inset-y-3 max-md:after:-inset-x-1 max-md:after:content-['']"
                 aria-describedby={open ? tipId : undefined}
-                onMouseEnter={show}
-                onMouseLeave={hide}
-                onFocus={show}
+                onPointerDown={(e) => { viaTouch.current = e.pointerType !== 'mouse'; }}
+                onMouseEnter={() => { if (!viaTouch.current) show(); }}
+                onMouseLeave={() => { if (!viaTouch.current) hide(); }}
+                onFocus={() => { if (!viaTouch.current) show(); }}
                 onBlur={hide}
+                onClick={() => { if (viaTouch.current) setOpen((o) => { if (!o) place(); return !o; }); }}
             >
                 {label}
             </button>

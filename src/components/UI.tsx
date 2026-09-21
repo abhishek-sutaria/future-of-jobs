@@ -186,6 +186,7 @@ export const UI: React.FC<UIProps> = ({ dashboardOpen }) => {
                 onStartTour={() => setTourActive(true)}
                 onOpenStudentGuide={() => setShowStudentGuide(true)}
                 onOpenHealthCheck={() => setShowHealthCheck(true)}
+                onShowMethodology={() => setShowMethodologyModal(true)}
             />
 
             {mapView === 'map' && (
@@ -227,7 +228,7 @@ export const UI: React.FC<UIProps> = ({ dashboardOpen }) => {
                 it's this button's own tour-methodology target, so the
                 guided tour's final step also spotlit nothing reachable. */}
             <div
-                className="absolute bottom-4 left-4 md:left-8 pointer-events-auto"
+                className="hidden md:block absolute bottom-4 left-4 md:left-8 pointer-events-auto"
                 style={{
                     zIndex: Z.base,
                     ...(mapView === 'map' && !isMobile ? { left: MAP_SIDEBAR.CLEARANCE_PX } : {}),
