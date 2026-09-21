@@ -119,12 +119,23 @@ export async function fetchLaborStats(seriesIds: string[]): Promise<LaborStatsRe
         }
 
         const rawJson = await response.json();
-        const json: BLSResponse = BLSResponseSchema.parse(rawJson);
 
-        if (json.status !== 'REQUEST_SUCCEEDED') {
-            console.error('BLS API Messages:', json.message);
-            throw new Error('BLS API Request Failed');
+        // BLS answers a declined request with HTTP 200 and a body that has no
+        // `Results.series` at all, e.g. when the key's daily quota is spent:
+        //   {"status":"REQUEST_NOT_PROCESSED","message":["...daily threshold...
+        //   has been reached."],"Results":{}}
+        // The schema parse below throws on that shape, so the status check that
+        // used to sit after it could never run and the real reason was buried in
+        // a ZodError. Check the status the API actually returned first.
+        const declined = (rawJson as { status?: unknown; message?: unknown })?.status;
+        if (typeof declined === 'string' && declined !== 'REQUEST_SUCCEEDED') {
+            const detail = Array.isArray((rawJson as { message?: unknown[] }).message)
+                ? (rawJson as { message: unknown[] }).message.join('; ')
+                : declined;
+            throw new BlsUnavailableError(detail);
         }
+
+        const json: BLSResponse = BLSResponseSchema.parse(rawJson);
 
         const results = new Map<string, number>();
         json.Results.series.forEach(series => {
@@ -144,8 +155,22 @@ export async function fetchLaborStats(seriesIds: string[]): Promise<LaborStatsRe
             console.warn('BLS live fetch failed; using cached data from', new Date(cache.fetchedAt).toISOString());
             return cacheToResult(cache);
         }
-        console.error('Failed to fetch BLS data:', error);
+        // A declined request is an expected condition (shared key, daily quota),
+        // not a fault in the app: say so plainly instead of dumping a schema error.
+        if (error instanceof BlsUnavailableError) {
+            console.warn('BLS live data unavailable:', error.message, '- keeping the bundled snapshot.');
+        } else {
+            console.error('Failed to fetch BLS data:', error);
+        }
         throw error;
+    }
+}
+
+/** BLS replied, but declined to serve the request (daily quota, bad key). */
+export class BlsUnavailableError extends Error {
+    constructor(message: string) {
+        super(message);
+        this.name = 'BlsUnavailableError';
     }
 }
 

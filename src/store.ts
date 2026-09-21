@@ -275,7 +275,7 @@ export const useStore = create<AppState>((set, get) => ({
         if (state.isLoadingData || state.hasLoadedRealData) return;
         set({ isLoadingData: true });
 
-        const { fetchLaborStats, getSeriesIdForJob } = await import('./utils/bls');
+        const { fetchLaborStats, getSeriesIdForJob, BlsUnavailableError } = await import('./utils/bls');
         const { MAP_TITLE_TO_SOC }                   = await import('./utils/onet');
         const locationModule                          = await import('./data/geo_real.json');
         // Strip the _meta provenance block — it is not a SOC → locations array entry.
@@ -303,7 +303,11 @@ export const useStore = create<AppState>((set, get) => ({
                 blsFetchedAt = result.fetchedAt;
             }
         } catch (e) {
-            console.error('Store: Failed to load BLS data', e);
+            if (e instanceof BlsUnavailableError) {
+                console.warn('Store: BLS live data unavailable; bundled employment figures kept.');
+            } else {
+                console.error('Store: Failed to load BLS data', e);
+            }
         }
 
         // PASS 1 — apply raw BLS employment + compute automationCostIndex
