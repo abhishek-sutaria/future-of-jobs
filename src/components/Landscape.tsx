@@ -35,6 +35,11 @@ export const Landscape: React.FC = () => {
     const setIsDefaultView = useStore((s) => s.setIsDefaultView);
     const resetViewRequestId = useStore((s) => s.resetViewRequestId);
     const controlsRef = useRef<OrbitControlsImpl>(null);
+    // Read once: R3F applies the `camera` prop at mount only. Portrait phones
+    // need a wider, further framing to fit the terrain (see SCENE constants).
+    const [isPortrait] = useState(
+        () => typeof window !== 'undefined' && window.innerWidth / window.innerHeight < 1,
+    );
     const isDefaultViewRef = useRef(true);
     const [canvasKey, setCanvasKey] = useState(0);
     const [contextLossGivenUp, setContextLossGivenUp] = useState(false);
@@ -141,9 +146,12 @@ export const Landscape: React.FC = () => {
             // OrbitControls camera position, so returning to the map is instant
             // and the user's orbit is exactly where they left it.
             frameloop={route === 'dashboard' ? 'never' : 'always'}
-            camera={{ position: [...SCENE.CAMERA_INITIAL_POSITION], fov: SCENE.CAMERA_FOV }}
+            camera={{
+                position: [...(isPortrait ? SCENE.CAMERA_PORTRAIT_POSITION : SCENE.CAMERA_INITIAL_POSITION)],
+                fov: isPortrait ? SCENE.CAMERA_PORTRAIT_FOV : SCENE.CAMERA_FOV,
+            }}
         >
-            <fog attach="fog" args={[SCENE.FOG_COLOR, SCENE.FOG_NEAR, SCENE.FOG_FAR]} />
+            <fog attach="fog" args={[SCENE.FOG_COLOR, SCENE.FOG_NEAR, isPortrait ? SCENE.FOG_FAR_PORTRAIT : SCENE.FOG_FAR]} />
 
             <ambientLight intensity={0.5} />
             <pointLight position={[10, 10, 10]} intensity={1} />

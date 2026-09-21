@@ -39,9 +39,13 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* OrbitControls owns drag gestures on the canvas; without this the browser
-   also treats the same drag as a scroll/refresh gesture on touch. */
+   also treats the same drag as a scroll/refresh gesture on touch.
+   !important is required: three's OrbitControls writes `touch-action` as an
+   INLINE style on the canvas (verified on production: the computed value was
+   `auto`, so the plain rule below it never applied and pull-to-refresh still
+   fired mid-drag). An inline declaration outranks any normal rule. */
 canvas {
-  touch-action: none;
+  touch-action: none !important;
 }
 
 /* Dark form fields: Chromium/Safari can force light-mode control colors on dark
