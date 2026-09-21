@@ -39,3 +39,27 @@ describe('clampLabelCenterY', () => {
         expect(clampLabelCenterY(0, 500, 852)).toBe(426);
     });
 });
+
+describe('clampLabelCenterY with chrome margins', () => {
+    it('keeps a label below a header band', () => {
+        // header occupies the top 180px; a label projected at y=40 must move down
+        expect(clampLabelCenterY(40, 10, 852, 180, 140)).toBe(190);
+    });
+
+    it('keeps a label above the year slider', () => {
+        expect(clampLabelCenterY(800, 10, 852, 180, 140)).toBe(702);
+    });
+
+    it('never places a label inside either band, at any projected y', () => {
+        const vh = 852, half = 10, top = 180, bottom = 140;
+        for (let y = -300; y <= 1200; y += 11) {
+            const c = clampLabelCenterY(y, half, vh, top, bottom);
+            expect(c - half).toBeGreaterThanOrEqual(top - 0.001);
+            expect(c + half).toBeLessThanOrEqual(vh - bottom + 0.001);
+        }
+    });
+
+    it('centres when the bands leave no room', () => {
+        expect(clampLabelCenterY(10, 40, 300, 200, 200)).toBe(150);
+    });
+});
