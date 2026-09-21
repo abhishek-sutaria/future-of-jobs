@@ -29,8 +29,29 @@ export const JobMarkers: React.FC = () => {
     // and read back when projecting, so a label near an edge can be nudged
     // fully into view instead of hanging off it.
     const labelHalfSize = React.useRef<Map<string, { x: number; y: number }>>(new Map());
+    // Vertical band the labels may occupy. Measured from the real chrome rather
+    // than hard-coded, because the header wraps differently across phone widths.
+    const safeBand = React.useRef({ top: 4, bottom: 4 });
     const gl = useThree((state) => state.gl);
     const isMobile = useIsMobile();
+
+    useEffect(() => {
+        if (!isMobile) { safeBand.current = { top: 4, bottom: 4 }; return; }
+        const measure = () => {
+            const box = (sel: string) => document.querySelector(sel)?.getBoundingClientRect();
+            const header = box('header');
+            const search = box('[data-tour="tour-search"]');
+            const slider = box('[data-tour="tour-slider"]');
+            const top = Math.max(header?.bottom ?? 0, search?.bottom ?? 0, 4);
+            const bottom = slider ? Math.max(window.innerHeight - slider.top, 4) : 4;
+            safeBand.current = { top: top + 6, bottom: bottom + 6 };
+        };
+        measure();
+        // The chrome mounts after the canvas, so measure again once it settles.
+        const t = setTimeout(measure, 1200);
+        window.addEventListener('resize', measure);
+        return () => { clearTimeout(t); window.removeEventListener('resize', measure); };
+    }, [isMobile]);
 
     // Clear stuck hover state when the window loses focus (pointerleave can be dropped mid-hover)
     useEffect(() => {
@@ -264,7 +285,7 @@ export const JobMarkers: React.FC = () => {
                                 if (!half) return [x, y];
                                 return [
                                     clampLabelCenterX(x, half.x, size.width),
-                                    clampLabelCenterY(y, half.y, size.height),
+                                    clampLabelCenterY(y, half.y, size.height, safeBand.current.top, safeBand.current.bottom),
                                 ];
                             }}
                             wrapperClass={

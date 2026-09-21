@@ -30,15 +30,21 @@ export function clampLabelCenterX(
     return Math.min(Math.max(x, min), max);
 }
 
-/** Same idea vertically, keeping a label clear of the top and bottom edges. */
+/**
+ * Same idea vertically. The margins are asymmetric on purpose: on a phone the
+ * header and search sit across the top and the year slider across the bottom,
+ * and a label pushed up by the stagger would otherwise land on top of them
+ * (measured on production: 7 labels over the header, 4 over the search box).
+ */
 export function clampLabelCenterY(
     y: number,
     halfHeight: number,
     viewportHeight: number,
-    margin = 4,
+    topMargin = 4,
+    bottomMargin = 4,
 ): number {
-    const min = halfHeight + margin;
-    const max = viewportHeight - halfHeight - margin;
+    const min = halfHeight + topMargin;
+    const max = viewportHeight - halfHeight - bottomMargin;
     if (min > max) return viewportHeight / 2;
     return Math.min(Math.max(y, min), max);
 }
