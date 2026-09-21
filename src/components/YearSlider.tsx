@@ -25,13 +25,13 @@ export const YearSlider: React.FC = () => {
         // breakpoint overriding a narrower one: Tailwind emits arbitrary min-[…]
         // blocks *before* the standard md block, so an override would lose on
         // source order and silently never apply.
-        <div className="absolute inset-x-0 bottom-6 flex justify-center px-4 md:max-[1199px]:pr-[264px] pointer-events-none" style={{ zIndex: Z.timeBar }}>
+        <div className="absolute inset-x-0 bottom-6 [@media(max-height:480px)]:!bottom-2 flex justify-center px-4 md:max-[1199px]:pr-[264px] pointer-events-none" style={{ zIndex: Z.timeBar }}>
             <div className="w-full max-w-2xl pointer-events-auto">
-            <div data-tour="tour-slider" className="bg-gray-900/60 backdrop-blur-xl border border-cyan-400/25 rounded-2xl px-4 py-3 md:px-6 md:py-4 shadow-lg shadow-cyan-500/5 overflow-hidden">
+            <div data-tour="tour-slider" className="bg-gray-900/60 backdrop-blur-xl border border-cyan-400/25 rounded-2xl px-4 py-3 md:px-6 md:py-4 [@media(max-height:480px)]:!py-1.5 shadow-lg shadow-cyan-500/5 overflow-hidden">
                 {/* Peak height encoding toggle. The mode hint sits beside the label instead
                     of on its own line, so the card stays short and more terrain is visible.
                     Font sizes are deliberately unchanged — only spacing was tightened. */}
-                <div className="flex items-start justify-between gap-3 mb-2 flex-wrap min-w-0">
+                <div className="flex items-start justify-between gap-3 mb-2 [@media(max-height:480px)]:!mb-1 flex-wrap min-w-0">
                     <div className="min-w-0">
                         <p className="text-[10px] text-gray-500 uppercase tracking-widest font-semibold">
                             Peak Height
@@ -39,7 +39,7 @@ export const YearSlider: React.FC = () => {
                         {/* The explainer sentence is what pushed this card tall enough to
                             crowd the terrain on a phone; the Growth/Workers toggle alone
                             is self-explanatory day-to-day, so only desktop keeps the hint. */}
-                        <p className="hidden md:block text-[10px] text-gray-500 leading-snug break-words">{modeHint}</p>
+                        <p className="hidden md:block [@media(max-height:480px)]:!hidden text-[10px] text-gray-500 leading-snug break-words">{modeHint}</p>
                     </div>
                     <div
                         role="radiogroup"
@@ -75,7 +75,7 @@ export const YearSlider: React.FC = () => {
                     </div>
                 </div>
 
-                <div className="flex justify-between items-center mb-2 text-sm font-medium tracking-widest gap-2 min-w-0">
+                <div className="flex justify-between items-center mb-2 [@media(max-height:480px)]:!mb-0.5 text-sm font-medium tracking-widest gap-2 min-w-0">
                     <span className="text-gray-500 text-xs">{YEAR_MIN}</span>
                     <span className="text-cyan-400 text-lg font-bold tabular-nums shrink-0 min-w-0 text-center" aria-live="polite">
                         {year.toFixed(0)}
@@ -104,7 +104,7 @@ export const YearSlider: React.FC = () => {
                         aria-valuemin={YEAR_MIN}
                         aria-valuemax={YEAR_MAX}
                         aria-valuenow={Math.round(year)}
-                        className="relative w-full h-5 appearance-none bg-transparent cursor-pointer z-10 slider-input"
+                        className="relative w-full h-5 appearance-none bg-transparent cursor-pointer z-10 slider-input max-md:h-11 max-md:-my-3"
                     />
                 </div>
             </div>
