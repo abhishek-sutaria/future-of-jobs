@@ -6,7 +6,7 @@ export default function RoleSelector() {
             {/* Header */}
             <div className="p-6 border-b border-gray-700/50">
                 <h2 className="text-white font-bold text-xl mb-2">Role Selector</h2>
-                <p className="text-gray-400 text-sm">Select roles to display on map</p>
+                <p className="text-gray-400 text-sm">Select roles to display in this view</p>
             </div>
 
             <RoleSelectorBody />
@@ -15,7 +15,7 @@ export default function RoleSelector() {
             <div className="p-4 border-t border-gray-700/50 bg-gray-900/50">
                 <div className="text-xs text-gray-500 space-y-1">
                     <p>Tip: Select multiple roles to compare</p>
-                    <p className="text-gray-600">Click map markers for details</p>
+                    <p className="text-gray-600">Click a role for its full profile</p>
                 </div>
             </div>
         </div>

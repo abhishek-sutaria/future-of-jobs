@@ -1,6 +1,6 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { useStore } from '../store';
-import { IconZap, IconGlobe, IconMap, IconSearch, IconInfo, IconX, IconActivity, IconRocket, IconUser, IconMenu } from './ui/Icons';
+import { IconZap, IconGlobe, IconMap, IconSearch, IconInfo, IconX, IconActivity, IconRocket, IconUser, IconMenu, IconLayers } from './ui/Icons';
 import { MobileMoreSheet } from './MobileMoreSheet';
 import { useIsMobile } from '../hooks/useIsMobile';
 import { useUserStore } from '../userStore';
@@ -53,7 +53,7 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
                 doesn't render at all (RoleFilterButton/Sheet takes over) —
                 applying it there used to shove this title almost entirely
                 off a phone screen for no benefit. */}
-            <div className="flex flex-col ml-0" style={{ marginLeft: mapView === 'map' && !isMobile ? MAP_SIDEBAR.CLEARANCE_PX : 0 }}>
+            <div className="flex flex-col ml-0" style={{ marginLeft: mapView !== 'globe' && !isMobile ? MAP_SIDEBAR.CLEARANCE_PX : 0 }}>
                 <h1 className="text-lg md:text-xl font-semibold text-white tracking-wide flex items-center gap-2.5">
                     <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-300 font-bold">AI</span>
                     <span className="text-white/80 font-light">&</span>
@@ -151,6 +151,22 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
                         off the left edge — clipped, though still tappable at
                         its centre, which is why a hit-test alone didn't catch
                         it. title= keeps the meaning available. */}
+                    <button
+                        onClick={() => setMapView(mapView === 'tasks' ? 'globe' : 'tasks')}
+                        title={mapView === 'tasks' ? 'Back to the 3D view' : 'Split every role into its tasks'}
+                        aria-pressed={mapView === 'tasks'}
+                        className={`hidden md:flex shrink-0 items-center gap-2 px-3 py-2.5 rounded-lg border text-xs font-semibold uppercase tracking-wider transition-colors min-h-[44px] ${
+                            mapView === 'tasks'
+                                ? 'border-teal-400/50 bg-teal-500/20 text-teal-200'
+                                : 'border-teal-500/25 bg-teal-500/[0.06] hover:bg-teal-500/15 text-teal-300'
+                        }`}
+                    >
+                        <IconLayers size={14} /> Tasks
+                        <span className="-ml-0.5 px-1 rounded bg-amber-500/20 text-amber-300 text-[8px] font-bold tracking-wide leading-[1.4]">
+                            BETA
+                        </span>
+                    </button>
+
                     <button
                         data-tour="tour-toggle"
                         onClick={() => setMapView(mapView === 'map' ? 'globe' : 'map')}
@@ -266,6 +282,7 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
             onOpenStartupIdeasModal={onOpenStartupIdeasModal}
             onOpenStudentGuide={onOpenStudentGuide}
             onShowMethodology={onShowMethodology}
+            onOpenTaskView={() => setMapView('tasks')}
         />
         </>
     );

@@ -147,8 +147,8 @@ interface AppState {
     setHeightMode: (mode: 'growth' | 'employment') => void;
 
     // Map view state
-    mapView: 'globe' | 'map';
-    setMapView: (mode: 'globe' | 'map') => void;
+    mapView: 'globe' | 'map' | 'tasks';
+    setMapView: (mode: 'globe' | 'map' | 'tasks') => void;
     selectedRoleIds: Set<string>;
     toggleRoleOnMap: (jobId: string) => void;
     selectAllRoles: () => void;

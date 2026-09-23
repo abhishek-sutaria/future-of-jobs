@@ -189,7 +189,7 @@ export const UI: React.FC<UIProps> = ({ dashboardOpen }) => {
                 onShowMethodology={() => setShowMethodologyModal(true)}
             />
 
-            {mapView === 'map' && (
+            {mapView !== 'globe' && (
                 isMobile ? (
                     <>
                         <RoleFilterButton onClick={() => setRoleFilterOpen(true)} />
@@ -220,7 +220,7 @@ export const UI: React.FC<UIProps> = ({ dashboardOpen }) => {
 
             {/* Both are 3D-terrain controls/keys — they do nothing over the 2D map, so
                 they are hidden there rather than floating inertly above it. */}
-            {mapView !== 'map' && <YearSlider />}
+            {mapView === 'globe' && <YearSlider />}
 
             {/* left-4/md:left-8 covers the 3D view; in 2D map view on desktop
                 this sat directly under RoleSelector's sidebar and was never
@@ -231,7 +231,11 @@ export const UI: React.FC<UIProps> = ({ dashboardOpen }) => {
                 className="hidden md:block absolute bottom-4 left-4 md:left-8 pointer-events-auto"
                 style={{
                     zIndex: Z.base,
-                    ...(mapView === 'map' && !isMobile ? { left: MAP_SIDEBAR.CLEARANCE_PX } : {}),
+                    ...(mapView !== 'globe' && !isMobile ? { left: MAP_SIDEBAR.CLEARANCE_PX } : {}),
+                    // The task view fills the width with role rows, so a pill floating
+                    // bottom-left covers role names at every scroll position. Its usual
+                    // partner, the Legend, is not rendered here, so the right is free.
+                    ...(mapView === 'tasks' ? { left: 'auto', right: 24 } : {}),
                 }}
             >
                 <button
@@ -246,7 +250,7 @@ export const UI: React.FC<UIProps> = ({ dashboardOpen }) => {
 
             <SkillsModal isOpen={showSkillsModal} onClose={() => setShowSkillsModal(false)} />
             <StartupIdeasModal isOpen={showStartupIdeasModal} onClose={() => setShowStartupIdeasModal(false)} />
-            {mapView !== 'map' && <Legend />}
+            {mapView === 'globe' && <Legend />}
             <GuidedTour isActive={tourActive} onClose={() => setTourActive(false)} />
         </div>
     );
