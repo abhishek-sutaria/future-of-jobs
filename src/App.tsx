@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Landscape } from './components/Landscape';
 import { UI } from './components/UI';
 import { MapView } from './components/MapView';
+import { TaskSplitView } from './components/TaskSplitView';
 import { DashboardPage } from './components/dashboard/DashboardPage';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { RescoreConfirmModal } from './components/RescoreConfirmModal';
@@ -96,6 +97,10 @@ function App() {
 
       <div className={`absolute inset-0 z-10 transition-opacity duration-300 ${mapView === 'map' ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
         {mapView === 'map' && <MapView />}
+      </div>
+
+      <div className={`absolute inset-0 z-10 transition-opacity duration-300 ${mapView === 'tasks' ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+        {mapView === 'tasks' && <TaskSplitView />}
       </div>
 
       <UI dashboardOpen={route === 'dashboard'} />

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Modal } from './ui/Modal';
-import { IconZap, IconRocket, IconInfo } from './ui/Icons';
+import { IconZap, IconRocket, IconInfo, IconLayers } from './ui/Icons';
 
 interface MobileMoreSheetProps {
     isOpen: boolean;
@@ -9,6 +9,7 @@ interface MobileMoreSheetProps {
     onOpenStartupIdeasModal: () => void;
     onOpenStudentGuide: () => void;
     onShowMethodology: () => void;
+    onOpenTaskView: () => void;
 }
 
 /**
@@ -20,7 +21,7 @@ interface MobileMoreSheetProps {
  * card, which spans the full width on a phone and covered it.
  */
 export const MobileMoreSheet: React.FC<MobileMoreSheetProps> = ({
-    isOpen, onClose, onOpenSkillsModal, onOpenStartupIdeasModal, onOpenStudentGuide, onShowMethodology,
+    isOpen, onClose, onOpenSkillsModal, onOpenStartupIdeasModal, onOpenStudentGuide, onShowMethodology, onOpenTaskView,
 }) => {
     const go = (action: () => void) => () => {
         onClose();
@@ -30,6 +31,15 @@ export const MobileMoreSheet: React.FC<MobileMoreSheetProps> = ({
     return (
         <Modal isOpen={isOpen} onClose={onClose} title="More" size="sm" layer="overlay">
             <div className="space-y-2">
+                <button
+                    onClick={go(onOpenTaskView)}
+                    className="w-full flex items-center gap-3 px-4 py-3.5 rounded-lg border border-teal-500/25 bg-teal-500/[0.06] hover:bg-teal-500/15 text-teal-300 text-sm font-semibold transition-colors min-h-[44px]"
+                >
+                    <IconLayers size={16} /> Task view
+                    <span className="ml-auto px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 text-[9px] font-bold tracking-wider">
+                        BETA
+                    </span>
+                </button>
                 <button
                     onClick={go(onOpenSkillsModal)}
                     className="w-full flex items-center gap-3 px-4 py-3.5 rounded-lg border border-cyan-500/20 bg-cyan-500/[0.06] hover:bg-cyan-500/15 text-cyan-300 text-sm font-semibold transition-colors min-h-[44px]"
