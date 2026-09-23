@@ -78,14 +78,15 @@ export const TaskSplitView: React.FC = () => {
         [scored],
     );
 
+    // The plain average of the roles listed below, not an employment-weighted one:
+    // a reader can add up the rows on screen and arrive at this number, which an
+    // invisible weighting would quietly break.
     const totals = useMemo(() => {
-        let workers = 0;
-        let aiWeighted = 0;
-        for (const job of scored) {
-            workers += job.employment;
-            aiWeighted += job.employment * publishedRisk(job);
-        }
-        return { workers, aiPct: workers ? (aiWeighted / workers) * 100 : 0 };
+        const workers = scored.reduce((a, job) => a + job.employment, 0);
+        const aiPct = scored.length
+            ? (scored.reduce((a, job) => a + publishedRisk(job), 0) / scored.length) * 100
+            : 0;
+        return { workers, aiPct };
     }, [scored]);
 
     // Two roles with the same headline but the most different task spread: the
@@ -135,13 +136,10 @@ export const TaskSplitView: React.FC = () => {
                     </span>
                 </div>
                 <h2 className="text-2xl md:text-3xl font-semibold text-white tracking-tight">
-                    What&rsquo;s left of the job
+                    Inside each job
                 </h2>
-                <p className="text-sm text-gray-400 leading-relaxed mt-2 max-w-2xl">
-                    Every bar is the role&rsquo;s published automation risk, the same number its
-                    role page shows: the average of its O*NET task ratings. Red is the share AI
-                    can do, green is what still needs a person. Open any role to see the tasks
-                    behind its number.
+                <p className="text-sm text-gray-400 mt-2">
+                    Every role, ordered by how much of it AI can do.
                 </p>
 
                 {/* Whole-group split */}
@@ -158,7 +156,7 @@ export const TaskSplitView: React.FC = () => {
                 <div className="mt-5 bg-gray-900/60 backdrop-blur-xl border border-cyan-400/25 rounded-2xl p-5 md:p-6 shadow-lg shadow-cyan-500/5">
                     <div className="flex flex-wrap items-baseline justify-between gap-2">
                         <p className="text-[10px] uppercase tracking-widest text-gray-500 font-semibold">
-                            {selectedRoleIds.size === 0 ? 'All ' : 'Filtered to '}{scored.length} role{scored.length === 1 ? '' : 's'} &middot;{' '}
+                            Average of the {scored.length} role{scored.length === 1 ? '' : 's'} below &middot;{' '}
                             {totals.workers.toLocaleString()} workers
                         </p>
                         <div className="flex items-center gap-4 text-[11px]">
@@ -298,7 +296,7 @@ export const TaskSplitView: React.FC = () => {
                 <p className="mt-10 text-[11px] text-gray-600 leading-relaxed max-w-2xl">
                     Tasks from O*NET 30.1 and employment from BLS OEWS, the same sources the map uses.
                     The per-task AI ratings are Claude&rsquo;s published set, identical for every visitor.
-                    The group figure is each role&rsquo;s published risk weighted by how many people work in it.
+                    Each bar is the role&rsquo;s published automation risk, the same number its role page shows.
                 </p>
             </div>
           </div>

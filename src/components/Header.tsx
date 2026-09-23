@@ -53,7 +53,7 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
                 doesn't render at all (RoleFilterButton/Sheet takes over) —
                 applying it there used to shove this title almost entirely
                 off a phone screen for no benefit. */}
-            <div className="flex flex-col ml-0" style={{ marginLeft: mapView !== 'globe' && !isMobile ? MAP_SIDEBAR.CLEARANCE_PX : 0 }}>
+            <div className="flex flex-col ml-0 min-w-0" style={{ marginLeft: mapView !== 'globe' && !isMobile ? MAP_SIDEBAR.CLEARANCE_PX : 0 }}>
                 <h1 className="text-lg md:text-xl font-semibold text-white tracking-wide flex items-center gap-2.5">
                     <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-300 font-bold">AI</span>
                     <span className="text-white/80 font-light">&</span>
@@ -129,7 +129,13 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
                     common 1366px laptop resolution — margin instead of precision.
                     If this box's content changes again, re-verify empirically;
                     don't trust a single quick pass at any one width. */}
-                <div className="flex items-center gap-1.5 sm:gap-2 flex-nowrap max-[1365px]:flex-wrap justify-end shrink-0 max-[1365px]:shrink max-[1365px]:min-w-0">
+                <div className={`flex items-center gap-1.5 sm:gap-2 justify-end max-[1365px]:flex-wrap max-[1365px]:shrink max-[1365px]:min-w-0 ${
+                    // The sidebar takes 336px off the header, so the width at which these
+                    // buttons must start wrapping is 336px higher whenever it is open.
+                    // Without this they kept their full width at ~1440 and the title ran
+                    // underneath them (in the 2D map as well, before this view existed).
+                    mapView !== 'globe' && !isMobile ? 'flex-wrap shrink min-w-0' : 'flex-nowrap shrink-0'
+                }`}>
                     <button
                         data-tour="tour-skills"
                         onClick={onOpenSkillsModal}
