@@ -250,9 +250,15 @@ canvas {
 
 /* drei <Html> labels — outer host z-index is rewritten from camera distance.
    Hover must both promote the active host and demote every other host, or
-   leftover --front classes (same max z) let later siblings cover the popup. */
+   leftover --front classes (same max z) let later siblings cover the popup.
+
+   pointer-events:none is load-bearing: a synthetic pointerdown forwarded from
+   a label onto the canvas (the old approach) leaves three's OrbitControls with
+   a NaN camera on touch, and the whole terrain vanishes. Labels are visual
+   only; JobMarkers hit-tests taps/hover on the canvas against their boxes. */
 .foj-job-label {
   z-index: auto;
+  pointer-events: none !important;
 }
 .foj-job-label--front {
   z-index: 2147483000 !important;
