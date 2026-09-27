@@ -10,6 +10,7 @@ import { SCENE, YEAR_MAX } from '../config/constants';
 import { useIsMobile } from '../hooks/useIsMobile';
 import {
     HIDDEN_LABEL_POSITION,
+    isHiddenLabelPosition,
     layoutLabels,
     type LabelCandidate,
 } from '../utils/labelLayout';
@@ -96,35 +97,94 @@ export const JobMarkers: React.FC = () => {
         if (isOrbiting) setHoveredJobId(null);
     }, [isOrbiting]);
 
-    // Drag-vs-click: forward the gesture to the canvas so OrbitControls rotates,
-    // and only open the detail panel if the pointer barely moved.
-    const handleLabelPointerDown = (job: Job) => (e: React.PointerEvent<HTMLDivElement>) => {
-        if (e.button !== 0) return;
-        const startX = e.clientX;
-        const startY = e.clientY;
-        const startTime = performance.now();
+    // Ref so the canvas hit-test listeners do not rebind when orbit starts
+    // (rebinding would reset the tap-start coordinates mid-gesture).
+    const isOrbitingRef = useRef(isOrbiting);
+    useEffect(() => {
+        isOrbitingRef.current = isOrbiting;
+    }, [isOrbiting]);
 
-        gl.domElement.dispatchEvent(new PointerEvent('pointerdown', {
-            pointerId: e.pointerId,
-            pointerType: e.pointerType,
-            clientX: e.clientX,
-            clientY: e.clientY,
-            button: 0,
-            buttons: 1,
-            bubbles: true,
-            cancelable: true,
-        }));
+    // Canvas owns every gesture. Labels are pointer-events:none (see index.css) so a
+    // finger that lands on a title still hits the WebGL canvas and OrbitControls
+    // rotates normally. The old path synthesised a pointerdown onto the canvas from
+    // the label; on touch that left OrbitControls with a NaN camera and the
+    // terrain vanished. Tap-to-select and mouse-hover are hit-tested here against
+    // the same screen-space placements the declutter pass just wrote.
+    useEffect(() => {
+        const el = gl.domElement;
+        let downX = 0;
+        let downY = 0;
+        let downT = 0;
 
-        // OrbitControls pointer-captures the canvas, so the label's own pointerup won't fire
-        const onUp = (ue: PointerEvent) => {
-            window.removeEventListener('pointerup', onUp);
-            const moved = Math.hypot(ue.clientX - startX, ue.clientY - startY);
-            if (moved < 5 && performance.now() - startTime < 300) {
-                setSelectedJob(job);
-            }
+        const canvasPoint = (clientX: number, clientY: number) => {
+            const rect = el.getBoundingClientRect();
+            return { x: clientX - rect.left, y: clientY - rect.top };
         };
-        window.addEventListener('pointerup', onUp);
-    };
+
+        const hitTest = (clientX: number, clientY: number): string | null => {
+            const { x, y } = canvasPoint(clientX, clientY);
+            // labelMeta is importance-sorted (selected/hovered, then employment);
+            // first match wins if two boxes ever share a pixel.
+            for (const { id } of labelMeta.current) {
+                const pos = placements.current.get(id);
+                if (!pos || isHiddenLabelPosition(pos)) continue;
+                const half = labelHalfSize.current.get(id);
+                if (!half) continue;
+                if (Math.abs(x - pos[0]) <= half.x && Math.abs(y - pos[1]) <= half.y) {
+                    return id;
+                }
+            }
+            return null;
+        };
+
+        const onDown = (e: PointerEvent) => {
+            if (e.button !== 0) return;
+            downX = e.clientX;
+            downY = e.clientY;
+            downT = performance.now();
+        };
+
+        const onUp = (e: PointerEvent) => {
+            if (e.button !== 0) return;
+            // Movement is the real drag-vs-tap discriminator. The time bound is
+            // only a backstop; 300ms was too tight for real finger taps (and for
+            // touch-event delivery latency on phones), so allow half a second.
+            const moved = Math.hypot(e.clientX - downX, e.clientY - downY);
+            if (moved >= 10 || performance.now() - downT >= 500) return;
+            const id = hitTest(e.clientX, e.clientY);
+            if (!id) return;
+            const job = jobs.find((j) => j.id === id);
+            if (job) setSelectedJob(job);
+        };
+
+        const onMove = (e: PointerEvent) => {
+            // Touch has no hover; while orbiting, popups are suppressed.
+            if (e.pointerType === 'touch' || isOrbitingRef.current) {
+                el.style.cursor = '';
+                return;
+            }
+            const id = hitTest(e.clientX, e.clientY);
+            setHoveredJobId(id);
+            el.style.cursor = id ? 'pointer' : '';
+        };
+
+        const onLeave = () => {
+            setHoveredJobId(null);
+            el.style.cursor = '';
+        };
+
+        el.addEventListener('pointerdown', onDown);
+        el.addEventListener('pointerup', onUp);
+        el.addEventListener('pointermove', onMove);
+        el.addEventListener('pointerleave', onLeave);
+        return () => {
+            el.removeEventListener('pointerdown', onDown);
+            el.removeEventListener('pointerup', onUp);
+            el.removeEventListener('pointermove', onMove);
+            el.removeEventListener('pointerleave', onLeave);
+            el.style.cursor = '';
+        };
+    }, [gl, jobs, setSelectedJob]);
 
     // Roles to display (filtered by selection)
     const filteredJobs = useMemo(() => {
@@ -413,12 +473,7 @@ export const JobMarkers: React.FC = () => {
                                 ref={(el) => {
                                     if (el) labelHalfSize.current.set(job.id, { x: el.offsetWidth / 2, y: el.offsetHeight / 2 });
                                 }}
-                                className={`flex flex-col max-w-[min(13rem,calc(100vw-2rem))] overflow-hidden rounded border shadow-sm cursor-pointer touch-none select-none transition-all duration-200 ${isSelected || isHovered ? 'bg-[#0F172A]/95 scale-105 ring-1 ring-white/25 border-slate-300/40 shadow-xl shadow-black/50' : 'bg-[#0F172A]/90 border-slate-600/40'} ${isHovered ? 'border-cyan-400/60' : ''}`}
-                                onPointerDown={handleLabelPointerDown(job)}
-                                onPointerEnter={() => {
-                                    if (!isOrbiting) setHoveredJobId(job.id);
-                                }}
-                                onPointerLeave={() => setHoveredJobId(null)}
+                                className={`flex flex-col max-w-[min(13rem,calc(100vw-2rem))] overflow-hidden rounded border shadow-sm select-none transition-all duration-200 ${isSelected || isHovered ? 'bg-[#0F172A]/95 scale-105 ring-1 ring-white/25 border-slate-300/40 shadow-xl shadow-black/50' : 'bg-[#0F172A]/90 border-slate-600/40'} ${isHovered ? 'border-cyan-400/60' : ''}`}
                             >
                                 {/* Title row */}
                                 <div className="flex items-center gap-1.5 px-1.5 py-0.5 max-md:gap-1 max-md:px-1 min-w-0">
