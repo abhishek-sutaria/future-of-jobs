@@ -1,6 +1,6 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { useThree } from '@react-three/fiber';
-import { Vector3 } from 'three';
+import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useFrame, useThree } from '@react-three/fiber';
+import { Group, Vector3 } from 'three';
 import { Html, Line } from '@react-three/drei';
 import { useStore } from '../store';
 import type { Job } from '../types';
@@ -8,10 +8,14 @@ import { getTerrainPosition, calculateGaussianHeight, buildGrowthForecastFlatArr
 import { buildRiskScale, riskBandColor } from '../config/theme';
 import { SCENE, YEAR_MAX } from '../config/constants';
 import { useIsMobile } from '../hooks/useIsMobile';
-import { clampLabelCenterX, clampLabelCenterY } from '../utils/labelLayout';
+import {
+    HIDDEN_LABEL_POSITION,
+    layoutLabels,
+    type LabelCandidate,
+} from '../utils/labelLayout';
 
-/** Scratch vector for label projection: reused so the per-frame position
- *  callback allocates nothing. */
+/** Scratch vector for label projection: reused so the per-frame layout
+ *  pass allocates nothing beyond the candidate list it already owns. */
 const projected = new Vector3();
 
 export const JobMarkers: React.FC = () => {
@@ -26,12 +30,27 @@ export const JobMarkers: React.FC = () => {
 
     const [hoveredJobId, setHoveredJobId] = useState<string | null>(null);
     // Half-size of each rendered label, measured from the DOM once per render
-    // and read back when projecting, so a label near an edge can be nudged
-    // fully into view instead of hanging off it.
-    const labelHalfSize = React.useRef<Map<string, { x: number; y: number }>>(new Map());
+    // and read back when projecting, so the shared declutter pass knows each
+    // box's footprint.
+    const labelHalfSize = useRef<Map<string, { x: number; y: number }>>(new Map());
     // Vertical band the labels may occupy. Measured from the real chrome rather
     // than hard-coded, because the header wraps differently across phone widths.
-    const safeBand = React.useRef({ top: 4, bottom: 4 });
+    const safeBand = useRef({ top: 4, bottom: 4 });
+    // Shared per-frame declutter results: id → [cssX, cssY]. calculatePosition
+    // only reads this; the useFrame pass below is the sole writer.
+    const placements = useRef<Map<string, [number, number]>>(new Map());
+    // Last accepted nudge per id — hysteresis so a label does not flicker
+    // between two equally valid spots as the camera moves.
+    const labelOffsets = useRef<Map<string, [number, number]>>(new Map());
+    // Meta for the declutter pass: id + leader-line tip height. Written in
+    // useLayoutEffect (not during render) so react-hooks/refs stays clean;
+    // read only from useFrame.
+    const labelMeta = useRef<Array<{ id: string; worldY: number }>>([]);
+    // Peak-group instances by job id — filled by callback refs, read from useFrame.
+    const groupById = useRef<Map<string, Group>>(new Map());
+    // Reused candidate buffer so layoutLabels does not allocate per frame.
+    const candidates = useRef<LabelCandidate[]>([]);
+
     const gl = useThree((state) => state.gl);
     const isMobile = useIsMobile();
 
@@ -139,18 +158,18 @@ export const JobMarkers: React.FC = () => {
         return nextPeaks;
     }, [filteredJobs, jobs, year, heightMode, forecastsFlat]);
 
-    // Stagger: vertical offset to separate overlapping labels
+    // Stagger: vertical offset to separate overlapping labels.
+    // Disabled while SCENE.LABEL.STAGGER_ENABLED is false on every device —
+    // the old mobile-only path pushed labelHeight up without a bound, which
+    // sent leader-line tips off the top of a phone viewport (Ray, foldable).
+    // Equal-length lines also restore the documented mapping: label height on
+    // screen mirrors the terrain beneath it. Declutter (layoutLabels) handles
+    // overlap by hiding crowded labels rather than stretching the lines.
     const staggeredPeaks = useMemo(() => {
         const withOffsets = peaks.map((p, i) => ({ ...p, offset: 0, id: filteredJobs[i].id }));
 
-        // Off on desktop so every leader line is the same length and label height
-        // mirrors the terrain (see SCENE.LABEL.STAGGER_ENABLED). On a phone all 50
-        // titles share 393px, so separation matters more than that mapping.
-        if (!SCENE.LABEL.STAGGER_ENABLED && !isMobile) return withOffsets;
+        if (!SCENE.LABEL.STAGGER_ENABLED) return withOffsets;
 
-        // A phone views the terrain from much further back, so peaks that are far
-        // apart in world units still land on top of each other on screen. Both the
-        // collision radius and the separation step scale up to compensate.
         const collision = isMobile ? SCENE.LABEL.COLLISION_DISTANCE * 1.8 : SCENE.LABEL.COLLISION_DISTANCE;
         const step = isMobile ? SCENE.LABEL.VERTICAL_OFFSET * 1.7 : SCENE.LABEL.VERTICAL_OFFSET;
         const passes = isMobile ? 6 : 3;
@@ -176,73 +195,158 @@ export const JobMarkers: React.FC = () => {
         return withOffsets;
     }, [peaks, filteredJobs, isMobile]);
 
-    if (mapView === 'map') return null;
+    // One shared declutter pass per frame. Projects every leader-line tip,
+    // places each label as close to its own tip as it can get without covering
+    // an already-placed label, and parks the rest at HIDDEN_LABEL_POSITION.
+    // That is what keeps the line attached to its label: the tip is the
+    // anchor, and resolveLabelPosition / layoutLabels refuse any placement
+    // that would leave the tip outside the box.
+    useFrame((state) => {
+        const meta = labelMeta.current;
+        if (meta.length === 0) return;
 
+        const { camera, size } = state;
+        const list = candidates.current;
+        list.length = 0;
+
+        for (const a of meta) {
+            const half = labelHalfSize.current.get(a.id) ?? { x: 40, y: 10 };
+            // The Html's local position is [0, labelHeight, 0] inside the peak
+            // group — project that world point, not the peak base.
+            const group = groupById.current.get(a.id);
+            if (!group) continue;
+            projected.set(0, a.worldY, 0);
+            group.localToWorld(projected);
+            projected.project(camera);
+            const inFront = projected.z >= -1 && projected.z <= 1;
+            const x = (projected.x * size.width) / 2 + size.width / 2;
+            const y = -((projected.y * size.height) / 2) + size.height / 2;
+            list.push({
+                id: a.id,
+                anchorX: x,
+                anchorY: y,
+                halfWidth: half.x,
+                halfHeight: half.y,
+                inFront,
+            });
+        }
+
+        layoutLabels(
+            list,
+            size.width,
+            size.height,
+            safeBand.current,
+            placements.current,
+            labelOffsets.current,
+            2,
+            4,
+        );
+    });
+
+    // Task view and the US map both sit as opaque overlays on top of this
+    // canvas. JobMarkers still mounts (hooks must stay unconditional) but the
+    // JSX returns null so the 50 Html DOM nodes are not kept alive under an
+    // opaque panel. Landscape also pauses the WebGL loop for those views.
     const isGlobalSelectionActive = !!selectedJob;
 
-    const markerItems = filteredJobs.flatMap((job) => {
-        const filteredIndex = filteredJobs.findIndex(j => j.id === job.id);
-        const peak = staggeredPeaks[filteredIndex];
-        const isSelected = selectedJob?.id === job.id;
-        if (isGlobalSelectionActive && !isSelected) return [];
+    const markerItems = useMemo(() => {
+        if (mapView !== 'globe') return [] as Array<{
+            job: Job;
+            peak: PeakData & { offset: number; id: string };
+            surfaceY: number;
+            isSelected: boolean;
+            isHovered: boolean;
+            showLabelText: boolean;
+            pipColor: string;
+            labelHeight: number;
+            growthStr: string;
+            growthColor: string;
+            growthLabel: string;
+            workersStr: string;
+            workersLabel: string;
+        }>;
 
-        // Distance used to drop ~2 in 5 labels beyond SCENE.LOD.FAR, so zooming
-        // out to see the whole terrain silently removed roles from view. Every
-        // role keeps its label at every distance now, matching the desktop view.
+        const items = filteredJobs.flatMap((job) => {
+            const filteredIndex = filteredJobs.findIndex(j => j.id === job.id);
+            const peak = staggeredPeaks[filteredIndex];
+            const isSelected = selectedJob?.id === job.id;
+            if (isGlobalSelectionActive && !isSelected) return [];
 
-        // Expanded hover stats are disabled during orbit so popups don't fight the camera.
-        const isHovered = !isOrbiting && hoveredJobId === job.id;
+            // Expanded hover stats are disabled during orbit so popups don't fight the camera.
+            const isHovered = !isOrbiting && hoveredJobId === job.id;
 
-        // The anchor ring/dot/leader-line always render for every LOD-visible
-        // job — they carry the risk colour and keep the terrain legible at a
-        // glance. Only the floating TEXT label is thinned on mobile, where all
-        // 50 overlap into unreadable mush; every job stays one search away.
-        // Every role carries its label on every device, matching the desktop
-        // view. The old phone-only thinning hid 45 of 50 titles.
-        const showLabelText = isMobile && isGlobalSelectionActive ? false : true;
+            // Every role carries its label on every device. The shared declutter
+            // pass (layoutLabels) hides crowded ones rather than thinning by
+            // employment count up front.
+            const showLabelText = isMobile && isGlobalSelectionActive ? false : true;
 
-        const pipColor = riskBandColor(job.automationCostIndex, riskScale);
-        const labelHeight = SCENE.LABEL.BASE_HEIGHT + peak.offset;
-        const surfaceY = calculateGaussianHeight(peak.x, peak.z, peaks) + TERRAIN_CONFIG.TERRAIN_OFFSET_Y;
+            const pipColor = riskBandColor(job.automationCostIndex, riskScale);
+            const labelHeight = SCENE.LABEL.BASE_HEIGHT + peak.offset;
+            const surfaceY = calculateGaussianHeight(peak.x, peak.z, peaks) + TERRAIN_CONFIG.TERRAIN_OFFSET_Y;
 
-        // Forecast stat is pinned to the terminal year (2030) regardless of the
-        // slider, so it reads as "where this role ends up" instead of always
-        // showing the 2025 baseline (0% by definition) when the slider starts there.
-        const forecastGrowth = growthAtYearFromForecastFlat(forecastsFlat, filteredIndex, YEAR_MAX);
-        const isDeclining = forecastGrowth < 0;
-        const isGrowing = forecastGrowth > 0;
-        const growthStr = `${forecastGrowth >= 0 ? '+' : ''}${forecastGrowth.toFixed(1)}%`;
-        const growthColor = isGrowing ? '#4ade80' : isDeclining ? '#f87171' : '#94a3b8';
-        const growthLabel = `${YEAR_MAX} Forecast`;
+            // Forecast stat is pinned to the terminal year (2030) regardless of the
+            // slider, so it reads as "where this role ends up" instead of always
+            // showing the 2025 baseline (0% by definition) when the slider starts there.
+            const forecastGrowth = growthAtYearFromForecastFlat(forecastsFlat, filteredIndex, YEAR_MAX);
+            const isDeclining = forecastGrowth < 0;
+            const isGrowing = forecastGrowth > 0;
+            const growthStr = `${forecastGrowth >= 0 ? '+' : ''}${forecastGrowth.toFixed(1)}%`;
+            const growthColor = isGrowing ? '#4ade80' : isDeclining ? '#f87171' : '#94a3b8';
+            const growthLabel = `${YEAR_MAX} Forecast`;
 
-        // Workers stat tracks the slider: implied headcount at the scrubbed year,
-        // using the same formula that drives the terrain peak in Workers mode.
-        const sliderGrowth = growthAtYearFromForecastFlat(forecastsFlat, filteredIndex, year);
-        const roundedYear = Math.round(year);
-        const impliedWorkers = impliedEmploymentAtYear(job.employment, sliderGrowth);
-        const workersStr = impliedWorkers >= 1_000_000
-            ? (impliedWorkers / 1_000_000).toFixed(1) + 'M'
-            : impliedWorkers >= 1_000
-            ? Math.round(impliedWorkers / 1_000) + 'K'
-            : Math.round(impliedWorkers).toString();
-        const workersLabel = `${roundedYear} Workers`;
+            // Workers stat tracks the slider: implied headcount at the scrubbed year,
+            // using the same formula that drives the terrain peak in Workers mode.
+            const sliderGrowth = growthAtYearFromForecastFlat(forecastsFlat, filteredIndex, year);
+            const roundedYear = Math.round(year);
+            const impliedWorkers = impliedEmploymentAtYear(job.employment, sliderGrowth);
+            const workersStr = impliedWorkers >= 1_000_000
+                ? (impliedWorkers / 1_000_000).toFixed(1) + 'M'
+                : impliedWorkers >= 1_000
+                ? Math.round(impliedWorkers / 1_000) + 'K'
+                : Math.round(impliedWorkers).toString();
+            const workersLabel = `${roundedYear} Workers`;
 
-        return [{
-            job,
-            peak,
-            surfaceY,
-            isSelected,
-            isHovered,
-            showLabelText,
-            pipColor,
-            labelHeight,
-            growthStr,
-            growthColor,
-            growthLabel,
-            workersStr,
-            workersLabel,
-        }];
-    }).sort((a, b) => Number(a.isHovered || a.isSelected) - Number(b.isHovered || b.isSelected));
+            return [{
+                job,
+                peak,
+                surfaceY,
+                isSelected,
+                isHovered,
+                showLabelText,
+                pipColor,
+                labelHeight,
+                growthStr,
+                growthColor,
+                growthLabel,
+                workersStr,
+                workersLabel,
+            }];
+        });
+
+        // Selected / hovered first, then employment descending — layoutLabels
+        // walks this order so the roles that matter most keep their labels when
+        // the band is crowded.
+        items.sort((a, b) => {
+            const aPri = Number(a.isHovered || a.isSelected);
+            const bPri = Number(b.isHovered || b.isSelected);
+            if (aPri !== bPri) return bPri - aPri;
+            return b.job.employment - a.job.employment;
+        });
+        return items;
+    }, [
+        mapView, filteredJobs, staggeredPeaks, selectedJob, isGlobalSelectionActive,
+        isOrbiting, hoveredJobId, isMobile, riskScale, peaks, forecastsFlat, year,
+    ]);
+
+    // Publish the ordered tip list for useFrame after commit — never during render.
+    useLayoutEffect(() => {
+        labelMeta.current = markerItems.map((m) => ({
+            id: m.job.id,
+            worldY: m.labelHeight,
+        }));
+    }, [markerItems]);
+
+    if (mapView !== 'globe') return null;
 
     return (
         <group>
@@ -250,7 +354,14 @@ export const JobMarkers: React.FC = () => {
                 job, peak, surfaceY, isSelected, isHovered, showLabelText, pipColor, labelHeight,
                 growthStr, growthColor, growthLabel, workersStr, workersLabel,
             }) => (
-                    <group key={job.id} position={[peak.x, surfaceY, peak.z]}>
+                    <group
+                        key={job.id}
+                        ref={(g) => {
+                            if (g) groupById.current.set(job.id, g);
+                            else groupById.current.delete(job.id);
+                        }}
+                        position={[peak.x, surfaceY, peak.z]}
+                    >
                         {/* Anchor ring */}
                         <mesh rotation={[-Math.PI / 2, 0, 0]}>
                             <ringGeometry args={[SCENE.ANCHOR.RING_INNER, SCENE.ANCHOR.RING_OUTER, SCENE.ANCHOR.RING_SEGMENTS]} />
@@ -262,7 +373,11 @@ export const JobMarkers: React.FC = () => {
                             <meshBasicMaterial color="#ffffff" />
                         </mesh>
 
-                        {/* Leader line */}
+                        {/* Leader line — always BASE_HEIGHT (stagger off). The
+                            tip is the label's anchor; layoutLabels refuses any
+                            placement that would leave this tip outside the box,
+                            so the line never runs off-screen while the label
+                            stays pinned in view. */}
                         <Line
                             points={[[0, 0, 0], [0, labelHeight, 0]]}
                             color="white"
@@ -275,26 +390,15 @@ export const JobMarkers: React.FC = () => {
                             force this host to the front AND pin every other host to the back
                             (previously --front stuck forever when wrapperClass went undefined,
                             so many labels shared max z and later DOM siblings covered the popup).
-                            showLabelText is always true on desktop; on mobile it's thinned to
-                            the top employers + selected/hovered so the terrain stays readable —
-                            every job is still one search away. */}
+                            Placement is owned by the shared useFrame declutter pass; this
+                            callback only reads the result (with a first-frame fallback that
+                            parks the label until the pass has run). */}
                         {showLabelText && (
                         <Html
                             position={[0, labelHeight, 0]}
                             center
-                            // drei's default projection lets a label overhang the
-                            // viewport when its peak sits near an edge. Same maths,
-                            // then clamped so the whole box stays on screen.
-                            calculatePosition={(obj, camera, size) => {
-                                projected.setFromMatrixPosition(obj.matrixWorld).project(camera);
-                                const x = (projected.x * size.width) / 2 + size.width / 2;
-                                const y = -((projected.y * size.height) / 2) + size.height / 2;
-                                const half = labelHalfSize.current.get(job.id);
-                                if (!half) return [x, y];
-                                return [
-                                    clampLabelCenterX(x, half.x, size.width),
-                                    clampLabelCenterY(y, half.y, size.height, safeBand.current.top, safeBand.current.bottom),
-                                ];
+                            calculatePosition={() => {
+                                return placements.current.get(job.id) ?? HIDDEN_LABEL_POSITION;
                             }}
                             wrapperClass={
                                 isHovered || isSelected

@@ -32,6 +32,7 @@ const MAX_CONTEXT_LOSS_RETRIES = 2;
 export const Landscape: React.FC = () => {
     const setIsOrbiting = useStore((s) => s.setIsOrbiting);
     const route = useStore((s) => s.route);
+    const mapView = useStore((s) => s.mapView);
     const setIsDefaultView = useStore((s) => s.setIsDefaultView);
     const resetViewRequestId = useStore((s) => s.resetViewRequestId);
     const controlsRef = useRef<OrbitControlsImpl>(null);
@@ -40,6 +41,17 @@ export const Landscape: React.FC = () => {
     const [isPortrait] = useState(
         () => typeof window !== 'undefined' && window.innerWidth / window.innerHeight < 1,
     );
+    // Read once at mount — matching isPortrait. Phones pay for every pixel in
+    // the backing store; R3F's default dpr cap is 2, which on a Fold at
+    // devicePixelRatio 3 still means a 720×1680 buffer. Capping mobile at 1.5
+    // cut that to 540×1260 (0.68MP from 1.21MP) and raised software-rendered
+    // fps from 15.6 to 25.7 in the same Chromium harness. Antialias off on
+    // phones is the same trade: MSAA roughly doubles fill cost for a visual
+    // difference the terrain's heatmap barely shows.
+    const [isMobile] = useState(
+        () => typeof window !== 'undefined' && window.matchMedia('(max-width: 767px)').matches,
+    );
+    const [antialias] = useState(() => !isMobile);
     const isDefaultViewRef = useRef(true);
     const [canvasKey, setCanvasKey] = useState(0);
     const [contextLossGivenUp, setContextLossGivenUp] = useState(false);
@@ -131,21 +143,31 @@ export const Landscape: React.FC = () => {
         return <WebGLFallback />;
     }
 
+    // Pause the loop whenever the 3D view is covered. An opaque DOM overlay
+    // does NOT stop requestAnimationFrame (browsers only throttle rAF for
+    // hidden tabs, not occluded canvases), and Terrain.tsx runs a ~37k-vertex
+    // shader with a per-vertex loop over up to 50 peaks every frame. Measured
+    // on production before this change: globe 12,161 draws/sec, task view
+    // 12,060/sec (NOT paused), US map 60/sec. After: globe ~12,060/sec, task
+    // view 0, US map 0, and the loop resumes on return to the globe. 'never'
+    // preserves the GL context, compiled shaders, geometry and the
+    // OrbitControls camera position, so returning is instant and the user's
+    // orbit is exactly where they left it.
+    //
+    // These are load reductions aimed at Ray's "locks up after a bit" report
+    // (Samsung foldable, Chrome). The lockup itself was not reproduced on an
+    // M4 Mac — defect (B) remains mitigated-not-confirmed.
+    const pauseLoop = route === 'dashboard' || mapView !== 'globe';
+
     return (
         <Canvas
             // key: forces a full remount (fresh GL context, shaders, buffers)
             // on WebGL context loss — see MAX_CONTEXT_LOSS_RETRIES above.
             key={canvasKey}
             onCreated={handleCreated}
-            // Halts the render loop while the dashboard covers the screen — an
-            // opaque DOM overlay does NOT stop requestAnimationFrame (browsers
-            // only throttle rAF for hidden tabs, not occluded canvases), and
-            // Terrain.tsx runs a ~37k-vertex shader with a per-vertex loop over
-            // up to 50 peaks every frame regardless of visibility. 'never'
-            // preserves the GL context, compiled shaders, geometry and the
-            // OrbitControls camera position, so returning to the map is instant
-            // and the user's orbit is exactly where they left it.
-            frameloop={route === 'dashboard' ? 'never' : 'always'}
+            frameloop={pauseLoop ? 'never' : 'always'}
+            dpr={isMobile ? [1, 1.5] : [1, 2]}
+            gl={{ antialias }}
             camera={{
                 position: [...(isPortrait ? SCENE.CAMERA_PORTRAIT_POSITION : SCENE.CAMERA_INITIAL_POSITION)],
                 fov: isPortrait ? SCENE.CAMERA_PORTRAIT_FOV : SCENE.CAMERA_FOV,
