@@ -36,24 +36,52 @@ export const Landscape: React.FC = () => {
     const setIsDefaultView = useStore((s) => s.setIsDefaultView);
     const resetViewRequestId = useStore((s) => s.resetViewRequestId);
     const controlsRef = useRef<OrbitControlsImpl>(null);
-    // Read once: R3F applies the `camera` prop at mount only. Portrait phones
-    // need a wider, further framing to fit the terrain (see SCENE constants).
-    const [isPortrait] = useState(
+    // R3F applies the `camera` prop at Canvas mount only. Portrait phones need
+    // wider/further framing (SCENE constants). Orientation / breakpoint flips
+    // remount the canvas below so the new framing actually takes effect.
+    const [isPortrait, setIsPortrait] = useState(
         () => typeof window !== 'undefined' && window.innerWidth / window.innerHeight < 1,
     );
-    // Read once at mount — matching isPortrait. Phones pay for every pixel in
-    // the backing store; R3F's default dpr cap is 2, which on a Fold at
-    // devicePixelRatio 3 still means a 720×1680 buffer. Capping mobile at 1.5
-    // cut that to 540×1260 (0.68MP from 1.21MP) and raised software-rendered
-    // fps from 15.6 to 25.7 in the same Chromium harness. Antialias off on
-    // phones is the same trade: MSAA roughly doubles fill cost for a visual
-    // difference the terrain's heatmap barely shows.
-    const [isMobile] = useState(
+    // Phones pay for every pixel in the backing store; R3F's default dpr cap
+    // is 2, which on a Fold at devicePixelRatio 3 still means a 720×1680
+    // buffer. Capping mobile at 1.5 cut that to 540×1260 and raised
+    // software-rendered fps from 15.6 to 25.7. Antialias off on phones is the
+    // same trade: MSAA roughly doubles fill cost for little visual gain.
+    const [isMobile, setIsMobile] = useState(
         () => typeof window !== 'undefined' && window.matchMedia('(max-width: 767px)').matches,
     );
-    const [antialias] = useState(() => !isMobile);
+    const antialias = !isMobile;
     const isDefaultViewRef = useRef(true);
     const [canvasKey, setCanvasKey] = useState(0);
+
+    useEffect(() => {
+        const read = () => {
+            const nextPortrait = window.innerWidth / window.innerHeight < 1;
+            const nextMobile = window.matchMedia('(max-width: 767px)').matches;
+            let framingChanged = false;
+            setIsPortrait((prev) => {
+                if (prev !== nextPortrait) framingChanged = true;
+                return nextPortrait;
+            });
+            setIsMobile((prev) => {
+                if (prev !== nextMobile) framingChanged = true;
+                return nextMobile;
+            });
+            // Remount Canvas so the camera prop (mount-only) picks up the new
+            // portrait FOV / mobile dpr. One bump even if both flags flip.
+            if (framingChanged) {
+                isDefaultViewRef.current = true;
+                setIsDefaultView(true);
+                setCanvasKey((k) => k + 1);
+            }
+        };
+        window.addEventListener('resize', read);
+        window.addEventListener('orientationchange', read);
+        return () => {
+            window.removeEventListener('resize', read);
+            window.removeEventListener('orientationchange', read);
+        };
+    }, [setIsDefaultView]);
     const [contextLossGivenUp, setContextLossGivenUp] = useState(false);
     const contextLossCountRef = useRef(0);
 

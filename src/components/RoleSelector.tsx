@@ -2,7 +2,7 @@ import RoleSelectorBody from './RoleSelectorBody';
 
 export default function RoleSelector() {
     return (
-        <div className="w-80 bg-gradient-to-b from-gray-900 to-black border-r border-gray-700/50 flex flex-col h-screen">
+        <div className="w-80 bg-gradient-to-b from-gray-900 to-black border-r border-gray-700/50 flex flex-col h-dvh">
             {/* Header */}
             <div className="p-6 border-b border-gray-700/50">
                 <h2 className="text-white font-bold text-xl mb-2">Role Selector</h2>

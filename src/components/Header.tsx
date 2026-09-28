@@ -1,4 +1,5 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useEffect, useLayoutEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { useStore } from '../store';
 import { IconZap, IconGlobe, IconMap, IconSearch, IconInfo, IconX, IconActivity, IconRocket, IconUser, IconMenu, IconLayers } from './ui/Icons';
 import { MobileMoreSheet } from './MobileMoreSheet';
@@ -299,6 +300,15 @@ const SearchBar: React.FC<{ onSelectJob: (job: Job) => void }> = ({ onSelectJob 
     const [matches, setMatches] = useState<Job[]>([]);
     const [isOpen, setIsOpen] = useState(false);
     const debounceRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+    const wrapRef = useRef<HTMLDivElement>(null);
+    const [menuBox, setMenuBox] = useState<{ top: number; left: number; width: number } | null>(null);
+
+    const placeMenu = useCallback(() => {
+        const el = wrapRef.current;
+        if (!el) return;
+        const r = el.getBoundingClientRect();
+        setMenuBox({ top: r.bottom + 8, left: r.left, width: r.width });
+    }, []);
 
     const handleChange = useCallback((val: string) => {
         setQuery(val);
@@ -323,8 +333,53 @@ const SearchBar: React.FC<{ onSelectJob: (job: Job) => void }> = ({ onSelectJob 
         setMatches([]);
     }, [onSelectJob]);
 
+    useLayoutEffect(() => {
+        if (!isOpen) return;
+        placeMenu();
+    }, [isOpen, matches.length, placeMenu]);
+
+    useEffect(() => {
+        if (!isOpen) return;
+        const onScrollOrResize = () => placeMenu();
+        window.addEventListener('resize', onScrollOrResize);
+        window.addEventListener('scroll', onScrollOrResize, true);
+        return () => {
+            window.removeEventListener('resize', onScrollOrResize);
+            window.removeEventListener('scroll', onScrollOrResize, true);
+        };
+    }, [isOpen, placeMenu]);
+
+    // Portal the menu out of Header's Z.header=20 stacking context so the
+    // year slider (Z.timeBar=110) cannot paint over / steal hits from results.
+    const menu = isOpen && menuBox && (matches.length > 0 || query.length > 1) && createPortal(
+        <div
+            style={{
+                position: 'fixed',
+                top: menuBox.top,
+                left: menuBox.left,
+                width: menuBox.width,
+                zIndex: Z.sidebar,
+            }}
+            className="bg-gray-900/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl max-h-[300px] overflow-y-auto text-sm custom-scrollbar pointer-events-auto"
+        >
+            {matches.length > 0 ? matches.map(j => (
+                <div
+                    key={j.id}
+                    className="px-3 py-3 hover:bg-white/[0.06] cursor-pointer flex justify-between items-center transition-colors border-b border-white/[0.04] last:border-0"
+                    onMouseDown={() => handleSelect(j)}
+                >
+                    <span className="font-medium text-gray-200 text-sm">{j.title}</span>
+                    <span className="text-[10px] uppercase tracking-wider text-gray-500 px-2 py-0.5 rounded bg-white/[0.04] border border-white/[0.06]">{j.cluster}</span>
+                </div>
+            )) : (
+                <div className="p-3 text-gray-500 text-xs text-center">No jobs found</div>
+            )}
+        </div>,
+        document.body,
+    );
+
     return (
-        <div className="relative w-full md:w-[220px]">
+        <div ref={wrapRef} className="relative w-full md:w-[220px]">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <IconSearch size={14} className="text-gray-500" />
             </div>
@@ -338,25 +393,7 @@ const SearchBar: React.FC<{ onSelectJob: (job: Job) => void }> = ({ onSelectJob 
                 aria-label="Search jobs"
                 className="block w-full pl-9 pr-3 py-2.5 border border-white/[0.06] rounded-lg bg-white/[0.03] text-gray-300 placeholder-gray-600 focus:outline-none focus:bg-white/[0.06] focus:border-white/15 focus:ring-1 focus:ring-white/10 text-sm transition-all min-h-[44px] max-md:min-w-[44px] max-md:justify-center"
             />
-            {isOpen && matches.length > 0 && (
-                <div className="absolute mt-2 w-full bg-gray-900/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl max-h-[300px] overflow-y-auto text-sm custom-scrollbar" style={{ zIndex: Z.sidebar }}>
-                    {matches.map(j => (
-                        <div
-                            key={j.id}
-                            className="px-3 py-3 hover:bg-white/[0.06] cursor-pointer flex justify-between items-center transition-colors border-b border-white/[0.04] last:border-0"
-                            onMouseDown={() => handleSelect(j)}
-                        >
-                            <span className="font-medium text-gray-200 text-sm">{j.title}</span>
-                            <span className="text-[10px] uppercase tracking-wider text-gray-500 px-2 py-0.5 rounded bg-white/[0.04] border border-white/[0.06]">{j.cluster}</span>
-                        </div>
-                    ))}
-                </div>
-            )}
-            {isOpen && query.length > 1 && matches.length === 0 && (
-                <div className="absolute mt-2 w-full bg-gray-900/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl p-3 text-gray-500 text-xs text-center" style={{ zIndex: Z.sidebar }}>
-                    No jobs found
-                </div>
-            )}
+            {menu}
         </div>
     );
 };
