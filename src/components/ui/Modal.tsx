@@ -7,6 +7,14 @@ interface ModalProps {
     onClose: () => void;
     title: string;
     children: ReactNode;
+    /**
+     * Optional non-scrolling block between the title bar and the body.
+     * Use for search/filters that must stay pinned while the body scrolls —
+     * a sticky element inside the scroller lets list rows paint above it
+     * (seen on the mobile Filter roles sheet: a selected row bled over the
+     * search field).
+     */
+    chrome?: ReactNode;
     footer?: ReactNode;
     size?: 'sm' | 'md' | 'lg' | 'xl';
     layer?: 'base' | 'overlay' | 'top';
@@ -21,7 +29,7 @@ const SIZE_MAP = {
     xl: 'max-w-6xl'
 } as const;
 
-export function Modal({ isOpen, onClose, title, children, footer, size = 'md', layer = 'overlay', printable = false }: ModalProps) {
+export function Modal({ isOpen, onClose, title, children, chrome, footer, size = 'md', layer = 'overlay', printable = false }: ModalProps) {
     const dialogRef = useRef<HTMLDivElement>(null);
     const previousFocus = useRef<HTMLElement | null>(null);
     const titleId = useRef(`modal-${Math.random().toString(36).slice(2, 9)}`);
@@ -92,7 +100,7 @@ export function Modal({ isOpen, onClose, title, children, footer, size = 'md', l
                 {...(printable ? { 'data-print-modal': '' } : {})}
                 className={`relative bg-gray-900/95 border border-white/10 rounded-2xl ${SIZE_MAP[size]} w-full shadow-2xl flex flex-col max-h-[90vh] overflow-hidden animate-in zoom-in-95 slide-in-from-bottom-2 duration-300`}
             >
-                <div className="flex items-center justify-between px-6 py-5 border-b border-white/[0.06]">
+                <div className="flex items-center justify-between px-6 py-5 border-b border-white/[0.06] shrink-0">
                     <h2
                         id={titleId.current}
                         className="text-lg font-semibold text-white tracking-wide"
@@ -109,7 +117,18 @@ export function Modal({ isOpen, onClose, title, children, footer, size = 'md', l
                         </svg>
                     </button>
                 </div>
-                <div className="flex-1 overflow-y-auto p-6 custom-scrollbar">
+                {/* chrome sits outside the scroller so list rows can never paint
+                    over search/filters (sticky-inside-scroll was the bleed). */}
+                {chrome && (
+                    <div className="shrink-0 bg-gray-900 border-b border-white/[0.06] overflow-hidden">
+                        {chrome}
+                    </div>
+                )}
+                <div
+                    className={`flex-1 min-h-0 overflow-y-auto custom-scrollbar ${
+                        chrome ? 'p-0' : 'p-6'
+                    }`}
+                >
                     {children}
                 </div>
                 {footer && (
