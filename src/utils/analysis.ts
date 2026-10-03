@@ -1,6 +1,7 @@
 import type { z } from 'zod';
-import { RISK_THRESHOLDS } from '../config/constants';
+import { RISK_THRESHOLDS, OOH_FRACTION_AT_YEAR_MAX, OOH_ENDPOINT_YEAR } from '../config/constants';
 import { callClaudeJSON, StartupIdeasSchema, StartupCoreSchema, StartupPlansSchema } from './claude';
+import { oohEnvelopeCap } from './terrainMath';
 
 export { getClaudeUserFriendlyMessage } from './claude';
 
@@ -303,8 +304,10 @@ export async function generateUpskillCourses(
  */
 function clampForecastToEnvelope(jobTitle: string, projectedGrowth: number, result: JobAnalysis): void {
     if (!result.yearlyForecast) return;
-    const lo = Math.min(0, projectedGrowth);
-    const hi = Math.max(0, projectedGrowth);
+    // Same 2030 fraction-of-decade cap as offline scoring (≈5/9 of OOH).
+    const cap = oohEnvelopeCap(projectedGrowth);
+    const lo = Math.min(0, cap);
+    const hi = Math.max(0, cap);
     for (const f of result.yearlyForecast) {
         const clamped = Math.min(hi, Math.max(lo, f.growthImpact));
         if (clamped !== f.growthImpact) {
@@ -368,7 +371,8 @@ export async function analyzeJob(
     IMPORTANT COHERENCE INSTRUCTIONS:
     - Provide precise, granular two-decimal scores (e.g., 0.73, 0.41, 0.88). DO NOT round to the nearest tenth or quarter.
     - "yearlyForecast.growthImpact" is CUMULATIVE percent change in employment from the 2025 baseline. NOT year-over-year. Year 2025 MUST be 0.00. Use two-decimal precision (e.g. 2.40, -3.85).
-    - For every forecast year, growthImpact MUST fall between 0.00 and ${bls.projectedGrowth} inclusive (the BLS OOH 10-year % for this role) — moving monotonically from the 2025 baseline toward that endpoint. Do not cross zero, and do not go past ${bls.projectedGrowth} in either direction.
+    - The BLS figure is a 10-year (2024–${OOH_ENDPOINT_YEAR}) outlook. By 2030 the path may reach at most ~${(OOH_FRACTION_AT_YEAR_MAX * 100).toFixed(0)}% of that decade change (cap = ${oohEnvelopeCap(bls.projectedGrowth).toFixed(2)}), not the full ${bls.projectedGrowth}%.
+    - For every forecast year, growthImpact MUST fall between 0.00 and ${oohEnvelopeCap(bls.projectedGrowth).toFixed(2)} inclusive — moving monotonically from the 2025 baseline toward that 2030 cap. Do not cross zero, and do not go past the cap.
     - Do not introduce other macro statistics (GDP, national unemployment, wages) unless they appear in the task text you were given.
     - "salary_forecast" should be an array of 6 numbers representing a salary index from 2025 to 2030. Start at 100.
     - If the role's tasks have high automation exposure, the salary forecast should show VOLATILITY (ups and downs) or DECLINE.

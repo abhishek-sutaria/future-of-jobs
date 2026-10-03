@@ -2,7 +2,8 @@ export type Task = {
   name: string;
   aiCapabilityScore: number; // 0-1 matches how well AI can do this
   humanCriticalityScore: number; // 0-1 matches human requirement (trust, empathy, etc)
-  importance: number; // E.g., O*NET importance score
+  /** Uniform placeholder (3) — not real O*NET Importance; unused in scoring. */
+  importance: number;
 };
 
 export type Job = {
@@ -10,7 +11,8 @@ export type Job = {
   title: string;
   cluster: string;
   employment: number; // Proxy for BLS volume
-  automationCostIndex: number; // 0-1 (Higher = more expensive to automate)
+  /** Mean of task AI capability scores (0–1). Higher = more automation risk / easier for GenAI. */
+  automationCostIndex: number;
   projectedGrowth: number; // Percentage (e.g., 5.2)
   salaryVolatilityLabel: string; // Percentile label: Critical | High | Moderate | Stable (store.ts)
   humanResilienceLabel: string; // Percentile label: Future-Proof | High | At Risk (store.ts)
@@ -35,9 +37,4 @@ export type Job = {
     employment: number;
     lq: number;
   }[];
-};
-
-export type JobStatus = {
-  riskScore: number; // 0-1
-  color: string; // Hex code or CSS color string
 };

@@ -50,6 +50,8 @@ export interface UpskillCompletion {
     jobId: string;
     taskName: string;
     completedAt: string;
+    /** Defend vs Build — stored client-side when recorded; older rows may omit it. */
+    mode?: 'defend' | 'build';
 }
 
 export interface StoredArtifact<T = unknown> {

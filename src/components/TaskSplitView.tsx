@@ -100,7 +100,7 @@ export const TaskSplitView: React.FC = () => {
                     Inside each job
                 </h2>
                 <p className="text-sm text-gray-400 mt-2">
-                    Every role, ordered by how much of it AI can do.
+                    Every role, ordered by GenAI capability today — not guaranteed adoption.
                 </p>
 
                 <div className="mt-5 bg-gray-900/60 backdrop-blur-xl border border-cyan-400/25 rounded-2xl p-5 md:p-6 shadow-lg shadow-cyan-500/5">
@@ -111,7 +111,7 @@ export const TaskSplitView: React.FC = () => {
                         </p>
                         <div className="flex items-center gap-4 text-[11px]">
                             <span className="flex items-center gap-1.5 text-gray-400">
-                                <span className="w-2.5 h-2.5 rounded-sm" style={{ background: AI }} /> AI can do
+                                <span className="w-2.5 h-2.5 rounded-sm" style={{ background: AI }} /> AI-capable
                             </span>
                             <span className="flex items-center gap-1.5 text-gray-400">
                                 <span className="w-2.5 h-2.5 rounded-sm" style={{ background: HUMAN }} /> Needs a person
@@ -132,7 +132,7 @@ export const TaskSplitView: React.FC = () => {
                     <div className="flex justify-between mt-3">
                         <div>
                             <div className="text-2xl font-bold tabular-nums" style={{ color: AI }}>{pct(totals.aiPct)}%</div>
-                            <div className="text-[11px] text-gray-500">AI can do</div>
+                            <div className="text-[11px] text-gray-500">AI-capable share</div>
                         </div>
                         <div className="text-right">
                             <div className="text-2xl font-bold tabular-nums" style={{ color: HUMAN }}>{pct(100 - totals.aiPct)}%</div>
@@ -145,10 +145,13 @@ export const TaskSplitView: React.FC = () => {
                     <div className="flex items-baseline justify-between gap-3">
                         <h3 className="text-sm font-semibold text-white uppercase tracking-wider">Role by role</h3>
                         <p className="text-[10px] uppercase tracking-widest text-gray-600 text-right leading-tight">
-                            AI can do
+                            AI-capable
                         </p>
                     </div>
 
+                    {ordered.length === 0 ? (
+                        <p className="mt-4 text-sm text-gray-500 italic">No roles match the current filter.</p>
+                    ) : (
                     <ul className="mt-3 space-y-1.5">
                         {ordered.map((job) => {
                             const risk = publishedRisk(job);
@@ -185,6 +188,7 @@ export const TaskSplitView: React.FC = () => {
                             );
                         })}
                     </ul>
+                    )}
                 </div>
 
                 {contrast && (

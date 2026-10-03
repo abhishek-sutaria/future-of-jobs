@@ -12,7 +12,8 @@
  */
 
 import { callClaudeJSON, JobTaskScoringSchema } from './claude';
-import { YEAR_MIN, YEAR_MAX } from '../config/constants';
+import { YEAR_MIN, YEAR_MAX, OOH_FRACTION_AT_YEAR_MAX, OOH_ENDPOINT_YEAR } from '../config/constants';
+import { oohEnvelopeCap } from './terrainMath';
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
@@ -93,8 +94,11 @@ export function clearScoreCache(): void {
  * silently. That's not a hypothetical: it happened for 5 real roles.
  */
 function assertValidYearlyForecast(projectedGrowth: number, points: ForecastPoint[]): void {
-    const lo = Math.min(0, projectedGrowth);
-    const hi = Math.max(0, projectedGrowth);
+    // Cap at the in-app 2030 fraction of the 10-year OOH endpoint (≈5/9), not the
+    // full 2034 figure — otherwise a five-year path silently front-loads a decade.
+    const cap = oohEnvelopeCap(projectedGrowth);
+    const lo = Math.min(0, cap);
+    const hi = Math.max(0, cap);
     // The 2025 baseline point must be essentially exact — it's defined as 0 by
     // construction, not modeled. Interior years for a ~0% BLS role are a real
     // AI-reasoned forecast, though, and a small transient dip-then-recover is
@@ -170,7 +174,8 @@ TWO outputs are needed:
   - growthImpact: CUMULATIVE percent change in this role's total US employment
     from the ${YEAR_MIN} baseline. NOT year-over-year — cumulative from ${YEAR_MIN}.
   - Year ${YEAR_MIN} MUST be exactly 0.00 (baseline).
-  - For EVERY year in the window, growthImpact MUST fall between 0.00 and ${projectedGrowth} inclusive (the BLS OOH 10-year % above) — moving monotonically from the ${YEAR_MIN} baseline toward that endpoint. Do not cross zero, and do not go past ${projectedGrowth} in either direction.
+  - The BLS figure above is a 10-year (2024–${OOH_ENDPOINT_YEAR}) outlook. By ${YEAR_MAX} the path may reach at most ~${(OOH_FRACTION_AT_YEAR_MAX * 100).toFixed(0)}% of that decade change (cap = ${(projectedGrowth * OOH_FRACTION_AT_YEAR_MAX).toFixed(2)}), not the full ${growthLabel}.
+  - For EVERY year in the window, growthImpact MUST fall between 0.00 and ${(projectedGrowth * OOH_FRACTION_AT_YEAR_MAX).toFixed(2)} inclusive — moving monotonically from the ${YEAR_MIN} baseline toward that ${YEAR_MAX} cap. Do not cross zero, and do not go past the cap.
   - Years ${YEAR_MIN + 1} through ${YEAR_MAX}: smooth progression toward a plausible 2030 endpoint that still respects that range at every year.
   - Use two-decimal precision (e.g. 2.40, -3.85).
   - Do not invent other macro statistics (GDP, national unemployment) unless they appear in a task description below.

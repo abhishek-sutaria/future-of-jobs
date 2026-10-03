@@ -17,8 +17,14 @@ const ALL_STEPS: Step[] = [
     {
         target: 'tour-slider',
         title: 'AI Timeline',
-        description: 'Drag the slider from 2025 → 2030. Peaks shrink as AI displaces workers — the higher the risk, the faster the drop.',
+        description: 'Drag the slider from 2025 → 2030. Default height is Workers (implied headcount). Switch Peak Height to Human work to see a scenario where peaks erode as AI takes more — high-risk roles drop faster.',
         padding: 14,
+    },
+    {
+        target: 'tour-tasks',
+        title: 'Tasks view',
+        description: 'See every role broken into AI-capable vs human-needed tasks. Same score, different jobs makes the contrast concrete.',
+        padding: 10,
     },
     {
         target: 'tour-search',

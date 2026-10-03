@@ -29,7 +29,7 @@ const vertexShader = `
   uniform float uGrowthNow[${SHADER.MAX_JOBS}];
   uniform int uPeakCount;
 
-  // Scalar mode flag (not an array): 0.0 = Growth mode, 1.0 = Workers mode.
+  // Scalar mode flag (not an array): 0.0 = Human-work scenario, 1.0 = Workers mode.
   uniform float uHeightMode;
 
   const float SIGMA_SQ2 = ${SHADER.SIGMA_SQ2.toFixed(1)};

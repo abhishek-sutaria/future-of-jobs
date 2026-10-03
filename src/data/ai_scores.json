@@ -39,27 +39,27 @@
         },
         {
           "year": 2026,
-          "growthImpact": 1.1,
+          "growthImpact": 0.69,
           "reasoning": "Modest hiring growth as AI tools assist but do not replace strategic roles."
         },
         {
           "year": 2027,
-          "growthImpact": 2.3,
+          "growthImpact": 1.44,
           "reasoning": "Continued demand for marketing managers despite productivity gains from AI."
         },
         {
           "year": 2028,
-          "growthImpact": 3.6,
+          "growthImpact": 2.26,
           "reasoning": "Steady growth as digital marketing complexity sustains managerial oversight needs."
         },
         {
           "year": 2029,
-          "growthImpact": 5,
+          "growthImpact": 3.14,
           "reasoning": "Gradual employment increase consistent with broader economic and BLS projections."
         },
         {
           "year": 2030,
-          "growthImpact": 6.2,
+          "growthImpact": 3.88,
           "reasoning": "Approaching the 7% BLS 10-year cap with AI augmenting rather than replacing the role."
         }
       ]
@@ -100,27 +100,27 @@
         },
         {
           "year": 2026,
-          "growthImpact": 1.1,
+          "growthImpact": 0.61,
           "reasoning": "Early AI adoption in reporting slightly tempers hiring growth."
         },
         {
           "year": 2027,
-          "growthImpact": 2.4,
+          "growthImpact": 1.33,
           "reasoning": "Steady demand for market insights offsets task automation."
         },
         {
           "year": 2028,
-          "growthImpact": 3.8,
+          "growthImpact": 2.11,
           "reasoning": "Analysts increasingly shift to interpretive and strategic roles."
         },
         {
           "year": 2029,
-          "growthImpact": 5.3,
+          "growthImpact": 2.94,
           "reasoning": "Continued demand growth aligns with BLS occupational outlook trajectory."
         },
         {
           "year": 2030,
-          "growthImpact": 7,
+          "growthImpact": 3.88,
           "reasoning": "Employment reaches projected 10-year cumulative growth endpoint."
         }
       ]
@@ -222,27 +222,27 @@
         },
         {
           "year": 2026,
-          "growthImpact": 0.9,
+          "growthImpact": 0.5,
           "reasoning": "Modest hiring growth as AI tools augment rather than replace analysts."
         },
         {
           "year": 2027,
-          "growthImpact": 2,
+          "growthImpact": 1.11,
           "reasoning": "Continued demand growth outpaces incremental AI-driven efficiency gains."
         },
         {
           "year": 2028,
-          "growthImpact": 3.2,
+          "growthImpact": 1.78,
           "reasoning": "Steady economic expansion sustains need for client-facing financial expertise."
         },
         {
           "year": 2029,
-          "growthImpact": 4.5,
+          "growthImpact": 2.5,
           "reasoning": "Growth trends toward BLS 10-year projection as roles evolve with AI tools."
         },
         {
           "year": 2030,
-          "growthImpact": 6,
+          "growthImpact": 3.33,
           "reasoning": "Employment reaches BLS projected 6% growth as AI augments analyst productivity."
         }
       ]
@@ -283,27 +283,27 @@
         },
         {
           "year": 2026,
-          "growthImpact": 2.3,
+          "growthImpact": 1.3,
           "reasoning": "Steady demand growth from financial complexity and regulatory needs."
         },
         {
           "year": 2027,
-          "growthImpact": 5.1,
+          "growthImpact": 2.87,
           "reasoning": "Continued expansion in financial services offsetting AI-driven efficiency gains."
         },
         {
           "year": 2028,
-          "growthImpact": 8.2,
+          "growthImpact": 4.62,
           "reasoning": "Growth moderates slightly as automation handles more routine reporting tasks."
         },
         {
           "year": 2029,
-          "growthImpact": 11.5,
+          "growthImpact": 6.48,
           "reasoning": "Demand for strategic financial oversight sustains hiring despite AI adoption."
         },
         {
           "year": 2030,
-          "growthImpact": 14.8,
+          "growthImpact": 8.33,
           "reasoning": "Cumulative growth approaches BLS 10-year cap, reflecting long-term managerial demand."
         }
       ]
@@ -344,27 +344,27 @@
         },
         {
           "year": 2026,
-          "growthImpact": 1.4,
+          "growthImpact": 0.85,
           "reasoning": "Gradual demand growth as firms adopt AI tools alongside consultants."
         },
         {
           "year": 2027,
-          "growthImpact": 3,
+          "growthImpact": 1.83,
           "reasoning": "Continued hiring growth despite AI-assisted efficiency gains."
         },
         {
           "year": 2028,
-          "growthImpact": 4.8,
+          "growthImpact": 2.93,
           "reasoning": "Steady expansion in consulting demand tempered by productivity tools."
         },
         {
           "year": 2029,
-          "growthImpact": 6.6,
+          "growthImpact": 4.02,
           "reasoning": "Sustained employment growth tracking toward BLS 10-year trend."
         },
         {
           "year": 2030,
-          "growthImpact": 8.2,
+          "growthImpact": 5,
           "reasoning": "Approaching BLS projected 9% growth ceiling by decade end."
         }
       ]
@@ -405,27 +405,27 @@
         },
         {
           "year": 2026,
-          "growthImpact": 1,
+          "growthImpact": 0.56,
           "reasoning": "Gradual demand growth as supply chains expand despite AI efficiency gains."
         },
         {
           "year": 2027,
-          "growthImpact": 2.2,
+          "growthImpact": 1.22,
           "reasoning": "Continued moderate hiring growth aligned with logistics sector expansion."
         },
         {
           "year": 2028,
-          "growthImpact": 3.4,
+          "growthImpact": 1.89,
           "reasoning": "AI tools augment rather than replace managers, supporting steady headcount growth."
         },
         {
           "year": 2029,
-          "growthImpact": 4.7,
+          "growthImpact": 2.61,
           "reasoning": "Sustained e-commerce and global trade growth drive continued demand."
         },
         {
           "year": 2030,
-          "growthImpact": 6,
+          "growthImpact": 3.33,
           "reasoning": "Employment reaches BLS-projected 6% cumulative growth by decade end."
         }
       ]
@@ -466,27 +466,27 @@
         },
         {
           "year": 2026,
-          "growthImpact": 2.8,
+          "growthImpact": 1.71,
           "reasoning": "Steady logistics demand growth with early AI tool adoption for reporting tasks."
         },
         {
           "year": 2027,
-          "growthImpact": 5.9,
+          "growthImpact": 3.59,
           "reasoning": "Continued sector expansion offsets modest task automation in proposal drafting."
         },
         {
           "year": 2028,
-          "growthImpact": 9.2,
+          "growthImpact": 5.61,
           "reasoning": "Growth moderates slightly as AI handles more documentation and performance reviews."
         },
         {
           "year": 2029,
-          "growthImpact": 12.6,
+          "growthImpact": 7.68,
           "reasoning": "Relationship and subcontractor management tasks remain human-driven, sustaining headcount growth."
         },
         {
           "year": 2030,
-          "growthImpact": 15.5,
+          "growthImpact": 9.44,
           "reasoning": "Cumulative growth nears BLS 10-year projection cap, reflecting continued demand tempered by automation."
         }
       ]
@@ -527,27 +527,27 @@
         },
         {
           "year": 2026,
-          "growthImpact": 2.8,
+          "growthImpact": 1.56,
           "reasoning": "Steady demand growth slightly offset by AI-assisted productivity gains."
         },
         {
           "year": 2027,
-          "growthImpact": 5.9,
+          "growthImpact": 3.28,
           "reasoning": "Continued hiring growth as software demand outpaces automation effects."
         },
         {
           "year": 2028,
-          "growthImpact": 9.2,
+          "growthImpact": 5.11,
           "reasoning": "Sustained expansion in software roles despite increasing AI tool adoption."
         },
         {
           "year": 2029,
-          "growthImpact": 12.5,
+          "growthImpact": 6.94,
           "reasoning": "Growth trajectory aligns with long-term BLS projections nearing endpoint."
         },
         {
           "year": 2030,
-          "growthImpact": 16,
+          "growthImpact": 8.88,
           "reasoning": "Employment reaches BLS 10-year projected cumulative growth ceiling."
         }
       ]
@@ -588,27 +588,27 @@
         },
         {
           "year": 2026,
-          "growthImpact": 3.2,
+          "growthImpact": 1.91,
           "reasoning": "Steady demand growth as analytics needs expand despite partial AI task assistance."
         },
         {
           "year": 2027,
-          "growthImpact": 7.1,
+          "growthImpact": 4.23,
           "reasoning": "Continued hiring growth aligned with BLS projections and rising data-driven decision needs."
         },
         {
           "year": 2028,
-          "growthImpact": 11.5,
+          "growthImpact": 6.86,
           "reasoning": "Growth moderates slightly as AI tools increase analyst productivity."
         },
         {
           "year": 2029,
-          "growthImpact": 16,
+          "growthImpact": 9.54,
           "reasoning": "Sustained occupational growth with AI augmenting rather than replacing analysts."
         },
         {
           "year": 2030,
-          "growthImpact": 20.5,
+          "growthImpact": 12.22,
           "reasoning": "Approaches BLS 10-year cap as demand for skilled human oversight remains strong."
         }
       ]
@@ -649,27 +649,27 @@
         },
         {
           "year": 2026,
-          "growthImpact": 0.45,
+          "growthImpact": 0.25,
           "reasoning": "Modest hiring growth as trading volumes and market activity expand slightly."
         },
         {
           "year": 2027,
-          "growthImpact": 0.95,
+          "growthImpact": 0.53,
           "reasoning": "Continued gradual demand growth despite AI automating routine trade execution."
         },
         {
           "year": 2028,
-          "growthImpact": 1.55,
+          "growthImpact": 0.86,
           "reasoning": "Client-facing advisory and relationship tasks sustain steady employment growth."
         },
         {
           "year": 2029,
-          "growthImpact": 2.2,
+          "growthImpact": 1.22,
           "reasoning": "Market expansion and regulatory complexity offset automation-driven efficiency gains."
         },
         {
           "year": 2030,
-          "growthImpact": 3,
+          "growthImpact": 1.66,
           "reasoning": "Employment reaches BLS-projected 10-year cumulative growth endpoint."
         }
       ]
@@ -710,27 +710,27 @@
         },
         {
           "year": 2026,
-          "growthImpact": 0.6,
+          "growthImpact": 0.48,
           "reasoning": "Modest hiring growth as demand for sales oversight persists."
         },
         {
           "year": 2027,
-          "growthImpact": 1.3,
+          "growthImpact": 1.03,
           "reasoning": "Continued steady demand despite AI aiding reporting tasks."
         },
         {
           "year": 2028,
-          "growthImpact": 2,
+          "growthImpact": 1.59,
           "reasoning": "Growth slows slightly as AI tools handle more analytical tasks."
         },
         {
           "year": 2029,
-          "growthImpact": 2.8,
+          "growthImpact": 2.22,
           "reasoning": "Sales management roles remain resilient due to human relationship needs."
         },
         {
           "year": 2030,
-          "growthImpact": 3.5,
+          "growthImpact": 2.77,
           "reasoning": "Employment nears BLS 10-year cap with gradual AI-augmented efficiency gains."
         }
       ]
@@ -771,27 +771,27 @@
         },
         {
           "year": 2026,
-          "growthImpact": 0.55,
+          "growthImpact": 0.42,
           "reasoning": "Modest hiring growth continues despite gradual AI-driven efficiency gains."
         },
         {
           "year": 2027,
-          "growthImpact": 1.15,
+          "growthImpact": 0.89,
           "reasoning": "Task automation reduces entry-level workload but demand for oversight persists."
         },
         {
           "year": 2028,
-          "growthImpact": 1.9,
+          "growthImpact": 1.47,
           "reasoning": "Steady demand growth from regulatory complexity partially offset by AI productivity tools."
         },
         {
           "year": 2029,
-          "growthImpact": 2.75,
+          "growthImpact": 2.12,
           "reasoning": "Continued economic expansion sustains need for auditors despite automation of routine tasks."
         },
         {
           "year": 2030,
-          "growthImpact": 3.6,
+          "growthImpact": 2.77,
           "reasoning": "Cumulative growth approaches BLS 10-year cap as AI augments rather than replaces core judgment tasks."
         }
       ]
@@ -832,27 +832,27 @@
         },
         {
           "year": 2026,
-          "growthImpact": 1.1,
+          "growthImpact": 0.74,
           "reasoning": "Modest hiring growth as demand for brand strategy persists despite AI content tools."
         },
         {
           "year": 2027,
-          "growthImpact": 2.2,
+          "growthImpact": 1.48,
           "reasoning": "Continued steady growth in line with BLS outlook trajectory."
         },
         {
           "year": 2028,
-          "growthImpact": 3.3,
+          "growthImpact": 2.21,
           "reasoning": "AI adoption boosts efficiency but human-led strategy roles keep growing."
         },
         {
           "year": 2029,
-          "growthImpact": 4.5,
+          "growthImpact": 3.02,
           "reasoning": "Sustained demand for brand oversight and cross-department coordination."
         },
         {
           "year": 2030,
-          "growthImpact": 5.8,
+          "growthImpact": 3.88,
           "reasoning": "Approaching BLS 10-year cap as role evolves with AI-augmented workflows."
         }
       ]
@@ -893,27 +893,27 @@
         },
         {
           "year": 2026,
-          "growthImpact": 0.8,
+          "growthImpact": 0.44,
           "reasoning": "Modest hiring growth as demand for strategic communications persists despite AI drafting tools."
         },
         {
           "year": 2027,
-          "growthImpact": 1.7,
+          "growthImpact": 0.94,
           "reasoning": "Continued steady growth as relationship-based and crisis management tasks resist automation."
         },
         {
           "year": 2028,
-          "growthImpact": 2.6,
+          "growthImpact": 1.44,
           "reasoning": "Employment growth continues in line with BLS projections as PR roles remain human-centric."
         },
         {
           "year": 2029,
-          "growthImpact": 3.6,
+          "growthImpact": 2,
           "reasoning": "Gradual approach toward projected decade-end growth as AI augments rather than replaces core duties."
         },
         {
           "year": 2030,
-          "growthImpact": 5,
+          "growthImpact": 2.77,
           "reasoning": "Reaches BLS 10-year projected growth endpoint of 5%."
         }
       ]
@@ -954,27 +954,27 @@
         },
         {
           "year": 2026,
-          "growthImpact": -0.85,
+          "growthImpact": -0.47,
           "reasoning": "Early AI tools begin automating lead generation and cost estimates."
         },
         {
           "year": 2027,
-          "growthImpact": -1.95,
+          "growthImpact": -1.08,
           "reasoning": "Wider adoption of AI-assisted prospecting reduces need for junior agents."
         },
         {
           "year": 2028,
-          "growthImpact": -3.1,
+          "growthImpact": -1.72,
           "reasoning": "AI-driven analytics and presentation tools further compress headcount needs."
         },
         {
           "year": 2029,
-          "growthImpact": -4.4,
+          "growthImpact": -2.44,
           "reasoning": "Continued consolidation as AI handles more client outreach and estimation tasks."
         },
         {
           "year": 2030,
-          "growthImpact": -6,
+          "growthImpact": -3.33,
           "reasoning": "Cumulative decline reaches BLS 10-year projected endpoint."
         }
       ]
@@ -1015,27 +1015,27 @@
         },
         {
           "year": 2026,
-          "growthImpact": 0.8,
+          "growthImpact": 0.44,
           "reasoning": "Modest hiring growth as event demand recovers with slight AI-driven efficiency gains."
         },
         {
           "year": 2027,
-          "growthImpact": 1.7,
+          "growthImpact": 0.94,
           "reasoning": "Continued steady demand for in-person events supports gradual job growth."
         },
         {
           "year": 2028,
-          "growthImpact": 2.7,
+          "growthImpact": 1.5,
           "reasoning": "Growth continues as AI tools handle logistics but human coordination remains essential."
         },
         {
           "year": 2029,
-          "growthImpact": 3.8,
+          "growthImpact": 2.11,
           "reasoning": "Event industry expansion outweighs incremental automation of admin tasks."
         },
         {
           "year": 2030,
-          "growthImpact": 5,
+          "growthImpact": 2.77,
           "reasoning": "Employment reaches BLS 10-year projected growth endpoint of 5%."
         }
       ]
@@ -1076,27 +1076,27 @@
         },
         {
           "year": 2026,
-          "growthImpact": 0.45,
+          "growthImpact": 0.25,
           "reasoning": "Modest growth as AI tools augment but do not replace relationship-based sales roles."
         },
         {
           "year": 2027,
-          "growthImpact": 0.95,
+          "growthImpact": 0.53,
           "reasoning": "Continued demand for account executives despite productivity gains from AI automation of routine tasks."
         },
         {
           "year": 2028,
-          "growthImpact": 1.5,
+          "growthImpact": 0.83,
           "reasoning": "Steady employment growth as businesses expand sales teams alongside AI-assisted efficiency."
         },
         {
           "year": 2029,
-          "growthImpact": 2.15,
+          "growthImpact": 1.19,
           "reasoning": "Gradual approach toward projected long-term growth as human relationship skills remain critical."
         },
         {
           "year": 2030,
-          "growthImpact": 3,
+          "growthImpact": 1.66,
           "reasoning": "Reaches BLS 10-year projected growth ceiling for the occupation group."
         }
       ]
@@ -1137,22 +1137,22 @@
         },
         {
           "year": 2026,
-          "growthImpact": -0.05,
+          "growthImpact": 0,
           "reasoning": "Early AI tools begin automating routine record-keeping and inquiries."
         },
         {
           "year": 2027,
-          "growthImpact": -0.1,
+          "growthImpact": 0,
           "reasoning": "Gradual displacement of administrative sales tasks by AI systems."
         },
         {
           "year": 2028,
-          "growthImpact": -0.15,
+          "growthImpact": 0,
           "reasoning": "Broader adoption of AI-assisted CRM and lead qualification tools."
         },
         {
           "year": 2029,
-          "growthImpact": -0.18,
+          "growthImpact": 0,
           "reasoning": "Continued efficiency gains offset by need for relationship-based selling."
         },
         {
@@ -1198,27 +1198,27 @@
         },
         {
           "year": 2026,
-          "growthImpact": 0.6,
+          "growthImpact": 0.37,
           "reasoning": "Slow initial hiring growth as AI tools assist but do not replace agents."
         },
         {
           "year": 2027,
-          "growthImpact": 1.3,
+          "growthImpact": 0.8,
           "reasoning": "Continued modest demand growth despite automation of admin tasks."
         },
         {
           "year": 2028,
-          "growthImpact": 2,
+          "growthImpact": 1.23,
           "reasoning": "Steady employment growth as client relationship roles remain human-driven."
         },
         {
           "year": 2029,
-          "growthImpact": 2.8,
+          "growthImpact": 1.73,
           "reasoning": "Gradual approach toward BLS decade-end projection."
         },
         {
           "year": 2030,
-          "growthImpact": 3.6,
+          "growthImpact": 2.22,
           "reasoning": "Employment nears the 4% ten-year BLS projected growth ceiling."
         }
       ]
@@ -1259,27 +1259,27 @@
         },
         {
           "year": 2026,
-          "growthImpact": 1.6,
+          "growthImpact": 0.99,
           "reasoning": "Early AI adoption boosts advisor productivity while demand for personalized advice grows steadily."
         },
         {
           "year": 2027,
-          "growthImpact": 3.4,
+          "growthImpact": 2.1,
           "reasoning": "Continued demand from aging population and retirement planning needs outweighs modest automation of routine tasks."
         },
         {
           "year": 2028,
-          "growthImpact": 5.3,
+          "growthImpact": 3.27,
           "reasoning": "Growing wealth management needs and financial literacy demand sustain hiring despite AI-assisted efficiency gains."
         },
         {
           "year": 2029,
-          "growthImpact": 7.2,
+          "growthImpact": 4.44,
           "reasoning": "Human-centric trust and regulatory complexity keep advisor demand rising in line with BLS outlook."
         },
         {
           "year": 2030,
-          "growthImpact": 9,
+          "growthImpact": 5.55,
           "reasoning": "Employment growth approaches BLS decade-end projection as AI augments rather than replaces advisors."
         }
       ]
@@ -1320,27 +1320,27 @@
         },
         {
           "year": 2026,
-          "growthImpact": -0.6,
+          "growthImpact": -0.33,
           "reasoning": "Early AI adoption begins to trim routine analytical tasks."
         },
         {
           "year": 2027,
-          "growthImpact": -1.4,
+          "growthImpact": -0.78,
           "reasoning": "Growing use of automated financial ratio tools reduces headcount growth."
         },
         {
           "year": 2028,
-          "growthImpact": -2.3,
+          "growthImpact": -1.28,
           "reasoning": "Broader AI integration in credit risk assessment slows hiring further."
         },
         {
           "year": 2029,
-          "growthImpact": -3.2,
+          "growthImpact": -1.78,
           "reasoning": "Continued automation of report generation and application processing."
         },
         {
           "year": 2030,
-          "growthImpact": -4,
+          "growthImpact": -2.22,
           "reasoning": "Cumulative decline aligns with BLS 10-year projected contraction."
         }
       ]
@@ -1381,27 +1381,27 @@
         },
         {
           "year": 2026,
-          "growthImpact": 0.15,
+          "growthImpact": 0.08,
           "reasoning": "Slow initial adoption of AI tools in budget analysis workflows."
         },
         {
           "year": 2027,
-          "growthImpact": 0.35,
+          "growthImpact": 0.19,
           "reasoning": "Increasing automation of reporting tasks slightly offset by steady demand."
         },
         {
           "year": 2028,
-          "growthImpact": 0.55,
+          "growthImpact": 0.31,
           "reasoning": "Continued modest employment growth as analysts shift to oversight roles."
         },
         {
           "year": 2029,
-          "growthImpact": 0.8,
+          "growthImpact": 0.44,
           "reasoning": "Organizational growth needs sustain slow but positive hiring trends."
         },
         {
           "year": 2030,
-          "growthImpact": 1,
+          "growthImpact": 0.55,
           "reasoning": "Employment reaches BLS projected 10-year cumulative growth of 1%."
         }
       ]
@@ -1442,27 +1442,27 @@
         },
         {
           "year": 2026,
-          "growthImpact": 0.45,
+          "growthImpact": 0.25,
           "reasoning": "Modest hiring growth as demand for risk expertise persists despite AI tool adoption."
         },
         {
           "year": 2027,
-          "growthImpact": 0.95,
+          "growthImpact": 0.53,
           "reasoning": "Continued steady demand growth in line with financial sector expansion."
         },
         {
           "year": 2028,
-          "growthImpact": 1.5,
+          "growthImpact": 0.83,
           "reasoning": "Gradual employment growth as regulatory and risk complexity increases."
         },
         {
           "year": 2029,
-          "growthImpact": 2.15,
+          "growthImpact": 1.19,
           "reasoning": "Growth continues as AI augments rather than replaces specialized judgment roles."
         },
         {
           "year": 2030,
-          "growthImpact": 3,
+          "growthImpact": 1.66,
           "reasoning": "Employment reaches BLS-projected 10-year cumulative growth endpoint."
         }
       ]
@@ -1503,27 +1503,27 @@
         },
         {
           "year": 2026,
-          "growthImpact": -0.45,
+          "growthImpact": -0.25,
           "reasoning": "Early AI adoption begins streamlining routine underwriting review tasks."
         },
         {
           "year": 2027,
-          "growthImpact": -1.05,
+          "growthImpact": -0.58,
           "reasoning": "Broader automation of risk assessment and document review reduces headcount needs."
         },
         {
           "year": 2028,
-          "growthImpact": -1.7,
+          "growthImpact": -0.94,
           "reasoning": "Continued efficiency gains from AI-assisted actuarial analysis suppress hiring."
         },
         {
           "year": 2029,
-          "growthImpact": -2.35,
+          "growthImpact": -1.31,
           "reasoning": "Mature GenAI tools handle more correspondence and risk scoring tasks."
         },
         {
           "year": 2030,
-          "growthImpact": -3,
+          "growthImpact": -1.66,
           "reasoning": "Cumulative automation impact aligns with BLS 10-year projected decline."
         }
       ]
@@ -1564,27 +1564,27 @@
         },
         {
           "year": 2026,
-          "growthImpact": 3.8,
+          "growthImpact": 2.16,
           "reasoning": "Steady demand growth continues despite gradual AI-assisted efficiency gains."
         },
         {
           "year": 2027,
-          "growthImpact": 8.2,
+          "growthImpact": 4.66,
           "reasoning": "Actuarial demand rises with regulatory complexity as AI handles routine calculations."
         },
         {
           "year": 2028,
-          "growthImpact": 12.9,
+          "growthImpact": 7.33,
           "reasoning": "Continued job growth as human judgment remains central to risk decisions."
         },
         {
           "year": 2029,
-          "growthImpact": 17.5,
+          "growthImpact": 9.95,
           "reasoning": "Growth trajectory tracks BLS projections with modest AI-driven productivity offset."
         },
         {
           "year": 2030,
-          "growthImpact": 21.5,
+          "growthImpact": 12.22,
           "reasoning": "Near full realization of BLS 10-year growth cap, tempered by AI task automation."
         }
       ]
@@ -1625,27 +1625,27 @@
         },
         {
           "year": 2026,
-          "growthImpact": 0.3,
+          "growthImpact": 0.17,
           "reasoning": "Slow initial adoption of AI in loan processing with modest hiring growth."
         },
         {
           "year": 2027,
-          "growthImpact": 0.7,
+          "growthImpact": 0.39,
           "reasoning": "Increased automation of underwriting tasks slightly offset by demand for loan services."
         },
         {
           "year": 2028,
-          "growthImpact": 1.1,
+          "growthImpact": 0.61,
           "reasoning": "Continued efficiency gains balanced by steady loan demand growth."
         },
         {
           "year": 2029,
-          "growthImpact": 1.5,
+          "growthImpact": 0.83,
           "reasoning": "Employment grows modestly as AI handles routine analysis but human roles remain for approvals."
         },
         {
           "year": 2030,
-          "growthImpact": 2,
+          "growthImpact": 1.11,
           "reasoning": "Employment reaches BLS-projected 10-year growth ceiling of 2%."
         }
       ]
@@ -1686,27 +1686,27 @@
         },
         {
           "year": 2026,
-          "growthImpact": 5.2,
+          "growthImpact": 3.07,
           "reasoning": "Strong demand growth continues to outpace AI-driven task automation."
         },
         {
           "year": 2027,
-          "growthImpact": 11,
+          "growthImpact": 6.49,
           "reasoning": "Employment expands as data science roles evolve alongside AI tools."
         },
         {
           "year": 2028,
-          "growthImpact": 17.5,
+          "growthImpact": 10.33,
           "reasoning": "Continued industry adoption of data-driven decision-making sustains hiring."
         },
         {
           "year": 2029,
-          "growthImpact": 24.8,
+          "growthImpact": 14.64,
           "reasoning": "Growth moderates slightly as AI augments routine analytical tasks."
         },
         {
           "year": 2030,
-          "growthImpact": 32,
+          "growthImpact": 18.88,
           "reasoning": "Cumulative growth approaches BLS 10-year projection cap of 36%."
         }
       ]
@@ -1747,27 +1747,27 @@
         },
         {
           "year": 2026,
-          "growthImpact": 1.5,
+          "growthImpact": 0.83,
           "reasoning": "Steady demand for statisticians continues despite growing AI-assisted analysis tools."
         },
         {
           "year": 2027,
-          "growthImpact": 3.2,
+          "growthImpact": 1.78,
           "reasoning": "Growth in data-driven industries sustains hiring even as some routine tasks are automated."
         },
         {
           "year": 2028,
-          "growthImpact": 5,
+          "growthImpact": 2.78,
           "reasoning": "Increasing demand for statistical expertise in AI model validation and data governance."
         },
         {
           "year": 2029,
-          "growthImpact": 7,
+          "growthImpact": 3.89,
           "reasoning": "Continued expansion in healthcare, finance, and tech analytics roles."
         },
         {
           "year": 2030,
-          "growthImpact": 9,
+          "growthImpact": 5,
           "reasoning": "Employment growth aligns with BLS 10-year projection as demand for data expertise persists."
         }
       ]
@@ -1808,27 +1808,27 @@
         },
         {
           "year": 2026,
-          "growthImpact": 1.5,
+          "growthImpact": 0.83,
           "reasoning": "Steady demand for system integration offsets modest AI-driven efficiency gains."
         },
         {
           "year": 2027,
-          "growthImpact": 3.2,
+          "growthImpact": 1.78,
           "reasoning": "Continued digital transformation projects sustain hiring despite AI tool adoption."
         },
         {
           "year": 2028,
-          "growthImpact": 5,
+          "growthImpact": 2.78,
           "reasoning": "Growing complexity of enterprise systems keeps demand for analysts rising."
         },
         {
           "year": 2029,
-          "growthImpact": 7,
+          "growthImpact": 3.89,
           "reasoning": "AI augments productivity but human oversight remains critical for integration tasks."
         },
         {
           "year": 2030,
-          "growthImpact": 9,
+          "growthImpact": 5,
           "reasoning": "Employment growth reaches BLS projected 10-year endpoint of 9%."
         }
       ]
@@ -1869,27 +1869,27 @@
         },
         {
           "year": 2026,
-          "growthImpact": -0.55,
+          "growthImpact": -0.31,
           "reasoning": "Early AI adoption in estimating software begins trimming demand slightly."
         },
         {
           "year": 2027,
-          "growthImpact": -1.3,
+          "growthImpact": -0.72,
           "reasoning": "Growing use of automated takeoff and estimation tools reduces headcount needs."
         },
         {
           "year": 2028,
-          "growthImpact": -2.15,
+          "growthImpact": -1.19,
           "reasoning": "Broader integration of AI-driven cost databases accelerates efficiency gains."
         },
         {
           "year": 2029,
-          "growthImpact": -3.05,
+          "growthImpact": -1.69,
           "reasoning": "Continued consolidation of estimating tasks into AI-assisted workflows."
         },
         {
           "year": 2030,
-          "growthImpact": -4,
+          "growthImpact": -2.22,
           "reasoning": "Cumulative decline aligns with BLS 10-year projected contraction."
         }
       ]
@@ -1930,27 +1930,27 @@
         },
         {
           "year": 2026,
-          "growthImpact": 0.8,
+          "growthImpact": 0.44,
           "reasoning": "Modest growth as demand for compliance expertise continues despite AI tool adoption."
         },
         {
           "year": 2027,
-          "growthImpact": 1.7,
+          "growthImpact": 0.94,
           "reasoning": "Gradual employment growth as firms balance efficiency gains with need for human oversight."
         },
         {
           "year": 2028,
-          "growthImpact": 2.6,
+          "growthImpact": 1.44,
           "reasoning": "Continued steady growth in line with BLS long-term outlook trajectory."
         },
         {
           "year": 2029,
-          "growthImpact": 3.6,
+          "growthImpact": 2,
           "reasoning": "Growth accelerates slightly as compensation analyst roles expand into strategic advisory functions."
         },
         {
           "year": 2030,
-          "growthImpact": 5,
+          "growthImpact": 2.77,
           "reasoning": "Reaches BLS projected 10-year cumulative growth endpoint of 5%."
         }
       ]
@@ -1991,27 +1991,27 @@
         },
         {
           "year": 2026,
-          "growthImpact": 0.45,
+          "growthImpact": 0.25,
           "reasoning": "Modest hiring growth as demand for procurement oversight continues despite AI tool adoption."
         },
         {
           "year": 2027,
-          "growthImpact": 0.95,
+          "growthImpact": 0.53,
           "reasoning": "Steady employment growth continues in line with BLS projections."
         },
         {
           "year": 2028,
-          "growthImpact": 1.55,
+          "growthImpact": 0.86,
           "reasoning": "Gradual growth as AI automates routine tasks but human negotiation and oversight roles persist."
         },
         {
           "year": 2029,
-          "growthImpact": 2.2,
+          "growthImpact": 1.22,
           "reasoning": "Continued incremental growth as firms expand supply chain management needs."
         },
         {
           "year": 2030,
-          "growthImpact": 3,
+          "growthImpact": 1.66,
           "reasoning": "Employment reaches the projected 10-year cumulative growth endpoint."
         }
       ]
@@ -2052,27 +2052,27 @@
         },
         {
           "year": 2026,
-          "growthImpact": 0.9,
+          "growthImpact": 0.5,
           "reasoning": "Slow employment growth as AI tools assist but do not replace buyer judgment."
         },
         {
           "year": 2027,
-          "growthImpact": 2,
+          "growthImpact": 1.11,
           "reasoning": "Continued modest hiring growth as demand for merchandising expertise persists."
         },
         {
           "year": 2028,
-          "growthImpact": 3.2,
+          "growthImpact": 1.78,
           "reasoning": "Gradual growth aligned with BLS trajectory despite AI-driven efficiency gains."
         },
         {
           "year": 2029,
-          "growthImpact": 4.5,
+          "growthImpact": 2.5,
           "reasoning": "Sustained retail sector expansion supports steady buyer employment growth."
         },
         {
           "year": 2030,
-          "growthImpact": 6,
+          "growthImpact": 3.33,
           "reasoning": "Employment reaches BLS-projected 10-year growth endpoint by 2030."
         }
       ]
@@ -2174,27 +2174,27 @@
         },
         {
           "year": 2026,
-          "growthImpact": 0.35,
+          "growthImpact": 0.19,
           "reasoning": "Modest growth as production demand slightly rises despite AI-assisted efficiency gains."
         },
         {
           "year": 2027,
-          "growthImpact": 0.75,
+          "growthImpact": 0.42,
           "reasoning": "Continued gradual employment growth consistent with OOH outlook."
         },
         {
           "year": 2028,
-          "growthImpact": 1.15,
+          "growthImpact": 0.64,
           "reasoning": "Slight deceleration as AI tools optimize scheduling and quality monitoring tasks."
         },
         {
           "year": 2029,
-          "growthImpact": 1.55,
+          "growthImpact": 0.86,
           "reasoning": "Growth continues but tempered by automation of routine oversight tasks."
         },
         {
           "year": 2030,
-          "growthImpact": 2,
+          "growthImpact": 1.11,
           "reasoning": "Reaches BLS 10-year cumulative cap reflecting steady but AI-moderated growth."
         }
       ]
@@ -2235,27 +2235,27 @@
         },
         {
           "year": 2026,
-          "growthImpact": 1.1,
+          "growthImpact": 0.61,
           "reasoning": "Early AI tool adoption slows hiring growth slightly but demand still rises."
         },
         {
           "year": 2027,
-          "growthImpact": 2.6,
+          "growthImpact": 1.44,
           "reasoning": "Continued digital product demand offsets efficiency gains from AI-assisted design."
         },
         {
           "year": 2028,
-          "growthImpact": 4.1,
+          "growthImpact": 2.28,
           "reasoning": "Steady growth as UX roles evolve to include AI oversight and strategy."
         },
         {
           "year": 2029,
-          "growthImpact": 5.6,
+          "growthImpact": 3.11,
           "reasoning": "Job growth continues aligning with broader tech and product expansion."
         },
         {
           "year": 2030,
-          "growthImpact": 7,
+          "growthImpact": 3.88,
           "reasoning": "Employment reaches BLS-projected 10-year growth endpoint."
         }
       ]
@@ -2296,27 +2296,27 @@
         },
         {
           "year": 2026,
-          "growthImpact": 2.1,
+          "growthImpact": 1.3,
           "reasoning": "Steady demand for IT leadership amid gradual AI tool adoption."
         },
         {
           "year": 2027,
-          "growthImpact": 4.6,
+          "growthImpact": 2.84,
           "reasoning": "Continued growth in IT management roles as digital transformation persists."
         },
         {
           "year": 2028,
-          "growthImpact": 7.2,
+          "growthImpact": 4.44,
           "reasoning": "Rising need for oversight of AI-integrated systems and teams."
         },
         {
           "year": 2029,
-          "growthImpact": 10.1,
+          "growthImpact": 6.23,
           "reasoning": "Sustained hiring as organizations scale technology infrastructure."
         },
         {
           "year": 2030,
-          "growthImpact": 13.5,
+          "growthImpact": 8.33,
           "reasoning": "Approaching BLS 10-year cap with strong long-term demand for IT managers."
         }
       ]
@@ -2357,27 +2357,27 @@
         },
         {
           "year": 2026,
-          "growthImpact": 4.5,
+          "growthImpact": 2.5,
           "reasoning": "Strong demand for cybersecurity talent continues despite AI tool adoption."
         },
         {
           "year": 2027,
-          "growthImpact": 10.2,
+          "growthImpact": 5.67,
           "reasoning": "Rising cyber threats and regulatory requirements drive continued hiring."
         },
         {
           "year": 2028,
-          "growthImpact": 16.8,
+          "growthImpact": 9.33,
           "reasoning": "AI augments analysts but human oversight remains critical for complex threats."
         },
         {
           "year": 2029,
-          "growthImpact": 23,
+          "growthImpact": 12.78,
           "reasoning": "Growing attack surface from cloud and IoT sustains strong job growth."
         },
         {
           "year": 2030,
-          "growthImpact": 29,
+          "growthImpact": 16.11,
           "reasoning": "Employment reaches BLS projected 10-year growth endpoint amid sustained cyber risk."
         }
       ]
@@ -2418,27 +2418,27 @@
         },
         {
           "year": 2026,
-          "growthImpact": 1.1,
+          "growthImpact": 0.68,
           "reasoning": "Modest hiring growth as AI coding tools boost productivity without displacing roles yet."
         },
         {
           "year": 2027,
-          "growthImpact": 2.3,
+          "growthImpact": 1.42,
           "reasoning": "Continued demand for web development offset by AI-driven efficiency gains."
         },
         {
           "year": 2028,
-          "growthImpact": 3.8,
+          "growthImpact": 2.35,
           "reasoning": "Steady growth as businesses expand digital presence despite automation of routine coding tasks."
         },
         {
           "year": 2029,
-          "growthImpact": 5.6,
+          "growthImpact": 3.46,
           "reasoning": "Growth moderates as AI handles more routine tasks, shifting demand toward higher-skill roles."
         },
         {
           "year": 2030,
-          "growthImpact": 7.2,
+          "growthImpact": 4.44,
           "reasoning": "Approaches BLS 10-year cap as AI reshapes but does not eliminate need for web developers."
         }
       ]
@@ -2479,27 +2479,27 @@
         },
         {
           "year": 2026,
-          "growthImpact": -0.15,
+          "growthImpact": -0.08,
           "reasoning": "Early AI-assisted automation of routine DB tasks begins slow displacement."
         },
         {
           "year": 2027,
-          "growthImpact": -0.35,
+          "growthImpact": -0.19,
           "reasoning": "Growing adoption of AI-driven database management tools reduces headcount growth."
         },
         {
           "year": 2028,
-          "growthImpact": -0.55,
+          "growthImpact": -0.31,
           "reasoning": "Security and access management tasks increasingly augmented by AI, slowing hiring."
         },
         {
           "year": 2029,
-          "growthImpact": -0.8,
+          "growthImpact": -0.44,
           "reasoning": "Continued consolidation of DBA roles as cloud-managed and AI-driven systems mature."
         },
         {
           "year": 2030,
-          "growthImpact": -1,
+          "growthImpact": -0.55,
           "reasoning": "Employment reaches BLS projected decline as automation fully offsets demand growth."
         }
       ]
@@ -2540,27 +2540,27 @@
         },
         {
           "year": 2026,
-          "growthImpact": 1.3,
+          "growthImpact": 0.72,
           "reasoning": "Early AI tool adoption slightly boosts efficiency without displacing roles yet."
         },
         {
           "year": 2027,
-          "growthImpact": 2.8,
+          "growthImpact": 1.56,
           "reasoning": "Steady demand growth as digital transformation projects expand."
         },
         {
           "year": 2028,
-          "growthImpact": 4.4,
+          "growthImpact": 2.44,
           "reasoning": "Continued IT investment and project complexity sustain hiring growth."
         },
         {
           "year": 2029,
-          "growthImpact": 6.1,
+          "growthImpact": 3.39,
           "reasoning": "Growth nears BLS trajectory as AI augments rather than replaces PM roles."
         },
         {
           "year": 2030,
-          "growthImpact": 8,
+          "growthImpact": 4.44,
           "reasoning": "Employment reaches the projected 10-year BLS growth endpoint."
         }
       ]
@@ -2601,27 +2601,27 @@
         },
         {
           "year": 2026,
-          "growthImpact": 0.35,
+          "growthImpact": 0.29,
           "reasoning": "Modest hiring growth slightly offset by AI-driven efficiency in reporting tasks."
         },
         {
           "year": 2027,
-          "growthImpact": 0.85,
+          "growthImpact": 0.7,
           "reasoning": "Continued gradual demand growth as AI augments rather than replaces managerial roles."
         },
         {
           "year": 2028,
-          "growthImpact": 1.4,
+          "growthImpact": 1.15,
           "reasoning": "Steady employment growth in line with BLS projections despite AI adoption."
         },
         {
           "year": 2029,
-          "growthImpact": 2.1,
+          "growthImpact": 1.73,
           "reasoning": "Slower growth as AI tools handle more routine administrative and analytical tasks."
         },
         {
           "year": 2030,
-          "growthImpact": 2.7,
+          "growthImpact": 2.22,
           "reasoning": "Approaches BLS 10-year cap as AI augments efficiency without displacing core leadership roles."
         }
       ]
@@ -2662,27 +2662,27 @@
         },
         {
           "year": 2026,
-          "growthImpact": 0.75,
+          "growthImpact": 0.5,
           "reasoning": "Steady demand for HR managers amid modest AI adoption for routine tasks."
         },
         {
           "year": 2027,
-          "growthImpact": 1.6,
+          "growthImpact": 1.06,
           "reasoning": "Continued job growth as AI augments rather than replaces core HR judgment tasks."
         },
         {
           "year": 2028,
-          "growthImpact": 2.5,
+          "growthImpact": 1.65,
           "reasoning": "Gradual employment growth consistent with BLS occupational outlook trajectory."
         },
         {
           "year": 2029,
-          "growthImpact": 3.4,
+          "growthImpact": 2.25,
           "reasoning": "Sustained demand for human-centric HR functions despite AI tool integration."
         },
         {
           "year": 2030,
-          "growthImpact": 4.2,
+          "growthImpact": 2.77,
           "reasoning": "Cumulative growth approaches but stays within BLS 10-year projection cap."
         }
       ]
@@ -2723,27 +2723,27 @@
         },
         {
           "year": 2026,
-          "growthImpact": 1.1,
+          "growthImpact": 0.61,
           "reasoning": "Steady demand for project managers with early AI tool adoption easing workloads."
         },
         {
           "year": 2027,
-          "growthImpact": 2.3,
+          "growthImpact": 1.28,
           "reasoning": "Continued industry growth outpaces modest AI-driven efficiency gains."
         },
         {
           "year": 2028,
-          "growthImpact": 3.5,
+          "growthImpact": 1.94,
           "reasoning": "Broader AI integration in reporting and planning slightly tempers headcount growth."
         },
         {
           "year": 2029,
-          "growthImpact": 4.7,
+          "growthImpact": 2.61,
           "reasoning": "Demand for oversight of complex, cross-functional projects sustains hiring."
         },
         {
           "year": 2030,
-          "growthImpact": 6,
+          "growthImpact": 3.33,
           "reasoning": "Employment reaches BLS decade-end projection as human judgment remains essential."
         }
       ]
@@ -2784,27 +2784,27 @@
         },
         {
           "year": 2026,
-          "growthImpact": 1.3,
+          "growthImpact": 1.1,
           "reasoning": "Modest hiring growth as AI tools assist content creation but demand for trainers persists."
         },
         {
           "year": 2027,
-          "growthImpact": 2.8,
+          "growthImpact": 2.38,
           "reasoning": "Continued steady growth as organizations expand upskilling programs amid AI adoption."
         },
         {
           "year": 2028,
-          "growthImpact": 4.3,
+          "growthImpact": 3.65,
           "reasoning": "Growth moderates as AI automates content/logistics tasks, tempering headcount needs."
         },
         {
           "year": 2029,
-          "growthImpact": 5.9,
+          "growthImpact": 5.01,
           "reasoning": "Demand growth continues driven by reskilling needs from workplace AI integration."
         },
         {
           "year": 2030,
-          "growthImpact": 7.2,
+          "growthImpact": 6.11,
           "reasoning": "Cumulative growth nears BLS 8% ceiling, reflecting sustained but AI-tempered occupational demand."
         }
       ]
@@ -2845,27 +2845,27 @@
         },
         {
           "year": 2026,
-          "growthImpact": 0.9,
+          "growthImpact": 0.67,
           "reasoning": "Modest hiring growth offset by early AI-driven efficiency in records tasks."
         },
         {
           "year": 2027,
-          "growthImpact": 1.8,
+          "growthImpact": 1.33,
           "reasoning": "Continued demand for employee relations work sustains headcount growth."
         },
         {
           "year": 2028,
-          "growthImpact": 2.7,
+          "growthImpact": 2,
           "reasoning": "AI automates more administrative tasks but overall role demand still expands."
         },
         {
           "year": 2029,
-          "growthImpact": 3.6,
+          "growthImpact": 2.67,
           "reasoning": "Growth moderates as AI tools handle more compliance and records work."
         },
         {
           "year": 2030,
-          "growthImpact": 4.5,
+          "growthImpact": 3.33,
           "reasoning": "Cumulative growth stays within BLS 6% cap, reflecting steady but tempered demand."
         }
       ]
@@ -2906,27 +2906,27 @@
         },
         {
           "year": 2026,
-          "growthImpact": 1.1,
+          "growthImpact": 0.61,
           "reasoning": "Steady demand for training managers despite growing AI-assisted content tools."
         },
         {
           "year": 2027,
-          "growthImpact": 2.3,
+          "growthImpact": 1.28,
           "reasoning": "Organizations continue investing in workforce development amid tech adoption."
         },
         {
           "year": 2028,
-          "growthImpact": 3.5,
+          "growthImpact": 1.94,
           "reasoning": "Moderate growth as human oversight remains vital for strategic training decisions."
         },
         {
           "year": 2029,
-          "growthImpact": 4.7,
+          "growthImpact": 2.61,
           "reasoning": "Continued expansion aligned with BLS occupational growth trajectory."
         },
         {
           "year": 2030,
-          "growthImpact": 6,
+          "growthImpact": 3.33,
           "reasoning": "Employment reaches projected 10-year BLS growth endpoint."
         }
       ]
@@ -2967,22 +2967,22 @@
         },
         {
           "year": 2026,
-          "growthImpact": -0.03,
+          "growthImpact": 0,
           "reasoning": "Early GenAI adoption begins trimming routine reporting and communication tasks."
         },
         {
           "year": 2027,
-          "growthImpact": -0.06,
+          "growthImpact": 0,
           "reasoning": "Growing automation of compliance documentation slightly offsets demand growth."
         },
         {
           "year": 2028,
-          "growthImpact": -0.05,
+          "growthImpact": 0,
           "reasoning": "Stabilizing role as human judgment remains vital for compliance and strategy."
         },
         {
           "year": 2029,
-          "growthImpact": -0.02,
+          "growthImpact": 0,
           "reasoning": "Employment demand recovers slightly as compensation strategy needs grow with workforce complexity."
         },
         {
@@ -3028,27 +3028,27 @@
         },
         {
           "year": 2026,
-          "growthImpact": 0.45,
+          "growthImpact": 0.25,
           "reasoning": "Gradual demand growth despite partial AI-driven productivity gains."
         },
         {
           "year": 2027,
-          "growthImpact": 0.95,
+          "growthImpact": 0.53,
           "reasoning": "Continued moderate hiring as risk complexity and regulation grow."
         },
         {
           "year": 2028,
-          "growthImpact": 1.55,
+          "growthImpact": 0.86,
           "reasoning": "Steady employment growth as AI augments rather than replaces analysts."
         },
         {
           "year": 2029,
-          "growthImpact": 2.2,
+          "growthImpact": 1.22,
           "reasoning": "Sustained demand from expanding financial risk oversight needs."
         },
         {
           "year": 2030,
-          "growthImpact": 3,
+          "growthImpact": 1.66,
           "reasoning": "Reaches BLS 10-year projected growth ceiling by decade end."
         }
       ]

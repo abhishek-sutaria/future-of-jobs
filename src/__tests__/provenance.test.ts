@@ -85,6 +85,8 @@ describe('Badge explanations', () => {
         expect(label).not.toMatch(/guess/i);
         // It must keep naming the BLS anchor it is built on.
         expect(label).toMatch(/BLS OOH/);
+        // And must not imply 2030 equals the full 2034 decade endpoint.
+        expect(label).toMatch(/fraction|2030/i);
     });
 
     it('no badge explanation calls any figure a guess', () => {

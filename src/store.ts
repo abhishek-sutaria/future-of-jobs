@@ -8,6 +8,8 @@ import {
     YEAR_MIN, PERCENTILES, RESILIENCE_LABELS, VOLATILITY_LABELS,
     CONFIDENCE, DATA_SOURCES,
 } from './config/constants';
+import { oohEnvelopeCap } from './utils/terrainMath';
+import { MAP_TITLE_TO_SOC } from './utils/onet';
 
 // ── Percentile helper (used by both fetchRealData and scoreAllJobsWithAI) ──
 //
@@ -106,13 +108,16 @@ function applyAnalysesToJobs(jobs: Job[], analyses: Record<string, JobAnalysisRe
         });
 
         const avgAi = newTasks.reduce((sum, t) => sum + t.aiCapabilityScore, 0) / newTasks.length;
-        const cap = Math.abs(job.projectedGrowth);
+        // Sign-aware envelope at the 2030 fraction of the decade OOH (≈5/9).
+        const cap = oohEnvelopeCap(job.projectedGrowth);
+        const lo = Math.min(0, cap);
+        const hi = Math.max(0, cap);
         const yearlyForecast = (analysis.yearlyForecast.length > 0
             ? analysis.yearlyForecast
             : job.yearlyForecast
         )?.map((pt) => {
-            if (!Number.isFinite(pt.growthImpact) || cap < 1e-9) return pt;
-            const clamped = Math.sign(pt.growthImpact) * Math.min(Math.abs(pt.growthImpact), cap);
+            if (!Number.isFinite(pt.growthImpact)) return pt;
+            const clamped = Math.min(hi, Math.max(lo, pt.growthImpact));
             return clamped === pt.growthImpact ? pt : { ...pt, growthImpact: clamped };
         });
 
@@ -126,10 +131,27 @@ function applyAnalysesToJobs(jobs: Job[], analyses: Record<string, JobAnalysisRe
     });
 }
 
+/** Split national OES headcount equally among titles that share a SOC so 3D peaks conserve mass. */
+function splitSharedSocEmployment(jobs: Job[]): Job[] {
+    const counts = new Map<string, number>();
+    for (const j of jobs) {
+        const soc = MAP_TITLE_TO_SOC[j.title];
+        if (soc) counts.set(soc, (counts.get(soc) ?? 0) + 1);
+    }
+    return jobs.map((j) => {
+        const soc = MAP_TITLE_TO_SOC[j.title];
+        const n = soc ? (counts.get(soc) ?? 1) : 1;
+        if (n <= 1) return j;
+        return { ...j, employment: Math.round(j.employment / n) };
+    });
+}
+
 // Precomputed scores are applied synchronously at module load so the very first
 // render already has real risk colors and forecasts — no blocking startup pass.
 const INITIAL_SCORES = resolveInitialScores();
-const SEEDED_JOBS = applyPercentileLabels(applyAnalysesToJobs(initialJobs, INITIAL_SCORES.scores));
+const SEEDED_JOBS = applyPercentileLabels(
+    splitSharedSocEmployment(applyAnalysesToJobs(initialJobs, INITIAL_SCORES.scores)),
+);
 
 // ── Store interface ────────────────────────────────────────────────────────
 
@@ -157,9 +179,13 @@ interface AppState {
     // Real Data Integration
     isLoadingData: boolean;
     hasLoadedRealData: boolean;
-    /** Provenance of the currently displayed BLS employment values */
+    /**
+     * Provenance of the CPS unemployment connectivity probe only — national
+     * per-role employment is always the bundled OES extract and is never
+     * overwritten from CPS.
+     */
     blsSource: 'live' | 'cache' | 'seed';
-    /** Epoch ms of the fetch that produced them (null when showing bundled seed data) */
+    /** Epoch ms of the CPS probe (null when showing bundled seed data) */
     blsFetchedAt: number | null;
     fetchRealData: () => Promise<void>;
 
@@ -244,9 +270,9 @@ export const useStore = create<AppState>((set, get) => ({
     jobs: SEEDED_JOBS,
 
 
-    // Peak height encoding — default Workers (implied headcount). The "growth"
-    // store key now drives "human work left" heights (risk × employment, eroding
-    // with the year), so 2025 is no longer flat when that mode is selected.
+    // Peak height encoding — default Workers (implied headcount). The store key
+    // `'growth'` is historical: it now drives the Human-work *scenario* height
+    // (risk × employment, eroding with the year), not BLS growth %.
     heightMode: 'employment',
     setHeightMode: (mode) => set({ heightMode: mode }),
 

@@ -507,7 +507,7 @@ export const StartupIdeasModal: React.FC<StartupIdeasModalProps> = ({ isOpen, on
                     <p className="text-gray-400 text-sm max-w-xs">{errorMessage}</p>
                     {/quota|rate limit/i.test(errorMessage) && (
                         <div className="p-3 bg-white/[0.03] rounded-lg border border-amber-500/20 text-xs text-amber-200 text-left max-w-sm">
-                            <strong>Tip:</strong> The free AI quota may be exhausted. Wait a minute and retry, or add your own API key.
+                            <strong>Tip:</strong> The shared AI quota may be exhausted. Wait a minute and retry. To use your own key for a full map re-score, open the AI Scores badge in the header.
                         </div>
                     )}
                     <button

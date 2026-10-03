@@ -1,6 +1,6 @@
-import type { Job, JobStatus } from './types';
+import type { Job } from './types';
 import {
-    RISK_THRESHOLDS, RISK_COLORS, DEFAULT_DATA_SOURCES,
+    RISK_THRESHOLDS, DEFAULT_DATA_SOURCES,
 } from './config/constants';
 
 /**
@@ -14,19 +14,25 @@ import {
  *   - title, cluster, employment      → BLS OEWS May 2025 (national), via
  *                                        scripts/refresh_oes_data.mjs (api.bls.gov)
  *   - projectedGrowth                  → BLS OOH 2024-2034 (10-year projection)
- *   - tasks[].name, tasks[].importance → O*NET 30.1
+ *   - tasks[].name                     → O*NET 30.1
+ *   - tasks[].importance               → uniform placeholder (3); NOT real
+ *                                        O*NET Importance and unused in scoring
  *
  * NOTE: state-level employment/location-quotient data (src/data/geo_real.json,
  * drives the 2D map) is a SEPARATE vintage — see that file's own _meta block.
  * It is not guaranteed to match the national vintage above.
  *
+ * Titles that share a SOC (aliases) each start with the full national OES
+ * headcount; store seeding splits that headcount equally so 3D peaks conserve
+ * total mass. The 2D map de-dupes by SOC instead (mapAggregation.ts).
+ *
  * Runtime-populated (Claude API analyzing the real O*NET tasks):
  *   - tasks[].aiCapabilityScore        (initial value: 0 = pending AI)
  *   - tasks[].humanCriticalityScore    (initial value: 0 = pending AI)
- *   - automationCostIndex              (computed from the AI scores above)
+ *   - automationCostIndex              (mean AI capability = automation risk)
  *   - humanResilienceLabel             (initial value: "—" = pending AI)
  *   - salaryVolatilityLabel            (initial value: "—" = pending AI)
- *   - yearlyForecast                   (filled in when user clicks a job)
+ *   - yearlyForecast                   (baked at module load from ai_scores.json)
  *
  * Job → SOC code mappings live in src/utils/onet.ts.
  */
@@ -2483,20 +2489,6 @@ export const initialJobs: Job[] = [
     ]
 }
 ];
-
-export function getJobStatus(job: Job, _year: number): JobStatus {
-    const totalAiScore = job.tasks.reduce((sum, t) => sum + t.aiCapabilityScore, 0);
-    const totalHumanScore = job.tasks.reduce((sum, t) => sum + t.humanCriticalityScore, 0);
-    const avgAiCapability = job.tasks.length ? totalAiScore / job.tasks.length : 0.5;
-    const avgHumanCriticality = job.tasks.length ? totalHumanScore / job.tasks.length : 0.5;
-    const isHighRisk = avgAiCapability > RISK_THRESHOLDS.AUTOMATABLE_AI_SCORE && job.automationCostIndex < RISK_THRESHOLDS.LOW_AUTOMATION_COST;
-    const isInsulated = avgHumanCriticality > RISK_THRESHOLDS.HUMAN_CRITICAL_SCORE;
-    let riskScore = 0.5;
-    let color = RISK_COLORS.MEDIUM;
-    if (isHighRisk) { riskScore = 0.9; color = RISK_COLORS.HIGH; }
-    else if (isInsulated) { riskScore = 0.1; color = RISK_COLORS.LOW; }
-    return { riskScore, color };
-}
 
 export type TaskCategory = 'Automatable' | 'Augmentable' | 'Human-Critical';
 /** Categories from current Claude/O*NET-backed task scores only (no synthetic year drift). */
