@@ -22,15 +22,19 @@ function makeJob(
         employment,
         projectedGrowth: 5,
         automationCostIndex: risk,
-        humanResilienceScore: 1 - risk,
+        salaryVolatilityLabel: 'Stable',
+        humanResilienceLabel: 'High',
+        confidenceScore: 1,
+        isAlias: false,
+        dataSources: ['test'],
+        yearlyForecast: [],
         tasks: taskScores.map((aiCapabilityScore, i) => ({
             name: `${title} task ${i}`,
             aiCapabilityScore,
             humanCriticalityScore: 1 - aiCapabilityScore,
+            importance: 3,
         })),
-        yearlyForecast: [],
-        dataSources: { bls: 'test', onet: 'test' },
-    } as Job;
+    };
 }
 
 describe('taskSplitMath', () => {
