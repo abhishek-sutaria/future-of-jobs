@@ -51,6 +51,10 @@ export const JobMarkers: React.FC = () => {
     const groupById = useRef<Map<string, Group>>(new Map());
     // Reused candidate buffer so layoutLabels does not allocate per frame.
     const candidates = useRef<LabelCandidate[]>([]);
+    // Screen-space peak tip anchors — used as a tappable proxy when declutter
+    // parks a label at HIDDEN_LABEL_POSITION (otherwise those roles are search-only).
+    const peakAnchors = useRef<Map<string, { x: number; y: number }>>(new Map());
+    const PEAK_HIT_RADIUS_PX = 28;
 
     const gl = useThree((state) => state.gl);
     const isMobile = useIsMobile();
@@ -134,7 +138,22 @@ export const JobMarkers: React.FC = () => {
                     return id;
                 }
             }
-            return null;
+            // Declutter-hidden labels: fall back to a small hit radius on the peak tip
+            // so crowded phones can still tap roles that lost their title.
+            let bestId: string | null = null;
+            let bestDist = PEAK_HIT_RADIUS_PX;
+            for (const { id } of labelMeta.current) {
+                const pos = placements.current.get(id);
+                if (pos && !isHiddenLabelPosition(pos)) continue;
+                const anchor = peakAnchors.current.get(id);
+                if (!anchor) continue;
+                const d = Math.hypot(x - anchor.x, y - anchor.y);
+                if (d < bestDist) {
+                    bestDist = d;
+                    bestId = id;
+                }
+            }
+            return bestId;
         };
 
         const onDown = (e: PointerEvent) => {
@@ -281,6 +300,7 @@ export const JobMarkers: React.FC = () => {
             const inFront = projected.z >= -1 && projected.z <= 1;
             const x = (projected.x * size.width) / 2 + size.width / 2;
             const y = -((projected.y * size.height) / 2) + size.height / 2;
+            peakAnchors.current.set(a.id, { x, y });
             list.push({
                 id: a.id,
                 anchorX: x,

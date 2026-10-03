@@ -48,7 +48,7 @@ export const UpskillModal: React.FC<UpskillModalProps> = ({ isOpen, onClose, job
         // Recorded against the user, not the occupation. Completing training
         // says something about this person's readiness; it says nothing about
         // how automatable the task itself is, so no job score moves here.
-        void recordUpskillCompletion(jobId, taskName);
+        void recordUpskillCompletion(jobId, taskName, mode);
         toast.success(
             mode === 'defend'
                 ? `Logged. You're building oversight on "${taskName}" — tracked in your dashboard.`
@@ -165,7 +165,9 @@ export const UpskillModal: React.FC<UpskillModalProps> = ({ isOpen, onClose, job
                 </button>
                 <button
                     onClick={handleComplete}
-                    className="px-6 py-2 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white text-sm font-bold transition-colors min-h-[44px]"
+                    disabled={isLoading || !courses?.courses?.length}
+                    title={!courses?.courses?.length && !isLoading ? 'Load courses before completing training' : undefined}
+                    className="px-6 py-2 rounded-lg bg-cyan-600 hover:bg-cyan-500 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-cyan-600 text-white text-sm font-bold transition-colors min-h-[44px]"
                 >
                     Complete Training
                 </button>

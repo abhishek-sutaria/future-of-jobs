@@ -19,7 +19,7 @@ describe('Landscape GL pause hardening', () => {
     });
 
     it('wakes the mobile idle timer when selectedJob changes', () => {
-        expect(src).toMatch(/bumpInteraction,\s*year,\s*heightMode,\s*mapView,\s*selectedJob/);
+        expect(src).toMatch(/bumpInteraction,\s*year,\s*heightMode,\s*mapView,\s*selectedJob,\s*route,\s*canvasKey/);
     });
 
     it('skips the second fill light on mobile', () => {

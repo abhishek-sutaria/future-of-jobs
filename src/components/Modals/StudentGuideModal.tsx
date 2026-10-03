@@ -19,15 +19,15 @@ const FEATURES: Feature[] = [
         emoji: '🏔️',
         title: '3D Terrain Map',
         description:
-            'Each glowing peak represents one job role. Peak colour = AI automation risk (red = high risk, green = safe). Peak height depends on the mode: Human work = how much of the role still needs a person (peaks erode as AI takes more); Workers = implied BLS headcount at that year.',
-        tip: 'Toggle the height mode with the switch on the year-slider panel. Workers mode shows which roles employ the most people; Human work shows what is left of each job as automation rises.',
+            'Each glowing peak represents one job role. Peak colour = AI automation risk (red = high risk, green = safer). Peak height depends on the mode: Human work is a scenario of how much of the role still needs a person (peaks erode as modelled AI share rises); Workers = implied BLS headcount at that year.',
+        tip: 'Toggle Peak Height on the year-slider panel. Workers shows which roles employ the most people; Human work is an in-app erosion scenario — not a BLS series.',
         color: 'cyan',
     },
     {
         emoji: '⏱️',
         title: 'AI Timeline Slider',
         description:
-            'Drag the slider from 2025 → 2030 to watch each role\'s projected employment change year by year. Every peak follows its role\'s published forecast, which stays within the official BLS 2024–34 outlook for that occupation.',
+            'Drag the slider from 2025 → 2030 to watch each role\'s projected employment change year by year. Every peak follows its role\'s published forecast, which stays within a fraction of the official BLS 2024–34 outlook (2030 is not the full decade endpoint).',
         tip: 'Compare a Marketing Manager to a Sales Manager at 2030. Notice which peak moves more, then open both roles to compare their task-level risk.',
         color: 'purple',
     },
@@ -38,6 +38,14 @@ const FEATURES: Feature[] = [
             'Click any peak to open a role\'s full profile: its Automation Risk, the BLS 2024–34 growth outlook, its Human Resilience rank among all 50 roles, and its projected jobs path to 2030. Below that, each of the role\'s O*NET tasks appears with its own risk score. Automation Risk is the plain average of those task scores, so you can check it yourself.',
         tip: 'The "Human Skills" section shows what AI cannot easily replace. These are the tasks worth developing.',
         color: 'blue',
+    },
+    {
+        emoji: '🧩',
+        title: 'Tasks View',
+        description:
+            'Open Tasks in the header to see every role broken into AI-capable vs human-needed work. Roles are ordered by average GenAI capability today — not guaranteed adoption. Use “Same score, different jobs” pairs to make the contrast concrete.',
+        tip: 'Capability labels are Claude judgments of what GenAI can handle, not a forecast that the work is already automated.',
+        color: 'indigo',
     },
     {
         emoji: '🤖',
@@ -59,8 +67,8 @@ const FEATURES: Feature[] = [
         emoji: '🗺️',
         title: 'Career Roadmap',
         description:
-            'Identifies the highest-risk task in a role and builds a personalised 6-month upskilling plan to move away from it, covering specific skills, tools, and learning resources.',
-        tip: 'Open it with View Roadmap at the bottom of the Job Detail Panel. The plan pairs that role\'s highest-risk task with its most human-critical one.',
+            'Identifies the highest-risk task in a role and builds a personalised 6-month plan to defend it — own the judgment and oversight around the automatable work — while deepening a human-critical task. Covers skills, tools, and learning resources.',
+        tip: 'Open it with View Roadmap at the bottom of the Job Detail Panel. Defend = supervise the high-risk task; Build = deepen the human-critical one.',
         color: 'orange',
     },
     {
@@ -101,6 +109,7 @@ const colorMap: Record<string, { border: string; badge: string; tip: string }> =
     cyan:    { border: 'border-cyan-500/30',    badge: 'bg-cyan-500/10 text-cyan-300',    tip: 'bg-cyan-500/5 border-cyan-500/20 text-cyan-200/70' },
     purple:  { border: 'border-purple-500/30',  badge: 'bg-purple-500/10 text-purple-300', tip: 'bg-purple-500/5 border-purple-500/20 text-purple-200/70' },
     blue:    { border: 'border-blue-500/30',    badge: 'bg-blue-500/10 text-blue-300',    tip: 'bg-blue-500/5 border-blue-500/20 text-blue-200/70' },
+    indigo:  { border: 'border-indigo-500/30',  badge: 'bg-indigo-500/10 text-indigo-300', tip: 'bg-indigo-500/5 border-indigo-500/20 text-indigo-200/70' },
     red:     { border: 'border-red-500/30',     badge: 'bg-red-500/10 text-red-300',      tip: 'bg-red-500/5 border-red-500/20 text-red-200/70' },
     violet:  { border: 'border-violet-500/30',  badge: 'bg-violet-500/10 text-violet-300', tip: 'bg-violet-500/5 border-violet-500/20 text-violet-200/70' },
     orange:  { border: 'border-orange-500/30',  badge: 'bg-orange-500/10 text-orange-300', tip: 'bg-orange-500/5 border-orange-500/20 text-orange-200/70' },

@@ -21,7 +21,8 @@ Inputs:
 Outputs:
   - src/data/geo_real.json (real state-level employment data, all states)
   - src/data/national_employment.json (national figures)
-  - src/data/bls_extracted.json (full extracted dataset for data.ts)
+  - src/data/bls_extracted.json (convenience mirror for scripts/auditors;
+    the live app reads src/data.ts directly — re-sync from data.ts after OES refresh)
 
 Notes on geo_real.json:
   - SOC codes are taken from src/utils/onet.ts MAP_TITLE_TO_SOC (the runtime

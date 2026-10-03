@@ -84,7 +84,10 @@ export const UI: React.FC<UIProps> = ({ dashboardOpen }) => {
         void useUserStore.getState().recordJobView(selectedJob.id, selectedJob.title);
     }, [selectedJob?.id]);
 
-    // Auto-analyze selected job
+    // Auto-analyze selected job. Generation id + stale checks prevent a slow
+    // response for role A from writing onto role B, and we never skip scheduling
+    // just because another analysis is still in flight.
+    const analyzeGenerationRef = React.useRef(0);
     React.useEffect(() => {
         if (!selectedJob) return;
         const jobId = selectedJob.id;
@@ -94,11 +97,13 @@ export const UI: React.FC<UIProps> = ({ dashboardOpen }) => {
         setAnalysisResult(null);
         setAnalysisError(null);
 
-        if (analysisLoading) return;
         if (autoAnalyzedJobIdsRef.current.has(jobId)) return;
         autoAnalyzedJobIdsRef.current.add(jobId);
 
-        const isStale = () => useStore.getState().selectedJob?.id !== jobId;
+        const generation = ++analyzeGenerationRef.current;
+        const isStale = () =>
+            analyzeGenerationRef.current !== generation
+            || useStore.getState().selectedJob?.id !== jobId;
 
         const runAnalysis = async () => {
             setAnalysisLoading(true);
@@ -126,10 +131,12 @@ export const UI: React.FC<UIProps> = ({ dashboardOpen }) => {
                     setAnalysisError(getClaudeUserFriendlyMessage(e));
                 }
             } finally {
-                setAnalysisLoading(false);
+                if (analyzeGenerationRef.current === generation) {
+                    setAnalysisLoading(false);
+                }
             }
         };
-        runAnalysis();
+        void runAnalysis();
     }, [selectedJob?.id]);
 
     // Fetch BLS unemployment

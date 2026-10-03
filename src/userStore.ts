@@ -62,7 +62,7 @@ interface UserState {
     toggleSavedRole: (jobId: string, jobTitle: string) => Promise<void>;
     isRoleSaved: (jobId: string) => boolean;
     recordJobView: (jobId: string, jobTitle: string) => Promise<void>;
-    recordUpskillCompletion: (jobId: string, taskName: string) => Promise<void>;
+    recordUpskillCompletion: (jobId: string, taskName: string, mode?: 'defend' | 'build') => Promise<void>;
 }
 
 /** An email is the signal that a user has moved beyond an anonymous session. */
@@ -315,7 +315,7 @@ export const useUserStore = create<UserState>((set, get) => ({
         });
     },
 
-    recordUpskillCompletion: async (jobId, taskName) => {
+    recordUpskillCompletion: async (jobId, taskName, mode) => {
         if (!HAS_SUPABASE) return;
         const ok = await dbRecordUpskill(jobId, taskName);
         if (!ok) return;
@@ -326,7 +326,7 @@ export const useUserStore = create<UserState>((set, get) => ({
                 ...activity,
                 upskillCompletions: [
                     ...activity.upskillCompletions,
-                    { jobId, taskName, completedAt: new Date().toISOString() },
+                    { jobId, taskName, completedAt: new Date().toISOString(), mode },
                 ],
             },
         });

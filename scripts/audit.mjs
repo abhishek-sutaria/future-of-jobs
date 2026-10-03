@@ -213,12 +213,11 @@ heading('CAT-1', 'Telemetry Cleanup — localhost:7252 / Agent Log Markers');
   );
 }
 
-// T7: Unused lastLoggedYearRef removed from JobMesh.tsx
+// T7: Dead JobMesh.tsx removed (third height formula / unused mesh)
 {
-  const src = read('src/components/JobMesh.tsx');
   check(
-    'T07 — lastLoggedYearRef removed from JobMesh.tsx',
-    !src.includes('lastLoggedYearRef')
+    'T07 — dead JobMesh.tsx removed',
+    !exists('src/components/JobMesh.tsx')
   );
 }
 

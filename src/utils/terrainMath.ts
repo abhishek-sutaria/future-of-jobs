@@ -1,4 +1,4 @@
-import { SHADER, YEAR_MIN, YEAR_MAX, YEAR_COUNT } from '../config/constants';
+import { SHADER, YEAR_MIN, YEAR_MAX, YEAR_COUNT, OOH_ENDPOINT_YEAR, OOH_FRACTION_AT_YEAR_MAX } from '../config/constants';
 import type { Job } from '../types';
 import { CLUSTER_ORDER, getFunctionalCluster, type FunctionalCluster } from '../config/clusters';
 import { MAP_TITLE_TO_SOC } from './onet';
@@ -6,7 +6,20 @@ import { MAP_TITLE_TO_SOC } from './onet';
 // Per-year growth values come from Claude's forecast (cumulative percent change
 // from the 2025 baseline, grounded in real BLS + O*NET inputs). When Claude
 // has not produced a forecast yet, cumulative % is a linear ramp from 0% at
-// YEAR_MIN to the job's BLS OOH projectedGrowth at YEAR_MAX (single official anchor).
+// YEAR_MIN toward the BLS OOH projectedGrowth at OOH_ENDPOINT_YEAR (2034), so
+// YEAR_MAX (2030) reaches only OOH_FRACTION_AT_YEAR_MAX (~5/9) of the decade %.
+
+/** Max cumulative % the in-app path may reach by YEAR_MAX for a given OOH figure. */
+export function oohEnvelopeCap(projectedGrowth: number): number {
+    return projectedGrowth * OOH_FRACTION_AT_YEAR_MAX;
+}
+
+/** Linear fraction of the 2024–34 OOH change represented at `year` (2025 = 0). */
+export function oohFractionAtYear(year: number): number {
+    const t = Math.max(YEAR_MIN, Math.min(OOH_ENDPOINT_YEAR, year));
+    const span = OOH_ENDPOINT_YEAR - YEAR_MIN;
+    return span > 0 ? (t - YEAR_MIN) / span : 0;
+}
 
 // Constants for Landscape Generation
 export const TERRAIN_CONFIG = {
@@ -146,12 +159,12 @@ export const getVisualHeightForGrowth = (growthDelta: number): number => {
 };
 
 /**
- * How much of the role AI is modelled to handle at `year`.
+ * How much of the role AI is modelled to handle at `year` (Human-work scenario).
  *
- * At YEAR_MIN this equals today's published automation risk, so peaks already
- * differ in 2025. As the scrub advances, AI share rises toward 1 — high-risk
- * roles erode faster. `FUTURE_EROSION` caps how far past today's risk we go by
- * YEAR_MAX (0.5 = halfway from current risk to full automation).
+ * This is an in-app scenario, not BLS data. At YEAR_MIN it equals today's
+ * published automation risk. As the scrub advances, AI share rises toward 1 —
+ * high-risk roles erode faster. `FUTURE_EROSION` caps how far past today's risk
+ * we go by YEAR_MAX (0.5 = halfway from current risk to full automation).
  */
 const FUTURE_EROSION = 0.5;
 
@@ -256,10 +269,8 @@ export const getCurrentYearGrowth = (job: Job, year: number): { value: number; s
         return { value: val1 * (1 - f) + val2 * f, source: 'ai' };
     }
 
-    const t = Math.max(YEAR_MIN, Math.min(YEAR_MAX, year));
-    const span = YEAR_MAX - YEAR_MIN;
-    const frac = span > 0 ? (t - YEAR_MIN) / span : 0;
-    const cumulative = job.projectedGrowth * frac;
+    // Baseline ramp: linear toward the 2034 OOH endpoint, so 2030 ≈ 5/9 of the decade %.
+    const cumulative = job.projectedGrowth * oohFractionAtYear(year);
 
     return { value: cumulative, source: 'baseline' };
 };

@@ -18,7 +18,7 @@ interface AnalysisModalProps {
 
 export const AnalysisModal: React.FC<AnalysisModalProps> = ({ isOpen, isLoading, job, result, errorMessage, onClose }) => {
     return (
-        <Modal isOpen={isOpen} onClose={onClose} title={`Live Job Analysis: ${job.title}`} size="lg" layer="top">
+        <Modal isOpen={isOpen} onClose={onClose} title={`Role analysis: ${job.title}`} size="lg" layer="top">
             <div className="flex items-center gap-2 mb-6">
                 <IconBrain size={14} className="text-blue-400" />
                 <span className="text-blue-300 text-xs uppercase tracking-wider font-semibold bg-blue-500/10 px-2 py-1 rounded">Claude</span>

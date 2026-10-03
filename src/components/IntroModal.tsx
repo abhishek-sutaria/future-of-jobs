@@ -24,8 +24,8 @@ export const IntroModal: React.FC = () => {
     };
 
     return (
-        <Modal isOpen={isOpen} onClose={handleClose} title="Navigating the Intelligence Age" size="md" layer="overlay">
-            <p className="text-gray-400 text-sm mb-6">Strategic Workforce Intelligence 2025–2030</p>
+        <Modal isOpen={isOpen} onClose={handleClose} title="AI & Future of Work" size="md" layer="overlay">
+            <p className="text-gray-400 text-sm mb-6">50 marketing &amp; business roles · 2025–2030</p>
 
             <div className="space-y-5 mb-8">
                 <div className="flex gap-4">
@@ -35,7 +35,7 @@ export const IntroModal: React.FC = () => {
                     <div>
                         <h3 className="text-white font-semibold mb-1 text-sm">Terrain Height = Workers or Human Work</h3>
                         <p className="text-gray-400 text-sm leading-relaxed">
-                            Toggle Peak Height on the year slider: Workers shows implied headcount; Human work shows how much of each role still needs a person (peaks erode as AI takes more).
+                            Toggle Peak Height on the year slider: Workers shows implied headcount; Human work is a scenario of how much of each role still needs a person (peaks erode as modelled AI share rises).
                         </p>
                     </div>
                 </div>
@@ -45,10 +45,10 @@ export const IntroModal: React.FC = () => {
                         <IconAlertTriangle size={18} className="text-red-400" />
                     </div>
                     <div>
-                        <h3 className="text-white font-semibold mb-1 text-sm">Color Indicates Risk</h3>
+                        <h3 className="text-white font-semibold mb-1 text-sm">Color Indicates Relative Risk</h3>
                         <p className="text-gray-400 text-sm leading-relaxed">
-                            <span className="text-red-400">High risk markers</span> indicate high automation exposure.
-                            <span className="text-emerald-400"> Safe zone markers</span> are human-critical roles.
+                            <span className="text-red-400">High risk markers</span> are more exposed to automation than most roles here.
+                            <span className="text-emerald-400"> Safer markers</span> rank lower on that same relative scale — not immune.
                         </p>
                     </div>
                 </div>
@@ -58,9 +58,9 @@ export const IntroModal: React.FC = () => {
                         <IconSearch size={18} className="text-purple-400" />
                     </div>
                     <div>
-                        <h3 className="text-white font-semibold mb-1 text-sm">Deep Analysis</h3>
+                        <h3 className="text-white font-semibold mb-1 text-sm">Role detail</h3>
                         <p className="text-gray-400 text-sm leading-relaxed">
-                            Click any marker to open the <strong className="text-white">Command Center</strong> and view detailed AI vs. Human skills analysis.
+                            Click any marker to open the role panel and compare AI-capable tasks with ones that still need a person.
                         </p>
                     </div>
                 </div>
