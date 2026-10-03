@@ -20,7 +20,7 @@ export type Job = {
   dataSources: string[];   // e.g. ["BLS-2024", "ONET-Weighted"]
   isAlias: boolean;        // True if we used a Proxy Job
   isEstimate?: boolean;    // Flag for hardcoded estimate
-  isStale?: boolean;       // True if fresh BLS data failed to load
+  isStale?: boolean;       // Deprecated — always false. Published OES is canonical; not a live-fetch fallback.
 
   tasks: Task[];
   yearlyForecast?: {

@@ -285,22 +285,19 @@ export const useStore = create<AppState>((set, get) => ({
         const locationData: Record<string, { name: string; lat: number; lng: number; employment: number; lq: number }[]> =
             Object.fromEntries(Object.entries(rawGeo).filter(([k]) => k !== '_meta'));
 
-        // Collect BLS series IDs
-        const jobMap    = new Map<string, string>();
+        // Probe CPS connectivity (does not overwrite per-role OES employment).
         const seriesIds: string[] = [];
         get().jobs.forEach(job => {
             const sid = getSeriesIdForJob(job.title, '01');
-            if (sid) { seriesIds.push(sid); jobMap.set(sid, job.id); }
+            if (sid) seriesIds.push(sid);
         });
 
-        let blsResults = new Map<string, number>();
         let blsSource: 'live' | 'cache' | 'seed' = 'seed';
         let blsFetchedAt: number | null = null;
         try {
             if (seriesIds.length > 0) {
                 const result = await fetchLaborStats(seriesIds);
-                blsResults   = result.values;
-                blsSource    = result.source;
+                blsSource = result.source;
                 blsFetchedAt = result.fetchedAt;
             }
         } catch (e) {
@@ -329,10 +326,13 @@ export const useStore = create<AppState>((set, get) => ({
             // own tooltip copy describes the national unemployment rate, not
             // occupation headcounts, so attaching it to this job would be its own
             // separate source of confusion.
-            const sid = getSeriesIdForJob(job.title, '01');
-            if (sid) {
-                item.isStale = !blsResults.has(sid);
-            }
+            //
+            // Never mark roles "stale" from a CPS miss: published OES employment
+            // in data.ts is the canonical Workers/Human-work figure. A red
+            // "Bundled data" / quota badge here was Ray's old STALE experience —
+            // it implied the numbers were degraded when they are simply the
+            // intentional published extract.
+            item.isStale = false;
 
             if (item.tasks.length > 0) {
                 const avg             = item.tasks.reduce((s, t) => s + t.aiCapabilityScore, 0) / item.tasks.length;

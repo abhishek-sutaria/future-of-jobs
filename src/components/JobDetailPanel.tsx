@@ -129,17 +129,6 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
     const toggleSavedRole = useUserStore((state) => state.toggleSavedRole);
     const authStatus = useUserStore((state) => state.authStatus);
 
-    const blsSource = useStore((state) => state.blsSource);
-    const blsFetchedAt = useStore((state) => state.blsFetchedAt);
-
-    const formatAge = (ms: number): string => {
-        const hours = Math.floor(ms / (60 * 60 * 1000));
-        if (hours < 1) return '<1h';
-        if (hours < 48) return `${hours}h`;
-        return `${Math.floor(hours / 24)}d`;
-    };
-    const blsAge = blsFetchedAt !== null ? formatAge(Date.now() - blsFetchedAt) : null;
-
     const riskValue = job.automationCostIndex;
 
     const { riskTask, safeTask } = pickRoadmapPair(job.tasks);
@@ -174,15 +163,9 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                 <span className="px-2 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wider bg-blue-500/10 text-blue-400 border border-blue-500/20">
                                     {job.cluster}
                                 </span>
-                                {job.isStale ? (
-                                    <span title="Live BLS fetch unavailable (daily quota resets at midnight ET). Showing bundled BLS OES estimates from the build." className="px-2 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wider bg-red-500/10 text-red-400 border border-red-500/20 flex items-center gap-1 cursor-help">
-                                        <IconAlertTriangle size={10} /> Bundled data
-                                    </span>
-                                ) : blsSource === 'cache' && blsAge ? (
-                                    <span title={`Cached BLS employment data from ${blsAge} ago. Refreshes automatically after 24h (BLS daily quota resets at midnight ET).`} className="px-2 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wider bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center gap-1 cursor-help">
-                                        <IconInfo size={10} /> BLS data {blsAge}
-                                    </span>
-                                ) : null}
+                                {/* Employment figures come from the published BLS OES extract
+                                    (see provenance OES chip). Live-fetch age / quota chrome
+                                    was removed — it implied a degraded fallback. */}
                                 <span className="hidden md:inline text-[10px] text-gray-500 font-mono">{job.id.slice(0, 8)}</span>
                             </div>
                             <h2 className="text-xl md:text-2xl font-bold text-white tracking-tight">{job.title}</h2>

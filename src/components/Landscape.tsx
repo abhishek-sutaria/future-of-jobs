@@ -33,6 +33,7 @@ export const Landscape: React.FC = () => {
     const setIsOrbiting = useStore((s) => s.setIsOrbiting);
     const route = useStore((s) => s.route);
     const mapView = useStore((s) => s.mapView);
+    const selectedJob = useStore((s) => s.selectedJob);
     const setIsDefaultView = useStore((s) => s.setIsDefaultView);
     const resetViewRequestId = useStore((s) => s.resetViewRequestId);
     const controlsRef = useRef<OrbitControlsImpl>(null);
@@ -82,15 +83,17 @@ export const Landscape: React.FC = () => {
     const year = useStore((s) => s.year);
     const heightMode = useStore((s) => s.heightMode);
 
-    // Arm the idle timer on mount, and wake the loop whenever the year scrub or
-    // height mode changes — those controls live outside OrbitControls, so without
-    // this a phone that only moves the slider would stay frozen on old peaks.
+    // Arm the idle timer on mount, and wake the loop whenever the year scrub,
+    // height mode, or map view changes — those controls live outside
+    // OrbitControls, so without this a phone that only moves the slider would
+    // stay frozen on old peaks. Closing a role panel also needs a wake so the
+    // terrain resumes under the user.
     useEffect(() => {
         bumpInteraction();
         return () => {
             if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
         };
-    }, [bumpInteraction, year, heightMode, mapView]);
+    }, [bumpInteraction, year, heightMode, mapView, selectedJob]);
 
     const handleContextLost = useCallback((event: Event) => {
         // Without this, the browser assumes the page doesn't want to recover
@@ -190,10 +193,13 @@ export const Landscape: React.FC = () => {
     // orbit is exactly where they left it.
     //
     // Load reductions aimed at Ray's "locks up after a bit" report (Samsung
-    // foldable, Chrome): pause under overlays, when the tab is hidden, and on
-    // phones after a short idle. Context + shaders stay warm so resume is instant.
+    // foldable, Chrome): pause under overlays (incl. the role panel), when the
+    // tab is hidden, and on phones after a short idle. Context + shaders stay
+    // warm so resume is instant. Leaving the 50-peak shader + 50 Html labels
+    // spinning under a full-screen role panel was the biggest remaining burn.
     const pauseLoop = route === 'dashboard'
         || mapView !== 'globe'
+        || selectedJob != null
         || tabHidden
         || (isMobile && mobileIdle);
 
@@ -219,9 +225,10 @@ export const Landscape: React.FC = () => {
         >
             <fog attach="fog" args={[SCENE.FOG_COLOR, SCENE.FOG_NEAR, isPortrait ? SCENE.FOG_FAR_PORTRAIT : SCENE.FOG_FAR]} />
 
-            <ambientLight intensity={0.5} />
+            <ambientLight intensity={isMobile ? 0.65 : 0.5} />
             <pointLight position={[10, 10, 10]} intensity={1} />
-            <pointLight position={[-10, 10, -10]} intensity={0.5} color="blue" />
+            {/* Second fill light is desktop-only — on phones it is pure fill cost. */}
+            {!isMobile && <pointLight position={[-10, 10, -10]} intensity={0.5} color="blue" />}
 
             <Terrain />
             <JobMarkers />

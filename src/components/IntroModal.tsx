@@ -33,9 +33,9 @@ export const IntroModal: React.FC = () => {
                         <IconLayers size={18} className="text-blue-400" />
                     </div>
                     <div>
-                        <h3 className="text-white font-semibold mb-1 text-sm">Terrain Height = Employment Volume</h3>
+                        <h3 className="text-white font-semibold mb-1 text-sm">Terrain Height = Workers or Human Work</h3>
                         <p className="text-gray-400 text-sm leading-relaxed">
-                            High peaks represent massive job clusters. Valleys represent niche or emerging roles.
+                            Toggle Peak Height on the year slider: Workers shows implied headcount; Human work shows how much of each role still needs a person (peaks erode as AI takes more).
                         </p>
                     </div>
                 </div>
