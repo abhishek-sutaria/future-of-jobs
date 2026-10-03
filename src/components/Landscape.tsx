@@ -79,15 +79,18 @@ export const Landscape: React.FC = () => {
         idleTimerRef.current = setTimeout(() => setMobileIdle(true), 2500);
     }, [isMobile]);
 
-    // Arm the idle timer on mount so a phone that never receives a touch still
-    // settles into frameloop:'never' after the first paint, instead of spinning
-    // the 50-peak shader forever in the background.
+    const year = useStore((s) => s.year);
+    const heightMode = useStore((s) => s.heightMode);
+
+    // Arm the idle timer on mount, and wake the loop whenever the year scrub or
+    // height mode changes — those controls live outside OrbitControls, so without
+    // this a phone that only moves the slider would stay frozen on old peaks.
     useEffect(() => {
         bumpInteraction();
         return () => {
             if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
         };
-    }, [bumpInteraction]);
+    }, [bumpInteraction, year, heightMode, mapView]);
 
     const handleContextLost = useCallback((event: Event) => {
         // Without this, the browser assumes the page doesn't want to recover
