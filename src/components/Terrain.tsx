@@ -3,7 +3,7 @@ import { useFrame } from '@react-three/fiber';
 import { ShaderMaterial, DoubleSide, Vector3, Vector2 } from 'three';
 import { useStore } from '../store';
 import type { Job } from '../types';
-import { getTerrainPosition, getVisualHeightForEmployment, getVisualHeightForWorkersAtYear, buildGrowthForecastFlatArray, growthAtYearFromForecastFlat, TERRAIN_CONFIG } from '../utils/terrainMath';
+import { getTerrainPosition, getVisualHeightForEmployment, getVisualHeightForWorkersAtYear, getVisualHeightForHumanWorkAtYear, buildGrowthForecastFlatArray, growthAtYearFromForecastFlat, TERRAIN_CONFIG } from '../utils/terrainMath';
 import { riskColorRGB, RISK_UNSCORED_RGB, buildRiskScale, normalizeRisk } from '../config/theme';
 import { SHADER, SHADER_VISUAL, SHADER_COLORS, SCENE } from '../config/constants';
 
@@ -51,11 +51,11 @@ const vertexShader = `
         vec3 peakData = uPeaks[i];
         float growthImpact = uGrowthNow[i];
 
-        // Workers mode: peak height from uPeaks.z (implied headcount at scrub year, CPU-updated).
-        // Growth mode: height from uGrowthNow only.
-        float growthScaler = growthImpact >= 0.0 ? ${SHADER.GROWTH_DAMPENING} : ${SHADER.DECLINE_DAMPENING};
-        float growthHeight = 1.0 + growthImpact * growthScaler;
-        float rawHeight = uHeightMode > 0.5 ? peakData.z : growthHeight;
+        // Both height modes upload the peak into uPeaks.z on the CPU each frame:
+        // Workers = implied headcount; Human work ("growth" store key) = human-remaining
+        // workforce that erodes with the year. uGrowthNow / uHeightMode stay referenced
+        // so drivers do not strip the uniform arrays from the program.
+        float rawHeight = peakData.z + (growthImpact + uHeightMode) * 0.0;
         float visualHeight = clamp(rawHeight, ${SHADER.HEIGHT_CLAMP_MIN}, ${SHADER.HEIGHT_CLAMP_MAX.toFixed(1)});
 
         float dx = worldPos.x - peakData.x;
@@ -145,6 +145,11 @@ export const Terrain: React.FC = () => {
   const jobs = useStore((state) => state.jobs);
   const selectedRoleIds = useStore((state) => state.selectedRoleIds);
   const heightMode = useStore((state) => state.heightMode);
+  // Mount-time only — matches Landscape's isMobile read so hydration does not
+  // rebuild the geometry after the first frame.
+  const [meshSegments] = React.useState(() => (
+    typeof window !== 'undefined' && window.matchMedia('(max-width: 767px)').matches ? 96 : 192
+  ));
 
   const filteredJobs = useMemo(() => (
     selectedRoleIds.size === 0 ? jobs : jobs.filter(job => selectedRoleIds.has(job.id))
@@ -229,33 +234,54 @@ export const Terrain: React.FC = () => {
     mat.uniforms.uHeightMode.value = heightMode === 'employment' ? 1.0 : 0.0;
   }, [heightMode]);
 
-  // Push current-year growth values to the GPU every frame. Only ONE
-  // dynamically-indexed uniform array (uGrowthNow) — drives both color tint
-  // and (via in-shader formula) Growth-mode peak height.
+  // Push current-year values to the GPU. On phones, skip alternate frames for
+  // the decorative uTime clock and reuse the last peak upload when year /
+  // height mode have not moved — cuts fill + uniform traffic that contributed
+  // to Chrome locking up after sustained orbiting on foldables.
+  const frameCountRef = useRef(0);
+  const lastUploadKeyRef = useRef('');
   useFrame((state) => {
     const mat = materialRef.current;
     if (!mat) return;
-    mat.uniforms.uTime.value = state.clock.getElapsedTime();
+
+    const isMobile = typeof window !== 'undefined'
+      && window.matchMedia('(max-width: 767px)').matches;
+    frameCountRef.current += 1;
+    if (!isMobile || frameCountRef.current % 2 === 0) {
+      mat.uniforms.uTime.value = state.clock.getElapsedTime();
+    }
 
     const forecasts = forecastsRef.current;
     const peakCount = mat.uniforms.uPeakCount.value as number;
     if (peakCount === 0 || !forecasts || forecasts.length === 0) return;
 
     const currentYear = useStore.getState().year;
-    const growthArr = mat.uniforms.uGrowthNow.value as Float32Array;
-    for (let i = 0; i < peakCount; i++) {
-      growthArr[i] = growthAtYearFromForecastFlat(forecasts, i, currentYear);
-    }
-
     const hm = useStore.getState().heightMode;
-    if (hm === 'employment') {
+    // Rewrite peaks only when the scrub year or height mode actually changes —
+    // not every rAF. On phones this is the difference between a warm GPU and
+    // a thermal throttle that looks like a lockup.
+    const uploadKey = `${currentYear.toFixed(1)}|${hm}|${peakCount}`;
+    if (uploadKey !== lastUploadKeyRef.current) {
+      const growthArr = mat.uniforms.uGrowthNow.value as Float32Array;
+      for (let i = 0; i < peakCount; i++) {
+        growthArr[i] = growthAtYearFromForecastFlat(forecasts, i, currentYear);
+      }
+
       const peaks = mat.uniforms.uPeaks.value as Vector3[];
       const fj = filteredJobsRef.current;
       for (let i = 0; i < peakCount; i++) {
         const job = fj[i];
         if (!job) continue;
-        peaks[i].z = getVisualHeightForWorkersAtYear(job.employment, growthArr[i]);
+        peaks[i].z = hm === 'employment'
+          ? getVisualHeightForWorkersAtYear(job.employment, growthArr[i])
+          : getVisualHeightForHumanWorkAtYear(
+              job.employment,
+              growthArr[i],
+              job.automationCostIndex,
+              currentYear,
+            );
       }
+      lastUploadKeyRef.current = uploadKey;
     }
 
     // ShaderMaterial only re-uploads uniforms when this flag is true (see three.js
@@ -276,7 +302,10 @@ export const Terrain: React.FC = () => {
         }
       }}
     >
-      <planeGeometry args={[SCENE.PLANE_SIZE, SCENE.PLANE_SIZE, 192, 192]} />
+      {/* Phones: half the tessellation (~9.5k verts vs ~37k) — the heatmap still
+          reads, and the cheaper vertex loop is the main lever against Chrome
+          thermal/lockup after a few minutes of orbiting. */}
+      <planeGeometry args={[SCENE.PLANE_SIZE, SCENE.PLANE_SIZE, meshSegments, meshSegments]} />
       <shaderMaterial
         ref={materialRef}
         vertexShader={vertexShader}

@@ -19,8 +19,8 @@ const FEATURES: Feature[] = [
         emoji: '🏔️',
         title: '3D Terrain Map',
         description:
-            'Each glowing peak represents one job role. Peak colour = AI automation risk (red = high risk, green = safe). Peak height depends on the mode: in Growth mode it reflects the projected employment change %; in Workers mode it reflects the implied BLS headcount at that year.',
-        tip: 'Toggle the height mode with the switch on the year-slider panel. Workers mode shows which roles employ the most people right now; Growth mode shows where change is happening fastest.',
+            'Each glowing peak represents one job role. Peak colour = AI automation risk (red = high risk, green = safe). Peak height depends on the mode: Human work = how much of the role still needs a person (peaks erode as AI takes more); Workers = implied BLS headcount at that year.',
+        tip: 'Toggle the height mode with the switch on the year-slider panel. Workers mode shows which roles employ the most people; Human work shows what is left of each job as automation rises.',
         color: 'cyan',
     },
     {

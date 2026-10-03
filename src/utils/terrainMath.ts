@@ -146,6 +146,45 @@ export const getVisualHeightForGrowth = (growthDelta: number): number => {
 };
 
 /**
+ * How much of the role AI is modelled to handle at `year`.
+ *
+ * At YEAR_MIN this equals today's published automation risk, so peaks already
+ * differ in 2025. As the scrub advances, AI share rises toward 1 — high-risk
+ * roles erode faster. `FUTURE_EROSION` caps how far past today's risk we go by
+ * YEAR_MAX (0.5 = halfway from current risk to full automation).
+ */
+const FUTURE_EROSION = 0.5;
+
+export function aiShareAtYear(publishedRisk: number, year: number): number {
+    const risk = Math.max(0, Math.min(1, publishedRisk));
+    const t = Math.max(YEAR_MIN, Math.min(YEAR_MAX, year));
+    const progress = (YEAR_MAX - YEAR_MIN) > 0 ? (t - YEAR_MIN) / (YEAR_MAX - YEAR_MIN) : 0;
+    const futureAi = risk + (1 - risk) * progress * FUTURE_EROSION;
+    return Math.max(0, Math.min(1, futureAi));
+}
+
+/**
+ * "What's left of the job" height: log-scaled human-remaining workforce.
+ *
+ *   impliedEmployment(year) × (1 − aiShareAtYear)
+ *
+ * Replaces the old Growth encoding (cumulative % from a flat 2025 baseline) so
+ * the landscape has readable height variance from the first year and erodes as
+ * AI takes more of each role.
+ */
+export function getVisualHeightForHumanWorkAtYear(
+    baselineEmployment: number,
+    cumulativePctFromBaseline: number,
+    publishedRisk: number,
+    year: number,
+): number {
+    const implied = impliedEmploymentAtYear(baselineEmployment, cumulativePctFromBaseline);
+    // Floor at 5% human share so a peak never vanishes entirely from the terrain.
+    const humanShare = Math.max(0.05, 1 - aiShareAtYear(publishedRisk, year));
+    return getVisualHeightForEmployment(implied * humanShare);
+}
+
+/**
  * Log-scaled height from employment count. Maps roughly:
  *   1,000 workers   → ~0.5  (short peak)
  *   100,000 workers → ~2.5  (medium peak)

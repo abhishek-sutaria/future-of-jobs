@@ -101,13 +101,12 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                     </div>
 
                     <p className="text-[11px] text-gray-500 leading-relaxed mt-2 italic">
-                        In <strong>Growth</strong> mode, peak motion follows each role&apos;s published
-                        year-by-year forecast, which is checked to stay within that role&apos;s BLS OOH
-                        2024&ndash;34 outlook before it is published.{' '}
-                        <strong>Workers</strong> mode uses the same cumulative % to scale baseline
-                        BLS employment into an implied headcount, then log-scales that for peak height,
-                        with a modest display-only boost to the height change so the scrub reads clearly,
-                        plus a touch of the Growth height mapping for extra motion.
+                        In <strong>Human work</strong> mode, peak height is the human-remaining share of
+                        each role (1 − automation risk) applied to implied employment; as the year
+                        advances, AI&apos;s share rises and peaks erode. Forecasts used for the employment
+                        scale stay within each role&apos;s BLS OOH 2024&ndash;34 outlook.{' '}
+                        <strong>Workers</strong> mode log-scales implied headcount (BLS baseline ×
+                        cumulative %), with a modest display-only boost so the scrub reads clearly.
                     </p>
                 </div>
 
@@ -186,8 +185,8 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                         Use the toggle on the year-slider panel to flip peak height between:
                     </p>
                     <ul className="list-disc list-inside text-xs text-gray-400 ml-1 space-y-1">
-                        <li><strong>Growth</strong>: per-year cumulative % from the role&apos;s published forecast. Before publishing, each forecast is checked to start at 0% in 2025 and stay within the role&apos;s BLS OOH 2024&ndash;34 ten-year change.</li>
-                        <li><strong>Workers</strong>: log-scaled implied headcount (BLS baseline × cumulative % at the selected year), with a stronger height-delta boost and a partial blend of the Growth height curve so the scrub feels responsive. Labels still show the real cumulative %.</li>
+                        <li><strong>Human work</strong>: log-scaled human-remaining workforce — implied employment × (1 − AI share). AI share starts at the role&apos;s published automation risk in 2025 and rises toward fuller automation by 2030, so high-risk peaks erode faster. 2025 already has height variance across roles.</li>
+                        <li><strong>Workers</strong>: log-scaled implied headcount (BLS baseline × cumulative % at the selected year), with a stronger height-delta boost so the scrub feels responsive. Labels still show the real cumulative %.</li>
                     </ul>
                 </div>
             </div>

@@ -3,8 +3,13 @@ import { useStore } from '../store';
 import { useIsMobile } from '../hooks/useIsMobile';
 import { RISK_THRESHOLDS, MAP_SIDEBAR } from '../config/constants';
 import { RISK_BAND_COLORS } from '../config/theme';
-import { IconLayers, IconAlertTriangle } from './ui/Icons';
-import type { Job } from '../types';
+import { IconLayers } from './ui/Icons';
+import {
+    averageRiskPct,
+    findContrastPair,
+    orderRolesByRisk,
+    publishedRisk,
+} from '../utils/taskSplitMath';
 
 /**
  * Task split view — the third view alongside the 3D terrain and the 2D map.
@@ -21,22 +26,6 @@ import type { Job } from '../types';
 
 const AI = RISK_BAND_COLORS.high;
 const HUMAN = RISK_BAND_COLORS.safe;
-
-/**
- * The role's published risk score, read straight off the job rather than
- * recomputed. The store derives it once (store.ts: parseFloat(avg.toFixed(2)))
- * and the role panel's gauge renders that same field, so taking it from here
- * means this view cannot drift from the role page even if the formula changes.
- */
-const publishedRisk = (job: Job) => job.automationCostIndex;
-
-const meanAi = publishedRisk;
-
-const spreadAi = (job: Job) => {
-    if (!job.tasks.length) return 0;
-    const m = meanAi(job);
-    return Math.sqrt(job.tasks.reduce((s, t) => s + (t.aiCapabilityScore - m) ** 2, 0) / job.tasks.length);
-};
 
 export const TaskSplitView: React.FC = () => {
     const jobs = useStore((s) => s.jobs);
@@ -71,39 +60,14 @@ export const TaskSplitView: React.FC = () => {
         return selectedRoleIds.size === 0 ? withScores : withScores.filter((j) => selectedRoleIds.has(j.id));
     }, [jobs, selectedRoleIds]);
 
-    // Order is fixed at the default line so the bars change in place while the
-    // slider moves, instead of re-sorting under the reader.
-    const ordered = useMemo(
-        () => [...scored].sort((a, b) => publishedRisk(a) - publishedRisk(b) || b.employment - a.employment),
-        [scored],
-    );
+    const ordered = useMemo(() => orderRolesByRisk(scored), [scored]);
 
-    // The plain average of the roles listed below, not an employment-weighted one:
-    // a reader can add up the rows on screen and arrive at this number, which an
-    // invisible weighting would quietly break.
     const totals = useMemo(() => {
         const workers = scored.reduce((a, job) => a + job.employment, 0);
-        const aiPct = scored.length
-            ? (scored.reduce((a, job) => a + publishedRisk(job), 0) / scored.length) * 100
-            : 0;
-        return { workers, aiPct };
+        return { workers, aiPct: averageRiskPct(scored) };
     }, [scored]);
 
-    // Two roles with the same headline but the most different task spread: the
-    // case for showing tasks at all. Found in the data, not hand-picked.
-    const contrast = useMemo(() => {
-        let best: { a: Job; b: Job; gap: number } | null = null;
-        for (let i = 0; i < scored.length; i++) {
-            for (let j = i + 1; j < scored.length; j++) {
-                const a = scored[i], b = scored[j];
-                if (Math.round(meanAi(a) * 100) !== Math.round(meanAi(b) * 100)) continue;
-                const gap = Math.abs(spreadAi(a) - spreadAi(b));
-                if (!best || gap > best.gap) best = { a, b, gap };
-            }
-        }
-        if (!best) return null;
-        return spreadAi(best.a) >= spreadAi(best.b) ? [best.a, best.b] : [best.b, best.a];
-    }, [scored]);
+    const contrast = useMemo(() => findContrastPair(scored), [scored]);
 
     const pct = (n: number) => Math.round(n);
 
@@ -131,9 +95,6 @@ export const TaskSplitView: React.FC = () => {
                     <p className="text-[10px] uppercase tracking-widest text-cyan-400/90 font-semibold">
                         Task view
                     </p>
-                    <span className="px-2 py-0.5 rounded bg-amber-500/15 border border-amber-500/30 text-amber-300 text-[10px] font-bold uppercase tracking-widest">
-                        Beta
-                    </span>
                 </div>
                 <h2 className="text-2xl md:text-3xl font-semibold text-white tracking-tight">
                     Inside each job
@@ -141,17 +102,6 @@ export const TaskSplitView: React.FC = () => {
                 <p className="text-sm text-gray-400 mt-2">
                     Every role, ordered by how much of it AI can do.
                 </p>
-
-                {/* Whole-group split */}
-                <div className="mt-5 flex items-start gap-3 rounded-xl border border-amber-500/25 bg-amber-500/[0.06] px-4 py-3">
-                    <IconAlertTriangle size={15} className="text-amber-400 mt-0.5 shrink-0" />
-                    <p className="text-[12px] text-amber-200/90 leading-relaxed">
-                        <strong className="font-semibold text-amber-200">Experimental, still in testing.</strong>{' '}
-                        This view is new and being verified role by role. Its figures come from the
-                        same published set as the rest of the app, but treat it as a preview rather
-                        than a finished part of the tool. The 3D map and role pages are unaffected.
-                    </p>
-                </div>
 
                 <div className="mt-5 bg-gray-900/60 backdrop-blur-xl border border-cyan-400/25 rounded-2xl p-5 md:p-6 shadow-lg shadow-cyan-500/5">
                     <div className="flex flex-wrap items-baseline justify-between gap-2">
@@ -191,12 +141,11 @@ export const TaskSplitView: React.FC = () => {
                     </div>
                 </div>
 
-                {/* Role by role */}
                 <div className="mt-8">
                     <div className="flex items-baseline justify-between gap-3">
                         <h3 className="text-sm font-semibold text-white uppercase tracking-wider">Role by role</h3>
                         <p className="text-[10px] uppercase tracking-widest text-gray-600 text-right leading-tight">
-                            automation risk
+                            AI can do
                         </p>
                     </div>
 
@@ -238,16 +187,13 @@ export const TaskSplitView: React.FC = () => {
                     </ul>
                 </div>
 
-                {/* Why the average hides the job */}
                 {contrast && (
                     <div className="mt-10">
                         <h3 className="text-sm font-semibold text-white uppercase tracking-wider">
-                            Why an average hides the job
+                            Same score, different jobs
                         </h3>
                         <p className="text-sm text-gray-400 leading-relaxed mt-2 max-w-2xl">
-                            These two roles carry the same headline risk score,{' '}
-                            {Math.round(meanAi(contrast[0]) * 100)}%. Their tasks look nothing alike,
-                            which is the case for showing tasks rather than one number per role.
+                            Both {Math.round(publishedRisk(contrast[0]) * 100)}% overall — the tasks underneath are not.
                         </p>
                         <div className="grid md:grid-cols-2 gap-5 mt-5">
                             {contrast.map((job) => (
@@ -294,9 +240,7 @@ export const TaskSplitView: React.FC = () => {
                 )}
 
                 <p className="mt-10 text-[11px] text-gray-600 leading-relaxed max-w-2xl">
-                    Tasks from O*NET 30.1 and employment from BLS OEWS, the same sources the map uses.
-                    The per-task AI ratings are Claude&rsquo;s published set, identical for every visitor.
-                    Each bar is the role&rsquo;s published automation risk, the same number its role page shows.
+                    Same published scores as the map and role pages — O*NET tasks, BLS employment, Claude ratings.
                 </p>
             </div>
           </div>

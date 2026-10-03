@@ -10,7 +10,7 @@ export const Legend: React.FC = () => {
     const heightMode = useStore((state) => state.heightMode);
     const heightCaption = heightMode === 'employment'
         ? 'implied workforce'
-        : 'growth vs 2025';
+        : 'human work left';
 
     return (
         <div

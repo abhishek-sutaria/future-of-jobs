@@ -70,6 +70,15 @@ describe('Store Logic: Truth in Data', () => {
         expect(allPending).toBe(true);
     });
 
+    // Ray's July "STALE" report: CPS rate-limits must not paint roles as degraded
+    // when published OES employment is the intentional source of truth.
+    it('never marks roles isStale after fetchRealData (published OES is canonical)', async () => {
+        await useStore.getState().fetchRealData();
+        const jobs = useStore.getState().jobs;
+        expect(jobs.length).toBeGreaterThan(0);
+        expect(jobs.every((j) => j.isStale !== true)).toBe(true);
+    });
+
     it('assigns volatility labels after fetchRealData once jobs have Claude task scores', async () => {
         const varied = initialJobs.map((job, i) => {
             const highRisk = i < 25;
