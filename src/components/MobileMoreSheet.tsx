@@ -36,9 +36,6 @@ export const MobileMoreSheet: React.FC<MobileMoreSheetProps> = ({
                     className="w-full flex items-center gap-3 px-4 py-3.5 rounded-lg border border-teal-500/25 bg-teal-500/[0.06] hover:bg-teal-500/15 text-teal-300 text-sm font-semibold transition-colors min-h-[44px]"
                 >
                     <IconLayers size={16} /> Task view
-                    <span className="ml-auto px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 text-[9px] font-bold tracking-wider">
-                        BETA
-                    </span>
                 </button>
                 <button
                     onClick={go(onOpenSkillsModal)}

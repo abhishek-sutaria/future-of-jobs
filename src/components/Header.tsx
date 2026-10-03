@@ -168,9 +168,6 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
                         }`}
                     >
                         <IconLayers size={14} /> Tasks
-                        <span className="-ml-0.5 px-1 rounded bg-amber-500/20 text-amber-300 text-[8px] font-bold tracking-wide leading-[1.4]">
-                            BETA
-                        </span>
                     </button>
 
                     <button

@@ -244,8 +244,9 @@ export const useStore = create<AppState>((set, get) => ({
     jobs: SEEDED_JOBS,
 
 
-    // Peak height encoding — default Workers so 2025 already has height variance
-    // (equal-length leader lines then stay readable; Growth is flat at the baseline).
+    // Peak height encoding — default Workers (implied headcount). The "growth"
+    // store key now drives "human work left" heights (risk × employment, eroding
+    // with the year), so 2025 is no longer flat when that mode is selected.
     heightMode: 'employment',
     setHeightMode: (mode) => set({ heightMode: mode }),
 

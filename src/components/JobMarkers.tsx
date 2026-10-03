@@ -4,7 +4,7 @@ import { Group, Vector3 } from 'three';
 import { Html, Line } from '@react-three/drei';
 import { useStore } from '../store';
 import type { Job } from '../types';
-import { getTerrainPosition, calculateGaussianHeight, buildGrowthForecastFlatArray, growthAtYearFromForecastFlat, getVisualHeightForGrowth, getVisualHeightForWorkersAtYear, impliedEmploymentAtYear, type PeakData, TERRAIN_CONFIG } from '../utils/terrainMath';
+import { getTerrainPosition, calculateGaussianHeight, buildGrowthForecastFlatArray, growthAtYearFromForecastFlat, getVisualHeightForHumanWorkAtYear, getVisualHeightForWorkersAtYear, impliedEmploymentAtYear, type PeakData, TERRAIN_CONFIG } from '../utils/terrainMath';
 import { buildRiskScale, riskBandColor } from '../config/theme';
 import { SCENE, YEAR_MAX } from '../config/constants';
 import { useIsMobile } from '../hooks/useIsMobile';
@@ -211,7 +211,7 @@ export const JobMarkers: React.FC = () => {
             const g = growthAtYearFromForecastFlat(forecastsFlat, filteredIndex, year);
             const h = heightMode === 'employment'
                 ? getVisualHeightForWorkersAtYear(job.employment, g)
-                : getVisualHeightForGrowth(g);
+                : getVisualHeightForHumanWorkAtYear(job.employment, g, job.automationCostIndex, year);
             const { x, z } = getTerrainPosition(i, jobs);
             return { x, z, height: h } as PeakData;
         });

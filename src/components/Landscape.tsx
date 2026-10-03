@@ -56,6 +56,38 @@ export const Landscape: React.FC = () => {
     const [canvasKey, setCanvasKey] = useState(0);
     const [contextLossGivenUp, setContextLossGivenUp] = useState(false);
     const contextLossCountRef = useRef(0);
+    // Pause the GL loop when the tab is backgrounded, and (on phones) when the
+    // user has stopped interacting — sustained rAF + the 50-peak shader was the
+    // load path behind Ray's "locks up after a bit" report on Chrome/Android.
+    const [tabHidden, setTabHidden] = useState(
+        () => typeof document !== 'undefined' && document.visibilityState === 'hidden',
+    );
+    const [mobileIdle, setMobileIdle] = useState(false);
+    const idleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+    useEffect(() => {
+        const onVisibility = () => setTabHidden(document.visibilityState === 'hidden');
+        document.addEventListener('visibilitychange', onVisibility);
+        return () => document.removeEventListener('visibilitychange', onVisibility);
+    }, []);
+
+    const bumpInteraction = useCallback(() => {
+        if (!isMobile) return;
+        setMobileIdle(false);
+        if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
+        // 2.5s of no orbit/zoom → pause the loop; any new gesture resumes it.
+        idleTimerRef.current = setTimeout(() => setMobileIdle(true), 2500);
+    }, [isMobile]);
+
+    // Arm the idle timer on mount so a phone that never receives a touch still
+    // settles into frameloop:'never' after the first paint, instead of spinning
+    // the 50-peak shader forever in the background.
+    useEffect(() => {
+        bumpInteraction();
+        return () => {
+            if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
+        };
+    }, [bumpInteraction]);
 
     const handleContextLost = useCallback((event: Event) => {
         // Without this, the browser assumes the page doesn't want to recover
@@ -154,10 +186,13 @@ export const Landscape: React.FC = () => {
     // OrbitControls camera position, so returning is instant and the user's
     // orbit is exactly where they left it.
     //
-    // These are load reductions aimed at Ray's "locks up after a bit" report
-    // (Samsung foldable, Chrome). The lockup itself was not reproduced on an
-    // M4 Mac — defect (B) remains mitigated-not-confirmed.
-    const pauseLoop = route === 'dashboard' || mapView !== 'globe';
+    // Load reductions aimed at Ray's "locks up after a bit" report (Samsung
+    // foldable, Chrome): pause under overlays, when the tab is hidden, and on
+    // phones after a short idle. Context + shaders stay warm so resume is instant.
+    const pauseLoop = route === 'dashboard'
+        || mapView !== 'globe'
+        || tabHidden
+        || (isMobile && mobileIdle);
 
     return (
         <Canvas
@@ -166,8 +201,14 @@ export const Landscape: React.FC = () => {
             key={canvasKey}
             onCreated={handleCreated}
             frameloop={pauseLoop ? 'never' : 'always'}
-            dpr={isMobile ? [1, 1.5] : [1, 2]}
-            gl={{ antialias }}
+            // Cap dpr at 1 on phones — Fold@3 was still a heavy backing store at 1.5.
+            dpr={isMobile ? [1, 1] : [1, 2]}
+            gl={{
+                antialias,
+                // Prefer the efficient GPU path on phones; default power can
+                // keep a discrete/high clock that overheats Chrome's GL process.
+                powerPreference: isMobile ? 'low-power' : 'default',
+            }}
             camera={{
                 position: [...(isPortrait ? SCENE.CAMERA_PORTRAIT_POSITION : SCENE.CAMERA_INITIAL_POSITION)],
                 fov: isPortrait ? SCENE.CAMERA_PORTRAIT_FOV : SCENE.CAMERA_FOV,
@@ -192,9 +233,18 @@ export const Landscape: React.FC = () => {
                 maxPolarAngle={SCENE.MAX_POLAR_ANGLE}
                 minDistance={SCENE.MIN_CAMERA_DISTANCE}
                 maxDistance={SCENE.MAX_CAMERA_DISTANCE}
-                onChange={clampPanTarget}
-                onStart={() => setIsOrbiting(true)}
-                onEnd={() => setIsOrbiting(false)}
+                onChange={() => {
+                    clampPanTarget();
+                    bumpInteraction();
+                }}
+                onStart={() => {
+                    setIsOrbiting(true);
+                    bumpInteraction();
+                }}
+                onEnd={() => {
+                    setIsOrbiting(false);
+                    bumpInteraction();
+                }}
             />
         </Canvas>
     );
