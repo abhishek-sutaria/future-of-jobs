@@ -17,3 +17,4 @@
 - **Modal mounting gotcha:** `Header` uses `pointer-events-none` (with selective `pointer-events-auto` on controls) at `Z.header` (20). Never mount full-screen dialogs inside it — clicks fall through to the WebGL globe/job labels and the year slider (`Z.timeBar` = 110) paints above the dialog. Mount rescore/API modals at `App` root (or portal to `document.body`) with `pointer-events-auto`.
 - **3D hover popups:** Job label hover expand is suppressed while `isOrbiting` is true (`OrbitControls` `onStart`/`onEnd` in `Landscape.tsx`).
 - **Production:** https://futureofjobs.vercel.app/ auto-deploys from `main`.
+- **Agent efficiency:** One agent = one goal (new chat per feature). Keep unused MCP servers off (e.g. Gmail only when emailing). For UI work, use the `ui-polish` skill; do not dump `src/data.ts` or large JSON into context — grep instead. Large dumps are listed in `.cursorignore`.

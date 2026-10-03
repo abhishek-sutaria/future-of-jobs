@@ -1,0 +1,14 @@
+# Raw BLS / O*NET dumps — never needed for feature or UI work
+data/all_data_M_2023.xlsx
+data/db_30_1_text/
+
+# Large bundled data — grep or read selectively; do not dump whole files
+src/data/geo_real.json
+src/data/ai_scores.json
+
+# Build / cache noise
+dist/
+coverage/
+*.log
+data/.oes_api_cache.json
+data/ai_scores_cache.json
