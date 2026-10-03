@@ -1,9 +1,10 @@
-import React, { useMemo, useState, useCallback, useEffect } from 'react';
+import React, { useMemo, useState, useCallback, useEffect, useRef } from 'react';
 import { ComposableMap, Geographies, Geography, Marker, ZoomableGroup } from 'react-simple-maps';
 import { scaleLinear } from 'd3-scale';
 import { useStore } from '../store';
 import { aggregateByState } from '../utils/mapAggregation';
 import { MAP_SIDEBAR } from '../config/constants';
+import { Z } from '../config/layers';
 
 // Low-res US state boundaries from the public us-atlas CDN
 const GEO_URL = 'https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json';
@@ -30,6 +31,10 @@ export const MapView: React.FC = () => {
     const jobs = useStore((state) => state.jobs);
     const selectedRoleIds = useStore((state) => state.selectedRoleIds);
     const [tooltip, setTooltip] = useState<TooltipState | null>(null);
+    // Touch has no hover — a tap pins the state popup until dismiss / Escape /
+    // another state. Mouse hover still follows the cursor when unpinned.
+    const [pinned, setPinned] = useState(false);
+    const viaTouch = useRef(false);
     const [position, setPosition] = useState<{ coordinates: [number, number]; zoom: number }>({
         coordinates: [-97, 38],
         zoom: 1,
@@ -64,37 +69,89 @@ export const MapView: React.FC = () => {
         []
     );
 
-    const handleStateEnter = useCallback(
-        (e: React.MouseEvent, stateName: string) => {
+    const buildTooltip = useCallback(
+        (e: { clientX: number; clientY: number }, stateName: string): TooltipState => {
             const data = stateData[stateName];
-            setTooltip({
+            return {
                 x: e.clientX,
                 y: e.clientY,
                 name: stateName,
                 totalEmployment: data?.totalEmployment ?? 0,
                 bySoc: data?.bySoc ?? [],
                 hasData: !!data,
-            });
+            };
         },
         [stateData]
     );
 
-    const handleStateMove = useCallback((e: React.MouseEvent) => {
-        setTooltip((t) => (t ? { ...t, x: e.clientX, y: e.clientY } : null));
-    }, []);
+    const handleStateEnter = useCallback(
+        (e: React.MouseEvent, stateName: string) => {
+            if (pinned || viaTouch.current) return;
+            setTooltip(buildTooltip(e, stateName));
+        },
+        [buildTooltip, pinned]
+    );
 
-    const handleStateLeave = useCallback(() => setTooltip(null), []);
+    const handleStateMove = useCallback((e: React.MouseEvent) => {
+        if (pinned || viaTouch.current) return;
+        setTooltip((t) => (t ? { ...t, x: e.clientX, y: e.clientY } : null));
+    }, [pinned]);
+
+    const handleStateLeave = useCallback(() => {
+        if (!pinned) setTooltip(null);
+    }, [pinned]);
+
+    const handleStateClick = useCallback(
+        (e: React.MouseEvent, stateName: string) => {
+            // react-simple-maps fires click after touch; pin so mouseleave/emulated
+            // hover cannot immediately clear the popup on phones.
+            viaTouch.current = e.detail === 0 || (e.nativeEvent as PointerEvent).pointerType === 'touch'
+                || matchMedia('(pointer: coarse)').matches;
+            setTooltip(buildTooltip(e, stateName));
+            setPinned(true);
+        },
+        [buildTooltip]
+    );
+
+    const dismissTooltip = useCallback(() => {
+        setPinned(false);
+        setTooltip(null);
+        viaTouch.current = false;
+    }, []);
 
     // Clear stuck tooltip when the window loses focus (mouseleave can be dropped mid-hover)
     useEffect(() => {
-        const clear = () => setTooltip(null);
+        const clear = () => dismissTooltip();
         window.addEventListener('blur', clear);
         document.addEventListener('visibilitychange', clear);
         return () => {
             window.removeEventListener('blur', clear);
             document.removeEventListener('visibilitychange', clear);
         };
-    }, []);
+    }, [dismissTooltip]);
+
+    useEffect(() => {
+        if (!pinned) return;
+        const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') dismissTooltip(); };
+        const onPointer = (e: PointerEvent) => {
+            const t = e.target as Element | null;
+            if (t?.closest?.('[data-map-tooltip]')) return;
+            // Geography clicks re-pin; ignore those via the SVG map surface only
+            // when they are state shapes — handled by handleStateClick first.
+            if (t?.closest?.('.rsm-geography')) return;
+            dismissTooltip();
+        };
+        window.addEventListener('keydown', onKey);
+        // Delay so the opening click does not immediately dismiss.
+        const id = window.setTimeout(() => {
+            window.addEventListener('pointerdown', onPointer, true);
+        }, 0);
+        return () => {
+            window.clearTimeout(id);
+            window.removeEventListener('keydown', onKey);
+            window.removeEventListener('pointerdown', onPointer, true);
+        };
+    }, [pinned, dismissTooltip]);
 
     const isDefault = position.zoom === 1;
 
@@ -176,6 +233,7 @@ export const MapView: React.FC = () => {
                                         onMouseEnter={(e) => handleStateEnter(e, stateName)}
                                         onMouseMove={handleStateMove}
                                         onMouseLeave={handleStateLeave}
+                                        onClick={(e) => handleStateClick(e, stateName)}
                                     />
                                 );
                             })
@@ -203,14 +261,19 @@ export const MapView: React.FC = () => {
                 </ZoomableGroup>
             </ComposableMap>
 
-            {/* Hover tooltip — follows cursor */}
+            {/* Hover / tap tooltip — follows cursor when unpinned; pinned on touch */}
             {tooltip && (
                 <div
-                    className="fixed z-[500] pointer-events-none"
-                    style={{ top: tooltip.y + 12, left: tooltip.x + 12 }}
+                    data-map-tooltip
+                    className={`fixed ${pinned ? 'pointer-events-auto' : 'pointer-events-none'}`}
+                    style={{
+                        zIndex: Z.sidebar,
+                        top: Math.min(tooltip.y + 12, window.innerHeight - 220),
+                        left: Math.min(tooltip.x + 12, window.innerWidth - 260),
+                    }}
                 >
                     <div className="bg-gray-900/95 backdrop-blur-xl border border-white/10 rounded-xl p-3 shadow-2xl w-60">
-                        <div className="flex justify-between items-baseline border-b border-white/[0.06] pb-2 mb-2">
+                        <div className="flex justify-between items-baseline border-b border-white/[0.06] pb-2 mb-2 gap-2">
                             <span className="text-white text-xs font-bold truncate">{tooltip.name}</span>
                             {tooltip.hasData ? (
                                 <span className="text-cyan-400 text-[10px] font-mono ml-2 shrink-0">
@@ -218,6 +281,16 @@ export const MapView: React.FC = () => {
                                 </span>
                             ) : (
                                 <span className="text-gray-600 text-[10px] ml-2 shrink-0">no data</span>
+                            )}
+                            {pinned && (
+                                <button
+                                    type="button"
+                                    aria-label="Dismiss state details"
+                                    onClick={dismissTooltip}
+                                    className="text-gray-500 hover:text-white text-xs ml-1 shrink-0 min-w-[28px] min-h-[28px]"
+                                >
+                                    ✕
+                                </button>
                             )}
                         </div>
 

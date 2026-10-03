@@ -47,6 +47,27 @@ export const FilterBar: React.FC<FilterBarProps> = ({
     const [clusterOpen, setClusterOpen] = useState(false);
     const [riskOpen, setRiskOpen] = useState(false);
     const debounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+    const filtersRowRef = useRef<HTMLDivElement>(null);
+
+    // Touch users leave a floating cluster/risk menu open forever without this —
+    // there is no hover-out, and opening the other menu was the only dismiss path.
+    useEffect(() => {
+        if (!clusterOpen && !riskOpen) return;
+        const onPointer = (e: PointerEvent) => {
+            if (filtersRowRef.current?.contains(e.target as Node)) return;
+            setClusterOpen(false);
+            setRiskOpen(false);
+        };
+        const onKey = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') { setClusterOpen(false); setRiskOpen(false); }
+        };
+        window.addEventListener('pointerdown', onPointer, true);
+        window.addEventListener('keydown', onKey);
+        return () => {
+            window.removeEventListener('pointerdown', onPointer, true);
+            window.removeEventListener('keydown', onKey);
+        };
+    }, [clusterOpen, riskOpen]);
 
     // Mirrors the debounced-search convention already used by Header.tsx's
     // SearchBar (UI.SEARCH_DEBOUNCE_MS), rather than inventing a new pattern.
@@ -70,7 +91,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
     const sortOptions = extraSortOptions ? [...SORT_OPTIONS, ...extraSortOptions] : SORT_OPTIONS;
 
     return (
-        <div className="flex flex-wrap items-center gap-2 mb-4">
+        <div ref={filtersRowRef} className="flex flex-wrap items-center gap-2 mb-4">
             <div className="relative flex-1 min-w-[200px]">
                 <IconSearch size={14} className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500" />
                 <input

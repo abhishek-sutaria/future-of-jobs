@@ -11,7 +11,7 @@ import { BLS_API, MAP_SIDEBAR } from '../config/constants';
 import RoleSelector from './RoleSelector';
 import { RoleFilterButton } from './RoleFilterButton';
 import { RoleFilterSheet } from './RoleFilterSheet';
-import { useIsMobile } from '../hooks/useIsMobile';
+import { usePreferRoleSheet } from '../hooks/useIsMobile';
 import { analyzeJob, getClaudeUserFriendlyMessage, type JobAnalysis } from '../utils/analysis';
 import { Legend } from './Legend';
 import { Header } from './Header';
@@ -43,7 +43,8 @@ export const UI: React.FC<UIProps> = ({ dashboardOpen }) => {
     const [showHealthCheck, setShowHealthCheck] = useState(false);
     const [tourActive, setTourActive] = useState(false);
     const [roleFilterOpen, setRoleFilterOpen] = useState(false);
-    const isMobile = useIsMobile();
+    // Phone + tablet: sheet. Desktop (≥1024): 320px sidebar.
+    const preferRoleSheet = usePreferRoleSheet();
 
     // Rotating back to mobile with the sheet open should not leave it primed
     // to silently reopen if the user rotates away and back; rotating INTO
@@ -51,7 +52,7 @@ export const UI: React.FC<UIProps> = ({ dashboardOpen }) => {
     // either, since the desktop sidebar takes over immediately in that case.
     React.useEffect(() => {
         setRoleFilterOpen(false);
-    }, [isMobile]);
+    }, [preferRoleSheet]);
 
     // The tour's spotlight targets data-tour selectors on chrome that is
     // covered (and inert) while the dashboard is open — its getBoundingClientRect
@@ -190,7 +191,7 @@ export const UI: React.FC<UIProps> = ({ dashboardOpen }) => {
             />
 
             {mapView !== 'globe' && (
-                isMobile ? (
+                preferRoleSheet ? (
                     <>
                         <RoleFilterButton onClick={() => setRoleFilterOpen(true)} />
                         <RoleFilterSheet isOpen={roleFilterOpen} onClose={() => setRoleFilterOpen(false)} />
@@ -231,7 +232,7 @@ export const UI: React.FC<UIProps> = ({ dashboardOpen }) => {
                 className="hidden md:block absolute bottom-4 left-4 md:left-8 pointer-events-auto"
                 style={{
                     zIndex: Z.base,
-                    ...(mapView !== 'globe' && !isMobile ? { left: MAP_SIDEBAR.CLEARANCE_PX } : {}),
+                    ...(mapView !== 'globe' && !preferRoleSheet ? { left: MAP_SIDEBAR.CLEARANCE_PX } : {}),
                     // The task view fills the width with role rows, so a pill floating
                     // bottom-left covers role names at every scroll position. Its usual
                     // partner, the Legend, is not rendered here, so the right is free.

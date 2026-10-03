@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { Z } from '../config/layers';
 
 interface Step {
@@ -96,6 +97,15 @@ export const GuidedTour: React.FC<Props> = ({ isActive, onClose }) => {
         return () => window.removeEventListener('resize', updateRect);
     }, [updateRect, step]);
 
+    useEffect(() => {
+        if (!isActive) return;
+        const onKey = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') onClose();
+        };
+        window.addEventListener('keydown', onKey);
+        return () => window.removeEventListener('keydown', onKey);
+    }, [isActive, onClose]);
+
     if (!isActive) return null;
 
     const isLast = step === steps.length - 1;
@@ -119,10 +129,19 @@ export const GuidedTour: React.FC<Props> = ({ isActive, onClose }) => {
         };
     }
 
-    return (
+    // Catcher blocks the map/slider/search under the dimmer. The old overlays
+    // were pointer-events:none, so the tour looked modal while every control
+    // stayed live (year slider, orbit, search). Spotlight stays PE-none so it
+    // is visual-only; card sits above the catcher.
+    return createPortal(
         <>
-            {/* Dark overlay — spotlight punches through via box-shadow */}
-            {rect ? (
+            <div
+                className="fixed inset-0"
+                style={{ zIndex: Z.modal, background: rect ? 'transparent' : 'rgba(0,0,0,0.82)' }}
+                onClick={(e) => e.stopPropagation()}
+                aria-hidden="true"
+            />
+            {rect && (
                 <div
                     style={{
                         position: 'fixed',
@@ -137,16 +156,15 @@ export const GuidedTour: React.FC<Props> = ({ isActive, onClose }) => {
                         pointerEvents: 'none',
                     }}
                 />
-            ) : (
-                <div
-                    className="fixed inset-0"
-                    style={{ zIndex: Z.modal, background: 'rgba(0,0,0,0.82)', pointerEvents: 'none' }}
-                />
             )}
 
-            {/* Step card */}
-            <div style={{ ...cardStyle, zIndex: Z.modal + 1 }} className="bg-gray-900 border border-white/10 rounded-xl p-5 shadow-2xl">
-                {/* Progress dots */}
+            <div
+                role="dialog"
+                aria-modal="true"
+                aria-label={current.title}
+                style={{ ...cardStyle, zIndex: Z.modal + 1 }}
+                className="bg-gray-900 border border-white/10 rounded-xl p-5 shadow-2xl pointer-events-auto"
+            >
                 <div className="flex gap-1.5 mb-4">
                     {steps.map((_, i) => (
                         <div
@@ -167,18 +185,19 @@ export const GuidedTour: React.FC<Props> = ({ isActive, onClose }) => {
                 <div className="flex items-center justify-between">
                     <button
                         onClick={step === 0 ? onClose : () => setStep(s => s - 1)}
-                        className="text-gray-500 text-sm hover:text-gray-300 transition-colors"
+                        className="text-gray-500 text-sm hover:text-gray-300 transition-colors min-h-[44px] px-1"
                     >
                         {step === 0 ? 'Skip tour' : '← Back'}
                     </button>
                     <button
                         onClick={isLast ? onClose : () => setStep(s => s + 1)}
-                        className="px-4 py-1.5 bg-cyan-600 hover:bg-cyan-500 text-white text-sm font-semibold rounded-lg transition-colors"
+                        className="px-4 py-1.5 bg-cyan-600 hover:bg-cyan-500 text-white text-sm font-semibold rounded-lg transition-colors min-h-[44px]"
                     >
                         {isLast ? 'Done ✓' : 'Next →'}
                     </button>
                 </div>
             </div>
-        </>
+        </>,
+        document.body,
     );
 };

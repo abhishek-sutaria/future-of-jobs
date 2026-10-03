@@ -13,6 +13,7 @@ import { partitionRoleTasks, isHybridTask, pickRoadmapPair, emptyColumnNote } fr
 import { forecastPathPoints } from '../utils/terrainMath';
 import { jobSourceProvenanceChips, panelSourceList } from '../utils/provenance';
 import { ProvenanceBadge } from './ProvenanceBadge';
+import { InfoTip } from './ui/InfoTip';
 import { useUserStore } from '../userStore';
 import { loadScenario, saveScenario } from '../lib/userData';
 import type { Job } from '../types';
@@ -165,7 +166,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                     onClick={onClose}
                     aria-hidden="true"
                 />
-                <div className="relative bg-gray-900/95 backdrop-blur-xl border border-cyan-400/20 shadow-2xl rounded-2xl w-full max-w-6xl h-auto max-h-[85vh] flex flex-col pointer-events-auto overflow-hidden">
+                <div className="relative bg-gray-900/95 backdrop-blur-xl border border-cyan-400/20 shadow-2xl rounded-2xl w-full max-w-6xl h-auto max-h-[85dvh] flex flex-col pointer-events-auto overflow-hidden">
 
                     {/* Header */}
                     <div className="flex-none p-4 md:p-6 border-b border-white/[0.06] flex justify-between items-start gap-4">
@@ -267,12 +268,11 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                     </span>
                                 </div>
                             </div>
-                            <div className="relative group/gauge flex items-center gap-1 mt-2">
+                            <div className="flex items-center gap-1 mt-2">
                                 <p className="text-[10px] uppercase text-gray-500 font-semibold tracking-wider">Automation Risk</p>
-                                <IconInfo size={10} className="text-gray-500" />
-                                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 p-2 bg-gray-900 border border-gray-700 rounded-lg text-[9px] text-gray-300 opacity-0 group-hover/gauge:opacity-100 pointer-events-none transition-opacity z-10 text-center leading-tight">
+                                <InfoTip label="About Automation Risk">
                                     The average of the risk scores shown on each of this role&rsquo;s tasks below. It is not a count of tasks at risk, so it can sit in the middle even when no single task is mostly automated.
-                                </div>
+                                </InfoTip>
                             </div>
                         </div>
 
@@ -317,12 +317,11 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                             />
                                             <circle cx="90" cy={y(end)} r="2.5" fill={color} />
                                         </svg>
-                                        <div className="flex items-center gap-1 mt-1 cursor-help group/tooltip relative">
+                                        <div className="flex items-center gap-1 mt-1">
                                             <p className="text-[10px] uppercase text-gray-500 font-semibold tracking-wider text-center max-w-[110px] leading-tight">Projected jobs 2025–30</p>
-                                            <IconInfo size={10} className="text-gray-500" />
-                                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-52 p-2 bg-gray-900 border border-gray-700 rounded-lg text-[9px] text-gray-300 opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity z-10 text-center leading-tight">
+                                            <InfoTip label="About projected jobs">
                                                 This role&rsquo;s year-by-year employment forecast: an AI prediction anchored to the BLS 2024&ndash;34 outlook, the same one the 3D view plots in Growth mode. It is not a BLS data series.
-                                            </div>
+                                            </InfoTip>
                                         </div>
                                         <div className="text-xs font-semibold tabular-nums" style={{ color }}>{end > 0 ? '+' : ''}{end.toFixed(1)}% by 2030</div>
                                     </>
