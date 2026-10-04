@@ -101,15 +101,30 @@ export const MapView: React.FC = () => {
         [showStateInfo],
     );
 
-    // Clear stuck tooltip when the window loses focus (mouseleave can be dropped mid-hover)
+    // Clear stuck tooltip: blur/visibility (mouseleave can drop mid-hover),
+    // Escape, and any pointer on the map that is not a state Geography
+    // (touch tooltips otherwise linger after the finger lifts).
     useEffect(() => {
         const clear = () => setTooltip(null);
+        const onKey = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') clear();
+        };
         window.addEventListener('blur', clear);
         document.addEventListener('visibilitychange', clear);
+        window.addEventListener('keydown', onKey);
         return () => {
             window.removeEventListener('blur', clear);
             document.removeEventListener('visibilitychange', clear);
+            window.removeEventListener('keydown', onKey);
         };
+    }, []);
+
+    const handleMapBackgroundPointerDown = useCallback((e: React.PointerEvent) => {
+        // State Geographies are <path>; anything else (ocean, markers, chrome)
+        // dismisses a sticky touch tooltip.
+        const el = e.target as Element | null;
+        if (el?.tagName === 'path') return;
+        setTooltip(null);
     }, []);
 
     const defaultCenter: [number, number] = [-97, 38];
@@ -118,7 +133,10 @@ export const MapView: React.FC = () => {
     const isDefault = position.zoom === 1 && !panMoved;
 
     return (
-        <div className="w-full h-full bg-[#0f172a] relative overflow-hidden">
+        <div
+            className="w-full h-full bg-[#0f172a] relative overflow-hidden"
+            onPointerDown={handleMapBackgroundPointerDown}
+        >
             {/* Reset view — small, conditional, only appears when zoomed/panned */}
             {!isDefault && (
                 <div className="absolute top-32 right-6 z-50">

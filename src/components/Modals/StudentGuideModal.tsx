@@ -36,7 +36,7 @@ const FEATURES: Feature[] = [
         title: 'Job Detail Panel',
         description:
             'Click any peak to open a role\'s full profile: its Automation Risk, the BLS 2024–34 growth outlook, its Human Resilience rank among all 50 roles, and its projected jobs path to 2030. Below that, each of the role\'s O*NET tasks appears with its own risk score. Automation Risk is the plain average of those task scores, so you can check it yourself.',
-        tip: 'The "Human Skills" section shows what AI cannot easily replace. These are the tasks worth developing.',
+        tip: 'Scores measure GenAI capability, not guaranteed adoption. The Human Skills section shows tasks worth deepening.',
         color: 'blue',
     },
     {

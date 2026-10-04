@@ -90,8 +90,8 @@ export const UpskillModal: React.FC<UpskillModalProps> = ({ isOpen, onClose, job
                     high-risk task reads as "learn the thing AI is about to do". */}
                 <p className="text-sm text-gray-300 leading-relaxed">
                     {mode === 'defend'
-                        ? "AI can already do much of this task, so the goal isn't to do it faster. It's to move into the part that lasts: directing the output, catching where it fails, and owning the judgment calls it can't."
-                        : 'This task resists automation. These build it from something you can do into something that sets you apart.'}
+                        ? "Current GenAI is capable of much of this task (capability, not guaranteed adoption), so the goal isn't to do it faster by hand. Move into the part that lasts: directing the output, catching where it fails, and owning the judgment calls models can't."
+                        : 'This task is rated as resisting automation relative to others here. These courses deepen it from something you can do into something that sets you apart.'}
                 </p>
 
                 {/* Course list */}

@@ -190,10 +190,10 @@ export async function analyzeResume(skillsInput: string): Promise<ResumeAnalysis
 
 export async function generateRoadmap(jobTitle: string, riskTask: string, targetTask: string): Promise<RoadmapResult> {
     const prompt = `
-        Context: Career transition plan for a ${jobTitle}.
-        Goal: Move away from "${riskTask}" (high automation risk) towards "${targetTask}" (high human value).
+        Context: Career Defend & Build plan for a ${jobTitle}.
+        Goal: DEFEND "${riskTask}" (high GenAI capability / automation exposure) by owning judgment, oversight, and exception-handling around it — do NOT abandon that task — while BUILDING "${targetTask}" (high human criticality) into a durable advantage.
 
-        INSTRUCTION: Be specific to this exact role and transition. Do not use generic filler text. Reference specific, real-world tools, platforms, certifications, and frameworks relevant to a ${jobTitle}.
+        INSTRUCTION: Be specific to this exact role. Do not use generic filler text. Do not frame the plan as leaving or exiting the high-risk task. Reference specific, real-world tools, platforms, certifications, and frameworks relevant to a ${jobTitle}.
 
         Output JSON only:
         {
@@ -261,9 +261,9 @@ export function buildUpskillPrompt(
         A professional working as a "${jobTitle}" has this task in their role:
         "${taskName}"
 
-        This task carries roughly ${Math.round(aiRiskPercent)}% automation exposure — AI can already do much of it.
+        This task carries roughly ${Math.round(aiRiskPercent)}% GenAI capability exposure — current models could handle much of it (capability, not guaranteed adoption).
 
-        Do NOT recommend training that teaches them to perform this task faster or more cheaply by hand. That is precisely the part being automated.
+        Do NOT recommend training that teaches them to perform this task faster or more cheaply by hand. That is precisely the part most exposed to automation.
 
         Recommend training that moves them UP the value chain on this exact task: directing and reviewing automated output, recognising where it fails, handling the exceptions and edge cases it cannot, carrying the accountability and judgment a model cannot own, and holding enough domain depth to know when the output is wrong.
 

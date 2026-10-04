@@ -54,12 +54,12 @@ export default function RoadmapModal({ job, riskTask, targetTask, onClose }: Roa
     // PHASE_COLORS imported from config/theme
 
     return (
-        <Modal isOpen={true} onClose={onClose} title="Career Transformation Roadmap" size="lg" layer="top">
+        <Modal isOpen={true} onClose={onClose} title="Defend & Build Roadmap" size="lg" layer="top">
             <p className="text-gray-400 text-sm mb-6">
                 For: <span className="text-white font-medium">{job.title}</span>
             </p>
 
-            {/* Problem -> Solution Flow */}
+            {/* Defend -> Build Flow */}
             <div className="flex flex-col md:flex-row gap-4 items-stretch mb-8">
                 <div className="flex-1 bg-red-500/[0.04] border border-red-500/15 rounded-xl p-5">
                     <h3 className="text-red-400 font-semibold text-xs uppercase tracking-wider mb-3 flex items-center gap-2">
@@ -81,8 +81,11 @@ export default function RoadmapModal({ job, riskTask, targetTask, onClose }: Roa
 
                 <div className="flex-1 bg-emerald-500/[0.04] border border-emerald-500/15 rounded-xl p-5">
                     <h3 className="text-emerald-400 font-semibold text-xs uppercase tracking-wider mb-3 flex items-center gap-2">
-                        <IconTarget size={14} /> Mitigation Strategy
+                        <IconTarget size={14} /> Build on this task
                     </h3>
+                    <p className="text-[11px] text-gray-400 leading-relaxed mb-3">
+                        Deepen the human-critical work that resists automation.
+                    </p>
                     <div className="flex flex-wrap gap-1.5 mb-3">
                         {targetTask.name.split(' ').length > UI.LONG_TEXT_WORD_THRESHOLD ? (
                             <p className="text-white text-sm font-medium leading-relaxed">{targetTask.name}</p>

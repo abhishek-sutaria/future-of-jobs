@@ -17,13 +17,13 @@ const ALL_STEPS: Step[] = [
     {
         target: 'tour-slider',
         title: 'AI Timeline',
-        description: 'Drag the slider from 2025 → 2030. Default height is Workers (implied headcount). Switch Peak Height to Human work to see a scenario where peaks erode as AI takes more — high-risk roles drop faster.',
+        description: 'Drag the slider from 2025 → 2030. Default height is Workers (implied headcount). Switch Peak Height to Human work for an in-app scenario (not BLS data) where peaks erode as modelled AI share rises — high-risk roles drop faster.',
         padding: 14,
     },
     {
         target: 'tour-tasks',
         title: 'Tasks view',
-        description: 'See every role broken into AI-capable vs human-needed tasks. Same score, different jobs makes the contrast concrete.',
+        description: 'See every role broken into AI-capable vs human-needed tasks. Same score, different jobs makes the contrast concrete. Scores are capability judgments, not guaranteed adoption.',
         padding: 10,
     },
     {
@@ -47,7 +47,7 @@ const ALL_STEPS: Step[] = [
     {
         target: 'tour-methodology',
         title: 'Data & sources',
-        description: 'All data comes from BLS Occupational Outlook, O*NET, and Claude AI analysis. Click to read the full methodology.',
+        description: 'Employment and outlook come from BLS; task lists from O*NET; risk scores and year curves from Claude (judgment, not official stats). Click to read the full methodology.',
         padding: 10,
     },
 ];

@@ -15,6 +15,7 @@ import {
     sortRows,
     computePortfolioStats,
     groupTrainingByRole,
+    resolveUpskillMode,
     summarizeArtifacts,
     EMPTY_FILTERS,
     type EnrichedRow,
@@ -262,6 +263,30 @@ describe('groupTrainingByRole', () => {
 
     it('empty input produces an empty array', () => {
         expect(groupTrainingByRole([], jobIndex)).toEqual([]);
+    });
+
+    it('derives Defend/Build from task capability when mode was not persisted', () => {
+        const job = makeJob({
+            id: 'job-mode',
+            title: 'Mode Job',
+            tasks: [
+                { name: 'Automate this', aiCapabilityScore: 0.8, humanCriticalityScore: 0.2, importance: 3 },
+                { name: 'Judge this', aiCapabilityScore: 0.2, humanCriticalityScore: 0.9, importance: 3 },
+            ],
+        });
+        const index = buildJobIndex([...allJobs, job]);
+        const groups = groupTrainingByRole(
+            [
+                { jobId: 'job-mode', taskName: 'Automate this', completedAt: '2026-01-01T00:00:00Z' },
+                { jobId: 'job-mode', taskName: 'Judge this', completedAt: '2026-01-02T00:00:00Z' },
+            ],
+            index,
+        );
+        expect(groups[0].completions.map((c) => c.mode)).toEqual(['defend', 'build']);
+        expect(resolveUpskillMode(
+            { jobId: 'job-mode', taskName: 'Automate this', completedAt: 'x', mode: 'build' },
+            job,
+        )).toBe('build');
     });
 });
 

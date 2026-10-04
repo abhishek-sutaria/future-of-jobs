@@ -35,7 +35,7 @@ export const IntroModal: React.FC = () => {
                     <div>
                         <h3 className="text-white font-semibold mb-1 text-sm">Terrain Height = Workers or Human Work</h3>
                         <p className="text-gray-400 text-sm leading-relaxed">
-                            Toggle Peak Height on the year slider: Workers shows implied headcount; Human work is a scenario of how much of each role still needs a person (peaks erode as modelled AI share rises).
+                            Toggle Peak Height on the year slider: Workers shows implied headcount; Human work is an in-app scenario (not a BLS series) of how much of each role still needs a person as modelled AI share rises.
                         </p>
                     </div>
                 </div>

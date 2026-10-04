@@ -105,9 +105,12 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                     <p className="text-[11px] text-gray-500 leading-relaxed mt-2 italic">
                         <strong>Human work</strong> is a scenario model, not BLS data: peak height is the
                         human-remaining share of each role applied to implied employment; as the year
-                        advances, a modelled AI share rises and peaks erode. Forecasts used for the
-                        employment scale stay within each role&apos;s BLS OOH envelope, front-loaded only
-                        to ~5/9 of the 10-year % by 2030.{' '}
+                        advances, a modelled AI share rises toward halfway from today&apos;s published
+                        risk to full automation by 2030 (<code className="text-[10px] bg-white/[0.06] rounded px-1">FUTURE_EROSION = 0.5</code>),
+                        so high-risk peaks erode faster. Forecasts used for the employment scale stay
+                        within each role&apos;s BLS OOH envelope, capped at ~5/9 of the 10-year % by 2030 —
+                        many published curves sit near that cap by design, not because 2030 equals the
+                        full BLS decade endpoint.{' '}
                         <strong>Workers</strong> mode log-scales implied headcount (BLS baseline ×
                         cumulative %), with a display-only height-delta boost so the scrub reads clearly.
                     </p>
@@ -188,7 +191,7 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                         Use the toggle on the year-slider panel to flip peak height between:
                     </p>
                     <ul className="list-disc list-inside text-xs text-gray-400 ml-1 space-y-1">
-                        <li><strong>Human work</strong> (scenario): log-scaled human-remaining workforce — implied employment × (1 − AI share). AI share starts at the role&apos;s published automation risk in 2025 and rises under an in-app erosion model by 2030, so high-risk peaks erode faster. Not a BLS series.</li>
+                        <li><strong>Human work</strong> (scenario): log-scaled human-remaining workforce — implied employment × (1 − AI share). AI share starts at the role&apos;s published automation risk in 2025 and rises under an in-app erosion model that reaches halfway from current risk to full automation by 2030 (<code className="text-[10px] bg-white/[0.06] rounded px-1">FUTURE_EROSION = 0.5</code>), so high-risk peaks erode faster. Not a BLS series.</li>
                         <li><strong>Workers</strong>: log-scaled implied headcount (BLS baseline × cumulative % at the selected year), with a display-only height-delta boost so the scrub feels responsive. Labels still show the real cumulative %.</li>
                     </ul>
                 </div>

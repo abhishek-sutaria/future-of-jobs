@@ -62,6 +62,12 @@ describe('scenarioCacheKey / roadmapCacheKey', () => {
         const b = roadmapCacheKey('job-15', 'Draft ad copy', 'Manage budgets');
         expect(a).not.toBe(b);
     });
+
+    it('roadmap key is versioned so Defend/Build prompt changes bust old caches', () => {
+        const key = roadmapCacheKey('job-15', 'Draft ad copy', 'Lead client strategy');
+        expect(key.startsWith('v2|')).toBe(true);
+        expect(key).toContain('job-15');
+    });
 });
 
 describe('saved roles', () => {

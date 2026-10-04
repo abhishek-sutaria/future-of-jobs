@@ -87,7 +87,7 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
                             onClick={() => openRescoreModal()}
                         >
                             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                            {scoresAgeLabel ? `AI Scores · ${scoresAgeLabel}` : 'AI Scores Live'}
+                            {scoresAgeLabel ? `AI Scores · ${scoresAgeLabel}` : 'AI Scores'}
                         </span>
                     )}
 
@@ -287,6 +287,8 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
             onOpenStudentGuide={onOpenStudentGuide}
             onShowMethodology={onShowMethodology}
             onOpenTaskView={() => setMapView('tasks')}
+            onOpenRescore={() => openRescoreModal()}
+            scoresAgeLabel={scoresAgeLabel}
         />
         </>
     );

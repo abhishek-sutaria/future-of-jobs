@@ -69,12 +69,11 @@ export const UI: React.FC<UIProps> = ({ dashboardOpen }) => {
     const [analysisError, setAnalysisError] = useState<string | null>(null);
     const missingApiKey = false;
 
-    // Jobs already auto-analyzed this session. This used to be inferred from
-    // `selectedJob.yearlyForecast` being absent, but forecasts now ship
-    // precomputed for every job, which made that check always short-circuit and
-    // silently stopped the deep-dive prose (traits, replacements, insight)
-    // from ever loading. Track the intent directly instead.
-    const autoAnalyzedJobIdsRef = React.useRef<Set<string>>(new Set());
+    // Session cache of successful auto-analyze prose. Mark ids only after
+    // success so a failed/in-flight call can retry, and restore on revisit
+    // instead of clearing to blank.
+    const analysisCacheRef = React.useRef<Map<string, JobAnalysis>>(new Map());
+    const analyzeGenerationRef = React.useRef(0);
 
     // Record the view as user activity. Kept in its own effect rather than
     // folded into auto-analysis below, which short-circuits for already-analyzed
@@ -85,20 +84,22 @@ export const UI: React.FC<UIProps> = ({ dashboardOpen }) => {
     }, [selectedJob?.id]);
 
     // Auto-analyze selected job. Generation id + stale checks prevent a slow
-    // response for role A from writing onto role B, and we never skip scheduling
-    // just because another analysis is still in flight.
-    const analyzeGenerationRef = React.useRef(0);
+    // response for role A from writing onto role B.
     React.useEffect(() => {
         if (!selectedJob) return;
         const jobId = selectedJob.id;
         const { title, tasks, employment, projectedGrowth } = selectedJob;
 
-        // Don't leave the previously opened job's analysis on screen under this one.
+        const cached = analysisCacheRef.current.get(jobId);
+        if (cached) {
+            setAnalysisResult(cached);
+            setAnalysisError(null);
+            setAnalysisLoading(false);
+            return;
+        }
+
         setAnalysisResult(null);
         setAnalysisError(null);
-
-        if (autoAnalyzedJobIdsRef.current.has(jobId)) return;
-        autoAnalyzedJobIdsRef.current.add(jobId);
 
         const generation = ++analyzeGenerationRef.current;
         const isStale = () =>
@@ -112,8 +113,10 @@ export const UI: React.FC<UIProps> = ({ dashboardOpen }) => {
             try {
                 const taskList = tasks.map(t => t.name);
                 const res = await analyzeJob(jobId, title, taskList, { employment, projectedGrowth });
+                if (res) analysisCacheRef.current.set(jobId, res);
                 // A slow response for a job the user already navigated away from
-                // must not overwrite the panel they're looking at now.
+                // must not overwrite the panel they're looking at now — but the
+                // cache above still preserves prose for when they return.
                 if (isStale()) return;
                 // Prose only: reasoning, insight, replacements, traits. The role's
                 // numbers stay the published ones, identical for every visitor.
@@ -121,8 +124,6 @@ export const UI: React.FC<UIProps> = ({ dashboardOpen }) => {
                 toast.success('AI analysis complete');
             } catch (e: unknown) {
                 console.error('Auto-analysis failed', e);
-                // Allow a retry the next time this job is opened.
-                autoAnalyzedJobIdsRef.current.delete(jobId);
                 if (isStale()) return;
                 const msg = e instanceof Error ? e.message : 'Failed to analyze';
                 if (msg.includes('429') || msg.includes('quota')) {
@@ -218,7 +219,10 @@ export const UI: React.FC<UIProps> = ({ dashboardOpen }) => {
                         analysisError={analysisError}
                         missingApiKey={missingApiKey}
                         onClose={() => setSelectedJob(null)}
-                        onSetAnalysisResult={setAnalysisResult}
+                        onSetAnalysisResult={(res) => {
+                            if (res && selectedJob) analysisCacheRef.current.set(selectedJob.id, res);
+                            setAnalysisResult(res);
+                        }}
                         onSetAnalysisLoading={setAnalysisLoading}
                         onShowMethodology={() => setShowMethodologyModal(true)}
                     />

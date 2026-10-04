@@ -422,7 +422,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                 </h3>
                                 {safeTasks.length > 0 && (
                                     <p className="text-[11px] text-gray-400 leading-relaxed mb-4">
-                                        The following tasks resist automation. This is where deepening your skill compounds.
+                                        The following tasks are rated as resisting automation relative to others here. This is where deepening your skill compounds.
                                     </p>
                                 )}
                                 <div className="space-y-3">
