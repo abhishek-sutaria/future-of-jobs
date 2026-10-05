@@ -36,4 +36,18 @@ describe('baked forecasts respect the BLS envelope', () => {
         }
         expect(violations).toEqual([]);
     });
+
+    it('2030 reasoning does not claim the full BLS 10-year endpoint after the 5/9 rescale', () => {
+        const stale: string[] = [];
+        const bad = /10[- ]year cap|10[- ]year projected|10[- ]year cumulative|full realization of BLS|Flat 10-year|Reaches BLS 10|Approaching the \d+% BLS 10/i;
+        for (const job of initialJobs) {
+            const entry = scores[job.id];
+            const f2030 = entry?.yearlyForecast?.find((f) => f.year === 2030);
+            if (!f2030?.reasoning) continue;
+            if (bad.test(f2030.reasoning) && !/5\/9|in-app/.test(f2030.reasoning)) {
+                stale.push(`${job.title}: ${f2030.reasoning}`);
+            }
+        }
+        expect(stale).toEqual([]);
+    });
 });

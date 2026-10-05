@@ -47,7 +47,18 @@ export const TrainingLog: React.FC<TrainingLogProps> = ({ groups, onOpenJob }) =
                         {group.completions.map((c) => (
                             <li key={c.taskName} className="flex items-start gap-2 text-xs text-gray-300">
                                 <IconCheck size={12} className="text-emerald-400 mt-0.5 shrink-0" />
-                                <span className="flex-1">{c.taskName}</span>
+                                <span className="flex-1">
+                                    {c.mode && (
+                                        <span className={`mr-1.5 text-[9px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded border ${
+                                            c.mode === 'defend'
+                                                ? 'text-cyan-300 bg-cyan-500/10 border-cyan-500/20'
+                                                : 'text-emerald-300 bg-emerald-500/10 border-emerald-500/20'
+                                        }`}>
+                                            {c.mode === 'defend' ? 'Defend' : 'Build'}
+                                        </span>
+                                    )}
+                                    {c.taskName}
+                                </span>
                                 <span className="text-gray-600 tabular-nums shrink-0">{formatDate(c.completedAt)}</span>
                             </li>
                         ))}

@@ -18,6 +18,7 @@ import type { Job } from '../types';
 import type { SavedRole, JobView, UpskillCompletion, StoredArtifact, ArtifactKind } from '../lib/userData';
 import { getFunctionalCluster, type FunctionalCluster } from '../config/clusters';
 import { buildRiskScale, riskBand, type RiskBand, type RiskScale } from '../config/theme';
+import { RISK_THRESHOLDS } from '../config/constants';
 
 // ── Job lookup ───────────────────────────────────────────────────────────
 //
@@ -205,6 +206,22 @@ export interface TrainingGroup {
     completions: UpskillCompletion[];
 }
 
+/**
+ * Defend vs Build is persisted only in the in-memory activity row (Supabase
+ * upskill_completions has no mode column). After hydration, derive it from
+ * the task's published AI capability when mode is missing so Training Log
+ * still labels correctly.
+ */
+export function resolveUpskillMode(
+    completion: UpskillCompletion,
+    job: Job | undefined,
+): 'defend' | 'build' | undefined {
+    if (completion.mode === 'defend' || completion.mode === 'build') return completion.mode;
+    const task = job?.tasks.find((t) => t.name === completion.taskName);
+    if (!task) return undefined;
+    return task.aiCapabilityScore >= RISK_THRESHOLDS.AUTOMATABLE_AI_SCORE ? 'defend' : 'build';
+}
+
 export function groupTrainingByRole(completions: UpskillCompletion[], jobIndex: Map<string, Job>): TrainingGroup[] {
     const byJob = new Map<string, UpskillCompletion[]>();
     for (const c of completions) {
@@ -218,7 +235,10 @@ export function groupTrainingByRole(completions: UpskillCompletion[], jobIndex: 
             jobId,
             jobTitle: job?.title ?? '(role no longer available)',
             cluster: job ? getFunctionalCluster(job.title) : null,
-            completions: list,
+            completions: list.map((c) => {
+                const mode = resolveUpskillMode(c, job);
+                return mode === c.mode ? c : { ...c, mode };
+            }),
         };
     });
 }

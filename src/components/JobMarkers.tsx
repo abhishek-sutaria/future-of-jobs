@@ -8,12 +8,38 @@ import { getTerrainPosition, calculateGaussianHeight, buildGrowthForecastFlatArr
 import { buildRiskScale, riskBandColor } from '../config/theme';
 import { SCENE, YEAR_MAX } from '../config/constants';
 import { useIsMobile } from '../hooks/useIsMobile';
+import { socAliasCount } from '../utils/onet';
 import {
     HIDDEN_LABEL_POSITION,
     isHiddenLabelPosition,
     layoutLabels,
     type LabelCandidate,
 } from '../utils/labelLayout';
+
+/** Leader line that hides when declutter parks the label off-screen. */
+const DeclutterAwareLeaderLine: React.FC<{
+    jobId: string;
+    labelHeight: number;
+    placements: React.MutableRefObject<Map<string, [number, number]>>;
+}> = ({ jobId, labelHeight, placements }) => {
+    const groupRef = useRef<Group>(null);
+    useFrame(() => {
+        const pos = placements.current.get(jobId);
+        const show = !!pos && !isHiddenLabelPosition(pos);
+        if (groupRef.current) groupRef.current.visible = show;
+    });
+    return (
+        <group ref={groupRef}>
+            <Line
+                points={[[0, 0, 0], [0, labelHeight, 0]]}
+                color="white"
+                lineWidth={0.5}
+                transparent
+                opacity={0.6}
+            />
+        </group>
+    );
+};
 
 /** Scratch vector for label projection: reused so the per-frame layout
  *  pass allocates nothing beyond the candidate list it already owns. */
@@ -51,6 +77,10 @@ export const JobMarkers: React.FC = () => {
     const groupById = useRef<Map<string, Group>>(new Map());
     // Reused candidate buffer so layoutLabels does not allocate per frame.
     const candidates = useRef<LabelCandidate[]>([]);
+    // Screen-space peak tip anchors — used as a tappable proxy when declutter
+    // parks a label at HIDDEN_LABEL_POSITION (otherwise those roles are search-only).
+    const peakAnchors = useRef<Map<string, { x: number; y: number }>>(new Map());
+    const PEAK_HIT_RADIUS_PX = 28;
 
     const gl = useThree((state) => state.gl);
     const isMobile = useIsMobile();
@@ -134,7 +164,22 @@ export const JobMarkers: React.FC = () => {
                     return id;
                 }
             }
-            return null;
+            // Declutter-hidden labels: fall back to a small hit radius on the peak tip
+            // so crowded phones can still tap roles that lost their title.
+            let bestId: string | null = null;
+            let bestDist = PEAK_HIT_RADIUS_PX;
+            for (const { id } of labelMeta.current) {
+                const pos = placements.current.get(id);
+                if (pos && !isHiddenLabelPosition(pos)) continue;
+                const anchor = peakAnchors.current.get(id);
+                if (!anchor) continue;
+                const d = Math.hypot(x - anchor.x, y - anchor.y);
+                if (d < bestDist) {
+                    bestDist = d;
+                    bestId = id;
+                }
+            }
+            return bestId;
         };
 
         const onDown = (e: PointerEvent) => {
@@ -281,6 +326,7 @@ export const JobMarkers: React.FC = () => {
             const inFront = projected.z >= -1 && projected.z <= 1;
             const x = (projected.x * size.width) / 2 + size.width / 2;
             const y = -((projected.y * size.height) / 2) + size.height / 2;
+            peakAnchors.current.set(a.id, { x, y });
             list.push({
                 id: a.id,
                 anchorX: x,
@@ -324,6 +370,7 @@ export const JobMarkers: React.FC = () => {
             growthLabel: string;
             workersStr: string;
             workersLabel: string;
+            socShareNote: string | null;
         }>;
 
         const items = filteredJobs.flatMap((job) => {
@@ -365,6 +412,10 @@ export const JobMarkers: React.FC = () => {
                 ? Math.round(impliedWorkers / 1_000) + 'K'
                 : Math.round(impliedWorkers).toString();
             const workersLabel = `${roundedYear} Workers`;
+            const aliasN = socAliasCount(job.title);
+            const socShareNote = aliasN > 1
+                ? `1/${aliasN} of shared SOC`
+                : null;
 
             return [{
                 job,
@@ -380,6 +431,7 @@ export const JobMarkers: React.FC = () => {
                 growthLabel,
                 workersStr,
                 workersLabel,
+                socShareNote,
             }];
         });
 
@@ -412,7 +464,7 @@ export const JobMarkers: React.FC = () => {
         <group>
             {markerItems.map(({
                 job, peak, surfaceY, isSelected, isHovered, showLabelText, pipColor, labelHeight,
-                growthStr, growthColor, growthLabel, workersStr, workersLabel,
+                growthStr, growthColor, growthLabel, workersStr, workersLabel, socShareNote,
             }) => (
                     <group
                         key={job.id}
@@ -437,13 +489,12 @@ export const JobMarkers: React.FC = () => {
                             tip is the label's anchor; layoutLabels refuses any
                             placement that would leave this tip outside the box,
                             so the line never runs off-screen while the label
-                            stays pinned in view. */}
-                        <Line
-                            points={[[0, 0, 0], [0, labelHeight, 0]]}
-                            color="white"
-                            lineWidth={0.5}
-                            transparent
-                            opacity={0.6}
+                            stays pinned in view. Hidden when declutter parks
+                            the label off-screen so orphan lines do not linger. */}
+                        <DeclutterAwareLeaderLine
+                            jobId={job.id}
+                            labelHeight={labelHeight}
+                            placements={placements}
                         />
 
                         {/* Label — drei rewrites host z-index from camera distance. On hover we
@@ -500,6 +551,11 @@ export const JobMarkers: React.FC = () => {
                                             <span className="text-[8px] text-slate-500 uppercase tracking-wider leading-none whitespace-nowrap">{workersLabel}</span>
                                             <span className="text-[10px] text-slate-200 font-mono font-medium leading-none whitespace-nowrap">{workersStr}</span>
                                         </div>
+                                        {socShareNote && (
+                                            <div className="text-[8px] text-slate-500 leading-none" title="National OES headcount for this SOC is split equally across alias titles on the 3D map">
+                                                {socShareNote}
+                                            </div>
+                                        )}
                                         <div className="flex items-baseline justify-between gap-2 min-w-0">
                                             <span className="text-[8px] text-slate-500 uppercase tracking-wider leading-none whitespace-nowrap">{growthLabel}</span>
                                             <span className="text-[10px] font-mono font-medium leading-none whitespace-nowrap" style={{ color: growthColor }}>

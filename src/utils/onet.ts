@@ -85,3 +85,15 @@ export const MAP_TITLE_TO_SOC: Record<string, string> = {
     "Compensation & Benefits Manager": "11-3111",
 };
 
+/** How many mapped titles share this role's SOC (1 = unique). Used when national
+ *  OES headcount is split equally across aliases for 3D Workers display. */
+export function socAliasCount(title: string): number {
+    const soc = MAP_TITLE_TO_SOC[title];
+    if (!soc) return 1;
+    let n = 0;
+    for (const code of Object.values(MAP_TITLE_TO_SOC)) {
+        if (code === soc) n++;
+    }
+    return Math.max(1, n);
+}
+

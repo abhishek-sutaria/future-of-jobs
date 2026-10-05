@@ -25,10 +25,11 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                 <div className="space-y-2">
                     <h3 className="text-base font-semibold text-white">Where every number comes from</h3>
                     <p className="text-sm text-gray-300 leading-relaxed">
-                        Labor-market figures shown as metrics come from the bundled BLS / O*NET snapshot,
-                        optional live BLS overlays when the API succeeds, or from Claude outputs that are
-                        explicitly conditioned on those inputs. Claude is probabilistic: treat its scores
-                        and year curves as structured judgment, not additional official statistics.
+                        Labor-market figures shown as metrics come from the bundled BLS / O*NET snapshot
+                        or from Claude outputs that are explicitly conditioned on those inputs. The live
+                        BLS CPS feed powers only the national unemployment rate in the header — not
+                        per-role employment. Claude is probabilistic: treat its scores and year curves
+                        as structured judgment, not additional official statistics.
                     </p>
 
                     <div className="mt-3 rounded-lg border border-white/[0.08] overflow-hidden">
@@ -55,9 +56,10 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                                     </td>
                                 </tr>
                                 <tr className="border-t border-white/[0.06]">
-                                    <td className="px-3 py-2">US unemployment rate (live)</td>
+                                    <td className="px-3 py-2">US unemployment rate (header only)</td>
                                     <td className="px-3 py-2 text-gray-400">
                                         <SourceLink href="https://www.bls.gov/cps/">BLS CPS (real-time API)</SourceLink>
+                                        {' '}— national rate; does not feed per-role employment or peak height.
                                     </td>
                                 </tr>
                                 <tr className="border-t border-white/[0.06]">
@@ -87,7 +89,7 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                                 <tr className="border-t border-white/[0.06]">
                                     <td className="px-3 py-2">Year-by-year forecast</td>
                                     <td className="px-3 py-2 text-gray-400">
-                                        <SourceLink href="https://www.anthropic.com/claude">Claude</SourceLink>, reasoning over the BLS projection + O*NET tasks — cumulative % change in <em>total employment for the role</em> (human workforce level), not an "AI + human jobs" total and not a pure residual after full automation
+                                        <SourceLink href="https://www.anthropic.com/claude">Claude</SourceLink>, reasoning over the BLS projection + O*NET tasks — cumulative % change in <em>total employment for the role</em> through 2030, scaled to a fraction of the official 2024–34 OOH endpoint (not the full decade by 2030)
                                     </td>
                                 </tr>
                                 <tr className="border-t border-white/[0.06]">
@@ -101,12 +103,16 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                     </div>
 
                     <p className="text-[11px] text-gray-500 leading-relaxed mt-2 italic">
-                        In <strong>Human work</strong> mode, peak height is the human-remaining share of
-                        each role (1 − automation risk) applied to implied employment; as the year
-                        advances, AI&apos;s share rises and peaks erode. Forecasts used for the employment
-                        scale stay within each role&apos;s BLS OOH 2024&ndash;34 outlook.{' '}
+                        <strong>Human work</strong> is a scenario model, not BLS data: peak height is the
+                        human-remaining share of each role applied to implied employment; as the year
+                        advances, a modelled AI share rises toward halfway from today&apos;s published
+                        risk to full automation by 2030 (<code className="text-[10px] bg-white/[0.06] rounded px-1">FUTURE_EROSION = 0.5</code>),
+                        so high-risk peaks erode faster. Forecasts used for the employment scale stay
+                        within each role&apos;s BLS OOH envelope, capped at ~5/9 of the 10-year % by 2030 —
+                        many published curves sit near that cap by design, not because 2030 equals the
+                        full BLS decade endpoint.{' '}
                         <strong>Workers</strong> mode log-scales implied headcount (BLS baseline ×
-                        cumulative %), with a modest display-only boost so the scrub reads clearly.
+                        cumulative %), with a display-only height-delta boost so the scrub reads clearly.
                     </p>
                 </div>
 
@@ -185,8 +191,8 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                         Use the toggle on the year-slider panel to flip peak height between:
                     </p>
                     <ul className="list-disc list-inside text-xs text-gray-400 ml-1 space-y-1">
-                        <li><strong>Human work</strong>: log-scaled human-remaining workforce — implied employment × (1 − AI share). AI share starts at the role&apos;s published automation risk in 2025 and rises toward fuller automation by 2030, so high-risk peaks erode faster. 2025 already has height variance across roles.</li>
-                        <li><strong>Workers</strong>: log-scaled implied headcount (BLS baseline × cumulative % at the selected year), with a stronger height-delta boost so the scrub feels responsive. Labels still show the real cumulative %.</li>
+                        <li><strong>Human work</strong> (scenario): log-scaled human-remaining workforce — implied employment × (1 − AI share). AI share starts at the role&apos;s published automation risk in 2025 and rises under an in-app erosion model that reaches halfway from current risk to full automation by 2030 (<code className="text-[10px] bg-white/[0.06] rounded px-1">FUTURE_EROSION = 0.5</code>), so high-risk peaks erode faster. Not a BLS series.</li>
+                        <li><strong>Workers</strong>: log-scaled implied headcount (BLS baseline × cumulative % at the selected year), with a display-only height-delta boost so the scrub feels responsive. Labels still show the real cumulative %.</li>
                     </ul>
                 </div>
             </div>

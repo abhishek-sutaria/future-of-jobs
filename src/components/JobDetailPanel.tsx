@@ -78,26 +78,42 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
         return () => document.removeEventListener('keydown', handleKeyDown);
     }, [hasNestedModalOpen, onClose]);
 
+    // Tracks the currently displayed role so in-flight Analyze/Scenario replies
+    // for a previous role cannot write onto the panel after a search-switch.
+    const jobIdRef = React.useRef(job.id);
+    React.useEffect(() => { jobIdRef.current = job.id; }, [job.id]);
+
     const handleAnalyze = async () => {
+        const startedFor = job.id;
+        const startedTitle = job.title;
+        const startedTasks = job.tasks;
+        const startedEmployment = job.employment;
+        const startedGrowth = job.projectedGrowth;
         onSetAnalysisLoading(true);
         setShowAnalysisModal(true);
         setAnalysisModalError(null);
         try {
-            const taskList = job.tasks.map(t => t.name);
-            const res = await analyzeJob(job.id, job.title, taskList, {
-                employment: job.employment,
-                projectedGrowth: job.projectedGrowth,
+            const taskList = startedTasks.map(t => t.name);
+            const res = await analyzeJob(startedFor, startedTitle, taskList, {
+                employment: startedEmployment,
+                projectedGrowth: startedGrowth,
             });
+            if (jobIdRef.current !== startedFor) return;
             onSetAnalysisResult(res);
         } catch (e) {
             console.error(e);
+            if (jobIdRef.current !== startedFor) return;
             setAnalysisModalError(getClaudeUserFriendlyMessage(e));
         } finally {
-            onSetAnalysisLoading(false);
+            if (jobIdRef.current === startedFor) onSetAnalysisLoading(false);
         }
     };
 
     const handleCrystalBall = async () => {
+        const startedFor = job.id;
+        const startedTitle = job.title;
+        const startedRisk = job.automationCostIndex;
+        const startedTasks = job.tasks;
         setShowScenarioModal(true);
         setScenarioError(null);
         setScenarioResult(null);
@@ -105,7 +121,8 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
         // A saved scenario restores instantly with no Claude call — this is a
         // ~1KB artifact that previously had zero caching and was re-billed on
         // every single open (see src/lib/userData.ts scenarioCacheKey).
-        const saved = await loadScenario(job.id);
+        const saved = await loadScenario(startedFor);
+        if (jobIdRef.current !== startedFor) return;
         if (saved) {
             setScenarioResult(saved);
             return;
@@ -113,16 +130,30 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
 
         setScenarioLoading(true);
         try {
-            const result = await generateJobScenario(job.title, job.automationCostIndex, job.tasks);
+            const result = await generateJobScenario(startedTitle, startedRisk, startedTasks);
+            if (jobIdRef.current !== startedFor) return;
             setScenarioResult(result);
-            void saveScenario(job.id, job.title, result);
+            void saveScenario(startedFor, startedTitle, result);
         } catch (err) {
             console.error(err);
+            if (jobIdRef.current !== startedFor) return;
             setScenarioError(getClaudeUserFriendlyMessage(err));
         } finally {
-            setScenarioLoading(false);
+            if (jobIdRef.current === startedFor) setScenarioLoading(false);
         }
     };
+
+    // Reset nested modal state when the selected role changes (same panel instance).
+    React.useEffect(() => {
+        setShowScenarioModal(false);
+        setScenarioResult(null);
+        setScenarioError(null);
+        setScenarioLoading(false);
+        setShowAnalysisModal(false);
+        setAnalysisModalError(null);
+        setShowRoadmapModal(false);
+        setUpskillTarget(null);
+    }, [job.id]);
 
     const isRoleSaved = useUserStore((state) => state.isRoleSaved(job.id));
     const toggleSavedRole = useUserStore((state) => state.toggleSavedRole);
@@ -303,7 +334,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                             <p className="text-[10px] uppercase text-gray-500 font-semibold tracking-wider text-center max-w-[110px] leading-tight">Projected jobs 2025–30</p>
                                             <IconInfo size={10} className="text-gray-500" />
                                             <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-52 p-2 bg-gray-900 border border-gray-700 rounded-lg text-[9px] text-gray-300 opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity z-10 text-center leading-tight">
-                                                This role&rsquo;s year-by-year employment forecast: an AI prediction anchored to the BLS 2024&ndash;34 outlook, the same cumulative % the 3D view uses when scaling Workers / Human-work heights. It is not a BLS data series.
+                                                This role&rsquo;s year-by-year employment forecast through 2030: an AI prediction anchored to the BLS 2024&ndash;34 outlook, scaled so 2030 is only a fraction of that decade endpoint (~5/9). Same cumulative % the 3D view uses for Workers / Human-work heights. Not a BLS data series.
                                             </div>
                                         </div>
                                         <div className="text-xs font-semibold tabular-nums" style={{ color }}>{end > 0 ? '+' : ''}{end.toFixed(1)}% by 2030</div>
@@ -324,8 +355,9 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                 </h3>
                                 {highRiskTasks.length > 0 && (
                                     <p className="text-[11px] text-gray-400 leading-relaxed mb-4">
-                                        AI is automating much of the following tasks. Defending one means moving into the
-                                        judgment around it: reviewing the output and owning the calls it can't.
+                                        Current GenAI can handle much of the following tasks (capability, not guaranteed
+                                        adoption). Defending one means owning the judgment around it: reviewing the output
+                                        and making the calls AI can&apos;t.
                                     </p>
                                 )}
                                 <div className="space-y-3">
@@ -340,7 +372,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                                     </div>
                                                     {isHybridTask(task) && (
                                                         <span
-                                                            title="AI can do much of this task, but human judgment still decides the outcome. This is where defending it pays off most."
+                                                            title="GenAI is capable of much of this task, but human judgment still decides the outcome. This is where defending it pays off most."
                                                             className="text-[9px] font-semibold text-amber-400/90 bg-amber-500/10 px-1.5 py-0.5 rounded border border-amber-500/20 uppercase tracking-wider cursor-help"
                                                         >
                                                             Hybrid
@@ -375,7 +407,9 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                                 <span key={i} className="px-2 py-0.5 bg-red-500/[0.06] border border-red-500/15 rounded text-[10px] text-red-300">{skill}</span>
                                             ))
                                         ) : (
-                                            <span className="text-gray-600 text-[10px] italic">Run analysis to see threats...</span>
+                                            <span className="text-gray-600 text-[10px] italic">
+                                                {analysisLoading ? 'Analyze running…' : 'Tap Analyze for likely replacements…'}
+                                            </span>
                                         )}
                                     </div>
                                 </div>
@@ -388,7 +422,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                 </h3>
                                 {safeTasks.length > 0 && (
                                     <p className="text-[11px] text-gray-400 leading-relaxed mb-4">
-                                        The following tasks resist automation. This is where deepening your skill compounds.
+                                        The following tasks are rated as resisting automation relative to others here. This is where deepening your skill compounds.
                                     </p>
                                 )}
                                 <div className="space-y-3">
@@ -430,7 +464,9 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                                 <span key={i} className="px-2 py-0.5 bg-emerald-500/[0.06] border border-emerald-500/15 rounded text-[10px] text-emerald-300">{skill}</span>
                                             ))
                                         ) : (
-                                            <span className="text-gray-600 text-[10px] italic">Run analysis to identify traits...</span>
+                                            <span className="text-gray-600 text-[10px] italic">
+                                                {analysisLoading ? 'Analyze running…' : 'Tap Analyze for human-centric traits…'}
+                                            </span>
                                         )}
                                     </div>
                                 </div>
@@ -558,20 +594,12 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
     );
 };
 
-function EmptyState({ loading, error, missingKey, type, hasHybrid = false }: { loading: boolean; error: string | null; missingKey: boolean; type: 'risk' | 'safe'; hasHybrid?: boolean }) {
+function EmptyState({ error, type, hasHybrid = false }: { loading?: boolean; error: string | null; missingKey?: boolean; type: 'risk' | 'safe'; hasHybrid?: boolean }) {
+    // Task columns come from published scores, not live Analyze — never flash
+    // "Analyzing…" here (that implied the lists depend on the prose call).
     return (
         <div className="flex flex-col items-center justify-center py-6 text-center space-y-2 opacity-70">
-            {loading ? (
-                <>
-                    <div className="w-6 h-6 border-2 border-cyan-500/30 border-t-cyan-400 rounded-full animate-spin"></div>
-                    <p className="text-cyan-400 text-xs">Analyzing...</p>
-                </>
-            ) : missingKey ? (
-                <>
-                    <IconBrain size={20} className="text-gray-500" />
-                    <p className="text-gray-400 text-xs">Click Analyze to run AI assessment</p>
-                </>
-            ) : error ? (
+            {error ? (
                 <p className="text-red-400 text-xs">{error}</p>
             ) : (
                 <>

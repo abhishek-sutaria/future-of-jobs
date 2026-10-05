@@ -64,19 +64,26 @@ export const MapView: React.FC = () => {
         []
     );
 
-    const handleStateEnter = useCallback(
-        (e: React.MouseEvent, stateName: string) => {
+    const showStateInfo = useCallback(
+        (clientX: number, clientY: number, stateName: string) => {
             const data = stateData[stateName];
             setTooltip({
-                x: e.clientX,
-                y: e.clientY,
+                x: clientX,
+                y: clientY,
                 name: stateName,
                 totalEmployment: data?.totalEmployment ?? 0,
                 bySoc: data?.bySoc ?? [],
                 hasData: !!data,
             });
         },
-        [stateData]
+        [stateData],
+    );
+
+    const handleStateEnter = useCallback(
+        (e: React.MouseEvent, stateName: string) => {
+            showStateInfo(e.clientX, e.clientY, stateName);
+        },
+        [showStateInfo],
     );
 
     const handleStateMove = useCallback((e: React.MouseEvent) => {
@@ -85,26 +92,56 @@ export const MapView: React.FC = () => {
 
     const handleStateLeave = useCallback(() => setTooltip(null), []);
 
-    // Clear stuck tooltip when the window loses focus (mouseleave can be dropped mid-hover)
+    const handleStatePointerUp = useCallback(
+        (e: React.PointerEvent, stateName: string) => {
+            // Touch / pen: mouseenter often never fires on mobile Chrome.
+            if (e.pointerType === 'mouse') return;
+            showStateInfo(e.clientX, e.clientY, stateName);
+        },
+        [showStateInfo],
+    );
+
+    // Clear stuck tooltip: blur/visibility (mouseleave can drop mid-hover),
+    // Escape, and any pointer on the map that is not a state Geography
+    // (touch tooltips otherwise linger after the finger lifts).
     useEffect(() => {
         const clear = () => setTooltip(null);
+        const onKey = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') clear();
+        };
         window.addEventListener('blur', clear);
         document.addEventListener('visibilitychange', clear);
+        window.addEventListener('keydown', onKey);
         return () => {
             window.removeEventListener('blur', clear);
             document.removeEventListener('visibilitychange', clear);
+            window.removeEventListener('keydown', onKey);
         };
     }, []);
 
-    const isDefault = position.zoom === 1;
+    const handleMapBackgroundPointerDown = useCallback((e: React.PointerEvent) => {
+        // State Geographies are <path>; anything else (ocean, markers, chrome)
+        // dismisses a sticky touch tooltip.
+        const el = e.target as Element | null;
+        if (el?.tagName === 'path') return;
+        setTooltip(null);
+    }, []);
+
+    const defaultCenter: [number, number] = [-97, 38];
+    const panMoved =
+        Math.hypot(position.coordinates[0] - defaultCenter[0], position.coordinates[1] - defaultCenter[1]) > 0.35;
+    const isDefault = position.zoom === 1 && !panMoved;
 
     return (
-        <div className="w-full h-full bg-[#0f172a] relative overflow-hidden">
+        <div
+            className="w-full h-full bg-[#0f172a] relative overflow-hidden"
+            onPointerDown={handleMapBackgroundPointerDown}
+        >
             {/* Reset view — small, conditional, only appears when zoomed/panned */}
             {!isDefault && (
                 <div className="absolute top-32 right-6 z-50">
                     <button
-                        onClick={() => setPosition({ coordinates: [-97, 38], zoom: 1 })}
+                        onClick={() => setPosition({ coordinates: defaultCenter, zoom: 1 })}
                         className="px-3 py-1.5 bg-slate-800/80 hover:bg-slate-700 text-gray-400 hover:text-white rounded-lg border border-white/[0.07] text-xs transition-colors"
                     >
                         Reset view
@@ -176,6 +213,7 @@ export const MapView: React.FC = () => {
                                         onMouseEnter={(e) => handleStateEnter(e, stateName)}
                                         onMouseMove={handleStateMove}
                                         onMouseLeave={handleStateLeave}
+                                        onPointerUp={(e) => handleStatePointerUp(e, stateName)}
                                     />
                                 );
                             })

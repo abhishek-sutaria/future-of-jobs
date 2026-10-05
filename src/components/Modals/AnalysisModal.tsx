@@ -18,7 +18,7 @@ interface AnalysisModalProps {
 
 export const AnalysisModal: React.FC<AnalysisModalProps> = ({ isOpen, isLoading, job, result, errorMessage, onClose }) => {
     return (
-        <Modal isOpen={isOpen} onClose={onClose} title={`Live Job Analysis: ${job.title}`} size="lg" layer="top">
+        <Modal isOpen={isOpen} onClose={onClose} title={`Role analysis: ${job.title}`} size="lg" layer="top">
             <div className="flex items-center gap-2 mb-6">
                 <IconBrain size={14} className="text-blue-400" />
                 <span className="text-blue-300 text-xs uppercase tracking-wider font-semibold bg-blue-500/10 px-2 py-1 rounded">Claude</span>
@@ -88,7 +88,7 @@ export const AnalysisModal: React.FC<AnalysisModalProps> = ({ isOpen, isLoading,
                         <div className="space-y-3">
                             <h4 className="text-gray-400 text-xs font-semibold uppercase tracking-wider border-b border-white/[0.06] pb-2">Task-by-Task Breakdown</h4>
                             <p className="text-[11px] text-gray-500">
-                                A red AI badge marks a task at or above {RISK_THRESHOLDS.AUTOMATABLE_AI_SCORE * 100}% AI exposure, the same line the role panel uses for its Automation Risk column. A green Human badge marks a task where human judgment stays critical. A task can carry both: AI does much of the work, a person still owns the outcome.
+                                A red AI badge marks a task at or above {RISK_THRESHOLDS.AUTOMATABLE_AI_SCORE * 100}% GenAI capability, the same line the role panel uses for its Automation Risk column. A green Human badge marks a task where human judgment stays critical. A task can carry both: models are capable of much of the work, a person still owns the outcome.
                             </p>
                             <div className="space-y-2">
                                 {rows.map((row) => {

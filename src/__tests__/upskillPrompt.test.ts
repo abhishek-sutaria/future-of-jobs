@@ -19,7 +19,8 @@ describe('defend mode (high automation risk)', () => {
     const prompt = buildUpskillPrompt(JOB, RISK_TASK, 'defend', 74);
 
     it('states the real exposure instead of asserting the task is human-valued', () => {
-        expect(prompt).toContain('74% automation exposure');
+        expect(prompt).toContain('74% GenAI capability exposure');
+        expect(prompt).toMatch(/capability, not guaranteed adoption/i);
         expect(prompt).not.toMatch(/high human value/i);
         expect(prompt).not.toMatch(/helps them stay resilient/i);
     });
@@ -35,7 +36,7 @@ describe('defend mode (high automation risk)', () => {
     });
 
     it('rounds the exposure rather than leaking a float into the prompt', () => {
-        expect(buildUpskillPrompt(JOB, RISK_TASK, 'defend', 73.6)).toContain('74% automation exposure');
+        expect(buildUpskillPrompt(JOB, RISK_TASK, 'defend', 73.6)).toContain('74% GenAI capability exposure');
     });
 });
 

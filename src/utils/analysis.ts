@@ -1,6 +1,7 @@
 import type { z } from 'zod';
-import { RISK_THRESHOLDS } from '../config/constants';
+import { RISK_THRESHOLDS, OOH_FRACTION_AT_YEAR_MAX, OOH_ENDPOINT_YEAR } from '../config/constants';
 import { callClaudeJSON, StartupIdeasSchema, StartupCoreSchema, StartupPlansSchema } from './claude';
+import { oohEnvelopeCap } from './terrainMath';
 
 export { getClaudeUserFriendlyMessage } from './claude';
 
@@ -189,10 +190,10 @@ export async function analyzeResume(skillsInput: string): Promise<ResumeAnalysis
 
 export async function generateRoadmap(jobTitle: string, riskTask: string, targetTask: string): Promise<RoadmapResult> {
     const prompt = `
-        Context: Career transition plan for a ${jobTitle}.
-        Goal: Move away from "${riskTask}" (high automation risk) towards "${targetTask}" (high human value).
+        Context: Career Defend & Build plan for a ${jobTitle}.
+        Goal: DEFEND "${riskTask}" (high GenAI capability / automation exposure) by owning judgment, oversight, and exception-handling around it — do NOT abandon that task — while BUILDING "${targetTask}" (high human criticality) into a durable advantage.
 
-        INSTRUCTION: Be specific to this exact role and transition. Do not use generic filler text. Reference specific, real-world tools, platforms, certifications, and frameworks relevant to a ${jobTitle}.
+        INSTRUCTION: Be specific to this exact role. Do not use generic filler text. Do not frame the plan as leaving or exiting the high-risk task. Reference specific, real-world tools, platforms, certifications, and frameworks relevant to a ${jobTitle}.
 
         Output JSON only:
         {
@@ -260,9 +261,9 @@ export function buildUpskillPrompt(
         A professional working as a "${jobTitle}" has this task in their role:
         "${taskName}"
 
-        This task carries roughly ${Math.round(aiRiskPercent)}% automation exposure — AI can already do much of it.
+        This task carries roughly ${Math.round(aiRiskPercent)}% GenAI capability exposure — current models could handle much of it (capability, not guaranteed adoption).
 
-        Do NOT recommend training that teaches them to perform this task faster or more cheaply by hand. That is precisely the part being automated.
+        Do NOT recommend training that teaches them to perform this task faster or more cheaply by hand. That is precisely the part most exposed to automation.
 
         Recommend training that moves them UP the value chain on this exact task: directing and reviewing automated output, recognising where it fails, handling the exceptions and edge cases it cannot, carrying the accountability and judgment a model cannot own, and holding enough domain depth to know when the output is wrong.
 
@@ -303,8 +304,10 @@ export async function generateUpskillCourses(
  */
 function clampForecastToEnvelope(jobTitle: string, projectedGrowth: number, result: JobAnalysis): void {
     if (!result.yearlyForecast) return;
-    const lo = Math.min(0, projectedGrowth);
-    const hi = Math.max(0, projectedGrowth);
+    // Same 2030 fraction-of-decade cap as offline scoring (≈5/9 of OOH).
+    const cap = oohEnvelopeCap(projectedGrowth);
+    const lo = Math.min(0, cap);
+    const hi = Math.max(0, cap);
     for (const f of result.yearlyForecast) {
         const clamped = Math.min(hi, Math.max(lo, f.growthImpact));
         if (clamped !== f.growthImpact) {
@@ -368,7 +371,8 @@ export async function analyzeJob(
     IMPORTANT COHERENCE INSTRUCTIONS:
     - Provide precise, granular two-decimal scores (e.g., 0.73, 0.41, 0.88). DO NOT round to the nearest tenth or quarter.
     - "yearlyForecast.growthImpact" is CUMULATIVE percent change in employment from the 2025 baseline. NOT year-over-year. Year 2025 MUST be 0.00. Use two-decimal precision (e.g. 2.40, -3.85).
-    - For every forecast year, growthImpact MUST fall between 0.00 and ${bls.projectedGrowth} inclusive (the BLS OOH 10-year % for this role) — moving monotonically from the 2025 baseline toward that endpoint. Do not cross zero, and do not go past ${bls.projectedGrowth} in either direction.
+    - The BLS figure is a 10-year (2024–${OOH_ENDPOINT_YEAR}) outlook. By 2030 the path may reach at most ~${(OOH_FRACTION_AT_YEAR_MAX * 100).toFixed(0)}% of that decade change (cap = ${oohEnvelopeCap(bls.projectedGrowth).toFixed(2)}), not the full ${bls.projectedGrowth}%.
+    - For every forecast year, growthImpact MUST fall between 0.00 and ${oohEnvelopeCap(bls.projectedGrowth).toFixed(2)} inclusive — moving monotonically from the 2025 baseline toward that 2030 cap. Do not cross zero, and do not go past the cap.
     - Do not introduce other macro statistics (GDP, national unemployment, wages) unless they appear in the task text you were given.
     - "salary_forecast" should be an array of 6 numbers representing a salary index from 2025 to 2030. Start at 100.
     - If the role's tasks have high automation exposure, the salary forecast should show VOLATILITY (ups and downs) or DECLINE.

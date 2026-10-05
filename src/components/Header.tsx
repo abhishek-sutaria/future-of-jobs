@@ -87,7 +87,7 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
                             onClick={() => openRescoreModal()}
                         >
                             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                            {scoresAgeLabel ? `AI Scores · ${scoresAgeLabel}` : 'AI Scores Live'}
+                            {scoresAgeLabel ? `AI Scores · ${scoresAgeLabel}` : 'AI Scores'}
                         </span>
                     )}
 
@@ -158,6 +158,7 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
                         its centre, which is why a hit-test alone didn't catch
                         it. title= keeps the meaning available. */}
                     <button
+                        data-tour="tour-tasks"
                         onClick={() => setMapView(mapView === 'tasks' ? 'globe' : 'tasks')}
                         title={mapView === 'tasks' ? 'Back to the 3D view' : 'Split every role into its tasks'}
                         aria-pressed={mapView === 'tasks'}
@@ -286,6 +287,8 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
             onOpenStudentGuide={onOpenStudentGuide}
             onShowMethodology={onShowMethodology}
             onOpenTaskView={() => setMapView('tasks')}
+            onOpenRescore={() => openRescoreModal()}
+            scoresAgeLabel={scoresAgeLabel}
         />
         </>
     );

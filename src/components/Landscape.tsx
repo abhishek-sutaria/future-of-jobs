@@ -66,12 +66,6 @@ export const Landscape: React.FC = () => {
     const [mobileIdle, setMobileIdle] = useState(false);
     const idleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-    useEffect(() => {
-        const onVisibility = () => setTabHidden(document.visibilityState === 'hidden');
-        document.addEventListener('visibilitychange', onVisibility);
-        return () => document.removeEventListener('visibilitychange', onVisibility);
-    }, []);
-
     const bumpInteraction = useCallback(() => {
         if (!isMobile) return;
         setMobileIdle(false);
@@ -80,20 +74,33 @@ export const Landscape: React.FC = () => {
         idleTimerRef.current = setTimeout(() => setMobileIdle(true), 2500);
     }, [isMobile]);
 
+    useEffect(() => {
+        const onVisibility = () => {
+            const hidden = document.visibilityState === 'hidden';
+            setTabHidden(hidden);
+            // Returning to the tab must re-arm the idle timer — otherwise a phone
+            // that went idle, then backgrounded, comes back with mobileIdle still
+            // true and stays frozen until the next orbit/year/job gesture.
+            if (!hidden) bumpInteraction();
+        };
+        document.addEventListener('visibilitychange', onVisibility);
+        return () => document.removeEventListener('visibilitychange', onVisibility);
+    }, [bumpInteraction]);
+
     const year = useStore((s) => s.year);
     const heightMode = useStore((s) => s.heightMode);
 
     // Arm the idle timer on mount, and wake the loop whenever the year scrub,
-    // height mode, or map view changes — those controls live outside
-    // OrbitControls, so without this a phone that only moves the slider would
-    // stay frozen on old peaks. Closing a role panel also needs a wake so the
-    // terrain resumes under the user.
+    // height mode, map view, selected job, route, or canvas remount changes —
+    // those live outside OrbitControls. Without route/canvasKey, a phone that
+    // idled then opened Dashboard (or recovered from context loss) can return
+    // to a Canvas still stuck on frameloop:'never'.
     useEffect(() => {
         bumpInteraction();
         return () => {
             if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
         };
-    }, [bumpInteraction, year, heightMode, mapView, selectedJob]);
+    }, [bumpInteraction, year, heightMode, mapView, selectedJob, route, canvasKey]);
 
     const handleContextLost = useCallback((event: Event) => {
         // Without this, the browser assumes the page doesn't want to recover
@@ -113,9 +120,11 @@ export const Landscape: React.FC = () => {
         // blank 3D view. The fresh OrbitControls instance starts at that
         // default framing too, so the "Reset view" button's own state needs
         // to follow — otherwise it would keep offering to reset a view
-        // that's already back at default.
+        // that's already back at default. Clear idle so the remounted Canvas
+        // does not boot with frameloop:'never'.
         isDefaultViewRef.current = true;
         setIsDefaultView(true);
+        setMobileIdle(false);
         setCanvasKey((k) => k + 1);
     }, [setIsDefaultView]);
 

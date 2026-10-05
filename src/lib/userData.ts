@@ -50,6 +50,8 @@ export interface UpskillCompletion {
     jobId: string;
     taskName: string;
     completedAt: string;
+    /** Defend vs Build — stored client-side when recorded; older rows may omit it. */
+    mode?: 'defend' | 'build';
 }
 
 export interface StoredArtifact<T = unknown> {
@@ -82,9 +84,11 @@ export const EMPTY_ACTIVITY: UserActivity = {
 /** Deterministic key for a per-job scenario. */
 export const scenarioCacheKey = (jobId: string): string => jobId;
 
-/** Deterministic key for a roadmap, which is specific to a task transition. */
+/** Deterministic key for a roadmap, which is specific to a task transition.
+ *  v2: Defend/Build framing (not “move away”) — busts cached plans generated
+ *  under the old abandon-the-task prompt. */
 export const roadmapCacheKey = (jobId: string, riskTask: string, targetTask: string): string =>
-    `${jobId}|${riskTask}|${targetTask}`;
+    `v2|${jobId}|${riskTask}|${targetTask}`;
 
 /**
  * Stable key for resume-derived artifacts, WITHOUT storing the resume.

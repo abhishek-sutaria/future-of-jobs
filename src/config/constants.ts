@@ -8,6 +8,14 @@ export const YEAR_MIN = 2025;
 export const YEAR_MAX = 2030;
 export const YEAR_RANGE = YEAR_MAX - YEAR_MIN;       // 5
 export const YEAR_COUNT = YEAR_RANGE + 1;             // 6 years (2025–2030 inclusive)
+/** Official BLS OOH / Employment Projections endpoint year (10-year outlook from 2024). */
+export const OOH_ENDPOINT_YEAR = 2034;
+/**
+ * Fraction of the full 2024–34 OOH % that the in-app 2030 slider endpoint may reach.
+ * Linear from the 2025 baseline (0) to the 2034 OOH endpoint: (2030 − 2025) / (2034 − 2025) = 5/9.
+ * Prevents baking the full decade change into a five-year path.
+ */
+export const OOH_FRACTION_AT_YEAR_MAX = (YEAR_MAX - YEAR_MIN) / (OOH_ENDPOINT_YEAR - YEAR_MIN);
 
 // ── Data Sources (metadata for seed data) ──────────────────────────
 // BLS_OES is the NATIONAL per-role headcount baked into src/data.ts (drives
