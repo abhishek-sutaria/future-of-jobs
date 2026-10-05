@@ -464,7 +464,7 @@ export const JobMarkers: React.FC = () => {
         <group>
             {markerItems.map(({
                 job, peak, surfaceY, isSelected, isHovered, showLabelText, pipColor, labelHeight,
-                growthStr, growthColor, growthLabel, workersStr, workersLabel,
+                growthStr, growthColor, growthLabel, workersStr, workersLabel, socShareNote,
             }) => (
                     <group
                         key={job.id}
