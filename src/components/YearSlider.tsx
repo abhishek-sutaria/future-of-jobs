@@ -22,7 +22,7 @@ export const YearSlider: React.FC = () => {
                     <p className="text-[10px] text-gray-500 uppercase tracking-widest font-semibold">
                         Number of Jobs (BLS)
                     </p>
-                    <p className="hidden md:block [@media(max-height:480px)]:!hidden text-[10px] text-gray-500 leading-snug break-words">
+                    <p className="text-[10px] text-gray-500 leading-snug break-words [@media(max-height:480px)]:text-[9px]">
                         Height = BLS employment count at this year (straight line from the 2025 level to the 2035 level)
                     </p>
                 </div>
