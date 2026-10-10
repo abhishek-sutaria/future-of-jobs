@@ -6,7 +6,7 @@ import { RISK_BAND_COLORS } from '../config/theme';
 // time slider down to an unusable width. The colour scale is also explained in the
 // intro modal, so phones lose nothing critical.
 export const Legend: React.FC = () => {
-    const heightCaption = 'BLS jobs 2025–35';
+    const heightCaption = 'number of jobs (BLS)';
 
     return (
         <div
