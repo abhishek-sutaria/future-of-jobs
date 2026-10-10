@@ -12,7 +12,12 @@
  */
 
 import { callClaudeJSON, JobTaskScoringSchema } from './claude';
-import { YEAR_MIN, YEAR_MAX, OOH_FRACTION_AT_YEAR_MAX, OOH_ENDPOINT_YEAR } from '../config/constants';
+import {
+    YEAR_MIN,
+    AI_FORECAST_YEAR_MAX,
+    OOH_FRACTION_AT_YEAR_MAX,
+    OOH_ENDPOINT_YEAR,
+} from '../config/constants';
 import { oohEnvelopeCap } from './terrainMath';
 
 // ── Types ──────────────────────────────────────────────────────────────────
@@ -110,7 +115,7 @@ function assertValidYearlyForecast(projectedGrowth: number, points: ForecastPoin
     // year itself stays strict.
     const baselineTol = 0.08;
     const nearZeroYearTol = 0.8;
-    const expectedYears = Array.from({ length: YEAR_MAX - YEAR_MIN + 1 }, (_, i) => YEAR_MIN + i);
+    const expectedYears = Array.from({ length: AI_FORECAST_YEAR_MAX - YEAR_MIN + 1 }, (_, i) => YEAR_MIN + i);
     const byYear = new Map<number, ForecastPoint>();
     for (const p of points) {
         if (!byYear.has(p.year)) byYear.set(p.year, p);
@@ -152,7 +157,7 @@ export function buildJobAnalysisPrompt(
     projectedGrowth: number,
 ): string {
     const growthLabel = `${projectedGrowth >= 0 ? '+' : ''}${projectedGrowth}%`;
-    const years = Array.from({ length: YEAR_MAX - YEAR_MIN + 1 }, (_, i) => YEAR_MIN + i);
+    const years = Array.from({ length: AI_FORECAST_YEAR_MAX - YEAR_MIN + 1 }, (_, i) => YEAR_MIN + i);
 
     return `You are an expert labor economist analyzing the impact of Generative AI on job tasks.
 
@@ -170,13 +175,13 @@ TWO outputs are needed:
   - humanCriticalityScore: How essential human judgment, empathy, ethics, or physical presence is.
     0.00 = human not needed, 1.00 = absolutely requires a human.
 
-(2) YEARLY FORECAST for ${YEAR_MIN} through ${YEAR_MAX} (six years):
+(2) YEARLY FORECAST for ${YEAR_MIN} through ${AI_FORECAST_YEAR_MAX} (six years):
   - growthImpact: CUMULATIVE percent change in this role's total US employment
     from the ${YEAR_MIN} baseline. NOT year-over-year — cumulative from ${YEAR_MIN}.
   - Year ${YEAR_MIN} MUST be exactly 0.00 (baseline).
-  - The BLS figure above is a 10-year (2024–${OOH_ENDPOINT_YEAR}) outlook. By ${YEAR_MAX} the path may reach at most ~${(OOH_FRACTION_AT_YEAR_MAX * 100).toFixed(0)}% of that decade change (cap = ${(projectedGrowth * OOH_FRACTION_AT_YEAR_MAX).toFixed(2)}), not the full ${growthLabel}.
-  - For EVERY year in the window, growthImpact MUST fall between 0.00 and ${(projectedGrowth * OOH_FRACTION_AT_YEAR_MAX).toFixed(2)} inclusive — moving monotonically from the ${YEAR_MIN} baseline toward that ${YEAR_MAX} cap. Do not cross zero, and do not go past the cap.
-  - Years ${YEAR_MIN + 1} through ${YEAR_MAX}: smooth progression toward a plausible 2030 endpoint that still respects that range at every year.
+  - The BLS figure above is a 10-year (2024–${OOH_ENDPOINT_YEAR}) outlook. By ${AI_FORECAST_YEAR_MAX} the path may reach at most ~${(OOH_FRACTION_AT_YEAR_MAX * 100).toFixed(0)}% of that decade change (cap = ${(projectedGrowth * OOH_FRACTION_AT_YEAR_MAX).toFixed(2)}), not the full ${growthLabel}.
+  - For EVERY year in the window, growthImpact MUST fall between 0.00 and ${(projectedGrowth * OOH_FRACTION_AT_YEAR_MAX).toFixed(2)} inclusive — moving monotonically from the ${YEAR_MIN} baseline toward that ${AI_FORECAST_YEAR_MAX} cap. Do not cross zero, and do not go past the cap.
+  - Years ${YEAR_MIN + 1} through ${AI_FORECAST_YEAR_MAX}: smooth progression toward a plausible 2030 endpoint that still respects that range at every year.
   - Use two-decimal precision (e.g. 2.40, -3.85).
   - Do not invent other macro statistics (GDP, national unemployment) unless they appear in a task description below.
 
@@ -222,7 +227,7 @@ export function parseJobAnalysis(
             growthImpact: f.growthImpact,
             reasoning: String(f.reasoning ?? ''),
         }))
-        .filter(f => f.year >= YEAR_MIN && f.year <= YEAR_MAX)
+        .filter(f => f.year >= YEAR_MIN && f.year <= AI_FORECAST_YEAR_MAX)
         .sort((a, b) => a.year - b.year);
 
     assertValidYearlyForecast(projectedGrowth, yearlyForecast);

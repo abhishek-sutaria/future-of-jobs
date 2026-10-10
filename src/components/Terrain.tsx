@@ -3,7 +3,14 @@ import { useFrame } from '@react-three/fiber';
 import { ShaderMaterial, DoubleSide, Vector3, Vector2 } from 'three';
 import { useStore } from '../store';
 import type { Job } from '../types';
-import { getTerrainPosition, getVisualHeightForEmployment, getVisualHeightForWorkersAtYear, getVisualHeightForGrowth, buildGrowthForecastFlatArray, growthAtYearFromForecastFlat, TERRAIN_CONFIG } from '../utils/terrainMath';
+import {
+  getTerrainPosition,
+  getVisualHeightForEpEmployment,
+  buildEpEmploymentFlatArray,
+  employmentAtYearFromFlat,
+  epEmploymentAtYear,
+  TERRAIN_CONFIG,
+} from '../utils/terrainMath';
 import { riskColorRGB, RISK_UNSCORED_RGB, buildRiskScale, normalizeRisk } from '../config/theme';
 import { SHADER, SHADER_VISUAL, SHADER_COLORS, SCENE } from '../config/constants';
 
@@ -17,15 +24,13 @@ const vertexShader = `
   uniform float uTime;
 
   // Peak Data
-  // uPeaks[i] = vec3(worldX, worldZ, workersModeHeight)
+  // uPeaks[i] = vec3(worldX, worldZ, peakHeight)
   //   .xy = location in terrain plane
-  //   .z  = log-scaled peak height in Workers mode (static BLS headcount)
+  //   .z  = linear BLS EP employment height at the current year
   uniform vec3 uPeaks[${SHADER.MAX_JOBS}];
   uniform vec3 uColors[${SHADER.MAX_JOBS}];
 
-  // Per-job current-year growth value (cumulative %, from Claude). Mutated by CPU
-  // each frame. This is the ONLY dynamically-indexed uniform array — some WebGL
-  // drivers don't reliably index more than one.
+  // Kept for shader compatibility (unused for height — CPU writes peak.z).
   uniform float uGrowthNow[${SHADER.MAX_JOBS}];
   uniform int uPeakCount;
 
@@ -140,11 +145,10 @@ const fragmentShader = `
 
 export const Terrain: React.FC = () => {
   const materialRef = useRef<ShaderMaterial>(null);
-  const forecastsRef = useRef<Float32Array | null>(null);
+  const employmentFlatRef = useRef<Float32Array | null>(null);
   const filteredJobsRef = useRef<Job[]>([]);
   const jobs = useStore((state) => state.jobs);
   const selectedRoleIds = useStore((state) => state.selectedRoleIds);
-  const heightMode = useStore((state) => state.heightMode);
   // Mount-time only — matches Landscape's isMobile read so hydration does not
   // rebuild the geometry after the first frame.
   const [meshSegments] = React.useState(() => (
@@ -181,7 +185,7 @@ export const Terrain: React.FC = () => {
     uColors: { value: Array.from({ length: SHADER.MAX_JOBS }, () => new Vector3(0, 0, 0)) },
     uGrowthNow: { value: new Float32Array(SHADER.MAX_JOBS) },
     uPeakCount: { value: 0 },
-    uHeightMode: { value: useStore.getState().heightMode === 'employment' ? 1.0 : 0.0 },
+    uHeightMode: { value: 1.0 },
   }), []);
 
   // Write per-job data into that stable object whenever the job set changes.
@@ -199,8 +203,9 @@ export const Terrain: React.FC = () => {
       }
       const originalIndex = jobs.findIndex(j => j.id === job.id);
       const { x, z } = getTerrainPosition(originalIndex, jobs);
-      // .xy = world position; .z = peak height (Workers = static BLS; Growth updates per year)
-      peaks[i].set(x, -z, getVisualHeightForEmployment(job.employment));
+      const yearNow = useStore.getState().year;
+      // .xy = world position; .z = linear BLS EP employment height at current year
+      peaks[i].set(x, -z, getVisualHeightForEpEmployment(epEmploymentAtYear(job, yearNow)));
 
       // Peak color encodes the Job Security Index (cyan→amber→red, matches Legend);
       // neutral slate until Claude scoring has produced a real automationCostIndex.
@@ -213,31 +218,18 @@ export const Terrain: React.FC = () => {
       colors[i].set(r, g, b);
     }
 
-    const forecasts = buildGrowthForecastFlatArray(filteredJobs);
-    forecastsRef.current = forecasts;
+    const employmentFlat = buildEpEmploymentFlatArray(filteredJobs);
+    employmentFlatRef.current = employmentFlat;
     filteredJobsRef.current = filteredJobs;
     uniforms.uPeakCount.value = filteredJobs.length;
-
-    const yearNow = useStore.getState().year;
-    const growthNow = uniforms.uGrowthNow.value;
-    for (let i = 0; i < filteredJobs.length; i++) {
-      growthNow[i] = growthAtYearFromForecastFlat(forecasts, i, yearNow);
-    }
 
     if (materialRef.current) materialRef.current.uniformsNeedUpdate = true;
   }, [filteredJobs, jobs, uniforms, riskScale]);
 
-  // Keep uHeightMode in sync with the store toggle without remounting the mesh.
-  React.useEffect(() => {
-    const mat = materialRef.current;
-    if (!mat || !mat.uniforms.uHeightMode) return;
-    mat.uniforms.uHeightMode.value = heightMode === 'employment' ? 1.0 : 0.0;
-  }, [heightMode]);
-
-  // Push current-year values to the GPU. On phones, skip alternate frames for
-  // the decorative uTime clock and reuse the last peak upload when year /
-  // height mode have not moved — cuts fill + uniform traffic that contributed
-  // to Chrome locking up after sustained orbiting on foldables.
+  // Push current-year EP heights to the GPU. On phones, skip alternate frames for
+  // the decorative uTime clock and reuse the last peak upload when year has not
+  // moved — cuts fill + uniform traffic that contributed to Chrome locking up
+  // after sustained orbiting on foldables.
   const frameCountRef = useRef(0);
   const lastUploadKeyRef = useRef('');
   useFrame((state) => {
@@ -251,30 +243,18 @@ export const Terrain: React.FC = () => {
       mat.uniforms.uTime.value = state.clock.getElapsedTime();
     }
 
-    const forecasts = forecastsRef.current;
+    const employmentFlat = employmentFlatRef.current;
     const peakCount = mat.uniforms.uPeakCount.value as number;
-    if (peakCount === 0 || !forecasts || forecasts.length === 0) return;
+    if (peakCount === 0 || !employmentFlat || employmentFlat.length === 0) return;
 
     const currentYear = useStore.getState().year;
-    const hm = useStore.getState().heightMode;
-    // Rewrite peaks only when the scrub year or height mode actually changes —
-    // not every rAF. On phones this is the difference between a warm GPU and
-    // a thermal throttle that looks like a lockup.
-    const uploadKey = `${currentYear.toFixed(1)}|${hm}|${peakCount}`;
+    // Rewrite peaks only when the scrub year actually changes — not every rAF.
+    const uploadKey = `${currentYear.toFixed(1)}|${peakCount}`;
     if (uploadKey !== lastUploadKeyRef.current) {
-      const growthArr = mat.uniforms.uGrowthNow.value as Float32Array;
-      for (let i = 0; i < peakCount; i++) {
-        growthArr[i] = growthAtYearFromForecastFlat(forecasts, i, currentYear);
-      }
-
       const peaks = mat.uniforms.uPeaks.value as Vector3[];
-      const fj = filteredJobsRef.current;
       for (let i = 0; i < peakCount; i++) {
-        const job = fj[i];
-        if (!job) continue;
-        peaks[i].z = hm === 'employment'
-          ? getVisualHeightForWorkersAtYear(job.employment, growthArr[i])
-          : getVisualHeightForGrowth(growthArr[i]);
+        const emp = employmentAtYearFromFlat(employmentFlat, i, currentYear);
+        peaks[i].z = getVisualHeightForEpEmployment(emp);
       }
       lastUploadKeyRef.current = uploadKey;
     }

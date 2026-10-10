@@ -1,15 +1,24 @@
-import { SHADER, YEAR_MIN, YEAR_MAX, YEAR_COUNT, OOH_ENDPOINT_YEAR, OOH_FRACTION_AT_YEAR_MAX } from '../config/constants';
+import {
+    SHADER,
+    YEAR_MIN,
+    YEAR_MAX,
+    YEAR_RANGE,
+    YEAR_COUNT,
+    AI_FORECAST_YEAR_MAX,
+    OOH_ENDPOINT_YEAR,
+    OOH_FRACTION_AT_YEAR_MAX,
+} from '../config/constants';
 import type { Job } from '../types';
 import { CLUSTER_ORDER, getFunctionalCluster, type FunctionalCluster } from '../config/clusters';
 import { MAP_TITLE_TO_SOC } from './onet';
 
-// Per-year growth values come from Claude's forecast (cumulative percent change
-// from the 2025 baseline, grounded in real BLS + O*NET inputs). When Claude
-// has not produced a forecast yet, cumulative % is a linear ramp from 0% at
-// YEAR_MIN toward the BLS OOH projectedGrowth at OOH_ENDPOINT_YEAR (2034), so
-// YEAR_MAX (2030) reaches only OOH_FRACTION_AT_YEAR_MAX (~5/9) of the decade %.
+// Landscape peak height: linear BLS Employment Projections levels
+// (epEmployment2025 → epEmployment2035). No AI yearlyForecast on the terrain.
+//
+// Role-page Claude forecasts still use oohEnvelopeCap / getCurrentYearGrowth
+// (AI path capped at AI_FORECAST_YEAR_MAX = 2030 vs the 2024–34 OOH decade).
 
-/** Max cumulative % the in-app path may reach by YEAR_MAX for a given OOH figure. */
+/** Max cumulative % a baked AI forecast may reach by 2030 for a given OOH figure. */
 export function oohEnvelopeCap(projectedGrowth: number): number {
     return projectedGrowth * OOH_FRACTION_AT_YEAR_MAX;
 }
@@ -19,6 +28,63 @@ export function oohFractionAtYear(year: number): number {
     const t = Math.max(YEAR_MIN, Math.min(OOH_ENDPOINT_YEAR, year));
     const span = OOH_ENDPOINT_YEAR - YEAR_MIN;
     return span > 0 ? (t - YEAR_MIN) / span : 0;
+}
+
+/**
+ * BLS EP employment at `year`: straight line between 2025 and 2035 levels.
+ * Falls back to OEWS `employment` when EP fields are missing.
+ */
+export function epEmploymentAtYear(job: Job, year: number): number {
+    const e0 = job.epEmployment2025;
+    const e1 = job.epEmployment2035;
+    if (e0 == null || e1 == null || !Number.isFinite(e0) || !Number.isFinite(e1)) {
+        return Math.max(1, job.employment);
+    }
+    const t = Math.max(YEAR_MIN, Math.min(YEAR_MAX, year));
+    const f = YEAR_RANGE > 0 ? (t - YEAR_MIN) / YEAR_RANGE : 0;
+    return Math.max(1, e0 + (e1 - e0) * f);
+}
+
+/**
+ * Linear (not log) visual height from an employment count.
+ * 0 workers → MIN_HEIGHT; LINEAR_EMP_REF workers → MAX_HEIGHT.
+ */
+export const LINEAR_EMP_REF = 2_000_000;
+
+export function getVisualHeightForEpEmployment(employment: number): number {
+    const minH = SHADER.HEIGHT_CLAMP_MIN;
+    const maxH = SHADER.HEIGHT_CLAMP_MAX;
+    const t = Math.max(0, Math.min(1, Math.max(0, employment) / LINEAR_EMP_REF));
+    return minH + t * (maxH - minH);
+}
+
+/** Integer-year EP employment table for Terrain / JobMarkers GPU sync. */
+export function buildEpEmploymentFlatArray(filteredJobs: Job[]): Float32Array {
+    const out = new Float32Array(SHADER.FORECAST_ARRAY_SIZE);
+    filteredJobs.forEach((job, jobIdx) => {
+        if (jobIdx >= SHADER.MAX_JOBS) return;
+        for (let year = YEAR_MIN; year <= YEAR_MAX; year++) {
+            const yearIdx = year - YEAR_MIN;
+            out[jobIdx * YEAR_COUNT + yearIdx] = epEmploymentAtYear(job, year);
+        }
+    });
+    return out;
+}
+
+export function employmentAtYearFromFlat(
+    flat: ArrayLike<number>,
+    jobIndex: number,
+    year: number,
+): number {
+    const t = Math.max(YEAR_MIN, Math.min(YEAR_MAX, year));
+    const y1 = Math.floor(t);
+    const y2 = Math.ceil(t);
+    const idx1 = jobIndex * YEAR_COUNT + (y1 - YEAR_MIN);
+    const idx2 = jobIndex * YEAR_COUNT + (y2 - YEAR_MIN);
+    const val1 = Number(flat[idx1] ?? 0);
+    const val2 = Number(flat[idx2] ?? 0);
+    const f = t - y1;
+    return val1 * (1 - f) + val2 * f;
 }
 
 // Constants for Landscape Generation
@@ -309,14 +375,14 @@ export function growthAtYearFromForecastFlat(
     return val1 * (1 - f) + val2 * f;
 }
 
-/** A role's published forecast as one cumulative value per year, YEAR_MIN..YEAR_MAX.
+/** A role's published AI forecast as one cumulative value per year, 2025..2030.
  *  Null when any year is missing, so a tile never draws a line it has to invent. */
 export function forecastPathPoints(
     forecast: { year: number; growthImpact: number }[] | undefined,
 ): number[] | null {
     if (!forecast?.length) return null;
     const points: number[] = [];
-    for (let year = YEAR_MIN; year <= YEAR_MAX; year++) {
+    for (let year = YEAR_MIN; year <= AI_FORECAST_YEAR_MAX; year++) {
         const hit = forecast.find((f) => f.year === year);
         if (!hit || !Number.isFinite(hit.growthImpact)) return null;
         points.push(hit.growthImpact);

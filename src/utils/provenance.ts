@@ -5,6 +5,7 @@ import { DATA_SOURCES } from '../config/constants';
 export type DataProvenance =
     | 'BLS_OES'
     | 'BLS_OOH'
+    | 'BLS_EP'
     | 'BLS_CPS'
     | 'ONET'
     | 'ONET_PROXY'
@@ -16,6 +17,7 @@ export type DataProvenance =
 const PROVENANCE_LABEL: Record<DataProvenance, string> = {
     BLS_OES: 'How many people in the U.S. have this job today. Comes from the government’s main employment survey (BLS OES).',
     BLS_OOH: 'How much this job is expected to grow or shrink over the next 10 years (2024–2034). Comes from the government’s job outlook handbook (BLS OOH).',
+    BLS_EP: 'How many people BLS projects will have this job in 2025 and in 2035. Comes from the Employment Projections program. The 3D map height follows this path.',
     BLS_CPS: 'Live U.S. unemployment rate from the government’s household survey (BLS CPS). This is the national rate — not a count of people in this specific job.',
     ONET: 'The day-to-day tasks listed for this job. Comes from O*NET, a government job-description database.',
     ONET_PROXY: 'The day-to-day tasks listed for this job. Comes from O*NET, a government job-description database, using the closest matching occupation because O*NET does not publish a separate profile for this exact title.',
@@ -36,6 +38,7 @@ export function jobSourceProvenanceChips(job: Job): { key: string; label: string
 
     if (src.has(DATA_SOURCES.BLS_OES)) chips.push({ key: 'oes', label: 'OES', provenance: 'BLS_OES' });
     if (src.has(DATA_SOURCES.BLS_OOH)) chips.push({ key: 'ooh', label: 'OOH', provenance: 'BLS_OOH' });
+    if (src.has(DATA_SOURCES.BLS_EP)) chips.push({ key: 'ep', label: 'EP', provenance: 'BLS_EP' });
     if (src.has(DATA_SOURCES.BLS_CPS)) chips.push({ key: 'cps', label: 'CPS', provenance: 'BLS_CPS' });
     // No State OES chip here by design. State-level OES backs the 2D map's
     // shading and Location Quotient; nothing on the detail panel is derived

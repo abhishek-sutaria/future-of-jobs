@@ -1,5 +1,4 @@
 import React from 'react';
-import { useStore } from '../store';
 import { Z } from '../config/layers';
 import { RISK_BAND_COLORS } from '../config/theme';
 
@@ -7,10 +6,7 @@ import { RISK_BAND_COLORS } from '../config/theme';
 // time slider down to an unusable width. The colour scale is also explained in the
 // intro modal, so phones lose nothing critical.
 export const Legend: React.FC = () => {
-    const heightMode = useStore((state) => state.heightMode);
-    const heightCaption = heightMode === 'employment'
-        ? 'BLS workers'
-        : 'growth vs 2025';
+    const heightCaption = 'BLS jobs 2025–35';
 
     return (
         <div

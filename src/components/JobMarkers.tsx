@@ -4,9 +4,17 @@ import { Group, Vector3 } from 'three';
 import { Html, Line } from '@react-three/drei';
 import { useStore } from '../store';
 import type { Job } from '../types';
-import { getTerrainPosition, calculateGaussianHeight, buildGrowthForecastFlatArray, growthAtYearFromForecastFlat, getVisualHeightForGrowth, getVisualHeightForWorkersAtYear, type PeakData, TERRAIN_CONFIG } from '../utils/terrainMath';
+import {
+    getTerrainPosition,
+    calculateGaussianHeight,
+    buildEpEmploymentFlatArray,
+    employmentAtYearFromFlat,
+    getVisualHeightForEpEmployment,
+    type PeakData,
+    TERRAIN_CONFIG,
+} from '../utils/terrainMath';
 import { buildRiskScale, riskBandColor } from '../config/theme';
-import { SCENE, YEAR_MAX } from '../config/constants';
+import { SCENE, YEAR_MIN, YEAR_MAX } from '../config/constants';
 import { useIsMobile } from '../hooks/useIsMobile';
 import { socAliasCount } from '../utils/onet';
 import {
@@ -52,7 +60,6 @@ export const JobMarkers: React.FC = () => {
     const selectedJob = useStore((state) => state.selectedJob);
     const selectedRoleIds = useStore((state) => state.selectedRoleIds);
     const mapView = useStore((state) => state.mapView);
-    const heightMode = useStore((state) => state.heightMode);
     const isOrbiting = useStore((state) => state.isOrbiting);
 
     const [hoveredJobId, setHoveredJobId] = useState<string | null>(null);
@@ -237,8 +244,8 @@ export const JobMarkers: React.FC = () => {
         return jobs.filter(job => selectedRoleIds.has(job.id));
     }, [jobs, selectedRoleIds]);
 
-    const forecastsFlat = useMemo(
-        () => buildGrowthForecastFlatArray(filteredJobs),
+    const employmentFlat = useMemo(
+        () => buildEpEmploymentFlatArray(filteredJobs),
         [filteredJobs],
     );
 
@@ -249,19 +256,17 @@ export const JobMarkers: React.FC = () => {
         [jobs],
     );
 
-    // Peak positions & heights (synced with Terrain.tsx shader + forecast flat buffer)
+    // Peak positions & heights (synced with Terrain.tsx shader + EP employment flat buffer)
     const peaks = useMemo(() => {
         const nextPeaks = filteredJobs.map((job, filteredIndex) => {
             const i = jobs.findIndex(j => j.id === job.id);
-            const g = growthAtYearFromForecastFlat(forecastsFlat, filteredIndex, year);
-            const h = heightMode === 'employment'
-                ? getVisualHeightForWorkersAtYear(job.employment, g)
-                : getVisualHeightForGrowth(g);
+            const emp = employmentAtYearFromFlat(employmentFlat, filteredIndex, year);
+            const h = getVisualHeightForEpEmployment(emp);
             const { x, z } = getTerrainPosition(i, jobs);
             return { x, z, height: h } as PeakData;
         });
         return nextPeaks;
-    }, [filteredJobs, jobs, year, heightMode, forecastsFlat]);
+    }, [filteredJobs, jobs, year, employmentFlat]);
 
     // Stagger: vertical offset to separate overlapping labels.
     // Disabled while SCENE.LABEL.STAGGER_ENABLED is false on every device —
@@ -391,23 +396,22 @@ export const JobMarkers: React.FC = () => {
             const labelHeight = SCENE.LABEL.BASE_HEIGHT + peak.offset;
             const surfaceY = calculateGaussianHeight(peak.x, peak.z, peaks) + TERRAIN_CONFIG.TERRAIN_OFFSET_Y;
 
-            // Forecast stat is pinned to the terminal year (2030) regardless of the
-            // slider, so it reads as "where this role ends up" instead of always
-            // showing the 2025 baseline (0% by definition) when the slider starts there.
-            const forecastGrowth = growthAtYearFromForecastFlat(forecastsFlat, filteredIndex, YEAR_MAX);
+            // EP decade % change (BLS Employment Projections 2025–2035).
+            const forecastGrowth = job.projectedGrowth;
             const isDeclining = forecastGrowth < 0;
             const isGrowing = forecastGrowth > 0;
             const growthStr = `${forecastGrowth >= 0 ? '+' : ''}${forecastGrowth.toFixed(1)}%`;
             const growthColor = isGrowing ? '#4ade80' : isDeclining ? '#f87171' : '#94a3b8';
-            const growthLabel = `${YEAR_MAX} Forecast`;
+            const growthLabel = `${YEAR_MIN}–${String(YEAR_MAX).slice(2)} EP`;
 
-            // Workers stat = static BLS OES headcount (same as Workers peak height).
-            const workersStr = job.employment >= 1_000_000
-                ? (job.employment / 1_000_000).toFixed(1) + 'M'
-                : job.employment >= 1_000
-                ? Math.round(job.employment / 1_000) + 'K'
-                : Math.round(job.employment).toString();
-            const workersLabel = 'Workers';
+            // Workers = BLS EP employment at the current slider year (matches peak).
+            const empNow = employmentAtYearFromFlat(employmentFlat, filteredIndex, year);
+            const workersStr = empNow >= 1_000_000
+                ? (empNow / 1_000_000).toFixed(1) + 'M'
+                : empNow >= 1_000
+                ? Math.round(empNow / 1_000) + 'K'
+                : Math.round(empNow).toString();
+            const workersLabel = 'Jobs';
             const aliasN = socAliasCount(job.title);
             const socShareNote = aliasN > 1
                 ? `1/${aliasN} of shared SOC`
@@ -443,7 +447,7 @@ export const JobMarkers: React.FC = () => {
         return items;
     }, [
         mapView, filteredJobs, staggeredPeaks, selectedJob, isGlobalSelectionActive,
-        isOrbiting, hoveredJobId, isMobile, riskScale, peaks, forecastsFlat, year,
+        isOrbiting, hoveredJobId, isMobile, riskScale, peaks, employmentFlat, year,
     ]);
 
     // Publish the ordered tip list for useFrame after commit — never during render.

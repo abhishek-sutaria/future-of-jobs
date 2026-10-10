@@ -6,14 +6,7 @@ import { YEAR_MIN, YEAR_MAX, YEAR_RANGE } from '../config/constants';
 export const YearSlider: React.FC = () => {
     const year = useStore((state) => state.year);
     const setYear = useStore((state) => state.setYear);
-    const heightMode = useStore((state) => state.heightMode);
-    const setHeightMode = useStore((state) => state.setHeightMode);
     const progress = ((year - YEAR_MIN) / YEAR_RANGE) * 100;
-
-    // Workers restored to static BLS headcount (Ray, Oct 2026).
-    const modeHint = heightMode === 'employment'
-        ? 'Height = BLS employment (log-scaled). Year does not change Workers peaks; use Growth for timeline.'
-        : 'Projected growth relative to 2025';
 
     return (
         // Horizontal placement is width-dependent, in three bands:
@@ -22,60 +15,16 @@ export const YearSlider: React.FC = () => {
         //    (210px wide + 24px margin). It sits left of centre, but never overlaps.
         //  • ≥1200px   — enough room for the card (max-w-2xl, 672px) to be truly
         //    centred on the viewport and still clear the Legend, so no reservation.
-        // The middle band is expressed as a bounded range rather than as a wider
-        // breakpoint overriding a narrower one: Tailwind emits arbitrary min-[…]
-        // blocks *before* the standard md block, so an override would lose on
-        // source order and silently never apply.
         <div className="absolute inset-x-0 bottom-6 [@media(max-height:480px)]:!bottom-2 flex justify-center px-4 md:max-[1199px]:pr-[264px] pointer-events-none" style={{ zIndex: Z.timeBar }}>
             <div className="w-full max-w-2xl pointer-events-auto">
             <div data-tour="tour-slider" className="bg-gray-900/60 backdrop-blur-xl border border-cyan-400/25 rounded-2xl px-4 py-3 md:px-6 md:py-4 [@media(max-height:480px)]:!py-1.5 shadow-lg shadow-cyan-500/5 overflow-hidden">
-                {/* Peak height encoding toggle. The mode hint sits beside the label instead
-                    of on its own line, so the card stays short and more terrain is visible.
-                    Font sizes are deliberately unchanged — only spacing was tightened. */}
-                <div className="flex items-start justify-between gap-3 mb-2 [@media(max-height:480px)]:!mb-1 flex-wrap min-w-0">
-                    <div className="min-w-0">
-                        <p className="text-[10px] text-gray-500 uppercase tracking-widest font-semibold">
-                            Peak Height
-                        </p>
-                        {/* The explainer sentence is what pushed this card tall enough to
-                            crowd the terrain on a phone; the Growth/Workers toggle alone
-                            is self-explanatory day-to-day, so only desktop keeps the hint. */}
-                        <p className="hidden md:block [@media(max-height:480px)]:!hidden text-[10px] text-gray-500 leading-snug break-words">{modeHint}</p>
-                    </div>
-                    <div
-                        role="radiogroup"
-                        aria-label="Peak height encoding"
-                        className="inline-flex rounded-lg border border-white/[0.08] bg-white/[0.03] p-0.5"
-                    >
-                        <button
-                            type="button"
-                            role="radio"
-                            aria-checked={heightMode === 'growth'}
-                            onClick={() => setHeightMode('growth')}
-                            title="Projected growth relative to 2025"
-                            className={`px-2.5 py-1 [@media(pointer:coarse)]:min-h-[44px] max-md:min-h-[44px] max-md:px-3 text-[10px] font-semibold uppercase tracking-wider rounded-md transition-colors ${
-                                heightMode === 'growth'
-                                    ? 'bg-cyan-500/20 text-cyan-200'
-                                    : 'text-gray-400 hover:text-white'
-                            }`}
-                        >
-                            Growth
-                        </button>
-                        <button
-                            type="button"
-                            role="radio"
-                            aria-checked={heightMode === 'employment'}
-                            onClick={() => setHeightMode('employment')}
-                            title="BLS employment headcount (log-scaled); does not change with the year"
-                            className={`px-2.5 py-1 [@media(pointer:coarse)]:min-h-[44px] max-md:min-h-[44px] max-md:px-3 text-[10px] font-semibold uppercase tracking-wider rounded-md transition-colors ${
-                                heightMode === 'employment'
-                                    ? 'bg-cyan-500/20 text-cyan-200'
-                                    : 'text-gray-400 hover:text-white'
-                            }`}
-                        >
-                            Workers
-                        </button>
-                    </div>
+                <div className="mb-2 [@media(max-height:480px)]:!mb-1 min-w-0">
+                    <p className="text-[10px] text-gray-500 uppercase tracking-widest font-semibold">
+                        Peak Height = BLS Jobs
+                    </p>
+                    <p className="hidden md:block [@media(max-height:480px)]:!hidden text-[10px] text-gray-500 leading-snug break-words">
+                        Number of jobs from BLS Employment Projections (2025–2035). Straight-line path between the two official levels — no AI forecast.
+                    </p>
                 </div>
 
                 <div className="flex justify-between items-center mb-2 [@media(max-height:480px)]:!mb-0.5 text-sm font-medium tracking-widest gap-2 min-w-0">

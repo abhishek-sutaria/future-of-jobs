@@ -12,12 +12,12 @@ const ALL_STEPS: Step[] = [
     {
         target: null,
         title: 'Welcome — quick tour',
-        description: 'This map shows the AI impact on 50 marketing & business roles from 2025 to 2030. Click Next to walk through each feature.',
+        description: 'This map shows 50 marketing & business roles with BLS Employment Projections from 2025 to 2035. Click Next to walk through each feature.',
     },
     {
         target: 'tour-slider',
         title: 'AI Timeline',
-        description: 'Drag the slider from 2025 → 2030. Default height is Workers (BLS employment headcount — does not change with the year). Switch Peak Height to Growth to see projected employment change relative to 2025.',
+        description: 'Drag the slider from 2025 → 2035. Peak height is the number of jobs from BLS Employment Projections — a straight line between the official 2025 and 2035 levels.',
         padding: 14,
     },
     {

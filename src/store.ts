@@ -10,6 +10,37 @@ import {
 } from './config/constants';
 import { oohEnvelopeCap } from './utils/terrainMath';
 import { MAP_TITLE_TO_SOC } from './utils/onet';
+import blsEp2025_2035 from './data/bls_ep_2025_2035.json';
+
+type EpSocRow = {
+    soc: string;
+    employment_2025: number;
+    employment_2035: number;
+    percent_change: number | null;
+};
+
+const EP_BY_SOC = (blsEp2025_2035 as { by_soc: Record<string, EpSocRow> }).by_soc;
+
+/** Attach BLS EP 2025/2035 levels (and EP % change) after baked AI scores are applied. */
+function attachEpEmployment(jobs: Job[]): Job[] {
+    return jobs.map((j) => {
+        const soc = MAP_TITLE_TO_SOC[j.title];
+        const ep = soc ? EP_BY_SOC[soc] : undefined;
+        if (!ep) return j;
+        const sources = j.dataSources.includes(DATA_SOURCES.BLS_EP)
+            ? j.dataSources
+            : [...j.dataSources, DATA_SOURCES.BLS_EP];
+        return {
+            ...j,
+            epEmployment2025: ep.employment_2025,
+            epEmployment2035: ep.employment_2035,
+            projectedGrowth: ep.percent_change == null
+                ? j.projectedGrowth
+                : Math.round(ep.percent_change * 10) / 10,
+            dataSources: sources,
+        };
+    });
+}
 
 // ── Percentile helper (used by both fetchRealData and scoreAllJobsWithAI) ──
 //
@@ -131,7 +162,7 @@ function applyAnalysesToJobs(jobs: Job[], analyses: Record<string, JobAnalysisRe
     });
 }
 
-/** Split national OES headcount equally among titles that share a SOC so 3D peaks conserve mass. */
+/** Split national headcounts equally among titles that share a SOC so 3D peaks conserve mass. */
 function splitSharedSocEmployment(jobs: Job[]): Job[] {
     const counts = new Map<string, number>();
     for (const j of jobs) {
@@ -142,7 +173,16 @@ function splitSharedSocEmployment(jobs: Job[]): Job[] {
         const soc = MAP_TITLE_TO_SOC[j.title];
         const n = soc ? (counts.get(soc) ?? 1) : 1;
         if (n <= 1) return j;
-        return { ...j, employment: Math.round(j.employment / n) };
+        return {
+            ...j,
+            employment: Math.round(j.employment / n),
+            epEmployment2025: j.epEmployment2025 != null
+                ? Math.round(j.epEmployment2025 / n)
+                : j.epEmployment2025,
+            epEmployment2035: j.epEmployment2035 != null
+                ? Math.round(j.epEmployment2035 / n)
+                : j.epEmployment2035,
+        };
     });
 }
 
@@ -150,7 +190,9 @@ function splitSharedSocEmployment(jobs: Job[]): Job[] {
 // render already has real risk colors and forecasts — no blocking startup pass.
 const INITIAL_SCORES = resolveInitialScores();
 const SEEDED_JOBS = applyPercentileLabels(
-    splitSharedSocEmployment(applyAnalysesToJobs(initialJobs, INITIAL_SCORES.scores)),
+    splitSharedSocEmployment(
+        attachEpEmployment(applyAnalysesToJobs(initialJobs, INITIAL_SCORES.scores)),
+    ),
 );
 
 // ── Store interface ────────────────────────────────────────────────────────
@@ -161,12 +203,6 @@ interface AppState {
     selectedJob: Job | null;
     setSelectedJob: (job: Job | null) => void;
     jobs: Job[];
-
-    // Peak height encoding — what does mountain height represent in the 3D view?
-    //   'growth'     → cumulative % → damped shader height (timeline scrub)
-    //   'employment' → log-scaled BLS employment headcount (static across years)
-    heightMode: 'growth' | 'employment';
-    setHeightMode: (mode: 'growth' | 'employment') => void;
 
     // Map view state
     mapView: 'globe' | 'map' | 'tasks';
@@ -269,10 +305,6 @@ export const useStore = create<AppState>((set, get) => ({
     setSelectedJob: (selectedJob) => set({ selectedJob }),
     jobs: SEEDED_JOBS,
 
-
-    // Peak height encoding — default Workers (static BLS headcount).
-    heightMode: 'employment',
-    setHeightMode: (mode) => set({ heightMode: mode }),
 
     // Map state
     mapView: 'globe',

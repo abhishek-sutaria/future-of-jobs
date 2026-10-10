@@ -88,19 +88,18 @@ export const Landscape: React.FC = () => {
     }, [bumpInteraction]);
 
     const year = useStore((s) => s.year);
-    const heightMode = useStore((s) => s.heightMode);
 
     // Arm the idle timer on mount, and wake the loop whenever the year scrub,
-    // height mode, map view, selected job, route, or canvas remount changes —
-    // those live outside OrbitControls. Without route/canvasKey, a phone that
-    // idled then opened Dashboard (or recovered from context loss) can return
-    // to a Canvas still stuck on frameloop:'never'.
+    // map view, selected job, route, or canvas remount changes — those live
+    // outside OrbitControls. Without route/canvasKey, a phone that idled then
+    // opened Dashboard (or recovered from context loss) can return to a Canvas
+    // still stuck on frameloop:'never'.
     useEffect(() => {
         bumpInteraction();
         return () => {
             if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
         };
-    }, [bumpInteraction, year, heightMode, mapView, selectedJob, route, canvasKey]);
+    }, [bumpInteraction, year, mapView, selectedJob, route, canvasKey]);
 
     const handleContextLost = useCallback((event: Event) => {
         // Without this, the browser assumes the page doesn't want to recover
