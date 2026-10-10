@@ -4,7 +4,7 @@ import { Group, Vector3 } from 'three';
 import { Html, Line } from '@react-three/drei';
 import { useStore } from '../store';
 import type { Job } from '../types';
-import { getTerrainPosition, calculateGaussianHeight, buildGrowthForecastFlatArray, growthAtYearFromForecastFlat, getVisualHeightForGrowth, getVisualHeightForWorkersAtYear, impliedEmploymentAtYear, type PeakData, TERRAIN_CONFIG } from '../utils/terrainMath';
+import { getTerrainPosition, calculateGaussianHeight, buildGrowthForecastFlatArray, growthAtYearFromForecastFlat, getVisualHeightForGrowth, getVisualHeightForWorkersAtYear, type PeakData, TERRAIN_CONFIG } from '../utils/terrainMath';
 import { buildRiskScale, riskBandColor } from '../config/theme';
 import { SCENE, YEAR_MAX } from '../config/constants';
 import { useIsMobile } from '../hooks/useIsMobile';
@@ -401,17 +401,13 @@ export const JobMarkers: React.FC = () => {
             const growthColor = isGrowing ? '#4ade80' : isDeclining ? '#f87171' : '#94a3b8';
             const growthLabel = `${YEAR_MAX} Forecast`;
 
-            // Workers stat tracks the slider: implied headcount at the scrubbed year,
-            // using the same formula that drives the terrain peak in Workers mode.
-            const sliderGrowth = growthAtYearFromForecastFlat(forecastsFlat, filteredIndex, year);
-            const roundedYear = Math.round(year);
-            const impliedWorkers = impliedEmploymentAtYear(job.employment, sliderGrowth);
-            const workersStr = impliedWorkers >= 1_000_000
-                ? (impliedWorkers / 1_000_000).toFixed(1) + 'M'
-                : impliedWorkers >= 1_000
-                ? Math.round(impliedWorkers / 1_000) + 'K'
-                : Math.round(impliedWorkers).toString();
-            const workersLabel = `${roundedYear} Workers`;
+            // Workers stat = static BLS OES headcount (same as Workers peak height).
+            const workersStr = job.employment >= 1_000_000
+                ? (job.employment / 1_000_000).toFixed(1) + 'M'
+                : job.employment >= 1_000
+                ? Math.round(job.employment / 1_000) + 'K'
+                : Math.round(job.employment).toString();
+            const workersLabel = 'Workers';
             const aliasN = socAliasCount(job.title);
             const socShareNote = aliasN > 1
                 ? `1/${aliasN} of shared SOC`

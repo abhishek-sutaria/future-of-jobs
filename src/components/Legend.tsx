@@ -9,7 +9,7 @@ import { RISK_BAND_COLORS } from '../config/theme';
 export const Legend: React.FC = () => {
     const heightMode = useStore((state) => state.heightMode);
     const heightCaption = heightMode === 'employment'
-        ? 'implied workforce'
+        ? 'BLS workers'
         : 'growth vs 2025';
 
     return (

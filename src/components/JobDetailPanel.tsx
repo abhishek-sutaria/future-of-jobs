@@ -334,7 +334,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                             <p className="text-[10px] uppercase text-gray-500 font-semibold tracking-wider text-center max-w-[110px] leading-tight">Projected jobs 2025–30</p>
                                             <IconInfo size={10} className="text-gray-500" />
                                             <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-52 p-2 bg-gray-900 border border-gray-700 rounded-lg text-[9px] text-gray-300 opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity z-10 text-center leading-tight">
-                                                This role&rsquo;s year-by-year employment forecast through 2030: an AI prediction anchored to the BLS 2024&ndash;34 outlook, scaled so 2030 is only a fraction of that decade endpoint (~5/9). Same cumulative % the 3D view uses for Workers / Growth heights. Not a BLS data series.
+                                                This role&rsquo;s year-by-year employment forecast through 2030: an AI prediction anchored to the BLS 2024&ndash;34 outlook, scaled so 2030 is only a fraction of that decade endpoint (~5/9). Same cumulative % the 3D view uses for Growth heights. Not a BLS data series.
                                             </div>
                                         </div>
                                         <div className="text-xs font-semibold tabular-nums" style={{ color }}>{end > 0 ? '+' : ''}{end.toFixed(1)}% by 2030</div>

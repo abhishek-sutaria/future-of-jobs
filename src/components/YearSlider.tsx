@@ -10,10 +10,9 @@ export const YearSlider: React.FC = () => {
     const setHeightMode = useStore((state) => state.setHeightMode);
     const progress = ((year - YEAR_MIN) / YEAR_RANGE) * 100;
 
-    // Rolled back from Human work → Growth (Ray, Oct 2026): keep the prior
-    // Growth/Workers encoding until we agree on a replacement visualization.
+    // Workers restored to static BLS headcount (Ray, Oct 2026).
     const modeHint = heightMode === 'employment'
-        ? 'Height = log-scaled implied workforce (BLS employment × cumulative % at this year).'
+        ? 'Height = BLS employment (log-scaled). Year does not change Workers peaks; use Growth for timeline.'
         : 'Projected growth relative to 2025';
 
     return (
@@ -67,7 +66,7 @@ export const YearSlider: React.FC = () => {
                             role="radio"
                             aria-checked={heightMode === 'employment'}
                             onClick={() => setHeightMode('employment')}
-                            title="Implied workforce from BLS employment × cumulative forecast %"
+                            title="BLS employment headcount (log-scaled); does not change with the year"
                             className={`px-2.5 py-1 [@media(pointer:coarse)]:min-h-[44px] max-md:min-h-[44px] max-md:px-3 text-[10px] font-semibold uppercase tracking-wider rounded-md transition-colors ${
                                 heightMode === 'employment'
                                     ? 'bg-cyan-500/20 text-cyan-200'

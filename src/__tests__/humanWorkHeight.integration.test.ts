@@ -93,6 +93,16 @@ describe('human-work heights on published roles', () => {
         expect(unique.size).toBeGreaterThan(10);
     });
 
+    it('Workers height ignores cumulative % (static BLS headcount)', () => {
+        for (const j of jobs.slice(0, 10)) {
+            const h0 = getVisualHeightForWorkersAtYear(j.employment, 0);
+            const hPos = getVisualHeightForWorkersAtYear(j.employment, 12);
+            const hNeg = getVisualHeightForWorkersAtYear(j.employment, -8);
+            expect(h0).toBe(hPos);
+            expect(h0).toBe(hNeg);
+        }
+    });
+
     it('JobMarkers and Terrain share the same Human-work height helper inputs', () => {
         // Spot-check: for every role, the height formula is deterministic given
         // the same (employment, cumulative%, risk, year) tuple — the two call

@@ -216,8 +216,8 @@ export const getVisualHeightForEmployment = (employment: number): number => {
 
 /**
  * Implied headcount at a given point on the forecast: baseline × (1 + cumulative%/100).
- * Shared by the Workers-mode terrain height below and the job popup's Workers stat —
- * both must derive the same number from the same forecast sample.
+ * Kept for the unwired Human-work helpers / tests. Live Workers mode uses baseline
+ * BLS employment only (Ray rollback, Oct 2026).
  */
 export function impliedEmploymentAtYear(
     baselineEmployment: number,
@@ -227,25 +227,14 @@ export function impliedEmploymentAtYear(
 }
 
 /**
- * Workers mode: mostly log-scaled **implied** headcount (baseline × (1 + cumulative%/100)),
- * with amplified delta from baseline employment height, plus a small blend of the same
- * Growth-mode height mapping so the year scrub reads clearly. Cumulative % in data is unchanged.
+ * Workers mode: peak height follows **BLS headcount only** (log-scaled).
+ * Timeline scrub does not change Workers peak height; cumulative % drives Growth mode.
  */
 export function getVisualHeightForWorkersAtYear(
     baselineEmployment: number,
-    cumulativePctFromBaseline: number,
+    _cumulativePctFromBaseline: number,
 ): number {
-    const implied = impliedEmploymentAtYear(baselineEmployment, cumulativePctFromBaseline);
-    const hBase = getVisualHeightForEmployment(baselineEmployment);
-    const hImplied = getVisualHeightForEmployment(implied);
-    const delta = hImplied - hBase;
-    const hEmploymentLed = hBase + delta * SHADER.WORKERS_HEIGHT_DELTA_AMPLIFIER;
-
-    const hGrowthLed = getVisualHeightForGrowth(cumulativePctFromBaseline);
-    const b = SHADER.WORKERS_GROWTH_STYLE_BLEND;
-    const mixed = hEmploymentLed * (1 - b) + hGrowthLed * b;
-
-    return Math.max(VISUAL_CONFIG.MIN_HEIGHT, Math.min(VISUAL_CONFIG.MAX_HEIGHT, mixed));
+    return getVisualHeightForEmployment(baselineEmployment);
 }
 
 export const getDeclineTintStrength = (growthDelta: number): number => {

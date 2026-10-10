@@ -35,7 +35,7 @@ export const IntroModal: React.FC = () => {
                     <div>
                         <h3 className="text-white font-semibold mb-1 text-sm">Terrain Height = Growth or Workers</h3>
                         <p className="text-gray-400 text-sm leading-relaxed">
-                            Toggle Peak Height on the year slider: Growth shows projected change relative to 2025; Workers shows implied headcount from the BLS employment outlook.
+                            Toggle Peak Height on the year slider: Growth shows projected change relative to 2025; Workers shows log-scaled BLS employment headcount (static across years).
                         </p>
                     </div>
                 </div>
