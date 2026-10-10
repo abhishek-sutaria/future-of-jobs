@@ -25,7 +25,7 @@ export const IntroModal: React.FC = () => {
 
     return (
         <Modal isOpen={isOpen} onClose={handleClose} title="AI & Future of Work" size="md" layer="overlay">
-            <p className="text-gray-400 text-sm mb-6">50 marketing &amp; business roles · 2025–2030</p>
+            <p className="text-gray-400 text-sm mb-6">50 marketing &amp; business roles · 2025–2035</p>
 
             <div className="space-y-5 mb-8">
                 <div className="flex gap-4">
@@ -33,9 +33,9 @@ export const IntroModal: React.FC = () => {
                         <IconLayers size={18} className="text-blue-400" />
                     </div>
                     <div>
-                        <h3 className="text-white font-semibold mb-1 text-sm">Terrain Height = Growth or Workers</h3>
+                        <h3 className="text-white font-semibold mb-1 text-sm">Terrain Height = BLS Jobs</h3>
                         <p className="text-gray-400 text-sm leading-relaxed">
-                            Toggle Peak Height on the year slider: Growth shows projected change relative to 2025; Workers shows log-scaled BLS employment headcount (static across years).
+                            Peak height is the number of jobs from BLS Employment Projections. Drag the year slider from 2025 to 2035 to follow the official path between those two levels.
                         </p>
                     </div>
                 </div>

@@ -10,10 +10,17 @@ export type Job = {
   id: string;
   title: string;
   cluster: string;
-  employment: number; // Proxy for BLS volume
+  employment: number; // BLS OEWS May 2025 national headcount (role panel / OES badge)
+  /**
+   * BLS Employment Projections — employment level in the EP base year (2025).
+   * Landscape peak height interpolates linearly between this and epEmployment2035.
+   */
+  epEmployment2025?: number;
+  /** BLS Employment Projections — projected employment level in 2035. */
+  epEmployment2035?: number;
   /** Mean of task AI capability scores (0–1). Higher = more automation risk / easier for GenAI. */
   automationCostIndex: number;
-  projectedGrowth: number; // Percentage (e.g., 5.2)
+  projectedGrowth: number; // BLS EP percent change 2025–35 (e.g., 5.2)
   salaryVolatilityLabel: string; // Percentile label: Critical | High | Moderate | Stable (store.ts)
   humanResilienceLabel: string; // Percentile label: Future-Proof | High | At Risk (store.ts)
 

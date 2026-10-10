@@ -4,27 +4,31 @@
  */
 
 // ── Simulation Time Range ──────────────────────────────────────────
+/** Landscape slider + BLS Employment Projections path (2025–2035). */
 export const YEAR_MIN = 2025;
-export const YEAR_MAX = 2030;
-export const YEAR_RANGE = YEAR_MAX - YEAR_MIN;       // 5
-export const YEAR_COUNT = YEAR_RANGE + 1;             // 6 years (2025–2030 inclusive)
-/** Official BLS OOH / Employment Projections endpoint year (10-year outlook from 2024). */
+export const YEAR_MAX = 2035;
+export const YEAR_RANGE = YEAR_MAX - YEAR_MIN;       // 10
+export const YEAR_COUNT = YEAR_RANGE + 1;             // 11 years (2025–2035 inclusive)
+/**
+ * Baked Claude yearlyForecast paths still end at 2030 (role charts / Analyze).
+ * Landscape peak height does not use those paths — it uses EP employment levels.
+ */
+export const AI_FORECAST_YEAR_MAX = 2030;
+/** Legacy OOH decade endpoint used to cap AI forecast paths (2024–34 vintage). */
 export const OOH_ENDPOINT_YEAR = 2034;
 /**
- * Fraction of the full 2024–34 OOH % that the in-app 2030 slider endpoint may reach.
+ * Fraction of the full 2024–34 OOH % that the baked AI 2030 path may reach.
  * Linear from the 2025 baseline (0) to the 2034 OOH endpoint: (2030 − 2025) / (2034 − 2025) = 5/9.
- * Prevents baking the full decade change into a five-year path.
  */
-export const OOH_FRACTION_AT_YEAR_MAX = (YEAR_MAX - YEAR_MIN) / (OOH_ENDPOINT_YEAR - YEAR_MIN);
+export const OOH_FRACTION_AT_YEAR_MAX =
+    (AI_FORECAST_YEAR_MAX - YEAR_MIN) / (OOH_ENDPOINT_YEAR - YEAR_MIN);
 
 // ── Data Sources (metadata for seed data) ──────────────────────────
-// BLS_OES is the NATIONAL per-role headcount baked into src/data.ts (drives
-// terrain height, the Workers stat, and the "OES" provenance badge). BLS_STATE
-// is a SEPARATE vintage: the state-level breakdown in src/data/geo_real.json
-// that drives the 2D map (see that file's own _meta.bls_release for its
-// current vintage — it is not guaranteed to match BLS_OES). Keep this literal
-// in sync with every `dataSources` array in src/data.ts; a mismatch silently
-// removes the OES badge (see src/utils/provenance.ts) with no test failure —
+// BLS_OES is the NATIONAL OEWS headcount baked into src/data.ts (role-panel
+// Workers badge / OES chip). Landscape peak height uses BLS Employment
+// Projections levels (epEmployment2025/2035 from bls_ep_2025_2035.json).
+// BLS_STATE is a SEPARATE vintage: state-level employment/LQ in geo_real.json.
+// Keep BLS_OES in sync with every `dataSources` array in src/data.ts —
 // src/__tests__/oesVintage.test.ts guards this.
 // ONET carried exactly that bug until 2026-09: this read 'ONET' while the data
 // says 'O*NET-30.1', so the O*NET badge could never render for any role, and
@@ -33,6 +37,8 @@ export const OOH_FRACTION_AT_YEAR_MAX = (YEAR_MAX - YEAR_MIN) / (OOH_ENDPOINT_YE
 export const DATA_SOURCES = {
     BLS_OES: 'BLS-OES-2025',
     BLS_OOH: 'BLS-OOH-2024-34',
+    /** Landscape employment path — BLS EP Table 1.2, 2025 and projected 2035. */
+    BLS_EP: 'BLS-EP-2025-35',
     BLS_CPS: 'BLS-CPS (Live)',
     BLS_STATE: 'BLS-OES-State',
     ONET: 'O*NET-30.1',
@@ -220,7 +226,7 @@ export const SHADER = {
     HEIGHT_CLAMP_MAX: 5.0,
     DECLINE_TINT_MAX: 0.65,
     MAX_JOBS: 50,
-    FORECAST_ARRAY_SIZE: 300, // MAX_JOBS * YEAR_COUNT
+    FORECAST_ARRAY_SIZE: 550, // MAX_JOBS * YEAR_COUNT (50 × 11)
     /** Gaussian steepness exponent for JobMesh bell-curve LatheGeometry */
     BELL_CURVE_DECAY: 3.5,
 } as const;

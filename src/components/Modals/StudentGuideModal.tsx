@@ -19,16 +19,16 @@ const FEATURES: Feature[] = [
         emoji: '🏔️',
         title: '3D Terrain Map',
         description:
-            'Each glowing peak represents one job role. Peak colour = AI automation risk (red = high risk, green = safer). Peak height depends on the mode: in Growth mode it reflects the projected employment change %; in Workers mode it reflects the static BLS employment headcount.',
-        tip: 'Toggle Peak Height on the year-slider panel. Workers shows which roles employ the most people; Growth shows where change is happening relative to 2025.',
+            'Each glowing peak represents one job role. Peak colour = AI automation risk (red = high risk, green = safer). Peak height = number of jobs from BLS Employment Projections (2025–2035).',
+        tip: 'Peak height is BLS Employment Projections job counts. Drag 2025 → 2035 to see the official path for each role.',
         color: 'cyan',
     },
     {
         emoji: '⏱️',
         title: 'AI Timeline Slider',
         description:
-            'Drag the slider from 2025 → 2030 to watch each role\'s projected employment change year by year. Every peak follows its role\'s published forecast, which stays within a fraction of the official BLS 2024–34 outlook (2030 is not the full decade endpoint).',
-        tip: 'Compare a Marketing Manager to a Sales Manager at 2030. Notice which peak moves more, then open both roles to compare their task-level risk.',
+            'Drag the slider from 2025 → 2035 to watch each role\'s BLS Employment Projections job count year by year. Height moves in a straight line between the official 2025 and 2035 employment levels — no AI forecast on the landscape.',
+        tip: 'Compare a Marketing Manager to a Sales Manager at 2035. Notice which peak moves more, then open both roles to compare their task-level risk.',
         color: 'purple',
     },
     {

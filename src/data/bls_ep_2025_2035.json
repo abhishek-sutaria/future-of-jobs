@@ -1,0 +1,387 @@
+{
+  "_meta": {
+    "source": "BLS Employment Projections Table 1.2",
+    "vintage": "2025\u20132035",
+    "units": "persons (converted from thousands)",
+    "workbook": "www.bls.gov/emp/ind-occ-matrix/occupation.xlsx",
+    "wayback_capture": "20261002185424"
+  },
+  "by_soc": {
+    "11-1021": {
+      "soc": "11-1021",
+      "bls_title": "General and operations managers",
+      "employment_2025": 3599000,
+      "employment_2035": 3780300,
+      "numeric_change": 181300,
+      "percent_change": 5.0
+    },
+    "11-2021": {
+      "soc": "11-2021",
+      "bls_title": "Marketing managers",
+      "employment_2025": 421600,
+      "employment_2035": 450800,
+      "numeric_change": 29100,
+      "percent_change": 6.9
+    },
+    "11-2022": {
+      "soc": "11-2022",
+      "bls_title": "Sales managers",
+      "employment_2025": 650100,
+      "employment_2035": 679100,
+      "numeric_change": 29000,
+      "percent_change": 4.5
+    },
+    "11-2032": {
+      "soc": "11-2032",
+      "bls_title": "Public relations managers",
+      "employment_2025": 80800,
+      "employment_2035": 85400,
+      "numeric_change": 4600,
+      "percent_change": 5.7
+    },
+    "11-3021": {
+      "soc": "11-3021",
+      "bls_title": "Computer and information systems managers",
+      "employment_2025": 685800,
+      "employment_2035": 793900,
+      "numeric_change": 108100,
+      "percent_change": 15.8
+    },
+    "11-3031": {
+      "soc": "11-3031",
+      "bls_title": "Financial managers",
+      "employment_2025": 879700,
+      "employment_2035": 964600,
+      "numeric_change": 84900,
+      "percent_change": 9.7
+    },
+    "11-3051": {
+      "soc": "11-3051",
+      "bls_title": "Industrial production managers",
+      "employment_2025": 252100,
+      "employment_2035": 258600,
+      "numeric_change": 6500,
+      "percent_change": 2.6
+    },
+    "11-3061": {
+      "soc": "11-3061",
+      "bls_title": "Purchasing managers",
+      "employment_2025": 88300,
+      "employment_2035": 91800,
+      "numeric_change": 3500,
+      "percent_change": 4.0
+    },
+    "11-3071": {
+      "soc": "11-3071",
+      "bls_title": "Transportation, storage, and distribution managers",
+      "employment_2025": 228100,
+      "employment_2035": 242100,
+      "numeric_change": 14000,
+      "percent_change": 6.1
+    },
+    "11-3111": {
+      "soc": "11-3111",
+      "bls_title": "Compensation and benefits managers",
+      "employment_2025": 23700,
+      "employment_2035": 24000,
+      "numeric_change": 300,
+      "percent_change": 1.1
+    },
+    "11-3121": {
+      "soc": "11-3121",
+      "bls_title": "Human resources managers",
+      "employment_2025": 224900,
+      "employment_2035": 237400,
+      "numeric_change": 12500,
+      "percent_change": 5.5
+    },
+    "11-3131": {
+      "soc": "11-3131",
+      "bls_title": "Training and development managers",
+      "employment_2025": 50200,
+      "employment_2035": 53500,
+      "numeric_change": 3200,
+      "percent_change": 6.4
+    },
+    "13-1020": {
+      "soc": "13-1020",
+      "bls_title": "Buyers and purchasing agents",
+      "employment_2025": 516100,
+      "employment_2035": 547000,
+      "numeric_change": 30800,
+      "percent_change": 6.0
+    },
+    "13-1051": {
+      "soc": "13-1051",
+      "bls_title": "Cost estimators",
+      "employment_2025": 226400,
+      "employment_2035": 219500,
+      "numeric_change": -6900,
+      "percent_change": -3.1
+    },
+    "13-1071": {
+      "soc": "13-1071",
+      "bls_title": "Human resources specialists",
+      "employment_2025": 939700,
+      "employment_2035": 999700,
+      "numeric_change": 60100,
+      "percent_change": 6.4
+    },
+    "13-1081": {
+      "soc": "13-1081",
+      "bls_title": "Logisticians",
+      "employment_2025": 255100,
+      "employment_2035": 300000,
+      "numeric_change": 44900,
+      "percent_change": 17.6
+    },
+    "13-1082": {
+      "soc": "13-1082",
+      "bls_title": "Project management specialists",
+      "employment_2025": 1094300,
+      "employment_2035": 1167400,
+      "numeric_change": 73200,
+      "percent_change": 6.7
+    },
+    "13-1111": {
+      "soc": "13-1111",
+      "bls_title": "Management analysts",
+      "employment_2025": 1077100,
+      "employment_2035": 1186300,
+      "numeric_change": 109200,
+      "percent_change": 10.1
+    },
+    "13-1121": {
+      "soc": "13-1121",
+      "bls_title": "Meeting, convention, and event planners",
+      "employment_2025": 172100,
+      "employment_2035": 182100,
+      "numeric_change": 10000,
+      "percent_change": 5.8
+    },
+    "13-1141": {
+      "soc": "13-1141",
+      "bls_title": "Compensation, benefits, and job analysis specialists",
+      "employment_2025": 118100,
+      "employment_2035": 125200,
+      "numeric_change": 7100,
+      "percent_change": 6.0
+    },
+    "13-1151": {
+      "soc": "13-1151",
+      "bls_title": "Training and development specialists",
+      "employment_2025": 472500,
+      "employment_2035": 523700,
+      "numeric_change": 51100,
+      "percent_change": 10.8
+    },
+    "13-1161": {
+      "soc": "13-1161",
+      "bls_title": "Market research analysts and marketing specialists",
+      "employment_2025": 952700,
+      "employment_2035": 1019000,
+      "numeric_change": 66300,
+      "percent_change": 7.0
+    },
+    "13-2011": {
+      "soc": "13-2011",
+      "bls_title": "Accountants and auditors",
+      "employment_2025": 1595200,
+      "employment_2035": 1674600,
+      "numeric_change": 79400,
+      "percent_change": 5.0
+    },
+    "13-2031": {
+      "soc": "13-2031",
+      "bls_title": "Budget analysts",
+      "employment_2025": 50400,
+      "employment_2035": 51300,
+      "numeric_change": 1000,
+      "percent_change": 1.9
+    },
+    "13-2041": {
+      "soc": "13-2041",
+      "bls_title": "Credit analysts",
+      "employment_2025": 64700,
+      "employment_2035": 61900,
+      "numeric_change": -2800,
+      "percent_change": -4.3
+    },
+    "13-2051": {
+      "soc": "13-2051",
+      "bls_title": "Financial and investment analysts",
+      "employment_2025": 377200,
+      "employment_2035": 404300,
+      "numeric_change": 27100,
+      "percent_change": 7.2
+    },
+    "13-2052": {
+      "soc": "13-2052",
+      "bls_title": "Personal financial advisors",
+      "employment_2025": 299400,
+      "employment_2035": 303500,
+      "numeric_change": 4100,
+      "percent_change": 1.4
+    },
+    "13-2053": {
+      "soc": "13-2053",
+      "bls_title": "Insurance underwriters",
+      "employment_2025": 125600,
+      "employment_2035": 120800,
+      "numeric_change": -4800,
+      "percent_change": -3.8
+    },
+    "13-2054": {
+      "soc": "13-2054",
+      "bls_title": "Financial risk specialists",
+      "employment_2025": 66000,
+      "employment_2035": 70800,
+      "numeric_change": 4900,
+      "percent_change": 7.4
+    },
+    "13-2072": {
+      "soc": "13-2072",
+      "bls_title": "Loan officers",
+      "employment_2025": 283000,
+      "employment_2035": 286000,
+      "numeric_change": 3100,
+      "percent_change": 1.1
+    },
+    "13-2099": {
+      "soc": "13-2099",
+      "bls_title": "Financial specialists, all other",
+      "employment_2025": 137800,
+      "employment_2035": 143400,
+      "numeric_change": 5600,
+      "percent_change": 4.1
+    },
+    "15-1211": {
+      "soc": "15-1211",
+      "bls_title": "Computer systems analysts",
+      "employment_2025": 544400,
+      "employment_2035": 587200,
+      "numeric_change": 42900,
+      "percent_change": 7.9
+    },
+    "15-1212": {
+      "soc": "15-1212",
+      "bls_title": "Information security analysts",
+      "employment_2025": 192900,
+      "employment_2035": 233400,
+      "numeric_change": 40600,
+      "percent_change": 21.0
+    },
+    "15-1242": {
+      "soc": "15-1242",
+      "bls_title": "Database administrators",
+      "employment_2025": 75000,
+      "employment_2035": 74900,
+      "numeric_change": -100,
+      "percent_change": -0.1
+    },
+    "15-1252": {
+      "soc": "15-1252",
+      "bls_title": "Software developers",
+      "employment_2025": 1717800,
+      "employment_2035": 1892600,
+      "numeric_change": 174700,
+      "percent_change": 10.2
+    },
+    "15-1254": {
+      "soc": "15-1254",
+      "bls_title": "Web developers",
+      "employment_2025": 87400,
+      "employment_2035": 90600,
+      "numeric_change": 3300,
+      "percent_change": 3.8
+    },
+    "15-1255": {
+      "soc": "15-1255",
+      "bls_title": "Web and digital interface designers",
+      "employment_2025": 132700,
+      "employment_2035": 140800,
+      "numeric_change": 8000,
+      "percent_change": 6.0
+    },
+    "15-1299": {
+      "soc": "15-1299",
+      "bls_title": "Computer occupations, all other",
+      "employment_2025": 471200,
+      "employment_2035": 495300,
+      "numeric_change": 24200,
+      "percent_change": 5.1
+    },
+    "15-2011": {
+      "soc": "15-2011",
+      "bls_title": "Actuaries",
+      "employment_2025": 31200,
+      "employment_2035": 34100,
+      "numeric_change": 2900,
+      "percent_change": 9.2
+    },
+    "15-2031": {
+      "soc": "15-2031",
+      "bls_title": "Operations research analysts",
+      "employment_2025": 113100,
+      "employment_2035": 126600,
+      "numeric_change": 13500,
+      "percent_change": 11.9
+    },
+    "15-2041": {
+      "soc": "15-2041",
+      "bls_title": "Statisticians",
+      "employment_2025": 31300,
+      "employment_2035": 34700,
+      "numeric_change": 3400,
+      "percent_change": 11.0
+    },
+    "15-2051": {
+      "soc": "15-2051",
+      "bls_title": "Data scientists",
+      "employment_2025": 275600,
+      "employment_2035": 371000,
+      "numeric_change": 95400,
+      "percent_change": 34.6
+    },
+    "41-3011": {
+      "soc": "41-3011",
+      "bls_title": "Advertising sales agents",
+      "employment_2025": 99300,
+      "employment_2035": 92200,
+      "numeric_change": -7100,
+      "percent_change": -7.2
+    },
+    "41-3021": {
+      "soc": "41-3021",
+      "bls_title": "Insurance sales agents",
+      "employment_2025": 572600,
+      "employment_2035": 591400,
+      "numeric_change": 18800,
+      "percent_change": 3.3
+    },
+    "41-3031": {
+      "soc": "41-3031",
+      "bls_title": "Securities, commodities, and financial services sales agents",
+      "employment_2025": 531000,
+      "employment_2035": 538500,
+      "numeric_change": 7500,
+      "percent_change": 1.4
+    },
+    "41-3091": {
+      "soc": "41-3091",
+      "bls_title": "Sales representatives of services, except advertising, insurance, financial services, and travel",
+      "employment_2025": 1272700,
+      "employment_2035": 1306700,
+      "numeric_change": 33900,
+      "percent_change": 2.7
+    },
+    "41-4012": {
+      "soc": "41-4012",
+      "bls_title": "Sales representatives, wholesale and manufacturing, except technical and scientific products",
+      "employment_2025": 1279400,
+      "employment_2035": 1268200,
+      "numeric_change": -11200,
+      "percent_change": -0.9
+    }
+  }
+}

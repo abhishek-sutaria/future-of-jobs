@@ -8,7 +8,7 @@ import { describe, it, expect } from 'vitest';
 import { useStore } from '../store';
 import { alignAnalysisToTasks } from '../utils/analysis';
 import { forecastPathPoints } from '../utils/terrainMath';
-import { RESILIENCE_LABELS, YEAR_MIN, YEAR_MAX } from '../config/constants';
+import { RESILIENCE_LABELS, YEAR_MIN, AI_FORECAST_YEAR_MAX } from '../config/constants';
 
 const jobs = () => useStore.getState().jobs;
 
@@ -68,8 +68,8 @@ describe('headline tiles are published', () => {
         for (const j of jobs()) {
             const points = forecastPathPoints(j.yearlyForecast);
             expect(points).not.toBeNull();
-            expect(points!.length).toBe(YEAR_MAX - YEAR_MIN + 1);
-            expect(points![points!.length - 1]).toBe(j.yearlyForecast!.find((f) => f.year === YEAR_MAX)!.growthImpact);
+            expect(points!.length).toBe(AI_FORECAST_YEAR_MAX - YEAR_MIN + 1);
+            expect(points![points!.length - 1]).toBe(j.yearlyForecast!.find((f) => f.year === AI_FORECAST_YEAR_MAX)!.growthImpact);
         }
     });
 

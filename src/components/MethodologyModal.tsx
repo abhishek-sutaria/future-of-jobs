@@ -42,17 +42,24 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                             </thead>
                             <tbody className="text-gray-300">
                                 <tr className="border-t border-white/[0.06]">
-                                    <td className="px-3 py-2">Employment headcount (per role)</td>
+                                    <td className="px-3 py-2">Employment headcount (role panel / OES badge)</td>
                                     <td className="px-3 py-2 text-gray-400">
                                         <SourceLink href="https://www.bls.gov/oes/">BLS OEWS May 2025</SourceLink>
-                                        {' '}(bundled national extract that drives 3D terrain height and the Workers stat).
+                                        {' '}(bundled national extract for the role panel).
                                     </td>
                                 </tr>
                                 <tr className="border-t border-white/[0.06]">
-                                    <td className="px-3 py-2">10-year growth projection</td>
+                                    <td className="px-3 py-2">3D peak height (jobs over time)</td>
                                     <td className="px-3 py-2 text-gray-400">
-                                        <SourceLink href="https://www.bls.gov/emp/tables/occupational-projections-and-characteristics.htm">BLS OOH / Employment Projections 2024–2034</SourceLink>
-                                        {' '}(official 10-year percent change by occupation; rounded to the nearest integer in-app).
+                                        <SourceLink href="https://www.bls.gov/emp/tables/occupational-projections-and-characteristics.htm">BLS Employment Projections 2025–2035</SourceLink>
+                                        {' '}(official employment levels in 2025 and 2035; landscape interpolates in a straight line between them).
+                                    </td>
+                                </tr>
+                                <tr className="border-t border-white/[0.06]">
+                                    <td className="px-3 py-2">10-year growth % (role panel)</td>
+                                    <td className="px-3 py-2 text-gray-400">
+                                        <SourceLink href="https://www.bls.gov/emp/tables/occupational-projections-and-characteristics.htm">BLS Employment Projections 2025–2035</SourceLink>
+                                        {' '}(official percent change by occupation; rounded to the nearest integer in-app).
                                     </td>
                                 </tr>
                                 <tr className="border-t border-white/[0.06]">
@@ -103,12 +110,9 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                     </div>
 
                     <p className="text-[11px] text-gray-500 leading-relaxed mt-2 italic">
-                        In <strong>Growth</strong> mode, peak motion follows each role&apos;s published
-                        year-by-year forecast, which is checked to stay within that role&apos;s BLS OOH
-                        2024&ndash;34 outlook before it is published (2030 is scaled to a fraction of the
-                        decade endpoint, ~5/9).{' '}
-                        <strong>Workers</strong> mode uses log-scaled BLS employment only — it does not
-                        animate with the year scrub.
+                        Peak height on the 3D landscape follows BLS Employment Projections job counts
+                        only (2025→2035, straight-line path). It does not use Claude forecasts.
+                        Claude year-by-year forecasts still appear on role pages for the 2025–2030 charts.
                     </p>
                 </div>
 
@@ -184,12 +188,10 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                         <h3 className="text-base font-semibold text-emerald-400">3D peak height</h3>
                     </div>
                     <p className="text-sm text-gray-300 leading-relaxed">
-                        Use the toggle on the year-slider panel to flip peak height between:
+                        Peak height is the number of jobs from BLS Employment Projections. Drag the year
+                        slider from 2025 to 2035; each peak moves in a straight line between the official
+                        2025 and 2035 employment levels (linear visual scale, not log).
                     </p>
-                    <ul className="list-disc list-inside text-xs text-gray-400 ml-1 space-y-1">
-                        <li><strong>Growth</strong>: per-year cumulative % from the role&apos;s published forecast. Before publishing, each forecast is checked to start at 0% in 2025 and stay within a fraction of the role&apos;s BLS OOH 2024&ndash;34 ten-year change.</li>
-                        <li><strong>Workers</strong>: log-scaled BLS employment headcount (static across years).</li>
-                    </ul>
                 </div>
             </div>
 
