@@ -103,16 +103,13 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                     </div>
 
                     <p className="text-[11px] text-gray-500 leading-relaxed mt-2 italic">
-                        <strong>Human work</strong> is a scenario model, not BLS data: peak height is the
-                        human-remaining share of each role applied to implied employment; as the year
-                        advances, a modelled AI share rises toward halfway from today&apos;s published
-                        risk to full automation by 2030 (<code className="text-[10px] bg-white/[0.06] rounded px-1">FUTURE_EROSION = 0.5</code>),
-                        so high-risk peaks erode faster. Forecasts used for the employment scale stay
-                        within each role&apos;s BLS OOH envelope, capped at ~5/9 of the 10-year % by 2030 —
-                        many published curves sit near that cap by design, not because 2030 equals the
-                        full BLS decade endpoint.{' '}
-                        <strong>Workers</strong> mode log-scales implied headcount (BLS baseline ×
-                        cumulative %), with a display-only height-delta boost so the scrub reads clearly.
+                        In <strong>Growth</strong> mode, peak motion follows each role&apos;s published
+                        year-by-year forecast, which is checked to stay within that role&apos;s BLS OOH
+                        2024&ndash;34 outlook before it is published (2030 is scaled to a fraction of the
+                        decade endpoint, ~5/9).{' '}
+                        <strong>Workers</strong> mode uses the same cumulative % to scale baseline
+                        BLS employment into an implied headcount, then log-scales that for peak height,
+                        with a modest display-only boost to the height change so the scrub reads clearly.
                     </p>
                 </div>
 
@@ -191,7 +188,7 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                         Use the toggle on the year-slider panel to flip peak height between:
                     </p>
                     <ul className="list-disc list-inside text-xs text-gray-400 ml-1 space-y-1">
-                        <li><strong>Human work</strong> (scenario): log-scaled human-remaining workforce — implied employment × (1 − AI share). AI share starts at the role&apos;s published automation risk in 2025 and rises under an in-app erosion model that reaches halfway from current risk to full automation by 2030 (<code className="text-[10px] bg-white/[0.06] rounded px-1">FUTURE_EROSION = 0.5</code>), so high-risk peaks erode faster. Not a BLS series.</li>
+                        <li><strong>Growth</strong>: per-year cumulative % from the role&apos;s published forecast. Before publishing, each forecast is checked to start at 0% in 2025 and stay within a fraction of the role&apos;s BLS OOH 2024&ndash;34 ten-year change.</li>
                         <li><strong>Workers</strong>: log-scaled implied headcount (BLS baseline × cumulative % at the selected year), with a display-only height-delta boost so the scrub feels responsive. Labels still show the real cumulative %.</li>
                     </ul>
                 </div>

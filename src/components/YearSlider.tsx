@@ -10,9 +10,11 @@ export const YearSlider: React.FC = () => {
     const setHeightMode = useStore((state) => state.setHeightMode);
     const progress = ((year - YEAR_MIN) / YEAR_RANGE) * 100;
 
+    // Rolled back from Human work → Growth (Ray, Oct 2026): keep the prior
+    // Growth/Workers encoding until we agree on a replacement visualization.
     const modeHint = heightMode === 'employment'
-        ? 'Height = log-scaled implied workforce (BLS employment × cumulative % at this year). Display-amplified so the scrub reads clearly.'
-        : 'Scenario model: height = human work still left. Peaks erode as modelled AI share rises — not a BLS series.';
+        ? 'Height = log-scaled implied workforce (BLS employment × cumulative % at this year).'
+        : 'Projected growth relative to 2025';
 
     return (
         // Horizontal placement is width-dependent, in three bands:
@@ -36,12 +38,10 @@ export const YearSlider: React.FC = () => {
                         <p className="text-[10px] text-gray-500 uppercase tracking-widest font-semibold">
                             Peak Height
                         </p>
-                        {/* Desktop keeps the full sentence; phones get a one-line hint so the
-                            two modes aren't unlabeled. */}
+                        {/* The explainer sentence is what pushed this card tall enough to
+                            crowd the terrain on a phone; the Growth/Workers toggle alone
+                            is self-explanatory day-to-day, so only desktop keeps the hint. */}
                         <p className="hidden md:block [@media(max-height:480px)]:!hidden text-[10px] text-gray-500 leading-snug break-words">{modeHint}</p>
-                        <p className="md:hidden [@media(max-height:480px)]:!hidden text-[10px] text-gray-500 leading-snug">
-                            {heightMode === 'employment' ? 'Implied headcount' : 'Scenario: human work left'}
-                        </p>
                     </div>
                     <div
                         role="radiogroup"
@@ -53,14 +53,14 @@ export const YearSlider: React.FC = () => {
                             role="radio"
                             aria-checked={heightMode === 'growth'}
                             onClick={() => setHeightMode('growth')}
-                            title="Scenario: human work still left in each role (not BLS data)"
+                            title="Projected growth relative to 2025"
                             className={`px-2.5 py-1 [@media(pointer:coarse)]:min-h-[44px] max-md:min-h-[44px] max-md:px-3 text-[10px] font-semibold uppercase tracking-wider rounded-md transition-colors ${
                                 heightMode === 'growth'
                                     ? 'bg-cyan-500/20 text-cyan-200'
                                     : 'text-gray-400 hover:text-white'
                             }`}
                         >
-                            Human work
+                            Growth
                         </button>
                         <button
                             type="button"

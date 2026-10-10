@@ -3,7 +3,7 @@ import { useFrame } from '@react-three/fiber';
 import { ShaderMaterial, DoubleSide, Vector3, Vector2 } from 'three';
 import { useStore } from '../store';
 import type { Job } from '../types';
-import { getTerrainPosition, getVisualHeightForEmployment, getVisualHeightForWorkersAtYear, getVisualHeightForHumanWorkAtYear, buildGrowthForecastFlatArray, growthAtYearFromForecastFlat, TERRAIN_CONFIG } from '../utils/terrainMath';
+import { getTerrainPosition, getVisualHeightForEmployment, getVisualHeightForWorkersAtYear, getVisualHeightForGrowth, buildGrowthForecastFlatArray, growthAtYearFromForecastFlat, TERRAIN_CONFIG } from '../utils/terrainMath';
 import { riskColorRGB, RISK_UNSCORED_RGB, buildRiskScale, normalizeRisk } from '../config/theme';
 import { SHADER, SHADER_VISUAL, SHADER_COLORS, SCENE } from '../config/constants';
 
@@ -52,9 +52,9 @@ const vertexShader = `
         float growthImpact = uGrowthNow[i];
 
         // Both height modes upload the peak into uPeaks.z on the CPU each frame:
-        // Workers = implied headcount; Human work ("growth" store key) = human-remaining
-        // workforce that erodes with the year. uGrowthNow / uHeightMode stay referenced
-        // so drivers do not strip the uniform arrays from the program.
+        // Workers = implied headcount; Growth = projected growth vs 2025.
+        // uGrowthNow / uHeightMode stay referenced so drivers do not strip the
+        // uniform arrays from the program.
         float rawHeight = peakData.z + (growthImpact + uHeightMode) * 0.0;
         float visualHeight = clamp(rawHeight, ${SHADER.HEIGHT_CLAMP_MIN}, ${SHADER.HEIGHT_CLAMP_MAX.toFixed(1)});
 
@@ -274,12 +274,7 @@ export const Terrain: React.FC = () => {
         if (!job) continue;
         peaks[i].z = hm === 'employment'
           ? getVisualHeightForWorkersAtYear(job.employment, growthArr[i])
-          : getVisualHeightForHumanWorkAtYear(
-              job.employment,
-              growthArr[i],
-              job.automationCostIndex,
-              currentYear,
-            );
+          : getVisualHeightForGrowth(growthArr[i]);
       }
       lastUploadKeyRef.current = uploadKey;
     }

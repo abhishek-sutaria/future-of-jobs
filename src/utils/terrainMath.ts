@@ -181,9 +181,9 @@ export function aiShareAtYear(publishedRisk: number, year: number): number {
  *
  *   impliedEmployment(year) × (1 − aiShareAtYear)
  *
- * Replaces the old Growth encoding (cumulative % from a flat 2025 baseline) so
- * the landscape has readable height variance from the first year and erodes as
- * AI takes more of each role.
+ * Kept for unit tests / a future redesign. Live Peak Height was rolled back to
+ * Growth/Workers (Ray, Oct 2026) until we agree on a credible replacement —
+ * this helper is not wired into Terrain or JobMarkers.
  */
 export function getVisualHeightForHumanWorkAtYear(
     baselineEmployment: number,
