@@ -107,9 +107,8 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                         year-by-year forecast, which is checked to stay within that role&apos;s BLS OOH
                         2024&ndash;34 outlook before it is published (2030 is scaled to a fraction of the
                         decade endpoint, ~5/9).{' '}
-                        <strong>Workers</strong> mode uses the same cumulative % to scale baseline
-                        BLS employment into an implied headcount, then log-scales that for peak height,
-                        with a modest display-only boost to the height change so the scrub reads clearly.
+                        <strong>Workers</strong> mode uses log-scaled BLS employment only — it does not
+                        animate with the year scrub.
                     </p>
                 </div>
 
@@ -189,7 +188,7 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                     </p>
                     <ul className="list-disc list-inside text-xs text-gray-400 ml-1 space-y-1">
                         <li><strong>Growth</strong>: per-year cumulative % from the role&apos;s published forecast. Before publishing, each forecast is checked to start at 0% in 2025 and stay within a fraction of the role&apos;s BLS OOH 2024&ndash;34 ten-year change.</li>
-                        <li><strong>Workers</strong>: log-scaled implied headcount (BLS baseline × cumulative % at the selected year), with a display-only height-delta boost so the scrub feels responsive. Labels still show the real cumulative %.</li>
+                        <li><strong>Workers</strong>: log-scaled BLS employment headcount (static across years).</li>
                     </ul>
                 </div>
             </div>

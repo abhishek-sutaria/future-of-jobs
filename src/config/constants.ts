@@ -223,16 +223,6 @@ export const SHADER = {
     FORECAST_ARRAY_SIZE: 300, // MAX_JOBS * YEAR_COUNT
     /** Gaussian steepness exponent for JobMesh bell-curve LatheGeometry */
     BELL_CURVE_DECAY: 3.5,
-    /**
-     * Workers mode only: stretches peak height change from baseline→implied headcount
-     * when the year scrub updates cumulative %. Does not alter stored % or data.
-     */
-    WORKERS_HEIGHT_DELTA_AMPLIFIER: 3.45,
-    /**
-     * Workers mode: mix in this fraction of Growth-mode height (same cumulative % dampers)
-     * so the scrub feels responsive; remainder stays employment-led implied headcount path.
-     */
-    WORKERS_GROWTH_STYLE_BLEND: 0.28,
 } as const;
 
 // ── Chart Defaults ─────────────────────────────────────────────────

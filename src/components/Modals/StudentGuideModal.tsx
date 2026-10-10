@@ -19,7 +19,7 @@ const FEATURES: Feature[] = [
         emoji: '🏔️',
         title: '3D Terrain Map',
         description:
-            'Each glowing peak represents one job role. Peak colour = AI automation risk (red = high risk, green = safer). Peak height depends on the mode: in Growth mode it reflects the projected employment change %; in Workers mode it reflects the implied BLS headcount at that year.',
+            'Each glowing peak represents one job role. Peak colour = AI automation risk (red = high risk, green = safer). Peak height depends on the mode: in Growth mode it reflects the projected employment change %; in Workers mode it reflects the static BLS employment headcount.',
         tip: 'Toggle Peak Height on the year-slider panel. Workers shows which roles employ the most people; Growth shows where change is happening relative to 2025.',
         color: 'cyan',
     },

@@ -19,7 +19,7 @@ const vertexShader = `
   // Peak Data
   // uPeaks[i] = vec3(worldX, worldZ, workersModeHeight)
   //   .xy = location in terrain plane
-  //   .z  = log-scaled peak height in Workers mode (CPU updates each frame vs timeline)
+  //   .z  = log-scaled peak height in Workers mode (static BLS headcount)
   uniform vec3 uPeaks[${SHADER.MAX_JOBS}];
   uniform vec3 uColors[${SHADER.MAX_JOBS}];
 
@@ -29,7 +29,7 @@ const vertexShader = `
   uniform float uGrowthNow[${SHADER.MAX_JOBS}];
   uniform int uPeakCount;
 
-  // Scalar mode flag (not an array): 0.0 = Human-work scenario, 1.0 = Workers mode.
+  // Scalar mode flag (not an array): 0.0 = Growth mode, 1.0 = Workers mode.
   uniform float uHeightMode;
 
   const float SIGMA_SQ2 = ${SHADER.SIGMA_SQ2.toFixed(1)};
@@ -52,7 +52,7 @@ const vertexShader = `
         float growthImpact = uGrowthNow[i];
 
         // Both height modes upload the peak into uPeaks.z on the CPU each frame:
-        // Workers = implied headcount; Growth = projected growth vs 2025.
+        // Workers = static BLS headcount; Growth = projected growth vs 2025.
         // uGrowthNow / uHeightMode stay referenced so drivers do not strip the
         // uniform arrays from the program.
         float rawHeight = peakData.z + (growthImpact + uHeightMode) * 0.0;
@@ -199,7 +199,7 @@ export const Terrain: React.FC = () => {
       }
       const originalIndex = jobs.findIndex(j => j.id === job.id);
       const { x, z } = getTerrainPosition(originalIndex, jobs);
-      // .xy = world position; .z = Workers-mode height (useFrame updates it per year)
+      // .xy = world position; .z = peak height (Workers = static BLS; Growth updates per year)
       peaks[i].set(x, -z, getVisualHeightForEmployment(job.employment));
 
       // Peak color encodes the Job Security Index (cyan→amber→red, matches Legend);

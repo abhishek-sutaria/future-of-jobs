@@ -17,7 +17,7 @@ const ALL_STEPS: Step[] = [
     {
         target: 'tour-slider',
         title: 'AI Timeline',
-        description: 'Drag the slider from 2025 → 2030. Default height is Workers (implied headcount). Switch Peak Height to Growth to see projected employment change relative to 2025.',
+        description: 'Drag the slider from 2025 → 2030. Default height is Workers (BLS employment headcount — does not change with the year). Switch Peak Height to Growth to see projected employment change relative to 2025.',
         padding: 14,
     },
     {

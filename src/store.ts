@@ -164,7 +164,7 @@ interface AppState {
 
     // Peak height encoding — what does mountain height represent in the 3D view?
     //   'growth'     → cumulative % → damped shader height (timeline scrub)
-    //   'employment' → implied headcount (BLS employment × (1+cumulative%/100)) log-scaled (timeline scrub)
+    //   'employment' → log-scaled BLS employment headcount (static across years)
     heightMode: 'growth' | 'employment';
     setHeightMode: (mode: 'growth' | 'employment') => void;
 
@@ -270,9 +270,7 @@ export const useStore = create<AppState>((set, get) => ({
     jobs: SEEDED_JOBS,
 
 
-    // Peak height encoding — default Workers (implied headcount). The store key
-    // `'growth'` is historical: it now drives the Human-work *scenario* height
-    // (risk × employment, eroding with the year), not BLS growth %.
+    // Peak height encoding — default Workers (static BLS headcount).
     heightMode: 'employment',
     setHeightMode: (mode) => set({ heightMode: mode }),
 
@@ -354,7 +352,7 @@ export const useStore = create<AppState>((set, get) => ({
             // separate source of confusion.
             //
             // Never mark roles "stale" from a CPS miss: published OES employment
-            // in data.ts is the canonical Workers/Human-work figure. A red
+            // in data.ts is the canonical Workers figure. A red
             // "Bundled data" / quota badge here was Ray's old STALE experience —
             // it implied the numbers were degraded when they are simply the
             // intentional published extract.
