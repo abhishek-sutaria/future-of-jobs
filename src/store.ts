@@ -36,7 +36,7 @@ function attachEpEmployment(jobs: Job[]): Job[] {
             epEmployment2035: ep.employment_2035,
             projectedGrowth: ep.percent_change == null
                 ? j.projectedGrowth
-                : Math.round(ep.percent_change),
+                : Math.round(ep.percent_change * 10) / 10,
             dataSources: sources,
         };
     });
