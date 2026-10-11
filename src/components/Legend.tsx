@@ -23,14 +23,16 @@ export const Legend: React.FC = () => {
             {/* Label colours are pulled from the same constants the map dots use, so the
                 legend keys both the discrete dots and the continuous terrain ramp. */}
             <div className="flex flex-row items-center gap-3">
-                <div className="flex flex-col justify-between h-16 text-[10px] font-medium text-right py-0.5">
+                {/* h-[77px] sized so the card matches YearSlider's measured outer height
+                    (title + subtitle + year row + range) at md+ padding. */}
+                <div className="flex flex-col justify-between h-[77px] text-[10px] font-medium text-right py-0.5">
                     <span style={{ color: RISK_BAND_COLORS.safe }}>Safe / Human-Centric</span>
                     <span style={{ color: RISK_BAND_COLORS.hybrid }}>Hybrid / Augmented</span>
                     <span style={{ color: RISK_BAND_COLORS.high }}>High Automation Risk</span>
                 </div>
 
                 <div
-                    className="h-16 w-1.5 rounded-full"
+                    className="h-[77px] w-1.5 rounded-full"
                     style={{
                         backgroundImage: `linear-gradient(to bottom, ${RISK_BAND_COLORS.safe}, ${RISK_BAND_COLORS.hybrid}, ${RISK_BAND_COLORS.high})`,
                     }}
