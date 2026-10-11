@@ -16,7 +16,7 @@ import {
 import { buildRiskScale, riskBandColor } from '../config/theme';
 import { SCENE, YEAR_MIN, YEAR_MAX } from '../config/constants';
 import { useIsMobile } from '../hooks/useIsMobile';
-import { socAliasCount, socPartnerTitles } from '../utils/onet';
+import { socPartnerTitles } from '../utils/onet';
 import {
     HIDDEN_LABEL_POSITION,
     isHiddenLabelPosition,
@@ -412,7 +412,6 @@ export const JobMarkers: React.FC = () => {
                 ? Math.round(empNow / 1_000) + 'K'
                 : Math.round(empNow).toString();
             const workersLabel = `${Math.round(year)} Jobs`;
-            const aliasN = socAliasCount(job.title);
             const partners = socPartnerTitles(job.title);
             const socShareNote = partners.length > 0
                 ? `Split w/${partners.map(p => {
