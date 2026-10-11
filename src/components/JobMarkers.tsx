@@ -402,16 +402,16 @@ export const JobMarkers: React.FC = () => {
             const isGrowing = forecastGrowth > 0;
             const growthStr = `${forecastGrowth >= 0 ? '+' : ''}${forecastGrowth.toFixed(1)}%`;
             const growthColor = isGrowing ? '#4ade80' : isDeclining ? '#f87171' : '#94a3b8';
-            const growthLabel = `${YEAR_MIN}–${String(YEAR_MAX).slice(2)} EP`;
+            const growthLabel = `${YEAR_MIN}–${String(YEAR_MAX).slice(2)} Growth`;
 
-            // Workers = BLS EP employment at the current slider year (matches peak).
+            // Jobs = BLS EP employment at the current slider year (matches peak).
             const empNow = employmentAtYearFromFlat(employmentFlat, filteredIndex, year);
             const workersStr = empNow >= 1_000_000
                 ? (empNow / 1_000_000).toFixed(1) + 'M'
                 : empNow >= 1_000
                 ? Math.round(empNow / 1_000) + 'K'
                 : Math.round(empNow).toString();
-            const workersLabel = 'Jobs';
+            const workersLabel = `${Math.round(year)} Jobs`;
             const aliasN = socAliasCount(job.title);
             const socShareNote = aliasN > 1
                 ? `1/${aliasN} of shared SOC`
