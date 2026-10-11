@@ -9,7 +9,7 @@ import { IconBrain, IconSparkles, IconAlertTriangle, IconShield, IconTarget, Ico
 import { Z } from '../config/layers';
 import { UI, CHART, RESILIENCE_LABELS } from '../config/constants';
 import { partitionRoleTasks, isHybridTask, pickRoadmapPair, emptyColumnNote } from '../utils/taskPartition';
-import { forecastPathPoints } from '../utils/terrainMath';
+import { blsEpGrowthPathPoints } from '../utils/terrainMath';
 import { jobSourceProvenanceChips, panelSourceList } from '../utils/provenance';
 import { ProvenanceBadge } from './ProvenanceBadge';
 import { useUserStore } from '../userStore';
@@ -252,8 +252,8 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                         with the content on phones; `md:contents` removes the wrapper from
                         layout at md and up, so the desktop panel is byte-for-byte unchanged. */}
                     <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar md:contents">
-                    {/* Metrics Row */}
-                    <div className="flex-none grid grid-cols-2 md:grid-cols-4 gap-3 p-4 md:p-6 border-b border-white/[0.04]">
+                    {/* Metrics Row — three tiles: risk, BLS growth (with path), resilience */}
+                    <div className="flex-none grid grid-cols-2 md:grid-cols-3 gap-3 p-4 md:p-6 border-b border-white/[0.04]">
                         {/* Risk Gauge */}
                         <div className="bg-white/[0.03] rounded-xl p-3 border border-white/[0.06] flex flex-col items-center justify-center relative group">
                             <button
@@ -289,11 +289,35 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                             </div>
                         </div>
 
-                        {/* Growth */}
-                        <div className="bg-white/[0.03] rounded-xl p-4 border border-white/[0.06] flex flex-col justify-center">
-                            <p className="text-[10px] uppercase text-gray-500 font-semibold tracking-wider mb-1">Growth Outlook</p>
-                            <div className="text-2xl font-bold text-white tabular-nums">{job.projectedGrowth > 0 ? '+' : ''}{job.projectedGrowth}%</div>
-                            <p className="text-[10px] text-gray-600">BLS outlook, 2024–34</p>
+                        {/* BLS Growth Outlook — official EP % change + linear 2025–35 path (no AI forecast) */}
+                        <div
+                            className="bg-white/[0.03] rounded-xl p-4 border border-white/[0.06] flex flex-col items-center justify-center"
+                            aria-label={`Growth Outlook ${job.projectedGrowth > 0 ? '+' : ''}${job.projectedGrowth}%, BLS outlook 2025–35`}
+                        >
+                            {(() => {
+                                const points = blsEpGrowthPathPoints(job.projectedGrowth);
+                                const end = job.projectedGrowth;
+                                const color = end < 0 ? '#ef4444' : '#22c55e';
+                                const lo = Math.min(0, ...points);
+                                const span = Math.max(0, ...points) - lo || 1;
+                                const y = (v: number) => 32 - ((v - lo) / span) * 28;
+                                const growthLabel = `${end > 0 ? '+' : ''}${end}%`;
+                                return (
+                                    <>
+                                        <p className="text-[10px] uppercase text-gray-500 font-semibold tracking-wider mb-1">Growth Outlook</p>
+                                        <div className="text-2xl font-bold tabular-nums" style={{ color }}>{growthLabel}</div>
+                                        <svg width="110" height="36" className="overflow-visible my-2" aria-hidden="true">
+                                            <line x1="0" y1={y(0)} x2="110" y2={y(0)} stroke="rgba(255,255,255,0.08)" strokeWidth="1" strokeDasharray="3 2" />
+                                            <polyline
+                                                fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
+                                                points={points.map((v, i) => `${i * (110 / (points.length - 1))},${y(v)}`).join(' ')}
+                                            />
+                                            <circle cx="110" cy={y(end)} r="2.5" fill={color} />
+                                        </svg>
+                                        <p className="text-[10px] text-gray-600">BLS outlook, 2025–35</p>
+                                    </>
+                                );
+                            })()}
                         </div>
 
                         {/* Human Resilience */}
@@ -308,39 +332,6 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                 {job.humanResilienceLabel}
                             </div>
                             <p className="text-[10px] text-gray-600 mt-0.5">Rank among all 50 roles</p>
-                        </div>
-
-                        {/* Projected employment path */}
-                        <div className="bg-white/[0.03] rounded-xl p-4 border border-white/[0.06] flex flex-col items-center justify-center">
-                            {(() => {
-                                const points = forecastPathPoints(job.yearlyForecast);
-                                if (!points) return <div className="text-xl font-bold text-gray-600">—</div>;
-                                const end = points[points.length - 1];
-                                const color = end < 0 ? '#ef4444' : '#22c55e';
-                                const lo = Math.min(0, ...points);
-                                const span = Math.max(0, ...points) - lo || 1;
-                                const y = (v: number) => 32 - ((v - lo) / span) * 28;
-                                return (
-                                    <>
-                                        <svg width="90" height="36" className="overflow-visible mb-2" aria-hidden="true">
-                                            <line x1="0" y1={y(0)} x2="90" y2={y(0)} stroke="rgba(255,255,255,0.08)" strokeWidth="1" strokeDasharray="3 2" />
-                                            <polyline
-                                                fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
-                                                points={points.map((v, i) => `${i * (90 / (points.length - 1))},${y(v)}`).join(' ')}
-                                            />
-                                            <circle cx="90" cy={y(end)} r="2.5" fill={color} />
-                                        </svg>
-                                        <div className="flex items-center gap-1 mt-1 cursor-help group/tooltip relative">
-                                            <p className="text-[10px] uppercase text-gray-500 font-semibold tracking-wider text-center max-w-[110px] leading-tight">Projected jobs 2025–30</p>
-                                            <IconInfo size={10} className="text-gray-500" />
-                                            <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-52 p-2 bg-gray-900 border border-gray-700 rounded-lg text-[9px] text-gray-300 opacity-0 group-hover/tooltip:opacity-100 pointer-events-none transition-opacity z-10 text-center leading-tight">
-                                                This role&rsquo;s year-by-year employment forecast through 2030: an AI prediction anchored to the BLS 2024&ndash;34 outlook, scaled so 2030 is only a fraction of that decade endpoint (~5/9). Same cumulative % the 3D view uses for Growth heights. Not a BLS data series.
-                                            </div>
-                                        </div>
-                                        <div className="text-xs font-semibold tabular-nums" style={{ color }}>{end > 0 ? '+' : ''}{end.toFixed(1)}% by 2030</div>
-                                    </>
-                                );
-                            })()}
                         </div>
                     </div>
 

@@ -53,6 +53,14 @@ describe('Panel provenance chips', () => {
         }
     });
 
+    it('does not advertise Claude employment forecast on the role panel', () => {
+        for (const job of initialJobs) {
+            const chips = jobSourceProvenanceChips(job);
+            expect(chips.map((c) => c.key)).not.toContain('fc');
+            expect(chips.map((c) => c.label)).not.toContain('Claude forecast');
+        }
+    });
+
     it('distinguishes proxy-sourced O*NET tasks from an exact O*NET match', () => {
         const alias = initialJobs.find((j) => j.isAlias);
         const exact = initialJobs.find((j) => !j.isAlias);

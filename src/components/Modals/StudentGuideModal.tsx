@@ -35,7 +35,7 @@ const FEATURES: Feature[] = [
         emoji: '📋',
         title: 'Job Detail Panel',
         description:
-            'Click any peak to open a role\'s full profile: its Automation Risk, the BLS 2024–34 growth outlook, its Human Resilience rank among all 50 roles, and its projected jobs path to 2030. Below that, each of the role\'s O*NET tasks appears with its own risk score. Automation Risk is the plain average of those task scores, so you can check it yourself.',
+            'Click any peak to open a role\'s full profile: its Automation Risk, the BLS 2025–35 growth outlook (with a straight-line path between those years), and its Human Resilience rank among all 50 roles. Below that, each of the role\'s O*NET tasks appears with its own risk score. Automation Risk is the plain average of those task scores, so you can check it yourself.',
         tip: 'Scores measure GenAI capability, not guaranteed adoption. The Human Skills section shows tasks worth deepening.',
         color: 'blue',
     },
@@ -99,7 +99,7 @@ const FEATURES: Feature[] = [
         emoji: '📚',
         title: 'Data Sources',
         description:
-            'Employment numbers come from the Bureau of Labor Statistics (BLS) Occupational Employment & Wage Statistics, and growth outlooks from the BLS 2024–34 Employment Projections. Task descriptions are sourced from O*NET 30.1. AI risk scores are Claude\'s ratings of each O*NET task, published with the app as one dated set, so every student sees the same numbers.',
+            'Employment numbers come from the Bureau of Labor Statistics (BLS) Occupational Employment & Wage Statistics, and growth outlooks from the BLS 2025–35 Employment Projections. Task descriptions are sourced from O*NET 30.1. AI risk scores are Claude\'s ratings of each O*NET task, published with the app as one dated set, so every student sees the same numbers.',
         tip: 'Click "Methodology & Data" at the bottom of the screen to read the full sourcing and calculation methodology.',
         color: 'gray',
     },

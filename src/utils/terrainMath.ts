@@ -389,3 +389,16 @@ export function forecastPathPoints(
     }
     return points;
 }
+
+/**
+ * Straight-line BLS EP cumulative % change from 0 at YEAR_MIN to
+ * `projectedGrowth` at YEAR_MAX (one point per year, inclusive).
+ */
+export function blsEpGrowthPathPoints(projectedGrowth: number): number[] {
+    const points: number[] = [];
+    for (let year = YEAR_MIN; year <= YEAR_MAX; year++) {
+        const f = YEAR_RANGE > 0 ? (year - YEAR_MIN) / YEAR_RANGE : 0;
+        points.push(projectedGrowth * f);
+    }
+    return points;
+}

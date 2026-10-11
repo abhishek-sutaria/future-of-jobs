@@ -94,9 +94,9 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                                     </td>
                                 </tr>
                                 <tr className="border-t border-white/[0.06]">
-                                    <td className="px-3 py-2">Year-by-year forecast</td>
+                                    <td className="px-3 py-2">Growth outlook (role page)</td>
                                     <td className="px-3 py-2 text-gray-400">
-                                        <SourceLink href="https://www.anthropic.com/claude">Claude</SourceLink>, reasoning over the BLS projection + O*NET tasks — cumulative % change in <em>total employment for the role</em> through 2030, scaled to a fraction of the official 2024–34 OOH endpoint (not the full decade by 2030)
+                                        BLS Employment Projections percent change 2025–35, with a straight-line path between those years (same vintage as landscape peak height)
                                     </td>
                                 </tr>
                                 <tr className="border-t border-white/[0.06]">
@@ -110,9 +110,9 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                     </div>
 
                     <p className="text-[11px] text-gray-500 leading-relaxed mt-2 italic">
-                        Peak height on the 3D landscape follows BLS Employment Projections job counts
-                        only (2025→2035, straight-line path). It does not use Claude forecasts.
-                        Claude year-by-year forecasts still appear on role pages for the 2025–2030 charts.
+                        Peak height on the 3D landscape and the Growth Outlook tile on each role page
+                        both follow BLS Employment Projections only (2025→2035, straight-line path).
+                        Neither uses Claude employment forecasts.
                     </p>
                 </div>
 

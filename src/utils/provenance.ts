@@ -54,7 +54,8 @@ export function jobSourceProvenanceChips(job: Job): { key: string; label: string
 
     const hasClaudeTasks = job.tasks.some((t) => t.aiCapabilityScore > 0 || t.humanCriticalityScore > 0);
     if (hasClaudeTasks) chips.push({ key: 'ai', label: 'Claude tasks', provenance: 'CLAUDE_TASK_SCORE' });
-    if (job.yearlyForecast?.length) chips.push({ key: 'fc', label: 'Claude forecast', provenance: 'CLAUDE_FORECAST' });
+    // Employment outlook on the role panel is BLS EP only — do not advertise the
+    // baked Claude yearlyForecast path (removed from the Growth Outlook tile).
 
     return chips;
 }
