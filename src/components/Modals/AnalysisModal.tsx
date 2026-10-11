@@ -75,10 +75,13 @@ export const AnalysisModal: React.FC<AnalysisModalProps> = ({ isOpen, isLoading,
                                 </div>
                                 <div>
                                     <h4 className="text-gray-300 text-sm font-semibold uppercase tracking-wider">Human Criticality</h4>
-                                    <p className="text-gray-500 text-xs mt-0.5">Average need for human judgment. Rated independently of AI score, so the two need not total 100%</p>
+                                    <p className="text-gray-500 text-xs mt-0.5">Average need for human judgment</p>
                                 </div>
                             </div>
                         </div>
+                        <p className="text-[11px] text-gray-500 leading-relaxed text-center -mt-2">
+                            AI Automation Score and Human Criticality are independent ratings, so they are not meant to add up to 100%.
+                        </p>
 
                         <div className="bg-blue-500/[0.04] border border-blue-500/15 rounded-xl p-5">
                             <h4 className="text-blue-400 text-xs font-semibold uppercase tracking-wider mb-2">Strategic Insight</h4>
@@ -88,8 +91,7 @@ export const AnalysisModal: React.FC<AnalysisModalProps> = ({ isOpen, isLoading,
                         <div className="space-y-3">
                             <h4 className="text-gray-400 text-xs font-semibold uppercase tracking-wider border-b border-white/[0.06] pb-2">Task-by-Task Breakdown</h4>
                             <p className="text-[11px] text-gray-500">
-                                A red AI badge marks a task at or above {RISK_THRESHOLDS.AUTOMATABLE_AI_SCORE * 100}% GenAI capability, the same line the role panel uses for its Automation Risk column. A green Human badge marks a task where human judgment stays critical. A task can carry both: models are capable of much of the work, a person still owns the outcome. The AI and Human percentages are independent ratings, so they are not meant to add up to 100%.
-                            </p>
+                                A red AI badge marks a task at or above {RISK_THRESHOLDS.AUTOMATABLE_AI_SCORE * 100}% GenAI capability, the same line the role panel uses for its Automation Risk column. A green Human badge marks a task where human judgment stays critical. A task can carry both: models are capable of much of the work, a person still owns the outcome.                            </p>
                             <div className="space-y-2">
                                 {rows.map((row) => {
                                     // Same exposure line as the role panel (utils/taskPartition); the two
