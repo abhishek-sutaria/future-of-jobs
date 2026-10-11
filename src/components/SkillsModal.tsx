@@ -207,13 +207,6 @@ export const SkillsModal: React.FC<SkillsModalProps> = ({ isOpen, onClose }) => 
                             {saved ? 'Saved to your activity' : 'Save this report'}
                         </button>
                     )}
-
-                    <button
-                        onClick={handleClose}
-                        className="w-full py-3 border border-white/[0.08] hover:bg-white/[0.04] rounded-lg text-sm font-medium text-gray-400 transition-colors"
-                    >
-                        Close Analysis
-                    </button>
                 </div>
             )}
 

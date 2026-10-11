@@ -1,6 +1,6 @@
 import React from 'react';
 import { Modal } from './ui/Modal';
-import { IconZap, IconRocket, IconInfo, IconLayers, IconSparkles } from './ui/Icons';
+import { IconZap, IconRocket, IconInfo, IconActivity, IconSparkles } from './ui/Icons';
 
 interface MobileMoreSheetProps {
     isOpen: boolean;
@@ -9,7 +9,7 @@ interface MobileMoreSheetProps {
     onOpenStartupIdeasModal: () => void;
     onOpenStudentGuide: () => void;
     onShowMethodology: () => void;
-    onOpenTaskView: () => void;
+    onOpenHealthCheck: () => void;
     onOpenRescore?: () => void;
     scoresAgeLabel?: string | null;
 }
@@ -21,10 +21,11 @@ interface MobileMoreSheetProps {
  * them without touching a single desktop class. Methodology & Data lives here
  * too: its floating pill shares the bottom-left corner with the year-slider
  * card, which spans the full width on a phone and covered it. Re-score is
- * desktop-only in the header badge, so it is offered here as well.
+ * desktop-only in the header badge, so it is offered here as well, and so is
+ * Health (moved off the phone header to make room for the view switcher).
  */
 export const MobileMoreSheet: React.FC<MobileMoreSheetProps> = ({
-    isOpen, onClose, onOpenSkillsModal, onOpenStartupIdeasModal, onOpenStudentGuide, onShowMethodology, onOpenTaskView,
+    isOpen, onClose, onOpenSkillsModal, onOpenStartupIdeasModal, onOpenStudentGuide, onShowMethodology, onOpenHealthCheck,
     onOpenRescore, scoresAgeLabel,
 }) => {
     const go = (action: () => void) => () => {
@@ -35,12 +36,6 @@ export const MobileMoreSheet: React.FC<MobileMoreSheetProps> = ({
     return (
         <Modal isOpen={isOpen} onClose={onClose} title="More" size="sm" layer="overlay">
             <div className="space-y-2">
-                <button
-                    onClick={go(onOpenTaskView)}
-                    className="w-full flex items-center gap-3 px-4 py-3.5 rounded-lg border border-teal-500/25 bg-teal-500/[0.06] hover:bg-teal-500/15 text-teal-300 text-sm font-semibold transition-colors min-h-[44px]"
-                >
-                    <IconLayers size={16} /> Task view
-                </button>
                 <button
                     onClick={go(onOpenSkillsModal)}
                     className="w-full flex items-center gap-3 px-4 py-3.5 rounded-lg border border-cyan-500/20 bg-cyan-500/[0.06] hover:bg-cyan-500/15 text-cyan-300 text-sm font-semibold transition-colors min-h-[44px]"
@@ -58,6 +53,12 @@ export const MobileMoreSheet: React.FC<MobileMoreSheetProps> = ({
                     className="w-full flex items-center gap-3 px-4 py-3.5 rounded-lg border border-amber-500/25 bg-amber-500/[0.06] hover:bg-amber-500/15 text-amber-400 text-sm font-semibold transition-colors min-h-[44px]"
                 >
                     <span className="text-base leading-none">📋</span> Student Guide
+                </button>
+                <button
+                    onClick={go(onOpenHealthCheck)}
+                    className="w-full flex items-center gap-3 px-4 py-3.5 rounded-lg border border-emerald-500/25 bg-emerald-500/[0.06] hover:bg-emerald-500/15 text-emerald-400 text-sm font-semibold transition-colors min-h-[44px]"
+                >
+                    <IconActivity size={16} /> Health Check
                 </button>
                 {onOpenRescore && (
                     <button
