@@ -1,6 +1,6 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { useStore } from '../store';
-import { IconZap, IconGlobe, IconMap, IconSearch, IconInfo, IconX, IconActivity, IconRocket, IconUser, IconMenu, IconLayers } from './ui/Icons';
+import { IconZap, IconGlobe, IconMap, IconSearch, IconInfo, IconActivity, IconRocket, IconUser, IconMenu, IconLayers } from './ui/Icons';
 import { MobileMoreSheet } from './MobileMoreSheet';
 import { useIsMobile } from '../hooks/useIsMobile';
 import { useUserStore } from '../userStore';
@@ -136,6 +136,29 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
                     // underneath them (in the 2D map as well, before this view existed).
                     mapView !== 'globe' && !isMobile ? 'flex-wrap shrink min-w-0' : 'flex-nowrap shrink-0'
                 }`}>
+                    {/* Mirrors MapView's own "Reset view" (same conditional-only-
+                        when-not-default pattern, same plain-text style). The 3D
+                        view has no bottom-line "am I at the default framing"
+                        signal the way the 2D map's `zoom === 1` does, so
+                        Landscape.tsx derives isDefaultView from pan-target
+                        distance and reports it here via the store — reported
+                        directly: a two-finger touch gesture panned the camera
+                        far enough to lose the terrain entirely with no way back
+                        short of reloading the page.
+                        First in a justify-end row, so appearing/disappearing
+                        never shifts any other button. */}
+                    {mapView !== 'map' && !isDefaultView && (
+                        <button
+                            onClick={triggerResetView}
+                            title="Return the 3D view to its starting position"
+                            className="shrink-0 px-3 py-2.5 rounded-lg border border-white/[0.08] bg-white/[0.03] hover:bg-white/[0.08] text-gray-300 hover:text-white text-xs font-semibold uppercase tracking-wider transition-colors min-h-[44px] max-md:min-w-[44px] max-md:justify-center"
+                        >
+                            Reset view
+                        </button>
+                    )}
+
+                    <ViewSwitcher view={mapView} onChange={setMapView} />
+
                     <button
                         data-tour="tour-skills"
                         onClick={onOpenSkillsModal}
@@ -151,70 +174,25 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
                     >
                         <IconRocket size={14} /> Startup Ideas
                     </button>
-                    {/* Labels collapse to icon-only below 380px. This row is
-                        flex-nowrap + justify-end, so on a 320px phone (iPhone
-                        SE, Galaxy S9+) the extra text pushed this button 42px
-                        off the left edge — clipped, though still tappable at
-                        its centre, which is why a hit-test alone didn't catch
-                        it. title= keeps the meaning available. */}
-                    <button
-                        data-tour="tour-tasks"
-                        onClick={() => setMapView(mapView === 'tasks' ? 'globe' : 'tasks')}
-                        title={mapView === 'tasks' ? 'Back to the 3D view' : 'Split every role into its tasks'}
-                        aria-pressed={mapView === 'tasks'}
-                        className={`hidden md:flex shrink-0 items-center gap-2 px-3 py-2.5 rounded-lg border text-xs font-semibold uppercase tracking-wider transition-colors min-h-[44px] ${
-                            mapView === 'tasks'
-                                ? 'border-teal-400/50 bg-teal-500/20 text-teal-200'
-                                : 'border-teal-500/25 bg-teal-500/[0.06] hover:bg-teal-500/15 text-teal-300'
-                        }`}
-                    >
-                        <IconLayers size={14} /> Tasks
-                    </button>
-
-                    <button
-                        data-tour="tour-toggle"
-                        onClick={() => setMapView(mapView === 'map' ? 'globe' : 'map')}
-                        title={mapView === 'map' ? 'Switch to the 3D view' : 'Switch to the 2D US map'}
-                        className="shrink-0 flex items-center gap-2 px-3 py-2.5 rounded-lg border border-blue-500/20 bg-blue-500/[0.06] hover:bg-blue-500/15 text-blue-400 text-xs font-semibold uppercase tracking-wider transition-colors min-h-[44px] max-md:min-w-[44px] max-md:justify-center"
-                    >
-                        {mapView === 'map' ? <IconGlobe size={14} /> : <IconMap size={14} />}
-                        <span className="max-[379px]:hidden">{mapView === 'map' ? 'Globe' : 'Map'}</span>
-                    </button>
-
-                    {/* Mirrors MapView's own "Reset view" (same conditional-only-
-                        when-not-default pattern, same plain-text style). The 3D
-                        view has no bottom-line "am I at the default framing"
-                        signal the way the 2D map's `zoom === 1` does, so
-                        Landscape.tsx derives isDefaultView from pan-target
-                        distance and reports it here via the store — reported
-                        directly: a two-finger touch gesture panned the camera
-                        far enough to lose the terrain entirely with no way back
-                        short of reloading the page. */}
-                    {mapView !== 'map' && !isDefaultView && (
-                        <button
-                            onClick={triggerResetView}
-                            title="Return the 3D view to its starting position"
-                            className="shrink-0 px-3 py-2.5 rounded-lg border border-white/[0.08] bg-white/[0.03] hover:bg-white/[0.08] text-gray-300 hover:text-white text-xs font-semibold uppercase tracking-wider transition-colors min-h-[44px] max-md:min-w-[44px] max-md:justify-center"
-                        >
-                            Reset view
-                        </button>
-                    )}
 
                     <button
                         onClick={onStartTour}
                         title="Take a guided tour"
+                        aria-label="Take a guided tour"
                         className="shrink-0 w-11 h-11 flex items-center justify-center rounded-lg border border-white/[0.08] bg-white/[0.03] hover:bg-white/[0.08] text-gray-500 hover:text-white transition-colors"
                     >
                         <IconInfo size={15} />
                     </button>
 
+                    {/* Desktop only — on a phone Health lives in the More sheet so the
+                        3-way view switcher fits a 320px row. */}
                     <button
                         onClick={onOpenHealthCheck}
                         title="Health Check — verify all app systems are working"
-                        className="shrink-0 flex items-center gap-2 px-3 py-2.5 rounded-lg border border-emerald-500/25 bg-emerald-500/[0.06] hover:bg-emerald-500/15 text-emerald-400 text-xs font-semibold uppercase tracking-wider transition-colors min-h-[44px] max-md:min-w-[44px] max-md:justify-center"
+                        className="hidden md:flex shrink-0 items-center gap-2 px-3 py-2.5 rounded-lg border border-emerald-500/25 bg-emerald-500/[0.06] hover:bg-emerald-500/15 text-emerald-400 text-xs font-semibold uppercase tracking-wider transition-colors min-h-[44px]"
                     >
                         <IconActivity size={14} />
-                        <span className="max-[379px]:hidden">Health</span>
+                        Health
                     </button>
 
                     <button
@@ -263,16 +241,6 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
                 </div>
 
                 <div className="flex items-center gap-2 w-full md:w-auto justify-end">
-                    {mapView === 'map' && (
-                        <button
-                            onClick={() => setMapView('globe')}
-                            title="Close map and return to 3D view"
-                            className="shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-lg border border-white/10 bg-slate-800/90 hover:bg-slate-700 text-white text-xs font-semibold uppercase tracking-wider transition-colors min-h-[44px] shadow-lg"
-                        >
-                            <IconX size={14} /> Close Map
-                        </button>
-                    )}
-
                     <div data-tour="tour-search" className="w-full md:w-auto">
                         <SearchBar onSelectJob={(job) => setSelectedJob(job)} />
                     </div>
@@ -286,13 +254,59 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
             onOpenStartupIdeasModal={onOpenStartupIdeasModal}
             onOpenStudentGuide={onOpenStudentGuide}
             onShowMethodology={onShowMethodology}
-            onOpenTaskView={() => setMapView('tasks')}
+            onOpenHealthCheck={onOpenHealthCheck}
             onOpenRescore={() => openRescoreModal()}
             scoresAgeLabel={scoresAgeLabel}
         />
         </>
     );
 };
+
+type View = 'globe' | 'map' | 'tasks';
+
+const VIEWS: { id: View; label: string; title: string; icon: React.ReactNode; tour?: string }[] = [
+    { id: 'globe', label: '3D', title: '3D landscape of jobs', icon: <IconGlobe size={14} /> },
+    { id: 'map', label: 'Map', title: '2D US map by state', icon: <IconMap size={14} /> },
+    { id: 'tasks', label: 'Tasks', title: 'Every role split into its tasks', icon: <IconLayers size={14} />, tour: 'tour-tasks' },
+];
+
+/**
+ * The three views are one control in one fixed place: the current view is
+ * highlighted and you leave it by picking another — never by hunting for a
+ * "Close map" / "Globe" / click-Tasks-again button that moves between modes.
+ * Labels collapse to icons below 640px so the row fits a 320px phone.
+ */
+const ViewSwitcher: React.FC<{ view: View; onChange: (v: View) => void }> = ({ view, onChange }) => (
+    <div
+        data-tour="tour-toggle"
+        role="group"
+        aria-label="View"
+        className="shrink-0 flex items-center gap-0.5 p-0.5 rounded-lg border border-white/[0.08] bg-white/[0.03]"
+    >
+        {VIEWS.map((v) => {
+            const active = view === v.id;
+            return (
+                <button
+                    key={v.id}
+                    type="button"
+                    data-tour={v.tour}
+                    onClick={() => onChange(v.id)}
+                    title={v.title}
+                    aria-label={v.label}
+                    aria-pressed={active}
+                    className={`flex items-center justify-center gap-1.5 h-10 min-w-[44px] px-2.5 sm:px-3 rounded-md text-xs font-semibold uppercase tracking-wider transition-colors ${
+                        active
+                            ? 'bg-cyan-500/20 text-cyan-200 ring-1 ring-cyan-400/40'
+                            : 'text-gray-400 hover:text-white hover:bg-white/[0.06]'
+                    }`}
+                >
+                    {v.icon}
+                    <span className="hidden sm:inline">{v.label}</span>
+                </button>
+            );
+        })}
+    </div>
+);
 
 const SearchBar: React.FC<{ onSelectJob: (job: Job) => void }> = ({ onSelectJob }) => {
     const [query, setQuery] = useState('');

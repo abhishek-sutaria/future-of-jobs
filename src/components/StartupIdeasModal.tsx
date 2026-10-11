@@ -483,20 +483,12 @@ export const StartupIdeasModal: React.FC<StartupIdeasModalProps> = ({ isOpen, on
                         </div>
                     )}
 
-                    <div className="flex gap-3">
-                        <button
-                            onClick={() => setStep('input')}
-                            className="flex-1 py-3 border border-white/[0.08] hover:bg-white/[0.04] rounded-lg text-sm font-medium text-gray-400 transition-colors"
-                        >
-                            New Analysis
-                        </button>
-                        <button
-                            onClick={handleClose}
-                            className="flex-1 py-3 border border-white/[0.08] hover:bg-white/[0.04] rounded-lg text-sm font-medium text-gray-400 transition-colors"
-                        >
-                            Close
-                        </button>
-                    </div>
+                    <button
+                        onClick={() => setStep('input')}
+                        className="w-full py-3 border border-white/[0.08] hover:bg-white/[0.04] rounded-lg text-sm font-medium text-gray-400 transition-colors"
+                    >
+                        New Analysis
+                    </button>
                 </div>
             )}
 

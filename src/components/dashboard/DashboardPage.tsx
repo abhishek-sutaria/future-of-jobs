@@ -1,10 +1,10 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { useStore } from '../../store';
 import { useUserStore } from '../../userStore';
 import { Z } from '../../config/layers';
 import { toast } from '../ui/Toast';
 import { Section, Empty } from '../ui/EmptyState';
-import { IconArrowRight } from '../ui/Icons';
+import { CloseButton } from '../ui/CloseButton';
 import { StatTiles } from './StatTiles';
 import { FilterBar } from './FilterBar';
 import { ActivityTable } from './ActivityTable';
@@ -89,19 +89,26 @@ export const DashboardPage: React.FC = () => {
         void toggleSavedRole(jobId, jobTitle);
     }, [toggleSavedRole]);
 
+    const close = useCallback(() => navigate('map'), [navigate]);
+
+    // Escape closes the page like every other panel — unless one of the page's
+    // own dialogs (e.g. a saved report) is open; that dialog handles Escape itself.
+    useEffect(() => {
+        const onKey = (e: KeyboardEvent) => {
+            if (e.key !== 'Escape') return;
+            if (document.querySelector('[aria-modal="true"]')) return;
+            close();
+        };
+        document.addEventListener('keydown', onKey);
+        return () => document.removeEventListener('keydown', onKey);
+    }, [close]);
+
     return (
         <div className="absolute inset-0 bg-gray-900 flex flex-col pointer-events-auto" style={{ zIndex: Z.page }}>
             {/* Header */}
-            <div className="flex-none flex items-center justify-between px-5 md:px-8 py-4 border-b border-white/[0.06]">
-                <div className="flex items-center gap-4">
-                    <button
-                        onClick={() => navigate('map')}
-                        className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-white/[0.08] bg-white/[0.03] hover:bg-white/10 text-xs font-semibold uppercase tracking-wider text-gray-300 transition-colors"
-                    >
-                        <IconArrowRight size={13} className="rotate-180" /> Back to map
-                    </button>
-                    <h1 className="text-lg font-semibold text-white tracking-wide">Your Dashboard</h1>
-                </div>
+            <div className="flex-none flex items-center justify-between gap-3 pl-5 md:pl-8 pr-3 md:pr-6 py-3 border-b border-white/[0.06]">
+                <h1 className="text-lg font-semibold text-white tracking-wide">Your Dashboard</h1>
+                <CloseButton onClick={close} />
             </div>
 
             {/* Scrollable body */}

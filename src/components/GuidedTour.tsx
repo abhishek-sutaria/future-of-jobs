@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Z } from '../config/layers';
+import { CloseButton } from './ui/CloseButton';
 
 interface Step {
     target: string | null; // data-tour="…" selector, or null for centered card
@@ -41,7 +42,7 @@ const ALL_STEPS: Step[] = [
     {
         target: 'tour-toggle',
         title: 'Switch view',
-        description: 'Toggle between the 3D terrain and a flat 2D US map to see where each role is most concentrated geographically.',
+        description: 'Switch between the 3D terrain, a 2D US map, and the Tasks list here. The highlighted button always shows which view you are in — click another to switch.',
         padding: 10,
     },
     {
@@ -102,6 +103,13 @@ export const GuidedTour: React.FC<Props> = ({ isActive, onClose }) => {
         return () => window.removeEventListener('resize', updateRect);
     }, [updateRect, step]);
 
+    useEffect(() => {
+        if (!isActive) return;
+        const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
+        document.addEventListener('keydown', onKey);
+        return () => document.removeEventListener('keydown', onKey);
+    }, [isActive, onClose]);
+
     if (!isActive) return null;
 
     const isLast = step === steps.length - 1;
@@ -127,6 +135,9 @@ export const GuidedTour: React.FC<Props> = ({ isActive, onClose }) => {
 
     return (
         <>
+            {/* Click-outside closes the tour, same as every other panel. */}
+            <div className="fixed inset-0" style={{ zIndex: Z.modal }} onClick={onClose} aria-hidden="true" />
+
             {/* Dark overlay — spotlight punches through via box-shadow */}
             {rect ? (
                 <div
@@ -151,17 +162,26 @@ export const GuidedTour: React.FC<Props> = ({ isActive, onClose }) => {
             )}
 
             {/* Step card */}
-            <div style={{ ...cardStyle, zIndex: Z.modal + 1 }} className="bg-gray-900 border border-white/10 rounded-xl p-5 shadow-2xl">
-                {/* Progress dots */}
-                <div className="flex gap-1.5 mb-4">
-                    {steps.map((_, i) => (
-                        <div
-                            key={i}
-                            className={`h-1 rounded-full transition-all duration-300 ${
-                                i === step ? 'w-6 bg-cyan-400' : i < step ? 'w-2 bg-cyan-800' : 'w-2 bg-white/15'
-                            }`}
-                        />
-                    ))}
+            <div
+                style={{ ...cardStyle, zIndex: Z.modal + 1 }}
+                className="bg-gray-900 border border-white/10 rounded-xl p-5 pt-3 shadow-2xl"
+                role="dialog"
+                aria-modal="true"
+                aria-label="Guided tour"
+            >
+                <div className="flex items-center justify-between -mr-2 mb-2">
+                    {/* Progress dots */}
+                    <div className="flex gap-1.5">
+                        {steps.map((_, i) => (
+                            <div
+                                key={i}
+                                className={`h-1 rounded-full transition-all duration-300 ${
+                                    i === step ? 'w-6 bg-cyan-400' : i < step ? 'w-2 bg-cyan-800' : 'w-2 bg-white/15'
+                                }`}
+                            />
+                        ))}
+                    </div>
+                    <CloseButton onClick={onClose} label="Close tour" />
                 </div>
 
                 <p className="text-[10px] text-cyan-500 uppercase tracking-widest font-bold mb-1">
@@ -171,12 +191,14 @@ export const GuidedTour: React.FC<Props> = ({ isActive, onClose }) => {
                 <p className="text-gray-400 text-sm leading-relaxed mb-5">{current.description}</p>
 
                 <div className="flex items-center justify-between">
-                    <button
-                        onClick={step === 0 ? onClose : () => setStep(s => s - 1)}
-                        className="text-gray-500 text-sm hover:text-gray-300 transition-colors"
-                    >
-                        {step === 0 ? 'Skip tour' : '← Back'}
-                    </button>
+                    {step > 0 ? (
+                        <button
+                            onClick={() => setStep(s => s - 1)}
+                            className="text-gray-500 text-sm hover:text-gray-300 transition-colors"
+                        >
+                            ← Back
+                        </button>
+                    ) : <span />}
                     <button
                         onClick={isLast ? onClose : () => setStep(s => s + 1)}
                         className="px-4 py-1.5 bg-cyan-600 hover:bg-cyan-500 text-white text-sm font-semibold rounded-lg transition-colors"
