@@ -20,10 +20,10 @@ export const YearSlider: React.FC = () => {
             <div data-tour="tour-slider" className="bg-gray-900/60 backdrop-blur-xl border border-cyan-400/25 rounded-2xl px-4 py-3 md:px-6 md:py-4 [@media(max-height:480px)]:!py-1.5 shadow-lg shadow-cyan-500/5 overflow-hidden">
                 <div className="mb-2 [@media(max-height:480px)]:!mb-1 min-w-0">
                     <p className="text-[10px] text-gray-500 uppercase tracking-widest font-semibold">
-                        Number of Jobs (BLS)
+                        Number of Jobs
                     </p>
                     <p className="text-[10px] text-gray-500 leading-snug break-words [@media(max-height:480px)]:text-[9px]">
-                        Height = BLS employment count at this year (straight line from the 2025 level to the 2035 level)
+                        Peak height = Employment count/projection from the U.S. Bureau of Labor Statistics (BLS)
                     </p>
                 </div>
 
