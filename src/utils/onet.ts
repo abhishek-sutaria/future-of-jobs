@@ -97,3 +97,16 @@ export function socAliasCount(title: string): number {
     return Math.max(1, n);
 }
 
+/** Get partner job title(s) that share this role's SOC. Returns empty array if unique. */
+export function socPartnerTitles(title: string): string[] {
+    const soc = MAP_TITLE_TO_SOC[title];
+    if (!soc) return [];
+    const partners: string[] = [];
+    for (const [partnerTitle, code] of Object.entries(MAP_TITLE_TO_SOC)) {
+        if (code === soc && partnerTitle !== title) {
+            partners.push(partnerTitle);
+        }
+    }
+    return partners;
+}
+
