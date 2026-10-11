@@ -4,6 +4,7 @@ import { YEAR_MIN, YEAR_MAX, DATA_SOURCES } from '../config/constants';
 import {
     epEmploymentAtYear,
     getVisualHeightForEpEmployment,
+    blsEpGrowthPathPoints,
     LINEAR_EMP_REF,
 } from '../utils/terrainMath';
 import blsEp from '../data/bls_ep_2025_2035.json';
@@ -45,5 +46,13 @@ describe('BLS EP landscape path', () => {
         for (const soc of socs) {
             expect(blsEp.by_soc[soc as keyof typeof blsEp.by_soc], soc).toBeTruthy();
         }
+    });
+
+    it('role-panel growth path is a straight line from 0% to the EP decade %', () => {
+        const points = blsEpGrowthPathPoints(10);
+        expect(points).toHaveLength(YEAR_MAX - YEAR_MIN + 1);
+        expect(points[0]).toBe(0);
+        expect(points[points.length - 1]).toBe(10);
+        expect(points[5]).toBeCloseTo(5, 5); // midpoint year 2030
     });
 });
