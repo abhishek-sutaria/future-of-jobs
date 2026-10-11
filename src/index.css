@@ -255,10 +255,15 @@ canvas {
    pointer-events:none is load-bearing: a synthetic pointerdown forwarded from
    a label onto the canvas (the old approach) leaves three's OrbitControls with
    a NaN camera on touch, and the whole terrain vanishes. Labels are visual
-   only; JobMarkers hit-tests taps/hover on the canvas against their boxes. */
+   only; JobMarkers hit-tests taps/hover on the canvas against their boxes.
+   
+   transform centers the label on the calculated position, which layoutLabels
+   returns as center coordinates (halfWidth, halfHeight). Without this, the
+   <Html> component treats them as top-left, shifting labels right/down. */
 .foj-job-label {
   z-index: auto;
   pointer-events: none !important;
+  transform: translate(-50%, -50%);
 }
 .foj-job-label--front {
   z-index: 2147483000 !important;
