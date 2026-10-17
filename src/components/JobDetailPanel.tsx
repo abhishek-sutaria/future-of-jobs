@@ -159,6 +159,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
     const riskValue = job.automationCostIndex;
 
     const { riskTask, safeTask } = pickRoadmapPair(job.tasks);
+    const canShowRoadmap = !!riskTask && !!safeTask;
 
     // The gauge is the mean of these same per-task scores, and every task shows
     // its score in one of the two columns (see utils/taskPartition).
@@ -252,6 +253,15 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                     }`}
                                 >
                                     <IconBookmark size={16} {...(isRoleSaved ? { fill: 'currentColor' } : {})} />
+                                </button>
+                            )}
+                            {canShowRoadmap && (
+                                <button
+                                    onClick={() => setShowRoadmapModal(true)}
+                                    title="Step-by-step plan to move from your most automatable task toward your most human-critical one"
+                                    className="hidden md:flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-semibold text-xs uppercase tracking-wider transition-colors min-h-[44px]"
+                                >
+                                    <IconTarget size={14} /> Roadmap
                                 </button>
                             )}
                             <button
@@ -556,21 +566,22 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                         return <p className="text-sm text-gray-400">Focus on developing social intelligence and complex problem-solving skills.</p>;
                                     })()}
                                 </div>
-
-                                <button
-                                    onClick={() => setShowRoadmapModal(true)}
-                                    className="px-5 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold transition-colors shrink-0 min-h-[44px]"
-                                >
-                                    View Roadmap
-                                </button>
                             </div>
                         </div>
                     </div>
                     </div>
 
-                    {/* Mobile action row. Scenario and save live in the panel header,
-                        which is `hidden md:flex`, so a phone needs its own copy. */}
+                    {/* Mobile action row. Roadmap, Scenario and save live in the panel
+                        header, which is `hidden md:flex`, so a phone needs its own copy. */}
                     <div className="flex-none md:hidden flex items-center gap-2 p-3 border-t border-white/[0.04]">
+                        {canShowRoadmap && (
+                            <button
+                                onClick={() => setShowRoadmapModal(true)}
+                                className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 min-h-[44px] bg-blue-600 active:bg-blue-500 text-white rounded-lg font-semibold text-xs uppercase tracking-wider transition-colors"
+                            >
+                                <IconTarget size={14} /> Roadmap
+                            </button>
+                        )}
                         <button
                             onClick={handleCrystalBall}
                             className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 min-h-[44px] bg-purple-600 active:bg-purple-500 text-white rounded-lg font-semibold text-xs uppercase tracking-wider transition-colors"
