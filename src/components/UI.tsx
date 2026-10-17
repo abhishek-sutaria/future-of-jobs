@@ -20,6 +20,7 @@ import { JobDetailPanel } from './JobDetailPanel';
 import { ErrorBoundary } from './ErrorBoundary';
 import { GuidedTour } from './GuidedTour';
 import { toast } from './ui/Toast';
+import { IconInfo } from './ui/Icons';
 import { Z } from '../config/layers';
 
 interface UIProps {
@@ -249,14 +250,28 @@ export const UI: React.FC<UIProps> = ({ dashboardOpen }) => {
                     ...(mapView === 'tasks' ? { left: 'auto', right: 24 } : {}),
                 }}
             >
-                <button
-                    data-tour="tour-methodology"
-                    onClick={() => setShowMethodologyModal(true)}
-                    className="bg-gray-900/70 backdrop-blur-sm border border-white/15 rounded-full px-4 py-2 [@media(pointer:coarse)]:min-h-[44px] flex items-center gap-2 text-[11px] text-gray-200 hover:text-white hover:bg-gray-900/90 hover:border-white/25 transition-all cursor-pointer shadow-lg"
-                >
-                    <span className="uppercase tracking-wider font-semibold text-cyan-400">Sources:</span>
-                    <span>Methodology & Data</span>
-                </button>
+                <div className="flex items-center bg-gray-900/70 backdrop-blur-sm border border-white/15 rounded-full shadow-lg text-[11px] text-gray-200 overflow-hidden">
+                    <button
+                        data-tour="tour-methodology"
+                        onClick={() => setShowMethodologyModal(true)}
+                        title="Sources, methodology & data"
+                        aria-label="Sources, methodology and data"
+                        className="pl-4 pr-3 py-2 [@media(pointer:coarse)]:min-h-[44px] flex items-center gap-1.5 hover:text-white hover:bg-white/[0.06] transition-colors cursor-pointer"
+                    >
+                        <IconInfo size={12} className="text-cyan-400" />
+                        Sources
+                    </button>
+                    <span className="w-px h-4 bg-white/15" aria-hidden="true" />
+                    <button
+                        onClick={() => setShowHealthCheck(true)}
+                        title="System status — check that every part of the app is working"
+                        aria-label="System status"
+                        className="pl-3 pr-4 py-2 [@media(pointer:coarse)]:min-h-[44px] flex items-center gap-1.5 text-gray-300 hover:text-white hover:bg-white/[0.06] transition-colors cursor-pointer"
+                    >
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" aria-hidden="true" />
+                        Status
+                    </button>
+                </div>
             </div>
 
             <SkillsModal isOpen={showSkillsModal} onClose={() => setShowSkillsModal(false)} />
