@@ -409,12 +409,12 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                     {highRiskTasks.map((task) => {
                                         const trained = completedTaskNames.has(task.name);
                                         return (
-                                            <div key={task.name} className="bg-white/[0.02] border border-red-500/10 hover:border-red-500/25 p-3.5 rounded-lg flex justify-between items-start gap-3 transition-colors">
+                                            <div key={task.name} className="bg-white/[0.02] border border-red-500/10 hover:border-red-500/25 p-3.5 rounded-lg flex max-md:flex-col justify-between items-start gap-3 max-md:gap-2 transition-colors">
                                                 <div className="flex-1 min-w-0">
                                                     <div className="text-gray-200 text-sm font-medium">{task.name}</div>
                                                     {renderReasoning(task.name)}
                                                 </div>
-                                                <div className="flex flex-col items-end gap-1.5 shrink-0 mt-0.5">
+                                                <div className="flex flex-col items-end gap-1.5 shrink-0 mt-0.5 max-md:mt-0 max-md:flex-row max-md:flex-wrap max-md:items-center">
                                                     {renderTaskScores(task, 'text-red-400 bg-red-500/10 border-red-500/15')}
                                                     {isHybridTask(task) && (
                                                         <span
@@ -475,12 +475,12 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                     {safeTasks.map((task) => {
                                         const trained = completedTaskNames.has(task.name);
                                         return (
-                                            <div key={task.name} className="bg-white/[0.02] border border-emerald-500/10 hover:border-emerald-500/25 p-3.5 rounded-lg flex justify-between items-start gap-3 transition-colors">
+                                            <div key={task.name} className="bg-white/[0.02] border border-emerald-500/10 hover:border-emerald-500/25 p-3.5 rounded-lg flex max-md:flex-col justify-between items-start gap-3 max-md:gap-2 transition-colors">
                                                 <div className="flex-1 min-w-0">
                                                     <div className="text-white text-sm font-medium">{task.name}</div>
                                                     {renderReasoning(task.name)}
                                                 </div>
-                                                <div className="flex flex-col items-end gap-1.5 shrink-0 mt-1">
+                                                <div className="flex flex-col items-end gap-1.5 shrink-0 mt-1 max-md:mt-0 max-md:flex-row max-md:flex-wrap max-md:items-center">
                                                     {renderTaskScores(task, 'text-emerald-400 bg-emerald-500/10 border-emerald-500/15')}
                                                     {trained ? (
                                                         <span className="flex items-center gap-1 text-[10px] font-semibold text-emerald-400 uppercase tracking-wider">
