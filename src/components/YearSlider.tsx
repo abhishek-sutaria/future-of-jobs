@@ -12,10 +12,11 @@ export const YearSlider: React.FC = () => {
         // Horizontal placement is width-dependent, in three bands:
         //  • below md  — reserve room on the right for the Legend (160px + 24px margin).
         //  • md–1200px — reserve room on the right so the slider clears the Legend
-        //    (210px wide + 24px margin). It sits left of centre, but never overlaps.
+        //    (210px wide + 24px margin), and on the left so it clears the
+        //    Sources | Status pill (UI.tsx, md+ only, left-8, ~170px wide).
         //  • ≥1200px   — enough room for the card (max-w-2xl, 672px) to be truly
-        //    centred on the viewport and still clear the Legend, so no reservation.
-        <div className="absolute inset-x-0 bottom-6 [@media(max-height:480px)]:!bottom-2 flex justify-center px-4 pr-[192px] md:max-[1199px]:pr-[264px] pointer-events-none" style={{ zIndex: Z.timeBar }}>
+        //    centred on the viewport and still clear both, so no reservation.
+        <div className="absolute inset-x-0 bottom-6 [@media(max-height:480px)]:!bottom-2 flex justify-center px-4 pr-[192px] md:max-[1199px]:pr-[264px] md:max-[1199px]:pl-[224px] pointer-events-none" style={{ zIndex: Z.timeBar }}>
             <div className="w-full max-w-2xl pointer-events-auto">
             <div data-tour="tour-slider" className="bg-gray-900/60 backdrop-blur-xl border border-cyan-400/25 rounded-2xl px-4 py-3 md:px-6 md:py-4 [@media(max-height:480px)]:!py-1.5 shadow-lg shadow-cyan-500/5 overflow-hidden">
                 <div className="mb-2 [@media(max-height:480px)]:!mb-1 min-w-0">

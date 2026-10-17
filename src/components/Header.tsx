@@ -1,6 +1,6 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { useStore } from '../store';
-import { IconZap, IconGlobe, IconMap, IconSearch, IconInfo, IconActivity, IconRocket, IconUser, IconMenu, IconLayers } from './ui/Icons';
+import { IconZap, IconGlobe, IconMap, IconSearch, IconInfo, IconRocket, IconUser, IconMenu, IconLayers, IconBook } from './ui/Icons';
 import { MobileMoreSheet } from './MobileMoreSheet';
 import { useIsMobile } from '../hooks/useIsMobile';
 import { useUserStore } from '../userStore';
@@ -107,29 +107,15 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
                 </div>
             </div>
 
-            <div className="flex flex-col items-end gap-2 pointer-events-auto w-full md:w-auto max-[1365px]:min-w-0">
-                {/* Below 1366px this row wraps instead of spilling off the right
-                    edge. Every button is shrink-0 and the row was flex-nowrap, so
-                    on iPad portrait (768px) 7 of them were unreachable in map
-                    view — the title reserves 336px there for the sidebar — and 2
-                    were still cut off at 1024px.
-
-                    This threshold was originally measured and shipped at 1150px.
-                    That measurement was wrong: the button that decides the real
-                    boundary — Saved/Account (useUserStore, authStatus-dependent)
-                    — resolves asynchronously, and a fast pass caught it before it
-                    settled, missing real clipping from 1149px through 1220px.
-                    Re-measured properly (explicitly waited for that button to
-                    render) and it's *still* not fully stable — 1250px clipped in
-                    one run and not another, same code, same width. That's the
-                    actual finding: this row's safe width isn't a fixed number,
-                    it moves with whatever the account button happens to render.
-                    Rather than chase the exact edge again, this is set well past
-                    every clipping width observed (1220px), comfortably under the
-                    common 1366px laptop resolution — margin instead of precision.
-                    If this box's content changes again, re-verify empirically;
-                    don't trust a single quick pass at any one width. */}
-                <div className={`flex items-center gap-1.5 sm:gap-2 justify-end max-[1365px]:flex-wrap max-[1365px]:shrink max-[1365px]:min-w-0 ${
+            <div className="flex flex-col items-end gap-2 pointer-events-auto w-full md:w-auto max-[1199px]:min-w-0">
+                {/* Below 1200px this row wraps instead of spilling off the right
+                    edge (every button is shrink-0). The old threshold was 1366px,
+                    set when the row was seven separate pills plus a Health button;
+                    grouping them into view / tools / help segments made it ~40%
+                    narrower. The Saved/Account button resolves asynchronously
+                    (authStatus), so re-verify empirically with it rendered if this
+                    row's content changes again — don't trust one quick pass. */}
+                <div className={`flex items-center gap-1.5 sm:gap-2 justify-end max-[1199px]:flex-wrap max-[1199px]:shrink max-[1199px]:min-w-0 ${
                     // The sidebar takes 336px off the header, so the width at which these
                     // buttons must start wrapping is 336px higher whenever it is open.
                     // Without this they kept their full width at ~1440 and the title ran
@@ -159,54 +145,44 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
 
                     <ViewSwitcher view={mapView} onChange={setMapView} />
 
-                    <button
-                        data-tour="tour-skills"
-                        onClick={onOpenSkillsModal}
-                        className="hidden md:flex shrink-0 items-center gap-2 px-3 py-2.5 rounded-lg border border-cyan-500/20 bg-cyan-500/[0.06] hover:bg-cyan-500/15 text-cyan-400 text-xs font-semibold uppercase tracking-wider transition-colors min-h-[44px] max-md:min-w-[44px] max-md:justify-center"
-                    >
-                        <IconZap size={14} /> My Skills
-                    </button>
-                    <button
-                        data-tour="tour-startup-ideas"
-                        onClick={onOpenStartupIdeasModal}
-                        title="Startup Ideas — personalized startup opportunities from your resume"
-                        className="hidden md:flex shrink-0 items-center gap-2 px-3 py-2.5 rounded-lg border border-violet-500/25 bg-violet-500/[0.06] hover:bg-violet-500/15 text-violet-300 text-xs font-semibold uppercase tracking-wider transition-colors min-h-[44px] max-md:min-w-[44px] max-md:justify-center"
-                    >
-                        <IconRocket size={14} /> Startup Ideas
-                    </button>
+                    {/* Same segmented style as the view switcher: one neutral surface,
+                        colour only on the icon, so the row reads as three groups
+                        (view, tools, help) rather than a strip of coloured pills. */}
+                    <div role="group" aria-label="Tools" className={`hidden md:flex ${GROUP_CLASS}`}>
+                        <button data-tour="tour-skills" onClick={onOpenSkillsModal} className={`flex ${GROUP_BUTTON_CLASS}`}>
+                            <IconZap size={14} className="text-cyan-400" /> My Skills
+                        </button>
+                        <button
+                            data-tour="tour-startup-ideas"
+                            onClick={onOpenStartupIdeasModal}
+                            title="Startup Ideas — personalized startup opportunities from your resume"
+                            className={`flex ${GROUP_BUTTON_CLASS}`}
+                        >
+                            <IconRocket size={14} className="text-violet-300" /> Startup Ideas
+                        </button>
+                    </div>
 
-                    <button
-                        onClick={onStartTour}
-                        title="Take a guided tour"
-                        aria-label="Take a guided tour"
-                        className="shrink-0 w-11 h-11 flex items-center justify-center rounded-lg border border-white/[0.08] bg-white/[0.03] hover:bg-white/[0.08] text-gray-500 hover:text-white transition-colors"
-                    >
-                        <IconInfo size={15} />
-                    </button>
+                    <div role="group" aria-label="Help" className={`flex ${GROUP_CLASS}`}>
+                        <button
+                            onClick={onOpenStudentGuide}
+                            title="Student Feature Guide — printable reference"
+                            className={`hidden md:flex ${GROUP_BUTTON_CLASS}`}
+                        >
+                            <IconBook size={14} className="text-amber-400" /> Guide
+                        </button>
+                        <button
+                            onClick={onStartTour}
+                            title="Take a guided tour"
+                            aria-label="Take a guided tour"
+                            className={`flex ${GROUP_BUTTON_CLASS}`}
+                        >
+                            <IconInfo size={14} />
+                            <span className="hidden md:inline">Tour</span>
+                        </button>
+                    </div>
 
-                    {/* Desktop only — on a phone Health lives in the More sheet so the
-                        3-way view switcher fits a 320px row. */}
-                    <button
-                        onClick={onOpenHealthCheck}
-                        title="Health Check — verify all app systems are working"
-                        className="hidden md:flex shrink-0 items-center gap-2 px-3 py-2.5 rounded-lg border border-emerald-500/25 bg-emerald-500/[0.06] hover:bg-emerald-500/15 text-emerald-400 text-xs font-semibold uppercase tracking-wider transition-colors min-h-[44px]"
-                    >
-                        <IconActivity size={14} />
-                        Health
-                    </button>
-
-                    <button
-                        onClick={onOpenStudentGuide}
-                        title="Student Feature Guide — printable reference"
-                        className="hidden md:flex shrink-0 items-center gap-2 px-3 py-2.5 rounded-lg border border-amber-500/25 bg-amber-500/[0.06] hover:bg-amber-500/15 text-amber-400 text-xs font-semibold uppercase tracking-wider transition-colors min-h-[44px] max-md:min-w-[44px] max-md:justify-center"
-                    >
-                        <span className="text-sm leading-none">📋</span> Guide
-                    </button>
-
-                    {/* My Skills, Startup Ideas, and Guide above are all
-                        `hidden md:flex` — this is their only way in on a
-                        phone. The tour and Methodology & Data don't need a
-                        spot here; both are already visible on mobile. */}
+                    {/* My Skills, Startup Ideas, and Guide above are desktop-only —
+                        this is their only way in on a phone. */}
                     <button
                         onClick={() => setShowMoreSheet(true)}
                         title="More"
@@ -225,14 +201,14 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
                                     ? 'Your activity — saved roles, history and reports'
                                     : 'Your activity — saved to this browser; add an email to keep it'
                             }
-                            className="shrink-0 flex items-center gap-2 px-3 py-2.5 rounded-lg border border-indigo-500/25 bg-indigo-500/[0.06] hover:bg-indigo-500/15 text-indigo-300 text-xs font-semibold uppercase tracking-wider transition-colors min-h-[44px] max-md:min-w-[44px] max-md:justify-center"
+                            className="shrink-0 flex items-center gap-2 px-3 py-2.5 rounded-lg border border-white/[0.08] bg-white/[0.03] hover:bg-white/[0.08] text-gray-300 hover:text-white text-xs font-semibold uppercase tracking-wider transition-colors min-h-[44px] max-md:min-w-[44px] max-md:justify-center"
                         >
-                            <IconUser size={14} />
+                            <IconUser size={14} className="text-indigo-300" />
                             <span className="hidden md:inline">
                                 {authStatus === 'identified' ? 'Account' : 'Saved'}
                             </span>
                             {savedCount > 0 && (
-                                <span className="px-1.5 py-0.5 rounded bg-indigo-500/20 text-[10px] leading-none">
+                                <span className="px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-200 text-[10px] leading-none">
                                     {savedCount}
                                 </span>
                             )}
@@ -262,6 +238,9 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
     );
 };
 
+const GROUP_CLASS = 'shrink-0 items-center gap-0.5 p-0.5 rounded-lg border border-white/[0.08] bg-white/[0.03]';
+const GROUP_BUTTON_CLASS = 'items-center justify-center gap-1.5 h-10 min-w-[44px] px-2.5 sm:px-3 rounded-md text-xs font-semibold uppercase tracking-wider text-gray-300 hover:text-white hover:bg-white/[0.06] transition-colors';
+
 type View = 'globe' | 'map' | 'tasks';
 
 const VIEWS: { id: View; label: string; title: string; icon: React.ReactNode; tour?: string }[] = [
@@ -281,7 +260,7 @@ const ViewSwitcher: React.FC<{ view: View; onChange: (v: View) => void }> = ({ v
         data-tour="tour-toggle"
         role="group"
         aria-label="View"
-        className="shrink-0 flex items-center gap-0.5 p-0.5 rounded-lg border border-white/[0.08] bg-white/[0.03]"
+        className={`flex ${GROUP_CLASS}`}
     >
         {VIEWS.map((v) => {
             const active = view === v.id;
