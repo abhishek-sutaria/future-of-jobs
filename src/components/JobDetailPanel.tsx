@@ -215,10 +215,10 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                     onClick={onClose}
                     aria-hidden="true"
                 />
-                <div className="relative bg-gray-900/95 backdrop-blur-xl border border-cyan-400/20 shadow-2xl rounded-2xl w-full max-w-6xl h-auto max-h-[85vh] flex flex-col pointer-events-auto overflow-hidden">
+                <div className="relative bg-gray-900/95 backdrop-blur-xl border border-cyan-400/20 shadow-2xl rounded-2xl w-full max-w-6xl h-auto max-h-[92vh] flex flex-col pointer-events-auto overflow-hidden">
 
                     {/* Header */}
-                    <div className="flex-none p-4 md:p-6 border-b border-white/[0.06] flex justify-between items-start gap-4">
+                    <div className="flex-none px-4 py-3 md:px-6 md:py-4 border-b border-white/[0.06] flex justify-between items-start gap-4">
                         <div className="min-w-0 flex-1">
                             <div className="flex items-center gap-2 mb-1.5">
                                 <span className="px-2 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wider bg-blue-500/10 text-blue-400 border border-blue-500/20">
@@ -280,46 +280,54 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                         with the content on phones; `md:contents` removes the wrapper from
                         layout at md and up, so the desktop panel is byte-for-byte unchanged. */}
                     <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar md:contents">
-                    {/* Metrics Row — three tiles: risk, BLS growth (with path), resilience */}
-                    <div className="flex-none grid grid-cols-2 md:grid-cols-3 gap-3 p-4 md:p-6 border-b border-white/[0.04]">
+                    {/* Metrics Row — four slim tiles: risk, human criticality, BLS growth, resilience.
+                        Risk and human criticality sit side by side so the independence note reads
+                        against both. */}
+                    <div className="flex-none grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3 px-4 md:px-6 py-3 border-b border-white/[0.04]">
                         {/* Risk Gauge */}
-                        <div className="bg-white/[0.03] rounded-xl p-3 border border-white/[0.06] flex flex-col items-center justify-center relative group">
-                            <button
-                                className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                                onClick={(e) => { e.stopPropagation(); onShowMethodology(); }}
-                                aria-label="View methodology"
-                            >
-                                <IconInfo size={12} className="text-gray-500 hover:text-cyan-400" />
-                            </button>
-                            <div className="relative w-20 h-20 flex items-center justify-center">
+                        <div className="bg-white/[0.03] rounded-xl px-3 py-2 border border-white/[0.06] flex items-center gap-3 relative group">
+                            <div className="relative w-11 h-11 shrink-0 flex items-center justify-center">
                                 <svg className="w-full h-full -rotate-90" viewBox="0 0 96 96">
-                                    <circle cx="48" cy="48" r="36" stroke="currentColor" strokeWidth="6" fill="transparent" className="text-white/[0.06]" />
+                                    <circle cx="48" cy="48" r="38" stroke="currentColor" strokeWidth="10" fill="transparent" className="text-white/[0.06]" />
                                     <circle
-                                        cx="48" cy="48" r="36" stroke="currentColor" strokeWidth="6" fill="transparent"
-                                        strokeDasharray={2 * Math.PI * 36}
-                                        strokeDashoffset={2 * Math.PI * 36 * (1 - riskValue)}
+                                        cx="48" cy="48" r="38" stroke="currentColor" strokeWidth="10" fill="transparent"
+                                        strokeDasharray={2 * Math.PI * 38}
+                                        strokeDashoffset={2 * Math.PI * 38 * (1 - riskValue)}
                                         strokeLinecap="round"
                                         className={`${riskValue > CHART.RADIAL_GAUGE.COLOR_HIGH ? 'text-red-500' : riskValue > CHART.RADIAL_GAUGE.COLOR_LOW ? 'text-amber-500' : 'text-emerald-500'} transition-all duration-700`}
                                     />
                                 </svg>
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                    <span className={`text-lg font-bold tabular-nums ${riskValue > CHART.RADIAL_GAUGE.COLOR_HIGH ? 'text-red-400' : 'text-white'}`}>
-                                        {(riskValue * 100).toFixed(0)}%
-                                    </span>
-                                </div>
                             </div>
-                            <div className="relative group/gauge flex items-center gap-1 mt-2">
-                                <p className="text-[10px] uppercase text-gray-500 font-semibold tracking-wider">Automation Risk</p>
-                                <IconInfo size={10} className="text-gray-500" />
-                                <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-56 p-2 bg-gray-900 border border-gray-700 rounded-lg text-[9px] text-gray-300 opacity-0 group-hover/gauge:opacity-100 pointer-events-none transition-opacity z-10 text-center leading-tight">
-                                    The average of the risk scores shown on each of this role&rsquo;s tasks below. It is not a count of tasks at risk, so it can sit in the middle even when no single task is mostly automated.
+                            <div className="min-w-0">
+                                <div className={`text-lg font-bold tabular-nums leading-tight ${riskValue > CHART.RADIAL_GAUGE.COLOR_HIGH ? 'text-red-400' : 'text-white'}`}>
+                                    {(riskValue * 100).toFixed(0)}%
+                                </div>
+                                <div className="relative group/gauge flex items-center gap-1">
+                                    <p className="text-[10px] uppercase text-gray-500 font-semibold tracking-wider">Automation Risk</p>
+                                    <button
+                                        onClick={(e) => { e.stopPropagation(); onShowMethodology(); }}
+                                        aria-label="View methodology"
+                                        className="shrink-0"
+                                    >
+                                        <IconInfo size={10} className="text-gray-500 hover:text-cyan-400" />
+                                    </button>
+                                    <div className="absolute top-full left-0 mt-2 w-56 p-2 bg-gray-900 border border-gray-700 rounded-lg text-[9px] text-gray-300 opacity-0 group-hover/gauge:opacity-100 pointer-events-none transition-opacity z-10 leading-tight">
+                                        The average of the risk scores shown on each of this role&rsquo;s tasks below. It is not a count of tasks at risk, so it can sit in the middle even when no single task is mostly automated.
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
+                        {/* Human Criticality — mean of the published per-task scores */}
+                        <div className="bg-white/[0.03] rounded-xl px-3 py-2 border border-white/[0.06] flex flex-col justify-center min-w-0">
+                            <div className="text-lg font-bold tabular-nums leading-tight text-emerald-400">{humanDisplay}%</div>
+                            <p className="text-[10px] uppercase text-gray-500 font-semibold tracking-wider">Human Criticality</p>
+                            <p className="text-[10px] text-gray-600 leading-tight">Average need for human judgment</p>
+                        </div>
+
                         {/* BLS Growth Outlook — official EP % change + linear 2025–35 path (no AI forecast) */}
                         <div
-                            className="bg-white/[0.03] rounded-xl p-4 border border-white/[0.06] flex flex-col items-center justify-center"
+                            className="bg-white/[0.03] rounded-xl px-3 py-2 border border-white/[0.06] flex items-center gap-3 min-w-0"
                             aria-label={`Growth Outlook ${job.projectedGrowth > 0 ? '+' : ''}${job.projectedGrowth}%, BLS outlook 2025–35`}
                         >
                             {(() => {
@@ -328,53 +336,51 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                 const color = end < 0 ? '#ef4444' : '#22c55e';
                                 const lo = Math.min(0, ...points);
                                 const span = Math.max(0, ...points) - lo || 1;
-                                const y = (v: number) => 32 - ((v - lo) / span) * 28;
+                                const y = (v: number) => 22 - ((v - lo) / span) * 20;
                                 const growthLabel = `${end > 0 ? '+' : ''}${end}%`;
                                 return (
                                     <>
-                                        <p className="text-[10px] uppercase text-gray-500 font-semibold tracking-wider mb-1">Growth Outlook</p>
-                                        <div className="text-2xl font-bold tabular-nums" style={{ color }}>{growthLabel}</div>
-                                        <svg width="110" height="36" className="overflow-visible my-2" aria-hidden="true">
-                                            <line x1="0" y1={y(0)} x2="110" y2={y(0)} stroke="rgba(255,255,255,0.08)" strokeWidth="1" strokeDasharray="3 2" />
+                                        <div className="min-w-0">
+                                            <div className="text-lg font-bold tabular-nums leading-tight" style={{ color }}>{growthLabel}</div>
+                                            <p className="text-[10px] uppercase text-gray-500 font-semibold tracking-wider">Growth Outlook</p>
+                                            <p className="text-[10px] text-gray-600">BLS outlook, 2025–35</p>
+                                        </div>
+                                        <svg width="56" height="24" className="overflow-visible shrink-0 ml-auto max-md:hidden" aria-hidden="true">
+                                            <line x1="0" y1={y(0)} x2="56" y2={y(0)} stroke="rgba(255,255,255,0.08)" strokeWidth="1" strokeDasharray="3 2" />
                                             <polyline
                                                 fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"
-                                                points={points.map((v, i) => `${i * (110 / (points.length - 1))},${y(v)}`).join(' ')}
+                                                points={points.map((v, i) => `${i * (56 / (points.length - 1))},${y(v)}`).join(' ')}
                                             />
-                                            <circle cx="110" cy={y(end)} r="2.5" fill={color} />
+                                            <circle cx="56" cy={y(end)} r="2.5" fill={color} />
                                         </svg>
-                                        <p className="text-[10px] text-gray-600">BLS outlook, 2025–35</p>
                                     </>
                                 );
                             })()}
                         </div>
 
                         {/* Human Resilience */}
-                        <div className="bg-white/[0.03] rounded-xl p-4 border border-white/[0.06] flex flex-col justify-center">
-                            <p className="text-[10px] uppercase text-gray-500 font-semibold tracking-wider mb-1">Human Resilience</p>
+                        <div className="bg-white/[0.03] rounded-xl px-3 py-2 border border-white/[0.06] flex flex-col justify-center min-w-0">
                             {/* Published percentile label (store.ts applyPercentileLabels), the same
                                 one the 3D view colours by. A live Analyze run no longer overrides it. */}
                             <div
                                 title="How this role's average need for human judgment ranks among all 50 roles: top quarter Future-Proof, middle half High, bottom quarter At Risk."
-                                className={`text-xl font-bold cursor-help ${RESILIENCE_COLOR[job.humanResilienceLabel] ?? 'text-gray-600'}`}
+                                className={`text-lg font-bold leading-tight cursor-help ${RESILIENCE_COLOR[job.humanResilienceLabel] ?? 'text-gray-600'}`}
                             >
                                 {job.humanResilienceLabel}
                             </div>
-                            <p className="text-[10px] text-gray-600 mt-0.5">Rank among all 50 roles</p>
-                            <p className="text-[11px] text-gray-400 mt-2 pt-2 border-t border-white/[0.06]">
-                                Human Criticality <span className="text-emerald-400 font-semibold tabular-nums">{humanDisplay}%</span>
-                            </p>
-                            <p className="text-[10px] text-gray-600 mt-0.5">Average need for human judgment</p>
+                            <p className="text-[10px] uppercase text-gray-500 font-semibold tracking-wider">Human Resilience</p>
+                            <p className="text-[10px] text-gray-600">Rank among all 50 roles</p>
                         </div>
-                        <p className="col-span-2 md:col-span-3 text-[11px] text-gray-400 leading-relaxed flex items-start gap-1.5">
+                        <p className="col-span-2 md:col-span-4 text-[11px] text-gray-400 leading-snug flex items-start gap-1.5">
                             <IconInfo size={12} className="text-cyan-400 mt-0.5 shrink-0" />
                             <span>Automation Risk and Human Criticality are independent ratings, on the role and on each task, so they are not meant to add up to 100%.</span>
                         </p>
                     </div>
 
                     {/* Main Content */}
-                    <div className="flex-1 min-h-0 overflow-y-auto p-4 md:p-6 space-y-6 custom-scrollbar">
+                    <div className="flex-1 min-h-0 overflow-y-auto px-4 py-4 md:px-6 space-y-4 custom-scrollbar">
                         {(analysisLoading || insightError || analysisResult?.strategic_insight) && (
-                            <div className="bg-blue-500/[0.04] border border-blue-500/15 rounded-xl p-5" aria-live="polite">
+                            <div className="bg-blue-500/[0.04] border border-blue-500/15 rounded-xl px-4 py-3" aria-live="polite">
                                 <div className="flex items-center gap-2 mb-2">
                                     <IconBrain size={14} className="text-blue-400" />
                                     <h3 className="text-blue-400 text-xs font-semibold uppercase tracking-wider">Strategic Insight</h3>
@@ -406,7 +412,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
 
                             {/* Automation Risk Card */}
-                            <div className="rounded-xl p-5 border border-red-500/15 bg-red-500/[0.03]">
+                            <div className="rounded-xl p-4 border border-red-500/15 bg-red-500/[0.03]">
                                 <h3 className="text-red-400 font-semibold uppercase tracking-wider text-xs mb-2 flex items-center gap-2">
                                     <IconAlertTriangle size={14} /> Automation Risk
                                 </h3>
@@ -474,7 +480,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                             </div>
 
                             {/* Human Skills Card */}
-                            <div className="rounded-xl p-5 border border-emerald-500/15 bg-emerald-500/[0.03]">
+                            <div className="rounded-xl p-4 border border-emerald-500/15 bg-emerald-500/[0.03]">
                                 <h3 className="text-emerald-400 font-semibold uppercase tracking-wider text-xs mb-2 flex items-center gap-2">
                                     <IconShield size={14} /> Human Skills
                                 </h3>
@@ -533,7 +539,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                         </div>
 
                         {/* Action Plan Bar */}
-                        <div className="bg-white/[0.02] border border-white/[0.06] rounded-xl p-5">
+                        <div className="bg-white/[0.02] border border-white/[0.06] rounded-xl p-4">
                             <div className="flex flex-col md:flex-row items-center justify-between gap-5">
                                 <div className="flex items-center gap-3">
                                     <div className="w-10 h-10 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center shrink-0">
