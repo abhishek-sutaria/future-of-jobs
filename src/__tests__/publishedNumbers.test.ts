@@ -20,7 +20,7 @@ describe('live Analyze cannot change published numbers', () => {
     });
 });
 
-describe('Analyze modal rows', () => {
+describe('Analyze rows on the role panel', () => {
     const job = jobs().find((j) => j.title === 'IT Project Manager')!;
 
     it('keep the published scores and take only reasoning from the live run', () => {

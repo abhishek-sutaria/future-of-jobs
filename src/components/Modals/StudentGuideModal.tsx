@@ -49,10 +49,10 @@ const FEATURES: Feature[] = [
     },
     {
         emoji: '🤖',
-        title: 'AI Analysis (Analyze)',
+        title: 'AI Analysis',
         description:
-            'Tap the Analyze button on any role and Claude explains its published scores: the reasoning behind each task\'s score, a strategic insight for the role, and the likely replacements and human traits it calls for. Analyze adds the explanation; it never changes the numbers.',
-        tip: 'Every student sees the same published scores for a role, dated in the header badge, so you can compare notes. Analyze is where you get the why behind them.',
+            'Open any role and Claude explains its published scores right in the panel: the reasoning under each task, a strategic insight for the role, and the likely replacements and human traits it calls for. The analysis adds the explanation; it never changes the numbers.',
+        tip: 'Every student sees the same published scores for a role, dated in the header badge, so you can compare notes. The analysis is where you get the why behind them.',
         color: 'red',
     },
     {
