@@ -177,7 +177,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
 
     const humanAvg = job.tasks.reduce((sum, t) => sum + t.humanCriticalityScore, 0) / (job.tasks.length || 1);
     const humanDisplay = (parseFloat(humanAvg.toFixed(2)) * 100).toFixed(0);
-    const insightError = analyzeError ?? analysisError;
+    const insightError = analysisResult ? analyzeError : (analyzeError ?? analysisError);
 
     const renderTaskScores = (task: Job['tasks'][number], riskChipClass: string) => {
         const isHumanCritical = task.humanCriticalityScore > RISK_THRESHOLDS.HUMAN_CRITICAL_SCORE;
@@ -254,12 +254,6 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                     <IconBookmark size={16} {...(isRoleSaved ? { fill: 'currentColor' } : {})} />
                                 </button>
                             )}
-                            <button
-                                onClick={handleAnalyze}
-                                className="hidden md:flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-semibold text-xs uppercase tracking-wider transition-colors min-h-[44px]"
-                            >
-                                <IconBrain size={14} /> Analyze
-                            </button>
                             <button
                                 onClick={handleCrystalBall}
                                 className="hidden md:flex items-center gap-2 px-4 py-2.5 bg-purple-600 hover:bg-purple-500 text-white rounded-lg font-semibold text-xs uppercase tracking-wider transition-colors min-h-[44px]"
@@ -379,7 +373,15 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                 {analysisLoading ? (
                                     <p className="text-gray-500 text-sm italic" role="status">Asking Claude about this role…</p>
                                 ) : insightError ? (
-                                    <p className="text-red-400 text-sm leading-relaxed">{insightError}</p>
+                                    <div className="flex flex-wrap items-center justify-between gap-3">
+                                        <p className="text-red-400 text-sm leading-relaxed flex-1 min-w-0">{insightError}</p>
+                                        <button
+                                            onClick={handleAnalyze}
+                                            className="px-3 py-2 min-h-[44px] bg-blue-600 hover:bg-blue-500 text-white rounded-lg font-semibold text-xs uppercase tracking-wider transition-colors shrink-0"
+                                        >
+                                            Try again
+                                        </button>
+                                    </div>
                                 ) : (
                                     <>
                                         <p className="text-gray-200 text-sm leading-relaxed italic">&ldquo;{analysisResult?.strategic_insight}&rdquo;</p>
@@ -454,7 +456,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                             ))
                                         ) : (
                                             <span className="text-gray-600 text-[10px] italic">
-                                                {analysisLoading ? 'Analyze running…' : 'Tap Analyze for likely replacements…'}
+                                                {analysisLoading ? 'Analysis running…' : 'Appears once the analysis loads'}
                                             </span>
                                         )}
                                     </div>
@@ -512,7 +514,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                             ))
                                         ) : (
                                             <span className="text-gray-600 text-[10px] italic">
-                                                {analysisLoading ? 'Analyze running…' : 'Tap Analyze for human-centric traits…'}
+                                                {analysisLoading ? 'Analysis running…' : 'Appears once the analysis loads'}
                                             </span>
                                         )}
                                     </div>
@@ -566,16 +568,9 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                     </div>
                     </div>
 
-                    {/* Mobile action row. Analyze, Scenario and save live in the panel
-                        header, which is `hidden md:flex` — on a phone the two headline AI
-                        features were unreachable. Same handlers; no desktop class touched. */}
+                    {/* Mobile action row. Scenario and save live in the panel header,
+                        which is `hidden md:flex`, so a phone needs its own copy. */}
                     <div className="flex-none md:hidden flex items-center gap-2 p-3 border-t border-white/[0.04]">
-                        <button
-                            onClick={handleAnalyze}
-                            className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 min-h-[44px] bg-blue-600 active:bg-blue-500 text-white rounded-lg font-semibold text-xs uppercase tracking-wider transition-colors"
-                        >
-                            <IconBrain size={14} /> Analyze
-                        </button>
                         <button
                             onClick={handleCrystalBall}
                             className="flex-1 flex items-center justify-center gap-2 px-3 py-2.5 min-h-[44px] bg-purple-600 active:bg-purple-500 text-white rounded-lg font-semibold text-xs uppercase tracking-wider transition-colors"
