@@ -1,13 +1,12 @@
 import React from 'react';
 import RoadmapModal from './Modals/RoadmapModal';
 import { ScenarioModal } from './Modals/ScenarioModal';
-import { AnalysisModal } from './Modals/AnalysisModal';
 import { UpskillModal } from './UpskillModal';
 import type { UpskillMode } from '../utils/analysis';
-import { generateJobScenario, analyzeJob, getClaudeUserFriendlyMessage, type ScenarioResult, type JobAnalysis } from '../utils/analysis';
+import { generateJobScenario, analyzeJob, alignAnalysisToTasks, getClaudeUserFriendlyMessage, type ScenarioResult, type JobAnalysis } from '../utils/analysis';
 import { IconBrain, IconSparkles, IconAlertTriangle, IconShield, IconTarget, IconInfo, IconTrendingDown, IconCheck, IconBookmark, IconAward } from './ui/Icons';
 import { Z } from '../config/layers';
-import { UI, CHART, RESILIENCE_LABELS } from '../config/constants';
+import { UI, CHART, RESILIENCE_LABELS, RISK_THRESHOLDS } from '../config/constants';
 import { partitionRoleTasks, isHybridTask, pickRoadmapPair, emptyColumnNote } from '../utils/taskPartition';
 import { blsEpGrowthPathPoints } from '../utils/terrainMath';
 import { jobSourceProvenanceChips, panelSourceList } from '../utils/provenance';
@@ -43,8 +42,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
     const [scenarioLoading, setScenarioLoading] = React.useState(false);
     const [scenarioResult, setScenarioResult] = React.useState<ScenarioResult | null>(null);
     const [scenarioError, setScenarioError] = React.useState<string | null>(null);
-    const [showAnalysisModal, setShowAnalysisModal] = React.useState(false);
-    const [analysisModalError, setAnalysisModalError] = React.useState<string | null>(null);
+    const [analyzeError, setAnalyzeError] = React.useState<string | null>(null);
     const [showRoadmapModal, setShowRoadmapModal] = React.useState(false);
     // Carries the mode and the task's real exposure, because both are sent to
     // the model as fact — see UpskillMode in utils/analysis.
@@ -66,10 +64,10 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
     const sourceChips = React.useMemo(() => jobSourceProvenanceChips(job), [job]);
 
     // Match every other modal in the app (ui/Modal, RescoreConfirmModal):
-    // Escape closes it. Skipped while a nested modal (Scenario/Analysis/
-    // Roadmap/Upskill) is open so Escape closes that top layer first, not
-    // this panel out from under it.
-    const hasNestedModalOpen = showScenarioModal || showAnalysisModal || showRoadmapModal || upskillTarget !== null;
+    // Escape closes it. Skipped while a nested modal (Scenario/Roadmap/Upskill)
+    // is open so Escape closes that top layer first, not this panel out from
+    // under it.
+    const hasNestedModalOpen = showScenarioModal || showRoadmapModal || upskillTarget !== null;
     React.useEffect(() => {
         if (hasNestedModalOpen) return;
         const handleKeyDown = (e: KeyboardEvent) => {
@@ -91,8 +89,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
         const startedEmployment = job.employment;
         const startedGrowth = job.projectedGrowth;
         onSetAnalysisLoading(true);
-        setShowAnalysisModal(true);
-        setAnalysisModalError(null);
+        setAnalyzeError(null);
         try {
             const taskList = startedTasks.map(t => t.name);
             const res = await analyzeJob(startedFor, startedTitle, taskList, {
@@ -104,7 +101,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
         } catch (e) {
             console.error(e);
             if (jobIdRef.current !== startedFor) return;
-            setAnalysisModalError(getClaudeUserFriendlyMessage(e));
+            setAnalyzeError(getClaudeUserFriendlyMessage(e));
         } finally {
             if (jobIdRef.current === startedFor) onSetAnalysisLoading(false);
         }
@@ -150,8 +147,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
         setScenarioResult(null);
         setScenarioError(null);
         setScenarioLoading(false);
-        setShowAnalysisModal(false);
-        setAnalysisModalError(null);
+        setAnalyzeError(null);
         setShowRoadmapModal(false);
         setUpskillTarget(null);
     }, [job.id]);
@@ -172,6 +168,39 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
     );
     const highRiskTasks = exposed.slice(0, UI.MAX_TASK_PREVIEW);
     const safeTasks = resistant.slice(0, UI.MAX_TASK_PREVIEW);
+
+    // Claude contributes prose only; scores on every task stay the published ones.
+    const reasoningByTask = React.useMemo(() => {
+        const rows = alignAnalysisToTasks(job.tasks, analysisResult?.tasks ?? []);
+        return new Map(rows.map((r) => [r.name, r.reasoning]));
+    }, [job.tasks, analysisResult]);
+
+    const humanAvg = job.tasks.reduce((sum, t) => sum + t.humanCriticalityScore, 0) / (job.tasks.length || 1);
+    const humanDisplay = (parseFloat(humanAvg.toFixed(2)) * 100).toFixed(0);
+    const insightError = analyzeError ?? analysisError;
+
+    const renderTaskScores = (task: Job['tasks'][number], riskChipClass: string) => {
+        const isHumanCritical = task.humanCriticalityScore > RISK_THRESHOLDS.HUMAN_CRITICAL_SCORE;
+        return (
+            <div className="flex items-center gap-1.5">
+                <div className={`text-[10px] font-semibold px-2 py-1 rounded border tabular-nums ${riskChipClass}`}>
+                    {(task.aiCapabilityScore * 100).toFixed(0)}% RISK
+                </div>
+                <div
+                    title="Need for human judgment on this task. Rated independently of the risk score."
+                    className={`text-[10px] font-semibold px-2 py-1 rounded border tabular-nums ${isHumanCritical ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20' : 'text-gray-500 bg-white/[0.04] border-white/[0.08]'}`}
+                >
+                    {(task.humanCriticalityScore * 100).toFixed(0)}% HUMAN
+                </div>
+            </div>
+        );
+    };
+
+    const renderReasoning = (taskName: string) => {
+        const reasoning = reasoningByTask.get(taskName);
+        if (!reasoning) return null;
+        return <p className="text-xs text-gray-500 mt-1.5 pl-2 border-l-2 border-white/[0.06] italic leading-relaxed">{reasoning}</p>;
+    };
 
     return (
         <>
@@ -327,11 +356,41 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                 {job.humanResilienceLabel}
                             </div>
                             <p className="text-[10px] text-gray-600 mt-0.5">Rank among all 50 roles</p>
+                            <p className="text-[11px] text-gray-400 mt-2 pt-2 border-t border-white/[0.06]">
+                                Human Criticality <span className="text-emerald-400 font-semibold tabular-nums">{humanDisplay}%</span>
+                            </p>
+                            <p className="text-[10px] text-gray-600 mt-0.5">Average need for human judgment</p>
                         </div>
+                        <p className="col-span-2 md:col-span-3 text-[11px] text-gray-400 leading-relaxed flex items-start gap-1.5">
+                            <IconInfo size={12} className="text-cyan-400 mt-0.5 shrink-0" />
+                            <span>Automation Risk and Human Criticality are independent ratings, on the role and on each task, so they are not meant to add up to 100%.</span>
+                        </p>
                     </div>
 
                     {/* Main Content */}
                     <div className="flex-1 min-h-0 overflow-y-auto p-4 md:p-6 space-y-6 custom-scrollbar">
+                        {(analysisLoading || insightError || analysisResult?.strategic_insight) && (
+                            <div className="bg-blue-500/[0.04] border border-blue-500/15 rounded-xl p-5" aria-live="polite">
+                                <div className="flex items-center gap-2 mb-2">
+                                    <IconBrain size={14} className="text-blue-400" />
+                                    <h3 className="text-blue-400 text-xs font-semibold uppercase tracking-wider">Strategic Insight</h3>
+                                    <span className="text-blue-300 text-[10px] uppercase tracking-wider font-semibold bg-blue-500/10 px-1.5 py-0.5 rounded">Claude</span>
+                                </div>
+                                {analysisLoading ? (
+                                    <p className="text-gray-500 text-sm italic" role="status">Asking Claude about this role…</p>
+                                ) : insightError ? (
+                                    <p className="text-red-400 text-sm leading-relaxed">{insightError}</p>
+                                ) : (
+                                    <>
+                                        <p className="text-gray-200 text-sm leading-relaxed italic">&ldquo;{analysisResult?.strategic_insight}&rdquo;</p>
+                                        <p className="text-[11px] text-gray-500 leading-relaxed mt-3">
+                                            Claude writes this insight, the reasoning under each task, and the likely replacements and required traits. Every score on this page is the published figure, the same for every visitor.
+                                        </p>
+                                    </>
+                                )}
+                            </div>
+                        )}
+
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
 
                             {/* Automation Risk Card */}
@@ -351,11 +410,12 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                         const trained = completedTaskNames.has(task.name);
                                         return (
                                             <div key={task.name} className="bg-white/[0.02] border border-red-500/10 hover:border-red-500/25 p-3.5 rounded-lg flex justify-between items-start gap-3 transition-colors">
-                                                <div className="text-gray-200 text-sm font-medium flex-1">{task.name}</div>
-                                                <div className="flex flex-col items-end gap-1.5 shrink-0">
-                                                    <div className="text-[10px] font-semibold text-red-400 bg-red-500/10 px-2 py-1 rounded border border-red-500/15 tabular-nums mt-0.5">
-                                                        {(task.aiCapabilityScore * 100).toFixed(0)}% RISK
-                                                    </div>
+                                                <div className="flex-1 min-w-0">
+                                                    <div className="text-gray-200 text-sm font-medium">{task.name}</div>
+                                                    {renderReasoning(task.name)}
+                                                </div>
+                                                <div className="flex flex-col items-end gap-1.5 shrink-0 mt-0.5">
+                                                    {renderTaskScores(task, 'text-red-400 bg-red-500/10 border-red-500/15')}
                                                     {isHybridTask(task) && (
                                                         <span
                                                             title="GenAI is capable of much of this task, but human judgment still decides the outcome. This is where defending it pays off most."
@@ -416,11 +476,12 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                         const trained = completedTaskNames.has(task.name);
                                         return (
                                             <div key={task.name} className="bg-white/[0.02] border border-emerald-500/10 hover:border-emerald-500/25 p-3.5 rounded-lg flex justify-between items-start gap-3 transition-colors">
-                                                <div className="text-white text-sm font-medium flex-1">{task.name}</div>
+                                                <div className="flex-1 min-w-0">
+                                                    <div className="text-white text-sm font-medium">{task.name}</div>
+                                                    {renderReasoning(task.name)}
+                                                </div>
                                                 <div className="flex flex-col items-end gap-1.5 shrink-0 mt-1">
-                                                    <div className="text-[10px] font-semibold text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded border border-emerald-500/15 tabular-nums">
-                                                        {(task.aiCapabilityScore * 100).toFixed(0)}% RISK
-                                                    </div>
+                                                    {renderTaskScores(task, 'text-emerald-400 bg-emerald-500/10 border-emerald-500/15')}
                                                     {trained ? (
                                                         <span className="flex items-center gap-1 text-[10px] font-semibold text-emerald-400 uppercase tracking-wider">
                                                             <IconAward size={11} /> Trained
@@ -568,14 +629,6 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                     aiRiskPercent={upskillTarget.riskPercent}
                 />
             )}
-            <AnalysisModal
-                isOpen={showAnalysisModal}
-                isLoading={analysisLoading}
-                job={job}
-                result={analysisResult}
-                errorMessage={analysisModalError}
-                onClose={() => setShowAnalysisModal(false)}
-            />
         </>
     );
 };

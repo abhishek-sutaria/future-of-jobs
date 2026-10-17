@@ -171,15 +171,15 @@ describe('the panel shows the whole task list, not a sample', () => {
 });
 
 describe('one definition of automatable across the app', () => {
-    it('the Analyze modal flags exactly the tasks the panel puts in its risk column', () => {
-        // AnalysisModal red-badges a task when ai >= AUTOMATABLE_AI_SCORE, which
-        // must stay identical to the panel's partition or the same task reads as
-        // automatable in one view and not the other.
+    it('the risk column holds exactly the tasks at or above the automatable line', () => {
+        // The Hybrid tag and the methodology copy both use ai >= AUTOMATABLE_AI_SCORE,
+        // which must stay identical to the panel's partition or the same task reads
+        // as automatable in one place and not the other.
         for (const job of initialJobs) {
             const tasks = displayedTasks(job.id, job.tasks);
             const { exposed } = partitionRoleTasks(tasks);
-            const flaggedByModal = tasks.filter((t) => t.aiCapabilityScore >= RISK_THRESHOLDS.AUTOMATABLE_AI_SCORE);
-            expect(new Set(flaggedByModal.map((t) => t.name))).toEqual(new Set(exposed.map((t) => t.name)));
+            const atOrAboveLine = tasks.filter((t) => t.aiCapabilityScore >= RISK_THRESHOLDS.AUTOMATABLE_AI_SCORE);
+            expect(new Set(atOrAboveLine.map((t) => t.name))).toEqual(new Set(exposed.map((t) => t.name)));
         }
     });
 });

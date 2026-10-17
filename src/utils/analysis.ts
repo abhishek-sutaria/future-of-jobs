@@ -542,10 +542,10 @@ export async function generateStartupIdeas(
 }
 
 /**
- * Rows for the Analyze modal: the role's published scores, with the live run's
- * reasoning attached. Matched by exact name, then 40-char prefix, then position,
- * because Claude sometimes paraphrases task_text. The live scores are ignored on
- * purpose, so the modal can never show a number the role page doesn't.
+ * Rows for the role panel's task cards: the role's published scores, with the
+ * live run's reasoning attached. Matched by exact name, then 40-char prefix, then
+ * position, because Claude sometimes paraphrases task_text. The live scores are
+ * ignored on purpose, so Analyze can never show a number the role page doesn't.
  */
 export function alignAnalysisToTasks(
     jobTasks: { name: string; aiCapabilityScore: number; humanCriticalityScore: number }[],
