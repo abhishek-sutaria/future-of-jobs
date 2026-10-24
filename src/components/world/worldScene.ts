@@ -89,3 +89,33 @@ export function peakHeightAt(entry: RoleEntry, year: number): number {
 }
 
 export const GROUND_Y = TERRAIN_CONFIG.TERRAIN_OFFSET_Y;
+
+/**
+ * Inside a zoomed field, peaks are drawn to that field's own scale: its
+ * largest occupation in the slider year is FIELD_PEAK_MAX world units tall and
+ * every other peak is linear to it. Only heights change; every number on
+ * labels and panels stays the published one. The world view keeps the single
+ * national scale (peakHeightAt).
+ */
+export const FIELD_PEAK_MAX = 3 * SHADER.HEIGHT_SCALE;
+
+/** The largest EP employment among a field's peaks in `year`. */
+export function fieldMaxEmploymentAt(peaks: readonly ScenePeak[], year: number): number {
+    let max = 0;
+    for (const p of peaks) max = Math.max(max, peakEmploymentAt(p.entry, year));
+    return max;
+}
+
+/** Peak height on the field scale, in world units above the ground. */
+export function fieldPeakHeightAt(entry: RoleEntry, year: number, fieldMax: number): number {
+    const min = SHADER.HEIGHT_CLAMP_MIN * SHADER.HEIGHT_SCALE;
+    if (!(fieldMax > 0)) return min;
+    return min + (peakEmploymentAt(entry, year) / fieldMax) * (FIELD_PEAK_MAX - min);
+}
+
+/** The height a peak is drawn at right now: field scale inside the zoomed field, national scale elsewhere. */
+export function displayedPeakHeight(peak: ScenePeak, year: number, focused: string | null, fieldMax: number): number {
+    return focused && peak.entry.continent === focused
+        ? fieldPeakHeightAt(peak.entry, year, fieldMax)
+        : peakHeightAt(peak.entry, year);
+}

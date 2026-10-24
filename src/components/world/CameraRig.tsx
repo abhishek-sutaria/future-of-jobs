@@ -3,8 +3,8 @@ import { useFrame, useThree } from '@react-three/fiber';
 import { PerspectiveCamera, Vector3 } from 'three';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import { useWorldStore } from '../../worldStore';
-import { peakHeightAt, type WorldScene } from './worldScene';
-import { SCENE, YEAR_MAX, YEAR_MIN } from '../../config/constants';
+import { FIELD_PEAK_MAX, type WorldScene } from './worldScene';
+import { SCENE } from '../../config/constants';
 import { worldCamera } from './worldCamera';
 import { frameRect, worldFraming } from './framing';
 
@@ -65,9 +65,9 @@ export const CameraRig: React.FC<{
         let framing;
         if (region) {
             // Leave room above for the tallest peak's label (its tip sits
-            // SCENE.LABEL.BASE_HEIGHT above the peak) at any slider year.
-            const tallest = Math.max(0, ...(scene.peaksByContinent.get(region.code) ?? []).map((p) =>
-                Math.max(peakHeightAt(p.entry, YEAR_MIN), peakHeightAt(p.entry, YEAR_MAX))));
+            // SCENE.LABEL.BASE_HEIGHT above the peak).
+            // Zoomed in, the field is drawn to its own scale, whose tallest peak is FIELD_PEAK_MAX.
+            const tallest = FIELD_PEAK_MAX;
             const lift = (tallest + SCENE.LABEL.BASE_HEIGHT + 1) * Math.cos((REGION_ELEVATION_DEG * Math.PI) / 180);
             framing = frameRect(region.rect, camera.fov, aspect, {
                 elevationDeg: REGION_ELEVATION_DEG, margin: REGION_MARGIN, lift, ...freeBand(),

@@ -76,6 +76,17 @@ describe('search', () => {
         expect(titles('electrician')[0]).toBe('Electricians');
     });
 
+    it('ranks whole-word matches above partial ones, larger occupations first', () => {
+        expect(titles('nurse')[0]).toBe('Registered Nurses');
+        expect(titles('actor')[0]).toBe('Actors');
+        expect(titles('data').slice(0, 3)).toContain('Data Scientist');
+        // "Nursery" is only a partial match, so it comes after every whole-word "nurse".
+        const nurse = titles('nurse');
+        const lastWhole = Math.max(...nurse.map((t, i) => (/\bnurses?\b/i.test(t) ? i : -1)));
+        const firstPartial = nurse.findIndex((t) => /nursery/i.test(t));
+        expect(firstPartial).toBeGreaterThan(lastWhole);
+    });
+
     it('finds every Kelley title, first, by its own name', () => {
         for (const job of jobs) expect(titles(job.title)[0], job.title).toBe(job.title);
     });

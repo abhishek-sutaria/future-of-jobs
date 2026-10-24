@@ -109,6 +109,12 @@ export type LabelCandidate = {
     halfHeight: number;
     /** False when the peak is behind the camera (NDC z outside [-1, 1]). */
     inFront: boolean;
+    /**
+     * How far the label may move off its anchor, in multiples of its own
+     * half-size (default 1, which keeps a leader line's tip inside the box).
+     * A label with no leader line (a region name) can take 2.
+     */
+    slack?: number;
 };
 
 type Placed = { id: string; x: number; y: number; halfW: number; halfH: number };
@@ -154,6 +160,7 @@ export function layoutLabels(
 
     for (const item of items) {
         const { id, anchorX, anchorY, halfWidth, halfHeight, inFront } = item;
+        const slack = item.slack ?? 1;
 
         if (
             !inFront ||
@@ -182,8 +189,8 @@ export function layoutLabels(
         }
 
         const fits = (cx: number, cy: number): boolean => {
-            // Anchor must stay inside the label box.
-            if (Math.abs(cx - anchorX) > halfWidth || Math.abs(cy - anchorY) > halfHeight) {
+            // Anchor must stay inside the label box (or within its slack).
+            if (Math.abs(cx - anchorX) > halfWidth * slack + 0.001 || Math.abs(cy - anchorY) > halfHeight * slack + 0.001) {
                 return false;
             }
             // Whole box inside the usable band.
@@ -212,8 +219,9 @@ export function layoutLabels(
             if (fits(hx, hy)) chosen = [hx, hy];
         }
 
+        const nudges = slack > 1 ? [...NUDGE_ORDER, ...NUDGE_ORDER.slice(1).map(([x, y]) => [x * slack, y * slack] as const)] : NUDGE_ORDER;
         if (!chosen) {
-            for (const [sx, sy] of NUDGE_ORDER) {
+            for (const [sx, sy] of nudges) {
                 const cx = anchorX + sx * halfWidth;
                 const cy = anchorY + sy * halfHeight;
                 // Also allow the viewport-clamped centre (same as resolveLabelPosition)
@@ -245,5 +253,54 @@ export function layoutLabels(
         out.set(id, chosen);
         offsets.set(id, [chosen[0] - anchorX, chosen[1] - anchorY]);
         placed.push({ id, x: chosen[0], y: chosen[1], halfW: halfWidth, halfH: halfHeight });
+    }
+}
+
+/**
+ * layoutLabels, then make smaller labels give way: if a hidden label's own
+ * spot (centred on its anchor) is covered by a placed label with a smaller
+ * `weight`, that smaller label is dropped and the layout runs again. So when
+ * labels compete, the one with the smallest weight is the one hidden, rather
+ * than whichever happened to be placed into a gap first.
+ *
+ * Only ids in `weights` take part; any other item (a hovered label, say)
+ * keeps its place and never yields.
+ */
+export function layoutLabelsByWeight(
+    items: readonly LabelCandidate[],
+    weights: ReadonlyMap<string, number>,
+    viewportWidth: number,
+    viewportHeight: number,
+    band: LabelBand,
+    out: Map<string, [number, number]>,
+    offsets: Map<string, [number, number]>,
+    pad = 2,
+    margin = 4,
+): void {
+    const dropped = new Set<string>();
+    for (let pass = 0; pass <= items.length; pass++) {
+        const active = dropped.size ? items.filter((i) => !dropped.has(i.id)) : items;
+        layoutLabels(active, viewportWidth, viewportHeight, band, out, offsets, pad, margin);
+        let changed = false;
+        for (const h of active) {
+            const wh = weights.get(h.id);
+            if (wh === undefined || !isHiddenLabelPosition(out.get(h.id) ?? HIDDEN_LABEL_POSITION)) continue;
+            // Only a label that would otherwise fit on screen at its own anchor.
+            if (isHiddenLabelPosition(resolveLabelPosition(h.anchorX, h.anchorY, h.halfWidth, h.halfHeight, viewportWidth, viewportHeight, band, margin))) continue;
+            for (const p of active) {
+                const wp = weights.get(p.id);
+                const pos = out.get(p.id);
+                if (wp === undefined || wp >= wh || !pos || isHiddenLabelPosition(pos)) continue;
+                if (labelsCollide(h.anchorX, h.anchorY, h.halfWidth, h.halfHeight, pos[0], pos[1], p.halfWidth, p.halfHeight, pad)) {
+                    dropped.add(p.id);
+                    changed = true;
+                }
+            }
+        }
+        if (!changed) break;
+    }
+    for (const id of dropped) {
+        out.set(id, HIDDEN_LABEL_POSITION);
+        offsets.delete(id);
     }
 }

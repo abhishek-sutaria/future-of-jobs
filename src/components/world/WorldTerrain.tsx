@@ -21,7 +21,7 @@ import {
     peakFragmentShader,
     peakVertexShader,
 } from './worldShaders';
-import { GROUND_Y, peakHeightAt, type ScenePeak, type WorldScene } from './worldScene';
+import { FIELD_PEAK_MAX, fieldMaxEmploymentAt, fieldPeakHeightAt, GROUND_Y, peakHeightAt, type ScenePeak, type WorldScene } from './worldScene';
 import { worldPointer } from './worldPointer';
 import { rectDepth, rectWidth, WORLD_BOUNDS } from '../../utils/worldLayout';
 
@@ -50,6 +50,7 @@ interface RegionMesh {
     aPeak: InstancedBufferAttribute;
     aEmph: InstancedBufferAttribute;
     aColor: InstancedBufferAttribute;
+    aFieldH: InstancedBufferAttribute;
 }
 
 /**
@@ -100,6 +101,9 @@ export const WorldTerrain: React.FC<{ scene: WorldScene; isMobile: boolean }> = 
             const aPeak = new InstancedBufferAttribute(peakArr, 4);
             const aColor = new InstancedBufferAttribute(colorArr, 3);
             const aEmph = new InstancedBufferAttribute(new Float32Array(n).fill(1), 1);
+            const fieldMax = fieldMaxEmploymentAt(peaks, year);
+            const aFieldH = new InstancedBufferAttribute(new Float32Array(peaks.map((p) => fieldPeakHeightAt(p.entry, year, fieldMax))), 1);
+            geometry.setAttribute('aFieldH', aFieldH);
             geometry.setAttribute('aPeak', aPeak);
             geometry.setAttribute('aColor', aColor);
             geometry.setAttribute('aEmph', aEmph);
@@ -108,7 +112,7 @@ export const WorldTerrain: React.FC<{ scene: WorldScene; isMobile: boolean }> = 
             // Real bounds for frustum culling (the unit bell's own bounds would
             // be wrong): the region's rectangle, as tall as its tallest peak on
             // the 2025→2035 path. A zoomed-in view then skips off-screen regions.
-            const tallest = Math.max(0, ...peaks.map((p) => Math.max(peakHeightAt(p.entry, YEAR_MIN), peakHeightAt(p.entry, YEAR_MAX))));
+            const tallest = Math.max(FIELD_PEAK_MAX, ...peaks.map((p) => Math.max(peakHeightAt(p.entry, YEAR_MIN), peakHeightAt(p.entry, YEAR_MAX))));
             const reach = Math.max(0, ...peaks.map((p) => p.radius));
             geometry.boundingSphere = new Sphere(
                 new Vector3(region.cx, GROUND_Y + tallest / 2, region.cz),
@@ -121,10 +125,11 @@ export const WorldTerrain: React.FC<{ scene: WorldScene; isMobile: boolean }> = 
                     uGroundY: { value: GROUND_Y },
                     uRegionDim: { value: 1 },
                     uRegionLift: { value: 1 },
+                    uFieldMix: { value: 0 },
                     uHover: { value: -1 },
                 },
             });
-            return { code: region.code, peaks, geometry, material, aPeak, aEmph, aColor };
+            return { code: region.code, peaks, geometry, material, aPeak, aEmph, aColor, aFieldH };
         });
     }, [scene, bell]);
 
@@ -154,10 +159,14 @@ export const WorldTerrain: React.FC<{ scene: WorldScene; isMobile: boolean }> = 
             lastYear.current = year;
             for (const m of regionMeshes) {
                 const arr = m.aPeak.array as Float32Array;
+                const field = m.aFieldH.array as Float32Array;
+                const fieldMax = fieldMaxEmploymentAt(m.peaks, year);
                 m.peaks.forEach((p, i) => {
                     arr[i * 4 + 3] = peakHeightAt(p.entry, year);
+                    field[i] = fieldPeakHeightAt(p.entry, year, fieldMax);
                 });
                 m.aPeak.needsUpdate = true;
+                m.aFieldH.needsUpdate = true;
             }
         }
         // Ease regions in and out of focus rather than snapping. Regions out
@@ -169,6 +178,9 @@ export const WorldTerrain: React.FC<{ scene: WorldScene; isMobile: boolean }> = 
             dim.value += ((away ? 0.35 : 1) - dim.value) * 0.15;
             const lift = m.material.uniforms.uRegionLift;
             lift.value += ((away ? FLATTENED_LIFT : 1) - lift.value) * 0.15;
+            // The zoomed field switches to its own height scale (see fieldPeakHeightAt).
+            const mix = m.material.uniforms.uFieldMix;
+            mix.value += ((focused === m.code ? 1 : 0) - mix.value) * 0.15;
             m.material.uniforms.uHover.value = worldPointer.hoverPeakContinent === m.code ? worldPointer.hoverPeakIndex : -1;
         }
         const focusIndex = focused ? regionIndex.get(focused) ?? -1 : -1;

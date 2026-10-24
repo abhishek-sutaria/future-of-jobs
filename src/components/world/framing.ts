@@ -28,7 +28,7 @@ export interface FrameOptions {
  */
 export function frameRect(rect: Rect, fovDeg: number, aspect: number, opts: FrameOptions = {}): Framing {
     const portrait = aspect < 1;
-    const elevation = ((opts.elevationDeg ?? (portrait ? 62 : 46)) * Math.PI) / 180;
+    const elevation = ((opts.elevationDeg ?? (portrait ? 76 : 46)) * Math.PI) / 180;
     const margin = opts.margin ?? 1.06;
     const vHalf = ((fovDeg * Math.PI) / 180) / 2;
     const hHalf = Math.atan(Math.tan(vHalf) * aspect);

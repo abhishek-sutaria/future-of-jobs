@@ -105,23 +105,37 @@ function blsEntry(occ: IndexOccupation): RoleEntry {
 
 const normalize = (s: string) => s.toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9-]+/g, ' ').trim();
 
+const escapeRe = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
 /**
- * Title search over every role. Ranked by match quality (exact, prefix, word
- * start, anywhere, then the official BLS title or SOC code), then by size.
+ * Title search over every role, in tiers, larger EP 2025 employment first
+ * within each tier:
+ *   0  the exact title ("actors", "registered nurses")
+ *   1  whole-word match anywhere in the title ("nurse" in Registered Nurses)
+ *   2  partial match inside a word ("nurse" in Nursery)
+ *   3  the official BLS title, for Kelley titles ("management analysts")
+ *   4  SOC code prefix
+ * Words match singular or plural, so "nurse" finds "Nurses" as a whole word.
+ * Start-of-title matches are not ranked above other whole-word matches: that
+ * would put Nurse Practitioners, Anesthetists and Midwives above Registered
+ * Nurses, the occupation most students mean.
  */
 export function searchRoles(entries: readonly RoleEntry[], query: string, limit = 40): RoleEntry[] {
     const q = normalize(query);
     if (q.length < 2) return [];
+    const plural = `${escapeRe(q)}(?:s|es)?`;
+    const exact = new RegExp(`^${plural}$`);
+    const word = new RegExp(`(?:^| )${plural}(?: |$)`);
     const scored: { entry: RoleEntry; rank: number }[] = [];
     for (const entry of entries) {
         const title = normalize(entry.title);
+        const bls = normalize(entry.blsTitle);
         let rank: number;
-        if (title === q) rank = 0;
-        else if (title.startsWith(q)) rank = 1;
-        else if (` ${title}`.includes(` ${q}`)) rank = 2;
-        else if (title.includes(q)) rank = 3;
-        else if (normalize(entry.blsTitle).includes(q)) rank = 4;
-        else if (entry.soc.startsWith(query.trim())) rank = 5;
+        if (exact.test(title) || exact.test(`${title}s`)) rank = 0;
+        else if (word.test(title)) rank = 1;
+        else if (title.includes(q)) rank = 2;
+        else if (bls.includes(q)) rank = 3;
+        else if (entry.soc.startsWith(query.trim())) rank = 4;
         else continue;
         scored.push({ entry, rank });
     }

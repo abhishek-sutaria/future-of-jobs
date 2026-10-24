@@ -174,6 +174,15 @@ export const WorldBar: React.FC = () => {
                     {kelleyOnly && kelleyHere === 0 && <span className="text-amber-300/90"> · no Kelley roles in this field</span>}
                 </p>
             )}
+            {region && (
+                <p
+                    className="pointer-events-auto self-start text-[10px] text-gray-500 bg-gray-900/60 backdrop-blur-sm rounded-md px-2 py-0.5 -mt-1"
+                    title="Inside a field, its largest occupation in the slider year is drawn full height and every other peak is in proportion to it. The whole-map view uses one national scale."
+                    data-testid="field-scale-note"
+                >
+                    Peak heights scaled within this field.
+                </p>
+            )}
             {!region && kelleyOnly && (
                 <p className="pointer-events-auto self-start text-[11px] text-amber-100/80 bg-gray-900/60 backdrop-blur-sm rounded-md px-2 py-1">
                     The 50 Kelley business roles, with their published AI scores.

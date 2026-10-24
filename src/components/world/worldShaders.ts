@@ -25,10 +25,12 @@ export const peakVertexShader = /* glsl */ `
   attribute vec3 aColor;    // Job Security colour, or the neutral "not scored yet" slate
   attribute float aEmph;    // 1 = full colour, lower = dimmed by the Kelley filter
   attribute float aIndex;   // instance index within this region, for the hover glow
+  attribute float aFieldH;  // height on this field's own scale (used while the field is zoomed)
 
   uniform float uGroundY;
   uniform float uRegionDim; // 1 = this region in focus or no focus; lower = dimmed
   uniform float uRegionLift; // 1 = true height; lower = flattened while another region is in focus
+  uniform float uFieldMix;   // 0 = national scale, 1 = this field's own scale
   uniform float uHover;     // hovered instance index, or -1
 
   varying vec3 vColor;
@@ -38,7 +40,7 @@ export const peakVertexShader = /* glsl */ `
   varying float vHover;
 
   void main() {
-    float h = aPeak.w * uRegionLift;
+    float h = mix(aPeak.w, aFieldH, uFieldMix) * uRegionLift;
     vec3 world = vec3(aPeak.x + position.x * aPeak.z, uGroundY + position.y * h, aPeak.y + position.z * aPeak.z);
     vWorld = world;
     vElev = position.y * h;

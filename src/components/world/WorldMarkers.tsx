@@ -11,8 +11,8 @@ import { INDEX_CONTINENT_BY_CODE } from '../../utils/occupationIndex';
 import { regionAt } from '../../utils/worldLayout';
 import { formatGrowth, formatWorkersShort, growthColor } from '../../utils/roleFormat';
 import { socPartnerTitles } from '../../utils/onet';
-import { HIDDEN_LABEL_POSITION, isHiddenLabelPosition, layoutLabels, type LabelCandidate } from '../../utils/labelLayout';
-import { GROUND_Y, peakEmploymentAt, peakHeightAt, type ScenePeak, type WorldScene } from './worldScene';
+import { HIDDEN_LABEL_POSITION, isHiddenLabelPosition, layoutLabelsByWeight, type LabelCandidate } from '../../utils/labelLayout';
+import { displayedPeakHeight, fieldMaxEmploymentAt, GROUND_Y, peakEmploymentAt, type ScenePeak, type WorldScene } from './worldScene';
 import { worldPointer } from './worldPointer';
 
 /** Labelled peaks in a zoomed region: the largest by EP 2025 employment. */
@@ -157,10 +157,11 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
         const extra = new Set<string>();
         if (hoveredId && !hoveredId.startsWith('region:')) extra.add(hoveredId);
         if (tappedKey) extra.add(tappedKey);
+        const fieldMax = focused ? fieldMaxEmploymentAt(scene.peaksByContinent.get(focused) ?? [], year) : 0;
         for (const p of tappablePeaks) {
             const key = p.entry.key;
             if (!labelledPeakKeys.has(key) && !extra.has(key)) continue;
-            const top = GROUND_Y + peakHeightAt(p.entry, year);
+            const top = GROUND_Y + displayedPeakHeight(p, year, focused, fieldMax);
             out.push({ kind: 'peak', id: key, peak: p, x: p.x, z: p.z, baseY: top, tipY: top + SCENE.LABEL.BASE_HEIGHT });
         }
         if (showRegionLabels) {
@@ -173,15 +174,22 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
         const pri = (m: MarkerItem) => Number(m.id === hoveredId || m.id === tappedKey);
         out.sort((a, b) => pri(b) - pri(a) || size(b) - size(a));
         return out;
-    }, [mapView, tappablePeaks, labelledPeakKeys, hoveredId, tappedKey, showRegionLabels, scene, year]);
+    }, [mapView, tappablePeaks, labelledPeakKeys, hoveredId, tappedKey, showRegionLabels, scene, year, focused]);
+
+    const regionWeights = useRef<Map<string, number>>(new Map());
 
     useLayoutEffect(() => {
+        regionWeights.current = new Map(
+            items
+                .filter((m) => m.kind === 'region' && m.id !== hoveredId)
+                .map((m) => [m.id, INDEX_CONTINENT_BY_CODE.get((m as { code: string }).code)?.ep.employment2025 ?? 0]),
+        );
         viewKeyRef.current = viewKey;
         itemsRef.current = items;
         tappablePeaksRef.current = tappablePeaks;
         tappedKeyRef.current = tappedKey;
         labelledKeysRef.current = labelledPeakKeys;
-    }, [items, tappablePeaks, tappedKey, labelledPeakKeys, viewKey]);
+    }, [items, tappablePeaks, tappedKey, labelledPeakKeys, viewKey, hoveredId]);
 
     // Canvas-level input: hover, tap and click.
     useEffect(() => {
@@ -325,8 +333,11 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
         const { camera, size } = state;
         const list = candidates.current;
         list.length = 0;
+        const yearNow = useStore.getState().year;
+        const focusNow = useWorldStore.getState().focusedContinent;
+        const fieldMaxNow = focusNow ? fieldMaxEmploymentAt(scene.peaksByContinent.get(focusNow) ?? [], yearNow) : 0;
         for (const p of tappablePeaksRef.current) {
-            projected.set(p.x, GROUND_Y + peakHeightAt(p.entry, useStore.getState().year), p.z).project(camera);
+            projected.set(p.x, GROUND_Y + displayedPeakHeight(p, yearNow, focusNow, fieldMaxNow), p.z).project(camera);
             if (projected.z < -1 || projected.z > 1) {
                 peakAnchors.current.delete(p.entry.key);
                 continue;
@@ -346,9 +357,13 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
                 halfWidth: half.x,
                 halfHeight: half.y,
                 inFront: projected.z >= -1 && projected.z <= 1,
+                // A region name has no leader line, so it may sit a little further off its centre.
+                slack: item.kind === 'region' ? 2 : 1,
             });
         }
-        layoutLabels(list, size.width, size.height, safeBand.current, placements.current, labelOffsets.current, 2, 4);
+        // Region labels compete by size: when two collide, the field with fewer
+        // workers (EP 2025) is the one hidden. Hovered/tapped labels never yield.
+        layoutLabelsByWeight(list, regionWeights.current, size.width, size.height, safeBand.current, placements.current, labelOffsets.current, 2, 4);
 
         const pos = leaderGeometry.getAttribute('position') as BufferAttribute;
         const arr = pos.array as Float32Array;
@@ -408,10 +423,13 @@ const RegionLabel: React.FC<{ code: string; expanded: boolean }> = ({ code, expa
     return (
         <div
             className={`flex flex-col w-max max-w-[min(15rem,calc(100vw-2rem))] rounded-md border select-none transition-all duration-200 ${
-                expanded ? 'bg-[#0F172A]/95 border-cyan-400/50 shadow-xl shadow-black/50' : 'bg-[#0F172A]/80 border-cyan-300/25'
+                expanded
+                    ? 'bg-[#0F172A]/95 border-cyan-400/50 shadow-xl shadow-black/50'
+                    // Phones: a compact two-line chip so all 22 names fit at 390px.
+                    : 'bg-[#0F172A]/80 border-cyan-300/25 max-md:max-w-[3.9rem] max-md:rounded'
             }`}
         >
-            <span className="px-2 py-1 max-md:px-1.5 max-md:py-0.5 text-[11px] max-md:text-[10px] font-semibold tracking-wide text-cyan-50 whitespace-nowrap">
+            <span className="px-2 py-1 max-md:px-1 max-md:py-px text-[11px] max-md:text-[8px] max-md:leading-[1.1] font-semibold tracking-wide max-md:tracking-normal text-cyan-50 whitespace-nowrap max-md:whitespace-normal max-md:text-center">
                 {CONTINENT_DISPLAY_NAMES[code]}
             </span>
             {expanded && (
