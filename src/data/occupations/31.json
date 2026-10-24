@@ -1,0 +1,3292 @@
+{
+ "_meta": {
+  "continent": "31-0000",
+  "title": "Healthcare Support Occupations",
+  "sources": "see index.json _meta.sources; source refs are <source>:<sheet>!<cell> or <source>:<file>#L<line>:<column>",
+  "extracted": "2026-10-24",
+  "generator": "python3 scripts/build_occupations.py"
+ },
+ "broadGroups": [
+  {
+   "soc": "31-1120",
+   "title": "Home Health and Personal Care Aides",
+   "minor": "31-1100",
+   "employment": 4305810,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L612",
+    "title": "oews:national_M2025_dl!J612"
+   }
+  },
+  {
+   "soc": "31-1130",
+   "title": "Nursing Assistants, Orderlies, and Psychiatric Aides",
+   "minor": "31-1100",
+   "employment": 1536870,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L614",
+    "title": "oews:national_M2025_dl!J614"
+   }
+  },
+  {
+   "soc": "31-2010",
+   "title": "Occupational Therapy Assistants and Aides",
+   "minor": "31-2000",
+   "employment": 55600,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L619",
+    "title": "oews:national_M2025_dl!J619"
+   }
+  },
+  {
+   "soc": "31-2020",
+   "title": "Physical Therapist Assistants and Aides",
+   "minor": "31-2000",
+   "employment": 160580,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L622",
+    "title": "oews:national_M2025_dl!J622"
+   }
+  },
+  {
+   "soc": "31-9010",
+   "title": "Massage Therapists",
+   "minor": "31-9000",
+   "employment": 98790,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L626",
+    "title": "oews:national_M2025_dl!J626"
+   }
+  },
+  {
+   "soc": "31-9090",
+   "title": "Miscellaneous Healthcare Support Occupations",
+   "minor": "31-9000",
+   "employment": 1744020,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L628",
+    "title": "oews:national_M2025_dl!J628"
+   }
+  }
+ ],
+ "occupations": {
+  "31-1120": {
+   "soc": "31-1120",
+   "title": "Home Health and Personal Care Aides",
+   "major": "31-0000",
+   "minor": "31-1100",
+   "broad": "31-1120",
+   "oewsRows": [
+    613,
+    612
+   ],
+   "oewsOGroups": [
+    "detailed",
+    "broad"
+   ],
+   "employment": 4305810,
+   "annualMedian": 35800,
+   "annualMean": 36120,
+   "hourlyMedian": 17.21,
+   "hourlyMean": 17.36,
+   "annualPct10": 27040,
+   "annualPct90": 45040,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Home health and personal care aides",
+    "employment2025": 4677100,
+    "employment2035": 5524400,
+    "numericChange": 847300,
+    "percentChange": 18.1
+   },
+   "onetCode": null,
+   "onetTaskSource": "none",
+   "onetSubCodes": [],
+   "description": null,
+   "tasks": [],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L613",
+    "annualMedian": "oews:national_M2025_dl!AB613",
+    "annualMean": "oews:national_M2025_dl!S613",
+    "hourlyMedian": "oews:national_M2025_dl!W613",
+    "hourlyMean": "oews:national_M2025_dl!R613",
+    "annualPct10": "oews:national_M2025_dl!Z613",
+    "annualPct90": "oews:national_M2025_dl!AD613",
+    "annualOnly": "oews:national_M2025_dl!AE613",
+    "hourlyOnly": "oews:national_M2025_dl!AF613",
+    "title": "oews:national_M2025_dl!J613",
+    "ep.title": "ep:Table 1.2!A500",
+    "ep.employment2025": "ep:Table 1.2!D500",
+    "ep.employment2035": "ep:Table 1.2!E500",
+    "ep.numericChange": "ep:Table 1.2!H500",
+    "ep.percentChange": "ep:Table 1.2!I500"
+   },
+   "nullReasons": {
+    "description": "No O*NET 30.1 occupation code starts with 31-1120",
+    "onetCode": "No O*NET 30.1 occupation code starts with 31-1120",
+    "tasks": "No O*NET 30.1 occupation code starts with 31-1120; O*NET lists this BLS group's members separately (31-1121.00, 31-1122.00) and they are not combined here"
+   }
+  },
+  "31-1131": {
+   "soc": "31-1131",
+   "title": "Nursing Assistants",
+   "major": "31-0000",
+   "minor": "31-1100",
+   "broad": "31-1130",
+   "oewsRows": [
+    615
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 1448910,
+   "annualMedian": 42260,
+   "annualMean": 42700,
+   "hourlyMedian": 20.32,
+   "hourlyMean": 20.53,
+   "annualPct10": 33940,
+   "annualPct90": 51980,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Nursing assistants",
+    "employment2025": 1505900,
+    "employment2035": 1544900,
+    "numericChange": 39000,
+    "percentChange": 2.6
+   },
+   "onetCode": "31-1131.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Provide or assist with basic care or support under the direction of onsite licensed nursing staff. Perform duties such as monitoring of health status, feeding, bathing, dressing, grooming, toileting, or ambulation of patients in a health or nursing facility. May include medication administration and other health-related tasks. Includes nursing care attendants, nursing aides, and nursing attendants.",
+   "tasks": [
+    {
+     "id": 19341,
+     "text": "Turn or reposition bedridden patients.",
+     "type": "Core",
+     "onetCode": "31-1131.00",
+     "line": 10056
+    },
+    {
+     "id": 19317,
+     "text": "Answer patient call signals, signal lights, bells, or intercom systems to determine patients' needs.",
+     "type": "Core",
+     "onetCode": "31-1131.00",
+     "line": 10057
+    },
+    {
+     "id": 19325,
+     "text": "Feed patients or assist patients to eat or drink.",
+     "type": "Core",
+     "onetCode": "31-1131.00",
+     "line": 10058
+    },
+    {
+     "id": 19327,
+     "text": "Measure and record food and liquid intake or urinary and fecal output, reporting changes to medical or nursing staff.",
+     "type": "Core",
+     "onetCode": "31-1131.00",
+     "line": 10059
+    },
+    {
+     "id": 19331,
+     "text": "Provide physical support to assist patients to perform daily living activities, such as getting out of bed, bathing, dressing, using the toilet, standing, walking, or exercising.",
+     "type": "Core",
+     "onetCode": "31-1131.00",
+     "line": 10060
+    },
+    {
+     "id": 19324,
+     "text": "Document or otherwise report observations of patient behavior, complaints, or physical symptoms to nurses.",
+     "type": "Core",
+     "onetCode": "31-1131.00",
+     "line": 10061
+    },
+    {
+     "id": 19334,
+     "text": "Remind patients to take medications or nutritional supplements.",
+     "type": "Core",
+     "onetCode": "31-1131.00",
+     "line": 10062
+    },
+    {
+     "id": 19336,
+     "text": "Review patients' dietary restrictions, food allergies, and preferences to ensure patient receives appropriate diet.",
+     "type": "Core",
+     "onetCode": "31-1131.00",
+     "line": 10063
+    },
+    {
+     "id": 19342,
+     "text": "Undress, wash, and dress patients who are unable to do so for themselves.",
+     "type": "Core",
+     "onetCode": "31-1131.00",
+     "line": 10064
+    },
+    {
+     "id": 19328,
+     "text": "Observe or examine patients to detect symptoms that may require medical attention, such as bruises, open wounds, or blood in urine.",
+     "type": "Core",
+     "onetCode": "31-1131.00",
+     "line": 10065
+    },
+    {
+     "id": 19346,
+     "text": "Lift or assist others to lift patients to move them on or off beds, examination tables, surgical tables, or stretchers.",
+     "type": "Core",
+     "onetCode": "31-1131.00",
+     "line": 10066
+    },
+    {
+     "id": 19339,
+     "text": "Supply, collect, or empty bedpans.",
+     "type": "Core",
+     "onetCode": "31-1131.00",
+     "line": 10067
+    },
+    {
+     "id": 19323,
+     "text": "Communicate with patients to ascertain feelings or need for assistance or social and emotional support.",
+     "type": "Core",
+     "onetCode": "31-1131.00",
+     "line": 10068
+    },
+    {
+     "id": 19333,
+     "text": "Record vital signs, such as temperature, blood pressure, pulse, or respiration rate, as directed by medical or nursing staff.",
+     "type": "Core",
+     "onetCode": "31-1131.00",
+     "line": 10069
+    },
+    {
+     "id": 19326,
+     "text": "Gather information from caregivers, nurses, or physicians about patient condition, treatment plans, or appropriate activities.",
+     "type": "Core",
+     "onetCode": "31-1131.00",
+     "line": 10070
+    },
+    {
+     "id": 19343,
+     "text": "Wash, groom, shave, or drape patients to prepare them for surgery, treatment, or examination.",
+     "type": "Core",
+     "onetCode": "31-1131.00",
+     "line": 10071
+    },
+    {
+     "id": 19330,
+     "text": "Prepare or serve food trays.",
+     "type": "Core",
+     "onetCode": "31-1131.00",
+     "line": 10072
+    },
+    {
+     "id": 19320,
+     "text": "Change bed linens or make beds.",
+     "type": "Core",
+     "onetCode": "31-1131.00",
+     "line": 10073
+    },
+    {
+     "id": 19344,
+     "text": "Exercise patients who are comatose, paralyzed, or have restricted mobility.",
+     "type": "Core",
+     "onetCode": "31-1131.00",
+     "line": 10074
+    },
+    {
+     "id": 19335,
+     "text": "Restock patient rooms with personal hygiene items, such as towels, washcloths, soap, or toilet paper.",
+     "type": "Core",
+     "onetCode": "31-1131.00",
+     "line": 10075
+    },
+    {
+     "id": 19321,
+     "text": "Clean and sanitize patient rooms, bathrooms, examination rooms, or other patient areas.",
+     "type": "Core",
+     "onetCode": "31-1131.00",
+     "line": 10076
+    },
+    {
+     "id": 19319,
+     "text": "Assist nurses or physicians in the operation of medical equipment or provision of patient care.",
+     "type": "Core",
+     "onetCode": "31-1131.00",
+     "line": 10077
+    },
+    {
+     "id": 19332,
+     "text": "Record height or weight of patients.",
+     "type": "Core",
+     "onetCode": "31-1131.00",
+     "line": 10078
+    },
+    {
+     "id": 19340,
+     "text": "Transport patients to treatment units, testing units, operating rooms, or other areas, using wheelchairs, stretchers, or moveable beds.",
+     "type": "Core",
+     "onetCode": "31-1131.00",
+     "line": 10079
+    },
+    {
+     "id": 19322,
+     "text": "Collect specimens, such as urine, feces, or sputum.",
+     "type": "Core",
+     "onetCode": "31-1131.00",
+     "line": 10080
+    },
+    {
+     "id": 19347,
+     "text": "Provide information, such as directions, visiting hours, or patient status information to visitors or callers.",
+     "type": "Core",
+     "onetCode": "31-1131.00",
+     "line": 10081
+    },
+    {
+     "id": 19329,
+     "text": "Position or hold patients in position for surgical preparation.",
+     "type": "Supplemental",
+     "onetCode": "31-1131.00",
+     "line": 10082
+    },
+    {
+     "id": 19337,
+     "text": "Set up treating or testing equipment, such as oxygen tents, portable radiograph (x-ray) equipment, or overhead irrigation bottles, as directed by a physician or nurse.",
+     "type": "Supplemental",
+     "onetCode": "31-1131.00",
+     "line": 10083
+    },
+    {
+     "id": 19316,
+     "text": "Administer medications or treatments, such as catheterizations, suppositories, irrigations, enemas, massages, or douches, as directed by a physician or nurse.",
+     "type": "Supplemental",
+     "onetCode": "31-1131.00",
+     "line": 10084
+    },
+    {
+     "id": 19318,
+     "text": "Apply clean dressings, slings, stockings, or support bandages, under direction of nurse or physician.",
+     "type": "Supplemental",
+     "onetCode": "31-1131.00",
+     "line": 10085
+    },
+    {
+     "id": 19338,
+     "text": "Stock or issue medical supplies, such as dressing packs or treatment trays.",
+     "type": "Supplemental",
+     "onetCode": "31-1131.00",
+     "line": 10086
+    },
+    {
+     "id": 19345,
+     "text": "Explain medical instructions to patients or family members.",
+     "type": "Supplemental",
+     "onetCode": "31-1131.00",
+     "line": 10087
+    },
+    {
+     "id": 19348,
+     "text": "Transport specimens, laboratory items, or pharmacy items, ensuring proper documentation and delivery to authorized personnel.",
+     "type": "Supplemental",
+     "onetCode": "31-1131.00",
+     "line": 10088
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L615",
+    "annualMedian": "oews:national_M2025_dl!AB615",
+    "annualMean": "oews:national_M2025_dl!S615",
+    "hourlyMedian": "oews:national_M2025_dl!W615",
+    "hourlyMean": "oews:national_M2025_dl!R615",
+    "annualPct10": "oews:national_M2025_dl!Z615",
+    "annualPct90": "oews:national_M2025_dl!AD615",
+    "annualOnly": "oews:national_M2025_dl!AE615",
+    "hourlyOnly": "oews:national_M2025_dl!AF615",
+    "title": "oews:national_M2025_dl!J615",
+    "ep.title": "ep:Table 1.2!A502",
+    "ep.employment2025": "ep:Table 1.2!D502",
+    "ep.employment2035": "ep:Table 1.2!E502",
+    "ep.numericChange": "ep:Table 1.2!H502",
+    "ep.percentChange": "ep:Table 1.2!I502",
+    "onetCode": "onet:Occupation Data.txt#L511:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L511:Description"
+   },
+   "nullReasons": {}
+  },
+  "31-1132": {
+   "soc": "31-1132",
+   "title": "Orderlies",
+   "major": "31-0000",
+   "minor": "31-1100",
+   "broad": "31-1130",
+   "oewsRows": [
+    616
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 52440,
+   "annualMedian": 38290,
+   "annualMean": 40660,
+   "hourlyMedian": 18.41,
+   "hourlyMean": 19.55,
+   "annualPct10": 32240,
+   "annualPct90": 50600,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Orderlies",
+    "employment2025": 52800,
+    "employment2035": 54900,
+    "numericChange": 2100,
+    "percentChange": 4
+   },
+   "onetCode": "31-1132.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Transport patients to areas such as operating rooms or x-ray rooms using wheelchairs, stretchers, or moveable beds. May maintain stocks of supplies or clean and transport equipment. Psychiatric orderlies are included in Psychiatric Aides.",
+   "tasks": [
+    {
+     "id": 19357,
+     "text": "Lift or assist others to lift patients to move them on or off beds, examination tables, surgical tables, or stretchers.",
+     "type": "Core",
+     "onetCode": "31-1132.00",
+     "line": 10089
+    },
+    {
+     "id": 19366,
+     "text": "Transport patients to treatment units, testing units, operating rooms, or other areas, using wheelchairs, stretchers, or moveable beds.",
+     "type": "Core",
+     "onetCode": "31-1132.00",
+     "line": 10090
+    },
+    {
+     "id": 19356,
+     "text": "Disinfect or sterilize equipment or supplies, using germicides or sterilizing equipment.",
+     "type": "Core",
+     "onetCode": "31-1132.00",
+     "line": 10091
+    },
+    {
+     "id": 19353,
+     "text": "Clean equipment, such as wheelchairs, hospital beds, or portable medical equipment, documenting needed repairs or maintenance.",
+     "type": "Core",
+     "onetCode": "31-1132.00",
+     "line": 10092
+    },
+    {
+     "id": 19359,
+     "text": "Respond to emergency situations, such as emergency medical calls, security calls, or fire alarms.",
+     "type": "Core",
+     "onetCode": "31-1132.00",
+     "line": 10093
+    },
+    {
+     "id": 19351,
+     "text": "Change soiled linens, such as bed linens, drapes, or cubicle curtains.",
+     "type": "Core",
+     "onetCode": "31-1132.00",
+     "line": 10094
+    },
+    {
+     "id": 19350,
+     "text": "Carry messages or documents between departments.",
+     "type": "Core",
+     "onetCode": "31-1132.00",
+     "line": 10095
+    },
+    {
+     "id": 19367,
+     "text": "Transport portable medical equipment or medical supplies between rooms or departments.",
+     "type": "Core",
+     "onetCode": "31-1132.00",
+     "line": 10096
+    },
+    {
+     "id": 19352,
+     "text": "Clean and sanitize patient rooms, bathrooms, examination rooms, or other patient areas.",
+     "type": "Supplemental",
+     "onetCode": "31-1132.00",
+     "line": 10097
+    },
+    {
+     "id": 19354,
+     "text": "Collect and transport infectious or hazardous waste in closed containers for sterilization or disposal, in accordance with applicable law, standards, or policies.",
+     "type": "Supplemental",
+     "onetCode": "31-1132.00",
+     "line": 10098
+    },
+    {
+     "id": 19368,
+     "text": "Transport specimens, laboratory items, or pharmacy items, ensuring proper documentation and delivery to authorized personnel.",
+     "type": "Supplemental",
+     "onetCode": "31-1132.00",
+     "line": 10099
+    },
+    {
+     "id": 19355,
+     "text": "Collect soiled linen or trash.",
+     "type": "Supplemental",
+     "onetCode": "31-1132.00",
+     "line": 10100
+    },
+    {
+     "id": 19370,
+     "text": "Provide physical support to patients to assist them to perform daily living activities, such as getting out of bed, bathing, dressing, using the toilet, standing, walking, or exercising.",
+     "type": "Supplemental",
+     "onetCode": "31-1132.00",
+     "line": 10101
+    },
+    {
+     "id": 19371,
+     "text": "Separate collected materials for disposal, recycling, or reuse, in accordance with environmental policies.",
+     "type": "Supplemental",
+     "onetCode": "31-1132.00",
+     "line": 10102
+    },
+    {
+     "id": 19360,
+     "text": "Restrain patients to prevent violence or injury or to assist physicians or nurses to administer treatments.",
+     "type": "Supplemental",
+     "onetCode": "31-1132.00",
+     "line": 10103
+    },
+    {
+     "id": 19369,
+     "text": "Turn or reposition bedridden patients, alone or with assistance, to prevent bedsores.",
+     "type": "Supplemental",
+     "onetCode": "31-1132.00",
+     "line": 10104
+    },
+    {
+     "id": 19358,
+     "text": "Position or hold patients in position for surgical preparation.",
+     "type": "Supplemental",
+     "onetCode": "31-1132.00",
+     "line": 10105
+    },
+    {
+     "id": 19363,
+     "text": "Stock utility rooms, nonmedical storage rooms, or cleaning carts with supplies.",
+     "type": "Supplemental",
+     "onetCode": "31-1132.00",
+     "line": 10106
+    },
+    {
+     "id": 19349,
+     "text": "Answer patient call signals, signal lights, bells, or intercom systems to determine patients' needs.",
+     "type": "Supplemental",
+     "onetCode": "31-1132.00",
+     "line": 10107
+    },
+    {
+     "id": 19362,
+     "text": "Stock or issue medical supplies, such as dressing packs or treatment trays.",
+     "type": "Supplemental",
+     "onetCode": "31-1132.00",
+     "line": 10108
+    },
+    {
+     "id": 19365,
+     "text": "Transport bodies to the morgue.",
+     "type": "Supplemental",
+     "onetCode": "31-1132.00",
+     "line": 10109
+    },
+    {
+     "id": 19361,
+     "text": "Serve or collect food trays.",
+     "type": "Supplemental",
+     "onetCode": "31-1132.00",
+     "line": 10110
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L616",
+    "annualMedian": "oews:national_M2025_dl!AB616",
+    "annualMean": "oews:national_M2025_dl!S616",
+    "hourlyMedian": "oews:national_M2025_dl!W616",
+    "hourlyMean": "oews:national_M2025_dl!R616",
+    "annualPct10": "oews:national_M2025_dl!Z616",
+    "annualPct90": "oews:national_M2025_dl!AD616",
+    "annualOnly": "oews:national_M2025_dl!AE616",
+    "hourlyOnly": "oews:national_M2025_dl!AF616",
+    "title": "oews:national_M2025_dl!J616",
+    "ep.title": "ep:Table 1.2!A503",
+    "ep.employment2025": "ep:Table 1.2!D503",
+    "ep.employment2035": "ep:Table 1.2!E503",
+    "ep.numericChange": "ep:Table 1.2!H503",
+    "ep.percentChange": "ep:Table 1.2!I503",
+    "onetCode": "onet:Occupation Data.txt#L512:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L512:Description"
+   },
+   "nullReasons": {}
+  },
+  "31-1133": {
+   "soc": "31-1133",
+   "title": "Psychiatric Aides",
+   "major": "31-0000",
+   "minor": "31-1100",
+   "broad": "31-1130",
+   "oewsRows": [
+    617
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 35520,
+   "annualMedian": 44910,
+   "annualMean": 45690,
+   "hourlyMedian": 21.59,
+   "hourlyMean": 21.97,
+   "annualPct10": 32090,
+   "annualPct90": 60440,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Psychiatric aides",
+    "employment2025": 36900,
+    "employment2035": 37600,
+    "numericChange": 700,
+    "percentChange": 1.9
+   },
+   "onetCode": "31-1133.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Assist mentally impaired or emotionally disturbed patients, working under direction of nursing and medical staff. May assist with daily living activities, lead patients in educational and recreational activities, or accompany patients to and from examinations and treatments. May restrain violent patients. Includes psychiatric orderlies.",
+   "tasks": [
+    {
+     "id": 20578,
+     "text": "Listen and provide emotional support and encouragement to psychiatric patients.",
+     "type": "Core",
+     "onetCode": "31-1133.00",
+     "line": 10111
+    },
+    {
+     "id": 1994,
+     "text": "Provide patients with cognitive, intellectual, or developmental disabilities with routine physical, emotional, psychological, or rehabilitation care under the direction of nursing or medical staff.",
+     "type": "Core",
+     "onetCode": "31-1133.00",
+     "line": 10112
+    },
+    {
+     "id": 18696,
+     "text": "Complete physical checks and monitor patients to detect unusual or harmful behavior and report observations to professional staff.",
+     "type": "Core",
+     "onetCode": "31-1133.00",
+     "line": 10113
+    },
+    {
+     "id": 2001,
+     "text": "Restrain or aid patients as necessary to prevent injury.",
+     "type": "Core",
+     "onetCode": "31-1133.00",
+     "line": 10114
+    },
+    {
+     "id": 1996,
+     "text": "Work as part of a team that may include psychiatrists, psychologists, psychiatric nurses, or social workers.",
+     "type": "Core",
+     "onetCode": "31-1133.00",
+     "line": 10115
+    },
+    {
+     "id": 18697,
+     "text": "Record and maintain patient information, such as vital signs, eating habits, behavior, progress notes, treatments, or discharge plans.",
+     "type": "Core",
+     "onetCode": "31-1133.00",
+     "line": 10116
+    },
+    {
+     "id": 2005,
+     "text": "Maintain patients' restrictions to assigned areas.",
+     "type": "Core",
+     "onetCode": "31-1133.00",
+     "line": 10117
+    },
+    {
+     "id": 1998,
+     "text": "Organize, supervise, or encourage patient participation in social, educational, or recreational activities.",
+     "type": "Core",
+     "onetCode": "31-1133.00",
+     "line": 10118
+    },
+    {
+     "id": 2003,
+     "text": "Provide patients with assistance in bathing, dressing, or grooming, demonstrating these skills as necessary.",
+     "type": "Core",
+     "onetCode": "31-1133.00",
+     "line": 10119
+    },
+    {
+     "id": 1997,
+     "text": "Aid patients in becoming accustomed to hospital routines.",
+     "type": "Core",
+     "onetCode": "31-1133.00",
+     "line": 10120
+    },
+    {
+     "id": 2000,
+     "text": "Serve meals or feed patients needing assistance or persuasion.",
+     "type": "Core",
+     "onetCode": "31-1133.00",
+     "line": 10121
+    },
+    {
+     "id": 2007,
+     "text": "Clean and disinfect rooms and furnishings to maintain a safe and orderly environment.",
+     "type": "Core",
+     "onetCode": "31-1133.00",
+     "line": 10122
+    },
+    {
+     "id": 18698,
+     "text": "Complete administrative tasks, such as entering orders into computer, answering telephone calls, or maintaining medical or facility information.",
+     "type": "Core",
+     "onetCode": "31-1133.00",
+     "line": 10123
+    },
+    {
+     "id": 2006,
+     "text": "Accompany patients to and from wards for medical or dental treatments, shopping trips, or religious or recreational events.",
+     "type": "Core",
+     "onetCode": "31-1133.00",
+     "line": 10124
+    },
+    {
+     "id": 2004,
+     "text": "Participate in recreational activities with patients, including card games, sports, or television viewing.",
+     "type": "Core",
+     "onetCode": "31-1133.00",
+     "line": 10125
+    },
+    {
+     "id": 1999,
+     "text": "Perform nursing duties, such as administering medications, measuring vital signs, collecting specimens, or drawing blood samples.",
+     "type": "Supplemental",
+     "onetCode": "31-1133.00",
+     "line": 10126
+    },
+    {
+     "id": 2002,
+     "text": "Interview patients upon admission and record information.",
+     "type": "Supplemental",
+     "onetCode": "31-1133.00",
+     "line": 10127
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L617",
+    "annualMedian": "oews:national_M2025_dl!AB617",
+    "annualMean": "oews:national_M2025_dl!S617",
+    "hourlyMedian": "oews:national_M2025_dl!W617",
+    "hourlyMean": "oews:national_M2025_dl!R617",
+    "annualPct10": "oews:national_M2025_dl!Z617",
+    "annualPct90": "oews:national_M2025_dl!AD617",
+    "annualOnly": "oews:national_M2025_dl!AE617",
+    "hourlyOnly": "oews:national_M2025_dl!AF617",
+    "title": "oews:national_M2025_dl!J617",
+    "ep.title": "ep:Table 1.2!A504",
+    "ep.employment2025": "ep:Table 1.2!D504",
+    "ep.employment2035": "ep:Table 1.2!E504",
+    "ep.numericChange": "ep:Table 1.2!H504",
+    "ep.percentChange": "ep:Table 1.2!I504",
+    "onetCode": "onet:Occupation Data.txt#L513:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L513:Description"
+   },
+   "nullReasons": {}
+  },
+  "31-2011": {
+   "soc": "31-2011",
+   "title": "Occupational Therapy Assistants",
+   "major": "31-0000",
+   "minor": "31-2000",
+   "broad": "31-2010",
+   "oewsRows": [
+    620
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 51290,
+   "annualMedian": 72300,
+   "annualMean": 70710,
+   "hourlyMedian": 34.76,
+   "hourlyMean": 33.99,
+   "annualPct10": 51490,
+   "annualPct90": 89780,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Occupational therapy assistants",
+    "employment2025": 52200,
+    "employment2035": 63400,
+    "numericChange": 11200,
+    "percentChange": 21.5
+   },
+   "onetCode": "31-2011.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Assist occupational therapists in providing occupational therapy treatments and procedures. May, in accordance with state laws, assist in development of treatment plans, carry out routine functions, direct activity programs, and document the progress of treatments. Generally requires formal training.",
+   "tasks": [
+    {
+     "id": 4258,
+     "text": "Instruct, or assist in instructing, patients and families in home programs, basic living skills, or the care and use of adaptive equipment.",
+     "type": "Core",
+     "onetCode": "31-2011.00",
+     "line": 10128
+    },
+    {
+     "id": 4255,
+     "text": "Maintain and promote a positive attitude toward clients and their treatment programs.",
+     "type": "Core",
+     "onetCode": "31-2011.00",
+     "line": 10129
+    },
+    {
+     "id": 4262,
+     "text": "Report to supervisors, verbally or in writing, on patients' progress, attitudes, and behavior.",
+     "type": "Core",
+     "onetCode": "31-2011.00",
+     "line": 10130
+    },
+    {
+     "id": 4261,
+     "text": "Implement, or assist occupational therapists with implementing, treatment plans designed to help clients function independently.",
+     "type": "Core",
+     "onetCode": "31-2011.00",
+     "line": 10131
+    },
+    {
+     "id": 4256,
+     "text": "Monitor patients' performance in therapy activities, providing encouragement.",
+     "type": "Core",
+     "onetCode": "31-2011.00",
+     "line": 10132
+    },
+    {
+     "id": 4254,
+     "text": "Observe and record patients' progress, attitudes, and behavior and maintain this information in client records.",
+     "type": "Core",
+     "onetCode": "31-2011.00",
+     "line": 10133
+    },
+    {
+     "id": 4257,
+     "text": "Select therapy activities to fit patients' needs and capabilities.",
+     "type": "Core",
+     "onetCode": "31-2011.00",
+     "line": 10134
+    },
+    {
+     "id": 18700,
+     "text": "Attend continuing education classes.",
+     "type": "Core",
+     "onetCode": "31-2011.00",
+     "line": 10135
+    },
+    {
+     "id": 4260,
+     "text": "Aid patients in dressing and grooming themselves.",
+     "type": "Core",
+     "onetCode": "31-2011.00",
+     "line": 10136
+    },
+    {
+     "id": 4259,
+     "text": "Evaluate the daily living skills or capacities of clients with physical, developmental, or mental health disabilities.",
+     "type": "Core",
+     "onetCode": "31-2011.00",
+     "line": 10137
+    },
+    {
+     "id": 18699,
+     "text": "Communicate and collaborate with other healthcare professionals involved with the care of a patient.",
+     "type": "Core",
+     "onetCode": "31-2011.00",
+     "line": 10138
+    },
+    {
+     "id": 4264,
+     "text": "Work under the direction of occupational therapists to plan, implement, or administer educational, vocational, or recreational programs that restore or enhance performance in individuals with functional impairments.",
+     "type": "Core",
+     "onetCode": "31-2011.00",
+     "line": 10139
+    },
+    {
+     "id": 4263,
+     "text": "Alter treatment programs to obtain better results if treatment is not having the intended effect.",
+     "type": "Core",
+     "onetCode": "31-2011.00",
+     "line": 10140
+    },
+    {
+     "id": 4266,
+     "text": "Assemble, clean, or maintain equipment or materials for patient use.",
+     "type": "Core",
+     "onetCode": "31-2011.00",
+     "line": 10141
+    },
+    {
+     "id": 4269,
+     "text": "Transport patients to and from the occupational therapy work area.",
+     "type": "Core",
+     "onetCode": "31-2011.00",
+     "line": 10142
+    },
+    {
+     "id": 4265,
+     "text": "Design, fabricate, or repair assistive devices or make adaptive changes to equipment or environments.",
+     "type": "Core",
+     "onetCode": "31-2011.00",
+     "line": 10143
+    },
+    {
+     "id": 18701,
+     "text": "Attend care plan meetings to review patient progress and update care plans.",
+     "type": "Core",
+     "onetCode": "31-2011.00",
+     "line": 10144
+    },
+    {
+     "id": 4270,
+     "text": "Demonstrate therapy techniques, such as manual or creative arts or games.",
+     "type": "Core",
+     "onetCode": "31-2011.00",
+     "line": 10145
+    },
+    {
+     "id": 4267,
+     "text": "Teach patients how to deal constructively with their emotions.",
+     "type": "Core",
+     "onetCode": "31-2011.00",
+     "line": 10146
+    },
+    {
+     "id": 4271,
+     "text": "Order any needed educational or treatment supplies.",
+     "type": "Core",
+     "onetCode": "31-2011.00",
+     "line": 10147
+    },
+    {
+     "id": 4268,
+     "text": "Perform clerical duties, such as scheduling appointments, collecting data, or documenting health insurance billings.",
+     "type": "Core",
+     "onetCode": "31-2011.00",
+     "line": 10148
+    },
+    {
+     "id": 4272,
+     "text": "Assist educational specialists or clinical psychologists in administering situational or diagnostic tests to measure client's abilities or progress.",
+     "type": "Supplemental",
+     "onetCode": "31-2011.00",
+     "line": 10149
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L620",
+    "annualMedian": "oews:national_M2025_dl!AB620",
+    "annualMean": "oews:national_M2025_dl!S620",
+    "hourlyMedian": "oews:national_M2025_dl!W620",
+    "hourlyMean": "oews:national_M2025_dl!R620",
+    "annualPct10": "oews:national_M2025_dl!Z620",
+    "annualPct90": "oews:national_M2025_dl!AD620",
+    "annualOnly": "oews:national_M2025_dl!AE620",
+    "hourlyOnly": "oews:national_M2025_dl!AF620",
+    "title": "oews:national_M2025_dl!J620",
+    "ep.title": "ep:Table 1.2!A507",
+    "ep.employment2025": "ep:Table 1.2!D507",
+    "ep.employment2035": "ep:Table 1.2!E507",
+    "ep.numericChange": "ep:Table 1.2!H507",
+    "ep.percentChange": "ep:Table 1.2!I507",
+    "onetCode": "onet:Occupation Data.txt#L514:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L514:Description"
+   },
+   "nullReasons": {}
+  },
+  "31-2012": {
+   "soc": "31-2012",
+   "title": "Occupational Therapy Aides",
+   "major": "31-0000",
+   "minor": "31-2000",
+   "broad": "31-2010",
+   "oewsRows": [
+    621
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 4310,
+   "annualMedian": 39160,
+   "annualMean": 44110,
+   "hourlyMedian": 18.83,
+   "hourlyMean": 21.21,
+   "annualPct10": 29430,
+   "annualPct90": 70200,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Occupational therapy aides",
+    "employment2025": 4400,
+    "employment2035": 4600,
+    "numericChange": 200,
+    "percentChange": 3.6
+   },
+   "onetCode": "31-2012.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Under close supervision of an occupational therapist or occupational therapy assistant, perform only delegated, selected, or routine tasks in specific situations. These duties include preparing patient and treatment room.",
+   "tasks": [
+    {
+     "id": 9398,
+     "text": "Encourage patients and attend to their physical needs to facilitate the attainment of therapeutic goals.",
+     "type": "Core",
+     "onetCode": "31-2012.00",
+     "line": 10150
+    },
+    {
+     "id": 9399,
+     "text": "Report to supervisors or therapists, verbally or in writing, on patients' progress, attitudes, attendance, and accomplishments.",
+     "type": "Core",
+     "onetCode": "31-2012.00",
+     "line": 10151
+    },
+    {
+     "id": 9400,
+     "text": "Observe patients' attendance, progress, attitudes, and accomplishments and record and maintain information in client records.",
+     "type": "Core",
+     "onetCode": "31-2012.00",
+     "line": 10152
+    },
+    {
+     "id": 9403,
+     "text": "Prepare and maintain work area, materials, and equipment and maintain inventory of treatment and educational supplies.",
+     "type": "Core",
+     "onetCode": "31-2012.00",
+     "line": 10153
+    },
+    {
+     "id": 9409,
+     "text": "Transport patients to and from the occupational therapy work area.",
+     "type": "Core",
+     "onetCode": "31-2012.00",
+     "line": 10154
+    },
+    {
+     "id": 9404,
+     "text": "Instruct patients and families in work, social, and living skills, the care and use of adaptive equipment, and other skills to facilitate home and work adjustment to disability.",
+     "type": "Core",
+     "onetCode": "31-2012.00",
+     "line": 10155
+    },
+    {
+     "id": 9406,
+     "text": "Assist occupational therapists in planning, implementing, and administering therapy programs to restore, reinforce, and enhance performance, using selected activities and special equipment.",
+     "type": "Core",
+     "onetCode": "31-2012.00",
+     "line": 10156
+    },
+    {
+     "id": 9408,
+     "text": "Demonstrate therapy techniques, such as manual and creative arts and games.",
+     "type": "Core",
+     "onetCode": "31-2012.00",
+     "line": 10157
+    },
+    {
+     "id": 9401,
+     "text": "Manage intradepartmental infection control and equipment security.",
+     "type": "Core",
+     "onetCode": "31-2012.00",
+     "line": 10158
+    },
+    {
+     "id": 9407,
+     "text": "Perform clerical, administrative, and secretarial duties, such as answering phones, restocking and ordering supplies, filling out paperwork, and scheduling appointments.",
+     "type": "Core",
+     "onetCode": "31-2012.00",
+     "line": 10159
+    },
+    {
+     "id": 9405,
+     "text": "Supervise patients in choosing and completing work assignments or arts and crafts projects.",
+     "type": "Core",
+     "onetCode": "31-2012.00",
+     "line": 10160
+    },
+    {
+     "id": 9410,
+     "text": "Adjust and repair assistive devices and make adaptive changes to other equipment and to environments.",
+     "type": "Core",
+     "onetCode": "31-2012.00",
+     "line": 10161
+    },
+    {
+     "id": 9402,
+     "text": "Evaluate the living skills and capacities of clients with physical, developmental, or mental health disabilities.",
+     "type": "Supplemental",
+     "onetCode": "31-2012.00",
+     "line": 10162
+    },
+    {
+     "id": 9412,
+     "text": "Accompany patients on outings, providing transportation when necessary.",
+     "type": "Supplemental",
+     "onetCode": "31-2012.00",
+     "line": 10163
+    },
+    {
+     "id": 9411,
+     "text": "Assist educational specialists or clinical psychologists in administering situational or diagnostic tests to measure client's abilities or progress.",
+     "type": "Supplemental",
+     "onetCode": "31-2012.00",
+     "line": 10164
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L621",
+    "annualMedian": "oews:national_M2025_dl!AB621",
+    "annualMean": "oews:national_M2025_dl!S621",
+    "hourlyMedian": "oews:national_M2025_dl!W621",
+    "hourlyMean": "oews:national_M2025_dl!R621",
+    "annualPct10": "oews:national_M2025_dl!Z621",
+    "annualPct90": "oews:national_M2025_dl!AD621",
+    "annualOnly": "oews:national_M2025_dl!AE621",
+    "hourlyOnly": "oews:national_M2025_dl!AF621",
+    "title": "oews:national_M2025_dl!J621",
+    "ep.title": "ep:Table 1.2!A508",
+    "ep.employment2025": "ep:Table 1.2!D508",
+    "ep.employment2035": "ep:Table 1.2!E508",
+    "ep.numericChange": "ep:Table 1.2!H508",
+    "ep.percentChange": "ep:Table 1.2!I508",
+    "onetCode": "onet:Occupation Data.txt#L515:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L515:Description"
+   },
+   "nullReasons": {}
+  },
+  "31-2021": {
+   "soc": "31-2021",
+   "title": "Physical Therapist Assistants",
+   "major": "31-0000",
+   "minor": "31-2000",
+   "broad": "31-2020",
+   "oewsRows": [
+    623
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 112430,
+   "annualMedian": 68380,
+   "annualMean": 68730,
+   "hourlyMedian": 32.88,
+   "hourlyMean": 33.04,
+   "annualPct10": 47750,
+   "annualPct90": 89510,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Physical therapist assistants",
+    "employment2025": 114100,
+    "employment2035": 140400,
+    "numericChange": 26200,
+    "percentChange": 23
+   },
+   "onetCode": "31-2021.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Assist physical therapists in providing physical therapy treatments and procedures. May, in accordance with state laws, assist in the development of treatment plans, carry out routine functions, document the progress of treatment, and modify specific treatments in accordance with patient status and within the scope of treatment plans established by a physical therapist. Generally requires formal training.",
+   "tasks": [
+    {
+     "id": 2008,
+     "text": "Instruct, motivate, safeguard, and assist patients as they practice exercises or functional activities.",
+     "type": "Core",
+     "onetCode": "31-2021.00",
+     "line": 10165
+    },
+    {
+     "id": 21192,
+     "text": "Document patient information, such as notes on their progress.",
+     "type": "Core",
+     "onetCode": "31-2021.00",
+     "line": 10166
+    },
+    {
+     "id": 15247,
+     "text": "Observe patients during treatments to compile and evaluate data on their responses and progress and provide results to physical therapist in person or through progress notes.",
+     "type": "Core",
+     "onetCode": "31-2021.00",
+     "line": 10167
+    },
+    {
+     "id": 21193,
+     "text": "Instruct patients in proper body mechanics and in ways to improve functional mobility, such as aquatic exercise.",
+     "type": "Core",
+     "onetCode": "31-2021.00",
+     "line": 10168
+    },
+    {
+     "id": 2013,
+     "text": "Secure patients into or onto therapy equipment.",
+     "type": "Core",
+     "onetCode": "31-2021.00",
+     "line": 10169
+    },
+    {
+     "id": 2009,
+     "text": "Confer with physical therapy staff or others to discuss and evaluate patient information for planning, modifying, or coordinating treatment.",
+     "type": "Core",
+     "onetCode": "31-2021.00",
+     "line": 10170
+    },
+    {
+     "id": 15248,
+     "text": "Administer active or passive manual therapeutic exercises, therapeutic massage, aquatic physical therapy, or heat, light, sound, or electrical modality treatments, such as ultrasound.",
+     "type": "Core",
+     "onetCode": "31-2021.00",
+     "line": 10171
+    },
+    {
+     "id": 2016,
+     "text": "Transport patients to and from treatment areas, lifting and transferring them according to positioning requirements.",
+     "type": "Core",
+     "onetCode": "31-2021.00",
+     "line": 10172
+    },
+    {
+     "id": 2018,
+     "text": "Clean work area and check and store equipment after treatment.",
+     "type": "Core",
+     "onetCode": "31-2021.00",
+     "line": 10173
+    },
+    {
+     "id": 15249,
+     "text": "Communicate with or instruct caregivers or family members on patient therapeutic activities or treatment plans.",
+     "type": "Core",
+     "onetCode": "31-2021.00",
+     "line": 10174
+    },
+    {
+     "id": 2012,
+     "text": "Measure patients' range-of-joint motion, body parts, or vital signs to determine effects of treatments or for patient evaluations.",
+     "type": "Core",
+     "onetCode": "31-2021.00",
+     "line": 10175
+    },
+    {
+     "id": 2015,
+     "text": "Train patients in the use of orthopedic braces, prostheses, or supportive devices.",
+     "type": "Core",
+     "onetCode": "31-2021.00",
+     "line": 10176
+    },
+    {
+     "id": 2017,
+     "text": "Monitor operation of equipment and record use of equipment and administration of treatment.",
+     "type": "Core",
+     "onetCode": "31-2021.00",
+     "line": 10177
+    },
+    {
+     "id": 2019,
+     "text": "Assist patients to dress, undress, or put on and remove supportive devices, such as braces, splints, or slings.",
+     "type": "Core",
+     "onetCode": "31-2021.00",
+     "line": 10178
+    },
+    {
+     "id": 15250,
+     "text": "Attend or conduct continuing education courses, seminars, or in-service activities.",
+     "type": "Core",
+     "onetCode": "31-2021.00",
+     "line": 10179
+    },
+    {
+     "id": 2014,
+     "text": "Fit patients for orthopedic braces, prostheses, or supportive devices, such as crutches.",
+     "type": "Core",
+     "onetCode": "31-2021.00",
+     "line": 10180
+    },
+    {
+     "id": 2023,
+     "text": "Perform postural drainage, percussions, or vibrations or teach deep breathing exercises to treat respiratory conditions.",
+     "type": "Core",
+     "onetCode": "31-2021.00",
+     "line": 10181
+    },
+    {
+     "id": 2021,
+     "text": "Perform clerical duties, such as taking inventory, ordering supplies, answering telephone, taking messages, or filling out forms.",
+     "type": "Core",
+     "onetCode": "31-2021.00",
+     "line": 10182
+    },
+    {
+     "id": 2022,
+     "text": "Prepare treatment areas and electrotherapy equipment for use by physiotherapists.",
+     "type": "Supplemental",
+     "onetCode": "31-2021.00",
+     "line": 10183
+    },
+    {
+     "id": 2020,
+     "text": "Administer traction to relieve neck or back pain, using intermittent or static traction equipment.",
+     "type": "Supplemental",
+     "onetCode": "31-2021.00",
+     "line": 10184
+    },
+    {
+     "id": 21194,
+     "text": "Perform therapeutic wound care.",
+     "type": "Supplemental",
+     "onetCode": "31-2021.00",
+     "line": 10185
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L623",
+    "annualMedian": "oews:national_M2025_dl!AB623",
+    "annualMean": "oews:national_M2025_dl!S623",
+    "hourlyMedian": "oews:national_M2025_dl!W623",
+    "hourlyMean": "oews:national_M2025_dl!R623",
+    "annualPct10": "oews:national_M2025_dl!Z623",
+    "annualPct90": "oews:national_M2025_dl!AD623",
+    "annualOnly": "oews:national_M2025_dl!AE623",
+    "hourlyOnly": "oews:national_M2025_dl!AF623",
+    "title": "oews:national_M2025_dl!J623",
+    "ep.title": "ep:Table 1.2!A510",
+    "ep.employment2025": "ep:Table 1.2!D510",
+    "ep.employment2035": "ep:Table 1.2!E510",
+    "ep.numericChange": "ep:Table 1.2!H510",
+    "ep.percentChange": "ep:Table 1.2!I510",
+    "onetCode": "onet:Occupation Data.txt#L516:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L516:Description"
+   },
+   "nullReasons": {}
+  },
+  "31-2022": {
+   "soc": "31-2022",
+   "title": "Physical Therapist Aides",
+   "major": "31-0000",
+   "minor": "31-2000",
+   "broad": "31-2020",
+   "oewsRows": [
+    624
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 48150,
+   "annualMedian": 35240,
+   "annualMean": 36430,
+   "hourlyMedian": 16.94,
+   "hourlyMean": 17.52,
+   "annualPct10": 25360,
+   "annualPct90": 47780,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Physical therapist aides",
+    "employment2025": 49000,
+    "employment2035": 51000,
+    "numericChange": 2000,
+    "percentChange": 4
+   },
+   "onetCode": "31-2022.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Under close supervision of a physical therapist or physical therapy assistant, perform only delegated, selected, or routine tasks in specific situations. These duties include preparing the patient and the treatment area.",
+   "tasks": [
+    {
+     "id": 4273,
+     "text": "Clean and organize work area and disinfect equipment after treatment.",
+     "type": "Core",
+     "onetCode": "31-2022.00",
+     "line": 10186
+    },
+    {
+     "id": 4276,
+     "text": "Secure patients into or onto therapy equipment.",
+     "type": "Core",
+     "onetCode": "31-2022.00",
+     "line": 10187
+    },
+    {
+     "id": 4275,
+     "text": "Instruct, motivate, safeguard, or assist patients practicing exercises or functional activities, under direction of medical staff.",
+     "type": "Core",
+     "onetCode": "31-2022.00",
+     "line": 10188
+    },
+    {
+     "id": 4278,
+     "text": "Confer with physical therapy staff or others to discuss and evaluate patient information for planning, modifying, or coordinating treatment.",
+     "type": "Core",
+     "onetCode": "31-2022.00",
+     "line": 10189
+    },
+    {
+     "id": 4274,
+     "text": "Observe patients during treatment to compile and evaluate data on patients' responses and progress and report to physical therapist.",
+     "type": "Core",
+     "onetCode": "31-2022.00",
+     "line": 10190
+    },
+    {
+     "id": 4283,
+     "text": "Change linens, such as bed sheets and pillow cases.",
+     "type": "Core",
+     "onetCode": "31-2022.00",
+     "line": 10191
+    },
+    {
+     "id": 4282,
+     "text": "Administer active or passive manual therapeutic exercises, therapeutic massage, or heat, light, sound, water, or electrical modality treatments, such as ultrasound.",
+     "type": "Core",
+     "onetCode": "31-2022.00",
+     "line": 10192
+    },
+    {
+     "id": 4277,
+     "text": "Transport patients to and from treatment areas, using wheelchairs or providing standing support.",
+     "type": "Core",
+     "onetCode": "31-2022.00",
+     "line": 10193
+    },
+    {
+     "id": 4280,
+     "text": "Perform clerical duties, such as taking inventory, ordering supplies, answering telephone, taking messages, or filling out forms.",
+     "type": "Core",
+     "onetCode": "31-2022.00",
+     "line": 10194
+    },
+    {
+     "id": 15251,
+     "text": "Schedule patient appointments with physical therapists and coordinate therapists' schedules.",
+     "type": "Core",
+     "onetCode": "31-2022.00",
+     "line": 10195
+    },
+    {
+     "id": 4284,
+     "text": "Arrange treatment supplies to keep them in order.",
+     "type": "Core",
+     "onetCode": "31-2022.00",
+     "line": 10196
+    },
+    {
+     "id": 4285,
+     "text": "Assist patients to dress, undress, or put on and remove supportive devices, such as braces, splints, or slings.",
+     "type": "Core",
+     "onetCode": "31-2022.00",
+     "line": 10197
+    },
+    {
+     "id": 4281,
+     "text": "Maintain equipment or furniture to keep it in good working condition, including performing the assembly or disassembly of equipment or accessories.",
+     "type": "Core",
+     "onetCode": "31-2022.00",
+     "line": 10198
+    },
+    {
+     "id": 4279,
+     "text": "Record treatment given and equipment used.",
+     "type": "Supplemental",
+     "onetCode": "31-2022.00",
+     "line": 10199
+    },
+    {
+     "id": 4286,
+     "text": "Measure patient's range-of-joint motion, body parts, or vital signs to determine effects of treatments or for patient evaluations.",
+     "type": "Supplemental",
+     "onetCode": "31-2022.00",
+     "line": 10200
+    },
+    {
+     "id": 4287,
+     "text": "Train patients to use orthopedic braces, prostheses, or supportive devices.",
+     "type": "Supplemental",
+     "onetCode": "31-2022.00",
+     "line": 10201
+    },
+    {
+     "id": 4290,
+     "text": "Administer traction to relieve neck or back pain, using intermittent or static traction equipment.",
+     "type": "Supplemental",
+     "onetCode": "31-2022.00",
+     "line": 10202
+    },
+    {
+     "id": 4288,
+     "text": "Fit patients for orthopedic braces, prostheses, or supportive devices, adjusting fit as needed.",
+     "type": "Supplemental",
+     "onetCode": "31-2022.00",
+     "line": 10203
+    },
+    {
+     "id": 4289,
+     "text": "Participate in patient care tasks, such as assisting with passing food trays, feeding residents, or bathing residents on bed rest.",
+     "type": "Supplemental",
+     "onetCode": "31-2022.00",
+     "line": 10204
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L624",
+    "annualMedian": "oews:national_M2025_dl!AB624",
+    "annualMean": "oews:national_M2025_dl!S624",
+    "hourlyMedian": "oews:national_M2025_dl!W624",
+    "hourlyMean": "oews:national_M2025_dl!R624",
+    "annualPct10": "oews:national_M2025_dl!Z624",
+    "annualPct90": "oews:national_M2025_dl!AD624",
+    "annualOnly": "oews:national_M2025_dl!AE624",
+    "hourlyOnly": "oews:national_M2025_dl!AF624",
+    "title": "oews:national_M2025_dl!J624",
+    "ep.title": "ep:Table 1.2!A511",
+    "ep.employment2025": "ep:Table 1.2!D511",
+    "ep.employment2035": "ep:Table 1.2!E511",
+    "ep.numericChange": "ep:Table 1.2!H511",
+    "ep.percentChange": "ep:Table 1.2!I511",
+    "onetCode": "onet:Occupation Data.txt#L517:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L517:Description"
+   },
+   "nullReasons": {}
+  },
+  "31-9011": {
+   "soc": "31-9011",
+   "title": "Massage Therapists",
+   "major": "31-0000",
+   "minor": "31-9000",
+   "broad": "31-9010",
+   "oewsRows": [
+    627
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 98790,
+   "annualMedian": 58450,
+   "annualMean": 63830,
+   "hourlyMedian": 28.1,
+   "hourlyMean": 30.69,
+   "annualPct10": 33640,
+   "annualPct90": 100200,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Massage therapists",
+    "employment2025": 155400,
+    "employment2035": 179100,
+    "numericChange": 23700,
+    "percentChange": 15.3
+   },
+   "onetCode": "31-9011.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Perform therapeutic massages of soft tissues and joints. May assist in the assessment of range of motion and muscle strength, or propose client therapy plans.",
+   "tasks": [
+    {
+     "id": 7878,
+     "text": "Confer with clients about their medical histories and problems with stress or pain to determine how massage will be most helpful.",
+     "type": "Core",
+     "onetCode": "31-9011.00",
+     "line": 10205
+    },
+    {
+     "id": 7880,
+     "text": "Massage and knead muscles and soft tissues of the body to provide treatment for medical conditions, injuries, or wellness maintenance.",
+     "type": "Core",
+     "onetCode": "31-9011.00",
+     "line": 10206
+    },
+    {
+     "id": 23928,
+     "text": "Maintain massage areas by restocking supplies or sanitizing equipment.",
+     "type": "Core",
+     "onetCode": "31-9011.00",
+     "line": 10207
+    },
+    {
+     "id": 7879,
+     "text": "Apply finger and hand pressure to specific points of the body.",
+     "type": "Core",
+     "onetCode": "31-9011.00",
+     "line": 10208
+    },
+    {
+     "id": 7884,
+     "text": "Develop and propose client treatment plans that specify which types of massage are to be used.",
+     "type": "Core",
+     "onetCode": "31-9011.00",
+     "line": 10209
+    },
+    {
+     "id": 7881,
+     "text": "Maintain treatment records.",
+     "type": "Core",
+     "onetCode": "31-9011.00",
+     "line": 10210
+    },
+    {
+     "id": 7883,
+     "text": "Assess clients' soft tissue condition, joint quality and function, muscle strength, and range of motion.",
+     "type": "Core",
+     "onetCode": "31-9011.00",
+     "line": 10211
+    },
+    {
+     "id": 7882,
+     "text": "Provide clients with guidance and information about techniques for postural improvement and stretching, strengthening, relaxation, and rehabilitative exercises.",
+     "type": "Core",
+     "onetCode": "31-9011.00",
+     "line": 10212
+    },
+    {
+     "id": 7887,
+     "text": "Treat clients in professional settings or travel to clients' offices and homes.",
+     "type": "Core",
+     "onetCode": "31-9011.00",
+     "line": 10213
+    },
+    {
+     "id": 7885,
+     "text": "Refer clients to other types of therapists when necessary.",
+     "type": "Core",
+     "onetCode": "31-9011.00",
+     "line": 10214
+    },
+    {
+     "id": 7889,
+     "text": "Prepare and blend oils and apply the blends to clients' skin.",
+     "type": "Core",
+     "onetCode": "31-9011.00",
+     "line": 10215
+    },
+    {
+     "id": 7888,
+     "text": "Consult with other health care professionals, such as physiotherapists, chiropractors, physicians, and psychologists, to develop treatment plans for clients.",
+     "type": "Core",
+     "onetCode": "31-9011.00",
+     "line": 10216
+    },
+    {
+     "id": 20757,
+     "text": "Perform other adjunctive therapies or treatment techniques in addition to massage.",
+     "type": "Core",
+     "onetCode": "31-9011.00",
+     "line": 10217
+    },
+    {
+     "id": 7886,
+     "text": "Use complementary aids, such as infrared lamps, wet compresses, ice, and whirlpool baths to promote clients' recovery, relaxation, and well-being.",
+     "type": "Supplemental",
+     "onetCode": "31-9011.00",
+     "line": 10218
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L627",
+    "annualMedian": "oews:national_M2025_dl!AB627",
+    "annualMean": "oews:national_M2025_dl!S627",
+    "hourlyMedian": "oews:national_M2025_dl!W627",
+    "hourlyMean": "oews:national_M2025_dl!R627",
+    "annualPct10": "oews:national_M2025_dl!Z627",
+    "annualPct90": "oews:national_M2025_dl!AD627",
+    "annualOnly": "oews:national_M2025_dl!AE627",
+    "hourlyOnly": "oews:national_M2025_dl!AF627",
+    "title": "oews:national_M2025_dl!J627",
+    "ep.title": "ep:Table 1.2!A513",
+    "ep.employment2025": "ep:Table 1.2!D513",
+    "ep.employment2035": "ep:Table 1.2!E513",
+    "ep.numericChange": "ep:Table 1.2!H513",
+    "ep.percentChange": "ep:Table 1.2!I513",
+    "onetCode": "onet:Occupation Data.txt#L518:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L518:Description"
+   },
+   "nullReasons": {}
+  },
+  "31-9091": {
+   "soc": "31-9091",
+   "title": "Dental Assistants",
+   "major": "31-0000",
+   "minor": "31-9000",
+   "broad": "31-9090",
+   "oewsRows": [
+    629
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 387790,
+   "annualMedian": 48070,
+   "annualMean": 50200,
+   "hourlyMedian": 23.11,
+   "hourlyMean": 24.13,
+   "annualPct10": 37130,
+   "annualPct90": 62250,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Dental assistants",
+    "employment2025": 388600,
+    "employment2035": 417400,
+    "numericChange": 28800,
+    "percentChange": 7.4
+   },
+   "onetCode": "31-9091.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Perform limited clinical duties under the direction of a dentist. Clinical duties may include equipment preparation and sterilization, preparing patients for treatment, assisting the dentist during treatment, and providing patients with instructions for oral healthcare procedures. May perform administrative duties such as scheduling appointments, maintaining medical records, billing, and coding information for insurance purposes.",
+   "tasks": [
+    {
+     "id": 550,
+     "text": "Prepare patient, sterilize or disinfect instruments, set up instrument trays, prepare materials, or assist dentist during dental procedures.",
+     "type": "Core",
+     "onetCode": "31-9091.00",
+     "line": 10219
+    },
+    {
+     "id": 552,
+     "text": "Record treatment information in patient records.",
+     "type": "Core",
+     "onetCode": "31-9091.00",
+     "line": 10220
+    },
+    {
+     "id": 555,
+     "text": "Assist dentist in management of medical or dental emergencies.",
+     "type": "Core",
+     "onetCode": "31-9091.00",
+     "line": 10221
+    },
+    {
+     "id": 18552,
+     "text": "Order and monitor dental supplies and equipment inventory.",
+     "type": "Core",
+     "onetCode": "31-9091.00",
+     "line": 10222
+    },
+    {
+     "id": 551,
+     "text": "Expose dental diagnostic x-rays.",
+     "type": "Core",
+     "onetCode": "31-9091.00",
+     "line": 10223
+    },
+    {
+     "id": 554,
+     "text": "Provide postoperative instructions prescribed by dentist.",
+     "type": "Core",
+     "onetCode": "31-9091.00",
+     "line": 10224
+    },
+    {
+     "id": 557,
+     "text": "Instruct patients in oral hygiene and plaque control programs.",
+     "type": "Core",
+     "onetCode": "31-9091.00",
+     "line": 10225
+    },
+    {
+     "id": 553,
+     "text": "Take and record medical and dental histories and vital signs of patients.",
+     "type": "Core",
+     "onetCode": "31-9091.00",
+     "line": 10226
+    },
+    {
+     "id": 561,
+     "text": "Apply protective coating of fluoride to teeth.",
+     "type": "Core",
+     "onetCode": "31-9091.00",
+     "line": 10227
+    },
+    {
+     "id": 563,
+     "text": "Schedule appointments, prepare bills and receive payment for dental services, complete insurance forms, and maintain records, manually or using computer.",
+     "type": "Core",
+     "onetCode": "31-9091.00",
+     "line": 10228
+    },
+    {
+     "id": 558,
+     "text": "Make preliminary impressions for study casts and occlusal registrations for mounting study casts.",
+     "type": "Core",
+     "onetCode": "31-9091.00",
+     "line": 10229
+    },
+    {
+     "id": 556,
+     "text": "Pour, trim, and polish study casts.",
+     "type": "Core",
+     "onetCode": "31-9091.00",
+     "line": 10230
+    },
+    {
+     "id": 562,
+     "text": "Fabricate temporary restorations or custom impressions from preliminary impressions.",
+     "type": "Core",
+     "onetCode": "31-9091.00",
+     "line": 10231
+    },
+    {
+     "id": 559,
+     "text": "Clean and polish removable appliances.",
+     "type": "Core",
+     "onetCode": "31-9091.00",
+     "line": 10232
+    },
+    {
+     "id": 560,
+     "text": "Clean teeth, using dental instruments.",
+     "type": "Supplemental",
+     "onetCode": "31-9091.00",
+     "line": 10233
+    },
+    {
+     "id": 18553,
+     "text": "Fabricate and fit orthodontic appliances and materials for patients, such as retainers, wires, or bands.",
+     "type": "Supplemental",
+     "onetCode": "31-9091.00",
+     "line": 10234
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L629",
+    "annualMedian": "oews:national_M2025_dl!AB629",
+    "annualMean": "oews:national_M2025_dl!S629",
+    "hourlyMedian": "oews:national_M2025_dl!W629",
+    "hourlyMean": "oews:national_M2025_dl!R629",
+    "annualPct10": "oews:national_M2025_dl!Z629",
+    "annualPct90": "oews:national_M2025_dl!AD629",
+    "annualOnly": "oews:national_M2025_dl!AE629",
+    "hourlyOnly": "oews:national_M2025_dl!AF629",
+    "title": "oews:national_M2025_dl!J629",
+    "ep.title": "ep:Table 1.2!A515",
+    "ep.employment2025": "ep:Table 1.2!D515",
+    "ep.employment2035": "ep:Table 1.2!E515",
+    "ep.numericChange": "ep:Table 1.2!H515",
+    "ep.percentChange": "ep:Table 1.2!I515",
+    "onetCode": "onet:Occupation Data.txt#L519:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L519:Description"
+   },
+   "nullReasons": {}
+  },
+  "31-9092": {
+   "soc": "31-9092",
+   "title": "Medical Assistants",
+   "major": "31-0000",
+   "minor": "31-9000",
+   "broad": "31-9090",
+   "oewsRows": [
+    630
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 817870,
+   "annualMedian": 45690,
+   "annualMean": 46120,
+   "hourlyMedian": 21.97,
+   "hourlyMean": 22.17,
+   "annualPct10": 36050,
+   "annualPct90": 59310,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Medical assistants",
+    "employment2025": 833900,
+    "employment2035": 941500,
+    "numericChange": 107600,
+    "percentChange": 12.9
+   },
+   "onetCode": "31-9092.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Perform administrative and certain clinical duties under the direction of a physician. Administrative duties may include scheduling appointments, maintaining medical records, billing, and coding information for insurance purposes. Clinical duties may include taking and recording vital signs and medical histories, preparing patients for examination, drawing blood, and administering medications as directed by physician.",
+   "tasks": [
+    {
+     "id": 2024,
+     "text": "Interview patients to obtain medical information and measure their vital signs, weight, and height.",
+     "type": "Core",
+     "onetCode": "31-9092.00",
+     "line": 10235
+    },
+    {
+     "id": 2033,
+     "text": "Clean and sterilize instruments and dispose of contaminated supplies.",
+     "type": "Core",
+     "onetCode": "31-9092.00",
+     "line": 10236
+    },
+    {
+     "id": 2026,
+     "text": "Record patients' medical history, vital statistics, or information such as test results in medical records.",
+     "type": "Core",
+     "onetCode": "31-9092.00",
+     "line": 10237
+    },
+    {
+     "id": 2029,
+     "text": "Explain treatment procedures, medications, diets, or physicians' instructions to patients.",
+     "type": "Core",
+     "onetCode": "31-9092.00",
+     "line": 10238
+    },
+    {
+     "id": 2032,
+     "text": "Prepare treatment rooms for patient examinations, keeping the rooms neat and clean.",
+     "type": "Core",
+     "onetCode": "31-9092.00",
+     "line": 10239
+    },
+    {
+     "id": 2028,
+     "text": "Collect blood, tissue, or other laboratory specimens, log the specimens, and prepare them for testing.",
+     "type": "Core",
+     "onetCode": "31-9092.00",
+     "line": 10240
+    },
+    {
+     "id": 2025,
+     "text": "Show patients to examination rooms and prepare them for the physician.",
+     "type": "Core",
+     "onetCode": "31-9092.00",
+     "line": 10241
+    },
+    {
+     "id": 2030,
+     "text": "Help physicians examine and treat patients, handing them instruments or materials or performing such tasks as giving injections or removing sutures.",
+     "type": "Core",
+     "onetCode": "31-9092.00",
+     "line": 10242
+    },
+    {
+     "id": 2040,
+     "text": "Perform routine laboratory tests and sample analyses.",
+     "type": "Core",
+     "onetCode": "31-9092.00",
+     "line": 10243
+    },
+    {
+     "id": 2036,
+     "text": "Greet and log in patients arriving at office or clinic.",
+     "type": "Core",
+     "onetCode": "31-9092.00",
+     "line": 10244
+    },
+    {
+     "id": 2038,
+     "text": "Perform general office duties, such as answering telephones, taking dictation, or completing insurance forms.",
+     "type": "Core",
+     "onetCode": "31-9092.00",
+     "line": 10245
+    },
+    {
+     "id": 2027,
+     "text": "Prepare and administer medications as directed by a physician.",
+     "type": "Core",
+     "onetCode": "31-9092.00",
+     "line": 10246
+    },
+    {
+     "id": 2031,
+     "text": "Authorize drug refills and provide prescription information to pharmacies.",
+     "type": "Core",
+     "onetCode": "31-9092.00",
+     "line": 10247
+    },
+    {
+     "id": 2035,
+     "text": "Change dressings on wounds.",
+     "type": "Core",
+     "onetCode": "31-9092.00",
+     "line": 10248
+    },
+    {
+     "id": 2034,
+     "text": "Schedule appointments for patients.",
+     "type": "Core",
+     "onetCode": "31-9092.00",
+     "line": 10249
+    },
+    {
+     "id": 2039,
+     "text": "Inventory and order medical, lab, or office supplies or equipment.",
+     "type": "Core",
+     "onetCode": "31-9092.00",
+     "line": 10250
+    },
+    {
+     "id": 2037,
+     "text": "Contact medical facilities or departments to schedule patients for tests or admission.",
+     "type": "Core",
+     "onetCode": "31-9092.00",
+     "line": 10251
+    },
+    {
+     "id": 2043,
+     "text": "Operate x-ray, electrocardiogram (EKG), or other equipment to administer routine diagnostic tests.",
+     "type": "Core",
+     "onetCode": "31-9092.00",
+     "line": 10252
+    },
+    {
+     "id": 2041,
+     "text": "Set up medical laboratory equipment.",
+     "type": "Core",
+     "onetCode": "31-9092.00",
+     "line": 10253
+    },
+    {
+     "id": 2042,
+     "text": "Keep financial records or perform other bookkeeping duties, such as handling credit or collections or mailing monthly statements to patients.",
+     "type": "Supplemental",
+     "onetCode": "31-9092.00",
+     "line": 10254
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L630",
+    "annualMedian": "oews:national_M2025_dl!AB630",
+    "annualMean": "oews:national_M2025_dl!S630",
+    "hourlyMedian": "oews:national_M2025_dl!W630",
+    "hourlyMean": "oews:national_M2025_dl!R630",
+    "annualPct10": "oews:national_M2025_dl!Z630",
+    "annualPct90": "oews:national_M2025_dl!AD630",
+    "annualOnly": "oews:national_M2025_dl!AE630",
+    "hourlyOnly": "oews:national_M2025_dl!AF630",
+    "title": "oews:national_M2025_dl!J630",
+    "ep.title": "ep:Table 1.2!A516",
+    "ep.employment2025": "ep:Table 1.2!D516",
+    "ep.employment2035": "ep:Table 1.2!E516",
+    "ep.numericChange": "ep:Table 1.2!H516",
+    "ep.percentChange": "ep:Table 1.2!I516",
+    "onetCode": "onet:Occupation Data.txt#L520:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L520:Description"
+   },
+   "nullReasons": {}
+  },
+  "31-9093": {
+   "soc": "31-9093",
+   "title": "Medical Equipment Preparers",
+   "major": "31-0000",
+   "minor": "31-9000",
+   "broad": "31-9090",
+   "oewsRows": [
+    631
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 77420,
+   "annualMedian": 47700,
+   "annualMean": 50510,
+   "hourlyMedian": 22.93,
+   "hourlyMean": 24.28,
+   "annualPct10": 36410,
+   "annualPct90": 69950,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Medical equipment preparers",
+    "employment2025": 79900,
+    "employment2035": 88600,
+    "numericChange": 8700,
+    "percentChange": 10.8
+   },
+   "onetCode": "31-9093.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Prepare, sterilize, install, or clean laboratory or healthcare equipment. May perform routine laboratory tasks and operate or inspect equipment.",
+   "tasks": [
+    {
+     "id": 4293,
+     "text": "Operate and maintain steam autoclaves, keeping records of loads completed, items in loads, and maintenance procedures performed.",
+     "type": "Core",
+     "onetCode": "31-9093.00",
+     "line": 10255
+    },
+    {
+     "id": 4292,
+     "text": "Clean instruments to prepare them for sterilization.",
+     "type": "Core",
+     "onetCode": "31-9093.00",
+     "line": 10256
+    },
+    {
+     "id": 4294,
+     "text": "Record sterilizer test results.",
+     "type": "Core",
+     "onetCode": "31-9093.00",
+     "line": 10257
+    },
+    {
+     "id": 4291,
+     "text": "Organize and assemble routine or specialty surgical instrument trays or other sterilized supplies, filling special requests as needed.",
+     "type": "Core",
+     "onetCode": "31-9093.00",
+     "line": 10258
+    },
+    {
+     "id": 4297,
+     "text": "Examine equipment to detect leaks, worn or loose parts, or other indications of disrepair.",
+     "type": "Core",
+     "onetCode": "31-9093.00",
+     "line": 10259
+    },
+    {
+     "id": 4298,
+     "text": "Report defective equipment to appropriate supervisors or staff.",
+     "type": "Core",
+     "onetCode": "31-9093.00",
+     "line": 10260
+    },
+    {
+     "id": 18703,
+     "text": "Maintain records of inventory or equipment usage and order medical instruments or supplies when inventory is low.",
+     "type": "Core",
+     "onetCode": "31-9093.00",
+     "line": 10261
+    },
+    {
+     "id": 18702,
+     "text": "Stock crash carts or other medical supplies.",
+     "type": "Core",
+     "onetCode": "31-9093.00",
+     "line": 10262
+    },
+    {
+     "id": 4296,
+     "text": "Start equipment and observe gauges and equipment operation to detect malfunctions and to ensure equipment is operating to prescribed standards.",
+     "type": "Core",
+     "onetCode": "31-9093.00",
+     "line": 10263
+    },
+    {
+     "id": 4299,
+     "text": "Check sterile supplies to ensure that they are not outdated.",
+     "type": "Core",
+     "onetCode": "31-9093.00",
+     "line": 10264
+    },
+    {
+     "id": 4301,
+     "text": "Attend hospital in-service programs related to areas of work specialization.",
+     "type": "Core",
+     "onetCode": "31-9093.00",
+     "line": 10265
+    },
+    {
+     "id": 4295,
+     "text": "Disinfect and sterilize equipment, such as respirators, hospital beds, or oxygen or dialysis equipment, using sterilizers, aerators, or washers.",
+     "type": "Supplemental",
+     "onetCode": "31-9093.00",
+     "line": 10266
+    },
+    {
+     "id": 4302,
+     "text": "Purge wastes from equipment by connecting equipment to water sources and flushing water through systems.",
+     "type": "Supplemental",
+     "onetCode": "31-9093.00",
+     "line": 10267
+    },
+    {
+     "id": 4303,
+     "text": "Deliver equipment to specified hospital locations or to patients' residences.",
+     "type": "Supplemental",
+     "onetCode": "31-9093.00",
+     "line": 10268
+    },
+    {
+     "id": 4304,
+     "text": "Assist hospital staff with patient care duties, such as providing transportation or setting up traction.",
+     "type": "Supplemental",
+     "onetCode": "31-9093.00",
+     "line": 10269
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L631",
+    "annualMedian": "oews:national_M2025_dl!AB631",
+    "annualMean": "oews:national_M2025_dl!S631",
+    "hourlyMedian": "oews:national_M2025_dl!W631",
+    "hourlyMean": "oews:national_M2025_dl!R631",
+    "annualPct10": "oews:national_M2025_dl!Z631",
+    "annualPct90": "oews:national_M2025_dl!AD631",
+    "annualOnly": "oews:national_M2025_dl!AE631",
+    "hourlyOnly": "oews:national_M2025_dl!AF631",
+    "title": "oews:national_M2025_dl!J631",
+    "ep.title": "ep:Table 1.2!A517",
+    "ep.employment2025": "ep:Table 1.2!D517",
+    "ep.employment2035": "ep:Table 1.2!E517",
+    "ep.numericChange": "ep:Table 1.2!H517",
+    "ep.percentChange": "ep:Table 1.2!I517",
+    "onetCode": "onet:Occupation Data.txt#L521:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L521:Description"
+   },
+   "nullReasons": {}
+  },
+  "31-9094": {
+   "soc": "31-9094",
+   "title": "Medical Transcriptionists",
+   "major": "31-0000",
+   "minor": "31-9000",
+   "broad": "31-9090",
+   "oewsRows": [
+    632
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 41550,
+   "annualMedian": 40410,
+   "annualMean": 41710,
+   "hourlyMedian": 19.43,
+   "hourlyMean": 20.05,
+   "annualPct10": 28250,
+   "annualPct90": 55950,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Medical transcriptionists",
+    "employment2025": 42000,
+    "employment2035": 40200,
+    "numericChange": -1900,
+    "percentChange": -4.4
+   },
+   "onetCode": "31-9094.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Transcribe medical reports recorded by physicians and other healthcare practitioners using various electronic devices, covering office visits, emergency room visits, diagnostic imaging studies, operations, chart reviews, and final summaries. Transcribe dictated reports and translate abbreviations into fully understandable form. Edit as necessary and return reports in either printed or electronic form for review and signature, or correction.",
+   "tasks": [
+    {
+     "id": 9416,
+     "text": "Return dictated reports in printed or electronic form for physician's review, signature, and corrections and for inclusion in patients' medical records.",
+     "type": "Core",
+     "onetCode": "31-9094.00",
+     "line": 10270
+    },
+    {
+     "id": 9421,
+     "text": "Produce medical reports, correspondence, records, patient-care information, statistics, medical research, and administrative material.",
+     "type": "Core",
+     "onetCode": "31-9094.00",
+     "line": 10271
+    },
+    {
+     "id": 9419,
+     "text": "Identify mistakes in reports and check with doctors to obtain the correct information.",
+     "type": "Core",
+     "onetCode": "31-9094.00",
+     "line": 10272
+    },
+    {
+     "id": 9414,
+     "text": "Review and edit transcribed reports or dictated material for spelling, grammar, clarity, consistency, and proper medical terminology.",
+     "type": "Core",
+     "onetCode": "31-9094.00",
+     "line": 10273
+    },
+    {
+     "id": 9413,
+     "text": "Transcribe dictation for a variety of medical reports, such as patient histories, physical examinations, emergency room visits, operations, chart reviews, consultation, or discharge summaries.",
+     "type": "Core",
+     "onetCode": "31-9094.00",
+     "line": 10274
+    },
+    {
+     "id": 9415,
+     "text": "Distinguish between homonyms and recognize inconsistencies and mistakes in medical terms, referring to dictionaries, drug references, and other sources on anatomy, physiology, and medicine.",
+     "type": "Core",
+     "onetCode": "31-9094.00",
+     "line": 10275
+    },
+    {
+     "id": 9423,
+     "text": "Set up and maintain medical files and databases, including records such as x-ray, lab, and procedure reports, medical histories, diagnostic workups, admission and discharge summaries, and clinical resumes.",
+     "type": "Core",
+     "onetCode": "31-9094.00",
+     "line": 10276
+    },
+    {
+     "id": 9417,
+     "text": "Translate medical jargon and abbreviations into their expanded forms to ensure the accuracy of patient and health care facility records.",
+     "type": "Core",
+     "onetCode": "31-9094.00",
+     "line": 10277
+    },
+    {
+     "id": 9420,
+     "text": "Perform data entry and data retrieval services, providing data for inclusion in medical records and for transmission to physicians.",
+     "type": "Core",
+     "onetCode": "31-9094.00",
+     "line": 10278
+    },
+    {
+     "id": 20254,
+     "text": "Take dictation using shorthand, a stenotype machine, or headsets and transcribing machines.",
+     "type": "Core",
+     "onetCode": "31-9094.00",
+     "line": 10279
+    },
+    {
+     "id": 9424,
+     "text": "Perform a variety of clerical and office tasks, such as handling incoming and outgoing mail, completing and submitting insurance claims, typing, filing, or operating office machines.",
+     "type": "Core",
+     "onetCode": "31-9094.00",
+     "line": 10280
+    },
+    {
+     "id": 9425,
+     "text": "Decide which information should be included or excluded in reports.",
+     "type": "Core",
+     "onetCode": "31-9094.00",
+     "line": 10281
+    },
+    {
+     "id": 9427,
+     "text": "Receive and screen telephone calls and visitors.",
+     "type": "Core",
+     "onetCode": "31-9094.00",
+     "line": 10282
+    },
+    {
+     "id": 9426,
+     "text": "Receive patients, schedule appointments, and maintain patient records.",
+     "type": "Supplemental",
+     "onetCode": "31-9094.00",
+     "line": 10283
+    },
+    {
+     "id": 9422,
+     "text": "Answer inquiries concerning the progress of medical cases, within the limits of confidentiality laws.",
+     "type": "Supplemental",
+     "onetCode": "31-9094.00",
+     "line": 10284
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L632",
+    "annualMedian": "oews:national_M2025_dl!AB632",
+    "annualMean": "oews:national_M2025_dl!S632",
+    "hourlyMedian": "oews:national_M2025_dl!W632",
+    "hourlyMean": "oews:national_M2025_dl!R632",
+    "annualPct10": "oews:national_M2025_dl!Z632",
+    "annualPct90": "oews:national_M2025_dl!AD632",
+    "annualOnly": "oews:national_M2025_dl!AE632",
+    "hourlyOnly": "oews:national_M2025_dl!AF632",
+    "title": "oews:national_M2025_dl!J632",
+    "ep.title": "ep:Table 1.2!A518",
+    "ep.employment2025": "ep:Table 1.2!D518",
+    "ep.employment2035": "ep:Table 1.2!E518",
+    "ep.numericChange": "ep:Table 1.2!H518",
+    "ep.percentChange": "ep:Table 1.2!I518",
+    "onetCode": "onet:Occupation Data.txt#L522:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L522:Description"
+   },
+   "nullReasons": {}
+  },
+  "31-9095": {
+   "soc": "31-9095",
+   "title": "Pharmacy Aides",
+   "major": "31-0000",
+   "minor": "31-9000",
+   "broad": "31-9090",
+   "oewsRows": [
+    633
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 39530,
+   "annualMedian": 37680,
+   "annualMean": 40450,
+   "hourlyMedian": 18.12,
+   "hourlyMean": 19.45,
+   "annualPct10": 29820,
+   "annualPct90": 56010,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Pharmacy aides",
+    "employment2025": 39200,
+    "employment2035": 39000,
+    "numericChange": -300,
+    "percentChange": -0.7
+   },
+   "onetCode": "31-9095.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Record drugs delivered to the pharmacy, store incoming merchandise, and inform the supervisor of stock needs. May operate cash register and accept prescriptions for filling.",
+   "tasks": [
+    {
+     "id": 2048,
+     "text": "Greet customers and help them locate merchandise.",
+     "type": "Core",
+     "onetCode": "31-9095.00",
+     "line": 10285
+    },
+    {
+     "id": 2045,
+     "text": "Accept prescriptions for filling, gathering and processing necessary information.",
+     "type": "Core",
+     "onetCode": "31-9095.00",
+     "line": 10286
+    },
+    {
+     "id": 2052,
+     "text": "Operate cash register to process cash or credit sales.",
+     "type": "Core",
+     "onetCode": "31-9095.00",
+     "line": 10287
+    },
+    {
+     "id": 2046,
+     "text": "Answer telephone inquiries, referring callers to pharmacist when necessary.",
+     "type": "Core",
+     "onetCode": "31-9095.00",
+     "line": 10288
+    },
+    {
+     "id": 18704,
+     "text": "Receive, store, and inventory pharmaceutical supplies or medications, check for out-of-date medications, and notify pharmacist when inventory levels are low.",
+     "type": "Core",
+     "onetCode": "31-9095.00",
+     "line": 10289
+    },
+    {
+     "id": 2049,
+     "text": "Unpack, sort, count, and label incoming merchandise, including items requiring special handling or refrigeration.",
+     "type": "Core",
+     "onetCode": "31-9095.00",
+     "line": 10290
+    },
+    {
+     "id": 2053,
+     "text": "Restock storage areas, replenishing items on shelves.",
+     "type": "Core",
+     "onetCode": "31-9095.00",
+     "line": 10291
+    },
+    {
+     "id": 2055,
+     "text": "Maintain and clean equipment, work areas, or shelves.",
+     "type": "Core",
+     "onetCode": "31-9095.00",
+     "line": 10292
+    },
+    {
+     "id": 2050,
+     "text": "Prepare prescription labels by typing or operating a computer and printer.",
+     "type": "Supplemental",
+     "onetCode": "31-9095.00",
+     "line": 10293
+    },
+    {
+     "id": 2059,
+     "text": "Compound, package, and label pharmaceutical products, under direction of pharmacist.",
+     "type": "Supplemental",
+     "onetCode": "31-9095.00",
+     "line": 10294
+    },
+    {
+     "id": 2058,
+     "text": "Process medical insurance claims, posting bill amounts and calculating copayments.",
+     "type": "Supplemental",
+     "onetCode": "31-9095.00",
+     "line": 10295
+    },
+    {
+     "id": 2054,
+     "text": "Perform clerical tasks, such as filing, compiling and maintaining prescription records, or composing letters.",
+     "type": "Supplemental",
+     "onetCode": "31-9095.00",
+     "line": 10296
+    },
+    {
+     "id": 2057,
+     "text": "Prepare, maintain, and record records of inventories, receipts, purchases, or deliveries, using a variety of computer screen formats.",
+     "type": "Supplemental",
+     "onetCode": "31-9095.00",
+     "line": 10297
+    },
+    {
+     "id": 2062,
+     "text": "Deliver medication to treatment areas, living units, residences, or clinics, using various means of transportation.",
+     "type": "Supplemental",
+     "onetCode": "31-9095.00",
+     "line": 10298
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L633",
+    "annualMedian": "oews:national_M2025_dl!AB633",
+    "annualMean": "oews:national_M2025_dl!S633",
+    "hourlyMedian": "oews:national_M2025_dl!W633",
+    "hourlyMean": "oews:national_M2025_dl!R633",
+    "annualPct10": "oews:national_M2025_dl!Z633",
+    "annualPct90": "oews:national_M2025_dl!AD633",
+    "annualOnly": "oews:national_M2025_dl!AE633",
+    "hourlyOnly": "oews:national_M2025_dl!AF633",
+    "title": "oews:national_M2025_dl!J633",
+    "ep.title": "ep:Table 1.2!A519",
+    "ep.employment2025": "ep:Table 1.2!D519",
+    "ep.employment2035": "ep:Table 1.2!E519",
+    "ep.numericChange": "ep:Table 1.2!H519",
+    "ep.percentChange": "ep:Table 1.2!I519",
+    "onetCode": "onet:Occupation Data.txt#L523:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L523:Description"
+   },
+   "nullReasons": {}
+  },
+  "31-9096": {
+   "soc": "31-9096",
+   "title": "Veterinary Assistants and Laboratory Animal Caretakers",
+   "major": "31-0000",
+   "minor": "31-9000",
+   "broad": "31-9090",
+   "oewsRows": [
+    634
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 126580,
+   "annualMedian": 38150,
+   "annualMean": 40340,
+   "hourlyMedian": 18.34,
+   "hourlyMean": 19.39,
+   "annualPct10": 30120,
+   "annualPct90": 49150,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Veterinary assistants and laboratory animal caretakers",
+    "employment2025": 132100,
+    "employment2035": 144200,
+    "numericChange": 12000,
+    "percentChange": 9.1
+   },
+   "onetCode": "31-9096.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Feed, water, and examine pets and other nonfarm animals for signs of illness, disease, or injury in laboratories and animal hospitals and clinics. Clean and disinfect cages and work areas, and sterilize laboratory and surgical equipment. May provide routine postoperative care, administer medication orally or topically, or prepare samples for laboratory examination under the supervision of veterinary or laboratory animal technologists or technicians, veterinarians, or scientists.",
+   "tasks": [
+    {
+     "id": 4312,
+     "text": "Hold or restrain animals during veterinary procedures.",
+     "type": "Core",
+     "onetCode": "31-9096.00",
+     "line": 10299
+    },
+    {
+     "id": 4306,
+     "text": "Monitor animals recovering from surgery and notify veterinarians of any unusual changes or symptoms.",
+     "type": "Core",
+     "onetCode": "31-9096.00",
+     "line": 10300
+    },
+    {
+     "id": 4314,
+     "text": "Fill medication prescriptions.",
+     "type": "Core",
+     "onetCode": "31-9096.00",
+     "line": 10301
+    },
+    {
+     "id": 4311,
+     "text": "Clean and maintain kennels, animal holding areas, examination or operating rooms, or animal loading or unloading facilities to control the spread of disease.",
+     "type": "Core",
+     "onetCode": "31-9096.00",
+     "line": 10302
+    },
+    {
+     "id": 4316,
+     "text": "Examine animals to detect behavioral changes or clinical symptoms that could indicate illness or injury.",
+     "type": "Core",
+     "onetCode": "31-9096.00",
+     "line": 10303
+    },
+    {
+     "id": 4313,
+     "text": "Perform routine laboratory tests or diagnostic tests, such as taking or developing x-rays.",
+     "type": "Core",
+     "onetCode": "31-9096.00",
+     "line": 10304
+    },
+    {
+     "id": 4317,
+     "text": "Assist veterinarians in examining animals to determine the nature of illnesses or injuries.",
+     "type": "Core",
+     "onetCode": "31-9096.00",
+     "line": 10305
+    },
+    {
+     "id": 4309,
+     "text": "Administer medication, immunizations, or blood plasma to animals as prescribed by veterinarians.",
+     "type": "Core",
+     "onetCode": "31-9096.00",
+     "line": 10306
+    },
+    {
+     "id": 4315,
+     "text": "Collect laboratory specimens, such as blood, urine, or feces, for testing.",
+     "type": "Core",
+     "onetCode": "31-9096.00",
+     "line": 10307
+    },
+    {
+     "id": 4327,
+     "text": "Perform office reception duties, such as scheduling appointments or helping customers.",
+     "type": "Core",
+     "onetCode": "31-9096.00",
+     "line": 10308
+    },
+    {
+     "id": 4308,
+     "text": "Clean, maintain, and sterilize instruments or equipment.",
+     "type": "Core",
+     "onetCode": "31-9096.00",
+     "line": 10309
+    },
+    {
+     "id": 4322,
+     "text": "Record information relating to animal genealogy, feeding schedules, appearance, behavior, or breeding.",
+     "type": "Core",
+     "onetCode": "31-9096.00",
+     "line": 10310
+    },
+    {
+     "id": 4310,
+     "text": "Provide emergency first aid to sick or injured animals.",
+     "type": "Core",
+     "onetCode": "31-9096.00",
+     "line": 10311
+    },
+    {
+     "id": 4318,
+     "text": "Prepare surgical equipment and pass instruments or materials to veterinarians during surgical procedures.",
+     "type": "Core",
+     "onetCode": "31-9096.00",
+     "line": 10312
+    },
+    {
+     "id": 4323,
+     "text": "Educate or advise clients on animal health care, nutrition, or behavior problems.",
+     "type": "Core",
+     "onetCode": "31-9096.00",
+     "line": 10313
+    },
+    {
+     "id": 4325,
+     "text": "Prepare examination or treatment rooms by stocking them with appropriate supplies.",
+     "type": "Core",
+     "onetCode": "31-9096.00",
+     "line": 10314
+    },
+    {
+     "id": 4320,
+     "text": "Prepare feed for animals according to specific instructions, such as diet lists or schedules.",
+     "type": "Core",
+     "onetCode": "31-9096.00",
+     "line": 10315
+    },
+    {
+     "id": 4326,
+     "text": "Provide assistance with euthanasia of animals or disposal of corpses.",
+     "type": "Core",
+     "onetCode": "31-9096.00",
+     "line": 10316
+    },
+    {
+     "id": 4329,
+     "text": "Write reports, maintain research information, or perform clerical duties.",
+     "type": "Core",
+     "onetCode": "31-9096.00",
+     "line": 10317
+    },
+    {
+     "id": 4324,
+     "text": "Perform hygiene-related duties, such as clipping animals' claws or cleaning and polishing teeth.",
+     "type": "Core",
+     "onetCode": "31-9096.00",
+     "line": 10318
+    },
+    {
+     "id": 4319,
+     "text": "Perform enemas, catheterizations, ear flushes, intravenous feedings, or gavages.",
+     "type": "Core",
+     "onetCode": "31-9096.00",
+     "line": 10319
+    },
+    {
+     "id": 4330,
+     "text": "Perform accounting duties, such as bookkeeping, billing customers for services, or maintaining inventories.",
+     "type": "Core",
+     "onetCode": "31-9096.00",
+     "line": 10320
+    },
+    {
+     "id": 4321,
+     "text": "Exercise animals or provide them with companionship.",
+     "type": "Core",
+     "onetCode": "31-9096.00",
+     "line": 10321
+    },
+    {
+     "id": 21195,
+     "text": "Place orders to restock inventory of hospital or laboratory supplies.",
+     "type": "Core",
+     "onetCode": "31-9096.00",
+     "line": 10322
+    },
+    {
+     "id": 4332,
+     "text": "Sell pet food or supplies to customers.",
+     "type": "Core",
+     "onetCode": "31-9096.00",
+     "line": 10323
+    },
+    {
+     "id": 4328,
+     "text": "Dust, spray, or bathe animals to control insect pests.",
+     "type": "Core",
+     "onetCode": "31-9096.00",
+     "line": 10324
+    },
+    {
+     "id": 4307,
+     "text": "Administer anesthetics during surgery and monitor the effects on animals.",
+     "type": "Supplemental",
+     "onetCode": "31-9096.00",
+     "line": 10325
+    },
+    {
+     "id": 4333,
+     "text": "Groom, trim, or clip animals' coats.",
+     "type": "Supplemental",
+     "onetCode": "31-9096.00",
+     "line": 10326
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L634",
+    "annualMedian": "oews:national_M2025_dl!AB634",
+    "annualMean": "oews:national_M2025_dl!S634",
+    "hourlyMedian": "oews:national_M2025_dl!W634",
+    "hourlyMean": "oews:national_M2025_dl!R634",
+    "annualPct10": "oews:national_M2025_dl!Z634",
+    "annualPct90": "oews:national_M2025_dl!AD634",
+    "annualOnly": "oews:national_M2025_dl!AE634",
+    "hourlyOnly": "oews:national_M2025_dl!AF634",
+    "title": "oews:national_M2025_dl!J634",
+    "ep.title": "ep:Table 1.2!A520",
+    "ep.employment2025": "ep:Table 1.2!D520",
+    "ep.employment2035": "ep:Table 1.2!E520",
+    "ep.numericChange": "ep:Table 1.2!H520",
+    "ep.percentChange": "ep:Table 1.2!I520",
+    "onetCode": "onet:Occupation Data.txt#L524:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L524:Description"
+   },
+   "nullReasons": {}
+  },
+  "31-9097": {
+   "soc": "31-9097",
+   "title": "Phlebotomists",
+   "major": "31-0000",
+   "minor": "31-9000",
+   "broad": "31-9090",
+   "oewsRows": [
+    635
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 143540,
+   "annualMedian": 45230,
+   "annualMean": 45520,
+   "hourlyMedian": 21.75,
+   "hourlyMean": 21.88,
+   "annualPct10": 35780,
+   "annualPct90": 58780,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Phlebotomists",
+    "employment2025": 143900,
+    "employment2035": 153700,
+    "numericChange": 9800,
+    "percentChange": 6.8
+   },
+   "onetCode": "31-9097.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Draw blood for tests, transfusions, donations, or research. May explain the procedure to patients and assist in the recovery of patients with adverse reactions.",
+   "tasks": [
+    {
+     "id": 19375,
+     "text": "Dispose of contaminated sharps, in accordance with applicable laws, standards, and policies.",
+     "type": "Core",
+     "onetCode": "31-9097.00",
+     "line": 10327
+    },
+    {
+     "id": 19382,
+     "text": "Organize or clean blood-drawing trays, ensuring that all instruments are sterile and all needles, syringes, or related items are of first-time use.",
+     "type": "Core",
+     "onetCode": "31-9097.00",
+     "line": 10328
+    },
+    {
+     "id": 19379,
+     "text": "Draw blood from veins by vacuum tube, syringe, or butterfly venipuncture methods.",
+     "type": "Core",
+     "onetCode": "31-9097.00",
+     "line": 10329
+    },
+    {
+     "id": 19381,
+     "text": "Match laboratory requisition forms to specimen tubes.",
+     "type": "Core",
+     "onetCode": "31-9097.00",
+     "line": 10330
+    },
+    {
+     "id": 19374,
+     "text": "Dispose of blood or other biohazard fluids or tissue, in accordance with applicable laws, standards, or policies.",
+     "type": "Core",
+     "onetCode": "31-9097.00",
+     "line": 10331
+    },
+    {
+     "id": 19387,
+     "text": "Conduct standards tests, such as blood alcohol, blood culture, oral glucose tolerance, glucose screening, blood smears, or peak and trough drug levels tests.",
+     "type": "Core",
+     "onetCode": "31-9097.00",
+     "line": 10332
+    },
+    {
+     "id": 19385,
+     "text": "Collect specimens at specific time intervals for tests, such as those assessing therapeutic drug levels.",
+     "type": "Core",
+     "onetCode": "31-9097.00",
+     "line": 10333
+    },
+    {
+     "id": 19392,
+     "text": "Process blood or other fluid samples for further analysis by other medical professionals.",
+     "type": "Core",
+     "onetCode": "31-9097.00",
+     "line": 10334
+    },
+    {
+     "id": 19393,
+     "text": "Provide sample analysis results to physicians to assist diagnosis.",
+     "type": "Core",
+     "onetCode": "31-9097.00",
+     "line": 10335
+    },
+    {
+     "id": 19389,
+     "text": "Enter patient, specimen, insurance, or billing information into computer.",
+     "type": "Core",
+     "onetCode": "31-9097.00",
+     "line": 10336
+    },
+    {
+     "id": 19376,
+     "text": "Document route of specimens from collection to laboratory analysis and diagnosis.",
+     "type": "Core",
+     "onetCode": "31-9097.00",
+     "line": 10337
+    },
+    {
+     "id": 19378,
+     "text": "Draw blood from capillaries by dermal puncture, such as heel or finger stick methods.",
+     "type": "Core",
+     "onetCode": "31-9097.00",
+     "line": 10338
+    },
+    {
+     "id": 19386,
+     "text": "Conduct hemoglobin tests to ensure donor iron levels are normal.",
+     "type": "Core",
+     "onetCode": "31-9097.00",
+     "line": 10339
+    },
+    {
+     "id": 19396,
+     "text": "Transport specimens or fluid samples from collection sites to laboratories.",
+     "type": "Core",
+     "onetCode": "31-9097.00",
+     "line": 10340
+    },
+    {
+     "id": 19373,
+     "text": "Collect fluid or tissue samples, using appropriate collection procedures.",
+     "type": "Core",
+     "onetCode": "31-9097.00",
+     "line": 10341
+    },
+    {
+     "id": 19380,
+     "text": "Explain fluid or tissue collection procedures to patients.",
+     "type": "Core",
+     "onetCode": "31-9097.00",
+     "line": 10342
+    },
+    {
+     "id": 19395,
+     "text": "Train other medical personnel in phlebotomy or laboratory techniques.",
+     "type": "Core",
+     "onetCode": "31-9097.00",
+     "line": 10343
+    },
+    {
+     "id": 19383,
+     "text": "Administer subcutaneous or intramuscular injects, in accordance with licensing restrictions.",
+     "type": "Supplemental",
+     "onetCode": "31-9097.00",
+     "line": 10344
+    },
+    {
+     "id": 19377,
+     "text": "Draw blood from arteries, using arterial collection techniques.",
+     "type": "Supplemental",
+     "onetCode": "31-9097.00",
+     "line": 10345
+    },
+    {
+     "id": 19390,
+     "text": "Monitor blood or plasma donors during and after procedures to ensure health, safety, and comfort.",
+     "type": "Supplemental",
+     "onetCode": "31-9097.00",
+     "line": 10346
+    },
+    {
+     "id": 19388,
+     "text": "Determine donor suitability, according to interview results, vital signs, and medical history.",
+     "type": "Supplemental",
+     "onetCode": "31-9097.00",
+     "line": 10347
+    },
+    {
+     "id": 19384,
+     "text": "Calibrate or maintain machines, such as those used for plasma collection.",
+     "type": "Supplemental",
+     "onetCode": "31-9097.00",
+     "line": 10348
+    },
+    {
+     "id": 19394,
+     "text": "Serve refreshments to donors to ensure absorption of sugar into their systems.",
+     "type": "Supplemental",
+     "onetCode": "31-9097.00",
+     "line": 10349
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L635",
+    "annualMedian": "oews:national_M2025_dl!AB635",
+    "annualMean": "oews:national_M2025_dl!S635",
+    "hourlyMedian": "oews:national_M2025_dl!W635",
+    "hourlyMean": "oews:national_M2025_dl!R635",
+    "annualPct10": "oews:national_M2025_dl!Z635",
+    "annualPct90": "oews:national_M2025_dl!AD635",
+    "annualOnly": "oews:national_M2025_dl!AE635",
+    "hourlyOnly": "oews:national_M2025_dl!AF635",
+    "title": "oews:national_M2025_dl!J635",
+    "ep.title": "ep:Table 1.2!A521",
+    "ep.employment2025": "ep:Table 1.2!D521",
+    "ep.employment2035": "ep:Table 1.2!E521",
+    "ep.numericChange": "ep:Table 1.2!H521",
+    "ep.percentChange": "ep:Table 1.2!I521",
+    "onetCode": "onet:Occupation Data.txt#L525:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L525:Description"
+   },
+   "nullReasons": {}
+  },
+  "31-9099": {
+   "soc": "31-9099",
+   "title": "Healthcare Support Workers, All Other",
+   "major": "31-0000",
+   "minor": "31-9000",
+   "broad": "31-9090",
+   "oewsRows": [
+    636
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 109740,
+   "annualMedian": 48430,
+   "annualMean": 50810,
+   "hourlyMedian": 23.28,
+   "hourlyMean": 24.43,
+   "annualPct10": 34770,
+   "annualPct90": 71470,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Healthcare support workers, all other",
+    "employment2025": 113900,
+    "employment2035": 119400,
+    "numericChange": 5500,
+    "percentChange": 4.8
+   },
+   "onetCode": "31-9099.00",
+   "onetTaskSource": "sub-codes",
+   "onetSubCodes": [
+    {
+     "code": "31-9099.01",
+     "title": "Speech-Language Pathology Assistants",
+     "taskCount": 11
+    },
+    {
+     "code": "31-9099.02",
+     "title": "Endoscopy Technicians",
+     "taskCount": 12
+    }
+   ],
+   "description": "All healthcare support workers not listed separately.",
+   "tasks": [
+    {
+     "id": 17535,
+     "text": "Document clients' progress toward meeting established treatment objectives.",
+     "type": "Core",
+     "onetCode": "31-9099.01",
+     "line": 10350
+    },
+    {
+     "id": 17532,
+     "text": "Implement treatment plans or protocols as directed by speech-language pathologists.",
+     "type": "Core",
+     "onetCode": "31-9099.01",
+     "line": 10351
+    },
+    {
+     "id": 17534,
+     "text": "Collect and compile data to document clients' performance or assess program quality.",
+     "type": "Core",
+     "onetCode": "31-9099.01",
+     "line": 10352
+    },
+    {
+     "id": 17539,
+     "text": "Perform support duties, such as preparing materials, keeping records, maintaining supplies, and scheduling activities.",
+     "type": "Core",
+     "onetCode": "31-9099.01",
+     "line": 10353
+    },
+    {
+     "id": 17533,
+     "text": "Assist speech-language pathologists in the remediation or development of speech and language skills.",
+     "type": "Core",
+     "onetCode": "31-9099.01",
+     "line": 10354
+    },
+    {
+     "id": 17541,
+     "text": "Select or prepare speech-language instructional materials.",
+     "type": "Core",
+     "onetCode": "31-9099.01",
+     "line": 10355
+    },
+    {
+     "id": 17531,
+     "text": "Assist speech-language pathologists in the conduct of client screenings or assessments of language, voice, fluency, articulation, or hearing.",
+     "type": "Core",
+     "onetCode": "31-9099.01",
+     "line": 10356
+    },
+    {
+     "id": 17540,
+     "text": "Prepare charts, graphs, or other visual displays to communicate clients' performance information.",
+     "type": "Core",
+     "onetCode": "31-9099.01",
+     "line": 10357
+    },
+    {
+     "id": 17536,
+     "text": "Test or maintain equipment to ensure correct performance.",
+     "type": "Supplemental",
+     "onetCode": "31-9099.01",
+     "line": 10358
+    },
+    {
+     "id": 17538,
+     "text": "Conduct in-service training sessions, or family and community education programs.",
+     "type": "Supplemental",
+     "onetCode": "31-9099.01",
+     "line": 10359
+    },
+    {
+     "id": 17537,
+     "text": "Assist speech-language pathologists in the conduct of speech-language research projects.",
+     "type": "Supplemental",
+     "onetCode": "31-9099.01",
+     "line": 10360
+    },
+    {
+     "id": 17519,
+     "text": "Clean, disinfect, or calibrate scopes or other endoscopic instruments according to manufacturer recommendations and facility standards.",
+     "type": "Core",
+     "onetCode": "31-9099.02",
+     "line": 10361
+    },
+    {
+     "id": 17527,
+     "text": "Collect specimens from patients, using standard medical procedures.",
+     "type": "Core",
+     "onetCode": "31-9099.02",
+     "line": 10362
+    },
+    {
+     "id": 17521,
+     "text": "Perform safety checks to verify proper equipment functioning.",
+     "type": "Core",
+     "onetCode": "31-9099.02",
+     "line": 10363
+    },
+    {
+     "id": 17523,
+     "text": "Maintain or repair endoscopic equipment.",
+     "type": "Core",
+     "onetCode": "31-9099.02",
+     "line": 10364
+    },
+    {
+     "id": 17525,
+     "text": "Assist physicians or registered nurses in the conduct of endoscopic procedures.",
+     "type": "Core",
+     "onetCode": "31-9099.02",
+     "line": 10365
+    },
+    {
+     "id": 17530,
+     "text": "Place devices, such as blood pressure cuffs, pulse oximeter sensors, nasal cannulas, surgical cautery pads, and cardiac monitoring electrodes, on patients to monitor vital signs.",
+     "type": "Core",
+     "onetCode": "31-9099.02",
+     "line": 10366
+    },
+    {
+     "id": 17522,
+     "text": "Prepare suites or rooms according to endoscopic procedure requirements.",
+     "type": "Core",
+     "onetCode": "31-9099.02",
+     "line": 10367
+    },
+    {
+     "id": 17520,
+     "text": "Maintain inventories of endoscopic equipment and supplies.",
+     "type": "Core",
+     "onetCode": "31-9099.02",
+     "line": 10368
+    },
+    {
+     "id": 17526,
+     "text": "Attend in-service training to validate or refresh basic professional skills.",
+     "type": "Core",
+     "onetCode": "31-9099.02",
+     "line": 10369
+    },
+    {
+     "id": 17528,
+     "text": "Conduct in-service training sessions to disseminate information regarding equipment or instruments.",
+     "type": "Core",
+     "onetCode": "31-9099.02",
+     "line": 10370
+    },
+    {
+     "id": 17524,
+     "text": "Position or transport patients in accordance with instructions from medical personnel.",
+     "type": "Core",
+     "onetCode": "31-9099.02",
+     "line": 10371
+    },
+    {
+     "id": 17529,
+     "text": "Read current literature, talk with colleagues, or participate in professional organizations or conferences to keep abreast of developments in endoscopy.",
+     "type": "Core",
+     "onetCode": "31-9099.02",
+     "line": 10372
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L636",
+    "annualMedian": "oews:national_M2025_dl!AB636",
+    "annualMean": "oews:national_M2025_dl!S636",
+    "hourlyMedian": "oews:national_M2025_dl!W636",
+    "hourlyMean": "oews:national_M2025_dl!R636",
+    "annualPct10": "oews:national_M2025_dl!Z636",
+    "annualPct90": "oews:national_M2025_dl!AD636",
+    "annualOnly": "oews:national_M2025_dl!AE636",
+    "hourlyOnly": "oews:national_M2025_dl!AF636",
+    "title": "oews:national_M2025_dl!J636",
+    "ep.title": "ep:Table 1.2!A522",
+    "ep.employment2025": "ep:Table 1.2!D522",
+    "ep.employment2035": "ep:Table 1.2!E522",
+    "ep.numericChange": "ep:Table 1.2!H522",
+    "ep.percentChange": "ep:Table 1.2!I522",
+    "onetCode": "onet:Occupation Data.txt#L526:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L526:Description"
+   },
+   "nullReasons": {}
+  }
+ }
+}

@@ -1,0 +1,1811 @@
+{
+ "_meta": {
+  "continent": "37-0000",
+  "title": "Building and Grounds Cleaning and Maintenance Occupations",
+  "sources": "see index.json _meta.sources; source refs are <source>:<sheet>!<cell> or <source>:<file>#L<line>:<column>",
+  "extracted": "2026-10-24",
+  "generator": "python3 scripts/build_occupations.py"
+ },
+ "broadGroups": [
+  {
+   "soc": "37-1010",
+   "title": "First-Line Supervisors of Building and Grounds Cleaning and Maintenance Workers",
+   "minor": "37-1000",
+   "employment": 309510,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L715",
+    "title": "oews:national_M2025_dl!J715"
+   }
+  },
+  {
+   "soc": "37-2010",
+   "title": "Building Cleaning Workers",
+   "minor": "37-2000",
+   "employment": 3087640,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L719",
+    "title": "oews:national_M2025_dl!J719"
+   }
+  },
+  {
+   "soc": "37-2020",
+   "title": "Pest Control Workers",
+   "minor": "37-2000",
+   "employment": 102620,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L723",
+    "title": "oews:national_M2025_dl!J723"
+   }
+  },
+  {
+   "soc": "37-3010",
+   "title": "Grounds Maintenance Workers",
+   "minor": "37-3000",
+   "employment": 1048490,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L726",
+    "title": "oews:national_M2025_dl!J726"
+   }
+  }
+ ],
+ "occupations": {
+  "37-1011": {
+   "soc": "37-1011",
+   "title": "First-Line Supervisors of Housekeeping and Janitorial Workers",
+   "major": "37-0000",
+   "minor": "37-1000",
+   "broad": "37-1010",
+   "oewsRows": [
+    716
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 178760,
+   "annualMedian": 49100,
+   "annualMean": 53320,
+   "hourlyMedian": 23.61,
+   "hourlyMean": 25.64,
+   "annualPct10": 35520,
+   "annualPct90": 76430,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "First-line supervisors of housekeeping and janitorial workers",
+    "employment2025": 265200,
+    "employment2035": 273600,
+    "numericChange": 8400,
+    "percentChange": 3.2
+   },
+   "onetCode": "37-1011.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Directly supervise and coordinate work activities of cleaning personnel in hotels, hospitals, offices, and other establishments.",
+   "tasks": [
+    {
+     "id": 9533,
+     "text": "Supervise in-house services, such as laundries, maintenance and repair, dry cleaning, or valet services.",
+     "type": "Core",
+     "onetCode": "37-1011.00",
+     "line": 11214
+    },
+    {
+     "id": 9520,
+     "text": "Select the most suitable cleaning materials for different types of linens, furniture, flooring, and surfaces.",
+     "type": "Core",
+     "onetCode": "37-1011.00",
+     "line": 11215
+    },
+    {
+     "id": 9534,
+     "text": "Advise managers, desk clerks, or admitting personnel of rooms ready for occupancy.",
+     "type": "Core",
+     "onetCode": "37-1011.00",
+     "line": 11216
+    },
+    {
+     "id": 9513,
+     "text": "Inspect work performed to ensure that it meets specifications and established standards.",
+     "type": "Core",
+     "onetCode": "37-1011.00",
+     "line": 11217
+    },
+    {
+     "id": 9515,
+     "text": "Perform or assist with cleaning duties as necessary.",
+     "type": "Core",
+     "onetCode": "37-1011.00",
+     "line": 11218
+    },
+    {
+     "id": 9514,
+     "text": "Plan and prepare employee work schedules.",
+     "type": "Core",
+     "onetCode": "37-1011.00",
+     "line": 11219
+    },
+    {
+     "id": 9527,
+     "text": "Establish and implement operational standards and procedures for the departments supervised.",
+     "type": "Core",
+     "onetCode": "37-1011.00",
+     "line": 11220
+    },
+    {
+     "id": 9519,
+     "text": "Inspect and evaluate the physical condition of facilities to determine the type of work required.",
+     "type": "Core",
+     "onetCode": "37-1011.00",
+     "line": 11221
+    },
+    {
+     "id": 9524,
+     "text": "Inventory stock to ensure that supplies and equipment are available in adequate amounts.",
+     "type": "Core",
+     "onetCode": "37-1011.00",
+     "line": 11222
+    },
+    {
+     "id": 9522,
+     "text": "Issue supplies and equipment to workers.",
+     "type": "Core",
+     "onetCode": "37-1011.00",
+     "line": 11223
+    },
+    {
+     "id": 9523,
+     "text": "Forecast necessary levels of staffing and stock at different times to facilitate effective scheduling and ordering.",
+     "type": "Core",
+     "onetCode": "37-1011.00",
+     "line": 11224
+    },
+    {
+     "id": 20130,
+     "text": "Check and maintain equipment to ensure that it is in working order.",
+     "type": "Core",
+     "onetCode": "37-1011.00",
+     "line": 11225
+    },
+    {
+     "id": 9531,
+     "text": "Maintain required records of work hours, budgets, payrolls, and other information.",
+     "type": "Core",
+     "onetCode": "37-1011.00",
+     "line": 11226
+    },
+    {
+     "id": 9512,
+     "text": "Direct activities for stopping the spread of infections in facilities, such as hospitals.",
+     "type": "Core",
+     "onetCode": "37-1011.00",
+     "line": 11227
+    },
+    {
+     "id": 9528,
+     "text": "Recommend or arrange for additional services, such as painting, repair work, renovations, and the replacement of furnishings and equipment.",
+     "type": "Core",
+     "onetCode": "37-1011.00",
+     "line": 11228
+    },
+    {
+     "id": 9517,
+     "text": "Coordinate activities with other departments to ensure that services are provided in an efficient and timely manner.",
+     "type": "Core",
+     "onetCode": "37-1011.00",
+     "line": 11229
+    },
+    {
+     "id": 9516,
+     "text": "Investigate complaints about service and equipment, and take corrective action.",
+     "type": "Core",
+     "onetCode": "37-1011.00",
+     "line": 11230
+    },
+    {
+     "id": 9521,
+     "text": "Instruct staff in work policies and procedures, and the use and maintenance of equipment.",
+     "type": "Core",
+     "onetCode": "37-1011.00",
+     "line": 11231
+    },
+    {
+     "id": 9529,
+     "text": "Select and order or purchase new equipment, supplies, or furnishings.",
+     "type": "Core",
+     "onetCode": "37-1011.00",
+     "line": 11232
+    },
+    {
+     "id": 9536,
+     "text": "Prepare reports on activity, personnel, and information, such as occupancy, hours worked, facility usage, work performed, and departmental expenses.",
+     "type": "Core",
+     "onetCode": "37-1011.00",
+     "line": 11233
+    },
+    {
+     "id": 9526,
+     "text": "Confer with staff to resolve performance and personnel problems, and to discuss company policies.",
+     "type": "Core",
+     "onetCode": "37-1011.00",
+     "line": 11234
+    },
+    {
+     "id": 9525,
+     "text": "Evaluate employee performance and recommend personnel actions, such as promotions, transfers, and dismissals.",
+     "type": "Core",
+     "onetCode": "37-1011.00",
+     "line": 11235
+    },
+    {
+     "id": 9530,
+     "text": "Recommend changes that could improve service and increase operational efficiency.",
+     "type": "Core",
+     "onetCode": "37-1011.00",
+     "line": 11236
+    },
+    {
+     "id": 9535,
+     "text": "Perform financial tasks, such as estimating costs and preparing and managing budgets.",
+     "type": "Supplemental",
+     "onetCode": "37-1011.00",
+     "line": 11237
+    },
+    {
+     "id": 9532,
+     "text": "Screen job applicants, and hire new employees.",
+     "type": "Supplemental",
+     "onetCode": "37-1011.00",
+     "line": 11238
+    },
+    {
+     "id": 20131,
+     "text": "Perform grounds maintenance tasks, such as removing snow and mowing the lawn.",
+     "type": "Supplemental",
+     "onetCode": "37-1011.00",
+     "line": 11239
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L716",
+    "annualMedian": "oews:national_M2025_dl!AB716",
+    "annualMean": "oews:national_M2025_dl!S716",
+    "hourlyMedian": "oews:national_M2025_dl!W716",
+    "hourlyMean": "oews:national_M2025_dl!R716",
+    "annualPct10": "oews:national_M2025_dl!Z716",
+    "annualPct90": "oews:national_M2025_dl!AD716",
+    "annualOnly": "oews:national_M2025_dl!AE716",
+    "hourlyOnly": "oews:national_M2025_dl!AF716",
+    "title": "oews:national_M2025_dl!J716",
+    "ep.title": "ep:Table 1.2!A584",
+    "ep.employment2025": "ep:Table 1.2!D584",
+    "ep.employment2035": "ep:Table 1.2!E584",
+    "ep.numericChange": "ep:Table 1.2!H584",
+    "ep.percentChange": "ep:Table 1.2!I584",
+    "onetCode": "onet:Occupation Data.txt#L575:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L575:Description"
+   },
+   "nullReasons": {}
+  },
+  "37-1012": {
+   "soc": "37-1012",
+   "title": "First-Line Supervisors of Landscaping, Lawn Service, and Groundskeeping Workers",
+   "major": "37-0000",
+   "minor": "37-1000",
+   "broad": "37-1010",
+   "oewsRows": [
+    717
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 130760,
+   "annualMedian": 58430,
+   "annualMean": 60960,
+   "hourlyMedian": 28.09,
+   "hourlyMean": 29.31,
+   "annualPct10": 40560,
+   "annualPct90": 85650,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "First-line supervisors of landscaping, lawn service, and groundskeeping workers",
+    "employment2025": 243300,
+    "employment2035": 253000,
+    "numericChange": 9700,
+    "percentChange": 4
+   },
+   "onetCode": "37-1012.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Directly supervise and coordinate activities of workers engaged in landscaping or groundskeeping activities. Work may involve reviewing contracts to ascertain service, machine, and workforce requirements; answering inquiries from potential customers regarding methods, material, and price ranges; and preparing estimates according to labor, material, and machine costs.",
+   "tasks": [
+    {
+     "id": 11199,
+     "text": "Establish and enforce operating procedures and work standards that will ensure adequate performance and personnel safety.",
+     "type": "Core",
+     "onetCode": "37-1012.00",
+     "line": 11240
+    },
+    {
+     "id": 11202,
+     "text": "Schedule work for crews, depending on work priorities, crew or equipment availability, or weather conditions.",
+     "type": "Core",
+     "onetCode": "37-1012.00",
+     "line": 11241
+    },
+    {
+     "id": 11225,
+     "text": "Tour grounds, such as parks, botanical gardens, cemeteries, or golf courses, to inspect conditions of plants and soil.",
+     "type": "Core",
+     "onetCode": "37-1012.00",
+     "line": 11242
+    },
+    {
+     "id": 11204,
+     "text": "Monitor project activities to ensure that instructions are followed, deadlines are met, and schedules are maintained.",
+     "type": "Core",
+     "onetCode": "37-1012.00",
+     "line": 11243
+    },
+    {
+     "id": 11201,
+     "text": "Direct activities of workers who perform duties, such as landscaping, cultivating lawns, or pruning trees and shrubs.",
+     "type": "Core",
+     "onetCode": "37-1012.00",
+     "line": 11244
+    },
+    {
+     "id": 11200,
+     "text": "Inspect completed work to ensure conformance to specifications, standards, and contract requirements.",
+     "type": "Core",
+     "onetCode": "37-1012.00",
+     "line": 11245
+    },
+    {
+     "id": 11203,
+     "text": "Plant or maintain vegetation through activities such as mulching, fertilizing, watering, mowing, or pruning.",
+     "type": "Core",
+     "onetCode": "37-1012.00",
+     "line": 11246
+    },
+    {
+     "id": 11210,
+     "text": "Direct or perform mixing or application of fertilizers, insecticides, herbicides, or fungicides.",
+     "type": "Core",
+     "onetCode": "37-1012.00",
+     "line": 11247
+    },
+    {
+     "id": 11205,
+     "text": "Train workers in tasks such as transplanting or pruning trees or shrubs, finishing cement, using equipment, or caring for turf.",
+     "type": "Core",
+     "onetCode": "37-1012.00",
+     "line": 11248
+    },
+    {
+     "id": 11224,
+     "text": "Prepare service estimates based on labor, material, and machine costs and maintain budgets for individual projects.",
+     "type": "Core",
+     "onetCode": "37-1012.00",
+     "line": 11249
+    },
+    {
+     "id": 11215,
+     "text": "Identify diseases or pests affecting landscaping and order appropriate treatments.",
+     "type": "Core",
+     "onetCode": "37-1012.00",
+     "line": 11250
+    },
+    {
+     "id": 11207,
+     "text": "Inventory supplies of tools, equipment, or materials to ensure that sufficient supplies are available and items are in usable condition.",
+     "type": "Core",
+     "onetCode": "37-1012.00",
+     "line": 11251
+    },
+    {
+     "id": 11212,
+     "text": "Maintain required records, such as personnel information or project records.",
+     "type": "Core",
+     "onetCode": "37-1012.00",
+     "line": 11252
+    },
+    {
+     "id": 11209,
+     "text": "Perform personnel-related activities, such as hiring workers, evaluating staff performance, or taking disciplinary actions when performance problems occur.",
+     "type": "Core",
+     "onetCode": "37-1012.00",
+     "line": 11253
+    },
+    {
+     "id": 11206,
+     "text": "Provide workers with assistance in performing duties as necessary to meet deadlines.",
+     "type": "Core",
+     "onetCode": "37-1012.00",
+     "line": 11254
+    },
+    {
+     "id": 11213,
+     "text": "Prepare or maintain required records, such as work activity or personnel reports.",
+     "type": "Core",
+     "onetCode": "37-1012.00",
+     "line": 11255
+    },
+    {
+     "id": 11216,
+     "text": "Investigate work-related complaints to verify problems and to determine responses.",
+     "type": "Core",
+     "onetCode": "37-1012.00",
+     "line": 11256
+    },
+    {
+     "id": 11219,
+     "text": "Perform administrative duties, such as authorizing leaves or processing time sheets.",
+     "type": "Core",
+     "onetCode": "37-1012.00",
+     "line": 11257
+    },
+    {
+     "id": 11208,
+     "text": "Confer with other supervisors to coordinate work activities with those of other departments or units.",
+     "type": "Core",
+     "onetCode": "37-1012.00",
+     "line": 11258
+    },
+    {
+     "id": 11217,
+     "text": "Direct or assist workers engaged in the maintenance or repair of equipment, such as power tools or motorized equipment.",
+     "type": "Core",
+     "onetCode": "37-1012.00",
+     "line": 11259
+    },
+    {
+     "id": 11211,
+     "text": "Review contracts or work assignments to determine service, machine, or workforce requirements for jobs.",
+     "type": "Core",
+     "onetCode": "37-1012.00",
+     "line": 11260
+    },
+    {
+     "id": 11214,
+     "text": "Order the performance of corrective work when problems occur and recommend procedural changes to avoid such problems.",
+     "type": "Core",
+     "onetCode": "37-1012.00",
+     "line": 11261
+    },
+    {
+     "id": 11221,
+     "text": "Confer with managers or landscape architects to develop plans or schedules for landscaping maintenance or improvement.",
+     "type": "Core",
+     "onetCode": "37-1012.00",
+     "line": 11262
+    },
+    {
+     "id": 11220,
+     "text": "Recommend changes in working conditions or equipment used to increase crew efficiency.",
+     "type": "Core",
+     "onetCode": "37-1012.00",
+     "line": 11263
+    },
+    {
+     "id": 11223,
+     "text": "Answer inquiries from current or prospective customers regarding methods, materials, or price ranges.",
+     "type": "Core",
+     "onetCode": "37-1012.00",
+     "line": 11264
+    },
+    {
+     "id": 11218,
+     "text": "Install or maintain landscaped areas, performing tasks such as removing snow, pouring cement curbs, or repairing sidewalks.",
+     "type": "Core",
+     "onetCode": "37-1012.00",
+     "line": 11265
+    },
+    {
+     "id": 11226,
+     "text": "Design or supervise the installation of sprinkler systems, calculating water pressure, or valve and pipe coverage needs.",
+     "type": "Core",
+     "onetCode": "37-1012.00",
+     "line": 11266
+    },
+    {
+     "id": 11222,
+     "text": "Negotiate with customers regarding fees for landscaping, lawn service, or groundskeeping work.",
+     "type": "Supplemental",
+     "onetCode": "37-1012.00",
+     "line": 11267
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L717",
+    "annualMedian": "oews:national_M2025_dl!AB717",
+    "annualMean": "oews:national_M2025_dl!S717",
+    "hourlyMedian": "oews:national_M2025_dl!W717",
+    "hourlyMean": "oews:national_M2025_dl!R717",
+    "annualPct10": "oews:national_M2025_dl!Z717",
+    "annualPct90": "oews:national_M2025_dl!AD717",
+    "annualOnly": "oews:national_M2025_dl!AE717",
+    "hourlyOnly": "oews:national_M2025_dl!AF717",
+    "title": "oews:national_M2025_dl!J717",
+    "ep.title": "ep:Table 1.2!A585",
+    "ep.employment2025": "ep:Table 1.2!D585",
+    "ep.employment2035": "ep:Table 1.2!E585",
+    "ep.numericChange": "ep:Table 1.2!H585",
+    "ep.percentChange": "ep:Table 1.2!I585",
+    "onetCode": "onet:Occupation Data.txt#L576:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L576:Description"
+   },
+   "nullReasons": {}
+  },
+  "37-2011": {
+   "soc": "37-2011",
+   "title": "Janitors and Cleaners, Except Maids and Housekeeping Cleaners",
+   "major": "37-0000",
+   "minor": "37-2000",
+   "broad": "37-2010",
+   "oewsRows": [
+    720
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 2209760,
+   "annualMedian": 36840,
+   "annualMean": 38760,
+   "hourlyMedian": 17.71,
+   "hourlyMean": 18.64,
+   "annualPct10": 28640,
+   "annualPct90": 50270,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Janitors and cleaners, except maids and housekeeping cleaners",
+    "employment2025": 2432600,
+    "employment2035": 2486200,
+    "numericChange": 53600,
+    "percentChange": 2.2
+   },
+   "onetCode": "37-2011.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Keep buildings in clean and orderly condition. Perform heavy cleaning duties, such as cleaning floors, shampooing rugs, washing walls and glass, and removing rubbish. Duties may include tending furnace and boiler, performing routine maintenance activities, notifying management of need for repairs, and cleaning snow or debris from sidewalk.",
+   "tasks": [
+    {
+     "id": 9538,
+     "text": "Service, clean, or supply restrooms.",
+     "type": "Core",
+     "onetCode": "37-2011.00",
+     "line": 11268
+    },
+    {
+     "id": 9539,
+     "text": "Gather and empty trash.",
+     "type": "Core",
+     "onetCode": "37-2011.00",
+     "line": 11269
+    },
+    {
+     "id": 9540,
+     "text": "Clean building floors by sweeping, mopping, scrubbing, or vacuuming.",
+     "type": "Core",
+     "onetCode": "37-2011.00",
+     "line": 11270
+    },
+    {
+     "id": 20590,
+     "text": "Monitor building security and safety by performing tasks such as locking doors after operating hours or checking electrical appliance use to ensure that hazards are not created.",
+     "type": "Core",
+     "onetCode": "37-2011.00",
+     "line": 11271
+    },
+    {
+     "id": 9544,
+     "text": "Notify managers concerning the need for major repairs or additions to building operating systems.",
+     "type": "Core",
+     "onetCode": "37-2011.00",
+     "line": 11272
+    },
+    {
+     "id": 9541,
+     "text": "Follow procedures for the use of chemical cleaners and power equipment to prevent damage to floors and fixtures.",
+     "type": "Core",
+     "onetCode": "37-2011.00",
+     "line": 11273
+    },
+    {
+     "id": 9542,
+     "text": "Mix water and detergents or acids in containers to prepare cleaning solutions, according to specifications.",
+     "type": "Core",
+     "onetCode": "37-2011.00",
+     "line": 11274
+    },
+    {
+     "id": 9546,
+     "text": "Clean windows, glass partitions, or mirrors, using soapy water or other cleaners, sponges, or squeegees.",
+     "type": "Core",
+     "onetCode": "37-2011.00",
+     "line": 11275
+    },
+    {
+     "id": 9545,
+     "text": "Requisition supplies or equipment needed for cleaning and maintenance duties.",
+     "type": "Core",
+     "onetCode": "37-2011.00",
+     "line": 11276
+    },
+    {
+     "id": 9550,
+     "text": "Dust furniture, walls, machines, or equipment.",
+     "type": "Core",
+     "onetCode": "37-2011.00",
+     "line": 11277
+    },
+    {
+     "id": 9549,
+     "text": "Clean and polish furniture and fixtures.",
+     "type": "Core",
+     "onetCode": "37-2011.00",
+     "line": 11278
+    },
+    {
+     "id": 9551,
+     "text": "Move heavy furniture, equipment, or supplies, either manually or with hand trucks.",
+     "type": "Core",
+     "onetCode": "37-2011.00",
+     "line": 11279
+    },
+    {
+     "id": 9543,
+     "text": "Strip, seal, finish, and polish floors.",
+     "type": "Supplemental",
+     "onetCode": "37-2011.00",
+     "line": 11280
+    },
+    {
+     "id": 9552,
+     "text": "Remove snow from sidewalks, driveways, or parking areas, using snowplows, snow blowers, or snow shovels, or spread snow-melting chemicals.",
+     "type": "Supplemental",
+     "onetCode": "37-2011.00",
+     "line": 11281
+    },
+    {
+     "id": 9555,
+     "text": "Make adjustments or minor repairs to heating, cooling, ventilating, plumbing, or electrical systems.",
+     "type": "Supplemental",
+     "onetCode": "37-2011.00",
+     "line": 11282
+    },
+    {
+     "id": 20592,
+     "text": "Drive vans, industrial trucks, or other vehicles required to travel to, or to perform, cleaning work.",
+     "type": "Supplemental",
+     "onetCode": "37-2011.00",
+     "line": 11283
+    },
+    {
+     "id": 9554,
+     "text": "Spray insecticides or fumigants to prevent insect or rodent infestation.",
+     "type": "Supplemental",
+     "onetCode": "37-2011.00",
+     "line": 11284
+    },
+    {
+     "id": 9548,
+     "text": "Set up, arrange, or remove decorations, tables, chairs, ladders, or scaffolding to prepare facilities for events, such as banquets or meetings.",
+     "type": "Supplemental",
+     "onetCode": "37-2011.00",
+     "line": 11285
+    },
+    {
+     "id": 9559,
+     "text": "Clean chimneys, flues, and connecting pipes, using power or hand tools.",
+     "type": "Supplemental",
+     "onetCode": "37-2011.00",
+     "line": 11286
+    },
+    {
+     "id": 20591,
+     "text": "Mow or trim lawns or shrubbery, using mowers or hand or power trimmers, and clear debris from grounds.",
+     "type": "Supplemental",
+     "onetCode": "37-2011.00",
+     "line": 11287
+    },
+    {
+     "id": 9547,
+     "text": "Steam-clean or shampoo carpets.",
+     "type": "Supplemental",
+     "onetCode": "37-2011.00",
+     "line": 11288
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L720",
+    "annualMedian": "oews:national_M2025_dl!AB720",
+    "annualMean": "oews:national_M2025_dl!S720",
+    "hourlyMedian": "oews:national_M2025_dl!W720",
+    "hourlyMean": "oews:national_M2025_dl!R720",
+    "annualPct10": "oews:national_M2025_dl!Z720",
+    "annualPct90": "oews:national_M2025_dl!AD720",
+    "annualOnly": "oews:national_M2025_dl!AE720",
+    "hourlyOnly": "oews:national_M2025_dl!AF720",
+    "title": "oews:national_M2025_dl!J720",
+    "ep.title": "ep:Table 1.2!A588",
+    "ep.employment2025": "ep:Table 1.2!D588",
+    "ep.employment2035": "ep:Table 1.2!E588",
+    "ep.numericChange": "ep:Table 1.2!H588",
+    "ep.percentChange": "ep:Table 1.2!I588",
+    "onetCode": "onet:Occupation Data.txt#L577:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L577:Description"
+   },
+   "nullReasons": {}
+  },
+  "37-2012": {
+   "soc": "37-2012",
+   "title": "Maids and Housekeeping Cleaners",
+   "major": "37-0000",
+   "minor": "37-2000",
+   "broad": "37-2010",
+   "oewsRows": [
+    721
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 860670,
+   "annualMedian": 35510,
+   "annualMean": 37080,
+   "hourlyMedian": 17.07,
+   "hourlyMean": 17.83,
+   "annualPct10": 27640,
+   "annualPct90": 48570,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Maids and housekeeping cleaners",
+    "employment2025": 1332100,
+    "employment2035": 1339500,
+    "numericChange": 7400,
+    "percentChange": 0.6
+   },
+   "onetCode": "37-2012.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Perform any combination of light cleaning duties to maintain private households or commercial establishments, such as hotels and hospitals, in a clean and orderly manner. Duties may include making beds, replenishing linens, cleaning rooms and halls, and vacuuming.",
+   "tasks": [
+    {
+     "id": 9564,
+     "text": "Keep storage areas and carts well-stocked, clean, and tidy.",
+     "type": "Core",
+     "onetCode": "37-2012.00",
+     "line": 11289
+    },
+    {
+     "id": 9560,
+     "text": "Carry linens, towels, toilet items, and cleaning supplies, using wheeled carts.",
+     "type": "Core",
+     "onetCode": "37-2012.00",
+     "line": 11290
+    },
+    {
+     "id": 9561,
+     "text": "Clean rooms, hallways, lobbies, lounges, restrooms, corridors, elevators, stairways, locker rooms, and other work areas so that health standards are met.",
+     "type": "Core",
+     "onetCode": "37-2012.00",
+     "line": 11291
+    },
+    {
+     "id": 9562,
+     "text": "Empty wastebaskets, empty and clean ashtrays, and transport other trash and waste to disposal areas.",
+     "type": "Core",
+     "onetCode": "37-2012.00",
+     "line": 11292
+    },
+    {
+     "id": 9566,
+     "text": "Sweep, scrub, wax, or polish floors, using brooms, mops, or powered scrubbing and waxing machines.",
+     "type": "Core",
+     "onetCode": "37-2012.00",
+     "line": 11293
+    },
+    {
+     "id": 9563,
+     "text": "Replenish supplies, such as drinking glasses, linens, writing supplies, and bathroom items.",
+     "type": "Core",
+     "onetCode": "37-2012.00",
+     "line": 11294
+    },
+    {
+     "id": 9567,
+     "text": "Clean rugs, carpets, upholstered furniture, and draperies, using vacuum cleaners and shampooers.",
+     "type": "Core",
+     "onetCode": "37-2012.00",
+     "line": 11295
+    },
+    {
+     "id": 9568,
+     "text": "Wash windows, walls, ceilings, and woodwork, waxing and polishing as necessary.",
+     "type": "Core",
+     "onetCode": "37-2012.00",
+     "line": 11296
+    },
+    {
+     "id": 9565,
+     "text": "Dust and polish furniture and equipment.",
+     "type": "Core",
+     "onetCode": "37-2012.00",
+     "line": 11297
+    },
+    {
+     "id": 9570,
+     "text": "Disinfect equipment and supplies, using germicides or steam-operated sterilizers.",
+     "type": "Supplemental",
+     "onetCode": "37-2012.00",
+     "line": 11298
+    },
+    {
+     "id": 9571,
+     "text": "Observe precautions required to protect hotel and guest property and report damage, theft, and found articles to supervisors.",
+     "type": "Supplemental",
+     "onetCode": "37-2012.00",
+     "line": 11299
+    },
+    {
+     "id": 9577,
+     "text": "Sort, count, and mark clean linens and store them in linen closets.",
+     "type": "Supplemental",
+     "onetCode": "37-2012.00",
+     "line": 11300
+    },
+    {
+     "id": 9575,
+     "text": "Sort clothing and other articles, load washing machines, and iron and fold dried items.",
+     "type": "Supplemental",
+     "onetCode": "37-2012.00",
+     "line": 11301
+    },
+    {
+     "id": 9587,
+     "text": "Move and arrange furniture and turn mattresses.",
+     "type": "Supplemental",
+     "onetCode": "37-2012.00",
+     "line": 11302
+    },
+    {
+     "id": 9582,
+     "text": "Replace light bulbs.",
+     "type": "Supplemental",
+     "onetCode": "37-2012.00",
+     "line": 11303
+    },
+    {
+     "id": 9586,
+     "text": "Deliver television sets, ironing boards, baby cribs, and rollaway beds to guests' rooms.",
+     "type": "Supplemental",
+     "onetCode": "37-2012.00",
+     "line": 11304
+    },
+    {
+     "id": 9569,
+     "text": "Hang draperies and dust window blinds.",
+     "type": "Supplemental",
+     "onetCode": "37-2012.00",
+     "line": 11305
+    },
+    {
+     "id": 9581,
+     "text": "Request repair services and wait for repair workers to arrive.",
+     "type": "Supplemental",
+     "onetCode": "37-2012.00",
+     "line": 11306
+    },
+    {
+     "id": 9579,
+     "text": "Prepare rooms for meetings and arrange decorations, media equipment, and furniture for social or business functions.",
+     "type": "Supplemental",
+     "onetCode": "37-2012.00",
+     "line": 11307
+    },
+    {
+     "id": 9578,
+     "text": "Polish silver accessories and metalwork, such as fixtures and fittings.",
+     "type": "Supplemental",
+     "onetCode": "37-2012.00",
+     "line": 11308
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L721",
+    "annualMedian": "oews:national_M2025_dl!AB721",
+    "annualMean": "oews:national_M2025_dl!S721",
+    "hourlyMedian": "oews:national_M2025_dl!W721",
+    "hourlyMean": "oews:national_M2025_dl!R721",
+    "annualPct10": "oews:national_M2025_dl!Z721",
+    "annualPct90": "oews:national_M2025_dl!AD721",
+    "annualOnly": "oews:national_M2025_dl!AE721",
+    "hourlyOnly": "oews:national_M2025_dl!AF721",
+    "title": "oews:national_M2025_dl!J721",
+    "ep.title": "ep:Table 1.2!A589",
+    "ep.employment2025": "ep:Table 1.2!D589",
+    "ep.employment2035": "ep:Table 1.2!E589",
+    "ep.numericChange": "ep:Table 1.2!H589",
+    "ep.percentChange": "ep:Table 1.2!I589",
+    "onetCode": "onet:Occupation Data.txt#L578:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L578:Description"
+   },
+   "nullReasons": {}
+  },
+  "37-2019": {
+   "soc": "37-2019",
+   "title": "Building Cleaning Workers, All Other",
+   "major": "37-0000",
+   "minor": "37-2000",
+   "broad": "37-2010",
+   "oewsRows": [
+    722
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 17210,
+   "annualMedian": 44040,
+   "annualMean": 46420,
+   "hourlyMedian": 21.17,
+   "hourlyMean": 22.32,
+   "annualPct10": 32370,
+   "annualPct90": 64030,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Building cleaning workers, all other",
+    "employment2025": 18600,
+    "employment2035": 19000,
+    "numericChange": 400,
+    "percentChange": 2
+   },
+   "onetCode": "37-2019.00",
+   "onetTaskSource": "none",
+   "onetSubCodes": [],
+   "description": "All building cleaning workers not listed separately.",
+   "tasks": [],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L722",
+    "annualMedian": "oews:national_M2025_dl!AB722",
+    "annualMean": "oews:national_M2025_dl!S722",
+    "hourlyMedian": "oews:national_M2025_dl!W722",
+    "hourlyMean": "oews:national_M2025_dl!R722",
+    "annualPct10": "oews:national_M2025_dl!Z722",
+    "annualPct90": "oews:national_M2025_dl!AD722",
+    "annualOnly": "oews:national_M2025_dl!AE722",
+    "hourlyOnly": "oews:national_M2025_dl!AF722",
+    "title": "oews:national_M2025_dl!J722",
+    "ep.title": "ep:Table 1.2!A590",
+    "ep.employment2025": "ep:Table 1.2!D590",
+    "ep.employment2035": "ep:Table 1.2!E590",
+    "ep.numericChange": "ep:Table 1.2!H590",
+    "ep.percentChange": "ep:Table 1.2!I590",
+    "onetCode": "onet:Occupation Data.txt#L579:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L579:Description"
+   },
+   "nullReasons": {
+    "tasks": "O*NET 30.1 has no task statements for 37-2019.00"
+   }
+  },
+  "37-2021": {
+   "soc": "37-2021",
+   "title": "Pest Control Workers",
+   "major": "37-0000",
+   "minor": "37-2000",
+   "broad": "37-2020",
+   "oewsRows": [
+    724
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 102620,
+   "annualMedian": 45250,
+   "annualMean": 46400,
+   "hourlyMedian": 21.75,
+   "hourlyMean": 22.31,
+   "annualPct10": 34680,
+   "annualPct90": 61890,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Pest control workers",
+    "employment2025": 108700,
+    "employment2035": 114700,
+    "numericChange": 6000,
+    "percentChange": 5.5
+   },
+   "onetCode": "37-2021.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Apply or release chemical solutions or toxic gases and set traps to kill or remove pests and vermin that infest buildings and surrounding areas.",
+   "tasks": [
+    {
+     "id": 7974,
+     "text": "Record work activities performed.",
+     "type": "Core",
+     "onetCode": "37-2021.00",
+     "line": 11309
+    },
+    {
+     "id": 7975,
+     "text": "Inspect premises to identify infestation source and extent of damage to property, wall, or roof porosity and access to infested locations.",
+     "type": "Core",
+     "onetCode": "37-2021.00",
+     "line": 11310
+    },
+    {
+     "id": 20759,
+     "text": "Recommend treatment and prevention methods for pest problems to clients.",
+     "type": "Core",
+     "onetCode": "37-2021.00",
+     "line": 11311
+    },
+    {
+     "id": 7976,
+     "text": "Spray or dust chemical solutions, powders, or gases into rooms, onto clothing, furnishings, or wood, or over marshlands, ditches, or catch basins.",
+     "type": "Core",
+     "onetCode": "37-2021.00",
+     "line": 11312
+    },
+    {
+     "id": 7977,
+     "text": "Clean work site after completion of job.",
+     "type": "Core",
+     "onetCode": "37-2021.00",
+     "line": 11313
+    },
+    {
+     "id": 7979,
+     "text": "Drive truck equipped with power spraying equipment.",
+     "type": "Core",
+     "onetCode": "37-2021.00",
+     "line": 11314
+    },
+    {
+     "id": 20760,
+     "text": "Measure area dimensions requiring treatment, calculate fumigant requirements, and estimate cost for service.",
+     "type": "Core",
+     "onetCode": "37-2021.00",
+     "line": 11315
+    },
+    {
+     "id": 7983,
+     "text": "Study preliminary reports or diagrams of infested area and determine treatment type required to eliminate and prevent recurrence of infestation.",
+     "type": "Core",
+     "onetCode": "37-2021.00",
+     "line": 11316
+    },
+    {
+     "id": 7978,
+     "text": "Direct, or assist other workers in, treatment or extermination processes to eliminate or control rodents, insects, or weeds.",
+     "type": "Core",
+     "onetCode": "37-2021.00",
+     "line": 11317
+    },
+    {
+     "id": 7981,
+     "text": "Post warning signs and lock building doors to secure area to be fumigated.",
+     "type": "Supplemental",
+     "onetCode": "37-2021.00",
+     "line": 11318
+    },
+    {
+     "id": 7985,
+     "text": "Set mechanical traps, or place poisonous paste or bait in sewers, burrows, or ditches.",
+     "type": "Supplemental",
+     "onetCode": "37-2021.00",
+     "line": 11319
+    },
+    {
+     "id": 7982,
+     "text": "Cut or bore openings in building or surrounding concrete, access infested areas, insert nozzle, and inject pesticide to impregnate ground.",
+     "type": "Supplemental",
+     "onetCode": "37-2021.00",
+     "line": 11320
+    },
+    {
+     "id": 7986,
+     "text": "Clean and remove blockages from infested areas to facilitate spraying procedures and provide drainage, using brooms, mops, shovels, or rakes.",
+     "type": "Supplemental",
+     "onetCode": "37-2021.00",
+     "line": 11321
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L724",
+    "annualMedian": "oews:national_M2025_dl!AB724",
+    "annualMean": "oews:national_M2025_dl!S724",
+    "hourlyMedian": "oews:national_M2025_dl!W724",
+    "hourlyMean": "oews:national_M2025_dl!R724",
+    "annualPct10": "oews:national_M2025_dl!Z724",
+    "annualPct90": "oews:national_M2025_dl!AD724",
+    "annualOnly": "oews:national_M2025_dl!AE724",
+    "hourlyOnly": "oews:national_M2025_dl!AF724",
+    "title": "oews:national_M2025_dl!J724",
+    "ep.title": "ep:Table 1.2!A591",
+    "ep.employment2025": "ep:Table 1.2!D591",
+    "ep.employment2035": "ep:Table 1.2!E591",
+    "ep.numericChange": "ep:Table 1.2!H591",
+    "ep.percentChange": "ep:Table 1.2!I591",
+    "onetCode": "onet:Occupation Data.txt#L580:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L580:Description"
+   },
+   "nullReasons": {}
+  },
+  "37-3011": {
+   "soc": "37-3011",
+   "title": "Landscaping and Groundskeeping Workers",
+   "major": "37-0000",
+   "minor": "37-3000",
+   "broad": "37-3010",
+   "oewsRows": [
+    727
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 952640,
+   "annualMedian": 39150,
+   "annualMean": 42290,
+   "hourlyMedian": 18.82,
+   "hourlyMean": 20.33,
+   "annualPct10": 31150,
+   "annualPct90": 56730,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Landscaping and groundskeeping workers",
+    "employment2025": 1188600,
+    "employment2035": 1244200,
+    "numericChange": 55600,
+    "percentChange": 4.7
+   },
+   "onetCode": "37-3011.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Landscape or maintain grounds of property using hand or power tools or equipment. Workers typically perform a variety of tasks, which may include any combination of the following: sod laying, mowing, trimming, planting, watering, fertilizing, digging, raking, sprinkler installation, and installation of mortarless segmental concrete masonry wall units.",
+   "tasks": [
+    {
+     "id": 9594,
+     "text": "Gather and remove litter.",
+     "type": "Core",
+     "onetCode": "37-3011.00",
+     "line": 11322
+    },
+    {
+     "id": 9592,
+     "text": "Use hand tools, such as shovels, rakes, pruning saws, saws, hedge or brush trimmers, or axes.",
+     "type": "Core",
+     "onetCode": "37-3011.00",
+     "line": 11323
+    },
+    {
+     "id": 20761,
+     "text": "Operate vehicles or powered equipment, such as mowers, tractors, twin-axle vehicles, snow blowers, chainsaws, electric clippers, sod cutters, or pruning saws.",
+     "type": "Core",
+     "onetCode": "37-3011.00",
+     "line": 11324
+    },
+    {
+     "id": 9598,
+     "text": "Water lawns, trees, or plants, using portable sprinkler systems, hoses, or watering cans.",
+     "type": "Core",
+     "onetCode": "37-3011.00",
+     "line": 11325
+    },
+    {
+     "id": 9593,
+     "text": "Prune or trim trees, shrubs, or hedges, using shears, pruners, or chain saws.",
+     "type": "Core",
+     "onetCode": "37-3011.00",
+     "line": 11326
+    },
+    {
+     "id": 9596,
+     "text": "Mix and spray or spread fertilizers, herbicides, or insecticides onto grass, shrubs, or trees, using hand or automatic sprayers or spreaders.",
+     "type": "Core",
+     "onetCode": "37-3011.00",
+     "line": 11327
+    },
+    {
+     "id": 9591,
+     "text": "Care for established lawns by mulching, aerating, weeding, grubbing, removing thatch, or trimming or edging around flower beds, walks, or walls.",
+     "type": "Core",
+     "onetCode": "37-3011.00",
+     "line": 11328
+    },
+    {
+     "id": 9601,
+     "text": "Follow planned landscaping designs to determine where to lay sod, sow grass, or plant flowers or foliage.",
+     "type": "Core",
+     "onetCode": "37-3011.00",
+     "line": 11329
+    },
+    {
+     "id": 9599,
+     "text": "Trim or pick flowers and clean flower beds.",
+     "type": "Core",
+     "onetCode": "37-3011.00",
+     "line": 11330
+    },
+    {
+     "id": 9611,
+     "text": "Attach wires from planted trees to support stakes.",
+     "type": "Core",
+     "onetCode": "37-3011.00",
+     "line": 11331
+    },
+    {
+     "id": 9602,
+     "text": "Plant seeds, bulbs, foliage, flowering plants, grass, ground covers, trees, or shrubs, and apply mulch for protection, using gardening tools.",
+     "type": "Core",
+     "onetCode": "37-3011.00",
+     "line": 11332
+    },
+    {
+     "id": 9589,
+     "text": "Mow or edge lawns, using power mowers or edgers.",
+     "type": "Core",
+     "onetCode": "37-3011.00",
+     "line": 11333
+    },
+    {
+     "id": 9600,
+     "text": "Rake, mulch, and compost leaves.",
+     "type": "Core",
+     "onetCode": "37-3011.00",
+     "line": 11334
+    },
+    {
+     "id": 9603,
+     "text": "Decorate gardens with stones or plants.",
+     "type": "Core",
+     "onetCode": "37-3011.00",
+     "line": 11335
+    },
+    {
+     "id": 9606,
+     "text": "Use irrigation methods to adjust the amount of water consumption and to prevent waste.",
+     "type": "Supplemental",
+     "onetCode": "37-3011.00",
+     "line": 11336
+    },
+    {
+     "id": 9597,
+     "text": "Provide proper upkeep of sidewalks, driveways, parking lots, fountains, planters, burial sites, or other grounds features.",
+     "type": "Supplemental",
+     "onetCode": "37-3011.00",
+     "line": 11337
+    },
+    {
+     "id": 9590,
+     "text": "Shovel snow from walks, driveways, or parking lots, and spread salt in those areas.",
+     "type": "Supplemental",
+     "onetCode": "37-3011.00",
+     "line": 11338
+    },
+    {
+     "id": 9604,
+     "text": "Maintain irrigation systems, including winterizing the systems and starting them up in spring.",
+     "type": "Supplemental",
+     "onetCode": "37-3011.00",
+     "line": 11339
+    },
+    {
+     "id": 9610,
+     "text": "Plan or cultivate lawns or gardens.",
+     "type": "Supplemental",
+     "onetCode": "37-3011.00",
+     "line": 11340
+    },
+    {
+     "id": 9595,
+     "text": "Maintain or repair tools, equipment, or structures, such as buildings, greenhouses, fences, or benches, using hand or power tools.",
+     "type": "Supplemental",
+     "onetCode": "37-3011.00",
+     "line": 11341
+    },
+    {
+     "id": 9609,
+     "text": "Care for artificial turf fields, periodically removing the turf and replacing cushioning pads or vacuuming and disinfecting the turf after use to prevent the growth of harmful bacteria.",
+     "type": "Supplemental",
+     "onetCode": "37-3011.00",
+     "line": 11342
+    },
+    {
+     "id": 9612,
+     "text": "Install rock gardens, ponds, decks, drainage systems, irrigation systems, retaining walls, fences, planters, or playground equipment.",
+     "type": "Supplemental",
+     "onetCode": "37-3011.00",
+     "line": 11343
+    },
+    {
+     "id": 9605,
+     "text": "Care for natural turf fields, making sure the underlying soil has the required composition to allow proper drainage and to support the grasses.",
+     "type": "Supplemental",
+     "onetCode": "37-3011.00",
+     "line": 11344
+    },
+    {
+     "id": 9608,
+     "text": "Advise customers on plant selection or care.",
+     "type": "Supplemental",
+     "onetCode": "37-3011.00",
+     "line": 11345
+    },
+    {
+     "id": 9607,
+     "text": "Haul or spread topsoil, or spread straw over seeded soil to hold soil in place.",
+     "type": "Supplemental",
+     "onetCode": "37-3011.00",
+     "line": 11346
+    },
+    {
+     "id": 9614,
+     "text": "Build forms and mix and pour cement to form garden borders.",
+     "type": "Supplemental",
+     "onetCode": "37-3011.00",
+     "line": 11347
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L727",
+    "annualMedian": "oews:national_M2025_dl!AB727",
+    "annualMean": "oews:national_M2025_dl!S727",
+    "hourlyMedian": "oews:national_M2025_dl!W727",
+    "hourlyMean": "oews:national_M2025_dl!R727",
+    "annualPct10": "oews:national_M2025_dl!Z727",
+    "annualPct90": "oews:national_M2025_dl!AD727",
+    "annualOnly": "oews:national_M2025_dl!AE727",
+    "hourlyOnly": "oews:national_M2025_dl!AF727",
+    "title": "oews:national_M2025_dl!J727",
+    "ep.title": "ep:Table 1.2!A593",
+    "ep.employment2025": "ep:Table 1.2!D593",
+    "ep.employment2035": "ep:Table 1.2!E593",
+    "ep.numericChange": "ep:Table 1.2!H593",
+    "ep.percentChange": "ep:Table 1.2!I593",
+    "onetCode": "onet:Occupation Data.txt#L581:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L581:Description"
+   },
+   "nullReasons": {}
+  },
+  "37-3012": {
+   "soc": "37-3012",
+   "title": "Pesticide Handlers, Sprayers, and Applicators, Vegetation",
+   "major": "37-0000",
+   "minor": "37-3000",
+   "broad": "37-3010",
+   "oewsRows": [
+    728
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 27050,
+   "annualMedian": 46340,
+   "annualMean": 47070,
+   "hourlyMedian": 22.28,
+   "hourlyMean": 22.63,
+   "annualPct10": 35570,
+   "annualPct90": 61420,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Pesticide handlers, sprayers, and applicators, vegetation",
+    "employment2025": 25700,
+    "employment2035": 26700,
+    "numericChange": 1000,
+    "percentChange": 3.9
+   },
+   "onetCode": "37-3012.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Mix or apply pesticides, herbicides, fungicides, or insecticides through sprays, dusts, vapors, soil incorporation, or chemical application on trees, shrubs, lawns, or crops. Usually requires specific training and state or federal certification.",
+   "tasks": [
+    {
+     "id": 11228,
+     "text": "Mix pesticides, herbicides, or fungicides for application to trees, shrubs, lawns, or botanical crops.",
+     "type": "Core",
+     "onetCode": "37-3012.00",
+     "line": 11348
+    },
+    {
+     "id": 11227,
+     "text": "Fill sprayer tanks with water and chemicals, according to formulas.",
+     "type": "Core",
+     "onetCode": "37-3012.00",
+     "line": 11349
+    },
+    {
+     "id": 11230,
+     "text": "Lift, push, and swing nozzles, hoses, and tubes to direct spray over designated areas.",
+     "type": "Core",
+     "onetCode": "37-3012.00",
+     "line": 11350
+    },
+    {
+     "id": 20762,
+     "text": "Identify lawn or plant diseases to determine the appropriate course of treatment.",
+     "type": "Core",
+     "onetCode": "37-3012.00",
+     "line": 11351
+    },
+    {
+     "id": 11229,
+     "text": "Cover areas to specified depths with pesticides, applying knowledge of weather conditions, droplet sizes, elevation-to-distance ratios, and obstructions.",
+     "type": "Core",
+     "onetCode": "37-3012.00",
+     "line": 11352
+    },
+    {
+     "id": 11231,
+     "text": "Start motors and engage machinery, such as sprayer agitators or pumps or portable spray equipment.",
+     "type": "Core",
+     "onetCode": "37-3012.00",
+     "line": 11353
+    },
+    {
+     "id": 11232,
+     "text": "Connect hoses and nozzles selected according to terrain, distribution pattern requirements, types of infestations, and velocities.",
+     "type": "Core",
+     "onetCode": "37-3012.00",
+     "line": 11354
+    },
+    {
+     "id": 11233,
+     "text": "Clean or service machinery to ensure operating efficiency, using water, gasoline, lubricants, or hand tools.",
+     "type": "Core",
+     "onetCode": "37-3012.00",
+     "line": 11355
+    },
+    {
+     "id": 11234,
+     "text": "Provide driving instructions to truck drivers to ensure complete coverage of designated areas, using hand and horn signals.",
+     "type": "Supplemental",
+     "onetCode": "37-3012.00",
+     "line": 11356
+    },
+    {
+     "id": 11235,
+     "text": "Plant grass with seed spreaders, and operate straw blowers to cover seeded areas with mixtures of asphalt and straw.",
+     "type": "Supplemental",
+     "onetCode": "37-3012.00",
+     "line": 11357
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L728",
+    "annualMedian": "oews:national_M2025_dl!AB728",
+    "annualMean": "oews:national_M2025_dl!S728",
+    "hourlyMedian": "oews:national_M2025_dl!W728",
+    "hourlyMean": "oews:national_M2025_dl!R728",
+    "annualPct10": "oews:national_M2025_dl!Z728",
+    "annualPct90": "oews:national_M2025_dl!AD728",
+    "annualOnly": "oews:national_M2025_dl!AE728",
+    "hourlyOnly": "oews:national_M2025_dl!AF728",
+    "title": "oews:national_M2025_dl!J728",
+    "ep.title": "ep:Table 1.2!A594",
+    "ep.employment2025": "ep:Table 1.2!D594",
+    "ep.employment2035": "ep:Table 1.2!E594",
+    "ep.numericChange": "ep:Table 1.2!H594",
+    "ep.percentChange": "ep:Table 1.2!I594",
+    "onetCode": "onet:Occupation Data.txt#L582:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L582:Description"
+   },
+   "nullReasons": {}
+  },
+  "37-3013": {
+   "soc": "37-3013",
+   "title": "Tree Trimmers and Pruners",
+   "major": "37-0000",
+   "minor": "37-3000",
+   "broad": "37-3010",
+   "oewsRows": [
+    729
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 55160,
+   "annualMedian": 50960,
+   "annualMean": 55970,
+   "hourlyMedian": 24.5,
+   "hourlyMean": 26.91,
+   "annualPct10": 37940,
+   "annualPct90": 80310,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Tree trimmers and pruners",
+    "employment2025": 70600,
+    "employment2035": 73600,
+    "numericChange": 3000,
+    "percentChange": 4.2
+   },
+   "onetCode": "37-3013.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Using sophisticated climbing and rigging techniques, cut away dead or excess branches from trees or shrubs to maintain right-of-way for roads, sidewalks, or utilities, or to improve appearance, health, and value of tree. Prune or treat trees or shrubs using handsaws, hand pruners, clippers, and power pruners. Works off the ground in the tree canopy and may use truck-mounted lifts.",
+   "tasks": [
+    {
+     "id": 13120,
+     "text": "Operate shredding and chipping equipment, and feed limbs and brush into the machines.",
+     "type": "Core",
+     "onetCode": "37-3013.00",
+     "line": 11358
+    },
+    {
+     "id": 13113,
+     "text": "Operate boom trucks, loaders, stump chippers, brush chippers, tractors, power saws, trucks, sprayers, and other equipment and tools.",
+     "type": "Core",
+     "onetCode": "37-3013.00",
+     "line": 11359
+    },
+    {
+     "id": 13116,
+     "text": "Cut away dead and excess branches from trees, or clear branches around power lines, using climbing equipment or buckets of extended truck booms, or chainsaws, hooks, handsaws, shears, and clippers.",
+     "type": "Core",
+     "onetCode": "37-3013.00",
+     "line": 11360
+    },
+    {
+     "id": 13115,
+     "text": "Clean, sharpen, and lubricate tools and equipment.",
+     "type": "Core",
+     "onetCode": "37-3013.00",
+     "line": 11361
+    },
+    {
+     "id": 13119,
+     "text": "Hoist tools and equipment to tree trimmers, and lower branches with ropes or block and tackle.",
+     "type": "Core",
+     "onetCode": "37-3013.00",
+     "line": 11362
+    },
+    {
+     "id": 13114,
+     "text": "Climb trees, using climbing hooks and belts, or climb ladders to gain access to work areas.",
+     "type": "Core",
+     "onetCode": "37-3013.00",
+     "line": 11363
+    },
+    {
+     "id": 13112,
+     "text": "Supervise others engaged in tree trimming work and train lower-level employees.",
+     "type": "Core",
+     "onetCode": "37-3013.00",
+     "line": 11364
+    },
+    {
+     "id": 13117,
+     "text": "Trim, top, and reshape trees to achieve attractive shapes or to remove low-hanging branches.",
+     "type": "Core",
+     "onetCode": "37-3013.00",
+     "line": 11365
+    },
+    {
+     "id": 13121,
+     "text": "Load debris and refuse onto trucks and haul it away for disposal.",
+     "type": "Core",
+     "onetCode": "37-3013.00",
+     "line": 11366
+    },
+    {
+     "id": 13122,
+     "text": "Inspect trees to determine if they have diseases or pest problems.",
+     "type": "Core",
+     "onetCode": "37-3013.00",
+     "line": 11367
+    },
+    {
+     "id": 13125,
+     "text": "Provide information to the public regarding trees, such as advice on tree care.",
+     "type": "Core",
+     "onetCode": "37-3013.00",
+     "line": 11368
+    },
+    {
+     "id": 13128,
+     "text": "Trim jagged stumps, using saws or pruning shears.",
+     "type": "Core",
+     "onetCode": "37-3013.00",
+     "line": 11369
+    },
+    {
+     "id": 13126,
+     "text": "Clear sites, streets, and grounds of woody and herbaceous materials, such as tree stumps and fallen trees and limbs.",
+     "type": "Core",
+     "onetCode": "37-3013.00",
+     "line": 11370
+    },
+    {
+     "id": 13124,
+     "text": "Collect debris and refuse from tree trimming and removal operations into piles, using shovels, rakes, or other tools.",
+     "type": "Core",
+     "onetCode": "37-3013.00",
+     "line": 11371
+    },
+    {
+     "id": 13123,
+     "text": "Cable, brace, tie, bolt, stake, and guy trees and branches to provide support.",
+     "type": "Core",
+     "onetCode": "37-3013.00",
+     "line": 11372
+    },
+    {
+     "id": 13131,
+     "text": "Plan and develop budgets for tree work, and estimate the monetary value of trees.",
+     "type": "Supplemental",
+     "onetCode": "37-3013.00",
+     "line": 11373
+    },
+    {
+     "id": 13118,
+     "text": "Prune, cut down, fertilize, and spray trees as directed by tree surgeons.",
+     "type": "Supplemental",
+     "onetCode": "37-3013.00",
+     "line": 11374
+    },
+    {
+     "id": 13127,
+     "text": "Remove broken limbs from wires, using hooked extension poles.",
+     "type": "Supplemental",
+     "onetCode": "37-3013.00",
+     "line": 11375
+    },
+    {
+     "id": 13132,
+     "text": "Water, root-feed, and fertilize trees.",
+     "type": "Supplemental",
+     "onetCode": "37-3013.00",
+     "line": 11376
+    },
+    {
+     "id": 13135,
+     "text": "Scrape decayed matter from cavities in trees and fill holes with cement to promote healing and to prevent further deterioration.",
+     "type": "Supplemental",
+     "onetCode": "37-3013.00",
+     "line": 11377
+    },
+    {
+     "id": 13130,
+     "text": "Spray trees to treat diseased or unhealthy trees, including mixing chemicals and calibrating spray equipment.",
+     "type": "Supplemental",
+     "onetCode": "37-3013.00",
+     "line": 11378
+    },
+    {
+     "id": 13133,
+     "text": "Apply tar or other protective substances to cut surfaces or seal surfaces and to protect them from fungi and insects.",
+     "type": "Supplemental",
+     "onetCode": "37-3013.00",
+     "line": 11379
+    },
+    {
+     "id": 13129,
+     "text": "Transplant and remove trees and shrubs, and prepare trees for moving.",
+     "type": "Supplemental",
+     "onetCode": "37-3013.00",
+     "line": 11380
+    },
+    {
+     "id": 13136,
+     "text": "Split logs or wooden blocks into bolts, pickets, posts, or stakes, using hand tools such as ax wedges, sledgehammers, and mallets.",
+     "type": "Supplemental",
+     "onetCode": "37-3013.00",
+     "line": 11381
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L729",
+    "annualMedian": "oews:national_M2025_dl!AB729",
+    "annualMean": "oews:national_M2025_dl!S729",
+    "hourlyMedian": "oews:national_M2025_dl!W729",
+    "hourlyMean": "oews:national_M2025_dl!R729",
+    "annualPct10": "oews:national_M2025_dl!Z729",
+    "annualPct90": "oews:national_M2025_dl!AD729",
+    "annualOnly": "oews:national_M2025_dl!AE729",
+    "hourlyOnly": "oews:national_M2025_dl!AF729",
+    "title": "oews:national_M2025_dl!J729",
+    "ep.title": "ep:Table 1.2!A595",
+    "ep.employment2025": "ep:Table 1.2!D595",
+    "ep.employment2035": "ep:Table 1.2!E595",
+    "ep.numericChange": "ep:Table 1.2!H595",
+    "ep.percentChange": "ep:Table 1.2!I595",
+    "onetCode": "onet:Occupation Data.txt#L583:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L583:Description"
+   },
+   "nullReasons": {}
+  },
+  "37-3019": {
+   "soc": "37-3019",
+   "title": "Grounds Maintenance Workers, All Other",
+   "major": "37-0000",
+   "minor": "37-3000",
+   "broad": "37-3010",
+   "oewsRows": [
+    730
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 13630,
+   "annualMedian": 46860,
+   "annualMean": 48830,
+   "hourlyMedian": 22.53,
+   "hourlyMean": 23.48,
+   "annualPct10": 31650,
+   "annualPct90": 74820,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Grounds maintenance workers, all other",
+    "employment2025": 14200,
+    "employment2035": 14800,
+    "numericChange": 500,
+    "percentChange": 3.7
+   },
+   "onetCode": "37-3019.00",
+   "onetTaskSource": "none",
+   "onetSubCodes": [],
+   "description": "All grounds maintenance workers not listed separately.",
+   "tasks": [],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L730",
+    "annualMedian": "oews:national_M2025_dl!AB730",
+    "annualMean": "oews:national_M2025_dl!S730",
+    "hourlyMedian": "oews:national_M2025_dl!W730",
+    "hourlyMean": "oews:national_M2025_dl!R730",
+    "annualPct10": "oews:national_M2025_dl!Z730",
+    "annualPct90": "oews:national_M2025_dl!AD730",
+    "annualOnly": "oews:national_M2025_dl!AE730",
+    "hourlyOnly": "oews:national_M2025_dl!AF730",
+    "title": "oews:national_M2025_dl!J730",
+    "ep.title": "ep:Table 1.2!A596",
+    "ep.employment2025": "ep:Table 1.2!D596",
+    "ep.employment2035": "ep:Table 1.2!E596",
+    "ep.numericChange": "ep:Table 1.2!H596",
+    "ep.percentChange": "ep:Table 1.2!I596",
+    "onetCode": "onet:Occupation Data.txt#L584:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L584:Description"
+   },
+   "nullReasons": {
+    "tasks": "O*NET 30.1 has no task statements for 37-3019.00"
+   }
+  }
+ }
+}

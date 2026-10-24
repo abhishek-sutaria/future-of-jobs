@@ -1,0 +1,2758 @@
+{
+ "_meta": {
+  "continent": "21-0000",
+  "title": "Community and Social Service Occupations",
+  "sources": "see index.json _meta.sources; source refs are <source>:<sheet>!<cell> or <source>:<file>#L<line>:<column>",
+  "extracted": "2026-10-24",
+  "generator": "python3 scripts/build_occupations.py"
+ },
+ "broadGroups": [
+  {
+   "soc": "21-1010",
+   "title": "Counselors",
+   "minor": "21-1000",
+   "employment": 1035300,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L310",
+    "title": "oews:national_M2025_dl!J310"
+   }
+  },
+  {
+   "soc": "21-1020",
+   "title": "Social Workers",
+   "minor": "21-1000",
+   "employment": 775930,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L316",
+    "title": "oews:national_M2025_dl!J316"
+   }
+  },
+  {
+   "soc": "21-1090",
+   "title": "Miscellaneous Community and Social Service Specialists",
+   "minor": "21-1000",
+   "employment": 762330,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L321",
+    "title": "oews:national_M2025_dl!J321"
+   }
+  },
+  {
+   "soc": "21-2010",
+   "title": "Clergy",
+   "minor": "21-2000",
+   "employment": 57200,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L328",
+    "title": "oews:national_M2025_dl!J328"
+   }
+  },
+  {
+   "soc": "21-2020",
+   "title": "Directors, Religious Activities and Education",
+   "minor": "21-2000",
+   "employment": 22160,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L330",
+    "title": "oews:national_M2025_dl!J330"
+   }
+  },
+  {
+   "soc": "21-2090",
+   "title": "Miscellaneous Religious Workers",
+   "minor": "21-2000",
+   "employment": 15760,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L332",
+    "title": "oews:national_M2025_dl!J332"
+   }
+  }
+ ],
+ "occupations": {
+  "21-1012": {
+   "soc": "21-1012",
+   "title": "Educational, Guidance, and Career Counselors and Advisors",
+   "major": "21-0000",
+   "minor": "21-1000",
+   "broad": "21-1010",
+   "oewsRows": [
+    311
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 353310,
+   "annualMedian": 64330,
+   "annualMean": 71430,
+   "hourlyMedian": 30.93,
+   "hourlyMean": 34.34,
+   "annualPct10": 45020,
+   "annualPct90": 104770,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Educational, guidance, and career counselors and advisors",
+    "employment2025": 389500,
+    "employment2035": 400900,
+    "numericChange": 11400,
+    "percentChange": 2.9
+   },
+   "onetCode": "21-1012.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Advise and assist students and provide educational and vocational guidance services.",
+   "tasks": [
+    {
+     "id": 5606,
+     "text": "Maintain accurate and complete student records as required by laws, district policies, and administrative regulations.",
+     "type": "Core",
+     "onetCode": "21-1012.00",
+     "line": 5475
+    },
+    {
+     "id": 18627,
+     "text": "Counsel students regarding educational issues, such as course and program selection, class scheduling and registration, school adjustment, truancy, study habits, and career planning.",
+     "type": "Core",
+     "onetCode": "21-1012.00",
+     "line": 5476
+    },
+    {
+     "id": 5608,
+     "text": "Provide crisis intervention to students when difficult situations occur at schools.",
+     "type": "Core",
+     "onetCode": "21-1012.00",
+     "line": 5477
+    },
+    {
+     "id": 23990,
+     "text": "Counsel individuals or groups to help them understand and overcome personal, social, or behavioral problems affecting their educational or vocational situations.",
+     "type": "Core",
+     "onetCode": "21-1012.00",
+     "line": 5478
+    },
+    {
+     "id": 5631,
+     "text": "Review transcripts to ensure that students meet graduation or college entrance requirements, and write letters of recommendation.",
+     "type": "Core",
+     "onetCode": "21-1012.00",
+     "line": 5479
+    },
+    {
+     "id": 5611,
+     "text": "Prepare students for later educational experiences by encouraging them to explore learning opportunities and to persevere with challenging tasks.",
+     "type": "Core",
+     "onetCode": "21-1012.00",
+     "line": 5480
+    },
+    {
+     "id": 23991,
+     "text": "Refer students to outside counseling services.",
+     "type": "Core",
+     "onetCode": "21-1012.00",
+     "line": 5481
+    },
+    {
+     "id": 5632,
+     "text": "Refer students to degree programs based on interests, aptitudes, or educational assessments.",
+     "type": "Core",
+     "onetCode": "21-1012.00",
+     "line": 5482
+    },
+    {
+     "id": 18625,
+     "text": "Evaluate students' or individuals' abilities, interests, and personality characteristics, using tests, records, interviews, or professional sources.",
+     "type": "Core",
+     "onetCode": "21-1012.00",
+     "line": 5483
+    },
+    {
+     "id": 5616,
+     "text": "Provide students with information on topics such as college degree programs and admission requirements, financial aid opportunities, trade and technical schools, and apprenticeship programs.",
+     "type": "Core",
+     "onetCode": "21-1012.00",
+     "line": 5484
+    },
+    {
+     "id": 5621,
+     "text": "Conduct follow-up interviews with counselees to determine if their needs have been met.",
+     "type": "Core",
+     "onetCode": "21-1012.00",
+     "line": 5485
+    },
+    {
+     "id": 5626,
+     "text": "Instruct individuals in career development techniques, such as job search and application strategies, resume writing, and interview skills.",
+     "type": "Core",
+     "onetCode": "21-1012.00",
+     "line": 5486
+    },
+    {
+     "id": 5625,
+     "text": "Assess needs for assistance, such as rehabilitation, financial aid, or additional vocational training, and refer clients to the appropriate services.",
+     "type": "Core",
+     "onetCode": "21-1012.00",
+     "line": 5487
+    },
+    {
+     "id": 18631,
+     "text": "Plan and promote career and employment-related programs and events, such as career planning presentations, work experience programs, job fairs, and career workshops.",
+     "type": "Core",
+     "onetCode": "21-1012.00",
+     "line": 5488
+    },
+    {
+     "id": 18630,
+     "text": "Attend meetings, educational conferences, and training workshops, and serve on committees.",
+     "type": "Core",
+     "onetCode": "21-1012.00",
+     "line": 5489
+    },
+    {
+     "id": 5619,
+     "text": "Teach classes and present self-help or information sessions on subjects related to education and career planning.",
+     "type": "Core",
+     "onetCode": "21-1012.00",
+     "line": 5490
+    },
+    {
+     "id": 5624,
+     "text": "Plan and conduct orientation programs and group conferences to promote the adjustment of individuals to new life experiences, such as starting college.",
+     "type": "Core",
+     "onetCode": "21-1012.00",
+     "line": 5491
+    },
+    {
+     "id": 5627,
+     "text": "Address community groups, faculty, and staff members to explain available counseling services.",
+     "type": "Core",
+     "onetCode": "21-1012.00",
+     "line": 5492
+    },
+    {
+     "id": 5623,
+     "text": "Prepare reports on students and activities as required by administration.",
+     "type": "Core",
+     "onetCode": "21-1012.00",
+     "line": 5493
+    },
+    {
+     "id": 5630,
+     "text": "Provide information for teachers and staff members involved in helping students or graduates identify and pursue employment opportunities.",
+     "type": "Core",
+     "onetCode": "21-1012.00",
+     "line": 5494
+    },
+    {
+     "id": 18628,
+     "text": "Collaborate with teachers and administrators in the development, evaluation, and revision of school programs and in the preparation of master schedules for curriculum offerings.",
+     "type": "Core",
+     "onetCode": "21-1012.00",
+     "line": 5495
+    },
+    {
+     "id": 18634,
+     "text": "Plan, direct, and participate in recruitment and enrollment activities.",
+     "type": "Core",
+     "onetCode": "21-1012.00",
+     "line": 5496
+    },
+    {
+     "id": 18626,
+     "text": "Identify cases of domestic abuse or other family problems and encourage students or parents to seek additional assistance from mental health professionals.",
+     "type": "Supplemental",
+     "onetCode": "21-1012.00",
+     "line": 5497
+    },
+    {
+     "id": 18624,
+     "text": "Confer with parents or guardians, teachers, administrators, and other professionals to discuss children's progress, resolve behavioral, academic, and other problems, and to determine priorities for students and their resource needs.",
+     "type": "Supplemental",
+     "onetCode": "21-1012.00",
+     "line": 5498
+    },
+    {
+     "id": 5633,
+     "text": "Provide special services such as alcohol and drug prevention programs and classes that teach students to handle conflicts without resorting to violence.",
+     "type": "Supplemental",
+     "onetCode": "21-1012.00",
+     "line": 5499
+    },
+    {
+     "id": 5634,
+     "text": "Provide students with disabilities with assistive devices, supportive technology, and assistance accessing facilities, such as restrooms.",
+     "type": "Supplemental",
+     "onetCode": "21-1012.00",
+     "line": 5500
+    },
+    {
+     "id": 18632,
+     "text": "Establish and enforce administration policies and rules governing student behavior.",
+     "type": "Supplemental",
+     "onetCode": "21-1012.00",
+     "line": 5501
+    },
+    {
+     "id": 18635,
+     "text": "Supervise, train, and direct professional staff and interns.",
+     "type": "Supplemental",
+     "onetCode": "21-1012.00",
+     "line": 5502
+    },
+    {
+     "id": 5636,
+     "text": "Interview clients to obtain information about employment history, educational background, and career goals, and to identify barriers to employment.",
+     "type": "Supplemental",
+     "onetCode": "21-1012.00",
+     "line": 5503
+    },
+    {
+     "id": 5629,
+     "text": "Compile and study occupational, educational, and economic information to assist counselees in determining and carrying out vocational and educational objectives.",
+     "type": "Supplemental",
+     "onetCode": "21-1012.00",
+     "line": 5504
+    },
+    {
+     "id": 18633,
+     "text": "Establish contacts with employers to create internship and employment opportunities for students.",
+     "type": "Supplemental",
+     "onetCode": "21-1012.00",
+     "line": 5505
+    },
+    {
+     "id": 5637,
+     "text": "Establish and supervise peer-counseling and peer-tutoring programs.",
+     "type": "Supplemental",
+     "onetCode": "21-1012.00",
+     "line": 5506
+    },
+    {
+     "id": 18629,
+     "text": "Observe students during classroom and play activities to evaluate students' performance, behavior, social development, and physical health.",
+     "type": "Supplemental",
+     "onetCode": "21-1012.00",
+     "line": 5507
+    },
+    {
+     "id": 5639,
+     "text": "Refer qualified counselees to employers or employment services for job placement.",
+     "type": "Supplemental",
+     "onetCode": "21-1012.00",
+     "line": 5508
+    },
+    {
+     "id": 5640,
+     "text": "Sponsor extracurricular activities, such as clubs, student organizations, and academic contests.",
+     "type": "Supplemental",
+     "onetCode": "21-1012.00",
+     "line": 5509
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L311",
+    "annualMedian": "oews:national_M2025_dl!AB311",
+    "annualMean": "oews:national_M2025_dl!S311",
+    "hourlyMedian": "oews:national_M2025_dl!W311",
+    "hourlyMean": "oews:national_M2025_dl!R311",
+    "annualPct10": "oews:national_M2025_dl!Z311",
+    "annualPct90": "oews:national_M2025_dl!AD311",
+    "annualOnly": "oews:national_M2025_dl!AE311",
+    "hourlyOnly": "oews:national_M2025_dl!AF311",
+    "title": "oews:national_M2025_dl!J311",
+    "ep.title": "ep:Table 1.2!A236",
+    "ep.employment2025": "ep:Table 1.2!D236",
+    "ep.employment2035": "ep:Table 1.2!E236",
+    "ep.numericChange": "ep:Table 1.2!H236",
+    "ep.percentChange": "ep:Table 1.2!I236",
+    "onetCode": "onet:Occupation Data.txt#L275:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L275:Description"
+   },
+   "nullReasons": {}
+  },
+  "21-1013": {
+   "soc": "21-1013",
+   "title": "Marriage and Family Therapists",
+   "major": "21-0000",
+   "minor": "21-1000",
+   "broad": "21-1010",
+   "oewsRows": [
+    312
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 66740,
+   "annualMedian": 66940,
+   "annualMean": 76960,
+   "hourlyMedian": 32.18,
+   "hourlyMean": 37,
+   "annualPct10": 44650,
+   "annualPct90": 123730,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Marriage and family therapists",
+    "employment2025": 76300,
+    "employment2035": 86600,
+    "numericChange": 10300,
+    "percentChange": 13.5
+   },
+   "onetCode": "21-1013.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Diagnose and treat mental and emotional disorders, whether cognitive, affective, or behavioral, within the context of marriage and family systems. Apply psychotherapeutic and family systems theories and techniques in the delivery of services to individuals, couples, and families for the purpose of treating such diagnosed nervous and mental disorders.",
+   "tasks": [
+    {
+     "id": 9186,
+     "text": "Encourage individuals and family members to develop and use skills and strategies for confronting their problems in a constructive manner.",
+     "type": "Core",
+     "onetCode": "21-1013.00",
+     "line": 5510
+    },
+    {
+     "id": 9184,
+     "text": "Ask questions that will help clients identify their feelings and behaviors.",
+     "type": "Core",
+     "onetCode": "21-1013.00",
+     "line": 5511
+    },
+    {
+     "id": 20232,
+     "text": "Develop and implement individualized treatment plans addressing family relationship problems, destructive patterns of behavior, and other personal issues.",
+     "type": "Core",
+     "onetCode": "21-1013.00",
+     "line": 5512
+    },
+    {
+     "id": 9187,
+     "text": "Maintain case files that include activities, progress notes, evaluations, and recommendations.",
+     "type": "Core",
+     "onetCode": "21-1013.00",
+     "line": 5513
+    },
+    {
+     "id": 9185,
+     "text": "Counsel clients on concerns, such as unsatisfactory relationships, divorce and separation, child rearing, home management, or financial difficulties.",
+     "type": "Core",
+     "onetCode": "21-1013.00",
+     "line": 5514
+    },
+    {
+     "id": 9188,
+     "text": "Collect information about clients, using techniques such as testing, interviewing, discussion, or observation.",
+     "type": "Core",
+     "onetCode": "21-1013.00",
+     "line": 5515
+    },
+    {
+     "id": 9191,
+     "text": "Confer with clients to develop plans for posttreatment activities.",
+     "type": "Core",
+     "onetCode": "21-1013.00",
+     "line": 5516
+    },
+    {
+     "id": 20233,
+     "text": "Confer with other counselors, doctors, and professionals to analyze individual cases and to coordinate counseling services.",
+     "type": "Core",
+     "onetCode": "21-1013.00",
+     "line": 5517
+    },
+    {
+     "id": 9190,
+     "text": "Determine whether clients should be counseled or referred to other specialists in such fields as medicine, psychiatry, or legal aid.",
+     "type": "Core",
+     "onetCode": "21-1013.00",
+     "line": 5518
+    },
+    {
+     "id": 9194,
+     "text": "Provide instructions to clients on how to obtain help with legal, financial, and other personal issues.",
+     "type": "Core",
+     "onetCode": "21-1013.00",
+     "line": 5519
+    },
+    {
+     "id": 9196,
+     "text": "Provide public education and consultation to other professionals or groups regarding counseling services, issues, and methods.",
+     "type": "Core",
+     "onetCode": "21-1013.00",
+     "line": 5520
+    },
+    {
+     "id": 9193,
+     "text": "Follow up on results of counseling programs and clients' adjustments to determine effectiveness of programs.",
+     "type": "Supplemental",
+     "onetCode": "21-1013.00",
+     "line": 5521
+    },
+    {
+     "id": 9197,
+     "text": "Supervise other counselors, social service staff, and assistants.",
+     "type": "Supplemental",
+     "onetCode": "21-1013.00",
+     "line": 5522
+    },
+    {
+     "id": 9195,
+     "text": "Gather information from doctors, schools, social workers, juvenile counselors, law enforcement personnel, and others to make recommendations to courts for resolution of child custody or visitation disputes.",
+     "type": "Supplemental",
+     "onetCode": "21-1013.00",
+     "line": 5523
+    },
+    {
+     "id": 9199,
+     "text": "Write evaluations of parents and children for use by courts deciding divorce and custody cases, testifying in court if necessary.",
+     "type": "Supplemental",
+     "onetCode": "21-1013.00",
+     "line": 5524
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L312",
+    "annualMedian": "oews:national_M2025_dl!AB312",
+    "annualMean": "oews:national_M2025_dl!S312",
+    "hourlyMedian": "oews:national_M2025_dl!W312",
+    "hourlyMean": "oews:national_M2025_dl!R312",
+    "annualPct10": "oews:national_M2025_dl!Z312",
+    "annualPct90": "oews:national_M2025_dl!AD312",
+    "annualOnly": "oews:national_M2025_dl!AE312",
+    "hourlyOnly": "oews:national_M2025_dl!AF312",
+    "title": "oews:national_M2025_dl!J312",
+    "ep.title": "ep:Table 1.2!A237",
+    "ep.employment2025": "ep:Table 1.2!D237",
+    "ep.employment2035": "ep:Table 1.2!E237",
+    "ep.numericChange": "ep:Table 1.2!H237",
+    "ep.percentChange": "ep:Table 1.2!I237",
+    "onetCode": "onet:Occupation Data.txt#L276:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L276:Description"
+   },
+   "nullReasons": {}
+  },
+  "21-1015": {
+   "soc": "21-1015",
+   "title": "Rehabilitation Counselors",
+   "major": "21-0000",
+   "minor": "21-1000",
+   "broad": "21-1010",
+   "oewsRows": [
+    313
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 94740,
+   "annualMedian": 46850,
+   "annualMean": 51820,
+   "hourlyMedian": 22.52,
+   "hourlyMean": 24.91,
+   "annualPct10": 35060,
+   "annualPct90": 77170,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Rehabilitation counselors",
+    "employment2025": 96900,
+    "employment2035": 99000,
+    "numericChange": 2200,
+    "percentChange": 2.2
+   },
+   "onetCode": "21-1015.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Counsel individuals to maximize the independence and employability of persons coping with personal, social, and vocational difficulties that result from birth defects, illness, disease, accidents, aging, or the stress of daily life. Coordinate activities for residents of care and treatment facilities. Assess client needs and design and implement rehabilitation programs that may include personal and vocational counseling, training, and job placement.",
+   "tasks": [
+    {
+     "id": 9202,
+     "text": "Prepare and maintain records and case files, including documentation, such as clients' personal and eligibility information, services provided, narratives of client contacts, or relevant correspondence.",
+     "type": "Core",
+     "onetCode": "21-1015.00",
+     "line": 5552
+    },
+    {
+     "id": 9201,
+     "text": "Confer with clients to discuss their options and goals so that rehabilitation programs and plans for accessing needed services can be developed.",
+     "type": "Core",
+     "onetCode": "21-1015.00",
+     "line": 5553
+    },
+    {
+     "id": 9205,
+     "text": "Develop rehabilitation plans that fit clients' aptitudes, education levels, physical abilities, and career goals.",
+     "type": "Core",
+     "onetCode": "21-1015.00",
+     "line": 5554
+    },
+    {
+     "id": 9208,
+     "text": "Locate barriers to client employment, such as inaccessible work sites, inflexible schedules, or transportation problems, and work with clients to develop strategies for overcoming these barriers.",
+     "type": "Core",
+     "onetCode": "21-1015.00",
+     "line": 5555
+    },
+    {
+     "id": 9200,
+     "text": "Monitor and record clients' progress to ensure that goals and objectives are met.",
+     "type": "Core",
+     "onetCode": "21-1015.00",
+     "line": 5556
+    },
+    {
+     "id": 9212,
+     "text": "Participate in job development and placement programs, contacting prospective employers, placing clients in jobs, and evaluating the success of placements.",
+     "type": "Core",
+     "onetCode": "21-1015.00",
+     "line": 5557
+    },
+    {
+     "id": 9204,
+     "text": "Analyze information from interviews, educational and medical records, consultation with other professionals, and diagnostic evaluations to assess clients' abilities, needs, and eligibility for services.",
+     "type": "Core",
+     "onetCode": "21-1015.00",
+     "line": 5558
+    },
+    {
+     "id": 9213,
+     "text": "Collaborate with clients' families to implement rehabilitation plans, such as behavioral, residential, social, or employment goals.",
+     "type": "Core",
+     "onetCode": "21-1015.00",
+     "line": 5559
+    },
+    {
+     "id": 9207,
+     "text": "Develop and maintain relationships with community referral sources, such as schools or community groups.",
+     "type": "Core",
+     "onetCode": "21-1015.00",
+     "line": 5560
+    },
+    {
+     "id": 9206,
+     "text": "Maintain close contact with clients during job training and placements to resolve problems and evaluate placement adequacy.",
+     "type": "Core",
+     "onetCode": "21-1015.00",
+     "line": 5561
+    },
+    {
+     "id": 9209,
+     "text": "Arrange for on-site job coaching or assistive devices, such as specially equipped wheelchairs, to help clients adapt to work or school environments.",
+     "type": "Core",
+     "onetCode": "21-1015.00",
+     "line": 5562
+    },
+    {
+     "id": 9203,
+     "text": "Arrange for physical, mental, academic, vocational, and other evaluations to obtain information for assessing clients' needs and developing rehabilitation plans.",
+     "type": "Core",
+     "onetCode": "21-1015.00",
+     "line": 5563
+    },
+    {
+     "id": 9210,
+     "text": "Confer with physicians, psychologists, occupational therapists, and other professionals to develop and implement client rehabilitation programs.",
+     "type": "Core",
+     "onetCode": "21-1015.00",
+     "line": 5564
+    },
+    {
+     "id": 9214,
+     "text": "Collaborate with community agencies to establish facilities and programs for persons with disabilities.",
+     "type": "Core",
+     "onetCode": "21-1015.00",
+     "line": 5565
+    },
+    {
+     "id": 20234,
+     "text": "Manage budgets and direct case service allocations, authorizing expenditures and payments.",
+     "type": "Supplemental",
+     "onetCode": "21-1015.00",
+     "line": 5566
+    },
+    {
+     "id": 21178,
+     "text": "Supervise rehabilitation counselors and staff.",
+     "type": "Supplemental",
+     "onetCode": "21-1015.00",
+     "line": 5567
+    },
+    {
+     "id": 9211,
+     "text": "Develop diagnostic procedures to determine clients' needs.",
+     "type": "Supplemental",
+     "onetCode": "21-1015.00",
+     "line": 5568
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L313",
+    "annualMedian": "oews:national_M2025_dl!AB313",
+    "annualMean": "oews:national_M2025_dl!S313",
+    "hourlyMedian": "oews:national_M2025_dl!W313",
+    "hourlyMean": "oews:national_M2025_dl!R313",
+    "annualPct10": "oews:national_M2025_dl!Z313",
+    "annualPct90": "oews:national_M2025_dl!AD313",
+    "annualOnly": "oews:national_M2025_dl!AE313",
+    "hourlyOnly": "oews:national_M2025_dl!AF313",
+    "title": "oews:national_M2025_dl!J313",
+    "ep.title": "ep:Table 1.2!A238",
+    "ep.employment2025": "ep:Table 1.2!D238",
+    "ep.employment2035": "ep:Table 1.2!E238",
+    "ep.numericChange": "ep:Table 1.2!H238",
+    "ep.percentChange": "ep:Table 1.2!I238",
+    "onetCode": "onet:Occupation Data.txt#L278:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L278:Description"
+   },
+   "nullReasons": {}
+  },
+  "21-1018": {
+   "soc": "21-1018",
+   "title": "Substance Abuse, Behavioral Disorder, and Mental Health Counselors",
+   "major": "21-0000",
+   "minor": "21-1000",
+   "broad": "21-1010",
+   "oewsRows": [
+    314
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 491930,
+   "annualMedian": 59350,
+   "annualMean": 64440,
+   "hourlyMedian": 28.53,
+   "hourlyMean": 30.98,
+   "annualPct10": 38940,
+   "annualPct90": 97590,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Substance abuse, behavioral disorder, and mental health counselors",
+    "employment2025": 533400,
+    "employment2035": 631400,
+    "numericChange": 98000,
+    "percentChange": 18.4
+   },
+   "onetCode": null,
+   "onetTaskSource": "none",
+   "onetSubCodes": [],
+   "description": null,
+   "tasks": [],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L314",
+    "annualMedian": "oews:national_M2025_dl!AB314",
+    "annualMean": "oews:national_M2025_dl!S314",
+    "hourlyMedian": "oews:national_M2025_dl!W314",
+    "hourlyMean": "oews:national_M2025_dl!R314",
+    "annualPct10": "oews:national_M2025_dl!Z314",
+    "annualPct90": "oews:national_M2025_dl!AD314",
+    "annualOnly": "oews:national_M2025_dl!AE314",
+    "hourlyOnly": "oews:national_M2025_dl!AF314",
+    "title": "oews:national_M2025_dl!J314",
+    "ep.title": "ep:Table 1.2!A239",
+    "ep.employment2025": "ep:Table 1.2!D239",
+    "ep.employment2035": "ep:Table 1.2!E239",
+    "ep.numericChange": "ep:Table 1.2!H239",
+    "ep.percentChange": "ep:Table 1.2!I239"
+   },
+   "nullReasons": {
+    "description": "No O*NET 30.1 occupation code starts with 21-1018",
+    "onetCode": "No O*NET 30.1 occupation code starts with 21-1018",
+    "tasks": "No O*NET 30.1 occupation code starts with 21-1018"
+   }
+  },
+  "21-1019": {
+   "soc": "21-1019",
+   "title": "Counselors, All Other",
+   "major": "21-0000",
+   "minor": "21-1000",
+   "broad": "21-1010",
+   "oewsRows": [
+    315
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 28580,
+   "annualMedian": 50860,
+   "annualMean": 58210,
+   "hourlyMedian": 24.45,
+   "hourlyMean": 27.99,
+   "annualPct10": 36240,
+   "annualPct90": 91940,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Counselors, all other",
+    "employment2025": 49800,
+    "employment2035": 52700,
+    "numericChange": 2900,
+    "percentChange": 5.9
+   },
+   "onetCode": "21-1019.00",
+   "onetTaskSource": "none",
+   "onetSubCodes": [],
+   "description": "All counselors not listed separately.",
+   "tasks": [],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L315",
+    "annualMedian": "oews:national_M2025_dl!AB315",
+    "annualMean": "oews:national_M2025_dl!S315",
+    "hourlyMedian": "oews:national_M2025_dl!W315",
+    "hourlyMean": "oews:national_M2025_dl!R315",
+    "annualPct10": "oews:national_M2025_dl!Z315",
+    "annualPct90": "oews:national_M2025_dl!AD315",
+    "annualOnly": "oews:national_M2025_dl!AE315",
+    "hourlyOnly": "oews:national_M2025_dl!AF315",
+    "title": "oews:national_M2025_dl!J315",
+    "ep.title": "ep:Table 1.2!A240",
+    "ep.employment2025": "ep:Table 1.2!D240",
+    "ep.employment2035": "ep:Table 1.2!E240",
+    "ep.numericChange": "ep:Table 1.2!H240",
+    "ep.percentChange": "ep:Table 1.2!I240",
+    "onetCode": "onet:Occupation Data.txt#L279:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L279:Description"
+   },
+   "nullReasons": {
+    "tasks": "O*NET 30.1 has no task statements for 21-1019.00"
+   }
+  },
+  "21-1021": {
+   "soc": "21-1021",
+   "title": "Child, Family, and School Social Workers",
+   "major": "21-0000",
+   "minor": "21-1000",
+   "broad": "21-1020",
+   "oewsRows": [
+    317
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 392550,
+   "annualMedian": 59550,
+   "annualMean": 64000,
+   "hourlyMedian": 28.63,
+   "hourlyMean": 30.77,
+   "annualPct10": 42280,
+   "annualPct90": 95530,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Child, family, and school social workers",
+    "employment2025": 405100,
+    "employment2035": 422900,
+    "numericChange": 17800,
+    "percentChange": 4.4
+   },
+   "onetCode": "21-1021.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Provide social services and assistance to improve the social and psychological functioning of children and their families and to maximize the family well-being and the academic functioning of children. May assist parents, arrange adoptions, and find foster homes for abandoned or abused children. In schools, they address such problems as teenage pregnancy, misbehavior, and truancy. May also advise teachers.",
+   "tasks": [
+    {
+     "id": 237,
+     "text": "Maintain case history records and prepare reports.",
+     "type": "Core",
+     "onetCode": "21-1021.00",
+     "line": 5569
+    },
+    {
+     "id": 235,
+     "text": "Interview clients individually, in families, or in groups, assessing their situations, capabilities, and problems to determine what services are required to meet their needs.",
+     "type": "Core",
+     "onetCode": "21-1021.00",
+     "line": 5570
+    },
+    {
+     "id": 250,
+     "text": "Serve as liaisons between students, homes, schools, family services, child guidance clinics, courts, protective services, doctors, and other contacts to help children who face problems, such as disabilities, abuse, or poverty.",
+     "type": "Core",
+     "onetCode": "21-1021.00",
+     "line": 5571
+    },
+    {
+     "id": 241,
+     "text": "Develop and review service plans in consultation with clients and perform follow-ups assessing the quantity and quality of services provided.",
+     "type": "Core",
+     "onetCode": "21-1021.00",
+     "line": 5572
+    },
+    {
+     "id": 243,
+     "text": "Address legal issues, such as child abuse and discipline, assisting with hearings and providing testimony to inform custody arrangements.",
+     "type": "Core",
+     "onetCode": "21-1021.00",
+     "line": 5573
+    },
+    {
+     "id": 240,
+     "text": "Counsel parents with child rearing problems, interviewing the child and family to determine whether further action is required.",
+     "type": "Core",
+     "onetCode": "21-1021.00",
+     "line": 5574
+    },
+    {
+     "id": 239,
+     "text": "Consult with parents, teachers, and other school personnel to determine causes of problems, such as truancy and misbehavior, and to implement solutions.",
+     "type": "Core",
+     "onetCode": "21-1021.00",
+     "line": 5575
+    },
+    {
+     "id": 246,
+     "text": "Arrange for medical, psychiatric, and other tests that may disclose causes of difficulties and indicate remedial measures.",
+     "type": "Core",
+     "onetCode": "21-1021.00",
+     "line": 5576
+    },
+    {
+     "id": 245,
+     "text": "Refer clients to community resources for services, such as job placement, debt counseling, legal aid, housing, medical treatment, or financial assistance, and provide concrete information, such as where to go and how to apply.",
+     "type": "Core",
+     "onetCode": "21-1021.00",
+     "line": 5577
+    },
+    {
+     "id": 236,
+     "text": "Counsel individuals, groups, families, or communities regarding issues including mental health, poverty, unemployment, substance abuse, physical abuse, rehabilitation, social adjustment, child care, or medical care.",
+     "type": "Core",
+     "onetCode": "21-1021.00",
+     "line": 5578
+    },
+    {
+     "id": 244,
+     "text": "Provide, find, or arrange for support services, such as child care, homemaker service, prenatal care, substance abuse treatment, job training, counseling, or parenting classes to prevent more serious problems from developing.",
+     "type": "Core",
+     "onetCode": "21-1021.00",
+     "line": 5579
+    },
+    {
+     "id": 242,
+     "text": "Collect supplementary information needed to assist client, such as employment records, medical records, or school reports.",
+     "type": "Core",
+     "onetCode": "21-1021.00",
+     "line": 5580
+    },
+    {
+     "id": 251,
+     "text": "Place children in foster or adoptive homes, institutions, or medical treatment centers.",
+     "type": "Supplemental",
+     "onetCode": "21-1021.00",
+     "line": 5581
+    },
+    {
+     "id": 253,
+     "text": "Recommend temporary foster care and advise foster or adoptive parents.",
+     "type": "Supplemental",
+     "onetCode": "21-1021.00",
+     "line": 5582
+    },
+    {
+     "id": 238,
+     "text": "Counsel students whose behavior, school progress, or mental or physical impairment indicate a need for assistance, diagnosing students' problems and arranging for needed services.",
+     "type": "Supplemental",
+     "onetCode": "21-1021.00",
+     "line": 5583
+    },
+    {
+     "id": 249,
+     "text": "Evaluate personal characteristics and home conditions of foster home or adoption applicants.",
+     "type": "Supplemental",
+     "onetCode": "21-1021.00",
+     "line": 5584
+    },
+    {
+     "id": 255,
+     "text": "Conduct social research.",
+     "type": "Supplemental",
+     "onetCode": "21-1021.00",
+     "line": 5585
+    },
+    {
+     "id": 252,
+     "text": "Supervise other social workers.",
+     "type": "Supplemental",
+     "onetCode": "21-1021.00",
+     "line": 5586
+    },
+    {
+     "id": 256,
+     "text": "Lead group counseling sessions that provide support in such areas as grief, stress, or chemical dependency.",
+     "type": "Supplemental",
+     "onetCode": "21-1021.00",
+     "line": 5587
+    },
+    {
+     "id": 257,
+     "text": "Serve on policy-making committees, assist in community development, and assist client groups by lobbying for solutions to problems.",
+     "type": "Supplemental",
+     "onetCode": "21-1021.00",
+     "line": 5588
+    },
+    {
+     "id": 254,
+     "text": "Determine clients' eligibility for financial assistance.",
+     "type": "Supplemental",
+     "onetCode": "21-1021.00",
+     "line": 5589
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L317",
+    "annualMedian": "oews:national_M2025_dl!AB317",
+    "annualMean": "oews:national_M2025_dl!S317",
+    "hourlyMedian": "oews:national_M2025_dl!W317",
+    "hourlyMean": "oews:national_M2025_dl!R317",
+    "annualPct10": "oews:national_M2025_dl!Z317",
+    "annualPct90": "oews:national_M2025_dl!AD317",
+    "annualOnly": "oews:national_M2025_dl!AE317",
+    "hourlyOnly": "oews:national_M2025_dl!AF317",
+    "title": "oews:national_M2025_dl!J317",
+    "ep.title": "ep:Table 1.2!A242",
+    "ep.employment2025": "ep:Table 1.2!D242",
+    "ep.employment2035": "ep:Table 1.2!E242",
+    "ep.numericChange": "ep:Table 1.2!H242",
+    "ep.percentChange": "ep:Table 1.2!I242",
+    "onetCode": "onet:Occupation Data.txt#L280:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L280:Description"
+   },
+   "nullReasons": {}
+  },
+  "21-1022": {
+   "soc": "21-1022",
+   "title": "Healthcare Social Workers",
+   "major": "21-0000",
+   "minor": "21-1000",
+   "broad": "21-1020",
+   "oewsRows": [
+    318
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 187630,
+   "annualMedian": 67880,
+   "annualMean": 71790,
+   "hourlyMedian": 32.63,
+   "hourlyMean": 34.51,
+   "annualPct10": 46220,
+   "annualPct90": 100360,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Healthcare social workers",
+    "employment2025": 194800,
+    "employment2035": 211300,
+    "numericChange": 16500,
+    "percentChange": 8.5
+   },
+   "onetCode": "21-1022.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Provide individuals, families, and groups with the psychosocial support needed to cope with chronic, acute, or terminal illnesses. Services include advising family caregivers. Provide patients with information and counseling, and make referrals for other services. May also provide case and care management or interventions designed to promote health, prevent disease, and address barriers to access to healthcare.",
+   "tasks": [
+    {
+     "id": 263,
+     "text": "Advocate for clients or patients to resolve crises.",
+     "type": "Core",
+     "onetCode": "21-1022.00",
+     "line": 5590
+    },
+    {
+     "id": 23910,
+     "text": "Educate clients about end-of-life symptoms and options to assist them in making informed decisions.",
+     "type": "Core",
+     "onetCode": "21-1022.00",
+     "line": 5591
+    },
+    {
+     "id": 258,
+     "text": "Collaborate with other professionals to evaluate patients' medical or physical condition and to assess client needs.",
+     "type": "Core",
+     "onetCode": "21-1022.00",
+     "line": 5592
+    },
+    {
+     "id": 260,
+     "text": "Refer patient, client, or family to community resources to assist in recovery from mental or physical illness and to provide access to services such as financial assistance, legal aid, housing, job placement or education.",
+     "type": "Core",
+     "onetCode": "21-1022.00",
+     "line": 5593
+    },
+    {
+     "id": 265,
+     "text": "Utilize consultation data and social work experience to plan and coordinate client or patient care and rehabilitation, following through to ensure service efficacy.",
+     "type": "Core",
+     "onetCode": "21-1022.00",
+     "line": 5594
+    },
+    {
+     "id": 267,
+     "text": "Monitor, evaluate, and record client progress according to measurable goals described in treatment and care plan.",
+     "type": "Core",
+     "onetCode": "21-1022.00",
+     "line": 5595
+    },
+    {
+     "id": 264,
+     "text": "Identify environmental impediments to client or patient progress through interviews and review of patient records.",
+     "type": "Core",
+     "onetCode": "21-1022.00",
+     "line": 5596
+    },
+    {
+     "id": 261,
+     "text": "Counsel clients and patients in individual and group sessions to help them overcome dependencies, recover from illness, and adjust to life.",
+     "type": "Core",
+     "onetCode": "21-1022.00",
+     "line": 5597
+    },
+    {
+     "id": 15227,
+     "text": "Plan discharge from care facility to home or other care facility.",
+     "type": "Core",
+     "onetCode": "21-1022.00",
+     "line": 5598
+    },
+    {
+     "id": 262,
+     "text": "Organize support groups or counsel family members to assist them in understanding, dealing with, and supporting the client or patient.",
+     "type": "Core",
+     "onetCode": "21-1022.00",
+     "line": 5599
+    },
+    {
+     "id": 266,
+     "text": "Modify treatment plans to comply with changes in clients' status.",
+     "type": "Core",
+     "onetCode": "21-1022.00",
+     "line": 5600
+    },
+    {
+     "id": 268,
+     "text": "Supervise and direct other workers providing services to clients or patients.",
+     "type": "Core",
+     "onetCode": "21-1022.00",
+     "line": 5601
+    },
+    {
+     "id": 272,
+     "text": "Plan and conduct programs to combat social problems, prevent substance abuse, or improve community health and counseling services.",
+     "type": "Core",
+     "onetCode": "21-1022.00",
+     "line": 5602
+    },
+    {
+     "id": 269,
+     "text": "Develop or advise on social policy and assist in community development.",
+     "type": "Core",
+     "onetCode": "21-1022.00",
+     "line": 5603
+    },
+    {
+     "id": 271,
+     "text": "Conduct social research to advance knowledge in the social work field.",
+     "type": "Core",
+     "onetCode": "21-1022.00",
+     "line": 5604
+    },
+    {
+     "id": 259,
+     "text": "Investigate child abuse or neglect cases and take authorized protective action when necessary.",
+     "type": "Supplemental",
+     "onetCode": "21-1022.00",
+     "line": 5605
+    },
+    {
+     "id": 270,
+     "text": "Oversee Medicaid- and Medicare-related paperwork and recordkeeping in hospitals.",
+     "type": "Supplemental",
+     "onetCode": "21-1022.00",
+     "line": 5606
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L318",
+    "annualMedian": "oews:national_M2025_dl!AB318",
+    "annualMean": "oews:national_M2025_dl!S318",
+    "hourlyMedian": "oews:national_M2025_dl!W318",
+    "hourlyMean": "oews:national_M2025_dl!R318",
+    "annualPct10": "oews:national_M2025_dl!Z318",
+    "annualPct90": "oews:national_M2025_dl!AD318",
+    "annualOnly": "oews:national_M2025_dl!AE318",
+    "hourlyOnly": "oews:national_M2025_dl!AF318",
+    "title": "oews:national_M2025_dl!J318",
+    "ep.title": "ep:Table 1.2!A243",
+    "ep.employment2025": "ep:Table 1.2!D243",
+    "ep.employment2035": "ep:Table 1.2!E243",
+    "ep.numericChange": "ep:Table 1.2!H243",
+    "ep.percentChange": "ep:Table 1.2!I243",
+    "onetCode": "onet:Occupation Data.txt#L281:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L281:Description"
+   },
+   "nullReasons": {}
+  },
+  "21-1023": {
+   "soc": "21-1023",
+   "title": "Mental Health and Substance Abuse Social Workers",
+   "major": "21-0000",
+   "minor": "21-1000",
+   "broad": "21-1020",
+   "oewsRows": [
+    319
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 132810,
+   "annualMedian": 60280,
+   "annualMean": 68030,
+   "hourlyMedian": 28.98,
+   "hourlyMean": 32.71,
+   "annualPct10": 39740,
+   "annualPct90": 104170,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Mental health and substance abuse social workers",
+    "employment2025": 138900,
+    "employment2035": 153200,
+    "numericChange": 14300,
+    "percentChange": 10.3
+   },
+   "onetCode": "21-1023.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Assess and treat individuals with mental, emotional, or substance abuse problems, including abuse of alcohol, tobacco, and/or other drugs. Activities may include individual and group therapy, crisis intervention, case management, client advocacy, prevention, and education.",
+   "tasks": [
+    {
+     "id": 273,
+     "text": "Counsel clients in individual or group sessions to assist them in dealing with substance abuse, mental or physical illness, poverty, unemployment, or physical abuse.",
+     "type": "Core",
+     "onetCode": "21-1023.00",
+     "line": 5607
+    },
+    {
+     "id": 275,
+     "text": "Collaborate with counselors, physicians, or nurses to plan or coordinate treatment, drawing on social work experience and patient needs.",
+     "type": "Core",
+     "onetCode": "21-1023.00",
+     "line": 5608
+    },
+    {
+     "id": 276,
+     "text": "Monitor, evaluate, and record client progress with respect to treatment goals.",
+     "type": "Core",
+     "onetCode": "21-1023.00",
+     "line": 5609
+    },
+    {
+     "id": 18487,
+     "text": "Interview clients, review records, conduct assessments, or confer with other professionals to evaluate the mental or physical condition of clients or patients.",
+     "type": "Core",
+     "onetCode": "21-1023.00",
+     "line": 5610
+    },
+    {
+     "id": 281,
+     "text": "Supervise or direct other workers who provide services to clients or patients.",
+     "type": "Core",
+     "onetCode": "21-1023.00",
+     "line": 5611
+    },
+    {
+     "id": 279,
+     "text": "Modify treatment plans according to changes in client status.",
+     "type": "Core",
+     "onetCode": "21-1023.00",
+     "line": 5612
+    },
+    {
+     "id": 18489,
+     "text": "Assist clients in adhering to treatment plans, such as setting up appointments, arranging for transportation to appointments, or providing support.",
+     "type": "Core",
+     "onetCode": "21-1023.00",
+     "line": 5613
+    },
+    {
+     "id": 18488,
+     "text": "Educate clients or community members about mental or physical illness, abuse, medication, or available community resources.",
+     "type": "Core",
+     "onetCode": "21-1023.00",
+     "line": 5614
+    },
+    {
+     "id": 278,
+     "text": "Counsel or aid family members to assist them in understanding, dealing with, or supporting the client or patient.",
+     "type": "Core",
+     "onetCode": "21-1023.00",
+     "line": 5615
+    },
+    {
+     "id": 18490,
+     "text": "Increase social work knowledge by reviewing current literature, conducting social research, or attending seminars, training workshops, or classes.",
+     "type": "Core",
+     "onetCode": "21-1023.00",
+     "line": 5616
+    },
+    {
+     "id": 277,
+     "text": "Refer patient, client, or family to community resources for housing or treatment to assist in recovery from mental or physical illness, following through to ensure service efficacy.",
+     "type": "Core",
+     "onetCode": "21-1023.00",
+     "line": 5617
+    },
+    {
+     "id": 280,
+     "text": "Plan or conduct programs to prevent substance abuse, combat social problems, or improve health or counseling services in community.",
+     "type": "Supplemental",
+     "onetCode": "21-1023.00",
+     "line": 5618
+    },
+    {
+     "id": 282,
+     "text": "Develop or advise on social policy or assist in community development.",
+     "type": "Supplemental",
+     "onetCode": "21-1023.00",
+     "line": 5619
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L319",
+    "annualMedian": "oews:national_M2025_dl!AB319",
+    "annualMean": "oews:national_M2025_dl!S319",
+    "hourlyMedian": "oews:national_M2025_dl!W319",
+    "hourlyMean": "oews:national_M2025_dl!R319",
+    "annualPct10": "oews:national_M2025_dl!Z319",
+    "annualPct90": "oews:national_M2025_dl!AD319",
+    "annualOnly": "oews:national_M2025_dl!AE319",
+    "hourlyOnly": "oews:national_M2025_dl!AF319",
+    "title": "oews:national_M2025_dl!J319",
+    "ep.title": "ep:Table 1.2!A244",
+    "ep.employment2025": "ep:Table 1.2!D244",
+    "ep.employment2035": "ep:Table 1.2!E244",
+    "ep.numericChange": "ep:Table 1.2!H244",
+    "ep.percentChange": "ep:Table 1.2!I244",
+    "onetCode": "onet:Occupation Data.txt#L282:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L282:Description"
+   },
+   "nullReasons": {}
+  },
+  "21-1029": {
+   "soc": "21-1029",
+   "title": "Social Workers, All Other",
+   "major": "21-0000",
+   "minor": "21-1000",
+   "broad": "21-1020",
+   "oewsRows": [
+    320
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 62930,
+   "annualMedian": 71900,
+   "annualMean": 75910,
+   "hourlyMedian": 34.57,
+   "hourlyMean": 36.5,
+   "annualPct10": 43620,
+   "annualPct90": 115610,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Social workers, all other",
+    "employment2025": 77400,
+    "employment2035": 79200,
+    "numericChange": 1800,
+    "percentChange": 2.3
+   },
+   "onetCode": "21-1029.00",
+   "onetTaskSource": "none",
+   "onetSubCodes": [],
+   "description": "All social workers not listed separately.",
+   "tasks": [],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L320",
+    "annualMedian": "oews:national_M2025_dl!AB320",
+    "annualMean": "oews:national_M2025_dl!S320",
+    "hourlyMedian": "oews:national_M2025_dl!W320",
+    "hourlyMean": "oews:national_M2025_dl!R320",
+    "annualPct10": "oews:national_M2025_dl!Z320",
+    "annualPct90": "oews:national_M2025_dl!AD320",
+    "annualOnly": "oews:national_M2025_dl!AE320",
+    "hourlyOnly": "oews:national_M2025_dl!AF320",
+    "title": "oews:national_M2025_dl!J320",
+    "ep.title": "ep:Table 1.2!A245",
+    "ep.employment2025": "ep:Table 1.2!D245",
+    "ep.employment2035": "ep:Table 1.2!E245",
+    "ep.numericChange": "ep:Table 1.2!H245",
+    "ep.percentChange": "ep:Table 1.2!I245",
+    "onetCode": "onet:Occupation Data.txt#L283:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L283:Description"
+   },
+   "nullReasons": {
+    "tasks": "O*NET 30.1 has no task statements for 21-1029.00"
+   }
+  },
+  "21-1091": {
+   "soc": "21-1091",
+   "title": "Health Education Specialists",
+   "major": "21-0000",
+   "minor": "21-1000",
+   "broad": "21-1090",
+   "oewsRows": [
+    322
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 65690,
+   "annualMedian": 64070,
+   "annualMean": 73280,
+   "hourlyMedian": 30.8,
+   "hourlyMean": 35.23,
+   "annualPct10": 42990,
+   "annualPct90": 118200,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Health education specialists",
+    "employment2025": 70400,
+    "employment2035": 74400,
+    "numericChange": 3900,
+    "percentChange": 5.6
+   },
+   "onetCode": "21-1091.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Provide and manage health education programs that help individuals, families, and their communities maximize and maintain healthy lifestyles. Use data to identify community needs prior to planning, implementing, monitoring, and evaluating programs designed to encourage healthy lifestyles, policies, and environments. May link health systems, health providers, insurers, and patients to address individual and population health needs. May serve as resource to assist individuals, other health professionals, or the community, and may administer fiscal resources for health education programs.",
+   "tasks": [
+    {
+     "id": 20236,
+     "text": "Prepare and distribute health education materials, such as reports, bulletins, and visual aids, to address smoking, vaccines, and other public health concerns.",
+     "type": "Core",
+     "onetCode": "21-1091.00",
+     "line": 5620
+    },
+    {
+     "id": 9218,
+     "text": "Develop and maintain cooperative working relationships with agencies and organizations interested in public health care.",
+     "type": "Core",
+     "onetCode": "21-1091.00",
+     "line": 5621
+    },
+    {
+     "id": 9222,
+     "text": "Maintain databases, mailing lists, telephone networks, and other information to facilitate the functioning of health education programs.",
+     "type": "Core",
+     "onetCode": "21-1091.00",
+     "line": 5622
+    },
+    {
+     "id": 9216,
+     "text": "Document activities and record information, such as the numbers of applications completed, presentations conducted, and persons assisted.",
+     "type": "Core",
+     "onetCode": "21-1091.00",
+     "line": 5623
+    },
+    {
+     "id": 9217,
+     "text": "Develop and present health education and promotion programs, such as training workshops, conferences, and school or community presentations.",
+     "type": "Core",
+     "onetCode": "21-1091.00",
+     "line": 5624
+    },
+    {
+     "id": 9221,
+     "text": "Collaborate with health specialists and civic groups to determine community health needs and the availability of services and to develop goals for meeting needs.",
+     "type": "Core",
+     "onetCode": "21-1091.00",
+     "line": 5625
+    },
+    {
+     "id": 9229,
+     "text": "Develop, conduct, or coordinate health needs assessments and other public health surveys.",
+     "type": "Core",
+     "onetCode": "21-1091.00",
+     "line": 5626
+    },
+    {
+     "id": 9223,
+     "text": "Supervise professional and technical staff in implementing health programs, objectives, and goals.",
+     "type": "Core",
+     "onetCode": "21-1091.00",
+     "line": 5627
+    },
+    {
+     "id": 9220,
+     "text": "Develop operational plans and policies necessary to achieve health education objectives and services.",
+     "type": "Core",
+     "onetCode": "21-1091.00",
+     "line": 5628
+    },
+    {
+     "id": 9225,
+     "text": "Provide program information to the public by preparing and presenting press releases, conducting media campaigns, or maintaining program-related Web sites.",
+     "type": "Core",
+     "onetCode": "21-1091.00",
+     "line": 5629
+    },
+    {
+     "id": 9228,
+     "text": "Develop and maintain health education libraries to provide resources for staff and community agencies.",
+     "type": "Core",
+     "onetCode": "21-1091.00",
+     "line": 5630
+    },
+    {
+     "id": 9224,
+     "text": "Design and conduct evaluations and diagnostic studies to assess the quality and performance of health education programs.",
+     "type": "Core",
+     "onetCode": "21-1091.00",
+     "line": 5631
+    },
+    {
+     "id": 9226,
+     "text": "Develop, prepare, and coordinate grant applications and grant-related activities to obtain funding for health education programs and related work.",
+     "type": "Core",
+     "onetCode": "21-1091.00",
+     "line": 5632
+    },
+    {
+     "id": 9227,
+     "text": "Provide guidance to agencies and organizations on assessment of health education needs and on development and delivery of health education programs.",
+     "type": "Core",
+     "onetCode": "21-1091.00",
+     "line": 5633
+    },
+    {
+     "id": 20237,
+     "text": "Design and administer training programs for new employees and continuing education for existing employees.",
+     "type": "Core",
+     "onetCode": "21-1091.00",
+     "line": 5634
+    },
+    {
+     "id": 20235,
+     "text": "Develop educational materials and programs for community agencies, local government, and state government.",
+     "type": "Supplemental",
+     "onetCode": "21-1091.00",
+     "line": 5635
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L322",
+    "annualMedian": "oews:national_M2025_dl!AB322",
+    "annualMean": "oews:national_M2025_dl!S322",
+    "hourlyMedian": "oews:national_M2025_dl!W322",
+    "hourlyMean": "oews:national_M2025_dl!R322",
+    "annualPct10": "oews:national_M2025_dl!Z322",
+    "annualPct90": "oews:national_M2025_dl!AD322",
+    "annualOnly": "oews:national_M2025_dl!AE322",
+    "hourlyOnly": "oews:national_M2025_dl!AF322",
+    "title": "oews:national_M2025_dl!J322",
+    "ep.title": "ep:Table 1.2!A247",
+    "ep.employment2025": "ep:Table 1.2!D247",
+    "ep.employment2035": "ep:Table 1.2!E247",
+    "ep.numericChange": "ep:Table 1.2!H247",
+    "ep.percentChange": "ep:Table 1.2!I247",
+    "onetCode": "onet:Occupation Data.txt#L284:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L284:Description"
+   },
+   "nullReasons": {}
+  },
+  "21-1092": {
+   "soc": "21-1092",
+   "title": "Probation Officers and Correctional Treatment Specialists",
+   "major": "21-0000",
+   "minor": "21-1000",
+   "broad": "21-1090",
+   "oewsRows": [
+    323
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 89390,
+   "annualMedian": 66270,
+   "annualMean": 73130,
+   "hourlyMedian": 31.86,
+   "hourlyMean": 35.16,
+   "annualPct10": 46840,
+   "annualPct90": 107790,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Probation officers and correctional treatment specialists",
+    "employment2025": 93700,
+    "employment2035": 96500,
+    "numericChange": 2800,
+    "percentChange": 3
+   },
+   "onetCode": "21-1092.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Provide social services to assist in rehabilitation of law offenders in custody or on probation or parole. Make recommendations for actions involving formulation of rehabilitation plan and treatment of offender, including conditional release and education and employment stipulations.",
+   "tasks": [
+    {
+     "id": 1614,
+     "text": "Prepare and maintain case folder for each assigned inmate or offender.",
+     "type": "Core",
+     "onetCode": "21-1092.00",
+     "line": 5636
+    },
+    {
+     "id": 1618,
+     "text": "Gather information about offenders' backgrounds by talking to offenders, their families and friends, and other people who have relevant information.",
+     "type": "Core",
+     "onetCode": "21-1092.00",
+     "line": 5637
+    },
+    {
+     "id": 1625,
+     "text": "Interview probationers and parolees regularly to evaluate their progress in accomplishing goals and maintaining the terms specified in their probation contracts and rehabilitation plans.",
+     "type": "Core",
+     "onetCode": "21-1092.00",
+     "line": 5638
+    },
+    {
+     "id": 1617,
+     "text": "Discuss with offenders how such issues as drug and alcohol abuse and anger management problems might have played roles in their criminal behavior.",
+     "type": "Core",
+     "onetCode": "21-1092.00",
+     "line": 5639
+    },
+    {
+     "id": 20056,
+     "text": "Supervise people on community-based sentences, such as electronically monitored home detention, and provide field supervision of probationers by conducting curfew checks or visits to home, work, or school.",
+     "type": "Core",
+     "onetCode": "21-1092.00",
+     "line": 5640
+    },
+    {
+     "id": 1628,
+     "text": "Investigate alleged parole violations, using interviews, surveillance, and search and seizure.",
+     "type": "Core",
+     "onetCode": "21-1092.00",
+     "line": 5641
+    },
+    {
+     "id": 1624,
+     "text": "Recommend remedial action or initiate court action in response to noncompliance with terms of probation or parole.",
+     "type": "Core",
+     "onetCode": "21-1092.00",
+     "line": 5642
+    },
+    {
+     "id": 1621,
+     "text": "Arrange for medical, mental health, or substance abuse treatment services according to individual needs or court orders.",
+     "type": "Core",
+     "onetCode": "21-1092.00",
+     "line": 5643
+    },
+    {
+     "id": 1620,
+     "text": "Develop liaisons and networks with other parole officers, community agencies, correctional institutions, psychiatric facilities, and aftercare agencies to plan for helping offenders with life adjustments.",
+     "type": "Core",
+     "onetCode": "21-1092.00",
+     "line": 5644
+    },
+    {
+     "id": 20055,
+     "text": "Administer drug and alcohol tests, including random drug screens of offenders, to verify compliance with substance abuse treatment programs.",
+     "type": "Core",
+     "onetCode": "21-1092.00",
+     "line": 5645
+    },
+    {
+     "id": 1616,
+     "text": "Inform offenders or inmates of requirements of conditional release, such as office visits, restitution payments, or educational and employment stipulations.",
+     "type": "Core",
+     "onetCode": "21-1092.00",
+     "line": 5646
+    },
+    {
+     "id": 1631,
+     "text": "Participate in decisions about whether cases should go before courts and which court should hear them.",
+     "type": "Core",
+     "onetCode": "21-1092.00",
+     "line": 5647
+    },
+    {
+     "id": 1615,
+     "text": "Write reports describing offenders' progress.",
+     "type": "Core",
+     "onetCode": "21-1092.00",
+     "line": 5648
+    },
+    {
+     "id": 1629,
+     "text": "Conduct prehearing and presentencing investigations and testify in court regarding offenders' backgrounds and recommended sentences and sentencing conditions.",
+     "type": "Core",
+     "onetCode": "21-1092.00",
+     "line": 5649
+    },
+    {
+     "id": 1623,
+     "text": "Arrange for postrelease services, such as employment, housing, counseling, education, and social activities.",
+     "type": "Core",
+     "onetCode": "21-1092.00",
+     "line": 5650
+    },
+    {
+     "id": 1622,
+     "text": "Provide offenders or inmates with assistance in matters concerning detainers, sentences in other jurisdictions, writs, and applications for social assistance.",
+     "type": "Core",
+     "onetCode": "21-1092.00",
+     "line": 5651
+    },
+    {
+     "id": 1633,
+     "text": "Develop and prepare packets containing information about social service agencies, assistance organizations, and programs that might be useful for inmates or offenders.",
+     "type": "Core",
+     "onetCode": "21-1092.00",
+     "line": 5652
+    },
+    {
+     "id": 1619,
+     "text": "Develop rehabilitation programs for assigned offenders or inmates, establishing rules of conduct, goals, and objectives.",
+     "type": "Supplemental",
+     "onetCode": "21-1092.00",
+     "line": 5653
+    },
+    {
+     "id": 1630,
+     "text": "Recommend appropriate penitentiary for initial placement of an offender.",
+     "type": "Supplemental",
+     "onetCode": "21-1092.00",
+     "line": 5654
+    },
+    {
+     "id": 1627,
+     "text": "Assess the suitability of penitentiary inmates for release under parole and statutory release programs and submit recommendations to parole boards.",
+     "type": "Supplemental",
+     "onetCode": "21-1092.00",
+     "line": 5655
+    },
+    {
+     "id": 1632,
+     "text": "Identify and approve work placements for offenders with community service sentences.",
+     "type": "Supplemental",
+     "onetCode": "21-1092.00",
+     "line": 5656
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L323",
+    "annualMedian": "oews:national_M2025_dl!AB323",
+    "annualMean": "oews:national_M2025_dl!S323",
+    "hourlyMedian": "oews:national_M2025_dl!W323",
+    "hourlyMean": "oews:national_M2025_dl!R323",
+    "annualPct10": "oews:national_M2025_dl!Z323",
+    "annualPct90": "oews:national_M2025_dl!AD323",
+    "annualOnly": "oews:national_M2025_dl!AE323",
+    "hourlyOnly": "oews:national_M2025_dl!AF323",
+    "title": "oews:national_M2025_dl!J323",
+    "ep.title": "ep:Table 1.2!A248",
+    "ep.employment2025": "ep:Table 1.2!D248",
+    "ep.employment2035": "ep:Table 1.2!E248",
+    "ep.numericChange": "ep:Table 1.2!H248",
+    "ep.percentChange": "ep:Table 1.2!I248",
+    "onetCode": "onet:Occupation Data.txt#L285:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L285:Description"
+   },
+   "nullReasons": {}
+  },
+  "21-1093": {
+   "soc": "21-1093",
+   "title": "Social and Human Service Assistants",
+   "major": "21-0000",
+   "minor": "21-1000",
+   "broad": "21-1090",
+   "oewsRows": [
+    324
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 437860,
+   "annualMedian": 45930,
+   "annualMean": 47690,
+   "hourlyMedian": 22.08,
+   "hourlyMean": 22.93,
+   "annualPct10": 34200,
+   "annualPct90": 63290,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Social and human service assistants",
+    "employment2025": 463400,
+    "employment2035": 497600,
+    "numericChange": 34200,
+    "percentChange": 7.4
+   },
+   "onetCode": "21-1093.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Assist other social and human service providers in providing client services in a wide variety of fields, such as psychology, rehabilitation, or social work, including support for families. May assist clients in identifying and obtaining available benefits and social and community services. May assist social workers with developing, organizing, and conducting programs to prevent and resolve problems relevant to substance abuse, human relationships, rehabilitation, or dependent care.",
+   "tasks": [
+    {
+     "id": 21179,
+     "text": "Assess clients' cognitive abilities and physical and emotional needs to determine appropriate interventions.",
+     "type": "Core",
+     "onetCode": "21-1093.00",
+     "line": 5657
+    },
+    {
+     "id": 21180,
+     "text": "Develop and implement behavioral management and care plans for clients.",
+     "type": "Core",
+     "onetCode": "21-1093.00",
+     "line": 5658
+    },
+    {
+     "id": 3754,
+     "text": "Keep records or prepare reports for owner or management concerning visits with clients.",
+     "type": "Core",
+     "onetCode": "21-1093.00",
+     "line": 5659
+    },
+    {
+     "id": 3755,
+     "text": "Visit individuals in homes or attend group meetings to provide information on agency services, requirements, or procedures.",
+     "type": "Core",
+     "onetCode": "21-1093.00",
+     "line": 5660
+    },
+    {
+     "id": 3757,
+     "text": "Submit reports and review reports or problems with superior.",
+     "type": "Core",
+     "onetCode": "21-1093.00",
+     "line": 5661
+    },
+    {
+     "id": 3759,
+     "text": "Interview individuals or family members to compile information on social, educational, criminal, institutional, or drug history.",
+     "type": "Core",
+     "onetCode": "21-1093.00",
+     "line": 5662
+    },
+    {
+     "id": 3753,
+     "text": "Provide information or refer individuals to public or private agencies or community services for assistance.",
+     "type": "Core",
+     "onetCode": "21-1093.00",
+     "line": 5663
+    },
+    {
+     "id": 3756,
+     "text": "Advise clients regarding food stamps, child care, food, money management, sanitation, or housekeeping.",
+     "type": "Core",
+     "onetCode": "21-1093.00",
+     "line": 5664
+    },
+    {
+     "id": 3758,
+     "text": "Oversee day-to-day group activities of residents in institution.",
+     "type": "Supplemental",
+     "onetCode": "21-1093.00",
+     "line": 5665
+    },
+    {
+     "id": 3770,
+     "text": "Assist in locating housing for displaced individuals.",
+     "type": "Supplemental",
+     "onetCode": "21-1093.00",
+     "line": 5666
+    },
+    {
+     "id": 3765,
+     "text": "Consult with supervisor concerning programs for individual families.",
+     "type": "Supplemental",
+     "onetCode": "21-1093.00",
+     "line": 5667
+    },
+    {
+     "id": 3764,
+     "text": "Demonstrate use and care of equipment for tenant use.",
+     "type": "Supplemental",
+     "onetCode": "21-1093.00",
+     "line": 5668
+    },
+    {
+     "id": 3772,
+     "text": "Assist in planning food budgets, using charts or sample budgets.",
+     "type": "Supplemental",
+     "onetCode": "21-1093.00",
+     "line": 5669
+    },
+    {
+     "id": 3771,
+     "text": "Assist clients with preparation of forms, such as tax or rent forms.",
+     "type": "Supplemental",
+     "onetCode": "21-1093.00",
+     "line": 5670
+    },
+    {
+     "id": 3762,
+     "text": "Explain rules established by owner or management, such as sanitation or maintenance requirements or parking regulations.",
+     "type": "Supplemental",
+     "onetCode": "21-1093.00",
+     "line": 5671
+    },
+    {
+     "id": 3767,
+     "text": "Observe clients' food selections and recommend alternate economical and nutritional food choices.",
+     "type": "Supplemental",
+     "onetCode": "21-1093.00",
+     "line": 5672
+    },
+    {
+     "id": 3763,
+     "text": "Observe and discuss meal preparation and suggest alternate methods of food preparation.",
+     "type": "Supplemental",
+     "onetCode": "21-1093.00",
+     "line": 5673
+    },
+    {
+     "id": 3761,
+     "text": "Transport and accompany clients to shopping areas or to appointments, using automobile.",
+     "type": "Supplemental",
+     "onetCode": "21-1093.00",
+     "line": 5674
+    },
+    {
+     "id": 3768,
+     "text": "Inform tenants of facilities, such as laundries or playgrounds.",
+     "type": "Supplemental",
+     "onetCode": "21-1093.00",
+     "line": 5675
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L324",
+    "annualMedian": "oews:national_M2025_dl!AB324",
+    "annualMean": "oews:national_M2025_dl!S324",
+    "hourlyMedian": "oews:national_M2025_dl!W324",
+    "hourlyMean": "oews:national_M2025_dl!R324",
+    "annualPct10": "oews:national_M2025_dl!Z324",
+    "annualPct90": "oews:national_M2025_dl!AD324",
+    "annualOnly": "oews:national_M2025_dl!AE324",
+    "hourlyOnly": "oews:national_M2025_dl!AF324",
+    "title": "oews:national_M2025_dl!J324",
+    "ep.title": "ep:Table 1.2!A249",
+    "ep.employment2025": "ep:Table 1.2!D249",
+    "ep.employment2035": "ep:Table 1.2!E249",
+    "ep.numericChange": "ep:Table 1.2!H249",
+    "ep.percentChange": "ep:Table 1.2!I249",
+    "onetCode": "onet:Occupation Data.txt#L286:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L286:Description"
+   },
+   "nullReasons": {}
+  },
+  "21-1094": {
+   "soc": "21-1094",
+   "title": "Community Health Workers",
+   "major": "21-0000",
+   "minor": "21-1000",
+   "broad": "21-1090",
+   "oewsRows": [
+    325
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 61660,
+   "annualMedian": 51850,
+   "annualMean": 56180,
+   "hourlyMedian": 24.93,
+   "hourlyMean": 27.01,
+   "annualPct10": 38810,
+   "annualPct90": 77180,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Community health workers",
+    "employment2025": 64700,
+    "employment2035": 72900,
+    "numericChange": 8200,
+    "percentChange": 12.7
+   },
+   "onetCode": "21-1094.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Promote health within a community by assisting individuals to adopt healthy behaviors. Serve as an advocate for the health needs of individuals by assisting community residents in effectively communicating with healthcare providers or social service agencies. Act as liaison or advocate and implement programs that promote, maintain, and improve individual and overall community health. May deliver health-related preventive services such as blood pressure, glaucoma, and hearing screenings. May collect data to help identify community health needs.",
+   "tasks": [
+    {
+     "id": 19031,
+     "text": "Maintain updated client records with plans, notes, appropriate forms, or related information.",
+     "type": "Core",
+     "onetCode": "21-1094.00",
+     "line": 5676
+    },
+    {
+     "id": 19017,
+     "text": "Advise clients or community groups on issues related to improving general health, such as diet or exercise.",
+     "type": "Core",
+     "onetCode": "21-1094.00",
+     "line": 5677
+    },
+    {
+     "id": 19028,
+     "text": "Identify or contact members of high-risk or otherwise targeted groups, such as members of minority populations, low-income populations, or pregnant women.",
+     "type": "Core",
+     "onetCode": "21-1094.00",
+     "line": 5678
+    },
+    {
+     "id": 19026,
+     "text": "Contact clients in person, by phone, or in writing to ensure they have completed required or recommended actions.",
+     "type": "Core",
+     "onetCode": "21-1094.00",
+     "line": 5679
+    },
+    {
+     "id": 19027,
+     "text": "Distribute flyers, brochures, or other informational or educational documents to inform members of a targeted community.",
+     "type": "Core",
+     "onetCode": "21-1094.00",
+     "line": 5680
+    },
+    {
+     "id": 19036,
+     "text": "Refer community members to needed health services.",
+     "type": "Core",
+     "onetCode": "21-1094.00",
+     "line": 5681
+    },
+    {
+     "id": 19024,
+     "text": "Attend community meetings or health fairs to understand community issues or build relationships with community members.",
+     "type": "Core",
+     "onetCode": "21-1094.00",
+     "line": 5682
+    },
+    {
+     "id": 19033,
+     "text": "Perform basic diagnostic procedures, such as blood pressure screening, breast cancer screening, or communicable disease screening.",
+     "type": "Supplemental",
+     "onetCode": "21-1094.00",
+     "line": 5683
+    },
+    {
+     "id": 19016,
+     "text": "Advise clients or community groups on issues related to diagnostic screenings, such as breast cancer screening, pap smears, glaucoma tests, or diabetes screenings.",
+     "type": "Supplemental",
+     "onetCode": "21-1094.00",
+     "line": 5684
+    },
+    {
+     "id": 19018,
+     "text": "Advise clients or community groups on issues related to risk or prevention of conditions, such as lead poisoning, human immunodeficiency virus (HIV), prenatal substance abuse, or domestic violence.",
+     "type": "Supplemental",
+     "onetCode": "21-1094.00",
+     "line": 5685
+    },
+    {
+     "id": 19015,
+     "text": "Administer immunizations or other basic preventive treatments.",
+     "type": "Supplemental",
+     "onetCode": "21-1094.00",
+     "line": 5686
+    },
+    {
+     "id": 19029,
+     "text": "Identify the particular health care needs of individuals in a community or target area.",
+     "type": "Supplemental",
+     "onetCode": "21-1094.00",
+     "line": 5687
+    },
+    {
+     "id": 19020,
+     "text": "Advise clients or community groups on issues related to self-care, such as diabetes management.",
+     "type": "Supplemental",
+     "onetCode": "21-1094.00",
+     "line": 5688
+    },
+    {
+     "id": 19025,
+     "text": "Conduct home visits for pregnant women, newborn infants, or other high-risk individuals to monitor their progress or assess their needs.",
+     "type": "Supplemental",
+     "onetCode": "21-1094.00",
+     "line": 5689
+    },
+    {
+     "id": 19043,
+     "text": "Transport or accompany clients to scheduled health appointments or referral sites.",
+     "type": "Supplemental",
+     "onetCode": "21-1094.00",
+     "line": 5690
+    },
+    {
+     "id": 19023,
+     "text": "Advocate for individual or community health needs with government agencies or health service providers.",
+     "type": "Supplemental",
+     "onetCode": "21-1094.00",
+     "line": 5691
+    },
+    {
+     "id": 19042,
+     "text": "Report incidences of child or elder abuse, neglect, or threats of harm to authorities, as required.",
+     "type": "Supplemental",
+     "onetCode": "21-1094.00",
+     "line": 5692
+    },
+    {
+     "id": 19038,
+     "text": "Teach classes or otherwise disseminate medical or dental health information to school groups, community groups, or targeted families or individuals, in a manner consistent with cultural norms.",
+     "type": "Supplemental",
+     "onetCode": "21-1094.00",
+     "line": 5693
+    },
+    {
+     "id": 19019,
+     "text": "Advise clients or community groups on issues related to sanitation or hygiene, such as flossing or hand washing.",
+     "type": "Supplemental",
+     "onetCode": "21-1094.00",
+     "line": 5694
+    },
+    {
+     "id": 19040,
+     "text": "Collect information from individuals to compile vital statistics about the general health of community members.",
+     "type": "Supplemental",
+     "onetCode": "21-1094.00",
+     "line": 5695
+    },
+    {
+     "id": 19039,
+     "text": "Assist families to apply for social services, including Medicaid or Women, Infants, and Children (WIC).",
+     "type": "Supplemental",
+     "onetCode": "21-1094.00",
+     "line": 5696
+    },
+    {
+     "id": 19021,
+     "text": "Advise clients or community groups on issues related to social or intellectual development, such as education, childcare, or problem solving.",
+     "type": "Supplemental",
+     "onetCode": "21-1094.00",
+     "line": 5697
+    },
+    {
+     "id": 19034,
+     "text": "Provide basic health services, such as first aid.",
+     "type": "Supplemental",
+     "onetCode": "21-1094.00",
+     "line": 5698
+    },
+    {
+     "id": 19030,
+     "text": "Interpret, translate, or provide cultural mediation related to health services or information for community members.",
+     "type": "Supplemental",
+     "onetCode": "21-1094.00",
+     "line": 5699
+    },
+    {
+     "id": 19032,
+     "text": "Monitor nutrition of children, elderly, or other high-risk groups.",
+     "type": "Supplemental",
+     "onetCode": "21-1094.00",
+     "line": 5700
+    },
+    {
+     "id": 19022,
+     "text": "Advise clients or community groups to ensure parental understanding of the importance of childhood immunizations and how to access immunization services.",
+     "type": "Supplemental",
+     "onetCode": "21-1094.00",
+     "line": 5701
+    },
+    {
+     "id": 19041,
+     "text": "Develop plans or formal contracts for individuals, families, or community groups to improve overall health.",
+     "type": "Supplemental",
+     "onetCode": "21-1094.00",
+     "line": 5702
+    },
+    {
+     "id": 19035,
+     "text": "Provide feedback to health service providers regarding improving service accessibility or acceptability.",
+     "type": "Supplemental",
+     "onetCode": "21-1094.00",
+     "line": 5703
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L325",
+    "annualMedian": "oews:national_M2025_dl!AB325",
+    "annualMean": "oews:national_M2025_dl!S325",
+    "hourlyMedian": "oews:national_M2025_dl!W325",
+    "hourlyMean": "oews:national_M2025_dl!R325",
+    "annualPct10": "oews:national_M2025_dl!Z325",
+    "annualPct90": "oews:national_M2025_dl!AD325",
+    "annualOnly": "oews:national_M2025_dl!AE325",
+    "hourlyOnly": "oews:national_M2025_dl!AF325",
+    "title": "oews:national_M2025_dl!J325",
+    "ep.title": "ep:Table 1.2!A250",
+    "ep.employment2025": "ep:Table 1.2!D250",
+    "ep.employment2035": "ep:Table 1.2!E250",
+    "ep.numericChange": "ep:Table 1.2!H250",
+    "ep.percentChange": "ep:Table 1.2!I250",
+    "onetCode": "onet:Occupation Data.txt#L287:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L287:Description"
+   },
+   "nullReasons": {}
+  },
+  "21-1099": {
+   "soc": "21-1099",
+   "title": "Community and Social Service Specialists, All Other",
+   "major": "21-0000",
+   "minor": "21-1000",
+   "broad": "21-1090",
+   "oewsRows": [
+    326
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 107730,
+   "annualMedian": 56730,
+   "annualMean": 59590,
+   "hourlyMedian": 27.28,
+   "hourlyMean": 28.65,
+   "annualPct10": 37310,
+   "annualPct90": 84210,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Community and social service specialists, all other",
+    "employment2025": 118600,
+    "employment2035": 125200,
+    "numericChange": 6600,
+    "percentChange": 5.5
+   },
+   "onetCode": "21-1099.00",
+   "onetTaskSource": "none",
+   "onetSubCodes": [],
+   "description": "All community and social service specialists not listed separately.",
+   "tasks": [],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L326",
+    "annualMedian": "oews:national_M2025_dl!AB326",
+    "annualMean": "oews:national_M2025_dl!S326",
+    "hourlyMedian": "oews:national_M2025_dl!W326",
+    "hourlyMean": "oews:national_M2025_dl!R326",
+    "annualPct10": "oews:national_M2025_dl!Z326",
+    "annualPct90": "oews:national_M2025_dl!AD326",
+    "annualOnly": "oews:national_M2025_dl!AE326",
+    "hourlyOnly": "oews:national_M2025_dl!AF326",
+    "title": "oews:national_M2025_dl!J326",
+    "ep.title": "ep:Table 1.2!A251",
+    "ep.employment2025": "ep:Table 1.2!D251",
+    "ep.employment2035": "ep:Table 1.2!E251",
+    "ep.numericChange": "ep:Table 1.2!H251",
+    "ep.percentChange": "ep:Table 1.2!I251",
+    "onetCode": "onet:Occupation Data.txt#L288:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L288:Description"
+   },
+   "nullReasons": {
+    "tasks": "O*NET 30.1 has no task statements for 21-1099.00"
+   }
+  },
+  "21-2011": {
+   "soc": "21-2011",
+   "title": "Clergy",
+   "major": "21-0000",
+   "minor": "21-2000",
+   "broad": "21-2010",
+   "oewsRows": [
+    329
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 57200,
+   "annualMedian": 60810,
+   "annualMean": 66860,
+   "hourlyMedian": 29.24,
+   "hourlyMean": 32.15,
+   "annualPct10": 37860,
+   "annualPct90": 98890,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Clergy",
+    "employment2025": 242000,
+    "employment2035": 247800,
+    "numericChange": 5700,
+    "percentChange": 2.4
+   },
+   "onetCode": "21-2011.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Conduct religious worship and perform other spiritual functions associated with beliefs and practices of religious faith or denomination. Provide spiritual and moral guidance and assistance to members.",
+   "tasks": [
+    {
+     "id": 10934,
+     "text": "Pray and promote spirituality.",
+     "type": "Core",
+     "onetCode": "21-2011.00",
+     "line": 5704
+    },
+    {
+     "id": 10936,
+     "text": "Prepare and deliver sermons or other talks.",
+     "type": "Core",
+     "onetCode": "21-2011.00",
+     "line": 5705
+    },
+    {
+     "id": 10935,
+     "text": "Read from sacred texts, such as the Bible, Torah, or Koran.",
+     "type": "Core",
+     "onetCode": "21-2011.00",
+     "line": 5706
+    },
+    {
+     "id": 10937,
+     "text": "Organize and lead regular religious services.",
+     "type": "Core",
+     "onetCode": "21-2011.00",
+     "line": 5707
+    },
+    {
+     "id": 10939,
+     "text": "Instruct people who seek conversion to a particular faith.",
+     "type": "Core",
+     "onetCode": "21-2011.00",
+     "line": 5708
+    },
+    {
+     "id": 10938,
+     "text": "Share information about religious issues by writing articles, giving speeches, or teaching.",
+     "type": "Core",
+     "onetCode": "21-2011.00",
+     "line": 5709
+    },
+    {
+     "id": 10940,
+     "text": "Counsel individuals or groups concerning their spiritual, emotional, or personal needs.",
+     "type": "Core",
+     "onetCode": "21-2011.00",
+     "line": 5710
+    },
+    {
+     "id": 10943,
+     "text": "Administer religious rites or ordinances.",
+     "type": "Core",
+     "onetCode": "21-2011.00",
+     "line": 5711
+    },
+    {
+     "id": 10950,
+     "text": "Prepare people for participation in religious ceremonies.",
+     "type": "Core",
+     "onetCode": "21-2011.00",
+     "line": 5712
+    },
+    {
+     "id": 10941,
+     "text": "Visit people in homes, hospitals, or prisons to provide them with comfort and support.",
+     "type": "Core",
+     "onetCode": "21-2011.00",
+     "line": 5713
+    },
+    {
+     "id": 10942,
+     "text": "Train leaders of church, community, or youth groups.",
+     "type": "Core",
+     "onetCode": "21-2011.00",
+     "line": 5714
+    },
+    {
+     "id": 20748,
+     "text": "Plan or lead religious education programs.",
+     "type": "Core",
+     "onetCode": "21-2011.00",
+     "line": 5715
+    },
+    {
+     "id": 10944,
+     "text": "Study and interpret religious laws, doctrines, or traditions.",
+     "type": "Core",
+     "onetCode": "21-2011.00",
+     "line": 5716
+    },
+    {
+     "id": 10947,
+     "text": "Respond to requests for assistance during emergencies or crises.",
+     "type": "Core",
+     "onetCode": "21-2011.00",
+     "line": 5717
+    },
+    {
+     "id": 10945,
+     "text": "Conduct special ceremonies, such as weddings, funerals, or confirmations.",
+     "type": "Core",
+     "onetCode": "21-2011.00",
+     "line": 5718
+    },
+    {
+     "id": 10948,
+     "text": "Devise ways in which congregational membership can be expanded.",
+     "type": "Core",
+     "onetCode": "21-2011.00",
+     "line": 5719
+    },
+    {
+     "id": 10949,
+     "text": "Collaborate with committees or individuals to address financial or administrative issues pertaining to congregations.",
+     "type": "Core",
+     "onetCode": "21-2011.00",
+     "line": 5720
+    },
+    {
+     "id": 10952,
+     "text": "Refer people to community support services, psychologists, or doctors.",
+     "type": "Core",
+     "onetCode": "21-2011.00",
+     "line": 5721
+    },
+    {
+     "id": 20749,
+     "text": "Organize or engage in interfaith, community, civic, educational, or recreational activities sponsored by or related to religious programs.",
+     "type": "Core",
+     "onetCode": "21-2011.00",
+     "line": 5722
+    },
+    {
+     "id": 10951,
+     "text": "Perform administrative duties, such as overseeing building management, ordering supplies, contracting for services or repairs, or supervising the work of staff members or volunteers.",
+     "type": "Core",
+     "onetCode": "21-2011.00",
+     "line": 5723
+    },
+    {
+     "id": 10953,
+     "text": "Participate in fundraising activities to support congregational activities or facilities.",
+     "type": "Core",
+     "onetCode": "21-2011.00",
+     "line": 5724
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L329",
+    "annualMedian": "oews:national_M2025_dl!AB329",
+    "annualMean": "oews:national_M2025_dl!S329",
+    "hourlyMedian": "oews:national_M2025_dl!W329",
+    "hourlyMean": "oews:national_M2025_dl!R329",
+    "annualPct10": "oews:national_M2025_dl!Z329",
+    "annualPct90": "oews:national_M2025_dl!AD329",
+    "annualOnly": "oews:national_M2025_dl!AE329",
+    "hourlyOnly": "oews:national_M2025_dl!AF329",
+    "title": "oews:national_M2025_dl!J329",
+    "ep.title": "ep:Table 1.2!A253",
+    "ep.employment2025": "ep:Table 1.2!D253",
+    "ep.employment2035": "ep:Table 1.2!E253",
+    "ep.numericChange": "ep:Table 1.2!H253",
+    "ep.percentChange": "ep:Table 1.2!I253",
+    "onetCode": "onet:Occupation Data.txt#L289:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L289:Description"
+   },
+   "nullReasons": {}
+  },
+  "21-2021": {
+   "soc": "21-2021",
+   "title": "Directors, Religious Activities and Education",
+   "major": "21-0000",
+   "minor": "21-2000",
+   "broad": "21-2020",
+   "oewsRows": [
+    331
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 22160,
+   "annualMedian": 52100,
+   "annualMean": 62100,
+   "hourlyMedian": 25.05,
+   "hourlyMean": 29.86,
+   "annualPct10": 34670,
+   "annualPct90": 98310,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Directors, religious activities and education",
+    "employment2025": 141900,
+    "employment2035": 146600,
+    "numericChange": 4700,
+    "percentChange": 3.3
+   },
+   "onetCode": "21-2021.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Coordinate or design programs and conduct outreach to promote the religious education or activities of a denominational group. May provide counseling, guidance, and leadership relative to marital, health, financial, and religious problems.",
+   "tasks": [
+    {
+     "id": 12977,
+     "text": "Develop or direct study courses or religious education programs within congregations.",
+     "type": "Core",
+     "onetCode": "21-2021.00",
+     "line": 5725
+    },
+    {
+     "id": 12975,
+     "text": "Identify and recruit potential volunteer workers.",
+     "type": "Core",
+     "onetCode": "21-2021.00",
+     "line": 5726
+    },
+    {
+     "id": 12978,
+     "text": "Select appropriate curricula or class structures for educational programs.",
+     "type": "Core",
+     "onetCode": "21-2021.00",
+     "line": 5727
+    },
+    {
+     "id": 12983,
+     "text": "Schedule special events, such as camps, conferences, meetings, seminars, or retreats.",
+     "type": "Core",
+     "onetCode": "21-2021.00",
+     "line": 5728
+    },
+    {
+     "id": 12980,
+     "text": "Counsel individuals regarding interpersonal, health, financial, or religious problems.",
+     "type": "Core",
+     "onetCode": "21-2021.00",
+     "line": 5729
+    },
+    {
+     "id": 12982,
+     "text": "Collaborate with other ministry members to establish goals and objectives for religious education programs or to develop ways to encourage program participation.",
+     "type": "Core",
+     "onetCode": "21-2021.00",
+     "line": 5730
+    },
+    {
+     "id": 12976,
+     "text": "Train and supervise religious education instructional staff.",
+     "type": "Core",
+     "onetCode": "21-2021.00",
+     "line": 5731
+    },
+    {
+     "id": 12979,
+     "text": "Implement program plans by ordering needed materials, scheduling speakers, reserving space, or handling other administrative details.",
+     "type": "Core",
+     "onetCode": "21-2021.00",
+     "line": 5732
+    },
+    {
+     "id": 12981,
+     "text": "Analyze member participation or changes in congregational emphasis to determine needs for religious education.",
+     "type": "Core",
+     "onetCode": "21-2021.00",
+     "line": 5733
+    },
+    {
+     "id": 12986,
+     "text": "Analyze revenue and program cost data to determine budget priorities.",
+     "type": "Core",
+     "onetCode": "21-2021.00",
+     "line": 5734
+    },
+    {
+     "id": 12987,
+     "text": "Attend workshops, seminars, or conferences to obtain program ideas, information, or resources.",
+     "type": "Core",
+     "onetCode": "21-2021.00",
+     "line": 5735
+    },
+    {
+     "id": 12991,
+     "text": "Visit congregational members' homes or arrange for pastoral visits to provide information or resources regarding religious education programs.",
+     "type": "Core",
+     "onetCode": "21-2021.00",
+     "line": 5736
+    },
+    {
+     "id": 12985,
+     "text": "Publicize programs through sources, such as newsletters, bulletins, or mailings.",
+     "type": "Core",
+     "onetCode": "21-2021.00",
+     "line": 5737
+    },
+    {
+     "id": 12984,
+     "text": "Confer with clergy members, congregational officials, or congregational organizations to encourage support of or participation in religious education activities.",
+     "type": "Core",
+     "onetCode": "21-2021.00",
+     "line": 5738
+    },
+    {
+     "id": 20750,
+     "text": "Plan fundraising activities for the church.",
+     "type": "Core",
+     "onetCode": "21-2021.00",
+     "line": 5739
+    },
+    {
+     "id": 12988,
+     "text": "Locate and distribute resources, such as periodicals or curricula, to enhance the effectiveness of educational programs.",
+     "type": "Core",
+     "onetCode": "21-2021.00",
+     "line": 5740
+    },
+    {
+     "id": 12989,
+     "text": "Participate in denominational activities aimed at goals, such as promoting interfaith understanding or providing aid to new or small congregations.",
+     "type": "Core",
+     "onetCode": "21-2021.00",
+     "line": 5741
+    },
+    {
+     "id": 12992,
+     "text": "Interpret religious education activities to the public through speaking, leading discussions, or writing articles for local or national publications.",
+     "type": "Supplemental",
+     "onetCode": "21-2021.00",
+     "line": 5742
+    },
+    {
+     "id": 12990,
+     "text": "Plan or conduct conferences dealing with the interpretation of religious ideas or convictions.",
+     "type": "Supplemental",
+     "onetCode": "21-2021.00",
+     "line": 5743
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L331",
+    "annualMedian": "oews:national_M2025_dl!AB331",
+    "annualMean": "oews:national_M2025_dl!S331",
+    "hourlyMedian": "oews:national_M2025_dl!W331",
+    "hourlyMean": "oews:national_M2025_dl!R331",
+    "annualPct10": "oews:national_M2025_dl!Z331",
+    "annualPct90": "oews:national_M2025_dl!AD331",
+    "annualOnly": "oews:national_M2025_dl!AE331",
+    "hourlyOnly": "oews:national_M2025_dl!AF331",
+    "title": "oews:national_M2025_dl!J331",
+    "ep.title": "ep:Table 1.2!A254",
+    "ep.employment2025": "ep:Table 1.2!D254",
+    "ep.employment2035": "ep:Table 1.2!E254",
+    "ep.numericChange": "ep:Table 1.2!H254",
+    "ep.percentChange": "ep:Table 1.2!I254",
+    "onetCode": "onet:Occupation Data.txt#L290:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L290:Description"
+   },
+   "nullReasons": {}
+  },
+  "21-2099": {
+   "soc": "21-2099",
+   "title": "Religious Workers, All Other",
+   "major": "21-0000",
+   "minor": "21-2000",
+   "broad": "21-2090",
+   "oewsRows": [
+    333
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 15760,
+   "annualMedian": 45280,
+   "annualMean": 53870,
+   "hourlyMedian": 21.77,
+   "hourlyMean": 25.9,
+   "annualPct10": 31200,
+   "annualPct90": 93900,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Religious workers, all other",
+    "employment2025": 113300,
+    "employment2035": 115000,
+    "numericChange": 1700,
+    "percentChange": 1.5
+   },
+   "onetCode": "21-2099.00",
+   "onetTaskSource": "none",
+   "onetSubCodes": [],
+   "description": "All religious workers not listed separately.",
+   "tasks": [],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L333",
+    "annualMedian": "oews:national_M2025_dl!AB333",
+    "annualMean": "oews:national_M2025_dl!S333",
+    "hourlyMedian": "oews:national_M2025_dl!W333",
+    "hourlyMean": "oews:national_M2025_dl!R333",
+    "annualPct10": "oews:national_M2025_dl!Z333",
+    "annualPct90": "oews:national_M2025_dl!AD333",
+    "annualOnly": "oews:national_M2025_dl!AE333",
+    "hourlyOnly": "oews:national_M2025_dl!AF333",
+    "title": "oews:national_M2025_dl!J333",
+    "ep.title": "ep:Table 1.2!A255",
+    "ep.employment2025": "ep:Table 1.2!D255",
+    "ep.employment2035": "ep:Table 1.2!E255",
+    "ep.numericChange": "ep:Table 1.2!H255",
+    "ep.percentChange": "ep:Table 1.2!I255",
+    "onetCode": "onet:Occupation Data.txt#L291:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L291:Description"
+   },
+   "nullReasons": {
+    "tasks": "O*NET 30.1 has no task statements for 21-2099.00"
+   }
+  }
+ }
+}
