@@ -99,7 +99,7 @@ const FEATURES: Feature[] = [
         emoji: '📚',
         title: 'Data Sources',
         description:
-            'Employment numbers come from the Bureau of Labor Statistics (BLS) Occupational Employment & Wage Statistics, and growth outlooks from the BLS 2025–35 Employment Projections. Task descriptions are sourced from O*NET 30.1. AI risk scores are Claude\'s ratings of each O*NET task, published with the app as one dated set, so every student sees the same numbers.',
+            'Employment numbers come from the Bureau of Labor Statistics (BLS) Occupational Employment & Wage Statistics (OEWS, May 2025). Pay on each role comes from the same survey and year: the national median annual wage, with the mean shown beside it. Growth outlooks come from the BLS 2025–35 Employment Projections. Task descriptions are sourced from O*NET 30.1. AI risk scores are Claude\'s ratings of each O*NET task, published with the app as one dated set, so every student sees the same numbers.',
         tip: 'Click "Methodology & Data" at the bottom of the screen to read the full sourcing and calculation methodology.',
         color: 'gray',
     },

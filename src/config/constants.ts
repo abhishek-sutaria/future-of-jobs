@@ -36,6 +36,8 @@ export const OOH_FRACTION_AT_YEAR_MAX =
 // breaks it). src/__tests__/provenance.test.ts now guards every literal here.
 export const DATA_SOURCES = {
     BLS_OES: 'BLS-OES-2025',
+    /** National pay (src/data/national_wages.json); same OEWS vintage as BLS_OES — wages.test.ts guards it. */
+    BLS_OES_WAGES: 'BLS-OES-Wages-2025',
     BLS_OOH: 'BLS-OOH-2024-34',
     /** Landscape employment path — BLS EP Table 1.2, 2025 and projected 2035. */
     BLS_EP: 'BLS-EP-2025-35',

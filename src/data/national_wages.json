@@ -1,0 +1,2218 @@
+{
+  "_meta": {
+    "source": "BLS OEWS May 2025, national_M2025_dl.xlsx",
+    "source_url": "https://www.bls.gov/oes/special-requests/oesm25nat.zip",
+    "sha256": "852250997ceff9b721ff68f63e877d818f9c1ec8b1b69dd367958faedd5282b2",
+    "method": "workbook",
+    "bls_release": "OEWS May 2025",
+    "api_vintage": "2025 A01",
+    "extracted": "2026-10-24",
+    "filter": "AREA = 99 (U.S.), NAICS = 000000, I_GROUP = cross-industry",
+    "workbook_notes_title": "May 2025 OEWS Estimates",
+    "topcode": {
+      "symbol": "#",
+      "text": "#  = indicates a wage equal to or greater than $115.00 per hour or $239,200 per year",
+      "hourly": 115.0,
+      "annual": 239200
+    },
+    "not_available_note": "*  = indicates that a wage estimate is not available",
+    "field_definitions": {
+      "A_MEDIAN": "Annual median wage (or the 50th percentile)",
+      "A_MEAN": "Mean annual wage",
+      "H_MEDIAN": "Hourly median wage (or the 50th percentile)",
+      "H_MEAN": "Mean hourly wage",
+      "A_PCT10": "Annual 10th percentile wage",
+      "A_PCT90": "Annual 90th percentile wage",
+      "ANNUAL": "Contains \"TRUE\" if only annual wages are released. The OEWS program releases only annual wages for some occupations that typically work fewer than 2,080 hours per year, but are paid on an annual basis, such as teachers, pilots, and athletes.",
+      "HOURLY": "Contains \"TRUE\" if only hourly wages are released. The OEWS program releases only hourly wages for some occupations that typically work fewer than 2,080 hours per year and are paid on an hourly basis, such as actors, dancers, and musicians and singers.",
+      "TOT_EMP": "Estimated total employment rounded to the nearest 10 (excludes self-employed)."
+    },
+    "series_id_format": "OEUN0000000000000{SOC6}{datatype}",
+    "series_datatypes": {
+      "annualMedian": {
+        "code": "13",
+        "oe_datatype": "Annual median wage"
+      },
+      "annualMean": {
+        "code": "04",
+        "oe_datatype": "Annual mean wage"
+      },
+      "hourlyMedian": {
+        "code": "08",
+        "oe_datatype": "Hourly median wage"
+      },
+      "hourlyMean": {
+        "code": "03",
+        "oe_datatype": "Hourly mean wage"
+      }
+    },
+    "series_datatypes_source": "https://download.bls.gov/pub/time.series/oe/oe.datatype",
+    "vintage_gate": "TOT_EMP equals src/data/national_employment.json for all 47 SOCs",
+    "note": "Values are copied from the workbook unchanged. null means BLS did not publish that measure; nullReasons says why. Titles sharing a SOC show the same wage (never split). Hourly and annual figures are separate BLS columns; neither is derived from the other here.",
+    "note_refresh": "Regenerate with: python3 scripts/extract_oews_wages.py"
+  },
+  "11-1021": {
+    "occTitle": "General and Operations Managers",
+    "source": {
+      "sheet": "national_M2025_dl",
+      "rows": [
+        8
+      ],
+      "oGroups": [
+        "detailed"
+      ],
+      "columns": {
+        "annualMedian": "AB",
+        "annualMean": "S",
+        "hourlyMedian": "W",
+        "hourlyMean": "R",
+        "annualPct10": "Z",
+        "annualPct90": "AD",
+        "annualOnly": "AE",
+        "hourlyOnly": "AF",
+        "totEmp": "L"
+      }
+    },
+    "seriesIds": {
+      "annualMedian": "OEUN000000000000011102113",
+      "annualMean": "OEUN000000000000011102104",
+      "hourlyMedian": "OEUN000000000000011102108",
+      "hourlyMean": "OEUN000000000000011102103"
+    },
+    "annualOnly": false,
+    "hourlyOnly": false,
+    "topcoded": {
+      "annualMedian": false,
+      "annualMean": false,
+      "hourlyMedian": false,
+      "hourlyMean": false,
+      "annualPct10": false,
+      "annualPct90": false
+    },
+    "nullReasons": {},
+    "annualMedian": 105770,
+    "annualMean": 134940,
+    "hourlyMedian": 50.85,
+    "hourlyMean": 64.87,
+    "annualPct10": 50090,
+    "annualPct90": 253390
+  },
+  "11-2021": {
+    "occTitle": "Marketing Managers",
+    "source": {
+      "sheet": "national_M2025_dl",
+      "rows": [
+        13
+      ],
+      "oGroups": [
+        "detailed"
+      ],
+      "columns": {
+        "annualMedian": "AB",
+        "annualMean": "S",
+        "hourlyMedian": "W",
+        "hourlyMean": "R",
+        "annualPct10": "Z",
+        "annualPct90": "AD",
+        "annualOnly": "AE",
+        "hourlyOnly": "AF",
+        "totEmp": "L"
+      }
+    },
+    "seriesIds": {
+      "annualMedian": "OEUN000000000000011202113",
+      "annualMean": "OEUN000000000000011202104",
+      "hourlyMedian": "OEUN000000000000011202108",
+      "hourlyMean": "OEUN000000000000011202103"
+    },
+    "annualOnly": false,
+    "hourlyOnly": false,
+    "topcoded": {
+      "annualMedian": false,
+      "annualMean": false,
+      "hourlyMedian": false,
+      "hourlyMean": false,
+      "annualPct10": false,
+      "annualPct90": false
+    },
+    "nullReasons": {},
+    "annualMedian": 166790,
+    "annualMean": 177770,
+    "hourlyMedian": 80.19,
+    "hourlyMean": 85.47,
+    "annualPct10": 90260,
+    "annualPct90": 293610
+  },
+  "11-2022": {
+    "occTitle": "Sales Managers",
+    "source": {
+      "sheet": "national_M2025_dl",
+      "rows": [
+        14
+      ],
+      "oGroups": [
+        "detailed"
+      ],
+      "columns": {
+        "annualMedian": "AB",
+        "annualMean": "S",
+        "hourlyMedian": "W",
+        "hourlyMean": "R",
+        "annualPct10": "Z",
+        "annualPct90": "AD",
+        "annualOnly": "AE",
+        "hourlyOnly": "AF",
+        "totEmp": "L"
+      }
+    },
+    "seriesIds": {
+      "annualMedian": "OEUN000000000000011202213",
+      "annualMean": "OEUN000000000000011202204",
+      "hourlyMedian": "OEUN000000000000011202208",
+      "hourlyMean": "OEUN000000000000011202203"
+    },
+    "annualOnly": false,
+    "hourlyOnly": false,
+    "topcoded": {
+      "annualMedian": false,
+      "annualMean": false,
+      "hourlyMedian": false,
+      "hourlyMean": false,
+      "annualPct10": false,
+      "annualPct90": false
+    },
+    "nullReasons": {},
+    "annualMedian": 148270,
+    "annualMean": 164350,
+    "hourlyMedian": 71.28,
+    "hourlyMean": 79.02,
+    "annualPct10": 73170,
+    "annualPct90": 290540
+  },
+  "11-2032": {
+    "occTitle": "Public Relations Managers",
+    "source": {
+      "sheet": "national_M2025_dl",
+      "rows": [
+        16
+      ],
+      "oGroups": [
+        "detailed"
+      ],
+      "columns": {
+        "annualMedian": "AB",
+        "annualMean": "S",
+        "hourlyMedian": "W",
+        "hourlyMean": "R",
+        "annualPct10": "Z",
+        "annualPct90": "AD",
+        "annualOnly": "AE",
+        "hourlyOnly": "AF",
+        "totEmp": "L"
+      }
+    },
+    "seriesIds": {
+      "annualMedian": "OEUN000000000000011203213",
+      "annualMean": "OEUN000000000000011203204",
+      "hourlyMedian": "OEUN000000000000011203208",
+      "hourlyMean": "OEUN000000000000011203203"
+    },
+    "annualOnly": false,
+    "hourlyOnly": false,
+    "topcoded": {
+      "annualMedian": false,
+      "annualMean": false,
+      "hourlyMedian": false,
+      "hourlyMean": false,
+      "annualPct10": false,
+      "annualPct90": false
+    },
+    "nullReasons": {},
+    "annualMedian": 146910,
+    "annualMean": 164760,
+    "hourlyMedian": 70.63,
+    "hourlyMean": 79.21,
+    "annualPct10": 82410,
+    "annualPct90": 284990
+  },
+  "11-3021": {
+    "occTitle": "Computer and Information Systems Managers",
+    "source": {
+      "sheet": "national_M2025_dl",
+      "rows": [
+        23
+      ],
+      "oGroups": [
+        "detailed"
+      ],
+      "columns": {
+        "annualMedian": "AB",
+        "annualMean": "S",
+        "hourlyMedian": "W",
+        "hourlyMean": "R",
+        "annualPct10": "Z",
+        "annualPct90": "AD",
+        "annualOnly": "AE",
+        "hourlyOnly": "AF",
+        "totEmp": "L"
+      }
+    },
+    "seriesIds": {
+      "annualMedian": "OEUN000000000000011302113",
+      "annualMean": "OEUN000000000000011302104",
+      "hourlyMedian": "OEUN000000000000011302108",
+      "hourlyMean": "OEUN000000000000011302103"
+    },
+    "annualOnly": false,
+    "hourlyOnly": false,
+    "topcoded": {
+      "annualMedian": false,
+      "annualMean": false,
+      "hourlyMedian": false,
+      "hourlyMean": false,
+      "annualPct10": false,
+      "annualPct90": false
+    },
+    "nullReasons": {},
+    "annualMedian": 175140,
+    "annualMean": 192160,
+    "hourlyMedian": 84.2,
+    "hourlyMean": 92.39,
+    "annualPct10": 107550,
+    "annualPct90": 297510
+  },
+  "11-3031": {
+    "occTitle": "Financial Managers",
+    "source": {
+      "sheet": "national_M2025_dl",
+      "rows": [
+        25
+      ],
+      "oGroups": [
+        "detailed"
+      ],
+      "columns": {
+        "annualMedian": "AB",
+        "annualMean": "S",
+        "hourlyMedian": "W",
+        "hourlyMean": "R",
+        "annualPct10": "Z",
+        "annualPct90": "AD",
+        "annualOnly": "AE",
+        "hourlyOnly": "AF",
+        "totEmp": "L"
+      }
+    },
+    "seriesIds": {
+      "annualMedian": "OEUN000000000000011303113",
+      "annualMean": "OEUN000000000000011303104",
+      "hourlyMedian": "OEUN000000000000011303108",
+      "hourlyMean": "OEUN000000000000011303103"
+    },
+    "annualOnly": false,
+    "hourlyOnly": false,
+    "topcoded": {
+      "annualMedian": false,
+      "annualMean": false,
+      "hourlyMedian": false,
+      "hourlyMean": false,
+      "annualPct10": false,
+      "annualPct90": false
+    },
+    "nullReasons": {},
+    "annualMedian": 166570,
+    "annualMean": 186910,
+    "hourlyMedian": 80.08,
+    "hourlyMean": 89.86,
+    "annualPct10": 94310,
+    "annualPct90": 323270
+  },
+  "11-3051": {
+    "occTitle": "Industrial Production Managers",
+    "source": {
+      "sheet": "national_M2025_dl",
+      "rows": [
+        27
+      ],
+      "oGroups": [
+        "detailed"
+      ],
+      "columns": {
+        "annualMedian": "AB",
+        "annualMean": "S",
+        "hourlyMedian": "W",
+        "hourlyMean": "R",
+        "annualPct10": "Z",
+        "annualPct90": "AD",
+        "annualOnly": "AE",
+        "hourlyOnly": "AF",
+        "totEmp": "L"
+      }
+    },
+    "seriesIds": {
+      "annualMedian": "OEUN000000000000011305113",
+      "annualMean": "OEUN000000000000011305104",
+      "hourlyMedian": "OEUN000000000000011305108",
+      "hourlyMean": "OEUN000000000000011305103"
+    },
+    "annualOnly": false,
+    "hourlyOnly": false,
+    "topcoded": {
+      "annualMedian": false,
+      "annualMean": false,
+      "hourlyMedian": false,
+      "hourlyMean": false,
+      "annualPct10": false,
+      "annualPct90": false
+    },
+    "nullReasons": {},
+    "annualMedian": 126060,
+    "annualMean": 134170,
+    "hourlyMedian": 60.61,
+    "hourlyMean": 64.5,
+    "annualPct10": 78000,
+    "annualPct90": 205520
+  },
+  "11-3061": {
+    "occTitle": "Purchasing Managers",
+    "source": {
+      "sheet": "national_M2025_dl",
+      "rows": [
+        29
+      ],
+      "oGroups": [
+        "detailed"
+      ],
+      "columns": {
+        "annualMedian": "AB",
+        "annualMean": "S",
+        "hourlyMedian": "W",
+        "hourlyMean": "R",
+        "annualPct10": "Z",
+        "annualPct90": "AD",
+        "annualOnly": "AE",
+        "hourlyOnly": "AF",
+        "totEmp": "L"
+      }
+    },
+    "seriesIds": {
+      "annualMedian": "OEUN000000000000011306113",
+      "annualMean": "OEUN000000000000011306104",
+      "hourlyMedian": "OEUN000000000000011306108",
+      "hourlyMean": "OEUN000000000000011306103"
+    },
+    "annualOnly": false,
+    "hourlyOnly": false,
+    "topcoded": {
+      "annualMedian": false,
+      "annualMean": false,
+      "hourlyMedian": false,
+      "hourlyMean": false,
+      "annualPct10": false,
+      "annualPct90": false
+    },
+    "nullReasons": {},
+    "annualMedian": 148080,
+    "annualMean": 156360,
+    "hourlyMedian": 71.19,
+    "hourlyMean": 75.17,
+    "annualPct10": 92490,
+    "annualPct90": 223280
+  },
+  "11-3071": {
+    "occTitle": "Transportation, Storage, and Distribution Managers",
+    "source": {
+      "sheet": "national_M2025_dl",
+      "rows": [
+        31
+      ],
+      "oGroups": [
+        "detailed"
+      ],
+      "columns": {
+        "annualMedian": "AB",
+        "annualMean": "S",
+        "hourlyMedian": "W",
+        "hourlyMean": "R",
+        "annualPct10": "Z",
+        "annualPct90": "AD",
+        "annualOnly": "AE",
+        "hourlyOnly": "AF",
+        "totEmp": "L"
+      }
+    },
+    "seriesIds": {
+      "annualMedian": "OEUN000000000000011307113",
+      "annualMean": "OEUN000000000000011307104",
+      "hourlyMedian": "OEUN000000000000011307108",
+      "hourlyMean": "OEUN000000000000011307103"
+    },
+    "annualOnly": false,
+    "hourlyOnly": false,
+    "topcoded": {
+      "annualMedian": false,
+      "annualMean": false,
+      "hourlyMedian": false,
+      "hourlyMean": false,
+      "annualPct10": false,
+      "annualPct90": false
+    },
+    "nullReasons": {},
+    "annualMedian": 107230,
+    "annualMean": 121600,
+    "hourlyMedian": 51.55,
+    "hourlyMean": 58.46,
+    "annualPct10": 65120,
+    "annualPct90": 194900
+  },
+  "11-3111": {
+    "occTitle": "Compensation and Benefits Managers",
+    "source": {
+      "sheet": "national_M2025_dl",
+      "rows": [
+        33
+      ],
+      "oGroups": [
+        "detailed"
+      ],
+      "columns": {
+        "annualMedian": "AB",
+        "annualMean": "S",
+        "hourlyMedian": "W",
+        "hourlyMean": "R",
+        "annualPct10": "Z",
+        "annualPct90": "AD",
+        "annualOnly": "AE",
+        "hourlyOnly": "AF",
+        "totEmp": "L"
+      }
+    },
+    "seriesIds": {
+      "annualMedian": "OEUN000000000000011311113",
+      "annualMean": "OEUN000000000000011311104",
+      "hourlyMedian": "OEUN000000000000011311108",
+      "hourlyMean": "OEUN000000000000011311103"
+    },
+    "annualOnly": false,
+    "hourlyOnly": false,
+    "topcoded": {
+      "annualMedian": false,
+      "annualMean": false,
+      "hourlyMedian": false,
+      "hourlyMean": false,
+      "annualPct10": false,
+      "annualPct90": false
+    },
+    "nullReasons": {},
+    "annualMedian": 149230,
+    "annualMean": 162640,
+    "hourlyMedian": 71.75,
+    "hourlyMean": 78.19,
+    "annualPct10": 89160,
+    "annualPct90": 256570
+  },
+  "11-3121": {
+    "occTitle": "Human Resources Managers",
+    "source": {
+      "sheet": "national_M2025_dl",
+      "rows": [
+        35
+      ],
+      "oGroups": [
+        "detailed"
+      ],
+      "columns": {
+        "annualMedian": "AB",
+        "annualMean": "S",
+        "hourlyMedian": "W",
+        "hourlyMean": "R",
+        "annualPct10": "Z",
+        "annualPct90": "AD",
+        "annualOnly": "AE",
+        "hourlyOnly": "AF",
+        "totEmp": "L"
+      }
+    },
+    "seriesIds": {
+      "annualMedian": "OEUN000000000000011312113",
+      "annualMean": "OEUN000000000000011312104",
+      "hourlyMedian": "OEUN000000000000011312108",
+      "hourlyMean": "OEUN000000000000011312103"
+    },
+    "annualOnly": false,
+    "hourlyOnly": false,
+    "topcoded": {
+      "annualMedian": false,
+      "annualMean": false,
+      "hourlyMedian": false,
+      "hourlyMean": false,
+      "annualPct10": false,
+      "annualPct90": false
+    },
+    "nullReasons": {},
+    "annualMedian": 149280,
+    "annualMean": 164230,
+    "hourlyMedian": 71.77,
+    "hourlyMean": 78.96,
+    "annualPct10": 88200,
+    "annualPct90": 267810
+  },
+  "11-3131": {
+    "occTitle": "Training and Development Managers",
+    "source": {
+      "sheet": "national_M2025_dl",
+      "rows": [
+        37
+      ],
+      "oGroups": [
+        "detailed"
+      ],
+      "columns": {
+        "annualMedian": "AB",
+        "annualMean": "S",
+        "hourlyMedian": "W",
+        "hourlyMean": "R",
+        "annualPct10": "Z",
+        "annualPct90": "AD",
+        "annualOnly": "AE",
+        "hourlyOnly": "AF",
+        "totEmp": "L"
+      }
+    },
+    "seriesIds": {
+      "annualMedian": "OEUN000000000000011313113",
+      "annualMean": "OEUN000000000000011313104",
+      "hourlyMedian": "OEUN000000000000011313108",
+      "hourlyMean": "OEUN000000000000011313103"
+    },
+    "annualOnly": false,
+    "hourlyOnly": false,
+    "topcoded": {
+      "annualMedian": false,
+      "annualMean": false,
+      "hourlyMedian": false,
+      "hourlyMean": false,
+      "annualPct10": false,
+      "annualPct90": false
+    },
+    "nullReasons": {},
+    "annualMedian": 133000,
+    "annualMean": 148370,
+    "hourlyMedian": 63.94,
+    "hourlyMean": 71.33,
+    "annualPct10": 79550,
+    "annualPct90": 233600
+  },
+  "13-1020": {
+    "occTitle": "Buyers and Purchasing Agents",
+    "source": {
+      "sheet": "national_M2025_dl",
+      "rows": [
+        79,
+        78
+      ],
+      "oGroups": [
+        "detailed",
+        "broad"
+      ],
+      "columns": {
+        "annualMedian": "AB",
+        "annualMean": "S",
+        "hourlyMedian": "W",
+        "hourlyMean": "R",
+        "annualPct10": "Z",
+        "annualPct90": "AD",
+        "annualOnly": "AE",
+        "hourlyOnly": "AF",
+        "totEmp": "L"
+      }
+    },
+    "seriesIds": {
+      "annualMedian": "OEUN000000000000013102013",
+      "annualMean": "OEUN000000000000013102004",
+      "hourlyMedian": "OEUN000000000000013102008",
+      "hourlyMean": "OEUN000000000000013102003"
+    },
+    "annualOnly": false,
+    "hourlyOnly": false,
+    "topcoded": {
+      "annualMedian": false,
+      "annualMean": false,
+      "hourlyMedian": false,
+      "hourlyMean": false,
+      "annualPct10": false,
+      "annualPct90": false
+    },
+    "nullReasons": {},
+    "annualMedian": 77710,
+    "annualMean": 83770,
+    "hourlyMedian": 37.36,
+    "hourlyMean": 40.27,
+    "annualPct10": 48380,
+    "annualPct90": 128870
+  },
+  "13-1051": {
+    "occTitle": "Cost Estimators",
+    "source": {
+      "sheet": "national_M2025_dl",
+      "rows": [
+        86
+      ],
+      "oGroups": [
+        "detailed"
+      ],
+      "columns": {
+        "annualMedian": "AB",
+        "annualMean": "S",
+        "hourlyMedian": "W",
+        "hourlyMean": "R",
+        "annualPct10": "Z",
+        "annualPct90": "AD",
+        "annualOnly": "AE",
+        "hourlyOnly": "AF",
+        "totEmp": "L"
+      }
+    },
+    "seriesIds": {
+      "annualMedian": "OEUN000000000000013105113",
+      "annualMean": "OEUN000000000000013105104",
+      "hourlyMedian": "OEUN000000000000013105108",
+      "hourlyMean": "OEUN000000000000013105103"
+    },
+    "annualOnly": false,
+    "hourlyOnly": false,
+    "topcoded": {
+      "annualMedian": false,
+      "annualMean": false,
+      "hourlyMedian": false,
+      "hourlyMean": false,
+      "annualPct10": false,
+      "annualPct90": false
+    },
+    "nullReasons": {},
+    "annualMedian": 78740,
+    "annualMean": 85390,
+    "hourlyMedian": 37.86,
+    "hourlyMean": 41.06,
+    "annualPct10": 48530,
+    "annualPct90": 130820
+  },
+  "13-1071": {
+    "occTitle": "Human Resources Specialists",
+    "source": {
+      "sheet": "national_M2025_dl",
+      "rows": [
+        88
+      ],
+      "oGroups": [
+        "detailed"
+      ],
+      "columns": {
+        "annualMedian": "AB",
+        "annualMean": "S",
+        "hourlyMedian": "W",
+        "hourlyMean": "R",
+        "annualPct10": "Z",
+        "annualPct90": "AD",
+        "annualOnly": "AE",
+        "hourlyOnly": "AF",
+        "totEmp": "L"
+      }
+    },
+    "seriesIds": {
+      "annualMedian": "OEUN000000000000013107113",
+      "annualMean": "OEUN000000000000013107104",
+      "hourlyMedian": "OEUN000000000000013107108",
+      "hourlyMean": "OEUN000000000000013107103"
+    },
+    "annualOnly": false,
+    "hourlyOnly": false,
+    "topcoded": {
+      "annualMedian": false,
+      "annualMean": false,
+      "hourlyMedian": false,
+      "hourlyMean": false,
+      "annualPct10": false,
+      "annualPct90": false
+    },
+    "nullReasons": {},
+    "annualMedian": 75940,
+    "annualMean": 81990,
+    "hourlyMedian": 36.51,
+    "hourlyMean": 39.42,
+    "annualPct10": 47180,
+    "annualPct90": 128720
+  },
+  "13-1081": {
+    "occTitle": "Logisticians",
+    "source": {
+      "sheet": "national_M2025_dl",
+      "rows": [
+        92
+      ],
+      "oGroups": [
+        "detailed"
+      ],
+      "columns": {
+        "annualMedian": "AB",
+        "annualMean": "S",
+        "hourlyMedian": "W",
+        "hourlyMean": "R",
+        "annualPct10": "Z",
+        "annualPct90": "AD",
+        "annualOnly": "AE",
+        "hourlyOnly": "AF",
+        "totEmp": "L"
+      }
+    },
+    "seriesIds": {
+      "annualMedian": "OEUN000000000000013108113",
+      "annualMean": "OEUN000000000000013108104",
+      "hourlyMedian": "OEUN000000000000013108108",
+      "hourlyMean": "OEUN000000000000013108103"
+    },
+    "annualOnly": false,
+    "hourlyOnly": false,
+    "topcoded": {
+      "annualMedian": false,
+      "annualMean": false,
+      "hourlyMedian": false,
+      "hourlyMean": false,
+      "annualPct10": false,
+      "annualPct90": false
+    },
+    "nullReasons": {},
+    "annualMedian": 82320,
+    "annualMean": 89730,
+    "hourlyMedian": 39.58,
+    "hourlyMean": 43.14,
+    "annualPct10": 50890,
+    "annualPct90": 133160
+  },
+  "13-1082": {
+    "occTitle": "Project Management Specialists",
+    "source": {
+      "sheet": "national_M2025_dl",
+      "rows": [
+        93
+      ],
+      "oGroups": [
+        "detailed"
+      ],
+      "columns": {
+        "annualMedian": "AB",
+        "annualMean": "S",
+        "hourlyMedian": "W",
+        "hourlyMean": "R",
+        "annualPct10": "Z",
+        "annualPct90": "AD",
+        "annualOnly": "AE",
+        "hourlyOnly": "AF",
+        "totEmp": "L"
+      }
+    },
+    "seriesIds": {
+      "annualMedian": "OEUN000000000000013108213",
+      "annualMean": "OEUN000000000000013108204",
+      "hourlyMedian": "OEUN000000000000013108208",
+      "hourlyMean": "OEUN000000000000013108203"
+    },
+    "annualOnly": false,
+    "hourlyOnly": false,
+    "topcoded": {
+      "annualMedian": false,
+      "annualMean": false,
+      "hourlyMedian": false,
+      "hourlyMean": false,
+      "annualPct10": false,
+      "annualPct90": false
+    },
+    "nullReasons": {},
+    "annualMedian": 102320,
+    "annualMean": 110740,
+    "hourlyMedian": 49.19,
+    "hourlyMean": 53.24,
+    "annualPct10": 61580,
+    "annualPct90": 167970
+  },
+  "13-1111": {
+    "occTitle": "Management Analysts",
+    "source": {
+      "sheet": "national_M2025_dl",
+      "rows": [
+        95
+      ],
+      "oGroups": [
+        "detailed"
+      ],
+      "columns": {
+        "annualMedian": "AB",
+        "annualMean": "S",
+        "hourlyMedian": "W",
+        "hourlyMean": "R",
+        "annualPct10": "Z",
+        "annualPct90": "AD",
+        "annualOnly": "AE",
+        "hourlyOnly": "AF",
+        "totEmp": "L"
+      }
+    },
+    "seriesIds": {
+      "annualMedian": "OEUN000000000000013111113",
+      "annualMean": "OEUN000000000000013111104",
+      "hourlyMedian": "OEUN000000000000013111108",
+      "hourlyMean": "OEUN000000000000013111103"
+    },
+    "annualOnly": false,
+    "hourlyOnly": false,
+    "topcoded": {
+      "annualMedian": false,
+      "annualMean": false,
+      "hourlyMedian": false,
+      "hourlyMean": false,
+      "annualPct10": false,
+      "annualPct90": false
+    },
+    "nullReasons": {},
+    "annualMedian": 101860,
+    "annualMean": 113790,
+    "hourlyMedian": 48.97,
+    "hourlyMean": 54.71,
+    "annualPct10": 60640,
+    "annualPct90": 171640
+  },
+  "13-1121": {
+    "occTitle": "Meeting, Convention, and Event Planners",
+    "source": {
+      "sheet": "national_M2025_dl",
+      "rows": [
+        97
+      ],
+      "oGroups": [
+        "detailed"
+      ],
+      "columns": {
+        "annualMedian": "AB",
+        "annualMean": "S",
+        "hourlyMedian": "W",
+        "hourlyMean": "R",
+        "annualPct10": "Z",
+        "annualPct90": "AD",
+        "annualOnly": "AE",
+        "hourlyOnly": "AF",
+        "totEmp": "L"
+      }
+    },
+    "seriesIds": {
+      "annualMedian": "OEUN000000000000013112113",
+      "annualMean": "OEUN000000000000013112104",
+      "hourlyMedian": "OEUN000000000000013112108",
+      "hourlyMean": "OEUN000000000000013112103"
+    },
+    "annualOnly": false,
+    "hourlyOnly": false,
+    "topcoded": {
+      "annualMedian": false,
+      "annualMean": false,
+      "hourlyMedian": false,
+      "hourlyMean": false,
+      "annualPct10": false,
+      "annualPct90": false
+    },
+    "nullReasons": {},
+    "annualMedian": 61160,
+    "annualMean": 66520,
+    "hourlyMedian": 29.41,
+    "hourlyMean": 31.98,
+    "annualPct10": 36830,
+    "annualPct90": 101700
+  },
+  "13-1141": {
+    "occTitle": "Compensation, Benefits, and Job Analysis Specialists",
+    "source": {
+      "sheet": "national_M2025_dl",
+      "rows": [
+        101
+      ],
+      "oGroups": [
+        "detailed"
+      ],
+      "columns": {
+        "annualMedian": "AB",
+        "annualMean": "S",
+        "hourlyMedian": "W",
+        "hourlyMean": "R",
+        "annualPct10": "Z",
+        "annualPct90": "AD",
+        "annualOnly": "AE",
+        "hourlyOnly": "AF",
+        "totEmp": "L"
+      }
+    },
+    "seriesIds": {
+      "annualMedian": "OEUN000000000000013114113",
+      "annualMean": "OEUN000000000000013114104",
+      "hourlyMedian": "OEUN000000000000013114108",
+      "hourlyMean": "OEUN000000000000013114103"
+    },
+    "annualOnly": false,
+    "hourlyOnly": false,
+    "topcoded": {
+      "annualMedian": false,
+      "annualMean": false,
+      "hourlyMedian": false,
+      "hourlyMean": false,
+      "annualPct10": false,
+      "annualPct90": false
+    },
+    "nullReasons": {},
+    "annualMedian": 78210,
+    "annualMean": 84330,
+    "hourlyMedian": 37.6,
+    "hourlyMean": 40.54,
+    "annualPct10": 49480,
+    "annualPct90": 128920
+  },
+  "13-1151": {
+    "occTitle": "Training and Development Specialists",
+    "source": {
+      "sheet": "national_M2025_dl",
+      "rows": [
+        103
+      ],
+      "oGroups": [
+        "detailed"
+      ],
+      "columns": {
+        "annualMedian": "AB",
+        "annualMean": "S",
+        "hourlyMedian": "W",
+        "hourlyMean": "R",
+        "annualPct10": "Z",
+        "annualPct90": "AD",
+        "annualOnly": "AE",
+        "hourlyOnly": "AF",
+        "totEmp": "L"
+      }
+    },
+    "seriesIds": {
+      "annualMedian": "OEUN000000000000013115113",
+      "annualMean": "OEUN000000000000013115104",
+      "hourlyMedian": "OEUN000000000000013115108",
+      "hourlyMean": "OEUN000000000000013115103"
+    },
+    "annualOnly": false,
+    "hourlyOnly": false,
+    "topcoded": {
+      "annualMedian": false,
+      "annualMean": false,
+      "hourlyMedian": false,
+      "hourlyMean": false,
+      "annualPct10": false,
+      "annualPct90": false
+    },
+    "nullReasons": {},
+    "annualMedian": 69280,
+    "annualMean": 75550,
+    "hourlyMedian": 33.31,
+    "hourlyMean": 36.32,
+    "annualPct10": 38760,
+    "annualPct90": 123250
+  },
+  "13-1161": {
+    "occTitle": "Market Research Analysts and Marketing Specialists",
+    "source": {
+      "sheet": "national_M2025_dl",
+      "rows": [
+        105
+      ],
+      "oGroups": [
+        "detailed"
+      ],
+      "columns": {
+        "annualMedian": "AB",
+        "annualMean": "S",
+        "hourlyMedian": "W",
+        "hourlyMean": "R",
+        "annualPct10": "Z",
+        "annualPct90": "AD",
+        "annualOnly": "AE",
+        "hourlyOnly": "AF",
+        "totEmp": "L"
+      }
+    },
+    "seriesIds": {
+      "annualMedian": "OEUN000000000000013116113",
+      "annualMean": "OEUN000000000000013116104",
+      "hourlyMedian": "OEUN000000000000013116108",
+      "hourlyMean": "OEUN000000000000013116103"
+    },
+    "annualOnly": false,
+    "hourlyOnly": false,
+    "topcoded": {
+      "annualMedian": false,
+      "annualMean": false,
+      "hourlyMedian": false,
+      "hourlyMean": false,
+      "annualPct10": false,
+      "annualPct90": false
+    },
+    "nullReasons": {},
+    "annualMedian": 78760,
+    "annualMean": 89490,
+    "hourlyMedian": 37.87,
+    "hourlyMean": 43.03,
+    "annualPct10": 43390,
+    "annualPct90": 155480
+  },
+  "13-2011": {
+    "occTitle": "Accountants and Auditors",
+    "source": {
+      "sheet": "national_M2025_dl",
+      "rows": [
+        110
+      ],
+      "oGroups": [
+        "detailed"
+      ],
+      "columns": {
+        "annualMedian": "AB",
+        "annualMean": "S",
+        "hourlyMedian": "W",
+        "hourlyMean": "R",
+        "annualPct10": "Z",
+        "annualPct90": "AD",
+        "annualOnly": "AE",
+        "hourlyOnly": "AF",
+        "totEmp": "L"
+      }
+    },
+    "seriesIds": {
+      "annualMedian": "OEUN000000000000013201113",
+      "annualMean": "OEUN000000000000013201104",
+      "hourlyMedian": "OEUN000000000000013201108",
+      "hourlyMean": "OEUN000000000000013201103"
+    },
+    "annualOnly": false,
+    "hourlyOnly": false,
+    "topcoded": {
+      "annualMedian": false,
+      "annualMean": false,
+      "hourlyMedian": false,
+      "hourlyMean": false,
+      "annualPct10": false,
+      "annualPct90": false
+    },
+    "nullReasons": {},
+    "annualMedian": 83680,
+    "annualMean": 94750,
+    "hourlyMedian": 40.23,
+    "hourlyMean": 45.56,
+    "annualPct10": 56020,
+    "annualPct90": 144090
+  },
+  "13-2031": {
+    "occTitle": "Budget Analysts",
+    "source": {
+      "sheet": "national_M2025_dl",
+      "rows": [
+        114
+      ],
+      "oGroups": [
+        "detailed"
+      ],
+      "columns": {
+        "annualMedian": "AB",
+        "annualMean": "S",
+        "hourlyMedian": "W",
+        "hourlyMean": "R",
+        "annualPct10": "Z",
+        "annualPct90": "AD",
+        "annualOnly": "AE",
+        "hourlyOnly": "AF",
+        "totEmp": "L"
+      }
+    },
+    "seriesIds": {
+      "annualMedian": "OEUN000000000000013203113",
+      "annualMean": "OEUN000000000000013203104",
+      "hourlyMedian": "OEUN000000000000013203108",
+      "hourlyMean": "OEUN000000000000013203103"
+    },
+    "annualOnly": false,
+    "hourlyOnly": false,
+    "topcoded": {
+      "annualMedian": false,
+      "annualMean": false,
+      "hourlyMedian": false,
+      "hourlyMean": false,
+      "annualPct10": false,
+      "annualPct90": false
+    },
+    "nullReasons": {},
+    "annualMedian": 91640,
+    "annualMean": 96370,
+    "hourlyMedian": 44.06,
+    "hourlyMean": 46.33,
+    "annualPct10": 62250,
+    "annualPct90": 136660
+  },
+  "13-2041": {
+    "occTitle": "Credit Analysts",
+    "source": {
+      "sheet": "national_M2025_dl",
+      "rows": [
+        116
+      ],
+      "oGroups": [
+        "detailed"
+      ],
+      "columns": {
+        "annualMedian": "AB",
+        "annualMean": "S",
+        "hourlyMedian": "W",
+        "hourlyMean": "R",
+        "annualPct10": "Z",
+        "annualPct90": "AD",
+        "annualOnly": "AE",
+        "hourlyOnly": "AF",
+        "totEmp": "L"
+      }
+    },
+    "seriesIds": {
+      "annualMedian": "OEUN000000000000013204113",
+      "annualMean": "OEUN000000000000013204104",
+      "hourlyMedian": "OEUN000000000000013204108",
+      "hourlyMean": "OEUN000000000000013204103"
+    },
+    "annualOnly": false,
+    "hourlyOnly": false,
+    "topcoded": {
+      "annualMedian": false,
+      "annualMean": false,
+      "hourlyMedian": false,
+      "hourlyMean": false,
+      "annualPct10": false,
+      "annualPct90": false
+    },
+    "nullReasons": {},
+    "annualMedian": 83510,
+    "annualMean": 100850,
+    "hourlyMedian": 40.15,
+    "hourlyMean": 48.49,
+    "annualPct10": 56250,
+    "annualPct90": 169230
+  },
+  "13-2051": {
+    "occTitle": "Financial and Investment Analysts",
+    "source": {
+      "sheet": "national_M2025_dl",
+      "rows": [
+        118
+      ],
+      "oGroups": [
+        "detailed"
+      ],
+      "columns": {
+        "annualMedian": "AB",
+        "annualMean": "S",
+        "hourlyMedian": "W",
+        "hourlyMean": "R",
+        "annualPct10": "Z",
+        "annualPct90": "AD",
+        "annualOnly": "AE",
+        "hourlyOnly": "AF",
+        "totEmp": "L"
+      }
+    },
+    "seriesIds": {
+      "annualMedian": "OEUN000000000000013205113",
+      "annualMean": "OEUN000000000000013205104",
+      "hourlyMedian": "OEUN000000000000013205108",
+      "hourlyMean": "OEUN000000000000013205103"
+    },
+    "annualOnly": false,
+    "hourlyOnly": false,
+    "topcoded": {
+      "annualMedian": false,
+      "annualMean": false,
+      "hourlyMedian": false,
+      "hourlyMean": false,
+      "annualPct10": false,
+      "annualPct90": false
+    },
+    "nullReasons": {},
+    "annualMedian": 102740,
+    "annualMean": 116800,
+    "hourlyMedian": 49.4,
+    "hourlyMean": 56.15,
+    "annualPct10": 63720,
+    "annualPct90": 180860
+  },
+  "13-2052": {
+    "occTitle": "Personal Financial Advisors",
+    "source": {
+      "sheet": "national_M2025_dl",
+      "rows": [
+        119
+      ],
+      "oGroups": [
+        "detailed"
+      ],
+      "columns": {
+        "annualMedian": "AB",
+        "annualMean": "S",
+        "hourlyMedian": "W",
+        "hourlyMean": "R",
+        "annualPct10": "Z",
+        "annualPct90": "AD",
+        "annualOnly": "AE",
+        "hourlyOnly": "AF",
+        "totEmp": "L"
+      }
+    },
+    "seriesIds": {
+      "annualMedian": "OEUN000000000000013205213",
+      "annualMean": "OEUN000000000000013205204",
+      "hourlyMedian": "OEUN000000000000013205208",
+      "hourlyMean": "OEUN000000000000013205203"
+    },
+    "annualOnly": false,
+    "hourlyOnly": false,
+    "topcoded": {
+      "annualMedian": false,
+      "annualMean": false,
+      "hourlyMedian": false,
+      "hourlyMean": false,
+      "annualPct10": false,
+      "annualPct90": false
+    },
+    "nullReasons": {},
+    "annualMedian": 105070,
+    "annualMean": 156670,
+    "hourlyMedian": 50.51,
+    "hourlyMean": 75.32,
+    "annualPct10": 50190,
+    "annualPct90": 357020
+  },
+  "13-2053": {
+    "occTitle": "Insurance Underwriters",
+    "source": {
+      "sheet": "national_M2025_dl",
+      "rows": [
+        120
+      ],
+      "oGroups": [
+        "detailed"
+      ],
+      "columns": {
+        "annualMedian": "AB",
+        "annualMean": "S",
+        "hourlyMedian": "W",
+        "hourlyMean": "R",
+        "annualPct10": "Z",
+        "annualPct90": "AD",
+        "annualOnly": "AE",
+        "hourlyOnly": "AF",
+        "totEmp": "L"
+      }
+    },
+    "seriesIds": {
+      "annualMedian": "OEUN000000000000013205313",
+      "annualMean": "OEUN000000000000013205304",
+      "hourlyMedian": "OEUN000000000000013205308",
+      "hourlyMean": "OEUN000000000000013205303"
+    },
+    "annualOnly": false,
+    "hourlyOnly": false,
+    "topcoded": {
+      "annualMedian": false,
+      "annualMean": false,
+      "hourlyMedian": false,
+      "hourlyMean": false,
+      "annualPct10": false,
+      "annualPct90": false
+    },
+    "nullReasons": {},
+    "annualMedian": 81370,
+    "annualMean": 93700,
+    "hourlyMedian": 39.12,
+    "hourlyMean": 45.05,
+    "annualPct10": 55530,
+    "annualPct90": 145160
+  },
+  "13-2054": {
+    "occTitle": "Financial Risk Specialists",
+    "source": {
+      "sheet": "national_M2025_dl",
+      "rows": [
+        121
+      ],
+      "oGroups": [
+        "detailed"
+      ],
+      "columns": {
+        "annualMedian": "AB",
+        "annualMean": "S",
+        "hourlyMedian": "W",
+        "hourlyMean": "R",
+        "annualPct10": "Z",
+        "annualPct90": "AD",
+        "annualOnly": "AE",
+        "hourlyOnly": "AF",
+        "totEmp": "L"
+      }
+    },
+    "seriesIds": {
+      "annualMedian": "OEUN000000000000013205413",
+      "annualMean": "OEUN000000000000013205404",
+      "hourlyMedian": "OEUN000000000000013205408",
+      "hourlyMean": "OEUN000000000000013205403"
+    },
+    "annualOnly": false,
+    "hourlyOnly": false,
+    "topcoded": {
+      "annualMedian": false,
+      "annualMean": false,
+      "hourlyMedian": false,
+      "hourlyMean": false,
+      "annualPct10": false,
+      "annualPct90": false
+    },
+    "nullReasons": {},
+    "annualMedian": 117330,
+    "annualMean": 124420,
+    "hourlyMedian": 56.41,
+    "hourlyMean": 59.82,
+    "annualPct10": 64820,
+    "annualPct90": 196110
+  },
+  "13-2072": {
+    "occTitle": "Loan Officers",
+    "source": {
+      "sheet": "national_M2025_dl",
+      "rows": [
+        126
+      ],
+      "oGroups": [
+        "detailed"
+      ],
+      "columns": {
+        "annualMedian": "AB",
+        "annualMean": "S",
+        "hourlyMedian": "W",
+        "hourlyMean": "R",
+        "annualPct10": "Z",
+        "annualPct90": "AD",
+        "annualOnly": "AE",
+        "hourlyOnly": "AF",
+        "totEmp": "L"
+      }
+    },
+    "seriesIds": {
+      "annualMedian": "OEUN000000000000013207213",
+      "annualMean": "OEUN000000000000013207204",
+      "hourlyMedian": "OEUN000000000000013207208",
+      "hourlyMean": "OEUN000000000000013207203"
+    },
+    "annualOnly": false,
+    "hourlyOnly": false,
+    "topcoded": {
+      "annualMedian": false,
+      "annualMean": false,
+      "hourlyMedian": false,
+      "hourlyMean": false,
+      "annualPct10": false,
+      "annualPct90": false
+    },
+    "nullReasons": {},
+    "annualMedian": 76690,
+    "annualMean": 87790,
+    "hourlyMedian": 36.87,
+    "hourlyMean": 42.21,
+    "annualPct10": 39430,
+    "annualPct90": 153180
+  },
+  "13-2099": {
+    "occTitle": "Financial Specialists, All Other",
+    "source": {
+      "sheet": "national_M2025_dl",
+      "rows": [
+        131
+      ],
+      "oGroups": [
+        "detailed"
+      ],
+      "columns": {
+        "annualMedian": "AB",
+        "annualMean": "S",
+        "hourlyMedian": "W",
+        "hourlyMean": "R",
+        "annualPct10": "Z",
+        "annualPct90": "AD",
+        "annualOnly": "AE",
+        "hourlyOnly": "AF",
+        "totEmp": "L"
+      }
+    },
+    "seriesIds": {
+      "annualMedian": "OEUN000000000000013209913",
+      "annualMean": "OEUN000000000000013209904",
+      "hourlyMedian": "OEUN000000000000013209908",
+      "hourlyMean": "OEUN000000000000013209903"
+    },
+    "annualOnly": false,
+    "hourlyOnly": false,
+    "topcoded": {
+      "annualMedian": false,
+      "annualMean": false,
+      "hourlyMedian": false,
+      "hourlyMean": false,
+      "annualPct10": false,
+      "annualPct90": false
+    },
+    "nullReasons": {},
+    "annualMedian": 81100,
+    "annualMean": 93810,
+    "hourlyMedian": 38.99,
+    "hourlyMean": 45.1,
+    "annualPct10": 48460,
+    "annualPct90": 151490
+  },
+  "15-1211": {
+    "occTitle": "Computer Systems Analysts",
+    "source": {
+      "sheet": "national_M2025_dl",
+      "rows": [
+        135
+      ],
+      "oGroups": [
+        "detailed"
+      ],
+      "columns": {
+        "annualMedian": "AB",
+        "annualMean": "S",
+        "hourlyMedian": "W",
+        "hourlyMean": "R",
+        "annualPct10": "Z",
+        "annualPct90": "AD",
+        "annualOnly": "AE",
+        "hourlyOnly": "AF",
+        "totEmp": "L"
+      }
+    },
+    "seriesIds": {
+      "annualMedian": "OEUN000000000000015121113",
+      "annualMean": "OEUN000000000000015121104",
+      "hourlyMedian": "OEUN000000000000015121108",
+      "hourlyMean": "OEUN000000000000015121103"
+    },
+    "annualOnly": false,
+    "hourlyOnly": false,
+    "topcoded": {
+      "annualMedian": false,
+      "annualMean": false,
+      "hourlyMedian": false,
+      "hourlyMean": false,
+      "annualPct10": false,
+      "annualPct90": false
+    },
+    "nullReasons": {},
+    "annualMedian": 105850,
+    "annualMean": 114610,
+    "hourlyMedian": 50.89,
+    "hourlyMean": 55.1,
+    "annualPct10": 67340,
+    "annualPct90": 167710
+  },
+  "15-1212": {
+    "occTitle": "Information Security Analysts",
+    "source": {
+      "sheet": "national_M2025_dl",
+      "rows": [
+        136
+      ],
+      "oGroups": [
+        "detailed"
+      ],
+      "columns": {
+        "annualMedian": "AB",
+        "annualMean": "S",
+        "hourlyMedian": "W",
+        "hourlyMean": "R",
+        "annualPct10": "Z",
+        "annualPct90": "AD",
+        "annualOnly": "AE",
+        "hourlyOnly": "AF",
+        "totEmp": "L"
+      }
+    },
+    "seriesIds": {
+      "annualMedian": "OEUN000000000000015121213",
+      "annualMean": "OEUN000000000000015121204",
+      "hourlyMedian": "OEUN000000000000015121208",
+      "hourlyMean": "OEUN000000000000015121203"
+    },
+    "annualOnly": false,
+    "hourlyOnly": false,
+    "topcoded": {
+      "annualMedian": false,
+      "annualMean": false,
+      "hourlyMedian": false,
+      "hourlyMean": false,
+      "annualPct10": false,
+      "annualPct90": false
+    },
+    "nullReasons": {},
+    "annualMedian": 129180,
+    "annualMean": 132510,
+    "hourlyMedian": 62.11,
+    "hourlyMean": 63.71,
+    "annualPct10": 75090,
+    "annualPct90": 199850
+  },
+  "15-1242": {
+    "occTitle": "Database Administrators",
+    "source": {
+      "sheet": "national_M2025_dl",
+      "rows": [
+        144
+      ],
+      "oGroups": [
+        "detailed"
+      ],
+      "columns": {
+        "annualMedian": "AB",
+        "annualMean": "S",
+        "hourlyMedian": "W",
+        "hourlyMean": "R",
+        "annualPct10": "Z",
+        "annualPct90": "AD",
+        "annualOnly": "AE",
+        "hourlyOnly": "AF",
+        "totEmp": "L"
+      }
+    },
+    "seriesIds": {
+      "annualMedian": "OEUN000000000000015124213",
+      "annualMean": "OEUN000000000000015124204",
+      "hourlyMedian": "OEUN000000000000015124208",
+      "hourlyMean": "OEUN000000000000015124203"
+    },
+    "annualOnly": false,
+    "hourlyOnly": false,
+    "topcoded": {
+      "annualMedian": false,
+      "annualMean": false,
+      "hourlyMedian": false,
+      "hourlyMean": false,
+      "annualPct10": false,
+      "annualPct90": false
+    },
+    "nullReasons": {},
+    "annualMedian": 104620,
+    "annualMean": 110090,
+    "hourlyMedian": 50.3,
+    "hourlyMean": 52.93,
+    "annualPct10": 60230,
+    "annualPct90": 163320
+  },
+  "15-1252": {
+    "occTitle": "Software Developers",
+    "source": {
+      "sheet": "national_M2025_dl",
+      "rows": [
+        149
+      ],
+      "oGroups": [
+        "detailed"
+      ],
+      "columns": {
+        "annualMedian": "AB",
+        "annualMean": "S",
+        "hourlyMedian": "W",
+        "hourlyMean": "R",
+        "annualPct10": "Z",
+        "annualPct90": "AD",
+        "annualOnly": "AE",
+        "hourlyOnly": "AF",
+        "totEmp": "L"
+      }
+    },
+    "seriesIds": {
+      "annualMedian": "OEUN000000000000015125213",
+      "annualMean": "OEUN000000000000015125204",
+      "hourlyMedian": "OEUN000000000000015125208",
+      "hourlyMean": "OEUN000000000000015125203"
+    },
+    "annualOnly": false,
+    "hourlyOnly": false,
+    "topcoded": {
+      "annualMedian": false,
+      "annualMean": false,
+      "hourlyMedian": false,
+      "hourlyMean": false,
+      "annualPct10": false,
+      "annualPct90": false
+    },
+    "nullReasons": {},
+    "annualMedian": 135980,
+    "annualMean": 148100,
+    "hourlyMedian": 65.38,
+    "hourlyMean": 71.2,
+    "annualPct10": 82460,
+    "annualPct90": 214670
+  },
+  "15-1254": {
+    "occTitle": "Web Developers",
+    "source": {
+      "sheet": "national_M2025_dl",
+      "rows": [
+        151
+      ],
+      "oGroups": [
+        "detailed"
+      ],
+      "columns": {
+        "annualMedian": "AB",
+        "annualMean": "S",
+        "hourlyMedian": "W",
+        "hourlyMean": "R",
+        "annualPct10": "Z",
+        "annualPct90": "AD",
+        "annualOnly": "AE",
+        "hourlyOnly": "AF",
+        "totEmp": "L"
+      }
+    },
+    "seriesIds": {
+      "annualMedian": "OEUN000000000000015125413",
+      "annualMean": "OEUN000000000000015125404",
+      "hourlyMedian": "OEUN000000000000015125408",
+      "hourlyMean": "OEUN000000000000015125403"
+    },
+    "annualOnly": false,
+    "hourlyOnly": false,
+    "topcoded": {
+      "annualMedian": false,
+      "annualMean": false,
+      "hourlyMedian": false,
+      "hourlyMean": false,
+      "annualPct10": false,
+      "annualPct90": false
+    },
+    "nullReasons": {},
+    "annualMedian": 92650,
+    "annualMean": 98770,
+    "hourlyMedian": 44.54,
+    "hourlyMean": 47.49,
+    "annualPct10": 48100,
+    "annualPct90": 162290
+  },
+  "15-1255": {
+    "occTitle": "Web and Digital Interface Designers",
+    "source": {
+      "sheet": "national_M2025_dl",
+      "rows": [
+        152
+      ],
+      "oGroups": [
+        "detailed"
+      ],
+      "columns": {
+        "annualMedian": "AB",
+        "annualMean": "S",
+        "hourlyMedian": "W",
+        "hourlyMean": "R",
+        "annualPct10": "Z",
+        "annualPct90": "AD",
+        "annualOnly": "AE",
+        "hourlyOnly": "AF",
+        "totEmp": "L"
+      }
+    },
+    "seriesIds": {
+      "annualMedian": "OEUN000000000000015125513",
+      "annualMean": "OEUN000000000000015125504",
+      "hourlyMedian": "OEUN000000000000015125508",
+      "hourlyMean": "OEUN000000000000015125503"
+    },
+    "annualOnly": false,
+    "hourlyOnly": false,
+    "topcoded": {
+      "annualMedian": false,
+      "annualMean": false,
+      "hourlyMedian": false,
+      "hourlyMean": false,
+      "annualPct10": false,
+      "annualPct90": false
+    },
+    "nullReasons": {},
+    "annualMedian": 104000,
+    "annualMean": 117490,
+    "hourlyMedian": 50,
+    "hourlyMean": 56.49,
+    "annualPct10": 53750,
+    "annualPct90": 201550
+  },
+  "15-1299": {
+    "occTitle": "Computer Occupations, All Other",
+    "source": {
+      "sheet": "national_M2025_dl",
+      "rows": [
+        154
+      ],
+      "oGroups": [
+        "detailed"
+      ],
+      "columns": {
+        "annualMedian": "AB",
+        "annualMean": "S",
+        "hourlyMedian": "W",
+        "hourlyMean": "R",
+        "annualPct10": "Z",
+        "annualPct90": "AD",
+        "annualOnly": "AE",
+        "hourlyOnly": "AF",
+        "totEmp": "L"
+      }
+    },
+    "seriesIds": {
+      "annualMedian": "OEUN000000000000015129913",
+      "annualMean": "OEUN000000000000015129904",
+      "hourlyMedian": "OEUN000000000000015129908",
+      "hourlyMean": "OEUN000000000000015129903"
+    },
+    "annualOnly": false,
+    "hourlyOnly": false,
+    "topcoded": {
+      "annualMedian": false,
+      "annualMean": false,
+      "hourlyMedian": false,
+      "hourlyMean": false,
+      "annualPct10": false,
+      "annualPct90": false
+    },
+    "nullReasons": {},
+    "annualMedian": 116580,
+    "annualMean": 122230,
+    "hourlyMedian": 56.05,
+    "hourlyMean": 58.77,
+    "annualPct10": 55940,
+    "annualPct90": 188470
+  },
+  "15-2011": {
+    "occTitle": "Actuaries",
+    "source": {
+      "sheet": "national_M2025_dl",
+      "rows": [
+        157
+      ],
+      "oGroups": [
+        "detailed"
+      ],
+      "columns": {
+        "annualMedian": "AB",
+        "annualMean": "S",
+        "hourlyMedian": "W",
+        "hourlyMean": "R",
+        "annualPct10": "Z",
+        "annualPct90": "AD",
+        "annualOnly": "AE",
+        "hourlyOnly": "AF",
+        "totEmp": "L"
+      }
+    },
+    "seriesIds": {
+      "annualMedian": "OEUN000000000000015201113",
+      "annualMean": "OEUN000000000000015201104",
+      "hourlyMedian": "OEUN000000000000015201108",
+      "hourlyMean": "OEUN000000000000015201103"
+    },
+    "annualOnly": false,
+    "hourlyOnly": false,
+    "topcoded": {
+      "annualMedian": false,
+      "annualMean": false,
+      "hourlyMedian": false,
+      "hourlyMean": false,
+      "annualPct10": false,
+      "annualPct90": false
+    },
+    "nullReasons": {},
+    "annualMedian": 130000,
+    "annualMean": 141480,
+    "hourlyMedian": 62.5,
+    "hourlyMean": 68.02,
+    "annualPct10": 78570,
+    "annualPct90": 215100
+  },
+  "15-2031": {
+    "occTitle": "Operations Research Analysts",
+    "source": {
+      "sheet": "national_M2025_dl",
+      "rows": [
+        161
+      ],
+      "oGroups": [
+        "detailed"
+      ],
+      "columns": {
+        "annualMedian": "AB",
+        "annualMean": "S",
+        "hourlyMedian": "W",
+        "hourlyMean": "R",
+        "annualPct10": "Z",
+        "annualPct90": "AD",
+        "annualOnly": "AE",
+        "hourlyOnly": "AF",
+        "totEmp": "L"
+      }
+    },
+    "seriesIds": {
+      "annualMedian": "OEUN000000000000015203113",
+      "annualMean": "OEUN000000000000015203104",
+      "hourlyMedian": "OEUN000000000000015203108",
+      "hourlyMean": "OEUN000000000000015203103"
+    },
+    "annualOnly": false,
+    "hourlyOnly": false,
+    "topcoded": {
+      "annualMedian": false,
+      "annualMean": false,
+      "hourlyMedian": false,
+      "hourlyMean": false,
+      "annualPct10": false,
+      "annualPct90": false
+    },
+    "nullReasons": {},
+    "annualMedian": 88940,
+    "annualMean": 99730,
+    "hourlyMedian": 42.76,
+    "hourlyMean": 47.95,
+    "annualPct10": 57060,
+    "annualPct90": 159910
+  },
+  "15-2041": {
+    "occTitle": "Statisticians",
+    "source": {
+      "sheet": "national_M2025_dl",
+      "rows": [
+        163
+      ],
+      "oGroups": [
+        "detailed"
+      ],
+      "columns": {
+        "annualMedian": "AB",
+        "annualMean": "S",
+        "hourlyMedian": "W",
+        "hourlyMean": "R",
+        "annualPct10": "Z",
+        "annualPct90": "AD",
+        "annualOnly": "AE",
+        "hourlyOnly": "AF",
+        "totEmp": "L"
+      }
+    },
+    "seriesIds": {
+      "annualMedian": "OEUN000000000000015204113",
+      "annualMean": "OEUN000000000000015204104",
+      "hourlyMedian": "OEUN000000000000015204108",
+      "hourlyMean": "OEUN000000000000015204103"
+    },
+    "annualOnly": false,
+    "hourlyOnly": false,
+    "topcoded": {
+      "annualMedian": false,
+      "annualMean": false,
+      "hourlyMedian": false,
+      "hourlyMean": false,
+      "annualPct10": false,
+      "annualPct90": false
+    },
+    "nullReasons": {},
+    "annualMedian": 105650,
+    "annualMean": 115700,
+    "hourlyMedian": 50.79,
+    "hourlyMean": 55.63,
+    "annualPct10": 64000,
+    "annualPct90": 174050
+  },
+  "15-2051": {
+    "occTitle": "Data Scientists",
+    "source": {
+      "sheet": "national_M2025_dl",
+      "rows": [
+        165
+      ],
+      "oGroups": [
+        "detailed"
+      ],
+      "columns": {
+        "annualMedian": "AB",
+        "annualMean": "S",
+        "hourlyMedian": "W",
+        "hourlyMean": "R",
+        "annualPct10": "Z",
+        "annualPct90": "AD",
+        "annualOnly": "AE",
+        "hourlyOnly": "AF",
+        "totEmp": "L"
+      }
+    },
+    "seriesIds": {
+      "annualMedian": "OEUN000000000000015205113",
+      "annualMean": "OEUN000000000000015205104",
+      "hourlyMedian": "OEUN000000000000015205108",
+      "hourlyMean": "OEUN000000000000015205103"
+    },
+    "annualOnly": false,
+    "hourlyOnly": false,
+    "topcoded": {
+      "annualMedian": false,
+      "annualMean": false,
+      "hourlyMedian": false,
+      "hourlyMean": false,
+      "annualPct10": false,
+      "annualPct90": false
+    },
+    "nullReasons": {},
+    "annualMedian": 120230,
+    "annualMean": 126800,
+    "hourlyMedian": 57.8,
+    "hourlyMean": 60.96,
+    "annualPct10": 67240,
+    "annualPct90": 199130
+  },
+  "41-3011": {
+    "occTitle": "Advertising Sales Agents",
+    "source": {
+      "sheet": "national_M2025_dl",
+      "rows": [
+        807
+      ],
+      "oGroups": [
+        "detailed"
+      ],
+      "columns": {
+        "annualMedian": "AB",
+        "annualMean": "S",
+        "hourlyMedian": "W",
+        "hourlyMean": "R",
+        "annualPct10": "Z",
+        "annualPct90": "AD",
+        "annualOnly": "AE",
+        "hourlyOnly": "AF",
+        "totEmp": "L"
+      }
+    },
+    "seriesIds": {
+      "annualMedian": "OEUN000000000000041301113",
+      "annualMean": "OEUN000000000000041301104",
+      "hourlyMedian": "OEUN000000000000041301108",
+      "hourlyMean": "OEUN000000000000041301103"
+    },
+    "annualOnly": false,
+    "hourlyOnly": false,
+    "topcoded": {
+      "annualMedian": false,
+      "annualMean": false,
+      "hourlyMedian": false,
+      "hourlyMean": false,
+      "annualPct10": false,
+      "annualPct90": false
+    },
+    "nullReasons": {},
+    "annualMedian": 64820,
+    "annualMean": 80670,
+    "hourlyMedian": 31.16,
+    "hourlyMean": 38.79,
+    "annualPct10": 35240,
+    "annualPct90": 146010
+  },
+  "41-3021": {
+    "occTitle": "Insurance Sales Agents",
+    "source": {
+      "sheet": "national_M2025_dl",
+      "rows": [
+        809
+      ],
+      "oGroups": [
+        "detailed"
+      ],
+      "columns": {
+        "annualMedian": "AB",
+        "annualMean": "S",
+        "hourlyMedian": "W",
+        "hourlyMean": "R",
+        "annualPct10": "Z",
+        "annualPct90": "AD",
+        "annualOnly": "AE",
+        "hourlyOnly": "AF",
+        "totEmp": "L"
+      }
+    },
+    "seriesIds": {
+      "annualMedian": "OEUN000000000000041302113",
+      "annualMean": "OEUN000000000000041302104",
+      "hourlyMedian": "OEUN000000000000041302108",
+      "hourlyMean": "OEUN000000000000041302103"
+    },
+    "annualOnly": false,
+    "hourlyOnly": false,
+    "topcoded": {
+      "annualMedian": false,
+      "annualMean": false,
+      "hourlyMedian": false,
+      "hourlyMean": false,
+      "annualPct10": false,
+      "annualPct90": false
+    },
+    "nullReasons": {},
+    "annualMedian": 62280,
+    "annualMean": 81480,
+    "hourlyMedian": 29.94,
+    "hourlyMean": 39.18,
+    "annualPct10": 37330,
+    "annualPct90": 138140
+  },
+  "41-3031": {
+    "occTitle": "Securities, Commodities, and Financial Services Sales Agents",
+    "source": {
+      "sheet": "national_M2025_dl",
+      "rows": [
+        811
+      ],
+      "oGroups": [
+        "detailed"
+      ],
+      "columns": {
+        "annualMedian": "AB",
+        "annualMean": "S",
+        "hourlyMedian": "W",
+        "hourlyMean": "R",
+        "annualPct10": "Z",
+        "annualPct90": "AD",
+        "annualOnly": "AE",
+        "hourlyOnly": "AF",
+        "totEmp": "L"
+      }
+    },
+    "seriesIds": {
+      "annualMedian": "OEUN000000000000041303113",
+      "annualMean": "OEUN000000000000041303104",
+      "hourlyMedian": "OEUN000000000000041303108",
+      "hourlyMean": "OEUN000000000000041303103"
+    },
+    "annualOnly": false,
+    "hourlyOnly": false,
+    "topcoded": {
+      "annualMedian": false,
+      "annualMean": false,
+      "hourlyMedian": false,
+      "hourlyMean": false,
+      "annualPct10": false,
+      "annualPct90": false
+    },
+    "nullReasons": {},
+    "annualMedian": 78660,
+    "annualMean": 109150,
+    "hourlyMedian": 37.82,
+    "hourlyMean": 52.48,
+    "annualPct10": 48040,
+    "annualPct90": 212880
+  },
+  "41-3091": {
+    "occTitle": "Sales Representatives of Services, Except Advertising, Insurance, Financial Services, and Travel",
+    "source": {
+      "sheet": "national_M2025_dl",
+      "rows": [
+        815
+      ],
+      "oGroups": [
+        "detailed"
+      ],
+      "columns": {
+        "annualMedian": "AB",
+        "annualMean": "S",
+        "hourlyMedian": "W",
+        "hourlyMean": "R",
+        "annualPct10": "Z",
+        "annualPct90": "AD",
+        "annualOnly": "AE",
+        "hourlyOnly": "AF",
+        "totEmp": "L"
+      }
+    },
+    "seriesIds": {
+      "annualMedian": "OEUN000000000000041309113",
+      "annualMean": "OEUN000000000000041309104",
+      "hourlyMedian": "OEUN000000000000041309108",
+      "hourlyMean": "OEUN000000000000041309103"
+    },
+    "annualOnly": false,
+    "hourlyOnly": false,
+    "topcoded": {
+      "annualMedian": false,
+      "annualMean": false,
+      "hourlyMedian": false,
+      "hourlyMean": false,
+      "annualPct10": false,
+      "annualPct90": false
+    },
+    "nullReasons": {},
+    "annualMedian": 69990,
+    "annualMean": 82430,
+    "hourlyMedian": 33.65,
+    "hourlyMean": 39.63,
+    "annualPct10": 37980,
+    "annualPct90": 148840
+  },
+  "41-4012": {
+    "occTitle": "Sales Representatives, Wholesale and Manufacturing, Except Technical and Scientific Products",
+    "source": {
+      "sheet": "national_M2025_dl",
+      "rows": [
+        819
+      ],
+      "oGroups": [
+        "detailed"
+      ],
+      "columns": {
+        "annualMedian": "AB",
+        "annualMean": "S",
+        "hourlyMedian": "W",
+        "hourlyMean": "R",
+        "annualPct10": "Z",
+        "annualPct90": "AD",
+        "annualOnly": "AE",
+        "hourlyOnly": "AF",
+        "totEmp": "L"
+      }
+    },
+    "seriesIds": {
+      "annualMedian": "OEUN000000000000041401213",
+      "annualMean": "OEUN000000000000041401204",
+      "hourlyMedian": "OEUN000000000000041401208",
+      "hourlyMean": "OEUN000000000000041401203"
+    },
+    "annualOnly": false,
+    "hourlyOnly": false,
+    "topcoded": {
+      "annualMedian": false,
+      "annualMean": false,
+      "hourlyMedian": false,
+      "hourlyMean": false,
+      "annualPct10": false,
+      "annualPct90": false
+    },
+    "nullReasons": {},
+    "annualMedian": 72080,
+    "annualMean": 82530,
+    "hourlyMedian": 34.65,
+    "hourlyMean": 39.68,
+    "annualPct10": 39090,
+    "annualPct90": 137550
+  }
+}
