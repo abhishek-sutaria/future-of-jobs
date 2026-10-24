@@ -1,9 +1,11 @@
 import type { Job } from '../types';
 import { DATA_SOURCES } from '../config/constants';
+import { WAGES_META, wageForTitle } from './wages';
 
 /** Traceable origin for a value shown in the UI (labor-market claims). */
 export type DataProvenance =
     | 'BLS_OES'
+    | 'BLS_OES_WAGES'
     | 'BLS_OOH'
     | 'BLS_EP'
     | 'BLS_CPS'
@@ -16,6 +18,7 @@ export type DataProvenance =
 
 const PROVENANCE_LABEL: Record<DataProvenance, string> = {
     BLS_OES: 'How many people in the U.S. have this job today. Comes from the government’s main employment survey (BLS OES).',
+    BLS_OES_WAGES: `What this job pays across the U.S., from the government’s wage survey (BLS ${WAGES_META.bls_release}), the same survey as the job counts. The median is the middle wage: half of workers earn more, half earn less. The mean is the average, which a few very high earners can pull up.`,
     BLS_OOH: 'How much this job is expected to grow or shrink over the next 10 years (2024–2034). Comes from the government’s job outlook handbook (BLS OOH).',
     BLS_EP: 'How many people BLS projects will have this job in 2025 and in 2035. Comes from the Employment Projections program. The 3D map height follows this path.',
     BLS_CPS: 'Live U.S. unemployment rate from the government’s household survey (BLS CPS). This is the national rate — not a count of people in this specific job.',
@@ -37,6 +40,8 @@ export function jobSourceProvenanceChips(job: Job): { key: string; label: string
     const src = new Set(job.dataSources);
 
     if (src.has(DATA_SOURCES.BLS_OES)) chips.push({ key: 'oes', label: 'OES', provenance: 'BLS_OES' });
+    // Pay comes from national_wages.json by SOC, not from data.ts dataSources.
+    if (wageForTitle(job.title)) chips.push({ key: 'pay', label: 'Pay', provenance: 'BLS_OES_WAGES' });
     if (src.has(DATA_SOURCES.BLS_OOH)) chips.push({ key: 'ooh', label: 'OOH', provenance: 'BLS_OOH' });
     if (src.has(DATA_SOURCES.BLS_EP)) chips.push({ key: 'ep', label: 'EP', provenance: 'BLS_EP' });
     if (src.has(DATA_SOURCES.BLS_CPS)) chips.push({ key: 'cps', label: 'CPS', provenance: 'BLS_CPS' });
@@ -67,6 +72,7 @@ export function jobSourceProvenanceChips(job: Job): { key: string; label: string
  */
 export function panelSourceList(job: Job): string[] {
     const sources = (job.dataSources ?? []).filter((s) => s !== DATA_SOURCES.BLS_STATE);
+    if (wageForTitle(job.title)) sources.push(DATA_SOURCES.BLS_OES_WAGES);
     return sources.length > 0 ? sources : ['Modeled'];
 }
 

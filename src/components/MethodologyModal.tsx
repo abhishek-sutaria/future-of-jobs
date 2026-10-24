@@ -49,6 +49,13 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                                     </td>
                                 </tr>
                                 <tr className="border-t border-white/[0.06]">
+                                    <td className="px-3 py-2">Pay (role panel / Pay badge)</td>
+                                    <td className="px-3 py-2 text-gray-400">
+                                        <SourceLink href="https://www.bls.gov/oes/">BLS OEWS May 2025</SourceLink>
+                                        {' '}national annual median wage, with the annual mean beside it. Same survey and year as employment, copied exactly as BLS publishes it. Wages BLS caps show as &ldquo;&ge;&rdquo; the cap. Roles that share one BLS code show the same pay.
+                                    </td>
+                                </tr>
+                                <tr className="border-t border-white/[0.06]">
                                     <td className="px-3 py-2">3D peak height (jobs over time)</td>
                                     <td className="px-3 py-2 text-gray-400">
                                         <SourceLink href="https://www.bls.gov/emp/tables/occupational-projections-and-characteristics.htm">BLS Employment Projections 2025–2035</SourceLink>

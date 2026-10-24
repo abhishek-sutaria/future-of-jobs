@@ -11,6 +11,7 @@ import { partitionRoleTasks, isHybridTask, pickRoadmapPair, emptyColumnNote } fr
 import { blsEpGrowthPathPoints } from '../utils/terrainMath';
 import { jobSourceProvenanceChips, panelSourceList } from '../utils/provenance';
 import { ProvenanceBadge } from './ProvenanceBadge';
+import { RolePay } from './RolePay';
 import { CloseButton } from './ui/CloseButton';
 import { useUserStore } from '../userStore';
 import { loadScenario, saveScenario } from '../lib/userData';
@@ -230,6 +231,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                 <span className="hidden md:inline text-[10px] text-gray-500 font-mono">{job.id.slice(0, 8)}</span>
                             </div>
                             <h2 className="text-xl md:text-2xl font-bold text-white tracking-tight">{job.title}</h2>
+                            <RolePay title={job.title} />
                             <div className="flex flex-wrap gap-1.5 mt-2" aria-label="Data sources for this role">
                                 {sourceChips.map((c) => (
                                     <ProvenanceBadge key={c.key} label={c.label} provenance={c.provenance} />

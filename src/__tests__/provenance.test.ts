@@ -82,7 +82,9 @@ describe('Panel provenance chips', () => {
         for (const job of initialJobs) {
             expect(panelSourceList(job)).not.toContain(DATA_SOURCES.BLS_STATE);
         }
-        expect(panelSourceList({ ...initialJobs[0], dataSources: [] })).toEqual(['Modeled']);
+        expect(panelSourceList({ ...initialJobs[0], title: 'Unmapped role', dataSources: [] })).toEqual(['Modeled']);
+        // Pay is keyed by SOC, not dataSources, so a mapped role still lists it (and shows the Pay chip).
+        expect(panelSourceList({ ...initialJobs[0], dataSources: [] })).toEqual([DATA_SOURCES.BLS_OES_WAGES]);
     });
 });
 
