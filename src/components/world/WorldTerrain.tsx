@@ -6,12 +6,14 @@ import {
     InstancedBufferGeometry,
     LatheGeometry,
     ShaderMaterial,
+    Sphere,
     Vector2,
+    Vector3,
     Vector4,
 } from 'three';
 import { useStore } from '../../store';
 import { useWorldStore } from '../../worldStore';
-import { SCENE, SHADER } from '../../config/constants';
+import { SCENE, SHADER, YEAR_MAX, YEAR_MIN } from '../../config/constants';
 import {
     groundFragmentShader,
     groundVertexShader,
@@ -21,7 +23,7 @@ import {
 } from './worldShaders';
 import { GROUND_Y, peakHeightAt, type ScenePeak, type WorldScene } from './worldScene';
 import { worldPointer } from './worldPointer';
-import { WORLD_BOUNDS } from '../../utils/worldLayout';
+import { rectDepth, rectWidth, WORLD_BOUNDS } from '../../utils/worldLayout';
 
 /** How far a peak outside the highlight fades toward the ground colour. */
 const DIM_EMPHASIS = 0.22;
@@ -72,6 +74,7 @@ export const WorldTerrain: React.FC<{ scene: WorldScene; isMobile: boolean }> = 
         }) },
         uHoverRegion: { value: -1 },
         uFocusRegion: { value: -1 },
+        uFocusRect: { value: new Vector4(1e6, 1e6, 1e6, 1e6) },
         uBounds: { value: new Vector4(WORLD_BOUNDS.x0, WORLD_BOUNDS.z0, WORLD_BOUNDS.x1, WORLD_BOUNDS.z1) },
         uMouse: { value: new Vector2(1e6, 1e6) },
     }), [scene.layout.regions]);
@@ -102,6 +105,15 @@ export const WorldTerrain: React.FC<{ scene: WorldScene; isMobile: boolean }> = 
             geometry.setAttribute('aEmph', aEmph);
             geometry.setAttribute('aIndex', new InstancedBufferAttribute(indexArr, 1));
             geometry.instanceCount = n;
+            // Real bounds for frustum culling (the unit bell's own bounds would
+            // be wrong): the region's rectangle, as tall as its tallest peak on
+            // the 2025→2035 path. A zoomed-in view then skips off-screen regions.
+            const tallest = Math.max(0, ...peaks.map((p) => Math.max(peakHeightAt(p.entry, YEAR_MIN), peakHeightAt(p.entry, YEAR_MAX))));
+            const reach = Math.max(0, ...peaks.map((p) => p.radius));
+            geometry.boundingSphere = new Sphere(
+                new Vector3(region.cx, GROUND_Y + tallest / 2, region.cz),
+                Math.hypot(rectWidth(region.rect) / 2 + reach, rectDepth(region.rect) / 2 + reach, tallest / 2),
+            );
             const material = new ShaderMaterial({
                 vertexShader: peakVertexShader,
                 fragmentShader: peakFragmentShader,
@@ -159,7 +171,11 @@ export const WorldTerrain: React.FC<{ scene: WorldScene; isMobile: boolean }> = 
             lift.value += ((away ? FLATTENED_LIFT : 1) - lift.value) * 0.15;
             m.material.uniforms.uHover.value = worldPointer.hoverPeakContinent === m.code ? worldPointer.hoverPeakIndex : -1;
         }
-        groundUniforms.uFocusRegion.value = focused ? regionIndex.get(focused) ?? -1 : -1;
+        const focusIndex = focused ? regionIndex.get(focused) ?? -1 : -1;
+        groundUniforms.uFocusRegion.value = focusIndex;
+        const fr = focusIndex >= 0 ? scene.layout.regions[focusIndex].rect : null;
+        if (fr) groundUniforms.uFocusRect.value.set(fr.x0, fr.z0, fr.x1, fr.z1);
+        else groundUniforms.uFocusRect.value.set(1e6, 1e6, 1e6, 1e6);
         groundUniforms.uHoverRegion.value = worldPointer.hoverRegion ? regionIndex.get(worldPointer.hoverRegion) ?? -1 : -1;
         groundUniforms.uMouse.value.set(worldPointer.mouseX, worldPointer.mouseZ);
     });
@@ -179,7 +195,7 @@ export const WorldTerrain: React.FC<{ scene: WorldScene; isMobile: boolean }> = 
                 />
             </mesh>
             {regionMeshes.map((m) => (
-                <mesh key={m.code} geometry={m.geometry} material={m.material} frustumCulled={false} />
+                <mesh key={m.code} geometry={m.geometry} material={m.material} />
             ))}
         </group>
     );

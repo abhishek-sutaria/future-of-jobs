@@ -100,6 +100,7 @@ export const groundFragmentShader = /* glsl */ `
   uniform vec4 uRegions[${MAX_REGIONS}];   // x0, z0, x1, z1
   uniform float uHoverRegion;              // index or -1
   uniform float uFocusRegion;              // index or -1
+  uniform vec4 uFocusRect;                 // the focused region's rectangle (far away when none)
   uniform vec4 uBounds;                    // world rectangle the regions fill
   uniform vec2 uMouse;
   varying vec3 vWorld;
@@ -111,7 +112,13 @@ export const groundFragmentShader = /* glsl */ `
 
     float region = -1.0;
     float edge = 1e6;
+    // Zoomed in, most of the screen is the focused region: test it first.
+    if (p.x >= uFocusRect.x && p.x <= uFocusRect.z && p.y >= uFocusRect.y && p.y <= uFocusRect.w) {
+      region = uFocusRegion;
+      edge = min(min(p.x - uFocusRect.x, uFocusRect.z - p.x), min(p.y - uFocusRect.y, uFocusRect.w - p.y));
+    }
     for (int i = 0; i < ${MAX_REGIONS}; i++) {
+      if (region >= 0.0) break;
       vec4 r = uRegions[i];
       if (p.x >= r.x && p.x <= r.z && p.y >= r.y && p.y <= r.w) {
         region = float(i);
