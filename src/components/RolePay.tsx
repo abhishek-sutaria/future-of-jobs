@@ -1,5 +1,6 @@
 import React from 'react';
-import { paySummary, payScopeNote, wageForTitle } from '../utils/wages';
+import { paySummary, payScopeNote, payBaseNote, wageForTitle, type PayFields } from '../utils/wages';
+import { INDEX_OCCUPATION_BY_SOC } from '../utils/occupationIndex';
 
 /**
  * Median pay line for the role panel header, read as one quiet sentence under
@@ -10,14 +11,18 @@ import { paySummary, payScopeNote, wageForTitle } from '../utils/wages';
 export const RolePay: React.FC<{ title: string }> = ({ title }) => {
     const found = wageForTitle(title);
     if (!found) return null;
+    // Payroll base: the SOC's whole OEWS headcount, never the 3D view's split share.
+    const base = INDEX_OCCUPATION_BY_SOC.get(found.soc)?.employment ?? null;
+    return <PayLine entry={found.entry} baseNote={payBaseNote(base)} scopeNote={payScopeNote(title)} />;
+};
 
-    const { label, headline, mean } = paySummary(found.entry);
-    const scopeNote = payScopeNote(title);
-
+/** The pay sentence itself, for any entry with OEWS wage fields (Kelley role or BLS occupation). */
+export const PayLine: React.FC<{ entry: PayFields; baseNote: string; scopeNote?: string | null }> = ({ entry, baseNote, scopeNote }) => {
+    const { label, headline, mean } = paySummary(entry);
     return (
         <div className="mt-1">
             {/* Two whole phrases: one line with a dot on desktop, stacked on a phone. */}
-            <p className="text-sm text-gray-400 flex flex-col md:flex-row md:items-baseline md:gap-1.5">
+            <p className="text-sm text-gray-400 flex flex-col md:flex-row md:items-baseline md:gap-1.5" title={baseNote} data-testid="pay-line">
                 {headline.text ? (
                     <span className="whitespace-nowrap">
                         <span className="font-semibold text-gray-100 tabular-nums">{headline.text}</span> {label.toLowerCase()}

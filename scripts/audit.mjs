@@ -195,21 +195,23 @@ heading('CAT-1', 'Telemetry Cleanup — localhost:7252 / Agent Log Markers');
   );
 }
 
-// T5: Unused lastFrameLogRef removed from Terrain.tsx
+// T5: Unused lastFrameLogRef removed from the terrain (Terrain.tsx, replaced
+// by world/WorldTerrain.tsx in the 22-continent world)
 {
-  const src = read('src/components/Terrain.tsx');
+  const src = read('src/components/world/WorldTerrain.tsx');
   check(
-    'T05 — lastFrameLogRef removed from Terrain.tsx',
-    !src.includes('lastFrameLogRef')
+    'T05 — lastFrameLogRef absent from the terrain (world/WorldTerrain.tsx)',
+    !exists('src/components/Terrain.tsx') && !src.includes('lastFrameLogRef')
   );
 }
 
-// T6: Unused lastMarkerLogRef removed from JobMarkers.tsx
+// T6: Unused lastMarkerLogRef removed from the labels (JobMarkers.tsx,
+// replaced by world/WorldMarkers.tsx)
 {
-  const src = read('src/components/JobMarkers.tsx');
+  const src = read('src/components/world/WorldMarkers.tsx');
   check(
-    'T06 — lastMarkerLogRef removed from JobMarkers.tsx',
-    !src.includes('lastMarkerLogRef')
+    'T06 — lastMarkerLogRef absent from the labels (world/WorldMarkers.tsx)',
+    !exists('src/components/JobMarkers.tsx') && !src.includes('lastMarkerLogRef')
   );
 }
 
@@ -904,6 +906,30 @@ check(
   check(
     'T53 — dist/assets/ contains a JavaScript bundle',
     hasJs
+  );
+}
+
+// T68: only index.json is in the main bundle; each continent file is its own
+// lazy chunk. Every occupation's description lives in its continent file only,
+// so finding any of them in the entry chunk means a continent was bundled.
+{
+  const assetsDir = path.join(ROOT, 'dist', 'assets');
+  const files = fs.existsSync(assetsDir) ? fs.readdirSync(assetsDir) : [];
+  const main = files.filter(f => /^index-.*\.js$/.test(f));
+  const index = JSON.parse(fs.readFileSync(path.join(ROOT, 'src/data/occupations/index.json'), 'utf8'));
+  const leaked = [];
+  const missingChunks = [];
+  for (const c of index.continents) {
+    if (!files.some(f => f.startsWith(`${c.code}-`) && f.endsWith('.js'))) missingChunks.push(c.code);
+    const file = JSON.parse(fs.readFileSync(path.join(ROOT, 'src/data/occupations', c.file), 'utf8'));
+    const sample = Object.values(file.occupations).find(o => o.description);
+    const needle = JSON.stringify(sample.description).slice(1, 60);
+    if (main.some(f => fs.readFileSync(path.join(assetsDir, f), 'utf8').includes(needle))) leaked.push(c.code);
+  }
+  check(
+    'T68 — continent files are lazy chunks, absent from the main bundle',
+    main.length === 1 && leaked.length === 0 && missingChunks.length === 0,
+    `main chunks: ${main.length}, leaked: ${leaked.join(',') || 'none'}, missing chunks: ${missingChunks.join(',') || 'none'}`
   );
 }
 

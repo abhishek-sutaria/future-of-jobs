@@ -13,7 +13,13 @@ const ALL_STEPS: Step[] = [
     {
         target: null,
         title: 'Welcome — quick tour',
-        description: 'This map shows 50 marketing & business roles with BLS Employment Projections from 2025 to 2035. Click Next to walk through each feature.',
+        description: 'This map shows every BLS occupation, grouped into 22 fields, with BLS Employment Projections from 2025 to 2035. Click Next to walk through each feature.',
+    },
+    {
+        target: 'tour-fields',
+        title: 'Fields & Kelley roles',
+        description: 'Pick a field to zoom in on its occupations, or click one on the map. A field’s size is its number of workers. Kelley roles highlights the 50 business roles that have AI scores today.',
+        padding: 8,
     },
     {
         target: 'tour-slider',
@@ -30,7 +36,7 @@ const ALL_STEPS: Step[] = [
     {
         target: 'tour-search',
         title: 'Search any role',
-        description: 'Type a job title to jump to it on the map and instantly open its full AI impact analysis.',
+        description: 'Type any job title, from Actors to Electricians, to fly to it on the map and open its panel.',
         padding: 10,
     },
     {

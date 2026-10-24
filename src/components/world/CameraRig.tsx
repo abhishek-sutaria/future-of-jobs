@@ -1,0 +1,83 @@
+import React, { useEffect, useRef } from 'react';
+import { useFrame, useThree } from '@react-three/fiber';
+import { PerspectiveCamera, Vector3 } from 'three';
+import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
+import { useWorldStore } from '../../worldStore';
+import { peakHeightAt, type WorldScene } from './worldScene';
+import { SCENE, YEAR_MAX, YEAR_MIN } from '../../config/constants';
+import { worldCamera } from './worldCamera';
+import { frameRect, worldFraming } from './framing';
+
+const FLY_MS = 900;
+/** Camera elevation when framing a region, from the horizontal. */
+const REGION_ELEVATION_DEG = 58;
+/** Room left around a region so its edge peaks stay clear of the screen edges. */
+const REGION_MARGIN = 1.2;
+
+const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
+
+/**
+ * Flies the camera between the whole world and one region whenever the
+ * world store asks (focusContinent / setKelleyOnly bump focusRequestId).
+ * Any orbit gesture cancels a flight in progress (worldCamera.cancel, called
+ * from Landscape's OrbitControls onStart).
+ */
+export const CameraRig: React.FC<{
+    controlsRef: React.RefObject<OrbitControlsImpl | null>;
+    scene: WorldScene;
+}> = ({ controlsRef, scene }) => {
+    const focused = useWorldStore((s) => s.focusedContinent);
+    const requestId = useWorldStore((s) => s.focusRequestId);
+    const camera = useThree((s) => s.camera) as PerspectiveCamera;
+    const size = useThree((s) => s.size);
+    const flight = useRef<{ fromT: Vector3; fromP: Vector3; toT: Vector3; toP: Vector3; start: number } | null>(null);
+
+    useEffect(() => {
+        worldCamera.cancel = () => {
+            flight.current = null;
+        };
+        return () => {
+            worldCamera.cancel = () => {};
+        };
+    }, []);
+
+    useEffect(() => {
+        if (requestId === 0) return;
+        const controls = controlsRef.current;
+        if (!controls) return;
+        const aspect = size.width / Math.max(1, size.height);
+        const region = focused ? scene.layout.regionByCode.get(focused) : undefined;
+        let framing;
+        if (region) {
+            // Leave room above for the tallest peak's label (its tip sits
+            // SCENE.LABEL.BASE_HEIGHT above the peak) at any slider year.
+            const tallest = Math.max(0, ...(scene.peaksByContinent.get(region.code) ?? []).map((p) =>
+                Math.max(peakHeightAt(p.entry, YEAR_MIN), peakHeightAt(p.entry, YEAR_MAX))));
+            const lift = (tallest + SCENE.LABEL.BASE_HEIGHT + 1) * Math.cos((REGION_ELEVATION_DEG * Math.PI) / 180);
+            framing = frameRect(region.rect, camera.fov, aspect, { elevationDeg: REGION_ELEVATION_DEG, margin: REGION_MARGIN, lift });
+        } else {
+            framing = worldFraming(camera.fov, aspect);
+        }
+        const toT = new Vector3(...framing.target);
+        const toP = new Vector3(...framing.position);
+        flight.current = { fromT: controls.target.clone(), fromP: camera.position.clone(), toT, toP, start: performance.now() };
+        // Flights are only requested from the UI, so the scene, size and
+        // framing they read are current; re-running on resize would yank the
+        // camera away from wherever the user has since orbited it.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [requestId]);
+
+    useFrame(() => {
+        const f = flight.current;
+        const controls = controlsRef.current;
+        if (!f || !controls) return;
+        const t = Math.min(1, (performance.now() - f.start) / FLY_MS);
+        const k = ease(t);
+        controls.target.lerpVectors(f.fromT, f.toT, k);
+        camera.position.lerpVectors(f.fromP, f.toP, k);
+        controls.update();
+        if (t >= 1) flight.current = null;
+    });
+
+    return null;
+};

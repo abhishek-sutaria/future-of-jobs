@@ -3,11 +3,17 @@ import { Canvas, type RootState } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import { MOUSE, TOUCH } from 'three';
-import { Terrain } from './Terrain';
-import { JobMarkers } from './JobMarkers';
+import { WorldTerrain } from './world/WorldTerrain';
+import { WorldMarkers } from './world/WorldMarkers';
+import { CameraRig } from './world/CameraRig';
+import { useWorldScene } from './world/worldScene';
+import { worldCamera } from './world/worldCamera';
 import { WebGLFallback } from './WebGLFallback';
 import { SCENE } from '../config/constants';
 import { useStore } from '../store';
+import { useWorldStore } from '../worldStore';
+import { WORLD_BOUNDS } from '../utils/worldLayout';
+import { worldFraming } from './world/framing';
 
 /** Matches MapView's own `isDefault = position.zoom === 1` — a single simple
  * check, not a multi-axis comparison. Pan target drifting from the origin is
@@ -34,6 +40,10 @@ export const Landscape: React.FC = () => {
     const route = useStore((s) => s.route);
     const mapView = useStore((s) => s.mapView);
     const selectedJob = useStore((s) => s.selectedJob);
+    const selectedOccupationSoc = useWorldStore((s) => s.selectedOccupationSoc);
+    const focusedContinent = useWorldStore((s) => s.focusedContinent);
+    const kelleyOnly = useWorldStore((s) => s.kelleyOnly);
+    const scene = useWorldScene();
     const setIsDefaultView = useStore((s) => s.setIsDefaultView);
     const resetViewRequestId = useStore((s) => s.resetViewRequestId);
     const controlsRef = useRef<OrbitControlsImpl>(null);
@@ -53,6 +63,12 @@ export const Landscape: React.FC = () => {
         () => typeof window !== 'undefined' && window.matchMedia('(max-width: 767px)').matches,
     );
     const [antialias] = useState(() => !isMobile);
+    // Whole-world framing for this viewport, read once like isPortrait: the
+    // "default view" (and Reset view) is this framing.
+    const [initialFraming] = useState(() => worldFraming(
+        isPortrait ? SCENE.CAMERA_PORTRAIT_FOV : SCENE.CAMERA_FOV,
+        typeof window !== 'undefined' ? window.innerWidth / Math.max(1, window.innerHeight) : 16 / 9,
+    ));
     const isDefaultViewRef = useRef(true);
     const [canvasKey, setCanvasKey] = useState(0);
     const [contextLossGivenUp, setContextLossGivenUp] = useState(false);
@@ -93,13 +109,14 @@ export const Landscape: React.FC = () => {
     // map view, selected job, route, or canvas remount changes — those live
     // outside OrbitControls. Without route/canvasKey, a phone that idled then
     // opened Dashboard (or recovered from context loss) can return to a Canvas
-    // still stuck on frameloop:'never'.
+    // still stuck on frameloop:'never'. A region flight or the Kelley filter
+    // must wake it too, or the camera would freeze mid-flight.
     useEffect(() => {
         bumpInteraction();
         return () => {
             if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
         };
-    }, [bumpInteraction, year, mapView, selectedJob, route, canvasKey]);
+    }, [bumpInteraction, year, mapView, selectedJob, route, canvasKey, selectedOccupationSoc, focusedContinent, kelleyOnly]);
 
     const handleContextLost = useCallback((event: Event) => {
         // Without this, the browser assumes the page doesn't want to recover
@@ -138,21 +155,23 @@ export const Landscape: React.FC = () => {
     // screen entirely, leaving only floating labels behind (drei's Html
     // isn't frustum-culled the same way a mesh is). Confirmed live: panning
     // the target 80 units from origin makes the terrain fully vanish.
-    // Clamp target to SCENE.MAX_PAN_RADIUS every change. Mutating target +
-    // camera position directly (not via a method that re-dispatches 'change'
-    // in a way that could loop) and only when actually out of bounds, so
-    // this is a no-op on every normal in-bounds interaction.
+    // Clamp the target to the regions' rectangle every change (it was a
+    // 25-unit radius when the terrain was a disc; corner regions now sit
+    // further out than that). Mutating target + camera position directly
+    // (not via a method that re-dispatches 'change' in a way that could loop)
+    // and only when actually out of bounds, so this is a no-op on every
+    // normal in-bounds interaction.
     const clampPanTarget = useCallback(() => {
         const controls = controlsRef.current;
         if (!controls) return;
         const target = controls.target;
-        const distXZ = Math.hypot(target.x, target.z);
-        if (distXZ > SCENE.MAX_PAN_RADIUS) {
-            const scale = SCENE.MAX_PAN_RADIUS / distXZ;
-            const dx = target.x * (1 - scale);
-            const dz = target.z * (1 - scale);
-            target.x -= dx;
-            target.z -= dz;
+        const cx = Math.min(WORLD_BOUNDS.x1, Math.max(WORLD_BOUNDS.x0, target.x));
+        const cz = Math.min(WORLD_BOUNDS.z1, Math.max(WORLD_BOUNDS.z0, target.z));
+        if (cx !== target.x || cz !== target.z) {
+            const dx = target.x - cx;
+            const dz = target.z - cz;
+            target.x = cx;
+            target.z = cz;
             controls.object.position.x -= dx;
             controls.object.position.z -= dz;
         }
@@ -160,12 +179,15 @@ export const Landscape: React.FC = () => {
         // Drives the header's "Reset view" button (mirrors MapView's own).
         // Compared via a plain ref, not the store value, so a drag that
         // never actually crosses the threshold never touches Zustand.
-        const isDefault = Math.hypot(controls.target.x, controls.target.z) <= DEFAULT_VIEW_EPSILON;
+        const isDefault = Math.hypot(
+            controls.target.x - initialFraming.target[0],
+            controls.target.z - initialFraming.target[2],
+        ) <= DEFAULT_VIEW_EPSILON;
         if (isDefault !== isDefaultViewRef.current) {
             isDefaultViewRef.current = isDefault;
             setIsDefaultView(isDefault);
         }
-    }, [setIsDefaultView]);
+    }, [setIsDefaultView, initialFraming]);
 
     // "Reset view" was clicked (resetViewRequestId incremented) — restore the
     // initial framing exactly, the same way returning from the dashboard
@@ -175,12 +197,15 @@ export const Landscape: React.FC = () => {
         if (resetViewRequestId === 0) return; // skip the initial mount value
         const controls = controlsRef.current;
         if (!controls) return;
-        controls.target.set(0, 0, 0);
-        controls.object.position.set(...SCENE.CAMERA_INITIAL_POSITION);
+        worldCamera.cancel();
+        // Back to the whole world: leave any zoomed region too.
+        if (useWorldStore.getState().focusedContinent) useWorldStore.setState({ focusedContinent: null });
+        controls.target.set(...initialFraming.target);
+        controls.object.position.set(...initialFraming.position);
         controls.update();
         isDefaultViewRef.current = true;
         setIsDefaultView(true);
-    }, [resetViewRequestId, setIsDefaultView]);
+    }, [resetViewRequestId, setIsDefaultView, initialFraming]);
 
     // Safe to bail out here (and only here): every hook above has already run
     // unconditionally on this render, so this doesn't change hook order/count
@@ -191,8 +216,9 @@ export const Landscape: React.FC = () => {
 
     // Pause the loop whenever the 3D view is covered. An opaque DOM overlay
     // does NOT stop requestAnimationFrame (browsers only throttle rAF for
-    // hidden tabs, not occluded canvases), and Terrain.tsx runs a ~37k-vertex
-    // shader with a per-vertex loop over up to 50 peaks every frame. Measured
+    // hidden tabs, not occluded canvases), and the terrain (then a ~37k-vertex
+    // shader looping over up to 50 peaks; now world/WorldTerrain's instanced
+    // peaks) redraws every frame. Measured
     // on production before this change: globe 12,161 draws/sec, task view
     // 12,060/sec (NOT paused), US map 60/sec. After: globe ~12,060/sec, task
     // view 0, US map 0, and the loop resumes on return to the globe. 'never'
@@ -208,6 +234,7 @@ export const Landscape: React.FC = () => {
     const pauseLoop = route === 'dashboard'
         || mapView !== 'globe'
         || selectedJob != null
+        || selectedOccupationSoc != null
         || tabHidden
         || (isMobile && mobileIdle);
 
@@ -227,7 +254,7 @@ export const Landscape: React.FC = () => {
                 powerPreference: isMobile ? 'low-power' : 'default',
             }}
             camera={{
-                position: [...(isPortrait ? SCENE.CAMERA_PORTRAIT_POSITION : SCENE.CAMERA_INITIAL_POSITION)],
+                position: [...initialFraming.position],
                 fov: isPortrait ? SCENE.CAMERA_PORTRAIT_FOV : SCENE.CAMERA_FOV,
             }}
         >
@@ -238,11 +265,13 @@ export const Landscape: React.FC = () => {
             {/* Second fill light is desktop-only — on phones it is pure fill cost. */}
             {!isMobile && <pointLight position={[-10, 10, -10]} intensity={0.5} color="blue" />}
 
-            <Terrain />
-            <JobMarkers />
+            <WorldTerrain scene={scene} isMobile={isMobile} />
+            <WorldMarkers scene={scene} />
+            <CameraRig controlsRef={controlsRef} scene={scene} />
 
             <OrbitControls
                 ref={controlsRef}
+                target={initialFraming.target}
                 enablePan={true}
                 enableZoom={true}
                 screenSpacePanning={false}
@@ -256,6 +285,7 @@ export const Landscape: React.FC = () => {
                     bumpInteraction();
                 }}
                 onStart={() => {
+                    worldCamera.cancel();
                     setIsOrbiting(true);
                     bumpInteraction();
                 }}

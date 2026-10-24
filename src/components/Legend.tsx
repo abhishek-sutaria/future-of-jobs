@@ -1,6 +1,6 @@
 import React from 'react';
 import { Z } from '../config/layers';
-import { RISK_BAND_COLORS } from '../config/theme';
+import { RISK_BAND_COLORS, RISK_UNSCORED_HEX } from '../config/theme';
 
 // Now visible on all viewports. The year slider width is scaled on mobile
 // to leave room for the legend. Padding/radius match YearSlider's card so
@@ -35,6 +35,15 @@ export const Legend: React.FC = () => {
                         backgroundImage: `linear-gradient(to bottom, ${RISK_BAND_COLORS.safe}, ${RISK_BAND_COLORS.hybrid}, ${RISK_BAND_COLORS.high})`,
                     }}
                 />
+            </div>
+
+            {/* Every occupation outside the 50 Kelley roles: no score, so no
+                risk colour. The slate matches RISK_UNSCORED_RGB on the peaks. */}
+            <div className="flex flex-row items-center justify-end gap-2 md:gap-3 border-t border-white/[0.06] pt-1.5">
+                <span className="text-[8px] md:text-[10px] font-medium text-right text-slate-400 leading-tight">
+                    Not scored yet<span className="max-md:hidden"> · AI scores coming soon</span>
+                </span>
+                <span className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full shrink-0" style={{ backgroundColor: RISK_UNSCORED_HEX }} />
             </div>
         </div>
     );

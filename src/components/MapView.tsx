@@ -2,6 +2,8 @@ import React, { useMemo, useState, useCallback, useEffect } from 'react';
 import { ComposableMap, Geographies, Geography, Marker, ZoomableGroup } from 'react-simple-maps';
 import { scaleLinear } from 'd3-scale';
 import { useStore } from '../store';
+import { useNonKelleyFocus } from '../hooks/useNonKelleyFocus';
+import { KelleyOnlyNote } from './KelleyOnlyNote';
 import { aggregateByState } from '../utils/mapAggregation';
 import { MAP_SIDEBAR } from '../config/constants';
 
@@ -29,6 +31,7 @@ interface TooltipState {
 export const MapView: React.FC = () => {
     const jobs = useStore((state) => state.jobs);
     const selectedRoleIds = useStore((state) => state.selectedRoleIds);
+    const nonKelleyFocus = useNonKelleyFocus();
     const [tooltip, setTooltip] = useState<TooltipState | null>(null);
     const [position, setPosition] = useState<{ coordinates: [number, number]; zoom: number }>({
         coordinates: [-97, 38],
@@ -131,6 +134,9 @@ export const MapView: React.FC = () => {
     const panMoved =
         Math.hypot(position.coordinates[0] - defaultCenter[0], position.coordinates[1] - defaultCenter[1]) > 0.35;
     const isDefault = position.zoom === 1 && !panMoved;
+
+    // State data exists for the 50 Kelley roles only.
+    if (nonKelleyFocus) return <KelleyOnlyNote continent={nonKelleyFocus} view="map" />;
 
     return (
         <div

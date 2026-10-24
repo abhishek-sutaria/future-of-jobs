@@ -55,6 +55,8 @@ const RISK_STOPS: [number, number, number][] = [
 
 /** Neutral slate for jobs with no automation-risk score yet */
 export const RISK_UNSCORED_RGB: [number, number, number] = [0.35, 0.42, 0.5];
+/** The same slate as a CSS colour, for label dots and the legend. */
+export const RISK_UNSCORED_HEX = '#' + RISK_UNSCORED_RGB.map((c) => Math.round(c * 255).toString(16).padStart(2, '0')).join('');
 
 /** Continuous green→amber→red ramp. Used for the terrain, where nuance is wanted. */
 export function riskColorRGB(t: number): [number, number, number] {

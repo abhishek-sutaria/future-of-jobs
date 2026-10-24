@@ -4,7 +4,7 @@
  * Screen-space placement maths for the floating role labels.
  *
  * Kept pure (no three.js, no DOM) so it can be unit-tested the way the rest of
- * this repo tests logic. JobMarkers feeds it the projected position of each
+ * this repo tests logic. world/WorldMarkers feeds it the projected position of each
  * leader-line tip (the "anchor") once per frame.
  *
  * Invariant: the anchor always stays inside its label box. A label may be
