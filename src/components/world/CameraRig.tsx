@@ -14,6 +14,21 @@ const REGION_ELEVATION_DEG = 58;
 /** Room left around a region so its edge peaks stay clear of the screen edges. */
 const REGION_MARGIN = 1.2;
 
+/**
+ * The part of the viewport the terrain is not covered by chrome: from the
+ * bottom of the header / fields bar to the top of the year slider. A phone's
+ * chrome takes about half the screen, a desktop's about a third.
+ */
+function freeBand(): { usableHeight?: number; bandCenter?: number } {
+    if (typeof document === 'undefined') return {};
+    const h = window.innerHeight;
+    const bottomOf = (sel: string) => document.querySelector(sel)?.getBoundingClientRect().bottom ?? 0;
+    const top = Math.max(bottomOf('header'), bottomOf('[data-world-bar]'));
+    const bottom = document.querySelector('[data-tour="tour-slider"]')?.getBoundingClientRect().top ?? h;
+    if (!(bottom > top)) return {};
+    return { usableHeight: (bottom - top) / h, bandCenter: ((top + bottom) / 2 - h / 2) / (h / 2) };
+}
+
 const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
 
 /**
@@ -54,7 +69,9 @@ export const CameraRig: React.FC<{
             const tallest = Math.max(0, ...(scene.peaksByContinent.get(region.code) ?? []).map((p) =>
                 Math.max(peakHeightAt(p.entry, YEAR_MIN), peakHeightAt(p.entry, YEAR_MAX))));
             const lift = (tallest + SCENE.LABEL.BASE_HEIGHT + 1) * Math.cos((REGION_ELEVATION_DEG * Math.PI) / 180);
-            framing = frameRect(region.rect, camera.fov, aspect, { elevationDeg: REGION_ELEVATION_DEG, margin: REGION_MARGIN, lift });
+            framing = frameRect(region.rect, camera.fov, aspect, {
+                elevationDeg: REGION_ELEVATION_DEG, margin: REGION_MARGIN, lift, ...freeBand(),
+            });
         } else {
             framing = worldFraming(camera.fov, aspect);
         }
