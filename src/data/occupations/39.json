@@ -1,0 +1,6005 @@
+{
+ "_meta": {
+  "continent": "39-0000",
+  "title": "Personal Care and Service Occupations",
+  "sources": "see index.json _meta.sources; source refs are <source>:<sheet>!<cell> or <source>:<file>#L<line>:<column>",
+  "extracted": "2026-10-24",
+  "generator": "python3 scripts/build_occupations.py"
+ },
+ "broadGroups": [
+  {
+   "soc": "39-1010",
+   "title": "First-Line Supervisors of Entertainment and Recreation Workers",
+   "minor": "39-1000",
+   "employment": 129200,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L733",
+    "title": "oews:national_M2025_dl!J733"
+   }
+  },
+  {
+   "soc": "39-1020",
+   "title": "First-Line Supervisors of Personal Service Workers",
+   "minor": "39-1000",
+   "employment": 114110,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L736",
+    "title": "oews:national_M2025_dl!J736"
+   }
+  },
+  {
+   "soc": "39-2010",
+   "title": "Animal Trainers",
+   "minor": "39-2000",
+   "employment": 18770,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L739",
+    "title": "oews:national_M2025_dl!J739"
+   }
+  },
+  {
+   "soc": "39-2020",
+   "title": "Animal Caretakers",
+   "minor": "39-2000",
+   "employment": 266910,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L741",
+    "title": "oews:national_M2025_dl!J741"
+   }
+  },
+  {
+   "soc": "39-3010",
+   "title": "Gambling Services Workers",
+   "minor": "39-3000",
+   "employment": 107000,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L744",
+    "title": "oews:national_M2025_dl!J744"
+   }
+  },
+  {
+   "soc": "39-3020",
+   "title": "Motion Picture Projectionists",
+   "minor": "39-3000",
+   "employment": 1480,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L748",
+    "title": "oews:national_M2025_dl!J748"
+   }
+  },
+  {
+   "soc": "39-3030",
+   "title": "Ushers, Lobby Attendants, and Ticket Takers",
+   "minor": "39-3000",
+   "employment": 121770,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L750",
+    "title": "oews:national_M2025_dl!J750"
+   }
+  },
+  {
+   "soc": "39-3090",
+   "title": "Miscellaneous Entertainment Attendants and Related Workers",
+   "minor": "39-3000",
+   "employment": 426960,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L752",
+    "title": "oews:national_M2025_dl!J752"
+   }
+  },
+  {
+   "soc": "39-4010",
+   "title": "Embalmers and Crematory Operators",
+   "minor": "39-4000",
+   "employment": 6870,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L758",
+    "title": "oews:national_M2025_dl!J758"
+   }
+  },
+  {
+   "soc": "39-4020",
+   "title": "Funeral Attendants",
+   "minor": "39-4000",
+   "employment": 31090,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L761",
+    "title": "oews:national_M2025_dl!J761"
+   }
+  },
+  {
+   "soc": "39-4030",
+   "title": "Morticians, Undertakers, and Funeral Arrangers",
+   "minor": "39-4000",
+   "employment": 25100,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L763",
+    "title": "oews:national_M2025_dl!J763"
+   }
+  },
+  {
+   "soc": "39-5010",
+   "title": "Barbers, Hairdressers, Hairstylists and Cosmetologists",
+   "minor": "39-5000",
+   "employment": 320710,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L766",
+    "title": "oews:national_M2025_dl!J766"
+   }
+  },
+  {
+   "soc": "39-5090",
+   "title": "Miscellaneous Personal Appearance Workers",
+   "minor": "39-5000",
+   "employment": 236070,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L769",
+    "title": "oews:national_M2025_dl!J769"
+   }
+  },
+  {
+   "soc": "39-6010",
+   "title": "Baggage Porters, Bellhops, and Concierges",
+   "minor": "39-6000",
+   "employment": 77750,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L775",
+    "title": "oews:national_M2025_dl!J775"
+   }
+  },
+  {
+   "soc": "39-7010",
+   "title": "Tour and Travel Guides",
+   "minor": "39-7000",
+   "employment": 53500,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L779",
+    "title": "oews:national_M2025_dl!J779"
+   }
+  },
+  {
+   "soc": "39-9010",
+   "title": "Childcare Workers",
+   "minor": "39-9000",
+   "employment": 518910,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L782",
+    "title": "oews:national_M2025_dl!J782"
+   }
+  },
+  {
+   "soc": "39-9030",
+   "title": "Recreation and Fitness Workers",
+   "minor": "39-9000",
+   "employment": 654420,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L784",
+    "title": "oews:national_M2025_dl!J784"
+   }
+  },
+  {
+   "soc": "39-9040",
+   "title": "Residential Advisors",
+   "minor": "39-9000",
+   "employment": 84760,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L787",
+    "title": "oews:national_M2025_dl!J787"
+   }
+  },
+  {
+   "soc": "39-9090",
+   "title": "Miscellaneous Personal Care and Service Workers",
+   "minor": "39-9000",
+   "employment": 60420,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L789",
+    "title": "oews:national_M2025_dl!J789"
+   }
+  }
+ ],
+ "occupations": {
+  "39-1013": {
+   "soc": "39-1013",
+   "title": "First-Line Supervisors of Gambling Services Workers",
+   "major": "39-0000",
+   "minor": "39-1000",
+   "broad": "39-1010",
+   "oewsRows": [
+    734
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 26010,
+   "annualMedian": 63820,
+   "annualMean": 64830,
+   "hourlyMedian": 30.68,
+   "hourlyMean": 31.17,
+   "annualPct10": 41400,
+   "annualPct90": 84750,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "First-line supervisors of gambling services workers",
+    "employment2025": 27200,
+    "employment2035": 28100,
+    "numericChange": 1000,
+    "percentChange": 3.5
+   },
+   "onetCode": "39-1013.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Directly supervise and coordinate activities of workers in assigned gambling areas. May circulate among tables, observe operations, and ensure that stations and games are covered for each shift. May verify and pay off jackpots. May reset slot machines after payoffs and make repairs or adjustments to slot machines or recommend removal of slot machines for repair. May plan and organize activities and services for guests in hotels/casinos.",
+   "tasks": [
+    {
+     "id": 23127,
+     "text": "Monitor game operations to ensure that house rules are followed, that tribal, state, and federal regulations are adhered to, and that employees provide prompt and courteous service.",
+     "type": "Core",
+     "onetCode": "39-1013.00",
+     "line": 11382
+    },
+    {
+     "id": 23129,
+     "text": "Observe gamblers' behavior for signs of cheating, such as marking, switching, or counting cards, and notify security staff of suspected cheating.",
+     "type": "Core",
+     "onetCode": "39-1013.00",
+     "line": 11383
+    },
+    {
+     "id": 23133,
+     "text": "Perform paperwork required for monetary transactions.",
+     "type": "Core",
+     "onetCode": "39-1013.00",
+     "line": 11384
+    },
+    {
+     "id": 23128,
+     "text": "Respond to and resolve patrons' complaints.",
+     "type": "Core",
+     "onetCode": "39-1013.00",
+     "line": 11385
+    },
+    {
+     "id": 23132,
+     "text": "Greet customers and ask about the quality of service they are receiving.",
+     "type": "Core",
+     "onetCode": "39-1013.00",
+     "line": 11386
+    },
+    {
+     "id": 23130,
+     "text": "Perform minor repairs or make adjustments to slot machines, resolving problems such as machine tilts and coin jams.",
+     "type": "Core",
+     "onetCode": "39-1013.00",
+     "line": 11387
+    },
+    {
+     "id": 23135,
+     "text": "Maintain familiarity with the games at a facility and with strategies or tricks used by cheaters at such games.",
+     "type": "Core",
+     "onetCode": "39-1013.00",
+     "line": 11388
+    },
+    {
+     "id": 23131,
+     "text": "Monitor payment of hand-delivered jackpots to ensure promptness.",
+     "type": "Core",
+     "onetCode": "39-1013.00",
+     "line": 11389
+    },
+    {
+     "id": 23134,
+     "text": "Explain and interpret house rules, such as game rules or betting limits, for patrons.",
+     "type": "Core",
+     "onetCode": "39-1013.00",
+     "line": 11390
+    },
+    {
+     "id": 23140,
+     "text": "Establish and maintain banks and table limits for each game.",
+     "type": "Core",
+     "onetCode": "39-1013.00",
+     "line": 11391
+    },
+    {
+     "id": 23136,
+     "text": "Reset slot machines after payoffs.",
+     "type": "Core",
+     "onetCode": "39-1013.00",
+     "line": 11392
+    },
+    {
+     "id": 23137,
+     "text": "Answer patrons' questions about gaming machine functions and payouts.",
+     "type": "Core",
+     "onetCode": "39-1013.00",
+     "line": 11393
+    },
+    {
+     "id": 23138,
+     "text": "Record the specifics of malfunctioning machines and document malfunctions needing repair.",
+     "type": "Core",
+     "onetCode": "39-1013.00",
+     "line": 11394
+    },
+    {
+     "id": 23147,
+     "text": "Monitor patrons for signs of compulsive gambling, offering assistance if necessary.",
+     "type": "Core",
+     "onetCode": "39-1013.00",
+     "line": 11395
+    },
+    {
+     "id": 23152,
+     "text": "Supervise the distribution of complimentary meals, hotel rooms, discounts, or other items given to players, based on length of play and amount bet.",
+     "type": "Core",
+     "onetCode": "39-1013.00",
+     "line": 11396
+    },
+    {
+     "id": 23139,
+     "text": "Report customer-related incidents occurring in gaming areas to supervisors.",
+     "type": "Core",
+     "onetCode": "39-1013.00",
+     "line": 11397
+    },
+    {
+     "id": 23141,
+     "text": "Attach \"out of order\" signs to malfunctioning machines, and notify technicians when machines need to be repaired or removed.",
+     "type": "Core",
+     "onetCode": "39-1013.00",
+     "line": 11398
+    },
+    {
+     "id": 23142,
+     "text": "Enforce safety rules, and report or remove safety hazards as well as guests who are underage, intoxicated, disruptive, or cheating.",
+     "type": "Core",
+     "onetCode": "39-1013.00",
+     "line": 11399
+    },
+    {
+     "id": 23143,
+     "text": "Exchange currency for customers, converting currency into requested combinations of bills and coins.",
+     "type": "Core",
+     "onetCode": "39-1013.00",
+     "line": 11400
+    },
+    {
+     "id": 23146,
+     "text": "Evaluate workers' performance and prepare written performance evaluations.",
+     "type": "Core",
+     "onetCode": "39-1013.00",
+     "line": 11401
+    },
+    {
+     "id": 23144,
+     "text": "Monitor stations and games and move dealers from game to game to ensure adequate staffing.",
+     "type": "Core",
+     "onetCode": "39-1013.00",
+     "line": 11402
+    },
+    {
+     "id": 23145,
+     "text": "Clean and maintain slot machines and surrounding areas.",
+     "type": "Core",
+     "onetCode": "39-1013.00",
+     "line": 11403
+    },
+    {
+     "id": 23149,
+     "text": "Monitor functioning of slot machine coin dispensers and fill coin hoppers when necessary.",
+     "type": "Supplemental",
+     "onetCode": "39-1013.00",
+     "line": 11404
+    },
+    {
+     "id": 23148,
+     "text": "Record, issue receipts for, and pay off bets.",
+     "type": "Supplemental",
+     "onetCode": "39-1013.00",
+     "line": 11405
+    },
+    {
+     "id": 23150,
+     "text": "Determine how many gaming tables to open each day and schedule staff accordingly.",
+     "type": "Supplemental",
+     "onetCode": "39-1013.00",
+     "line": 11406
+    },
+    {
+     "id": 23151,
+     "text": "Direct workers compiling summary sheets for each race or event to record amounts wagered and amounts to be paid to winners.",
+     "type": "Supplemental",
+     "onetCode": "39-1013.00",
+     "line": 11407
+    },
+    {
+     "id": 23154,
+     "text": "Establish policies on types of gambling offered, odds, or extension of credit.",
+     "type": "Supplemental",
+     "onetCode": "39-1013.00",
+     "line": 11408
+    },
+    {
+     "id": 23153,
+     "text": "Review operational expenses, budget estimates, betting accounts, or collection reports for accuracy.",
+     "type": "Supplemental",
+     "onetCode": "39-1013.00",
+     "line": 11409
+    },
+    {
+     "id": 23155,
+     "text": "Interview and hire workers.",
+     "type": "n/a",
+     "onetCode": "39-1013.00",
+     "line": 11410
+    },
+    {
+     "id": 23156,
+     "text": "Train, supervise, schedule, and evaluate workers.",
+     "type": "n/a",
+     "onetCode": "39-1013.00",
+     "line": 11411
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L734",
+    "annualMedian": "oews:national_M2025_dl!AB734",
+    "annualMean": "oews:national_M2025_dl!S734",
+    "hourlyMedian": "oews:national_M2025_dl!W734",
+    "hourlyMean": "oews:national_M2025_dl!R734",
+    "annualPct10": "oews:national_M2025_dl!Z734",
+    "annualPct90": "oews:national_M2025_dl!AD734",
+    "annualOnly": "oews:national_M2025_dl!AE734",
+    "hourlyOnly": "oews:national_M2025_dl!AF734",
+    "title": "oews:national_M2025_dl!J734",
+    "ep.title": "ep:Table 1.2!A600",
+    "ep.employment2025": "ep:Table 1.2!D600",
+    "ep.employment2035": "ep:Table 1.2!E600",
+    "ep.numericChange": "ep:Table 1.2!H600",
+    "ep.percentChange": "ep:Table 1.2!I600",
+    "onetCode": "onet:Occupation Data.txt#L585:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L585:Description"
+   },
+   "nullReasons": {}
+  },
+  "39-1014": {
+   "soc": "39-1014",
+   "title": "First-Line Supervisors of Entertainment and Recreation Workers, Except Gambling Services",
+   "major": "39-0000",
+   "minor": "39-1000",
+   "broad": "39-1010",
+   "oewsRows": [
+    735
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 103190,
+   "annualMedian": 48560,
+   "annualMean": 53550,
+   "hourlyMedian": 23.34,
+   "hourlyMean": 25.75,
+   "annualPct10": 34760,
+   "annualPct90": 79060,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "First-line supervisors of entertainment and recreation workers, except gambling services",
+    "employment2025": 109300,
+    "employment2035": 115100,
+    "numericChange": 5800,
+    "percentChange": 5.3
+   },
+   "onetCode": "39-1014.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Directly supervise and coordinate activities of entertainment and recreation related workers.",
+   "tasks": [
+    {
+     "id": 23157,
+     "text": "Analyze and record personnel or operational data and write related activity reports.",
+     "type": "n/a",
+     "onetCode": "39-1014.00",
+     "line": 11412
+    },
+    {
+     "id": 23158,
+     "text": "Apply customer feedback to service improvement efforts.",
+     "type": "n/a",
+     "onetCode": "39-1014.00",
+     "line": 11413
+    },
+    {
+     "id": 23159,
+     "text": "Assign work schedules, following work requirements, to ensure quality and timely delivery of service.",
+     "type": "n/a",
+     "onetCode": "39-1014.00",
+     "line": 11414
+    },
+    {
+     "id": 23160,
+     "text": "Collaborate with staff members to plan or develop programs of events or schedules of activities.",
+     "type": "n/a",
+     "onetCode": "39-1014.00",
+     "line": 11415
+    },
+    {
+     "id": 23161,
+     "text": "Direct or coordinate the activities of entertainment and recreation related workers.",
+     "type": "n/a",
+     "onetCode": "39-1014.00",
+     "line": 11416
+    },
+    {
+     "id": 23162,
+     "text": "Furnish customers with information on events or activities.",
+     "type": "n/a",
+     "onetCode": "39-1014.00",
+     "line": 11417
+    },
+    {
+     "id": 23163,
+     "text": "Inform workers about interests or special needs of specific groups.",
+     "type": "n/a",
+     "onetCode": "39-1014.00",
+     "line": 11418
+    },
+    {
+     "id": 23164,
+     "text": "Inspect work areas or operating equipment to ensure conformance to established standards in areas such as cleanliness or maintenance.",
+     "type": "n/a",
+     "onetCode": "39-1014.00",
+     "line": 11419
+    },
+    {
+     "id": 23165,
+     "text": "Meet with managers or other supervisors to stay informed of changes affecting workers or operations.",
+     "type": "n/a",
+     "onetCode": "39-1014.00",
+     "line": 11420
+    },
+    {
+     "id": 23166,
+     "text": "Observe and evaluate workers' appearance and performance to ensure quality service and compliance with specifications.",
+     "type": "n/a",
+     "onetCode": "39-1014.00",
+     "line": 11421
+    },
+    {
+     "id": 23167,
+     "text": "Participate in continuing education to stay abreast of industry trends and developments.",
+     "type": "n/a",
+     "onetCode": "39-1014.00",
+     "line": 11422
+    },
+    {
+     "id": 23168,
+     "text": "Plan, direct, or supervise recreational and entertainment activities led by staff, such as sports, aquatics, games, or performing arts.",
+     "type": "n/a",
+     "onetCode": "39-1014.00",
+     "line": 11423
+    },
+    {
+     "id": 23169,
+     "text": "Provide staff with assistance in performing difficult or complicated duties.",
+     "type": "n/a",
+     "onetCode": "39-1014.00",
+     "line": 11424
+    },
+    {
+     "id": 23170,
+     "text": "Recruit and hire staff members.",
+     "type": "n/a",
+     "onetCode": "39-1014.00",
+     "line": 11425
+    },
+    {
+     "id": 23171,
+     "text": "Requisition supplies and equipment necessary for workers to facilitate recreational or entertainment activities, such as safety harnesses, flash lights, or first aid kits.",
+     "type": "n/a",
+     "onetCode": "39-1014.00",
+     "line": 11426
+    },
+    {
+     "id": 23172,
+     "text": "Resolve customer complaints regarding worker performance or services rendered.",
+     "type": "n/a",
+     "onetCode": "39-1014.00",
+     "line": 11427
+    },
+    {
+     "id": 23173,
+     "text": "Serve as a point of contact between managerial staff and leaders of recreational or entertainment activities.",
+     "type": "n/a",
+     "onetCode": "39-1014.00",
+     "line": 11428
+    },
+    {
+     "id": 23174,
+     "text": "Take disciplinary action to address performance problems.",
+     "type": "n/a",
+     "onetCode": "39-1014.00",
+     "line": 11429
+    },
+    {
+     "id": 23175,
+     "text": "Train workers in proper operational procedures and functions and explain company policies.",
+     "type": "n/a",
+     "onetCode": "39-1014.00",
+     "line": 11430
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L735",
+    "annualMedian": "oews:national_M2025_dl!AB735",
+    "annualMean": "oews:national_M2025_dl!S735",
+    "hourlyMedian": "oews:national_M2025_dl!W735",
+    "hourlyMean": "oews:national_M2025_dl!R735",
+    "annualPct10": "oews:national_M2025_dl!Z735",
+    "annualPct90": "oews:national_M2025_dl!AD735",
+    "annualOnly": "oews:national_M2025_dl!AE735",
+    "hourlyOnly": "oews:national_M2025_dl!AF735",
+    "title": "oews:national_M2025_dl!J735",
+    "ep.title": "ep:Table 1.2!A601",
+    "ep.employment2025": "ep:Table 1.2!D601",
+    "ep.employment2035": "ep:Table 1.2!E601",
+    "ep.numericChange": "ep:Table 1.2!H601",
+    "ep.percentChange": "ep:Table 1.2!I601",
+    "onetCode": "onet:Occupation Data.txt#L586:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L586:Description"
+   },
+   "nullReasons": {}
+  },
+  "39-1022": {
+   "soc": "39-1022",
+   "title": "First-Line Supervisors of Personal Service Workers",
+   "major": "39-0000",
+   "minor": "39-1000",
+   "broad": "39-1020",
+   "oewsRows": [
+    737
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 114110,
+   "annualMedian": 48590,
+   "annualMean": 52360,
+   "hourlyMedian": 23.36,
+   "hourlyMean": 25.17,
+   "annualPct10": 34010,
+   "annualPct90": 75330,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "First-line supervisors of personal service workers",
+    "employment2025": 122500,
+    "employment2035": 130200,
+    "numericChange": 7700,
+    "percentChange": 6.3
+   },
+   "onetCode": "39-1022.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Supervise and coordinate activities of personal service workers.",
+   "tasks": [
+    {
+     "id": 13140,
+     "text": "Train workers in proper operational procedures and functions and explain company policies.",
+     "type": "Core",
+     "onetCode": "39-1022.00",
+     "line": 11431
+    },
+    {
+     "id": 13142,
+     "text": "Meet with managers or other supervisors to stay informed of changes affecting operations.",
+     "type": "Core",
+     "onetCode": "39-1022.00",
+     "line": 11432
+    },
+    {
+     "id": 13138,
+     "text": "Assign work schedules, following work requirements, to ensure quality and timely delivery of service.",
+     "type": "Core",
+     "onetCode": "39-1022.00",
+     "line": 11433
+    },
+    {
+     "id": 13151,
+     "text": "Recruit and hire staff members.",
+     "type": "Core",
+     "onetCode": "39-1022.00",
+     "line": 11434
+    },
+    {
+     "id": 13145,
+     "text": "Resolve customer complaints regarding worker performance or services rendered.",
+     "type": "Core",
+     "onetCode": "39-1022.00",
+     "line": 11435
+    },
+    {
+     "id": 13150,
+     "text": "Take disciplinary action to address performance problems.",
+     "type": "Core",
+     "onetCode": "39-1022.00",
+     "line": 11436
+    },
+    {
+     "id": 13139,
+     "text": "Inspect work areas or operating equipment to ensure conformance to established standards in areas such as cleanliness or maintenance.",
+     "type": "Core",
+     "onetCode": "39-1022.00",
+     "line": 11437
+    },
+    {
+     "id": 23179,
+     "text": "Investigate employee complaints and resolve problems following management rules and regulations.",
+     "type": "Core",
+     "onetCode": "39-1022.00",
+     "line": 11438
+    },
+    {
+     "id": 13141,
+     "text": "Observe and evaluate workers' appearance and performance to ensure quality service and compliance with specifications.",
+     "type": "Core",
+     "onetCode": "39-1022.00",
+     "line": 11439
+    },
+    {
+     "id": 23177,
+     "text": "Direct or coordinate the activities of workers, such as hotel staff or hair stylists.",
+     "type": "Core",
+     "onetCode": "39-1022.00",
+     "line": 11440
+    },
+    {
+     "id": 13152,
+     "text": "Participate in continuing education to stay abreast of industry trends and developments.",
+     "type": "Core",
+     "onetCode": "39-1022.00",
+     "line": 11441
+    },
+    {
+     "id": 23178,
+     "text": "Inform management about problems, such as employee disputes.",
+     "type": "Core",
+     "onetCode": "39-1022.00",
+     "line": 11442
+    },
+    {
+     "id": 23176,
+     "text": "Arrange worker breaks to ensure services are adequately staffed throughout each shift.",
+     "type": "Core",
+     "onetCode": "39-1022.00",
+     "line": 11443
+    },
+    {
+     "id": 20763,
+     "text": "Apply customer feedback to service improvement efforts.",
+     "type": "Core",
+     "onetCode": "39-1022.00",
+     "line": 11444
+    },
+    {
+     "id": 13143,
+     "text": "Inform workers about interests or special needs of specific groups.",
+     "type": "Core",
+     "onetCode": "39-1022.00",
+     "line": 11445
+    },
+    {
+     "id": 13146,
+     "text": "Requisition necessary supplies, equipment, or services.",
+     "type": "Core",
+     "onetCode": "39-1022.00",
+     "line": 11446
+    },
+    {
+     "id": 13154,
+     "text": "Direct marketing, advertising, or other customer recruitment efforts.",
+     "type": "Supplemental",
+     "onetCode": "39-1022.00",
+     "line": 11447
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L737",
+    "annualMedian": "oews:national_M2025_dl!AB737",
+    "annualMean": "oews:national_M2025_dl!S737",
+    "hourlyMedian": "oews:national_M2025_dl!W737",
+    "hourlyMean": "oews:national_M2025_dl!R737",
+    "annualPct10": "oews:national_M2025_dl!Z737",
+    "annualPct90": "oews:national_M2025_dl!AD737",
+    "annualOnly": "oews:national_M2025_dl!AE737",
+    "hourlyOnly": "oews:national_M2025_dl!AF737",
+    "title": "oews:national_M2025_dl!J737",
+    "ep.title": "ep:Table 1.2!A602",
+    "ep.employment2025": "ep:Table 1.2!D602",
+    "ep.employment2035": "ep:Table 1.2!E602",
+    "ep.numericChange": "ep:Table 1.2!H602",
+    "ep.percentChange": "ep:Table 1.2!I602",
+    "onetCode": "onet:Occupation Data.txt#L587:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L587:Description"
+   },
+   "nullReasons": {}
+  },
+  "39-2011": {
+   "soc": "39-2011",
+   "title": "Animal Trainers",
+   "major": "39-0000",
+   "minor": "39-2000",
+   "broad": "39-2010",
+   "oewsRows": [
+    740
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 18770,
+   "annualMedian": 39990,
+   "annualMean": 47020,
+   "hourlyMedian": 19.22,
+   "hourlyMean": 22.61,
+   "annualPct10": 29600,
+   "annualPct90": 75490,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Animal trainers",
+    "employment2025": 47800,
+    "employment2035": 49700,
+    "numericChange": 2000,
+    "percentChange": 4.2
+   },
+   "onetCode": "39-2011.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Train animals for riding, harness, security, performance, or obedience, or for assisting persons with disabilities. Accustom animals to human voice and contact, and condition animals to respond to commands. Train animals according to prescribed standards for show or competition. May train animals to carry pack loads or work as part of pack team.",
+   "tasks": [
+    {
+     "id": 7989,
+     "text": "Cue or signal animals during performances.",
+     "type": "Core",
+     "onetCode": "39-2011.00",
+     "line": 11448
+    },
+    {
+     "id": 7993,
+     "text": "Talk to or interact with animals to familiarize them to human voices or contact.",
+     "type": "Core",
+     "onetCode": "39-2011.00",
+     "line": 11449
+    },
+    {
+     "id": 20593,
+     "text": "Conduct training programs to develop or maintain desired animal behaviors for competition, entertainment, obedience, security, riding, or related purposes.",
+     "type": "Core",
+     "onetCode": "39-2011.00",
+     "line": 11450
+    },
+    {
+     "id": 7992,
+     "text": "Feed or exercise animals or provide other general care, such as cleaning or maintaining holding or performance areas.",
+     "type": "Core",
+     "onetCode": "39-2011.00",
+     "line": 11451
+    },
+    {
+     "id": 7988,
+     "text": "Observe animals' physical conditions to detect illness or unhealthy conditions requiring medical care.",
+     "type": "Core",
+     "onetCode": "39-2011.00",
+     "line": 11452
+    },
+    {
+     "id": 7991,
+     "text": "Evaluate animals to determine their temperaments, abilities, or aptitude for training.",
+     "type": "Core",
+     "onetCode": "39-2011.00",
+     "line": 11453
+    },
+    {
+     "id": 7990,
+     "text": "Administer prescribed medications to animals.",
+     "type": "Core",
+     "onetCode": "39-2011.00",
+     "line": 11454
+    },
+    {
+     "id": 7995,
+     "text": "Keep records documenting animal health, diet, or behavior.",
+     "type": "Core",
+     "onetCode": "39-2011.00",
+     "line": 11455
+    },
+    {
+     "id": 20594,
+     "text": "Evaluate animals for trainability and ability to perform.",
+     "type": "Core",
+     "onetCode": "39-2011.00",
+     "line": 11456
+    },
+    {
+     "id": 7996,
+     "text": "Advise animal owners regarding the purchase of specific animals.",
+     "type": "Core",
+     "onetCode": "39-2011.00",
+     "line": 11457
+    },
+    {
+     "id": 7998,
+     "text": "Train horses or other equines for riding, harness, show, racing, or other work, using knowledge of breed characteristics, training methods, performance standards, and the peculiarities of each animal.",
+     "type": "Supplemental",
+     "onetCode": "39-2011.00",
+     "line": 11458
+    },
+    {
+     "id": 7999,
+     "text": "Use oral, spur, rein, or hand commands to condition horses to carry riders or to pull horse-drawn equipment.",
+     "type": "Supplemental",
+     "onetCode": "39-2011.00",
+     "line": 11459
+    },
+    {
+     "id": 8002,
+     "text": "Retrain horses to break bad habits, such as kicking, bolting, or resisting bridling or grooming.",
+     "type": "Supplemental",
+     "onetCode": "39-2011.00",
+     "line": 11460
+    },
+    {
+     "id": 8001,
+     "text": "Train dogs in human assistance or property protection duties.",
+     "type": "Supplemental",
+     "onetCode": "39-2011.00",
+     "line": 11461
+    },
+    {
+     "id": 8004,
+     "text": "Organize or conduct animal shows.",
+     "type": "Supplemental",
+     "onetCode": "39-2011.00",
+     "line": 11462
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L740",
+    "annualMedian": "oews:national_M2025_dl!AB740",
+    "annualMean": "oews:national_M2025_dl!S740",
+    "hourlyMedian": "oews:national_M2025_dl!W740",
+    "hourlyMean": "oews:national_M2025_dl!R740",
+    "annualPct10": "oews:national_M2025_dl!Z740",
+    "annualPct90": "oews:national_M2025_dl!AD740",
+    "annualOnly": "oews:national_M2025_dl!AE740",
+    "hourlyOnly": "oews:national_M2025_dl!AF740",
+    "title": "oews:national_M2025_dl!J740",
+    "ep.title": "ep:Table 1.2!A604",
+    "ep.employment2025": "ep:Table 1.2!D604",
+    "ep.employment2035": "ep:Table 1.2!E604",
+    "ep.numericChange": "ep:Table 1.2!H604",
+    "ep.percentChange": "ep:Table 1.2!I604",
+    "onetCode": "onet:Occupation Data.txt#L588:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L588:Description"
+   },
+   "nullReasons": {}
+  },
+  "39-2021": {
+   "soc": "39-2021",
+   "title": "Animal Caretakers",
+   "major": "39-0000",
+   "minor": "39-2000",
+   "broad": "39-2020",
+   "oewsRows": [
+    742
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 266910,
+   "annualMedian": 35360,
+   "annualMean": 37300,
+   "hourlyMedian": 17,
+   "hourlyMean": 17.94,
+   "annualPct10": 27250,
+   "annualPct90": 50060,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Animal caretakers",
+    "employment2025": 365300,
+    "employment2035": 409400,
+    "numericChange": 44100,
+    "percentChange": 12.1
+   },
+   "onetCode": "39-2021.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Feed, water, groom, bathe, exercise, or otherwise provide care to promote and maintain the well-being of pets and other animals that are not raised for consumption, such as dogs, cats, race horses, ornamental fish or birds, zoo animals, and mice. Work in settings such as kennels, animal shelters, zoos, circuses, and aquariums. May keep records of feedings, treatments, and animals received or discharged. May clean, disinfect, and repair cages, pens, or fish tanks.",
+   "tasks": [
+    {
+     "id": 5072,
+     "text": "Feed and water animals according to schedules and feeding instructions.",
+     "type": "Core",
+     "onetCode": "39-2021.00",
+     "line": 11463
+    },
+    {
+     "id": 5077,
+     "text": "Provide treatment to sick or injured animals, or contact veterinarians to secure treatment.",
+     "type": "Core",
+     "onetCode": "39-2021.00",
+     "line": 11464
+    },
+    {
+     "id": 5075,
+     "text": "Examine and observe animals to detect signs of illness, disease, or injury.",
+     "type": "Core",
+     "onetCode": "39-2021.00",
+     "line": 11465
+    },
+    {
+     "id": 5082,
+     "text": "Mix food, liquid formulas, medications, or food supplements according to instructions, prescriptions, and knowledge of animal species.",
+     "type": "Core",
+     "onetCode": "39-2021.00",
+     "line": 11466
+    },
+    {
+     "id": 20132,
+     "text": "Do facility laundry and clean, organize, maintain, and disinfect animal quarters, such as pens and stables, and equipment, such as saddles and bridles.",
+     "type": "Core",
+     "onetCode": "39-2021.00",
+     "line": 11467
+    },
+    {
+     "id": 5080,
+     "text": "Exercise animals to maintain their physical and mental health.",
+     "type": "Core",
+     "onetCode": "39-2021.00",
+     "line": 11468
+    },
+    {
+     "id": 5078,
+     "text": "Collect and record animal information, such as weight, size, physical condition, treatments received, medications given, and food intake.",
+     "type": "Core",
+     "onetCode": "39-2021.00",
+     "line": 11469
+    },
+    {
+     "id": 5076,
+     "text": "Respond to questions from patrons, and provide information about animals, such as behavior, habitat, breeding habits, or facility activities.",
+     "type": "Core",
+     "onetCode": "39-2021.00",
+     "line": 11470
+    },
+    {
+     "id": 5074,
+     "text": "Answer telephones and schedule appointments.",
+     "type": "Core",
+     "onetCode": "39-2021.00",
+     "line": 11471
+    },
+    {
+     "id": 21150,
+     "text": "Advise pet owners on how to care for their pets' health.",
+     "type": "Core",
+     "onetCode": "39-2021.00",
+     "line": 11472
+    },
+    {
+     "id": 5079,
+     "text": "Perform animal grooming duties, such as washing, brushing, clipping, and trimming coats, cutting nails, and cleaning ears.",
+     "type": "Core",
+     "onetCode": "39-2021.00",
+     "line": 11473
+    },
+    {
+     "id": 5085,
+     "text": "Observe and caution children petting and feeding animals in designated areas to ensure the safety of humans and animals.",
+     "type": "Supplemental",
+     "onetCode": "39-2021.00",
+     "line": 11474
+    },
+    {
+     "id": 5083,
+     "text": "Clean and disinfect surgical equipment.",
+     "type": "Supplemental",
+     "onetCode": "39-2021.00",
+     "line": 11475
+    },
+    {
+     "id": 5086,
+     "text": "Find homes for stray or unwanted animals.",
+     "type": "Supplemental",
+     "onetCode": "39-2021.00",
+     "line": 11476
+    },
+    {
+     "id": 5084,
+     "text": "Discuss with clients their pets' grooming needs.",
+     "type": "Supplemental",
+     "onetCode": "39-2021.00",
+     "line": 11477
+    },
+    {
+     "id": 5089,
+     "text": "Transfer animals between enclosures to facilitate breeding, birthing, shipping, or rearrangement of exhibits.",
+     "type": "Supplemental",
+     "onetCode": "39-2021.00",
+     "line": 11478
+    },
+    {
+     "id": 5087,
+     "text": "Adjust controls to regulate specified temperature and humidity of animal quarters, nurseries, or exhibit areas.",
+     "type": "Supplemental",
+     "onetCode": "39-2021.00",
+     "line": 11479
+    },
+    {
+     "id": 5088,
+     "text": "Anesthetize and inoculate animals, according to instructions.",
+     "type": "Supplemental",
+     "onetCode": "39-2021.00",
+     "line": 11480
+    },
+    {
+     "id": 5090,
+     "text": "Install, maintain, and repair animal care facility equipment, such as infrared lights, feeding devices, and cages.",
+     "type": "Supplemental",
+     "onetCode": "39-2021.00",
+     "line": 11481
+    },
+    {
+     "id": 5091,
+     "text": "Train animals to perform certain tasks.",
+     "type": "Supplemental",
+     "onetCode": "39-2021.00",
+     "line": 11482
+    },
+    {
+     "id": 5081,
+     "text": "Order, unload, and store feed and supplies.",
+     "type": "Supplemental",
+     "onetCode": "39-2021.00",
+     "line": 11483
+    },
+    {
+     "id": 5093,
+     "text": "Sell pet food and supplies.",
+     "type": "Supplemental",
+     "onetCode": "39-2021.00",
+     "line": 11484
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L742",
+    "annualMedian": "oews:national_M2025_dl!AB742",
+    "annualMean": "oews:national_M2025_dl!S742",
+    "hourlyMedian": "oews:national_M2025_dl!W742",
+    "hourlyMean": "oews:national_M2025_dl!R742",
+    "annualPct10": "oews:national_M2025_dl!Z742",
+    "annualPct90": "oews:national_M2025_dl!AD742",
+    "annualOnly": "oews:national_M2025_dl!AE742",
+    "hourlyOnly": "oews:national_M2025_dl!AF742",
+    "title": "oews:national_M2025_dl!J742",
+    "ep.title": "ep:Table 1.2!A605",
+    "ep.employment2025": "ep:Table 1.2!D605",
+    "ep.employment2035": "ep:Table 1.2!E605",
+    "ep.numericChange": "ep:Table 1.2!H605",
+    "ep.percentChange": "ep:Table 1.2!I605",
+    "onetCode": "onet:Occupation Data.txt#L589:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L589:Description"
+   },
+   "nullReasons": {}
+  },
+  "39-3011": {
+   "soc": "39-3011",
+   "title": "Gambling Dealers",
+   "major": "39-0000",
+   "minor": "39-3000",
+   "broad": "39-3010",
+   "oewsRows": [
+    745
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 83910,
+   "annualMedian": 34320,
+   "annualMean": 42550,
+   "hourlyMedian": 16.5,
+   "hourlyMean": 20.46,
+   "annualPct10": 24040,
+   "annualPct90": 77090,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Gambling dealers",
+    "employment2025": 88900,
+    "employment2035": 91900,
+    "numericChange": 3000,
+    "percentChange": 3.4
+   },
+   "onetCode": "39-3011.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Operate table games. Stand or sit behind table and operate games of chance by dispensing the appropriate number of cards or blocks to players, or operating other gambling equipment. Distribute winnings or collect players' money or chips. May compare the house's hand against players' hands.",
+   "tasks": [
+    {
+     "id": 4446,
+     "text": "Pay winnings or collect losing bets as established by the rules and procedures of a specific game.",
+     "type": "Core",
+     "onetCode": "39-3011.00",
+     "line": 11485
+    },
+    {
+     "id": 21151,
+     "text": "Greet customers and make them feel welcome.",
+     "type": "Core",
+     "onetCode": "39-3011.00",
+     "line": 11486
+    },
+    {
+     "id": 4445,
+     "text": "Exchange paper currency for playing chips or coin money.",
+     "type": "Core",
+     "onetCode": "39-3011.00",
+     "line": 11487
+    },
+    {
+     "id": 4449,
+     "text": "Check to ensure that all players have placed bets before play begins.",
+     "type": "Core",
+     "onetCode": "39-3011.00",
+     "line": 11488
+    },
+    {
+     "id": 4451,
+     "text": "Inspect cards and equipment to be used in games to ensure that they are in good condition.",
+     "type": "Core",
+     "onetCode": "39-3011.00",
+     "line": 11489
+    },
+    {
+     "id": 4447,
+     "text": "Deal cards to house hands, and compare these with players' hands to determine winners, as in black jack.",
+     "type": "Core",
+     "onetCode": "39-3011.00",
+     "line": 11490
+    },
+    {
+     "id": 4450,
+     "text": "Stand behind a gaming table and deal the appropriate number of cards to each player.",
+     "type": "Core",
+     "onetCode": "39-3011.00",
+     "line": 11491
+    },
+    {
+     "id": 4455,
+     "text": "Apply rule variations to card games such as poker, in which players bet on the value of their hands.",
+     "type": "Core",
+     "onetCode": "39-3011.00",
+     "line": 11492
+    },
+    {
+     "id": 4456,
+     "text": "Receive, verify, and record patrons' cash wagers.",
+     "type": "Core",
+     "onetCode": "39-3011.00",
+     "line": 11493
+    },
+    {
+     "id": 4448,
+     "text": "Conduct gambling games, such as dice, roulette, cards, or keno, following all applicable rules and regulations.",
+     "type": "Core",
+     "onetCode": "39-3011.00",
+     "line": 11494
+    },
+    {
+     "id": 4459,
+     "text": "Work as part of a team of dealers in games, such as baccarat or craps.",
+     "type": "Core",
+     "onetCode": "39-3011.00",
+     "line": 11495
+    },
+    {
+     "id": 4452,
+     "text": "Start and control games and gaming equipment, and announce winning numbers or colors.",
+     "type": "Core",
+     "onetCode": "39-3011.00",
+     "line": 11496
+    },
+    {
+     "id": 4454,
+     "text": "Compute amounts of players' wins or losses, or scan winning tickets presented by patrons to calculate the amount of money won.",
+     "type": "Core",
+     "onetCode": "39-3011.00",
+     "line": 11497
+    },
+    {
+     "id": 4453,
+     "text": "Open and close cash floats and game tables.",
+     "type": "Core",
+     "onetCode": "39-3011.00",
+     "line": 11498
+    },
+    {
+     "id": 4457,
+     "text": "Answer questions about game rules and casino policies.",
+     "type": "Core",
+     "onetCode": "39-3011.00",
+     "line": 11499
+    },
+    {
+     "id": 4458,
+     "text": "Refer patrons to gaming cashiers to collect winnings.",
+     "type": "Core",
+     "onetCode": "39-3011.00",
+     "line": 11500
+    },
+    {
+     "id": 20133,
+     "text": "Supervise staff and monitor gambling tables to ensure security of the game.",
+     "type": "Supplemental",
+     "onetCode": "39-3011.00",
+     "line": 11501
+    },
+    {
+     "id": 4461,
+     "text": "Seat patrons at gaming tables.",
+     "type": "Supplemental",
+     "onetCode": "39-3011.00",
+     "line": 11502
+    },
+    {
+     "id": 4464,
+     "text": "Train new dealers.",
+     "type": "Supplemental",
+     "onetCode": "39-3011.00",
+     "line": 11503
+    },
+    {
+     "id": 4462,
+     "text": "Prepare collection reports for submission to supervisors.",
+     "type": "Supplemental",
+     "onetCode": "39-3011.00",
+     "line": 11504
+    },
+    {
+     "id": 4460,
+     "text": "Participate in games for gambling establishments to provide the minimum complement of players at a table.",
+     "type": "Supplemental",
+     "onetCode": "39-3011.00",
+     "line": 11505
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L745",
+    "annualMedian": "oews:national_M2025_dl!AB745",
+    "annualMean": "oews:national_M2025_dl!S745",
+    "hourlyMedian": "oews:national_M2025_dl!W745",
+    "hourlyMean": "oews:national_M2025_dl!R745",
+    "annualPct10": "oews:national_M2025_dl!Z745",
+    "annualPct90": "oews:national_M2025_dl!AD745",
+    "annualOnly": "oews:national_M2025_dl!AE745",
+    "hourlyOnly": "oews:national_M2025_dl!AF745",
+    "title": "oews:national_M2025_dl!J745",
+    "ep.title": "ep:Table 1.2!A608",
+    "ep.employment2025": "ep:Table 1.2!D608",
+    "ep.employment2035": "ep:Table 1.2!E608",
+    "ep.numericChange": "ep:Table 1.2!H608",
+    "ep.percentChange": "ep:Table 1.2!I608",
+    "onetCode": "onet:Occupation Data.txt#L590:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L590:Description"
+   },
+   "nullReasons": {}
+  },
+  "39-3012": {
+   "soc": "39-3012",
+   "title": "Gambling and Sports Book Writers and Runners",
+   "major": "39-0000",
+   "minor": "39-3000",
+   "broad": "39-3010",
+   "oewsRows": [
+    746
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 8950,
+   "annualMedian": 34980,
+   "annualMean": 36450,
+   "hourlyMedian": 16.82,
+   "hourlyMean": 17.53,
+   "annualPct10": 22090,
+   "annualPct90": 48270,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Gambling and sports book writers and runners",
+    "employment2025": 9600,
+    "employment2035": 9800,
+    "numericChange": 200,
+    "percentChange": 1.8
+   },
+   "onetCode": "39-3012.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Post information enabling patrons to wager on various races and sporting events. Assist in the operation of games such as keno and bingo. May operate random number-generating equipment and announce the numbers for patrons. Receive, verify, and record patrons' wagers. Scan and process winning tickets presented by patrons and pay out winnings for those wagers.",
+   "tasks": [
+    {
+     "id": 8007,
+     "text": "Collect bets in the form of cash or chips, verifying and recording amounts.",
+     "type": "Core",
+     "onetCode": "39-3012.00",
+     "line": 11506
+    },
+    {
+     "id": 8008,
+     "text": "Collect cards or tickets from players.",
+     "type": "Core",
+     "onetCode": "39-3012.00",
+     "line": 11507
+    },
+    {
+     "id": 20596,
+     "text": "Compute and verify amounts won or lost, paying out winnings or referring patrons to workers, such as gaming cashiers, so that winnings can be collected.",
+     "type": "Core",
+     "onetCode": "39-3012.00",
+     "line": 11508
+    },
+    {
+     "id": 8009,
+     "text": "Answer questions about game rules or casino policies.",
+     "type": "Core",
+     "onetCode": "39-3012.00",
+     "line": 11509
+    },
+    {
+     "id": 8012,
+     "text": "Conduct gambling tables or games, such as dice, roulette, cards, or keno, and ensure that game rules are followed.",
+     "type": "Supplemental",
+     "onetCode": "39-3012.00",
+     "line": 11510
+    },
+    {
+     "id": 8020,
+     "text": "Operate games in which players bet that a ball will come to rest in a particular slot on a rotating wheel, performing actions such as spinning the wheel and releasing the ball.",
+     "type": "Supplemental",
+     "onetCode": "39-3012.00",
+     "line": 11511
+    },
+    {
+     "id": 8016,
+     "text": "Exchange paper currency for playing chips or coins.",
+     "type": "Supplemental",
+     "onetCode": "39-3012.00",
+     "line": 11512
+    },
+    {
+     "id": 8010,
+     "text": "Compare the house hand with players' hands to determine the winner.",
+     "type": "Supplemental",
+     "onetCode": "39-3012.00",
+     "line": 11513
+    },
+    {
+     "id": 8017,
+     "text": "Open or close cash floats or game tables.",
+     "type": "Supplemental",
+     "onetCode": "39-3012.00",
+     "line": 11514
+    },
+    {
+     "id": 8014,
+     "text": "Pay off or move bets as established by game rules and procedures.",
+     "type": "Supplemental",
+     "onetCode": "39-3012.00",
+     "line": 11515
+    },
+    {
+     "id": 8018,
+     "text": "Start gaming equipment that randomly selects numbered balls and announce winning numbers and colors.",
+     "type": "Supplemental",
+     "onetCode": "39-3012.00",
+     "line": 11516
+    },
+    {
+     "id": 8011,
+     "text": "Check to ensure that all players have placed their bets before play begins.",
+     "type": "Supplemental",
+     "onetCode": "39-3012.00",
+     "line": 11517
+    },
+    {
+     "id": 8015,
+     "text": "Inspect cards or equipment to be used in games to ensure they are in proper condition.",
+     "type": "Supplemental",
+     "onetCode": "39-3012.00",
+     "line": 11518
+    },
+    {
+     "id": 8019,
+     "text": "Record the number of tickets cashed and the amount paid out after each race or event.",
+     "type": "Supplemental",
+     "onetCode": "39-3012.00",
+     "line": 11519
+    },
+    {
+     "id": 8013,
+     "text": "Prepare collection reports for submission to supervisors.",
+     "type": "Supplemental",
+     "onetCode": "39-3012.00",
+     "line": 11520
+    },
+    {
+     "id": 8023,
+     "text": "Deliver tickets, cards, and money to bingo callers.",
+     "type": "Supplemental",
+     "onetCode": "39-3012.00",
+     "line": 11521
+    },
+    {
+     "id": 8026,
+     "text": "Sell food, beverages, or tobacco to players.",
+     "type": "Supplemental",
+     "onetCode": "39-3012.00",
+     "line": 11522
+    },
+    {
+     "id": 8021,
+     "text": "Supervise staff and games and mediate disputes.",
+     "type": "Supplemental",
+     "onetCode": "39-3012.00",
+     "line": 11523
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L746",
+    "annualMedian": "oews:national_M2025_dl!AB746",
+    "annualMean": "oews:national_M2025_dl!S746",
+    "hourlyMedian": "oews:national_M2025_dl!W746",
+    "hourlyMean": "oews:national_M2025_dl!R746",
+    "annualPct10": "oews:national_M2025_dl!Z746",
+    "annualPct90": "oews:national_M2025_dl!AD746",
+    "annualOnly": "oews:national_M2025_dl!AE746",
+    "hourlyOnly": "oews:national_M2025_dl!AF746",
+    "title": "oews:national_M2025_dl!J746",
+    "ep.title": "ep:Table 1.2!A609",
+    "ep.employment2025": "ep:Table 1.2!D609",
+    "ep.employment2035": "ep:Table 1.2!E609",
+    "ep.numericChange": "ep:Table 1.2!H609",
+    "ep.percentChange": "ep:Table 1.2!I609",
+    "onetCode": "onet:Occupation Data.txt#L591:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L591:Description"
+   },
+   "nullReasons": {}
+  },
+  "39-3019": {
+   "soc": "39-3019",
+   "title": "Gambling Service Workers, All Other",
+   "major": "39-0000",
+   "minor": "39-3000",
+   "broad": "39-3010",
+   "oewsRows": [
+    747
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 14140,
+   "annualMedian": 36310,
+   "annualMean": 41380,
+   "hourlyMedian": 17.46,
+   "hourlyMean": 19.9,
+   "annualPct10": 23160,
+   "annualPct90": 65470,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Gambling service workers, all other",
+    "employment2025": 15300,
+    "employment2035": 15900,
+    "numericChange": 600,
+    "percentChange": 4.2
+   },
+   "onetCode": "39-3019.00",
+   "onetTaskSource": "none",
+   "onetSubCodes": [],
+   "description": "All gambling service workers not listed separately.",
+   "tasks": [],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L747",
+    "annualMedian": "oews:national_M2025_dl!AB747",
+    "annualMean": "oews:national_M2025_dl!S747",
+    "hourlyMedian": "oews:national_M2025_dl!W747",
+    "hourlyMean": "oews:national_M2025_dl!R747",
+    "annualPct10": "oews:national_M2025_dl!Z747",
+    "annualPct90": "oews:national_M2025_dl!AD747",
+    "annualOnly": "oews:national_M2025_dl!AE747",
+    "hourlyOnly": "oews:national_M2025_dl!AF747",
+    "title": "oews:national_M2025_dl!J747",
+    "ep.title": "ep:Table 1.2!A610",
+    "ep.employment2025": "ep:Table 1.2!D610",
+    "ep.employment2035": "ep:Table 1.2!E610",
+    "ep.numericChange": "ep:Table 1.2!H610",
+    "ep.percentChange": "ep:Table 1.2!I610",
+    "onetCode": "onet:Occupation Data.txt#L592:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L592:Description"
+   },
+   "nullReasons": {
+    "tasks": "O*NET 30.1 has no task statements for 39-3019.00"
+   }
+  },
+  "39-3021": {
+   "soc": "39-3021",
+   "title": "Motion Picture Projectionists",
+   "major": "39-0000",
+   "minor": "39-3000",
+   "broad": "39-3020",
+   "oewsRows": [
+    749
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 1480,
+   "annualMedian": 38270,
+   "annualMean": 51480,
+   "hourlyMedian": 18.4,
+   "hourlyMean": 24.75,
+   "annualPct10": 23390,
+   "annualPct90": 88310,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Motion picture projectionists",
+    "employment2025": 1500,
+    "employment2035": 1400,
+    "numericChange": -100,
+    "percentChange": -6.2
+   },
+   "onetCode": "39-3021.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Set up and operate motion picture projection and related sound reproduction equipment.",
+   "tasks": [
+    {
+     "id": 8030,
+     "text": "Monitor operations to ensure that standards for sound and image projection quality are met.",
+     "type": "Core",
+     "onetCode": "39-3021.00",
+     "line": 11524
+    },
+    {
+     "id": 8029,
+     "text": "Start projectors and open shutters to project images onto screens.",
+     "type": "Core",
+     "onetCode": "39-3021.00",
+     "line": 11525
+    },
+    {
+     "id": 8040,
+     "text": "Open and close facilities according to rules and schedules.",
+     "type": "Core",
+     "onetCode": "39-3021.00",
+     "line": 11526
+    },
+    {
+     "id": 8031,
+     "text": "Operate equipment to show films in a number of theaters simultaneously.",
+     "type": "Core",
+     "onetCode": "39-3021.00",
+     "line": 11527
+    },
+    {
+     "id": 21201,
+     "text": "Perform regular maintenance tasks, such as rotating or replacing xenon bulbs, cleaning projectors and lenses, lubricating machinery, and keeping electrical contacts clean and tight.",
+     "type": "Core",
+     "onetCode": "39-3021.00",
+     "line": 11528
+    },
+    {
+     "id": 8034,
+     "text": "Set up and adjust picture projectors and screens to achieve proper size, illumination, and focus of images, and proper volume and tone of sound.",
+     "type": "Core",
+     "onetCode": "39-3021.00",
+     "line": 11529
+    },
+    {
+     "id": 8035,
+     "text": "Inspect projection equipment prior to operation to ensure proper working order.",
+     "type": "Core",
+     "onetCode": "39-3021.00",
+     "line": 11530
+    },
+    {
+     "id": 8039,
+     "text": "Perform minor repairs, such as replacing worn sprockets, or notify maintenance personnel of the need for major repairs.",
+     "type": "Core",
+     "onetCode": "39-3021.00",
+     "line": 11531
+    },
+    {
+     "id": 8042,
+     "text": "Set up and inspect curtain and screen controls.",
+     "type": "Core",
+     "onetCode": "39-3021.00",
+     "line": 11532
+    },
+    {
+     "id": 8046,
+     "text": "Coordinate equipment operation with presentation of supplemental material, such as music, oral commentaries, or sound effects.",
+     "type": "Core",
+     "onetCode": "39-3021.00",
+     "line": 11533
+    },
+    {
+     "id": 21202,
+     "text": "Clean the projection booth.",
+     "type": "Core",
+     "onetCode": "39-3021.00",
+     "line": 11534
+    },
+    {
+     "id": 8033,
+     "text": "Inspect movie films to ensure that they are complete and in good condition.",
+     "type": "Supplemental",
+     "onetCode": "39-3021.00",
+     "line": 11535
+    },
+    {
+     "id": 8044,
+     "text": "Remove full take-up reels and run film through rewinding machines to rewind projected films so they may be shown again.",
+     "type": "Supplemental",
+     "onetCode": "39-3021.00",
+     "line": 11536
+    },
+    {
+     "id": 8047,
+     "text": "Install and connect auxiliary equipment, such as microphones, amplifiers, disc playback machines, and lights.",
+     "type": "Supplemental",
+     "onetCode": "39-3021.00",
+     "line": 11537
+    },
+    {
+     "id": 8041,
+     "text": "Observe projector operation to anticipate need to transfer operations from one projector to another.",
+     "type": "Supplemental",
+     "onetCode": "39-3021.00",
+     "line": 11538
+    },
+    {
+     "id": 8048,
+     "text": "Prepare film inspection reports, attendance sheets, and log books.",
+     "type": "Supplemental",
+     "onetCode": "39-3021.00",
+     "line": 11539
+    },
+    {
+     "id": 8032,
+     "text": "Splice separate film reels, advertisements, and movie trailers together to form a feature-length presentation on one continuous reel.",
+     "type": "Supplemental",
+     "onetCode": "39-3021.00",
+     "line": 11540
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L749",
+    "annualMedian": "oews:national_M2025_dl!AB749",
+    "annualMean": "oews:national_M2025_dl!S749",
+    "hourlyMedian": "oews:national_M2025_dl!W749",
+    "hourlyMean": "oews:national_M2025_dl!R749",
+    "annualPct10": "oews:national_M2025_dl!Z749",
+    "annualPct90": "oews:national_M2025_dl!AD749",
+    "annualOnly": "oews:national_M2025_dl!AE749",
+    "hourlyOnly": "oews:national_M2025_dl!AF749",
+    "title": "oews:national_M2025_dl!J749",
+    "ep.title": "ep:Table 1.2!A611",
+    "ep.employment2025": "ep:Table 1.2!D611",
+    "ep.employment2035": "ep:Table 1.2!E611",
+    "ep.numericChange": "ep:Table 1.2!H611",
+    "ep.percentChange": "ep:Table 1.2!I611",
+    "onetCode": "onet:Occupation Data.txt#L593:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L593:Description"
+   },
+   "nullReasons": {}
+  },
+  "39-3031": {
+   "soc": "39-3031",
+   "title": "Ushers, Lobby Attendants, and Ticket Takers",
+   "major": "39-0000",
+   "minor": "39-3000",
+   "broad": "39-3030",
+   "oewsRows": [
+    751
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 121770,
+   "annualMedian": 32910,
+   "annualMean": 33080,
+   "hourlyMedian": 15.82,
+   "hourlyMean": 15.91,
+   "annualPct10": 23560,
+   "annualPct90": 42470,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Ushers, lobby attendants, and ticket takers",
+    "employment2025": 124500,
+    "employment2035": 125600,
+    "numericChange": 1100,
+    "percentChange": 0.9
+   },
+   "onetCode": "39-3031.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Assist patrons at entertainment events by performing duties, such as collecting admission tickets and passes from patrons, assisting in finding seats, searching for lost articles, and helping patrons locate such facilities as restrooms and telephones.",
+   "tasks": [
+    {
+     "id": 5096,
+     "text": "Greet patrons attending entertainment events.",
+     "type": "Core",
+     "onetCode": "39-3031.00",
+     "line": 11541
+    },
+    {
+     "id": 20764,
+     "text": "Sell or collect admission tickets, passes, or facility memberships from patrons at entertainment events.",
+     "type": "Core",
+     "onetCode": "39-3031.00",
+     "line": 11542
+    },
+    {
+     "id": 20765,
+     "text": "Clean facilities.",
+     "type": "Core",
+     "onetCode": "39-3031.00",
+     "line": 11543
+    },
+    {
+     "id": 5103,
+     "text": "Settle seating disputes or help solve other customer concerns.",
+     "type": "Core",
+     "onetCode": "39-3031.00",
+     "line": 11544
+    },
+    {
+     "id": 5097,
+     "text": "Examine tickets or passes to verify authenticity, using criteria such as color or date issued.",
+     "type": "Core",
+     "onetCode": "39-3031.00",
+     "line": 11545
+    },
+    {
+     "id": 5100,
+     "text": "Provide assistance with patrons' special needs, such as helping those with wheelchairs.",
+     "type": "Core",
+     "onetCode": "39-3031.00",
+     "line": 11546
+    },
+    {
+     "id": 5098,
+     "text": "Guide patrons to exits or provide other instructions or assistance in case of emergency.",
+     "type": "Core",
+     "onetCode": "39-3031.00",
+     "line": 11547
+    },
+    {
+     "id": 5102,
+     "text": "Refuse admittance to undesirable persons or persons without tickets or passes.",
+     "type": "Core",
+     "onetCode": "39-3031.00",
+     "line": 11548
+    },
+    {
+     "id": 20766,
+     "text": "Assist patrons by giving directions to points in or outside of the facility or providing information about local attractions.",
+     "type": "Core",
+     "onetCode": "39-3031.00",
+     "line": 11549
+    },
+    {
+     "id": 5104,
+     "text": "Assist patrons in finding seats, lighting the way with flashlights, if necessary.",
+     "type": "Core",
+     "onetCode": "39-3031.00",
+     "line": 11550
+    },
+    {
+     "id": 5099,
+     "text": "Maintain order and ensure adherence to safety rules.",
+     "type": "Core",
+     "onetCode": "39-3031.00",
+     "line": 11551
+    },
+    {
+     "id": 5105,
+     "text": "Search for lost articles or for parents of lost children.",
+     "type": "Core",
+     "onetCode": "39-3031.00",
+     "line": 11552
+    },
+    {
+     "id": 5107,
+     "text": "Operate refreshment stands during intermission or obtain refreshments for press box patrons during performances.",
+     "type": "Supplemental",
+     "onetCode": "39-3031.00",
+     "line": 11553
+    },
+    {
+     "id": 5106,
+     "text": "Count and record number of tickets collected.",
+     "type": "Supplemental",
+     "onetCode": "39-3031.00",
+     "line": 11554
+    },
+    {
+     "id": 20767,
+     "text": "Lead tours and answer visitors' questions about the exhibits.",
+     "type": "Supplemental",
+     "onetCode": "39-3031.00",
+     "line": 11555
+    },
+    {
+     "id": 5112,
+     "text": "Manage inventory or sale of artist merchandise.",
+     "type": "Supplemental",
+     "onetCode": "39-3031.00",
+     "line": 11556
+    },
+    {
+     "id": 5108,
+     "text": "Verify credentials of patrons desiring entrance into press box and permit only authorized persons to enter.",
+     "type": "Supplemental",
+     "onetCode": "39-3031.00",
+     "line": 11557
+    },
+    {
+     "id": 5109,
+     "text": "Distribute programs to patrons.",
+     "type": "Supplemental",
+     "onetCode": "39-3031.00",
+     "line": 11558
+    },
+    {
+     "id": 5113,
+     "text": "Give door checks to patrons who are temporarily leaving establishments.",
+     "type": "Supplemental",
+     "onetCode": "39-3031.00",
+     "line": 11559
+    },
+    {
+     "id": 5114,
+     "text": "Manage informational kiosks or displays of event signs or posters.",
+     "type": "Supplemental",
+     "onetCode": "39-3031.00",
+     "line": 11560
+    },
+    {
+     "id": 5111,
+     "text": "Work with others to change advertising displays.",
+     "type": "Supplemental",
+     "onetCode": "39-3031.00",
+     "line": 11561
+    },
+    {
+     "id": 5115,
+     "text": "Page individuals wanted at the box office.",
+     "type": "Supplemental",
+     "onetCode": "39-3031.00",
+     "line": 11562
+    },
+    {
+     "id": 20768,
+     "text": "Schedule or manage staff, such as volunteer usher corps.",
+     "type": "Supplemental",
+     "onetCode": "39-3031.00",
+     "line": 11563
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L751",
+    "annualMedian": "oews:national_M2025_dl!AB751",
+    "annualMean": "oews:national_M2025_dl!S751",
+    "hourlyMedian": "oews:national_M2025_dl!W751",
+    "hourlyMean": "oews:national_M2025_dl!R751",
+    "annualPct10": "oews:national_M2025_dl!Z751",
+    "annualPct90": "oews:national_M2025_dl!AD751",
+    "annualOnly": "oews:national_M2025_dl!AE751",
+    "hourlyOnly": "oews:national_M2025_dl!AF751",
+    "title": "oews:national_M2025_dl!J751",
+    "ep.title": "ep:Table 1.2!A612",
+    "ep.employment2025": "ep:Table 1.2!D612",
+    "ep.employment2035": "ep:Table 1.2!E612",
+    "ep.numericChange": "ep:Table 1.2!H612",
+    "ep.percentChange": "ep:Table 1.2!I612",
+    "onetCode": "onet:Occupation Data.txt#L594:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L594:Description"
+   },
+   "nullReasons": {}
+  },
+  "39-3091": {
+   "soc": "39-3091",
+   "title": "Amusement and Recreation Attendants",
+   "major": "39-0000",
+   "minor": "39-3000",
+   "broad": "39-3090",
+   "oewsRows": [
+    753
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 397830,
+   "annualMedian": 32150,
+   "annualMean": 32640,
+   "hourlyMedian": 15.46,
+   "hourlyMean": 15.69,
+   "annualPct10": 22350,
+   "annualPct90": 42490,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Amusement and recreation attendants",
+    "employment2025": 408400,
+    "employment2035": 423600,
+    "numericChange": 15200,
+    "percentChange": 3.7
+   },
+   "onetCode": "39-3091.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Perform a variety of attending duties at amusement or recreation facility. May schedule use of recreation facilities, maintain and provide equipment to participants of sporting events or recreational pursuits, or operate amusement concessions and rides.",
+   "tasks": [
+    {
+     "id": 5119,
+     "text": "Sell tickets and collect fees from customers.",
+     "type": "Core",
+     "onetCode": "39-3091.00",
+     "line": 11564
+    },
+    {
+     "id": 5116,
+     "text": "Provide information about facilities, entertainment options, and rules and regulations.",
+     "type": "Core",
+     "onetCode": "39-3091.00",
+     "line": 11565
+    },
+    {
+     "id": 5120,
+     "text": "Keep informed of shut-down and emergency evacuation procedures.",
+     "type": "Core",
+     "onetCode": "39-3091.00",
+     "line": 11566
+    },
+    {
+     "id": 5130,
+     "text": "Direct patrons to rides, seats, or attractions.",
+     "type": "Core",
+     "onetCode": "39-3091.00",
+     "line": 11567
+    },
+    {
+     "id": 5118,
+     "text": "Monitor activities to ensure adherence to rules and safety procedures, or arrange for the removal of unruly patrons.",
+     "type": "Core",
+     "onetCode": "39-3091.00",
+     "line": 11568
+    },
+    {
+     "id": 5117,
+     "text": "Record details of attendance, sales, receipts, reservations, or repair activities.",
+     "type": "Core",
+     "onetCode": "39-3091.00",
+     "line": 11569
+    },
+    {
+     "id": 5134,
+     "text": "Maintain inventories of equipment, storing and retrieving items and assembling and disassembling equipment as necessary.",
+     "type": "Core",
+     "onetCode": "39-3091.00",
+     "line": 11570
+    },
+    {
+     "id": 5131,
+     "text": "Provide assistance to patrons entering or exiting amusement rides, boats, or ski lifts, or mounting or dismounting animals.",
+     "type": "Supplemental",
+     "onetCode": "39-3091.00",
+     "line": 11571
+    },
+    {
+     "id": 5121,
+     "text": "Clean sporting equipment, vehicles, rides, booths, facilities, or grounds.",
+     "type": "Supplemental",
+     "onetCode": "39-3091.00",
+     "line": 11572
+    },
+    {
+     "id": 5125,
+     "text": "Inspect equipment to detect wear and damage and perform minor repairs, adjustments, or maintenance tasks, such as oiling parts.",
+     "type": "Supplemental",
+     "onetCode": "39-3091.00",
+     "line": 11573
+    },
+    {
+     "id": 5128,
+     "text": "Verify, collect, or punch tickets before admitting patrons to venues, such as amusement parks and rides.",
+     "type": "Supplemental",
+     "onetCode": "39-3091.00",
+     "line": 11574
+    },
+    {
+     "id": 5124,
+     "text": "Fasten safety devices for patrons, or provide them with directions for fastening devices.",
+     "type": "Supplemental",
+     "onetCode": "39-3091.00",
+     "line": 11575
+    },
+    {
+     "id": 5123,
+     "text": "Announce or describe amusement park attractions to patrons to entice customers to games and other entertainment.",
+     "type": "Supplemental",
+     "onetCode": "39-3091.00",
+     "line": 11576
+    },
+    {
+     "id": 5133,
+     "text": "Schedule the use of recreation facilities, such as golf courses, tennis courts, bowling alleys, or softball diamonds.",
+     "type": "Supplemental",
+     "onetCode": "39-3091.00",
+     "line": 11577
+    },
+    {
+     "id": 5132,
+     "text": "Sell and serve refreshments to customers.",
+     "type": "Supplemental",
+     "onetCode": "39-3091.00",
+     "line": 11578
+    },
+    {
+     "id": 5127,
+     "text": "Rent, sell, or issue sporting equipment and supplies, such as bowling shoes, golf balls, swimming suits, or beach chairs.",
+     "type": "Supplemental",
+     "onetCode": "39-3091.00",
+     "line": 11579
+    },
+    {
+     "id": 5126,
+     "text": "Operate, drive, or explain the use of mechanical riding devices or other automatic equipment in amusement parks, carnivals, or recreation areas.",
+     "type": "Supplemental",
+     "onetCode": "39-3091.00",
+     "line": 11580
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L753",
+    "annualMedian": "oews:national_M2025_dl!AB753",
+    "annualMean": "oews:national_M2025_dl!S753",
+    "hourlyMedian": "oews:national_M2025_dl!W753",
+    "hourlyMean": "oews:national_M2025_dl!R753",
+    "annualPct10": "oews:national_M2025_dl!Z753",
+    "annualPct90": "oews:national_M2025_dl!AD753",
+    "annualOnly": "oews:national_M2025_dl!AE753",
+    "hourlyOnly": "oews:national_M2025_dl!AF753",
+    "title": "oews:national_M2025_dl!J753",
+    "ep.title": "ep:Table 1.2!A614",
+    "ep.employment2025": "ep:Table 1.2!D614",
+    "ep.employment2035": "ep:Table 1.2!E614",
+    "ep.numericChange": "ep:Table 1.2!H614",
+    "ep.percentChange": "ep:Table 1.2!I614",
+    "onetCode": "onet:Occupation Data.txt#L595:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L595:Description"
+   },
+   "nullReasons": {}
+  },
+  "39-3092": {
+   "soc": "39-3092",
+   "title": "Costume Attendants",
+   "major": "39-0000",
+   "minor": "39-3000",
+   "broad": "39-3090",
+   "oewsRows": [
+    754
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 6510,
+   "annualMedian": 50400,
+   "annualMean": 63440,
+   "hourlyMedian": 24.23,
+   "hourlyMean": 30.5,
+   "annualPct10": 32150,
+   "annualPct90": 109520,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Costume attendants",
+    "employment2025": 6600,
+    "employment2035": 7000,
+    "numericChange": 400,
+    "percentChange": 5.9
+   },
+   "onetCode": "39-3092.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Select, fit, and take care of costumes for cast members, and aid entertainers. May assist with multiple costume changes during performances.",
+   "tasks": [
+    {
+     "id": 9627,
+     "text": "Create worksheets for dressing lists, show notes, or costume checks.",
+     "type": "Core",
+     "onetCode": "39-3092.00",
+     "line": 11581
+    },
+    {
+     "id": 20898,
+     "text": "Provide dressing assistance to cast members or assign cast dressers to assist specific cast members with costume changes.",
+     "type": "Core",
+     "onetCode": "39-3092.00",
+     "line": 11582
+    },
+    {
+     "id": 9616,
+     "text": "Arrange costumes in order of use to facilitate quick-change procedures for performances.",
+     "type": "Core",
+     "onetCode": "39-3092.00",
+     "line": 11583
+    },
+    {
+     "id": 9621,
+     "text": "Design or construct costumes or send them to tailors for construction, major repairs, or alterations.",
+     "type": "Core",
+     "onetCode": "39-3092.00",
+     "line": 11584
+    },
+    {
+     "id": 9629,
+     "text": "Examine costume fit on cast members and sketch or write notes for alterations.",
+     "type": "Core",
+     "onetCode": "39-3092.00",
+     "line": 11585
+    },
+    {
+     "id": 9615,
+     "text": "Distribute costumes or related equipment and keep records of item status.",
+     "type": "Core",
+     "onetCode": "39-3092.00",
+     "line": 11586
+    },
+    {
+     "id": 9623,
+     "text": "Check the appearance of costumes on stage or under lights to determine whether desired effects are being achieved.",
+     "type": "Core",
+     "onetCode": "39-3092.00",
+     "line": 11587
+    },
+    {
+     "id": 9618,
+     "text": "Clean and press costumes before and after performances and perform any minor repairs.",
+     "type": "Core",
+     "onetCode": "39-3092.00",
+     "line": 11588
+    },
+    {
+     "id": 9625,
+     "text": "Collaborate with production designers, costume designers, or other production staff to discuss and execute costume design details.",
+     "type": "Core",
+     "onetCode": "39-3092.00",
+     "line": 11589
+    },
+    {
+     "id": 9626,
+     "text": "Monitor, maintain, or secure inventories of costumes, wigs, or makeup, providing keys or access to assigned directors, costume designers, or wardrobe mistresses/masters.",
+     "type": "Core",
+     "onetCode": "39-3092.00",
+     "line": 11590
+    },
+    {
+     "id": 9622,
+     "text": "Purchase, rent, or requisition costumes or other wardrobe necessities.",
+     "type": "Core",
+     "onetCode": "39-3092.00",
+     "line": 11591
+    },
+    {
+     "id": 9632,
+     "text": "Study books, pictures, or examples of period clothing to determine styles worn during specific periods in history.",
+     "type": "Core",
+     "onetCode": "39-3092.00",
+     "line": 11592
+    },
+    {
+     "id": 9617,
+     "text": "Return borrowed or rented items when productions are complete and return other items to storage.",
+     "type": "Core",
+     "onetCode": "39-3092.00",
+     "line": 11593
+    },
+    {
+     "id": 9630,
+     "text": "Review scripts or other production information to determine a story's locale or period, as well as the number of characters and required costumes.",
+     "type": "Core",
+     "onetCode": "39-3092.00",
+     "line": 11594
+    },
+    {
+     "id": 9624,
+     "text": "Inventory stock to determine types or conditions of available costuming.",
+     "type": "Core",
+     "onetCode": "39-3092.00",
+     "line": 11595
+    },
+    {
+     "id": 9628,
+     "text": "Direct the work of wardrobe crews during dress rehearsals or performances.",
+     "type": "Supplemental",
+     "onetCode": "39-3092.00",
+     "line": 11596
+    },
+    {
+     "id": 9634,
+     "text": "Participate in the hiring, training, scheduling, or supervision of alteration workers.",
+     "type": "Supplemental",
+     "onetCode": "39-3092.00",
+     "line": 11597
+    },
+    {
+     "id": 9633,
+     "text": "Provide managers with budget recommendations and take responsibility for budgetary line items related to costumes, storage, or makeup needs.",
+     "type": "Supplemental",
+     "onetCode": "39-3092.00",
+     "line": 11598
+    },
+    {
+     "id": 9619,
+     "text": "Assign lockers to employees and maintain locker rooms, dressing rooms, wig rooms, or costume storage or laundry areas.",
+     "type": "Supplemental",
+     "onetCode": "39-3092.00",
+     "line": 11599
+    },
+    {
+     "id": 9631,
+     "text": "Recommend vendors and monitor their work.",
+     "type": "Supplemental",
+     "onetCode": "39-3092.00",
+     "line": 11600
+    },
+    {
+     "id": 9635,
+     "text": "Care for non-clothing items, such as flags, table skirts, or draperies.",
+     "type": "Supplemental",
+     "onetCode": "39-3092.00",
+     "line": 11601
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L754",
+    "annualMedian": "oews:national_M2025_dl!AB754",
+    "annualMean": "oews:national_M2025_dl!S754",
+    "hourlyMedian": "oews:national_M2025_dl!W754",
+    "hourlyMean": "oews:national_M2025_dl!R754",
+    "annualPct10": "oews:national_M2025_dl!Z754",
+    "annualPct90": "oews:national_M2025_dl!AD754",
+    "annualOnly": "oews:national_M2025_dl!AE754",
+    "hourlyOnly": "oews:national_M2025_dl!AF754",
+    "title": "oews:national_M2025_dl!J754",
+    "ep.title": "ep:Table 1.2!A615",
+    "ep.employment2025": "ep:Table 1.2!D615",
+    "ep.employment2035": "ep:Table 1.2!E615",
+    "ep.numericChange": "ep:Table 1.2!H615",
+    "ep.percentChange": "ep:Table 1.2!I615",
+    "onetCode": "onet:Occupation Data.txt#L596:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L596:Description"
+   },
+   "nullReasons": {}
+  },
+  "39-3093": {
+   "soc": "39-3093",
+   "title": "Locker Room, Coatroom, and Dressing Room Attendants",
+   "major": "39-0000",
+   "minor": "39-3000",
+   "broad": "39-3090",
+   "oewsRows": [
+    755
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 15560,
+   "annualMedian": 36300,
+   "annualMean": 38460,
+   "hourlyMedian": 17.45,
+   "hourlyMean": 18.49,
+   "annualPct10": 26590,
+   "annualPct90": 54260,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Locker room, coatroom, and dressing room attendants",
+    "employment2025": 16000,
+    "employment2035": 17100,
+    "numericChange": 1000,
+    "percentChange": 6.4
+   },
+   "onetCode": "39-3093.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Provide personal items to patrons or customers in locker rooms, dressing rooms, or coatrooms.",
+   "tasks": [
+    {
+     "id": 4476,
+     "text": "Provide towels and sheets to clients in public baths, steam rooms, and restrooms.",
+     "type": "Core",
+     "onetCode": "39-3093.00",
+     "line": 11602
+    },
+    {
+     "id": 4465,
+     "text": "Assign dressing room facilities, locker space, or clothing containers to patrons of athletic or bathing establishments.",
+     "type": "Core",
+     "onetCode": "39-3093.00",
+     "line": 11603
+    },
+    {
+     "id": 4467,
+     "text": "Check supplies to ensure adequate availability, and order new supplies when necessary.",
+     "type": "Core",
+     "onetCode": "39-3093.00",
+     "line": 11604
+    },
+    {
+     "id": 4472,
+     "text": "Monitor patrons' facility use to ensure that rules and regulations are followed, and safety and order are maintained.",
+     "type": "Core",
+     "onetCode": "39-3093.00",
+     "line": 11605
+    },
+    {
+     "id": 20134,
+     "text": "Clean facilities such as floors or locker rooms.",
+     "type": "Core",
+     "onetCode": "39-3093.00",
+     "line": 11606
+    },
+    {
+     "id": 4466,
+     "text": "Answer customer inquiries or explain cost, availability, policies, and procedures of facilities.",
+     "type": "Core",
+     "onetCode": "39-3093.00",
+     "line": 11607
+    },
+    {
+     "id": 4468,
+     "text": "Refer guest problems or complaints to supervisors.",
+     "type": "Core",
+     "onetCode": "39-3093.00",
+     "line": 11608
+    },
+    {
+     "id": 4484,
+     "text": "Maintain a lost-and-found collection.",
+     "type": "Core",
+     "onetCode": "39-3093.00",
+     "line": 11609
+    },
+    {
+     "id": 4469,
+     "text": "Clean and polish footwear, using brushes, sponges, cleaning fluid, polishes, waxes, liquid or sole dressing, and daubers.",
+     "type": "Supplemental",
+     "onetCode": "39-3093.00",
+     "line": 11610
+    },
+    {
+     "id": 4474,
+     "text": "Activate emergency action plans and administer first aid, as necessary.",
+     "type": "Supplemental",
+     "onetCode": "39-3093.00",
+     "line": 11611
+    },
+    {
+     "id": 4473,
+     "text": "Procure beverages, food, and other items as requested.",
+     "type": "Supplemental",
+     "onetCode": "39-3093.00",
+     "line": 11612
+    },
+    {
+     "id": 4477,
+     "text": "Collect soiled linen or clothing for laundering.",
+     "type": "Supplemental",
+     "onetCode": "39-3093.00",
+     "line": 11613
+    },
+    {
+     "id": 4475,
+     "text": "Store personal possessions for patrons, issue claim checks for articles stored, and return articles on receipt of checks.",
+     "type": "Supplemental",
+     "onetCode": "39-3093.00",
+     "line": 11614
+    },
+    {
+     "id": 4471,
+     "text": "Operate washing machines and dryers to clean soiled apparel and towels.",
+     "type": "Supplemental",
+     "onetCode": "39-3093.00",
+     "line": 11615
+    },
+    {
+     "id": 4482,
+     "text": "Maintain inventories of clothing or uniforms, accessories, equipment, or linens.",
+     "type": "Supplemental",
+     "onetCode": "39-3093.00",
+     "line": 11616
+    },
+    {
+     "id": 4479,
+     "text": "Attend to needs of athletic teams in clubhouses.",
+     "type": "Supplemental",
+     "onetCode": "39-3093.00",
+     "line": 11617
+    },
+    {
+     "id": 4480,
+     "text": "Provide assistance to patrons by performing duties such as opening doors or carrying bags.",
+     "type": "Supplemental",
+     "onetCode": "39-3093.00",
+     "line": 11618
+    },
+    {
+     "id": 4478,
+     "text": "Operate controls that regulate temperatures or room environments.",
+     "type": "Supplemental",
+     "onetCode": "39-3093.00",
+     "line": 11619
+    },
+    {
+     "id": 4483,
+     "text": "Issue gym clothes, uniforms, towels, athletic equipment, and special athletic apparel.",
+     "type": "Supplemental",
+     "onetCode": "39-3093.00",
+     "line": 11620
+    },
+    {
+     "id": 4486,
+     "text": "Provide or arrange for services such as clothes pressing, cleaning, or repair.",
+     "type": "Supplemental",
+     "onetCode": "39-3093.00",
+     "line": 11621
+    },
+    {
+     "id": 4470,
+     "text": "Report and document safety hazards, potentially hazardous conditions, and unsafe practices and procedures.",
+     "type": "Supplemental",
+     "onetCode": "39-3093.00",
+     "line": 11622
+    },
+    {
+     "id": 4481,
+     "text": "Stencil identifying information on equipment.",
+     "type": "Supplemental",
+     "onetCode": "39-3093.00",
+     "line": 11623
+    },
+    {
+     "id": 4485,
+     "text": "Set up various apparatus or athletic equipment.",
+     "type": "Supplemental",
+     "onetCode": "39-3093.00",
+     "line": 11624
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L755",
+    "annualMedian": "oews:national_M2025_dl!AB755",
+    "annualMean": "oews:national_M2025_dl!S755",
+    "hourlyMedian": "oews:national_M2025_dl!W755",
+    "hourlyMean": "oews:national_M2025_dl!R755",
+    "annualPct10": "oews:national_M2025_dl!Z755",
+    "annualPct90": "oews:national_M2025_dl!AD755",
+    "annualOnly": "oews:national_M2025_dl!AE755",
+    "hourlyOnly": "oews:national_M2025_dl!AF755",
+    "title": "oews:national_M2025_dl!J755",
+    "ep.title": "ep:Table 1.2!A616",
+    "ep.employment2025": "ep:Table 1.2!D616",
+    "ep.employment2035": "ep:Table 1.2!E616",
+    "ep.numericChange": "ep:Table 1.2!H616",
+    "ep.percentChange": "ep:Table 1.2!I616",
+    "onetCode": "onet:Occupation Data.txt#L597:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L597:Description"
+   },
+   "nullReasons": {}
+  },
+  "39-3099": {
+   "soc": "39-3099",
+   "title": "Entertainment Attendants and Related Workers, All Other",
+   "major": "39-0000",
+   "minor": "39-3000",
+   "broad": "39-3090",
+   "oewsRows": [
+    756
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 7060,
+   "annualMedian": 32640,
+   "annualMean": 34980,
+   "hourlyMedian": 15.69,
+   "hourlyMean": 16.82,
+   "annualPct10": 23310,
+   "annualPct90": 48440,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Entertainment attendants and related workers, all other",
+    "employment2025": 7200,
+    "employment2035": 7500,
+    "numericChange": 300,
+    "percentChange": 4
+   },
+   "onetCode": "39-3099.00",
+   "onetTaskSource": "none",
+   "onetSubCodes": [],
+   "description": "All entertainment attendants and related workers not listed separately.",
+   "tasks": [],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L756",
+    "annualMedian": "oews:national_M2025_dl!AB756",
+    "annualMean": "oews:national_M2025_dl!S756",
+    "hourlyMedian": "oews:national_M2025_dl!W756",
+    "hourlyMean": "oews:national_M2025_dl!R756",
+    "annualPct10": "oews:national_M2025_dl!Z756",
+    "annualPct90": "oews:national_M2025_dl!AD756",
+    "annualOnly": "oews:national_M2025_dl!AE756",
+    "hourlyOnly": "oews:national_M2025_dl!AF756",
+    "title": "oews:national_M2025_dl!J756",
+    "ep.title": "ep:Table 1.2!A617",
+    "ep.employment2025": "ep:Table 1.2!D617",
+    "ep.employment2035": "ep:Table 1.2!E617",
+    "ep.numericChange": "ep:Table 1.2!H617",
+    "ep.percentChange": "ep:Table 1.2!I617",
+    "onetCode": "onet:Occupation Data.txt#L598:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L598:Description"
+   },
+   "nullReasons": {
+    "tasks": "O*NET 30.1 has no task statements for 39-3099.00"
+   }
+  },
+  "39-4011": {
+   "soc": "39-4011",
+   "title": "Embalmers",
+   "major": "39-0000",
+   "minor": "39-4000",
+   "broad": "39-4010",
+   "oewsRows": [
+    759
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 3890,
+   "annualMedian": 58780,
+   "annualMean": 58390,
+   "hourlyMedian": 28.26,
+   "hourlyMean": 28.07,
+   "annualPct10": 38310,
+   "annualPct90": 77570,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Embalmers",
+    "employment2025": 3900,
+    "employment2035": 4000,
+    "numericChange": 0,
+    "percentChange": 0.7
+   },
+   "onetCode": "39-4011.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Prepare bodies for interment in conformity with legal requirements.",
+   "tasks": [
+    {
+     "id": 4487,
+     "text": "Conform to laws of health and sanitation and ensure that legal requirements concerning embalming are met.",
+     "type": "Core",
+     "onetCode": "39-4011.00",
+     "line": 11625
+    },
+    {
+     "id": 4488,
+     "text": "Apply cosmetics to impart lifelike appearance to the deceased.",
+     "type": "Core",
+     "onetCode": "39-4011.00",
+     "line": 11626
+    },
+    {
+     "id": 4495,
+     "text": "Join lips, using needles and thread or wire.",
+     "type": "Core",
+     "onetCode": "39-4011.00",
+     "line": 11627
+    },
+    {
+     "id": 4490,
+     "text": "Close incisions, using needles and sutures.",
+     "type": "Core",
+     "onetCode": "39-4011.00",
+     "line": 11628
+    },
+    {
+     "id": 4489,
+     "text": "Incise stomach and abdominal walls and probe internal organs, using trocar, to withdraw blood and waste matter from organs.",
+     "type": "Core",
+     "onetCode": "39-4011.00",
+     "line": 11629
+    },
+    {
+     "id": 23930,
+     "text": "Clean and disinfect areas in which bodies are prepared and embalmed.",
+     "type": "Core",
+     "onetCode": "39-4011.00",
+     "line": 11630
+    },
+    {
+     "id": 4493,
+     "text": "Dress bodies and place them in caskets.",
+     "type": "Core",
+     "onetCode": "39-4011.00",
+     "line": 11631
+    },
+    {
+     "id": 4492,
+     "text": "Make incisions in arms or thighs and drain blood from circulatory system and replace it with embalming fluid, using pump.",
+     "type": "Core",
+     "onetCode": "39-4011.00",
+     "line": 11632
+    },
+    {
+     "id": 20257,
+     "text": "Remove the deceased from place of death and transport to funeral home.",
+     "type": "Core",
+     "onetCode": "39-4011.00",
+     "line": 11633
+    },
+    {
+     "id": 4494,
+     "text": "Perform the duties of funeral directors, including coordinating funeral activities.",
+     "type": "Core",
+     "onetCode": "39-4011.00",
+     "line": 11634
+    },
+    {
+     "id": 4497,
+     "text": "Attach trocar to pump-tube, start pump, and repeat probing to force embalming fluid into organs.",
+     "type": "Core",
+     "onetCode": "39-4011.00",
+     "line": 11635
+    },
+    {
+     "id": 4491,
+     "text": "Reshape or reconstruct disfigured or maimed bodies when necessary, using dermasurgery techniques and materials such as clay, cotton, plaster of Paris, and wax.",
+     "type": "Core",
+     "onetCode": "39-4011.00",
+     "line": 11636
+    },
+    {
+     "id": 4504,
+     "text": "Pack body orifices with cotton saturated with embalming fluid to prevent escape of gases or waste matter.",
+     "type": "Core",
+     "onetCode": "39-4011.00",
+     "line": 11637
+    },
+    {
+     "id": 4496,
+     "text": "Conduct interviews to arrange for the preparation of obituary notices, to assist with the selection of caskets or urns, and to determine the location and time of burials or cremations.",
+     "type": "Core",
+     "onetCode": "39-4011.00",
+     "line": 11638
+    },
+    {
+     "id": 4500,
+     "text": "Insert convex celluloid or cotton between eyeballs and eyelids to prevent slipping and sinking of eyelids.",
+     "type": "Core",
+     "onetCode": "39-4011.00",
+     "line": 11639
+    },
+    {
+     "id": 4505,
+     "text": "Assist with placing caskets in hearses and organize cemetery processions.",
+     "type": "Core",
+     "onetCode": "39-4011.00",
+     "line": 11640
+    },
+    {
+     "id": 4499,
+     "text": "Maintain records, such as itemized lists of clothing or valuables delivered with body and names of persons embalmed.",
+     "type": "Core",
+     "onetCode": "39-4011.00",
+     "line": 11641
+    },
+    {
+     "id": 4501,
+     "text": "Wash and dry bodies, using germicidal soap and towels or hot air dryers.",
+     "type": "Core",
+     "onetCode": "39-4011.00",
+     "line": 11642
+    },
+    {
+     "id": 4502,
+     "text": "Arrange for transporting the deceased to another state for interment.",
+     "type": "Core",
+     "onetCode": "39-4011.00",
+     "line": 11643
+    },
+    {
+     "id": 4498,
+     "text": "Perform special procedures necessary for remains that are to be transported to other states or overseas, or where death was caused by infectious disease.",
+     "type": "Core",
+     "onetCode": "39-4011.00",
+     "line": 11644
+    },
+    {
+     "id": 4503,
+     "text": "Supervise funeral attendants and other funeral home staff.",
+     "type": "Core",
+     "onetCode": "39-4011.00",
+     "line": 11645
+    },
+    {
+     "id": 4506,
+     "text": "Serve as pallbearers, attend visiting rooms, and provide other assistance to the bereaved.",
+     "type": "Core",
+     "onetCode": "39-4011.00",
+     "line": 11646
+    },
+    {
+     "id": 4507,
+     "text": "Direct casket and floral display placement and arrange guest seating.",
+     "type": "Core",
+     "onetCode": "39-4011.00",
+     "line": 11647
+    },
+    {
+     "id": 4508,
+     "text": "Arrange funeral home equipment and perform general maintenance.",
+     "type": "Core",
+     "onetCode": "39-4011.00",
+     "line": 11648
+    },
+    {
+     "id": 4509,
+     "text": "Assist coroners at death scenes or at autopsies, file police reports, and testify at inquests or in court, if employed by a coroner.",
+     "type": "Supplemental",
+     "onetCode": "39-4011.00",
+     "line": 11649
+    },
+    {
+     "id": 4510,
+     "text": "Press diaphragm to evacuate air from lungs.",
+     "type": "Supplemental",
+     "onetCode": "39-4011.00",
+     "line": 11650
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L759",
+    "annualMedian": "oews:national_M2025_dl!AB759",
+    "annualMean": "oews:national_M2025_dl!S759",
+    "hourlyMedian": "oews:national_M2025_dl!W759",
+    "hourlyMean": "oews:national_M2025_dl!R759",
+    "annualPct10": "oews:national_M2025_dl!Z759",
+    "annualPct90": "oews:national_M2025_dl!AD759",
+    "annualOnly": "oews:national_M2025_dl!AE759",
+    "hourlyOnly": "oews:national_M2025_dl!AF759",
+    "title": "oews:national_M2025_dl!J759",
+    "ep.title": "ep:Table 1.2!A620",
+    "ep.employment2025": "ep:Table 1.2!D620",
+    "ep.employment2035": "ep:Table 1.2!E620",
+    "ep.numericChange": "ep:Table 1.2!H620",
+    "ep.percentChange": "ep:Table 1.2!I620",
+    "onetCode": "onet:Occupation Data.txt#L599:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L599:Description"
+   },
+   "nullReasons": {}
+  },
+  "39-4012": {
+   "soc": "39-4012",
+   "title": "Crematory Operators",
+   "major": "39-0000",
+   "minor": "39-4000",
+   "broad": "39-4010",
+   "oewsRows": [
+    760
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 2970,
+   "annualMedian": 43650,
+   "annualMean": 45670,
+   "hourlyMedian": 20.98,
+   "hourlyMean": 21.96,
+   "annualPct10": 33270,
+   "annualPct90": 62460,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Crematory operators",
+    "employment2025": 3000,
+    "employment2035": 3100,
+    "numericChange": 100,
+    "percentChange": 3.1
+   },
+   "onetCode": "39-4012.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Operate crematory equipment to reduce human or animal remains to bone fragments in accordance with state and local regulations. Duties may include preparing the body for cremation and performing general maintenance on crematory equipment. May use traditional flame-based cremation, calcination, or alkaline hydrolysis.",
+   "tasks": [
+    {
+     "id": 23180,
+     "text": "Clean the crematorium, including tables, floors, and equipment.",
+     "type": "n/a",
+     "onetCode": "39-4012.00",
+     "line": 11651
+    },
+    {
+     "id": 23181,
+     "text": "Document divided remains to ensure parts are not misplaced.",
+     "type": "n/a",
+     "onetCode": "39-4012.00",
+     "line": 11652
+    },
+    {
+     "id": 23182,
+     "text": "Embalm, dress, or otherwise prepare the deceased for viewing.",
+     "type": "n/a",
+     "onetCode": "39-4012.00",
+     "line": 11653
+    },
+    {
+     "id": 23183,
+     "text": "Explain the cremation process to family or friends of the deceased.",
+     "type": "n/a",
+     "onetCode": "39-4012.00",
+     "line": 11654
+    },
+    {
+     "id": 23184,
+     "text": "Offer counsel and comfort to bereaved families or friends.",
+     "type": "n/a",
+     "onetCode": "39-4012.00",
+     "line": 11655
+    },
+    {
+     "id": 23185,
+     "text": "Pick up and handle human or pet remains in a respectful manner.",
+     "type": "n/a",
+     "onetCode": "39-4012.00",
+     "line": 11656
+    },
+    {
+     "id": 23186,
+     "text": "Place corpses into crematory machines to reduce remains to bone fragments using flame, heat, or alkaline hydrolysis.",
+     "type": "n/a",
+     "onetCode": "39-4012.00",
+     "line": 11657
+    },
+    {
+     "id": 23187,
+     "text": "Pulverize remaining bone fragments into smaller pieces, using specialized equipment, such as a cremulator or grinder.",
+     "type": "n/a",
+     "onetCode": "39-4012.00",
+     "line": 11658
+    },
+    {
+     "id": 23188,
+     "text": "Read documentation to confirm the identity of the deceased.",
+     "type": "n/a",
+     "onetCode": "39-4012.00",
+     "line": 11659
+    },
+    {
+     "id": 23189,
+     "text": "Remove jewelry, watches, or other personal items from the deceased prior to cremation.",
+     "type": "n/a",
+     "onetCode": "39-4012.00",
+     "line": 11660
+    },
+    {
+     "id": 23190,
+     "text": "Sweep or vacuum the cremation chamber to retrieve remains for storage in an urn or other container.",
+     "type": "n/a",
+     "onetCode": "39-4012.00",
+     "line": 11661
+    },
+    {
+     "id": 23191,
+     "text": "Transport the deceased to a funeral home or crematory using a van, hearse, or other vehicle.",
+     "type": "n/a",
+     "onetCode": "39-4012.00",
+     "line": 11662
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L760",
+    "annualMedian": "oews:national_M2025_dl!AB760",
+    "annualMean": "oews:national_M2025_dl!S760",
+    "hourlyMedian": "oews:national_M2025_dl!W760",
+    "hourlyMean": "oews:national_M2025_dl!R760",
+    "annualPct10": "oews:national_M2025_dl!Z760",
+    "annualPct90": "oews:national_M2025_dl!AD760",
+    "annualOnly": "oews:national_M2025_dl!AE760",
+    "hourlyOnly": "oews:national_M2025_dl!AF760",
+    "title": "oews:national_M2025_dl!J760",
+    "ep.title": "ep:Table 1.2!A621",
+    "ep.employment2025": "ep:Table 1.2!D621",
+    "ep.employment2035": "ep:Table 1.2!E621",
+    "ep.numericChange": "ep:Table 1.2!H621",
+    "ep.percentChange": "ep:Table 1.2!I621",
+    "onetCode": "onet:Occupation Data.txt#L600:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L600:Description"
+   },
+   "nullReasons": {}
+  },
+  "39-4021": {
+   "soc": "39-4021",
+   "title": "Funeral Attendants",
+   "major": "39-0000",
+   "minor": "39-4000",
+   "broad": "39-4020",
+   "oewsRows": [
+    762
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 31090,
+   "annualMedian": 35680,
+   "annualMean": 37190,
+   "hourlyMedian": 17.16,
+   "hourlyMean": 17.88,
+   "annualPct10": 28070,
+   "annualPct90": 48460,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Funeral attendants",
+    "employment2025": 31300,
+    "employment2035": 32100,
+    "numericChange": 800,
+    "percentChange": 2.6
+   },
+   "onetCode": "39-4021.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Perform a variety of tasks during funeral, such as placing casket in parlor or chapel prior to service, arranging floral offerings or lights around casket, directing or escorting mourners, closing casket, and issuing and storing funeral equipment.",
+   "tasks": [
+    {
+     "id": 4512,
+     "text": "Greet people at the funeral home.",
+     "type": "Core",
+     "onetCode": "39-4021.00",
+     "line": 11663
+    },
+    {
+     "id": 4511,
+     "text": "Perform a variety of tasks during funerals to assist funeral directors and to ensure that services run smoothly and as planned.",
+     "type": "Core",
+     "onetCode": "39-4021.00",
+     "line": 11664
+    },
+    {
+     "id": 4514,
+     "text": "Close caskets at appropriate point in services.",
+     "type": "Core",
+     "onetCode": "39-4021.00",
+     "line": 11665
+    },
+    {
+     "id": 4517,
+     "text": "Direct or escort mourners to parlors or chapels in which wakes or funerals are being held.",
+     "type": "Core",
+     "onetCode": "39-4021.00",
+     "line": 11666
+    },
+    {
+     "id": 4518,
+     "text": "Place caskets in parlors or chapels prior to wakes or funerals.",
+     "type": "Core",
+     "onetCode": "39-4021.00",
+     "line": 11667
+    },
+    {
+     "id": 4513,
+     "text": "Offer assistance to mourners as they enter or exit limousines.",
+     "type": "Core",
+     "onetCode": "39-4021.00",
+     "line": 11668
+    },
+    {
+     "id": 4521,
+     "text": "Clean funeral parlors or chapels.",
+     "type": "Core",
+     "onetCode": "39-4021.00",
+     "line": 11669
+    },
+    {
+     "id": 4522,
+     "text": "Arrange floral offerings or lights around caskets.",
+     "type": "Core",
+     "onetCode": "39-4021.00",
+     "line": 11670
+    },
+    {
+     "id": 4519,
+     "text": "Clean and drive funeral vehicles, such as cars or hearses, in funeral processions.",
+     "type": "Core",
+     "onetCode": "39-4021.00",
+     "line": 11671
+    },
+    {
+     "id": 4527,
+     "text": "Act as pallbearers.",
+     "type": "Core",
+     "onetCode": "39-4021.00",
+     "line": 11672
+    },
+    {
+     "id": 20600,
+     "text": "Supervise funeral processions and assist with cemetery parking.",
+     "type": "Core",
+     "onetCode": "39-4021.00",
+     "line": 11673
+    },
+    {
+     "id": 20601,
+     "text": "Deliver floral arrangements or other items to family members of the deceased.",
+     "type": "Core",
+     "onetCode": "39-4021.00",
+     "line": 11674
+    },
+    {
+     "id": 4520,
+     "text": "Carry flowers to hearses or limousines for transportation to places of interment.",
+     "type": "Core",
+     "onetCode": "39-4021.00",
+     "line": 11675
+    },
+    {
+     "id": 20602,
+     "text": "Perform general maintenance tasks for funeral homes, such as maintaining equipment or caring for funeral grounds.",
+     "type": "Core",
+     "onetCode": "39-4021.00",
+     "line": 11676
+    },
+    {
+     "id": 4525,
+     "text": "Issue and store funeral equipment.",
+     "type": "Core",
+     "onetCode": "39-4021.00",
+     "line": 11677
+    },
+    {
+     "id": 4523,
+     "text": "Provide advice to mourners on how to make charitable donations in honor of the deceased.",
+     "type": "Core",
+     "onetCode": "39-4021.00",
+     "line": 11678
+    },
+    {
+     "id": 20603,
+     "text": "Embalm, dress, cosmeticize, and casket the deceased.",
+     "type": "Supplemental",
+     "onetCode": "39-4021.00",
+     "line": 11679
+    },
+    {
+     "id": 20607,
+     "text": "Prepare obituaries for newspapers.",
+     "type": "Supplemental",
+     "onetCode": "39-4021.00",
+     "line": 11680
+    },
+    {
+     "id": 4516,
+     "text": "Obtain burial permits and register deaths.",
+     "type": "Supplemental",
+     "onetCode": "39-4021.00",
+     "line": 11681
+    },
+    {
+     "id": 20597,
+     "text": "Transport the deceased to the funeral home.",
+     "type": "Supplemental",
+     "onetCode": "39-4021.00",
+     "line": 11682
+    },
+    {
+     "id": 20605,
+     "text": "Obtain doctors' signatures on death certificate and complete other paperwork, such as insurance claims forms.",
+     "type": "Supplemental",
+     "onetCode": "39-4021.00",
+     "line": 11683
+    },
+    {
+     "id": 4526,
+     "text": "Assist with cremations and the processing and packaging of cremated remains.",
+     "type": "Supplemental",
+     "onetCode": "39-4021.00",
+     "line": 11684
+    },
+    {
+     "id": 20598,
+     "text": "Attend to the needs of the bereaved, such as by offering comfort, counseling, or after-care programs.",
+     "type": "Supplemental",
+     "onetCode": "39-4021.00",
+     "line": 11685
+    },
+    {
+     "id": 20599,
+     "text": "Perform various administrative tasks, such as typing documents or answering telephone calls.",
+     "type": "Supplemental",
+     "onetCode": "39-4021.00",
+     "line": 11686
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L762",
+    "annualMedian": "oews:national_M2025_dl!AB762",
+    "annualMean": "oews:national_M2025_dl!S762",
+    "hourlyMedian": "oews:national_M2025_dl!W762",
+    "hourlyMean": "oews:national_M2025_dl!R762",
+    "annualPct10": "oews:national_M2025_dl!Z762",
+    "annualPct90": "oews:national_M2025_dl!AD762",
+    "annualOnly": "oews:national_M2025_dl!AE762",
+    "hourlyOnly": "oews:national_M2025_dl!AF762",
+    "title": "oews:national_M2025_dl!J762",
+    "ep.title": "ep:Table 1.2!A622",
+    "ep.employment2025": "ep:Table 1.2!D622",
+    "ep.employment2035": "ep:Table 1.2!E622",
+    "ep.numericChange": "ep:Table 1.2!H622",
+    "ep.percentChange": "ep:Table 1.2!I622",
+    "onetCode": "onet:Occupation Data.txt#L601:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L601:Description"
+   },
+   "nullReasons": {}
+  },
+  "39-4031": {
+   "soc": "39-4031",
+   "title": "Morticians, Undertakers, and Funeral Arrangers",
+   "major": "39-0000",
+   "minor": "39-4000",
+   "broad": "39-4030",
+   "oewsRows": [
+    764
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 25100,
+   "annualMedian": 55010,
+   "annualMean": 58160,
+   "hourlyMedian": 26.45,
+   "hourlyMean": 27.96,
+   "annualPct10": 33350,
+   "annualPct90": 88620,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Morticians, undertakers, and funeral arrangers",
+    "employment2025": 26700,
+    "employment2035": 27500,
+    "numericChange": 800,
+    "percentChange": 3
+   },
+   "onetCode": "39-4031.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Perform various tasks to arrange and direct individual funeral services, such as coordinating transportation of body to mortuary, interviewing family or other authorized person to arrange details, selecting pallbearers, aiding with the selection of officials for religious rites, and providing transportation for mourners.",
+   "tasks": [
+    {
+     "id": 3335,
+     "text": "Oversee the preparation and care of the remains of people who have died.",
+     "type": "Core",
+     "onetCode": "39-4031.00",
+     "line": 11687
+    },
+    {
+     "id": 3334,
+     "text": "Obtain information needed to complete legal documents, such as death certificates or burial permits.",
+     "type": "Core",
+     "onetCode": "39-4031.00",
+     "line": 11688
+    },
+    {
+     "id": 3343,
+     "text": "Perform embalming duties, as necessary.",
+     "type": "Core",
+     "onetCode": "39-4031.00",
+     "line": 11689
+    },
+    {
+     "id": 3332,
+     "text": "Consult with families or friends of the deceased to arrange funeral details, such as obituary notice wording, casket selection, or plans for services.",
+     "type": "Core",
+     "onetCode": "39-4031.00",
+     "line": 11690
+    },
+    {
+     "id": 21009,
+     "text": "Remove deceased remains from place of death.",
+     "type": "Core",
+     "onetCode": "39-4031.00",
+     "line": 11691
+    },
+    {
+     "id": 3336,
+     "text": "Contact cemeteries to schedule the opening and closing of graves.",
+     "type": "Core",
+     "onetCode": "39-4031.00",
+     "line": 11692
+    },
+    {
+     "id": 15200,
+     "text": "Plan, schedule, or coordinate funerals, burials, or cremations, arranging details such as floral delivery or the time and place of services.",
+     "type": "Core",
+     "onetCode": "39-4031.00",
+     "line": 11693
+    },
+    {
+     "id": 3340,
+     "text": "Close caskets and lead funeral corteges to churches or burial sites.",
+     "type": "Core",
+     "onetCode": "39-4031.00",
+     "line": 11694
+    },
+    {
+     "id": 3337,
+     "text": "Provide information on funeral service options, products, or merchandise, and maintain a casket display area.",
+     "type": "Core",
+     "onetCode": "39-4031.00",
+     "line": 11695
+    },
+    {
+     "id": 3339,
+     "text": "Offer counsel and comfort to bereaved families or friends.",
+     "type": "Core",
+     "onetCode": "39-4031.00",
+     "line": 11696
+    },
+    {
+     "id": 3344,
+     "text": "Direct preparations and shipment of bodies for out-of-state burial.",
+     "type": "Core",
+     "onetCode": "39-4031.00",
+     "line": 11697
+    },
+    {
+     "id": 3345,
+     "text": "Discuss and negotiate prearranged funerals with clients.",
+     "type": "Core",
+     "onetCode": "39-4031.00",
+     "line": 11698
+    },
+    {
+     "id": 3347,
+     "text": "Maintain financial records, order merchandise, or prepare accounts.",
+     "type": "Core",
+     "onetCode": "39-4031.00",
+     "line": 11699
+    },
+    {
+     "id": 3342,
+     "text": "Provide or arrange transportation between sites for the remains, mourners, pallbearers, clergy, or flowers.",
+     "type": "Core",
+     "onetCode": "39-4031.00",
+     "line": 11700
+    },
+    {
+     "id": 3341,
+     "text": "Arrange for clergy members to perform needed services.",
+     "type": "Core",
+     "onetCode": "39-4031.00",
+     "line": 11701
+    },
+    {
+     "id": 3348,
+     "text": "Plan placement of caskets at funeral sites or place or adjust lights, fixtures, or floral displays.",
+     "type": "Core",
+     "onetCode": "39-4031.00",
+     "line": 11702
+    },
+    {
+     "id": 15202,
+     "text": "Clean funeral home facilities and grounds.",
+     "type": "Core",
+     "onetCode": "39-4031.00",
+     "line": 11703
+    },
+    {
+     "id": 15201,
+     "text": "Manage funeral home operations, including the hiring, training, or supervision of embalmers, funeral attendants, or other staff.",
+     "type": "Core",
+     "onetCode": "39-4031.00",
+     "line": 11704
+    },
+    {
+     "id": 3346,
+     "text": "Inform survivors of benefits for which they may be eligible.",
+     "type": "Core",
+     "onetCode": "39-4031.00",
+     "line": 11705
+    },
+    {
+     "id": 3349,
+     "text": "Arrange for pallbearers or inform pallbearers or honorary groups of their duties.",
+     "type": "Core",
+     "onetCode": "39-4031.00",
+     "line": 11706
+    },
+    {
+     "id": 3350,
+     "text": "Receive or usher people to their seats for services.",
+     "type": "Core",
+     "onetCode": "39-4031.00",
+     "line": 11707
+    },
+    {
+     "id": 15203,
+     "text": "Participate in community activities for funeral home promotion or other purposes.",
+     "type": "Core",
+     "onetCode": "39-4031.00",
+     "line": 11708
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L764",
+    "annualMedian": "oews:national_M2025_dl!AB764",
+    "annualMean": "oews:national_M2025_dl!S764",
+    "hourlyMedian": "oews:national_M2025_dl!W764",
+    "hourlyMean": "oews:national_M2025_dl!R764",
+    "annualPct10": "oews:national_M2025_dl!Z764",
+    "annualPct90": "oews:national_M2025_dl!AD764",
+    "annualOnly": "oews:national_M2025_dl!AE764",
+    "hourlyOnly": "oews:national_M2025_dl!AF764",
+    "title": "oews:national_M2025_dl!J764",
+    "ep.title": "ep:Table 1.2!A623",
+    "ep.employment2025": "ep:Table 1.2!D623",
+    "ep.employment2035": "ep:Table 1.2!E623",
+    "ep.numericChange": "ep:Table 1.2!H623",
+    "ep.percentChange": "ep:Table 1.2!I623",
+    "onetCode": "onet:Occupation Data.txt#L602:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L602:Description"
+   },
+   "nullReasons": {}
+  },
+  "39-5011": {
+   "soc": "39-5011",
+   "title": "Barbers",
+   "major": "39-0000",
+   "minor": "39-5000",
+   "broad": "39-5010",
+   "oewsRows": [
+    767
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 15000,
+   "annualMedian": 38210,
+   "annualMean": 47070,
+   "hourlyMedian": 18.37,
+   "hourlyMean": 22.63,
+   "annualPct10": 28600,
+   "annualPct90": 76460,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Barbers",
+    "employment2025": 75800,
+    "employment2035": 78300,
+    "numericChange": 2500,
+    "percentChange": 3.3
+   },
+   "onetCode": "39-5011.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Provide barbering services, such as cutting, trimming, shampooing, and styling hair; trimming beards; or giving shaves.",
+   "tasks": [
+    {
+     "id": 8049,
+     "text": "Clean and sterilize scissors, combs, clippers, and other instruments.",
+     "type": "Core",
+     "onetCode": "39-5011.00",
+     "line": 11709
+    },
+    {
+     "id": 8051,
+     "text": "Drape and pin protective cloths around customers' shoulders.",
+     "type": "Core",
+     "onetCode": "39-5011.00",
+     "line": 11710
+    },
+    {
+     "id": 8050,
+     "text": "Cut and trim hair according to clients' instructions or current hairstyles, using clippers, combs, hand-held blow driers, and scissors.",
+     "type": "Core",
+     "onetCode": "39-5011.00",
+     "line": 11711
+    },
+    {
+     "id": 8052,
+     "text": "Question patrons regarding desired services and haircut styles.",
+     "type": "Core",
+     "onetCode": "39-5011.00",
+     "line": 11712
+    },
+    {
+     "id": 8053,
+     "text": "Clean work stations and sweep floors.",
+     "type": "Core",
+     "onetCode": "39-5011.00",
+     "line": 11713
+    },
+    {
+     "id": 8063,
+     "text": "Apply lather and shave beards or neck and temple hair contours, using razors.",
+     "type": "Core",
+     "onetCode": "39-5011.00",
+     "line": 11714
+    },
+    {
+     "id": 8054,
+     "text": "Record services provided on cashiers' tickets or receive payment from customers.",
+     "type": "Core",
+     "onetCode": "39-5011.00",
+     "line": 11715
+    },
+    {
+     "id": 8056,
+     "text": "Shape and trim beards and moustaches, using scissors.",
+     "type": "Core",
+     "onetCode": "39-5011.00",
+     "line": 11716
+    },
+    {
+     "id": 8061,
+     "text": "Perform clerical and administrative duties such as keeping records, paying bills, and hiring and supervising personnel.",
+     "type": "Core",
+     "onetCode": "39-5011.00",
+     "line": 11717
+    },
+    {
+     "id": 8057,
+     "text": "Stay informed of the latest styles and hair care techniques.",
+     "type": "Core",
+     "onetCode": "39-5011.00",
+     "line": 11718
+    },
+    {
+     "id": 8058,
+     "text": "Suggest treatments to alleviate hair problems.",
+     "type": "Core",
+     "onetCode": "39-5011.00",
+     "line": 11719
+    },
+    {
+     "id": 8055,
+     "text": "Order supplies.",
+     "type": "Core",
+     "onetCode": "39-5011.00",
+     "line": 11720
+    },
+    {
+     "id": 8059,
+     "text": "Shampoo hair.",
+     "type": "Core",
+     "onetCode": "39-5011.00",
+     "line": 11721
+    },
+    {
+     "id": 8065,
+     "text": "Recommend and sell lotions, tonics, or other cosmetic supplies.",
+     "type": "Core",
+     "onetCode": "39-5011.00",
+     "line": 11722
+    },
+    {
+     "id": 8067,
+     "text": "Provide skin care and nail treatments.",
+     "type": "Supplemental",
+     "onetCode": "39-5011.00",
+     "line": 11723
+    },
+    {
+     "id": 8060,
+     "text": "Keep card files on clientele, recording notes of work done, products used and fees charged after each visit.",
+     "type": "Supplemental",
+     "onetCode": "39-5011.00",
+     "line": 11724
+    },
+    {
+     "id": 8062,
+     "text": "Curl, color, or straighten hair, using special chemical solutions and equipment.",
+     "type": "Supplemental",
+     "onetCode": "39-5011.00",
+     "line": 11725
+    },
+    {
+     "id": 8066,
+     "text": "Provide face, neck, and scalp massages.",
+     "type": "Supplemental",
+     "onetCode": "39-5011.00",
+     "line": 11726
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L767",
+    "annualMedian": "oews:national_M2025_dl!AB767",
+    "annualMean": "oews:national_M2025_dl!S767",
+    "hourlyMedian": "oews:national_M2025_dl!W767",
+    "hourlyMean": "oews:national_M2025_dl!R767",
+    "annualPct10": "oews:national_M2025_dl!Z767",
+    "annualPct90": "oews:national_M2025_dl!AD767",
+    "annualOnly": "oews:national_M2025_dl!AE767",
+    "hourlyOnly": "oews:national_M2025_dl!AF767",
+    "title": "oews:national_M2025_dl!J767",
+    "ep.title": "ep:Table 1.2!A626",
+    "ep.employment2025": "ep:Table 1.2!D626",
+    "ep.employment2035": "ep:Table 1.2!E626",
+    "ep.numericChange": "ep:Table 1.2!H626",
+    "ep.percentChange": "ep:Table 1.2!I626",
+    "onetCode": "onet:Occupation Data.txt#L603:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L603:Description"
+   },
+   "nullReasons": {}
+  },
+  "39-5012": {
+   "soc": "39-5012",
+   "title": "Hairdressers, Hairstylists, and Cosmetologists",
+   "major": "39-0000",
+   "minor": "39-5000",
+   "broad": "39-5010",
+   "oewsRows": [
+    768
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 305710,
+   "annualMedian": 35790,
+   "annualMean": 43960,
+   "hourlyMedian": 17.21,
+   "hourlyMean": 21.13,
+   "annualPct10": 27040,
+   "annualPct90": 71190,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Hairdressers, hairstylists, and cosmetologists",
+    "employment2025": 595000,
+    "employment2035": 640900,
+    "numericChange": 45900,
+    "percentChange": 7.7
+   },
+   "onetCode": "39-5012.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Provide beauty services, such as cutting, coloring, and styling hair, and massaging and treating scalp. May shampoo hair, apply makeup, dress wigs, remove hair, and provide nail and skincare services.",
+   "tasks": [
+    {
+     "id": 635,
+     "text": "Keep work stations clean and sanitize tools, such as scissors and combs.",
+     "type": "Core",
+     "onetCode": "39-5012.00",
+     "line": 11727
+    },
+    {
+     "id": 639,
+     "text": "Bleach, dye, or tint hair, using applicator or brush.",
+     "type": "Core",
+     "onetCode": "39-5012.00",
+     "line": 11728
+    },
+    {
+     "id": 636,
+     "text": "Cut, trim and shape hair or hairpieces, based on customers' instructions, hair type, and facial features, using clippers, scissors, trimmers and razors.",
+     "type": "Core",
+     "onetCode": "39-5012.00",
+     "line": 11729
+    },
+    {
+     "id": 638,
+     "text": "Schedule client appointments.",
+     "type": "Core",
+     "onetCode": "39-5012.00",
+     "line": 11730
+    },
+    {
+     "id": 640,
+     "text": "Update and maintain customer information records, such as beauty services provided.",
+     "type": "Core",
+     "onetCode": "39-5012.00",
+     "line": 11731
+    },
+    {
+     "id": 643,
+     "text": "Demonstrate and sell hair care products and cosmetics.",
+     "type": "Core",
+     "onetCode": "39-5012.00",
+     "line": 11732
+    },
+    {
+     "id": 637,
+     "text": "Analyze patrons' hair and other physical features to determine and recommend beauty treatment or suggest hair styles.",
+     "type": "Core",
+     "onetCode": "39-5012.00",
+     "line": 11733
+    },
+    {
+     "id": 641,
+     "text": "Shampoo, rinse, condition, and dry hair and scalp or hairpieces with water, liquid soap, or other solutions.",
+     "type": "Core",
+     "onetCode": "39-5012.00",
+     "line": 11734
+    },
+    {
+     "id": 642,
+     "text": "Operate cash registers to receive payments from patrons.",
+     "type": "Core",
+     "onetCode": "39-5012.00",
+     "line": 11735
+    },
+    {
+     "id": 20899,
+     "text": "Order, display, and maintain supplies.",
+     "type": "Core",
+     "onetCode": "39-5012.00",
+     "line": 11736
+    },
+    {
+     "id": 646,
+     "text": "Comb, brush, and spray hair or wigs to set style.",
+     "type": "Core",
+     "onetCode": "39-5012.00",
+     "line": 11737
+    },
+    {
+     "id": 644,
+     "text": "Develop new styles and techniques.",
+     "type": "Core",
+     "onetCode": "39-5012.00",
+     "line": 11738
+    },
+    {
+     "id": 645,
+     "text": "Apply water or setting, straightening or waving solutions to hair, and use curlers, rollers, hot combs and curling irons to press and curl hair.",
+     "type": "Core",
+     "onetCode": "39-5012.00",
+     "line": 11739
+    },
+    {
+     "id": 647,
+     "text": "Shape eyebrows and remove facial hair, using depilatory cream, tweezers, electrolysis or wax.",
+     "type": "Core",
+     "onetCode": "39-5012.00",
+     "line": 11740
+    },
+    {
+     "id": 650,
+     "text": "Shave, trim, and shape beards and moustaches.",
+     "type": "Core",
+     "onetCode": "39-5012.00",
+     "line": 11741
+    },
+    {
+     "id": 651,
+     "text": "Train or supervise other hairstylists, hairdressers, and assistants.",
+     "type": "Supplemental",
+     "onetCode": "39-5012.00",
+     "line": 11742
+    },
+    {
+     "id": 649,
+     "text": "Massage and treat scalp for hygienic and remedial purposes, using hands, fingers, or vibrating equipment.",
+     "type": "Supplemental",
+     "onetCode": "39-5012.00",
+     "line": 11743
+    },
+    {
+     "id": 648,
+     "text": "Administer therapeutic medication and advise patron to seek medical treatment for chronic or contagious scalp conditions.",
+     "type": "Supplemental",
+     "onetCode": "39-5012.00",
+     "line": 11744
+    },
+    {
+     "id": 652,
+     "text": "Recommend and explain the use of cosmetics, lotions, and creams to soften and lubricate skin and enhance and restore natural appearance.",
+     "type": "Supplemental",
+     "onetCode": "39-5012.00",
+     "line": 11745
+    },
+    {
+     "id": 654,
+     "text": "Clean, shape, and polish fingernails and toenails, using files and nail polish.",
+     "type": "Supplemental",
+     "onetCode": "39-5012.00",
+     "line": 11746
+    },
+    {
+     "id": 653,
+     "text": "Give facials to patrons, using special compounds, such as lotions and creams.",
+     "type": "Supplemental",
+     "onetCode": "39-5012.00",
+     "line": 11747
+    },
+    {
+     "id": 656,
+     "text": "Attach wigs or hairpieces to model heads and dress wigs and hairpieces according to instructions, samples, sketches or photographs.",
+     "type": "Supplemental",
+     "onetCode": "39-5012.00",
+     "line": 11748
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L768",
+    "annualMedian": "oews:national_M2025_dl!AB768",
+    "annualMean": "oews:national_M2025_dl!S768",
+    "hourlyMedian": "oews:national_M2025_dl!W768",
+    "hourlyMean": "oews:national_M2025_dl!R768",
+    "annualPct10": "oews:national_M2025_dl!Z768",
+    "annualPct90": "oews:national_M2025_dl!AD768",
+    "annualOnly": "oews:national_M2025_dl!AE768",
+    "hourlyOnly": "oews:national_M2025_dl!AF768",
+    "title": "oews:national_M2025_dl!J768",
+    "ep.title": "ep:Table 1.2!A627",
+    "ep.employment2025": "ep:Table 1.2!D627",
+    "ep.employment2035": "ep:Table 1.2!E627",
+    "ep.numericChange": "ep:Table 1.2!H627",
+    "ep.percentChange": "ep:Table 1.2!I627",
+    "onetCode": "onet:Occupation Data.txt#L604:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L604:Description"
+   },
+   "nullReasons": {}
+  },
+  "39-5091": {
+   "soc": "39-5091",
+   "title": "Makeup Artists, Theatrical and Performance",
+   "major": "39-0000",
+   "minor": "39-5000",
+   "broad": "39-5090",
+   "oewsRows": [
+    770
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 2340,
+   "annualMedian": 97150,
+   "annualMean": 102240,
+   "hourlyMedian": 46.71,
+   "hourlyMean": 49.16,
+   "annualPct10": 23360,
+   "annualPct90": 167470,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Makeup artists, theatrical and performance",
+    "employment2025": 4300,
+    "employment2035": 4600,
+    "numericChange": 300,
+    "percentChange": 6.1
+   },
+   "onetCode": "39-5091.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Apply makeup to performers to reflect period, setting, and situation of their role.",
+   "tasks": [
+    {
+     "id": 24008,
+     "text": "Clean supplies such as makeup brushes.",
+     "type": "Core",
+     "onetCode": "39-5091.00",
+     "line": 11749
+    },
+    {
+     "id": 14798,
+     "text": "Duplicate work precisely to replicate characters' appearances on a daily basis.",
+     "type": "Core",
+     "onetCode": "39-5091.00",
+     "line": 11750
+    },
+    {
+     "id": 14800,
+     "text": "Apply makeup to enhance or alter the appearance of people appearing in productions such as movies.",
+     "type": "Core",
+     "onetCode": "39-5091.00",
+     "line": 11751
+    },
+    {
+     "id": 14805,
+     "text": "Analyze a script, noting events that affect each character's appearance, so that plans can be made for each scene.",
+     "type": "Core",
+     "onetCode": "39-5091.00",
+     "line": 11752
+    },
+    {
+     "id": 14801,
+     "text": "Alter or maintain makeup during productions as necessary to compensate for lighting changes or to achieve continuity of effect.",
+     "type": "Core",
+     "onetCode": "39-5091.00",
+     "line": 11753
+    },
+    {
+     "id": 14797,
+     "text": "Confer with stage or motion picture officials and performers to determine desired effects.",
+     "type": "Core",
+     "onetCode": "39-5091.00",
+     "line": 11754
+    },
+    {
+     "id": 14806,
+     "text": "Requisition or acquire needed materials for special effects, including wigs, beards, and special cosmetics.",
+     "type": "Core",
+     "onetCode": "39-5091.00",
+     "line": 11755
+    },
+    {
+     "id": 14814,
+     "text": "Study production information, such as character descriptions, period settings, and situations, to determine makeup requirements.",
+     "type": "Core",
+     "onetCode": "39-5091.00",
+     "line": 11756
+    },
+    {
+     "id": 14799,
+     "text": "Establish budgets, and work within budgetary limits.",
+     "type": "Core",
+     "onetCode": "39-5091.00",
+     "line": 11757
+    },
+    {
+     "id": 14802,
+     "text": "Select desired makeup shades from stock, or mix oil, grease, and coloring to achieve specific color effects.",
+     "type": "Core",
+     "onetCode": "39-5091.00",
+     "line": 11758
+    },
+    {
+     "id": 14807,
+     "text": "Write makeup sheets and take photos to document specific looks and the products used to achieve the looks.",
+     "type": "Core",
+     "onetCode": "39-5091.00",
+     "line": 11759
+    },
+    {
+     "id": 14804,
+     "text": "Assess performers' skin type to ensure that makeup will not cause break-outs or skin irritations.",
+     "type": "Core",
+     "onetCode": "39-5091.00",
+     "line": 11760
+    },
+    {
+     "id": 14809,
+     "text": "Attach prostheses to performers and apply makeup to create special features or effects, such as scars, aging, or illness.",
+     "type": "Core",
+     "onetCode": "39-5091.00",
+     "line": 11761
+    },
+    {
+     "id": 14808,
+     "text": "Examine sketches, photographs, and plaster models to obtain desired character image depiction.",
+     "type": "Core",
+     "onetCode": "39-5091.00",
+     "line": 11762
+    },
+    {
+     "id": 14803,
+     "text": "Cleanse and tone the skin to prepare it for makeup application.",
+     "type": "Core",
+     "onetCode": "39-5091.00",
+     "line": 11763
+    },
+    {
+     "id": 14810,
+     "text": "Evaluate environmental characteristics, such as venue size and lighting plans, to determine makeup requirements.",
+     "type": "Core",
+     "onetCode": "39-5091.00",
+     "line": 11764
+    },
+    {
+     "id": 14815,
+     "text": "Provide performers with makeup removal assistance after performances have been completed.",
+     "type": "Core",
+     "onetCode": "39-5091.00",
+     "line": 11765
+    },
+    {
+     "id": 14811,
+     "text": "Design rubber or plastic prostheses that can be used to change performers' appearances.",
+     "type": "Core",
+     "onetCode": "39-5091.00",
+     "line": 11766
+    },
+    {
+     "id": 14812,
+     "text": "Create character drawings or models, based upon independent research, to augment period production files.",
+     "type": "Core",
+     "onetCode": "39-5091.00",
+     "line": 11767
+    },
+    {
+     "id": 14817,
+     "text": "Demonstrate products to clients, and provide instruction in makeup application.",
+     "type": "Core",
+     "onetCode": "39-5091.00",
+     "line": 11768
+    },
+    {
+     "id": 14813,
+     "text": "Advise hairdressers on the hairstyles required for character parts.",
+     "type": "Supplemental",
+     "onetCode": "39-5091.00",
+     "line": 11769
+    },
+    {
+     "id": 14816,
+     "text": "Wash and reset wigs.",
+     "type": "Supplemental",
+     "onetCode": "39-5091.00",
+     "line": 11770
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L770",
+    "annualMedian": "oews:national_M2025_dl!AB770",
+    "annualMean": "oews:national_M2025_dl!S770",
+    "hourlyMedian": "oews:national_M2025_dl!W770",
+    "hourlyMean": "oews:national_M2025_dl!R770",
+    "annualPct10": "oews:national_M2025_dl!Z770",
+    "annualPct90": "oews:national_M2025_dl!AD770",
+    "annualOnly": "oews:national_M2025_dl!AE770",
+    "hourlyOnly": "oews:national_M2025_dl!AF770",
+    "title": "oews:national_M2025_dl!J770",
+    "ep.title": "ep:Table 1.2!A629",
+    "ep.employment2025": "ep:Table 1.2!D629",
+    "ep.employment2035": "ep:Table 1.2!E629",
+    "ep.numericChange": "ep:Table 1.2!H629",
+    "ep.percentChange": "ep:Table 1.2!I629",
+    "onetCode": "onet:Occupation Data.txt#L605:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L605:Description"
+   },
+   "nullReasons": {}
+  },
+  "39-5092": {
+   "soc": "39-5092",
+   "title": "Manicurists and Pedicurists",
+   "major": "39-0000",
+   "minor": "39-5000",
+   "broad": "39-5090",
+   "oewsRows": [
+    771
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 152770,
+   "annualMedian": 35760,
+   "annualMean": 38570,
+   "hourlyMedian": 17.19,
+   "hourlyMean": 18.54,
+   "annualPct10": 28920,
+   "annualPct90": 50140,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Manicurists and pedicurists",
+    "employment2025": 201800,
+    "employment2035": 220400,
+    "numericChange": 18600,
+    "percentChange": 9.2
+   },
+   "onetCode": "39-5092.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Clean and shape customers' fingernails and toenails. May polish or decorate nails.",
+   "tasks": [
+    {
+     "id": 8748,
+     "text": "Clean and sanitize tools and work environment.",
+     "type": "Core",
+     "onetCode": "39-5092.00",
+     "line": 11771
+    },
+    {
+     "id": 8753,
+     "text": "Apply undercoat and clear or colored polish onto nails with brush.",
+     "type": "Core",
+     "onetCode": "39-5092.00",
+     "line": 11772
+    },
+    {
+     "id": 8758,
+     "text": "Maintain supply inventories and records of client services.",
+     "type": "Core",
+     "onetCode": "39-5092.00",
+     "line": 11773
+    },
+    {
+     "id": 8752,
+     "text": "Shape and smooth ends of nails, using scissors, files, or emery boards.",
+     "type": "Core",
+     "onetCode": "39-5092.00",
+     "line": 11774
+    },
+    {
+     "id": 20769,
+     "text": "Prepare nail cuticles with water and oil, using cuticle knives to push back cuticles and scissors or nippers to trim cuticles.",
+     "type": "Core",
+     "onetCode": "39-5092.00",
+     "line": 11775
+    },
+    {
+     "id": 20770,
+     "text": "Prepare customers' nails in soapy water, using swabs, files, and orange sticks.",
+     "type": "Core",
+     "onetCode": "39-5092.00",
+     "line": 11776
+    },
+    {
+     "id": 8750,
+     "text": "Remove previously applied nail polish, using liquid remover and swabs.",
+     "type": "Core",
+     "onetCode": "39-5092.00",
+     "line": 11777
+    },
+    {
+     "id": 20771,
+     "text": "Use rotary abrasive wheels to shape and smooth nails or artificial extensions.",
+     "type": "Core",
+     "onetCode": "39-5092.00",
+     "line": 11778
+    },
+    {
+     "id": 8749,
+     "text": "Schedule client appointments and accept payments.",
+     "type": "Core",
+     "onetCode": "39-5092.00",
+     "line": 11779
+    },
+    {
+     "id": 20772,
+     "text": "Assess the condition of clients' hands, remove dead skin, and massage hands.",
+     "type": "Core",
+     "onetCode": "39-5092.00",
+     "line": 11780
+    },
+    {
+     "id": 8760,
+     "text": "Roughen surfaces of fingernails, using abrasive wheel.",
+     "type": "Core",
+     "onetCode": "39-5092.00",
+     "line": 11781
+    },
+    {
+     "id": 8754,
+     "text": "Advise clients on nail care and use of products and colors.",
+     "type": "Core",
+     "onetCode": "39-5092.00",
+     "line": 11782
+    },
+    {
+     "id": 20773,
+     "text": "Treat nails to repair or improve strength and resilience by wrapping.",
+     "type": "Core",
+     "onetCode": "39-5092.00",
+     "line": 11783
+    },
+    {
+     "id": 20774,
+     "text": "Extend nails using powder, solvent, and paper forms attached to tips of customers' fingers to support and shape artificial nails.",
+     "type": "Core",
+     "onetCode": "39-5092.00",
+     "line": 11784
+    },
+    {
+     "id": 8763,
+     "text": "Polish nails, using powdered polish and buffer.",
+     "type": "Core",
+     "onetCode": "39-5092.00",
+     "line": 11785
+    },
+    {
+     "id": 8764,
+     "text": "Whiten underside of nails with white paste or pencils.",
+     "type": "Core",
+     "onetCode": "39-5092.00",
+     "line": 11786
+    },
+    {
+     "id": 8761,
+     "text": "Promote and sell nail care products.",
+     "type": "Core",
+     "onetCode": "39-5092.00",
+     "line": 11787
+    },
+    {
+     "id": 8765,
+     "text": "Decorate clients' nails by piercing or attaching ornaments or designs.",
+     "type": "Core",
+     "onetCode": "39-5092.00",
+     "line": 11788
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L771",
+    "annualMedian": "oews:national_M2025_dl!AB771",
+    "annualMean": "oews:national_M2025_dl!S771",
+    "hourlyMedian": "oews:national_M2025_dl!W771",
+    "hourlyMean": "oews:national_M2025_dl!R771",
+    "annualPct10": "oews:national_M2025_dl!Z771",
+    "annualPct90": "oews:national_M2025_dl!AD771",
+    "annualOnly": "oews:national_M2025_dl!AE771",
+    "hourlyOnly": "oews:national_M2025_dl!AF771",
+    "title": "oews:national_M2025_dl!J771",
+    "ep.title": "ep:Table 1.2!A630",
+    "ep.employment2025": "ep:Table 1.2!D630",
+    "ep.employment2035": "ep:Table 1.2!E630",
+    "ep.numericChange": "ep:Table 1.2!H630",
+    "ep.percentChange": "ep:Table 1.2!I630",
+    "onetCode": "onet:Occupation Data.txt#L606:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L606:Description"
+   },
+   "nullReasons": {}
+  },
+  "39-5093": {
+   "soc": "39-5093",
+   "title": "Shampooers",
+   "major": "39-0000",
+   "minor": "39-5000",
+   "broad": "39-5090",
+   "oewsRows": [
+    772
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 8070,
+   "annualMedian": 32600,
+   "annualMean": 31980,
+   "hourlyMedian": 15.67,
+   "hourlyMean": 15.37,
+   "annualPct10": 23110,
+   "annualPct90": 38240,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Shampooers",
+    "employment2025": 15400,
+    "employment2035": 16200,
+    "numericChange": 900,
+    "percentChange": 5.6
+   },
+   "onetCode": "39-5093.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Shampoo and rinse customers' hair.",
+   "tasks": [
+    {
+     "id": 14818,
+     "text": "Massage, shampoo, and condition patron's hair and scalp to clean them and remove excess oil.",
+     "type": "Core",
+     "onetCode": "39-5093.00",
+     "line": 11789
+    },
+    {
+     "id": 14819,
+     "text": "Advise patrons with chronic or potentially contagious scalp conditions to seek medical treatment.",
+     "type": "Core",
+     "onetCode": "39-5093.00",
+     "line": 11790
+    },
+    {
+     "id": 14820,
+     "text": "Treat scalp conditions and hair loss, using specialized lotions, shampoos, or equipment such as infrared lamps or vibrating equipment.",
+     "type": "Core",
+     "onetCode": "39-5093.00",
+     "line": 11791
+    },
+    {
+     "id": 14821,
+     "text": "Maintain treatment records.",
+     "type": "Supplemental",
+     "onetCode": "39-5093.00",
+     "line": 11792
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L772",
+    "annualMedian": "oews:national_M2025_dl!AB772",
+    "annualMean": "oews:national_M2025_dl!S772",
+    "hourlyMedian": "oews:national_M2025_dl!W772",
+    "hourlyMean": "oews:national_M2025_dl!R772",
+    "annualPct10": "oews:national_M2025_dl!Z772",
+    "annualPct90": "oews:national_M2025_dl!AD772",
+    "annualOnly": "oews:national_M2025_dl!AE772",
+    "hourlyOnly": "oews:national_M2025_dl!AF772",
+    "title": "oews:national_M2025_dl!J772",
+    "ep.title": "ep:Table 1.2!A631",
+    "ep.employment2025": "ep:Table 1.2!D631",
+    "ep.employment2035": "ep:Table 1.2!E631",
+    "ep.numericChange": "ep:Table 1.2!H631",
+    "ep.percentChange": "ep:Table 1.2!I631",
+    "onetCode": "onet:Occupation Data.txt#L607:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L607:Description"
+   },
+   "nullReasons": {}
+  },
+  "39-5094": {
+   "soc": "39-5094",
+   "title": "Skincare Specialists",
+   "major": "39-0000",
+   "minor": "39-5000",
+   "broad": "39-5090",
+   "oewsRows": [
+    773
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 72890,
+   "annualMedian": 45330,
+   "annualMean": 51850,
+   "hourlyMedian": 21.79,
+   "hourlyMean": 24.93,
+   "annualPct10": 29580,
+   "annualPct90": 82050,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Skincare specialists",
+    "employment2025": 104200,
+    "employment2035": 113300,
+    "numericChange": 9100,
+    "percentChange": 8.8
+   },
+   "onetCode": "39-5094.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Provide skincare treatments to face and body to enhance an individual's appearance. Includes electrologists and laser hair removal specialists.",
+   "tasks": [
+    {
+     "id": 8069,
+     "text": "Sterilize equipment and clean work areas.",
+     "type": "Core",
+     "onetCode": "39-5094.00",
+     "line": 11793
+    },
+    {
+     "id": 8074,
+     "text": "Cleanse clients' skin with water, creams, or lotions.",
+     "type": "Core",
+     "onetCode": "39-5094.00",
+     "line": 11794
+    },
+    {
+     "id": 8071,
+     "text": "Demonstrate how to clean and care for skin properly and recommend skin-care regimens.",
+     "type": "Core",
+     "onetCode": "39-5094.00",
+     "line": 11795
+    },
+    {
+     "id": 8077,
+     "text": "Determine which products or colors will improve clients' skin quality and appearance.",
+     "type": "Core",
+     "onetCode": "39-5094.00",
+     "line": 11796
+    },
+    {
+     "id": 8070,
+     "text": "Keep records of client needs and preferences and the services provided.",
+     "type": "Core",
+     "onetCode": "39-5094.00",
+     "line": 11797
+    },
+    {
+     "id": 8075,
+     "text": "Treat the facial skin to maintain and improve its appearance, using specialized techniques and products, such as peels and masks.",
+     "type": "Core",
+     "onetCode": "39-5094.00",
+     "line": 11798
+    },
+    {
+     "id": 8072,
+     "text": "Examine clients' skin, using magnifying lamps or visors when necessary, to evaluate skin condition and appearance.",
+     "type": "Core",
+     "onetCode": "39-5094.00",
+     "line": 11799
+    },
+    {
+     "id": 8078,
+     "text": "Perform simple extractions to remove blackheads.",
+     "type": "Core",
+     "onetCode": "39-5094.00",
+     "line": 11800
+    },
+    {
+     "id": 8073,
+     "text": "Select and apply cosmetic products, such as creams, lotions, and tonics.",
+     "type": "Core",
+     "onetCode": "39-5094.00",
+     "line": 11801
+    },
+    {
+     "id": 20258,
+     "text": "Stay abreast of latest industry trends, products, research, and treatments.",
+     "type": "Core",
+     "onetCode": "39-5094.00",
+     "line": 11802
+    },
+    {
+     "id": 8081,
+     "text": "Apply chemical peels to reduce fine lines and age spots.",
+     "type": "Core",
+     "onetCode": "39-5094.00",
+     "line": 11803
+    },
+    {
+     "id": 8076,
+     "text": "Refer clients to medical personnel for treatment of serious skin problems.",
+     "type": "Core",
+     "onetCode": "39-5094.00",
+     "line": 11804
+    },
+    {
+     "id": 8079,
+     "text": "Provide facial and body massages.",
+     "type": "Core",
+     "onetCode": "39-5094.00",
+     "line": 11805
+    },
+    {
+     "id": 8080,
+     "text": "Remove body and facial hair by applying wax.",
+     "type": "Core",
+     "onetCode": "39-5094.00",
+     "line": 11806
+    },
+    {
+     "id": 8086,
+     "text": "Tint eyelashes and eyebrows.",
+     "type": "Core",
+     "onetCode": "39-5094.00",
+     "line": 11807
+    },
+    {
+     "id": 8084,
+     "text": "Collaborate with plastic surgeons and dermatologists to provide patients with preoperative and postoperative skin care.",
+     "type": "Supplemental",
+     "onetCode": "39-5094.00",
+     "line": 11808
+    },
+    {
+     "id": 8082,
+     "text": "Advise clients about colors and types of makeup and instruct them in makeup application techniques.",
+     "type": "Supplemental",
+     "onetCode": "39-5094.00",
+     "line": 11809
+    },
+    {
+     "id": 8083,
+     "text": "Sell makeup to clients.",
+     "type": "Supplemental",
+     "onetCode": "39-5094.00",
+     "line": 11810
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L773",
+    "annualMedian": "oews:national_M2025_dl!AB773",
+    "annualMean": "oews:national_M2025_dl!S773",
+    "hourlyMedian": "oews:national_M2025_dl!W773",
+    "hourlyMean": "oews:national_M2025_dl!R773",
+    "annualPct10": "oews:national_M2025_dl!Z773",
+    "annualPct90": "oews:national_M2025_dl!AD773",
+    "annualOnly": "oews:national_M2025_dl!AE773",
+    "hourlyOnly": "oews:national_M2025_dl!AF773",
+    "title": "oews:national_M2025_dl!J773",
+    "ep.title": "ep:Table 1.2!A632",
+    "ep.employment2025": "ep:Table 1.2!D632",
+    "ep.employment2035": "ep:Table 1.2!E632",
+    "ep.numericChange": "ep:Table 1.2!H632",
+    "ep.percentChange": "ep:Table 1.2!I632",
+    "onetCode": "onet:Occupation Data.txt#L608:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L608:Description"
+   },
+   "nullReasons": {}
+  },
+  "39-6011": {
+   "soc": "39-6011",
+   "title": "Baggage Porters and Bellhops",
+   "major": "39-0000",
+   "minor": "39-6000",
+   "broad": "39-6010",
+   "oewsRows": [
+    776
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 28510,
+   "annualMedian": 37080,
+   "annualMean": 38570,
+   "hourlyMedian": 17.83,
+   "hourlyMean": 18.54,
+   "annualPct10": 27040,
+   "annualPct90": 51600,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Baggage porters and bellhops",
+    "employment2025": 29200,
+    "employment2035": 28400,
+    "numericChange": -900,
+    "percentChange": -3
+   },
+   "onetCode": "39-6011.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Handle baggage for travelers at transportation terminals or for guests at hotels or similar establishments.",
+   "tasks": [
+    {
+     "id": 2316,
+     "text": "Receive and mark baggage by completing and attaching claim checks.",
+     "type": "Core",
+     "onetCode": "39-6011.00",
+     "line": 11811
+    },
+    {
+     "id": 2317,
+     "text": "Greet incoming guests and escort them to their rooms.",
+     "type": "Core",
+     "onetCode": "39-6011.00",
+     "line": 11812
+    },
+    {
+     "id": 2324,
+     "text": "Transport guests about premises and local areas, or arrange for transportation.",
+     "type": "Core",
+     "onetCode": "39-6011.00",
+     "line": 11813
+    },
+    {
+     "id": 2323,
+     "text": "Maintain clean lobbies or entrance areas for travelers or guests.",
+     "type": "Core",
+     "onetCode": "39-6011.00",
+     "line": 11814
+    },
+    {
+     "id": 2314,
+     "text": "Transfer luggage, trunks, and packages to and from rooms, loading areas, vehicles, or transportation terminals, by hand or using baggage carts.",
+     "type": "Core",
+     "onetCode": "39-6011.00",
+     "line": 11815
+    },
+    {
+     "id": 2315,
+     "text": "Supply guests or travelers with directions, travel information, and other information, such as available services and points of interest.",
+     "type": "Core",
+     "onetCode": "39-6011.00",
+     "line": 11816
+    },
+    {
+     "id": 2321,
+     "text": "Explain the operation of room features, such as locks, ventilation systems, and televisions.",
+     "type": "Core",
+     "onetCode": "39-6011.00",
+     "line": 11817
+    },
+    {
+     "id": 2318,
+     "text": "Assist travelers and guests with disabilities.",
+     "type": "Core",
+     "onetCode": "39-6011.00",
+     "line": 11818
+    },
+    {
+     "id": 2320,
+     "text": "Deliver messages and room service orders, and run errands for guests.",
+     "type": "Core",
+     "onetCode": "39-6011.00",
+     "line": 11819
+    },
+    {
+     "id": 2327,
+     "text": "Pick up and return items for laundry and valet service.",
+     "type": "Core",
+     "onetCode": "39-6011.00",
+     "line": 11820
+    },
+    {
+     "id": 2319,
+     "text": "Act as part of the security team at transportation terminals, hotels, or similar establishments.",
+     "type": "Supplemental",
+     "onetCode": "39-6011.00",
+     "line": 11821
+    },
+    {
+     "id": 2325,
+     "text": "Compute and complete charge slips for services rendered and maintain records.",
+     "type": "Supplemental",
+     "onetCode": "39-6011.00",
+     "line": 11822
+    },
+    {
+     "id": 2326,
+     "text": "Page guests in hotel lobbies, dining rooms, or other areas.",
+     "type": "Supplemental",
+     "onetCode": "39-6011.00",
+     "line": 11823
+    },
+    {
+     "id": 2330,
+     "text": "Set up conference rooms, display tables, racks, or shelves, and arrange merchandise displays for sales personnel.",
+     "type": "Supplemental",
+     "onetCode": "39-6011.00",
+     "line": 11824
+    },
+    {
+     "id": 2328,
+     "text": "Inspect guests' rooms to ensure that they are adequately stocked, orderly, and comfortable.",
+     "type": "Supplemental",
+     "onetCode": "39-6011.00",
+     "line": 11825
+    },
+    {
+     "id": 2329,
+     "text": "Complete baggage insurance forms.",
+     "type": "Supplemental",
+     "onetCode": "39-6011.00",
+     "line": 11826
+    },
+    {
+     "id": 2322,
+     "text": "Arrange for shipments of baggage, express mail, and parcels by providing weighing and billing services.",
+     "type": "Supplemental",
+     "onetCode": "39-6011.00",
+     "line": 11827
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L776",
+    "annualMedian": "oews:national_M2025_dl!AB776",
+    "annualMean": "oews:national_M2025_dl!S776",
+    "hourlyMedian": "oews:national_M2025_dl!W776",
+    "hourlyMean": "oews:national_M2025_dl!R776",
+    "annualPct10": "oews:national_M2025_dl!Z776",
+    "annualPct90": "oews:national_M2025_dl!AD776",
+    "annualOnly": "oews:national_M2025_dl!AE776",
+    "hourlyOnly": "oews:national_M2025_dl!AF776",
+    "title": "oews:national_M2025_dl!J776",
+    "ep.title": "ep:Table 1.2!A634",
+    "ep.employment2025": "ep:Table 1.2!D634",
+    "ep.employment2035": "ep:Table 1.2!E634",
+    "ep.numericChange": "ep:Table 1.2!H634",
+    "ep.percentChange": "ep:Table 1.2!I634",
+    "onetCode": "onet:Occupation Data.txt#L609:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L609:Description"
+   },
+   "nullReasons": {}
+  },
+  "39-6012": {
+   "soc": "39-6012",
+   "title": "Concierges",
+   "major": "39-0000",
+   "minor": "39-6000",
+   "broad": "39-6010",
+   "oewsRows": [
+    777
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 49240,
+   "annualMedian": 38950,
+   "annualMean": 42510,
+   "hourlyMedian": 18.73,
+   "hourlyMean": 20.44,
+   "annualPct10": 31620,
+   "annualPct90": 57570,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Concierges",
+    "employment2025": 50200,
+    "employment2035": 51500,
+    "numericChange": 1300,
+    "percentChange": 2.6
+   },
+   "onetCode": "39-6012.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Assist patrons at hotel, apartment, or office building with personal services. May take messages; arrange or give advice on transportation, business services, or entertainment; or monitor guest requests for housekeeping and maintenance.",
+   "tasks": [
+    {
+     "id": 4529,
+     "text": "Provide information about local features, such as shopping, dining, nightlife, or recreational destinations.",
+     "type": "Core",
+     "onetCode": "39-6012.00",
+     "line": 11828
+    },
+    {
+     "id": 20259,
+     "text": "Make reservations for patrons, such as for dinner, spa treatments, or golf tee times, and obtain tickets to special events.",
+     "type": "Core",
+     "onetCode": "39-6012.00",
+     "line": 11829
+    },
+    {
+     "id": 20260,
+     "text": "Provide directions to guests.",
+     "type": "Core",
+     "onetCode": "39-6012.00",
+     "line": 11830
+    },
+    {
+     "id": 21203,
+     "text": "Order flowers for guests.",
+     "type": "Core",
+     "onetCode": "39-6012.00",
+     "line": 11831
+    },
+    {
+     "id": 4530,
+     "text": "Make travel arrangements for sightseeing or other tours.",
+     "type": "Core",
+     "onetCode": "39-6012.00",
+     "line": 11832
+    },
+    {
+     "id": 4533,
+     "text": "Pick up and deliver items or run errands for guests.",
+     "type": "Core",
+     "onetCode": "39-6012.00",
+     "line": 11833
+    },
+    {
+     "id": 20262,
+     "text": "Plan special events, parties, or meetings, which may include booking musicians or celebrities.",
+     "type": "Core",
+     "onetCode": "39-6012.00",
+     "line": 11834
+    },
+    {
+     "id": 24009,
+     "text": "Book airline or train tickets, reserve rental cars, or arrange shuttle service for guests.",
+     "type": "Core",
+     "onetCode": "39-6012.00",
+     "line": 11835
+    },
+    {
+     "id": 20263,
+     "text": "Arrange childcare services for guests.",
+     "type": "Core",
+     "onetCode": "39-6012.00",
+     "line": 11836
+    },
+    {
+     "id": 4534,
+     "text": "Carry out unusual requests, such as searching for hard-to-find items or arranging for exotic services, such as hot-air balloon rides.",
+     "type": "Core",
+     "onetCode": "39-6012.00",
+     "line": 11837
+    },
+    {
+     "id": 24010,
+     "text": "Assist guests with special needs by providing equipment such as wheelchairs.",
+     "type": "Core",
+     "onetCode": "39-6012.00",
+     "line": 11838
+    },
+    {
+     "id": 4531,
+     "text": "Receive, store, or deliver luggage or mail.",
+     "type": "Core",
+     "onetCode": "39-6012.00",
+     "line": 11839
+    },
+    {
+     "id": 4532,
+     "text": "Perform office duties on a temporary basis when needed.",
+     "type": "Core",
+     "onetCode": "39-6012.00",
+     "line": 11840
+    },
+    {
+     "id": 4535,
+     "text": "Arrange for the replacement of items lost by travelers.",
+     "type": "Core",
+     "onetCode": "39-6012.00",
+     "line": 11841
+    },
+    {
+     "id": 20261,
+     "text": "Provide business services for guests, such as sending or receiving faxes or shipping packages.",
+     "type": "Core",
+     "onetCode": "39-6012.00",
+     "line": 11842
+    },
+    {
+     "id": 4536,
+     "text": "Arrange for interpreters or translators when patrons require such services.",
+     "type": "Core",
+     "onetCode": "39-6012.00",
+     "line": 11843
+    },
+    {
+     "id": 20265,
+     "text": "Provide food and beverage services to guests.",
+     "type": "Supplemental",
+     "onetCode": "39-6012.00",
+     "line": 11844
+    },
+    {
+     "id": 20264,
+     "text": "Clean and tidy hotel lounge.",
+     "type": "Supplemental",
+     "onetCode": "39-6012.00",
+     "line": 11845
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L777",
+    "annualMedian": "oews:national_M2025_dl!AB777",
+    "annualMean": "oews:national_M2025_dl!S777",
+    "hourlyMedian": "oews:national_M2025_dl!W777",
+    "hourlyMean": "oews:national_M2025_dl!R777",
+    "annualPct10": "oews:national_M2025_dl!Z777",
+    "annualPct90": "oews:national_M2025_dl!AD777",
+    "annualOnly": "oews:national_M2025_dl!AE777",
+    "hourlyOnly": "oews:national_M2025_dl!AF777",
+    "title": "oews:national_M2025_dl!J777",
+    "ep.title": "ep:Table 1.2!A635",
+    "ep.employment2025": "ep:Table 1.2!D635",
+    "ep.employment2035": "ep:Table 1.2!E635",
+    "ep.numericChange": "ep:Table 1.2!H635",
+    "ep.percentChange": "ep:Table 1.2!I635",
+    "onetCode": "onet:Occupation Data.txt#L610:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L610:Description"
+   },
+   "nullReasons": {}
+  },
+  "39-7010": {
+   "soc": "39-7010",
+   "title": "Tour and Travel Guides",
+   "major": "39-0000",
+   "minor": "39-7000",
+   "broad": "39-7010",
+   "oewsRows": [
+    780,
+    779
+   ],
+   "oewsOGroups": [
+    "detailed",
+    "broad"
+   ],
+   "employment": 53500,
+   "annualMedian": 38120,
+   "annualMean": 43720,
+   "hourlyMedian": 18.33,
+   "hourlyMean": 21.02,
+   "annualPct10": 28520,
+   "annualPct90": 60930,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Tour and travel guides",
+    "employment2025": 62200,
+    "employment2035": 66100,
+    "numericChange": 3900,
+    "percentChange": 6.3
+   },
+   "onetCode": null,
+   "onetTaskSource": "none",
+   "onetSubCodes": [],
+   "description": null,
+   "tasks": [],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L780",
+    "annualMedian": "oews:national_M2025_dl!AB780",
+    "annualMean": "oews:national_M2025_dl!S780",
+    "hourlyMedian": "oews:national_M2025_dl!W780",
+    "hourlyMean": "oews:national_M2025_dl!R780",
+    "annualPct10": "oews:national_M2025_dl!Z780",
+    "annualPct90": "oews:national_M2025_dl!AD780",
+    "annualOnly": "oews:national_M2025_dl!AE780",
+    "hourlyOnly": "oews:national_M2025_dl!AF780",
+    "title": "oews:national_M2025_dl!J780",
+    "ep.title": "ep:Table 1.2!A637",
+    "ep.employment2025": "ep:Table 1.2!D637",
+    "ep.employment2035": "ep:Table 1.2!E637",
+    "ep.numericChange": "ep:Table 1.2!H637",
+    "ep.percentChange": "ep:Table 1.2!I637"
+   },
+   "nullReasons": {
+    "description": "No O*NET 30.1 occupation code starts with 39-7010",
+    "onetCode": "No O*NET 30.1 occupation code starts with 39-7010",
+    "tasks": "No O*NET 30.1 occupation code starts with 39-7010; O*NET lists this BLS group's members separately (39-7011.00, 39-7012.00) and they are not combined here"
+   }
+  },
+  "39-9011": {
+   "soc": "39-9011",
+   "title": "Childcare Workers",
+   "major": "39-0000",
+   "minor": "39-9000",
+   "broad": "39-9010",
+   "oewsRows": [
+    783
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 518910,
+   "annualMedian": 34980,
+   "annualMean": 35030,
+   "hourlyMedian": 16.82,
+   "hourlyMean": 16.84,
+   "annualPct10": 24260,
+   "annualPct90": 46010,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Childcare workers",
+    "employment2025": 1010300,
+    "employment2035": 990400,
+    "numericChange": -19900,
+    "percentChange": -2
+   },
+   "onetCode": "39-9011.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [
+    {
+     "code": "39-9011.01",
+     "title": "Nannies",
+     "taskCount": 19
+    }
+   ],
+   "description": "Attend to children at schools, businesses, private households, and childcare institutions. Perform a variety of tasks, such as dressing, feeding, bathing, and overseeing play.",
+   "tasks": [
+    {
+     "id": 18756,
+     "text": "Maintain a safe play environment.",
+     "type": "Core",
+     "onetCode": "39-9011.00",
+     "line": 11882
+    },
+    {
+     "id": 2336,
+     "text": "Observe and monitor children's play activities.",
+     "type": "Core",
+     "onetCode": "39-9011.00",
+     "line": 11883
+    },
+    {
+     "id": 18757,
+     "text": "Communicate with children's parents or guardians about daily activities, behaviors, and related issues.",
+     "type": "Core",
+     "onetCode": "39-9011.00",
+     "line": 11884
+    },
+    {
+     "id": 2331,
+     "text": "Support children's emotional and social development, encouraging understanding of others and positive self-concepts.",
+     "type": "Core",
+     "onetCode": "39-9011.00",
+     "line": 11885
+    },
+    {
+     "id": 2332,
+     "text": "Care for children in institutional setting, such as group homes, nursery schools, private businesses, or schools for people with disabilities.",
+     "type": "Core",
+     "onetCode": "39-9011.00",
+     "line": 11886
+    },
+    {
+     "id": 2333,
+     "text": "Sanitize toys and play equipment.",
+     "type": "Core",
+     "onetCode": "39-9011.00",
+     "line": 11887
+    },
+    {
+     "id": 2346,
+     "text": "Dress children and change diapers.",
+     "type": "Core",
+     "onetCode": "39-9011.00",
+     "line": 11888
+    },
+    {
+     "id": 2337,
+     "text": "Keep records on individual children, including daily observations and information about activities, meals served, and medications administered.",
+     "type": "Core",
+     "onetCode": "39-9011.00",
+     "line": 11889
+    },
+    {
+     "id": 2335,
+     "text": "Identify signs of emotional or developmental problems in children and bring them to parents' or guardians' attention.",
+     "type": "Core",
+     "onetCode": "39-9011.00",
+     "line": 11890
+    },
+    {
+     "id": 2338,
+     "text": "Instruct children in health and personal habits, such as eating, resting, and toilet habits.",
+     "type": "Core",
+     "onetCode": "39-9011.00",
+     "line": 11891
+    },
+    {
+     "id": 2342,
+     "text": "Organize and store toys and materials to ensure order in activity areas.",
+     "type": "Core",
+     "onetCode": "39-9011.00",
+     "line": 11892
+    },
+    {
+     "id": 18761,
+     "text": "Perform general administrative tasks, such as taking attendance, editing internal paperwork, and making phone calls.",
+     "type": "Core",
+     "onetCode": "39-9011.00",
+     "line": 11893
+    },
+    {
+     "id": 18759,
+     "text": "Create developmentally appropriate lesson plans.",
+     "type": "Core",
+     "onetCode": "39-9011.00",
+     "line": 11894
+    },
+    {
+     "id": 2348,
+     "text": "Perform housekeeping duties, such as laundry, cleaning, dish washing, and changing of linens.",
+     "type": "Core",
+     "onetCode": "39-9011.00",
+     "line": 11895
+    },
+    {
+     "id": 2339,
+     "text": "Read to children and teach them simple painting, drawing, handicrafts, and songs.",
+     "type": "Core",
+     "onetCode": "39-9011.00",
+     "line": 11896
+    },
+    {
+     "id": 18758,
+     "text": "Assist in preparing food and serving meals and refreshments to children.",
+     "type": "Core",
+     "onetCode": "39-9011.00",
+     "line": 11897
+    },
+    {
+     "id": 2334,
+     "text": "Discipline children and recommend or initiate other measures to control behavior, such as caring for own clothing and picking up toys and books.",
+     "type": "Core",
+     "onetCode": "39-9011.00",
+     "line": 11898
+    },
+    {
+     "id": 18760,
+     "text": "Regulate children's rest periods.",
+     "type": "Core",
+     "onetCode": "39-9011.00",
+     "line": 11899
+    },
+    {
+     "id": 18762,
+     "text": "Organize and participate in recreational activities and outings, such as games and field trips.",
+     "type": "Core",
+     "onetCode": "39-9011.00",
+     "line": 11900
+    },
+    {
+     "id": 2344,
+     "text": "Sterilize bottles and prepare formulas.",
+     "type": "Supplemental",
+     "onetCode": "39-9011.00",
+     "line": 11901
+    },
+    {
+     "id": 2347,
+     "text": "Help children with homework and school work.",
+     "type": "Supplemental",
+     "onetCode": "39-9011.00",
+     "line": 11902
+    },
+    {
+     "id": 18763,
+     "text": "Provide care for children with physical, developmental, or mental health disabilities.",
+     "type": "Supplemental",
+     "onetCode": "39-9011.00",
+     "line": 11903
+    },
+    {
+     "id": 18764,
+     "text": "Perform general personnel functions, such as supervision, training, and scheduling.",
+     "type": "Supplemental",
+     "onetCode": "39-9011.00",
+     "line": 11904
+    },
+    {
+     "id": 2349,
+     "text": "Accompany children to and from school, on outings, and to medical appointments.",
+     "type": "Supplemental",
+     "onetCode": "39-9011.00",
+     "line": 11905
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L783",
+    "annualMedian": "oews:national_M2025_dl!AB783",
+    "annualMean": "oews:national_M2025_dl!S783",
+    "hourlyMedian": "oews:national_M2025_dl!W783",
+    "hourlyMean": "oews:national_M2025_dl!R783",
+    "annualPct10": "oews:national_M2025_dl!Z783",
+    "annualPct90": "oews:national_M2025_dl!AD783",
+    "annualOnly": "oews:national_M2025_dl!AE783",
+    "hourlyOnly": "oews:national_M2025_dl!AF783",
+    "title": "oews:national_M2025_dl!J783",
+    "ep.title": "ep:Table 1.2!A639",
+    "ep.employment2025": "ep:Table 1.2!D639",
+    "ep.employment2035": "ep:Table 1.2!E639",
+    "ep.numericChange": "ep:Table 1.2!H639",
+    "ep.percentChange": "ep:Table 1.2!I639",
+    "onetCode": "onet:Occupation Data.txt#L613:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L613:Description"
+   },
+   "nullReasons": {}
+  },
+  "39-9031": {
+   "soc": "39-9031",
+   "title": "Exercise Trainers and Group Fitness Instructors",
+   "major": "39-0000",
+   "minor": "39-9000",
+   "broad": "39-9030",
+   "oewsRows": [
+    785
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 322930,
+   "annualMedian": 47160,
+   "annualMean": 52420,
+   "hourlyMedian": 22.67,
+   "hourlyMean": 25.2,
+   "annualPct10": 28800,
+   "annualPct90": 83100,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Exercise trainers and group fitness instructors",
+    "employment2025": 388400,
+    "employment2035": 416900,
+    "numericChange": 28500,
+    "percentChange": 7.3
+   },
+   "onetCode": "39-9031.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Instruct or coach groups or individuals in exercise activities for the primary purpose of personal fitness. Demonstrate techniques and form, observe participants, and explain to them corrective measures necessary to improve their skills. Develop and implement individualized approaches to exercise.",
+   "tasks": [
+    {
+     "id": 4559,
+     "text": "Observe participants and inform them of corrective measures necessary for skill improvement.",
+     "type": "Core",
+     "onetCode": "39-9031.00",
+     "line": 11925
+    },
+    {
+     "id": 4557,
+     "text": "Offer alternatives during classes to accommodate different levels of fitness.",
+     "type": "Core",
+     "onetCode": "39-9031.00",
+     "line": 11926
+    },
+    {
+     "id": 4565,
+     "text": "Monitor participants' progress and adapt programs as needed.",
+     "type": "Core",
+     "onetCode": "39-9031.00",
+     "line": 11927
+    },
+    {
+     "id": 4558,
+     "text": "Plan routines, choose appropriate music, and choose different movements for each set of muscles, depending on participants' capabilities and limitations.",
+     "type": "Core",
+     "onetCode": "39-9031.00",
+     "line": 11928
+    },
+    {
+     "id": 4566,
+     "text": "Evaluate individuals' abilities, needs, and physical conditions, and develop suitable training programs to meet any special requirements.",
+     "type": "Core",
+     "onetCode": "39-9031.00",
+     "line": 11929
+    },
+    {
+     "id": 4561,
+     "text": "Instruct participants in maintaining exertion levels to maximize benefits from exercise routines.",
+     "type": "Core",
+     "onetCode": "39-9031.00",
+     "line": 11930
+    },
+    {
+     "id": 4562,
+     "text": "Teach and demonstrate use of gymnastic and training equipment, such as trampolines and weights.",
+     "type": "Core",
+     "onetCode": "39-9031.00",
+     "line": 11931
+    },
+    {
+     "id": 4556,
+     "text": "Explain and enforce safety rules and regulations governing sports, recreational activities, and the use of exercise equipment.",
+     "type": "Core",
+     "onetCode": "39-9031.00",
+     "line": 11932
+    },
+    {
+     "id": 4560,
+     "text": "Teach proper breathing techniques used during physical exertion.",
+     "type": "Core",
+     "onetCode": "39-9031.00",
+     "line": 11933
+    },
+    {
+     "id": 4563,
+     "text": "Maintain fitness equipment.",
+     "type": "Core",
+     "onetCode": "39-9031.00",
+     "line": 11934
+    },
+    {
+     "id": 4568,
+     "text": "Provide students with information and resources regarding nutrition, weight control, and lifestyle issues.",
+     "type": "Core",
+     "onetCode": "39-9031.00",
+     "line": 11935
+    },
+    {
+     "id": 4569,
+     "text": "Administer emergency first aid, wrap injuries, treat minor chronic disabilities, or refer injured persons to physicians.",
+     "type": "Core",
+     "onetCode": "39-9031.00",
+     "line": 11936
+    },
+    {
+     "id": 4575,
+     "text": "Maintain equipment inventories, and select, store, or issue equipment as needed.",
+     "type": "Core",
+     "onetCode": "39-9031.00",
+     "line": 11937
+    },
+    {
+     "id": 4570,
+     "text": "Advise clients about proper clothing and shoes.",
+     "type": "Core",
+     "onetCode": "39-9031.00",
+     "line": 11938
+    },
+    {
+     "id": 4564,
+     "text": "Conduct therapeutic, recreational, or athletic activities.",
+     "type": "Supplemental",
+     "onetCode": "39-9031.00",
+     "line": 11939
+    },
+    {
+     "id": 4567,
+     "text": "Plan physical education programs to promote development of participants' physical attributes and social skills.",
+     "type": "Supplemental",
+     "onetCode": "39-9031.00",
+     "line": 11940
+    },
+    {
+     "id": 4572,
+     "text": "Teach individual and team sports to participants through instruction and demonstration, using knowledge of sports techniques and of participants' physical capabilities.",
+     "type": "Supplemental",
+     "onetCode": "39-9031.00",
+     "line": 11941
+    },
+    {
+     "id": 4573,
+     "text": "Promote health clubs through membership sales, and record member information.",
+     "type": "Supplemental",
+     "onetCode": "39-9031.00",
+     "line": 11942
+    },
+    {
+     "id": 4576,
+     "text": "Organize and conduct competitions and tournaments.",
+     "type": "Supplemental",
+     "onetCode": "39-9031.00",
+     "line": 11943
+    },
+    {
+     "id": 4577,
+     "text": "Advise participants in use of heat or ultraviolet treatments and hot baths.",
+     "type": "Supplemental",
+     "onetCode": "39-9031.00",
+     "line": 11944
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L785",
+    "annualMedian": "oews:national_M2025_dl!AB785",
+    "annualMean": "oews:national_M2025_dl!S785",
+    "hourlyMedian": "oews:national_M2025_dl!W785",
+    "hourlyMean": "oews:national_M2025_dl!R785",
+    "annualPct10": "oews:national_M2025_dl!Z785",
+    "annualPct90": "oews:national_M2025_dl!AD785",
+    "annualOnly": "oews:national_M2025_dl!AE785",
+    "hourlyOnly": "oews:national_M2025_dl!AF785",
+    "title": "oews:national_M2025_dl!J785",
+    "ep.title": "ep:Table 1.2!A641",
+    "ep.employment2025": "ep:Table 1.2!D641",
+    "ep.employment2035": "ep:Table 1.2!E641",
+    "ep.numericChange": "ep:Table 1.2!H641",
+    "ep.percentChange": "ep:Table 1.2!I641",
+    "onetCode": "onet:Occupation Data.txt#L615:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L615:Description"
+   },
+   "nullReasons": {}
+  },
+  "39-9032": {
+   "soc": "39-9032",
+   "title": "Recreation Workers",
+   "major": "39-0000",
+   "minor": "39-9000",
+   "broad": "39-9030",
+   "oewsRows": [
+    786
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 331490,
+   "annualMedian": 36560,
+   "annualMean": 38520,
+   "hourlyMedian": 17.58,
+   "hourlyMean": 18.52,
+   "annualPct10": 27600,
+   "annualPct90": 50410,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Recreation workers",
+    "employment2025": 346900,
+    "employment2035": 361900,
+    "numericChange": 15000,
+    "percentChange": 4.3
+   },
+   "onetCode": "39-9032.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Conduct recreation activities with groups in public, private, or volunteer agencies or recreation facilities. Organize and promote activities, such as arts and crafts, sports, games, music, dramatics, social recreation, camping, and hobbies, taking into account the needs and interests of individual members.",
+   "tasks": [
+    {
+     "id": 2380,
+     "text": "Enforce rules and regulations of recreational facilities to maintain discipline and ensure safety.",
+     "type": "Core",
+     "onetCode": "39-9032.00",
+     "line": 11945
+    },
+    {
+     "id": 2381,
+     "text": "Organize, lead, and promote interest in recreational activities, such as arts, crafts, sports, games, camping, and hobbies.",
+     "type": "Core",
+     "onetCode": "39-9032.00",
+     "line": 11946
+    },
+    {
+     "id": 21010,
+     "text": "Assess the needs and interests of individuals and groups and plan activities accordingly, given the available equipment or facilities.",
+     "type": "Core",
+     "onetCode": "39-9032.00",
+     "line": 11947
+    },
+    {
+     "id": 2382,
+     "text": "Manage the daily operations of recreational facilities.",
+     "type": "Core",
+     "onetCode": "39-9032.00",
+     "line": 11948
+    },
+    {
+     "id": 2383,
+     "text": "Administer first aid according to prescribed procedures and notify emergency medical personnel when necessary.",
+     "type": "Core",
+     "onetCode": "39-9032.00",
+     "line": 11949
+    },
+    {
+     "id": 2388,
+     "text": "Complete and maintain time and attendance forms and inventory lists.",
+     "type": "Core",
+     "onetCode": "39-9032.00",
+     "line": 11950
+    },
+    {
+     "id": 2386,
+     "text": "Explain principles, techniques, and safety procedures to participants in recreational activities and demonstrate use of materials and equipment.",
+     "type": "Core",
+     "onetCode": "39-9032.00",
+     "line": 11951
+    },
+    {
+     "id": 2393,
+     "text": "Direct special activities or events, such as aquatics, gymnastics, or performing arts.",
+     "type": "Core",
+     "onetCode": "39-9032.00",
+     "line": 11952
+    },
+    {
+     "id": 2390,
+     "text": "Supervise and coordinate the work activities of personnel, such as training staff members and assigning work duties.",
+     "type": "Core",
+     "onetCode": "39-9032.00",
+     "line": 11953
+    },
+    {
+     "id": 2387,
+     "text": "Evaluate recreation areas, facilities, and services to determine if they are producing desired results.",
+     "type": "Core",
+     "onetCode": "39-9032.00",
+     "line": 11954
+    },
+    {
+     "id": 21011,
+     "text": "Document individuals' progress toward meeting their treatment goals.",
+     "type": "Core",
+     "onetCode": "39-9032.00",
+     "line": 11955
+    },
+    {
+     "id": 2385,
+     "text": "Greet new arrivals to activities, introducing them to other participants, explaining facility rules, and encouraging participation.",
+     "type": "Core",
+     "onetCode": "39-9032.00",
+     "line": 11956
+    },
+    {
+     "id": 2389,
+     "text": "Confer with management to discuss and resolve participant complaints.",
+     "type": "Core",
+     "onetCode": "39-9032.00",
+     "line": 11957
+    },
+    {
+     "id": 2394,
+     "text": "Meet with staff to discuss rules, regulations, and work-related problems.",
+     "type": "Core",
+     "onetCode": "39-9032.00",
+     "line": 11958
+    },
+    {
+     "id": 2399,
+     "text": "Oversee the purchase, planning, design, construction, and upkeep of recreation facilities and areas.",
+     "type": "Core",
+     "onetCode": "39-9032.00",
+     "line": 11959
+    },
+    {
+     "id": 2396,
+     "text": "Encourage participants to develop their own activities and leadership skills through group discussions.",
+     "type": "Core",
+     "onetCode": "39-9032.00",
+     "line": 11960
+    },
+    {
+     "id": 2391,
+     "text": "Meet and collaborate with agency personnel, community organizations, and other professional personnel to plan balanced recreational programs for participants.",
+     "type": "Core",
+     "onetCode": "39-9032.00",
+     "line": 11961
+    },
+    {
+     "id": 2395,
+     "text": "Provide for entertainment and set up related decorations and equipment.",
+     "type": "Core",
+     "onetCode": "39-9032.00",
+     "line": 11962
+    },
+    {
+     "id": 2397,
+     "text": "Serve as liaison between park or recreation administrators and activity instructors.",
+     "type": "Supplemental",
+     "onetCode": "39-9032.00",
+     "line": 11963
+    },
+    {
+     "id": 2392,
+     "text": "Schedule maintenance and use of facilities.",
+     "type": "Supplemental",
+     "onetCode": "39-9032.00",
+     "line": 11964
+    },
+    {
+     "id": 18557,
+     "text": "Conduct individual in-room visits with residents.",
+     "type": "Supplemental",
+     "onetCode": "39-9032.00",
+     "line": 11965
+    },
+    {
+     "id": 21012,
+     "text": "Develop treatment goals for individuals based on their assessments.",
+     "type": "Supplemental",
+     "onetCode": "39-9032.00",
+     "line": 11966
+    },
+    {
+     "id": 2398,
+     "text": "Evaluate staff performance, recording evaluations on appropriate forms.",
+     "type": "Supplemental",
+     "onetCode": "39-9032.00",
+     "line": 11967
+    },
+    {
+     "id": 18558,
+     "text": "Take residents on community outings.",
+     "type": "Supplemental",
+     "onetCode": "39-9032.00",
+     "line": 11968
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L786",
+    "annualMedian": "oews:national_M2025_dl!AB786",
+    "annualMean": "oews:national_M2025_dl!S786",
+    "hourlyMedian": "oews:national_M2025_dl!W786",
+    "hourlyMean": "oews:national_M2025_dl!R786",
+    "annualPct10": "oews:national_M2025_dl!Z786",
+    "annualPct90": "oews:national_M2025_dl!AD786",
+    "annualOnly": "oews:national_M2025_dl!AE786",
+    "hourlyOnly": "oews:national_M2025_dl!AF786",
+    "title": "oews:national_M2025_dl!J786",
+    "ep.title": "ep:Table 1.2!A642",
+    "ep.employment2025": "ep:Table 1.2!D642",
+    "ep.employment2035": "ep:Table 1.2!E642",
+    "ep.numericChange": "ep:Table 1.2!H642",
+    "ep.percentChange": "ep:Table 1.2!I642",
+    "onetCode": "onet:Occupation Data.txt#L616:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L616:Description"
+   },
+   "nullReasons": {}
+  },
+  "39-9041": {
+   "soc": "39-9041",
+   "title": "Residential Advisors",
+   "major": "39-0000",
+   "minor": "39-9000",
+   "broad": "39-9040",
+   "oewsRows": [
+    788
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 84760,
+   "annualMedian": 42240,
+   "annualMean": 43990,
+   "hourlyMedian": 20.31,
+   "hourlyMean": 21.15,
+   "annualPct10": 29870,
+   "annualPct90": 61060,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Residential advisors",
+    "employment2025": 94100,
+    "employment2035": 97400,
+    "numericChange": 3300,
+    "percentChange": 3.5
+   },
+   "onetCode": "39-9041.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Coordinate activities in resident facilities in secondary school and college dormitories, group homes, or similar establishments. Order supplies and determine need for maintenance, repairs, and furnishings. May maintain household records and assign rooms. May assist residents with problem solving or refer them to counseling resources.",
+   "tasks": [
+    {
+     "id": 6974,
+     "text": "Communicate with other staff to resolve problems with individual students.",
+     "type": "Core",
+     "onetCode": "39-9041.00",
+     "line": 11969
+    },
+    {
+     "id": 6977,
+     "text": "Observe students to detect and report unusual behavior.",
+     "type": "Core",
+     "onetCode": "39-9041.00",
+     "line": 11970
+    },
+    {
+     "id": 20138,
+     "text": "Supervise, train, and evaluate residence hall staff, including resident assistants, participants in work-study programs, and other student workers.",
+     "type": "Core",
+     "onetCode": "39-9041.00",
+     "line": 11971
+    },
+    {
+     "id": 6971,
+     "text": "Provide emergency first aid and summon medical assistance when necessary.",
+     "type": "Core",
+     "onetCode": "39-9041.00",
+     "line": 11972
+    },
+    {
+     "id": 6976,
+     "text": "Make regular rounds to ensure that residents and areas are safe and secure.",
+     "type": "Core",
+     "onetCode": "39-9041.00",
+     "line": 11973
+    },
+    {
+     "id": 6972,
+     "text": "Mediate interpersonal problems between residents.",
+     "type": "Core",
+     "onetCode": "39-9041.00",
+     "line": 11974
+    },
+    {
+     "id": 6970,
+     "text": "Enforce rules and regulations to ensure the smooth and orderly operation of dormitory programs.",
+     "type": "Core",
+     "onetCode": "39-9041.00",
+     "line": 11975
+    },
+    {
+     "id": 6978,
+     "text": "Determine the need for facility maintenance and repair, and notify appropriate personnel.",
+     "type": "Core",
+     "onetCode": "39-9041.00",
+     "line": 11976
+    },
+    {
+     "id": 6979,
+     "text": "Collaborate with counselors to develop counseling programs that address the needs of individual students.",
+     "type": "Core",
+     "onetCode": "39-9041.00",
+     "line": 11977
+    },
+    {
+     "id": 20137,
+     "text": "Develop and coordinate educational programs for residents.",
+     "type": "Core",
+     "onetCode": "39-9041.00",
+     "line": 11978
+    },
+    {
+     "id": 6980,
+     "text": "Develop program plans for individuals or assist in plan development.",
+     "type": "Core",
+     "onetCode": "39-9041.00",
+     "line": 11979
+    },
+    {
+     "id": 6984,
+     "text": "Provide requested information on students' progress and the development of case plans.",
+     "type": "Core",
+     "onetCode": "39-9041.00",
+     "line": 11980
+    },
+    {
+     "id": 6985,
+     "text": "Confer with medical personnel to better understand the backgrounds and needs of individual residents.",
+     "type": "Core",
+     "onetCode": "39-9041.00",
+     "line": 11981
+    },
+    {
+     "id": 6973,
+     "text": "Administer, coordinate, or recommend disciplinary and corrective actions.",
+     "type": "Core",
+     "onetCode": "39-9041.00",
+     "line": 11982
+    },
+    {
+     "id": 6986,
+     "text": "Answer telephones, and route calls or deliver messages.",
+     "type": "Core",
+     "onetCode": "39-9041.00",
+     "line": 11983
+    },
+    {
+     "id": 6975,
+     "text": "Counsel students in the handling of issues such as family, financial, and educational problems.",
+     "type": "Core",
+     "onetCode": "39-9041.00",
+     "line": 11984
+    },
+    {
+     "id": 6981,
+     "text": "Hold regular meetings with each assigned unit.",
+     "type": "Core",
+     "onetCode": "39-9041.00",
+     "line": 11985
+    },
+    {
+     "id": 6994,
+     "text": "Compile information such as residents' daily activities and the quantities of supplies used to prepare required reports.",
+     "type": "Core",
+     "onetCode": "39-9041.00",
+     "line": 11986
+    },
+    {
+     "id": 6993,
+     "text": "Chaperone group-sponsored trips and social functions.",
+     "type": "Core",
+     "onetCode": "39-9041.00",
+     "line": 11987
+    },
+    {
+     "id": 6991,
+     "text": "Order supplies for facilities.",
+     "type": "Core",
+     "onetCode": "39-9041.00",
+     "line": 11988
+    },
+    {
+     "id": 20139,
+     "text": "Oversee departmental budget.",
+     "type": "Supplemental",
+     "onetCode": "39-9041.00",
+     "line": 11989
+    },
+    {
+     "id": 6992,
+     "text": "Supervise students' housekeeping work to ensure that it is done properly.",
+     "type": "Supplemental",
+     "onetCode": "39-9041.00",
+     "line": 11990
+    },
+    {
+     "id": 6988,
+     "text": "Process contract cancellations for students who are unable to follow residence hall policies and procedures.",
+     "type": "Supplemental",
+     "onetCode": "39-9041.00",
+     "line": 11991
+    },
+    {
+     "id": 6995,
+     "text": "Accompany and supervise students during meals.",
+     "type": "Supplemental",
+     "onetCode": "39-9041.00",
+     "line": 11992
+    },
+    {
+     "id": 6990,
+     "text": "Supervise the activities of housekeeping personnel.",
+     "type": "Supplemental",
+     "onetCode": "39-9041.00",
+     "line": 11993
+    },
+    {
+     "id": 6983,
+     "text": "Assign rooms to students.",
+     "type": "Supplemental",
+     "onetCode": "39-9041.00",
+     "line": 11994
+    },
+    {
+     "id": 6996,
+     "text": "Provide transportation or escort for expeditions, such as shopping trips or visits to doctors or dentists.",
+     "type": "Supplemental",
+     "onetCode": "39-9041.00",
+     "line": 11995
+    },
+    {
+     "id": 6982,
+     "text": "Direct and participate in on- and off-campus recreational activities for residents of institutions, boarding schools, fraternities or sororities, children's homes, or similar establishments.",
+     "type": "Supplemental",
+     "onetCode": "39-9041.00",
+     "line": 11996
+    },
+    {
+     "id": 6989,
+     "text": "Sort and distribute mail.",
+     "type": "Supplemental",
+     "onetCode": "39-9041.00",
+     "line": 11997
+    },
+    {
+     "id": 6997,
+     "text": "Inventory, pack, and remove items left behind by former residents.",
+     "type": "Supplemental",
+     "onetCode": "39-9041.00",
+     "line": 11998
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L788",
+    "annualMedian": "oews:national_M2025_dl!AB788",
+    "annualMean": "oews:national_M2025_dl!S788",
+    "hourlyMedian": "oews:national_M2025_dl!W788",
+    "hourlyMean": "oews:national_M2025_dl!R788",
+    "annualPct10": "oews:national_M2025_dl!Z788",
+    "annualPct90": "oews:national_M2025_dl!AD788",
+    "annualOnly": "oews:national_M2025_dl!AE788",
+    "hourlyOnly": "oews:national_M2025_dl!AF788",
+    "title": "oews:national_M2025_dl!J788",
+    "ep.title": "ep:Table 1.2!A643",
+    "ep.employment2025": "ep:Table 1.2!D643",
+    "ep.employment2035": "ep:Table 1.2!E643",
+    "ep.numericChange": "ep:Table 1.2!H643",
+    "ep.percentChange": "ep:Table 1.2!I643",
+    "onetCode": "onet:Occupation Data.txt#L617:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L617:Description"
+   },
+   "nullReasons": {}
+  },
+  "39-9099": {
+   "soc": "39-9099",
+   "title": "Personal Care and Service Workers, All Other",
+   "major": "39-0000",
+   "minor": "39-9000",
+   "broad": "39-9090",
+   "oewsRows": [
+    790
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 60420,
+   "annualMedian": 41600,
+   "annualMean": 40120,
+   "hourlyMedian": 20,
+   "hourlyMean": 19.29,
+   "annualPct10": 27480,
+   "annualPct90": 48910,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Personal care and service workers, all other",
+    "employment2025": 94600,
+    "employment2035": 100200,
+    "numericChange": 5600,
+    "percentChange": 5.9
+   },
+   "onetCode": "39-9099.00",
+   "onetTaskSource": "none",
+   "onetSubCodes": [],
+   "description": "All personal care and service workers not listed separately.",
+   "tasks": [],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L790",
+    "annualMedian": "oews:national_M2025_dl!AB790",
+    "annualMean": "oews:national_M2025_dl!S790",
+    "hourlyMedian": "oews:national_M2025_dl!W790",
+    "hourlyMean": "oews:national_M2025_dl!R790",
+    "annualPct10": "oews:national_M2025_dl!Z790",
+    "annualPct90": "oews:national_M2025_dl!AD790",
+    "annualOnly": "oews:national_M2025_dl!AE790",
+    "hourlyOnly": "oews:national_M2025_dl!AF790",
+    "title": "oews:national_M2025_dl!J790",
+    "ep.title": "ep:Table 1.2!A644",
+    "ep.employment2025": "ep:Table 1.2!D644",
+    "ep.employment2035": "ep:Table 1.2!E644",
+    "ep.numericChange": "ep:Table 1.2!H644",
+    "ep.percentChange": "ep:Table 1.2!I644",
+    "onetCode": "onet:Occupation Data.txt#L618:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L618:Description"
+   },
+   "nullReasons": {
+    "tasks": "O*NET 30.1 has no task statements for 39-9099.00"
+   }
+  }
+ }
+}

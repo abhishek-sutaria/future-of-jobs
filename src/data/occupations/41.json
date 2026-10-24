@@ -1,0 +1,4360 @@
+{
+ "_meta": {
+  "continent": "41-0000",
+  "title": "Sales and Related Occupations",
+  "sources": "see index.json _meta.sources; source refs are <source>:<sheet>!<cell> or <source>:<file>#L<line>:<column>",
+  "extracted": "2026-10-24",
+  "generator": "python3 scripts/build_occupations.py"
+ },
+ "broadGroups": [
+  {
+   "soc": "41-1010",
+   "title": "First-Line Supervisors of Sales Workers",
+   "minor": "41-1000",
+   "employment": 1336190,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L793",
+    "title": "oews:national_M2025_dl!J793"
+   }
+  },
+  {
+   "soc": "41-2010",
+   "title": "Cashiers",
+   "minor": "41-2000",
+   "employment": 3110940,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L797",
+    "title": "oews:national_M2025_dl!J797"
+   }
+  },
+  {
+   "soc": "41-2020",
+   "title": "Counter and Rental Clerks and Parts Salespersons",
+   "minor": "41-2000",
+   "employment": 670890,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L800",
+    "title": "oews:national_M2025_dl!J800"
+   }
+  },
+  {
+   "soc": "41-2030",
+   "title": "Retail Salespersons",
+   "minor": "41-2000",
+   "employment": 3897860,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L803",
+    "title": "oews:national_M2025_dl!J803"
+   }
+  },
+  {
+   "soc": "41-3010",
+   "title": "Advertising Sales Agents",
+   "minor": "41-3000",
+   "employment": 91700,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L806",
+    "title": "oews:national_M2025_dl!J806"
+   }
+  },
+  {
+   "soc": "41-3020",
+   "title": "Insurance Sales Agents",
+   "minor": "41-3000",
+   "employment": 479100,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L808",
+    "title": "oews:national_M2025_dl!J808"
+   }
+  },
+  {
+   "soc": "41-3030",
+   "title": "Securities, Commodities, and Financial Services Sales Agents",
+   "minor": "41-3000",
+   "employment": 489570,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L810",
+    "title": "oews:national_M2025_dl!J810"
+   }
+  },
+  {
+   "soc": "41-3040",
+   "title": "Travel Agents",
+   "minor": "41-3000",
+   "employment": 55110,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L812",
+    "title": "oews:national_M2025_dl!J812"
+   }
+  },
+  {
+   "soc": "41-3090",
+   "title": "Miscellaneous Sales Representatives, Services",
+   "minor": "41-3000",
+   "employment": 1256010,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L814",
+    "title": "oews:national_M2025_dl!J814"
+   }
+  },
+  {
+   "soc": "41-4010",
+   "title": "Sales Representatives, Wholesale and Manufacturing",
+   "minor": "41-4000",
+   "employment": 1522990,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L817",
+    "title": "oews:national_M2025_dl!J817"
+   }
+  },
+  {
+   "soc": "41-9010",
+   "title": "Models, Demonstrators, and Product Promoters",
+   "minor": "41-9000",
+   "employment": 68300,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L821",
+    "title": "oews:national_M2025_dl!J821"
+   }
+  },
+  {
+   "soc": "41-9020",
+   "title": "Real Estate Brokers and Sales Agents",
+   "minor": "41-9000",
+   "employment": 239470,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L824",
+    "title": "oews:national_M2025_dl!J824"
+   }
+  },
+  {
+   "soc": "41-9030",
+   "title": "Sales Engineers",
+   "minor": "41-9000",
+   "employment": 51790,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L827",
+    "title": "oews:national_M2025_dl!J827"
+   }
+  },
+  {
+   "soc": "41-9040",
+   "title": "Telemarketers",
+   "minor": "41-9000",
+   "employment": 58430,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L829",
+    "title": "oews:national_M2025_dl!J829"
+   }
+  },
+  {
+   "soc": "41-9090",
+   "title": "Miscellaneous Sales and Related Workers",
+   "minor": "41-9000",
+   "employment": 95940,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L831",
+    "title": "oews:national_M2025_dl!J831"
+   }
+  }
+ ],
+ "occupations": {
+  "41-1011": {
+   "soc": "41-1011",
+   "title": "First-Line Supervisors of Retail Sales Workers",
+   "major": "41-0000",
+   "minor": "41-1000",
+   "broad": "41-1010",
+   "oewsRows": [
+    794
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 1121800,
+   "annualMedian": 48520,
+   "annualMean": 53380,
+   "hourlyMedian": 23.33,
+   "hourlyMean": 25.66,
+   "annualPct10": 33120,
+   "annualPct90": 77080,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "First-line supervisors of retail sales workers",
+    "employment2025": 1419800,
+    "employment2035": 1367400,
+    "numericChange": -52500,
+    "percentChange": -3.7
+   },
+   "onetCode": "41-1011.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Directly supervise and coordinate activities of retail sales workers in an establishment or department. Duties may include management functions, such as purchasing, budgeting, accounting, and personnel work, in addition to supervisory duties.",
+   "tasks": [
+    {
+     "id": 657,
+     "text": "Provide customer service by greeting and assisting customers and responding to customer inquiries and complaints.",
+     "type": "Core",
+     "onetCode": "41-1011.00",
+     "line": 11999
+    },
+    {
+     "id": 660,
+     "text": "Direct and supervise employees engaged in sales, inventory-taking, reconciling cash receipts, or in performing services for customers.",
+     "type": "Core",
+     "onetCode": "41-1011.00",
+     "line": 12000
+    },
+    {
+     "id": 671,
+     "text": "Examine merchandise to ensure that it is correctly priced and displayed and that it functions as advertised.",
+     "type": "Core",
+     "onetCode": "41-1011.00",
+     "line": 12001
+    },
+    {
+     "id": 658,
+     "text": "Monitor sales activities to ensure that customers receive satisfactory service and quality goods.",
+     "type": "Core",
+     "onetCode": "41-1011.00",
+     "line": 12002
+    },
+    {
+     "id": 668,
+     "text": "Instruct staff on how to handle difficult and complicated sales.",
+     "type": "Core",
+     "onetCode": "41-1011.00",
+     "line": 12003
+    },
+    {
+     "id": 659,
+     "text": "Assign employees to specific duties.",
+     "type": "Core",
+     "onetCode": "41-1011.00",
+     "line": 12004
+    },
+    {
+     "id": 662,
+     "text": "Keep records of purchases, sales, and requisitions.",
+     "type": "Core",
+     "onetCode": "41-1011.00",
+     "line": 12005
+    },
+    {
+     "id": 666,
+     "text": "Perform work activities of subordinates, such as cleaning and organizing shelves and displays and selling merchandise.",
+     "type": "Core",
+     "onetCode": "41-1011.00",
+     "line": 12006
+    },
+    {
+     "id": 672,
+     "text": "Plan and prepare work schedules and keep records of employees' work schedules and time cards.",
+     "type": "Core",
+     "onetCode": "41-1011.00",
+     "line": 12007
+    },
+    {
+     "id": 673,
+     "text": "Review inventory and sales records to prepare reports for management and budget departments.",
+     "type": "Core",
+     "onetCode": "41-1011.00",
+     "line": 12008
+    },
+    {
+     "id": 661,
+     "text": "Inventory stock and reorder when inventory drops to a specified level.",
+     "type": "Core",
+     "onetCode": "41-1011.00",
+     "line": 12009
+    },
+    {
+     "id": 667,
+     "text": "Establish and implement policies, goals, objectives, and procedures for the department.",
+     "type": "Core",
+     "onetCode": "41-1011.00",
+     "line": 12010
+    },
+    {
+     "id": 664,
+     "text": "Examine products purchased for resale or received for storage to assess the condition of each product or item.",
+     "type": "Core",
+     "onetCode": "41-1011.00",
+     "line": 12011
+    },
+    {
+     "id": 663,
+     "text": "Enforce safety, health, and security rules.",
+     "type": "Core",
+     "onetCode": "41-1011.00",
+     "line": 12012
+    },
+    {
+     "id": 670,
+     "text": "Estimate consumer demand and determine the types and amounts of goods to be sold.",
+     "type": "Core",
+     "onetCode": "41-1011.00",
+     "line": 12013
+    },
+    {
+     "id": 675,
+     "text": "Confer with company officials to develop methods and procedures to increase sales, expand markets, and promote business.",
+     "type": "Core",
+     "onetCode": "41-1011.00",
+     "line": 12014
+    },
+    {
+     "id": 669,
+     "text": "Formulate pricing policies for merchandise, according to profitability requirements.",
+     "type": "Supplemental",
+     "onetCode": "41-1011.00",
+     "line": 12015
+    },
+    {
+     "id": 665,
+     "text": "Hire, train, and evaluate personnel in sales or marketing establishments, promoting or firing workers when appropriate.",
+     "type": "Supplemental",
+     "onetCode": "41-1011.00",
+     "line": 12016
+    },
+    {
+     "id": 674,
+     "text": "Plan and coordinate advertising campaigns and sales promotions and prepare merchandise displays and advertising copy.",
+     "type": "Supplemental",
+     "onetCode": "41-1011.00",
+     "line": 12017
+    },
+    {
+     "id": 676,
+     "text": "Establish credit policies and operating procedures.",
+     "type": "Supplemental",
+     "onetCode": "41-1011.00",
+     "line": 12018
+    },
+    {
+     "id": 677,
+     "text": "Plan budgets and authorize payments and merchandise returns.",
+     "type": "Supplemental",
+     "onetCode": "41-1011.00",
+     "line": 12019
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L794",
+    "annualMedian": "oews:national_M2025_dl!AB794",
+    "annualMean": "oews:national_M2025_dl!S794",
+    "hourlyMedian": "oews:national_M2025_dl!W794",
+    "hourlyMean": "oews:national_M2025_dl!R794",
+    "annualPct10": "oews:national_M2025_dl!Z794",
+    "annualPct90": "oews:national_M2025_dl!AD794",
+    "annualOnly": "oews:national_M2025_dl!AE794",
+    "hourlyOnly": "oews:national_M2025_dl!AF794",
+    "title": "oews:national_M2025_dl!J794",
+    "ep.title": "ep:Table 1.2!A647",
+    "ep.employment2025": "ep:Table 1.2!D647",
+    "ep.employment2035": "ep:Table 1.2!E647",
+    "ep.numericChange": "ep:Table 1.2!H647",
+    "ep.percentChange": "ep:Table 1.2!I647",
+    "onetCode": "onet:Occupation Data.txt#L619:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L619:Description"
+   },
+   "nullReasons": {}
+  },
+  "41-1012": {
+   "soc": "41-1012",
+   "title": "First-Line Supervisors of Non-Retail Sales Workers",
+   "major": "41-0000",
+   "minor": "41-1000",
+   "broad": "41-1010",
+   "oewsRows": [
+    795
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 214390,
+   "annualMedian": 87520,
+   "annualMean": 99370,
+   "hourlyMedian": 42.08,
+   "hourlyMean": 47.77,
+   "annualPct10": 50320,
+   "annualPct90": 164070,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "First-line supervisors of non-retail sales workers",
+    "employment2025": 311900,
+    "employment2035": 313600,
+    "numericChange": 1700,
+    "percentChange": 0.5
+   },
+   "onetCode": "41-1012.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Directly supervise and coordinate activities of sales workers other than retail sales workers. May perform duties such as budgeting, accounting, and personnel work, in addition to supervisory duties.",
+   "tasks": [
+    {
+     "id": 9661,
+     "text": "Monitor sales staff performance to ensure that goals are met.",
+     "type": "Core",
+     "onetCode": "41-1012.00",
+     "line": 12020
+    },
+    {
+     "id": 9665,
+     "text": "Provide staff with assistance in performing difficult or complicated duties.",
+     "type": "Core",
+     "onetCode": "41-1012.00",
+     "line": 12021
+    },
+    {
+     "id": 20266,
+     "text": "Direct and supervise employees engaged in sales, inventory-taking, reconciling cash receipts, or performing specific services.",
+     "type": "Core",
+     "onetCode": "41-1012.00",
+     "line": 12022
+    },
+    {
+     "id": 9660,
+     "text": "Listen to and resolve customer complaints regarding services, products, or personnel.",
+     "type": "Core",
+     "onetCode": "41-1012.00",
+     "line": 12023
+    },
+    {
+     "id": 9673,
+     "text": "Keep records pertaining to purchases, sales, and requisitions.",
+     "type": "Core",
+     "onetCode": "41-1012.00",
+     "line": 12024
+    },
+    {
+     "id": 9662,
+     "text": "Hire, train, and evaluate personnel.",
+     "type": "Core",
+     "onetCode": "41-1012.00",
+     "line": 12025
+    },
+    {
+     "id": 9663,
+     "text": "Confer with company officials to develop methods and procedures to increase sales, expand markets, and promote business.",
+     "type": "Core",
+     "onetCode": "41-1012.00",
+     "line": 12026
+    },
+    {
+     "id": 9666,
+     "text": "Plan and prepare work schedules, and assign employees to specific duties.",
+     "type": "Core",
+     "onetCode": "41-1012.00",
+     "line": 12027
+    },
+    {
+     "id": 9667,
+     "text": "Attend company meetings to exchange product information and coordinate work activities with other departments.",
+     "type": "Core",
+     "onetCode": "41-1012.00",
+     "line": 12028
+    },
+    {
+     "id": 9672,
+     "text": "Visit retailers and sales representatives to promote products and gather information.",
+     "type": "Supplemental",
+     "onetCode": "41-1012.00",
+     "line": 12029
+    },
+    {
+     "id": 9669,
+     "text": "Formulate pricing policies on merchandise according to profitability requirements.",
+     "type": "Supplemental",
+     "onetCode": "41-1012.00",
+     "line": 12030
+    },
+    {
+     "id": 9668,
+     "text": "Prepare sales and inventory reports for management and budget departments.",
+     "type": "Supplemental",
+     "onetCode": "41-1012.00",
+     "line": 12031
+    },
+    {
+     "id": 9677,
+     "text": "Examine products purchased for resale or received for storage to determine product condition.",
+     "type": "Supplemental",
+     "onetCode": "41-1012.00",
+     "line": 12032
+    },
+    {
+     "id": 9670,
+     "text": "Examine merchandise to ensure correct pricing and display, and that it functions as advertised.",
+     "type": "Supplemental",
+     "onetCode": "41-1012.00",
+     "line": 12033
+    },
+    {
+     "id": 9671,
+     "text": "Analyze details of sales territories to assess their growth potential and to set quotas.",
+     "type": "Supplemental",
+     "onetCode": "41-1012.00",
+     "line": 12034
+    },
+    {
+     "id": 9676,
+     "text": "Inventory stock and reorder when inventories drop to specified levels.",
+     "type": "Supplemental",
+     "onetCode": "41-1012.00",
+     "line": 12035
+    },
+    {
+     "id": 9674,
+     "text": "Coordinate sales promotion activities, such as preparing merchandise displays and advertising copy.",
+     "type": "Supplemental",
+     "onetCode": "41-1012.00",
+     "line": 12036
+    },
+    {
+     "id": 9675,
+     "text": "Prepare rental or lease agreements, specifying charges and payment procedures for use of machinery, tools, or other items.",
+     "type": "Supplemental",
+     "onetCode": "41-1012.00",
+     "line": 12037
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L795",
+    "annualMedian": "oews:national_M2025_dl!AB795",
+    "annualMean": "oews:national_M2025_dl!S795",
+    "hourlyMedian": "oews:national_M2025_dl!W795",
+    "hourlyMean": "oews:national_M2025_dl!R795",
+    "annualPct10": "oews:national_M2025_dl!Z795",
+    "annualPct90": "oews:national_M2025_dl!AD795",
+    "annualOnly": "oews:national_M2025_dl!AE795",
+    "hourlyOnly": "oews:national_M2025_dl!AF795",
+    "title": "oews:national_M2025_dl!J795",
+    "ep.title": "ep:Table 1.2!A648",
+    "ep.employment2025": "ep:Table 1.2!D648",
+    "ep.employment2035": "ep:Table 1.2!E648",
+    "ep.numericChange": "ep:Table 1.2!H648",
+    "ep.percentChange": "ep:Table 1.2!I648",
+    "onetCode": "onet:Occupation Data.txt#L620:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L620:Description"
+   },
+   "nullReasons": {}
+  },
+  "41-2011": {
+   "soc": "41-2011",
+   "title": "Cashiers",
+   "major": "41-0000",
+   "minor": "41-2000",
+   "broad": "41-2010",
+   "oewsRows": [
+    798
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 3089410,
+   "annualMedian": 32880,
+   "annualMean": 33180,
+   "hourlyMedian": 15.81,
+   "hourlyMean": 15.95,
+   "annualPct10": 24530,
+   "annualPct90": 40410,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Cashiers",
+    "employment2025": 3106300,
+    "employment2035": 2905700,
+    "numericChange": -200600,
+    "percentChange": -6.5
+   },
+   "onetCode": "41-2011.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Receive and disburse money in establishments other than financial institutions. May use electronic scanners, cash registers, or related equipment. May process credit or debit card transactions and validate checks.",
+   "tasks": [
+    {
+     "id": 2400,
+     "text": "Receive payment by cash, check, credit cards, vouchers, or automatic debits.",
+     "type": "Core",
+     "onetCode": "41-2011.00",
+     "line": 12038
+    },
+    {
+     "id": 2403,
+     "text": "Greet customers entering establishments.",
+     "type": "Core",
+     "onetCode": "41-2011.00",
+     "line": 12039
+    },
+    {
+     "id": 2401,
+     "text": "Issue receipts, refunds, credits, or change due to customers.",
+     "type": "Core",
+     "onetCode": "41-2011.00",
+     "line": 12040
+    },
+    {
+     "id": 18765,
+     "text": "Assist customers by providing information and resolving their complaints.",
+     "type": "Core",
+     "onetCode": "41-2011.00",
+     "line": 12041
+    },
+    {
+     "id": 2422,
+     "text": "Monitor checkout stations to ensure they have adequate cash available and are staffed appropriately.",
+     "type": "Core",
+     "onetCode": "41-2011.00",
+     "line": 12042
+    },
+    {
+     "id": 2405,
+     "text": "Establish or identify prices of goods, services, or admission, and tabulate bills, using calculators, cash registers, or optical price scanners.",
+     "type": "Core",
+     "onetCode": "41-2011.00",
+     "line": 12043
+    },
+    {
+     "id": 21073,
+     "text": "Answer incoming phone calls.",
+     "type": "Core",
+     "onetCode": "41-2011.00",
+     "line": 12044
+    },
+    {
+     "id": 2408,
+     "text": "Answer customers' questions, and provide information on procedures or policies.",
+     "type": "Core",
+     "onetCode": "41-2011.00",
+     "line": 12045
+    },
+    {
+     "id": 2419,
+     "text": "Request information or assistance, using paging systems.",
+     "type": "Core",
+     "onetCode": "41-2011.00",
+     "line": 12046
+    },
+    {
+     "id": 21072,
+     "text": "Help customers find the location of products.",
+     "type": "Core",
+     "onetCode": "41-2011.00",
+     "line": 12047
+    },
+    {
+     "id": 2417,
+     "text": "Process merchandise returns and exchanges.",
+     "type": "Core",
+     "onetCode": "41-2011.00",
+     "line": 12048
+    },
+    {
+     "id": 18766,
+     "text": "Maintain clean and orderly checkout areas, and complete other general cleaning duties, such as mopping floors and emptying trash cans.",
+     "type": "Core",
+     "onetCode": "41-2011.00",
+     "line": 12049
+    },
+    {
+     "id": 2411,
+     "text": "Calculate total payments received during a time period, and reconcile this with total sales.",
+     "type": "Supplemental",
+     "onetCode": "41-2011.00",
+     "line": 12050
+    },
+    {
+     "id": 2402,
+     "text": "Count money in cash drawers at the beginning of shifts to ensure that amounts are correct and that there is adequate change.",
+     "type": "Supplemental",
+     "onetCode": "41-2011.00",
+     "line": 12051
+    },
+    {
+     "id": 2406,
+     "text": "Issue trading stamps, and redeem food stamps and coupons.",
+     "type": "Supplemental",
+     "onetCode": "41-2011.00",
+     "line": 12052
+    },
+    {
+     "id": 2423,
+     "text": "Post charges against guests' or patients' accounts.",
+     "type": "Supplemental",
+     "onetCode": "41-2011.00",
+     "line": 12053
+    },
+    {
+     "id": 2412,
+     "text": "Compute and record totals of transactions.",
+     "type": "Supplemental",
+     "onetCode": "41-2011.00",
+     "line": 12054
+    },
+    {
+     "id": 2410,
+     "text": "Weigh items sold by weight to determine prices.",
+     "type": "Supplemental",
+     "onetCode": "41-2011.00",
+     "line": 12055
+    },
+    {
+     "id": 2416,
+     "text": "Sort, count, and wrap currency and coins.",
+     "type": "Supplemental",
+     "onetCode": "41-2011.00",
+     "line": 12056
+    },
+    {
+     "id": 2414,
+     "text": "Keep periodic balance sheets of amounts and numbers of transactions.",
+     "type": "Supplemental",
+     "onetCode": "41-2011.00",
+     "line": 12057
+    },
+    {
+     "id": 2421,
+     "text": "Compile and maintain non-monetary reports and records.",
+     "type": "Supplemental",
+     "onetCode": "41-2011.00",
+     "line": 12058
+    },
+    {
+     "id": 18768,
+     "text": "Supervise others and provide on-the-job training.",
+     "type": "Supplemental",
+     "onetCode": "41-2011.00",
+     "line": 12059
+    },
+    {
+     "id": 18767,
+     "text": "Assist with duties in other areas of the store, such as monitoring fitting rooms or bagging and carrying out customers' items.",
+     "type": "Supplemental",
+     "onetCode": "41-2011.00",
+     "line": 12060
+    },
+    {
+     "id": 2413,
+     "text": "Sell tickets and other items to customers.",
+     "type": "Supplemental",
+     "onetCode": "41-2011.00",
+     "line": 12061
+    },
+    {
+     "id": 21074,
+     "text": "Stock shelves, sort and reshelve returned items, and mark prices on items and shelves.",
+     "type": "Supplemental",
+     "onetCode": "41-2011.00",
+     "line": 12062
+    },
+    {
+     "id": 2415,
+     "text": "Bag, box, wrap, or gift-wrap merchandise, and prepare packages for shipment.",
+     "type": "Supplemental",
+     "onetCode": "41-2011.00",
+     "line": 12063
+    },
+    {
+     "id": 2409,
+     "text": "Cash checks for customers.",
+     "type": "Supplemental",
+     "onetCode": "41-2011.00",
+     "line": 12064
+    },
+    {
+     "id": 2424,
+     "text": "Offer customers carry-out service at the completion of transactions.",
+     "type": "Supplemental",
+     "onetCode": "41-2011.00",
+     "line": 12065
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L798",
+    "annualMedian": "oews:national_M2025_dl!AB798",
+    "annualMean": "oews:national_M2025_dl!S798",
+    "hourlyMedian": "oews:national_M2025_dl!W798",
+    "hourlyMean": "oews:national_M2025_dl!R798",
+    "annualPct10": "oews:national_M2025_dl!Z798",
+    "annualPct90": "oews:national_M2025_dl!AD798",
+    "annualOnly": "oews:national_M2025_dl!AE798",
+    "hourlyOnly": "oews:national_M2025_dl!AF798",
+    "title": "oews:national_M2025_dl!J798",
+    "ep.title": "ep:Table 1.2!A651",
+    "ep.employment2025": "ep:Table 1.2!D651",
+    "ep.employment2035": "ep:Table 1.2!E651",
+    "ep.numericChange": "ep:Table 1.2!H651",
+    "ep.percentChange": "ep:Table 1.2!I651",
+    "onetCode": "onet:Occupation Data.txt#L621:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L621:Description"
+   },
+   "nullReasons": {}
+  },
+  "41-2012": {
+   "soc": "41-2012",
+   "title": "Gambling Change Persons and Booth Cashiers",
+   "major": "41-0000",
+   "minor": "41-2000",
+   "broad": "41-2010",
+   "oewsRows": [
+    799
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 21530,
+   "annualMedian": 36220,
+   "annualMean": 39100,
+   "hourlyMedian": 17.41,
+   "hourlyMean": 18.8,
+   "annualPct10": 24460,
+   "annualPct90": 60330,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Gambling change persons and booth cashiers",
+    "employment2025": 22000,
+    "employment2035": 21600,
+    "numericChange": -400,
+    "percentChange": -1.9
+   },
+   "onetCode": "41-2012.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Exchange coins, tokens, and chips for patrons' money. May issue payoffs and obtain customer's signature on receipt. May operate a booth in the slot machine area and furnish change persons with money bank at the start of the shift, or count and audit money in drawers.",
+   "tasks": [
+    {
+     "id": 6999,
+     "text": "Keep accurate records of monetary exchanges, authorization forms, and transaction reconciliations.",
+     "type": "Core",
+     "onetCode": "41-2012.00",
+     "line": 12066
+    },
+    {
+     "id": 21152,
+     "text": "Exchange money, credit, tickets, or casino chips and make change for customers.",
+     "type": "Core",
+     "onetCode": "41-2012.00",
+     "line": 12067
+    },
+    {
+     "id": 6998,
+     "text": "Count money and audit money drawers.",
+     "type": "Core",
+     "onetCode": "41-2012.00",
+     "line": 12068
+    },
+    {
+     "id": 21153,
+     "text": "Check identifications to verify age of players.",
+     "type": "Core",
+     "onetCode": "41-2012.00",
+     "line": 12069
+    },
+    {
+     "id": 7003,
+     "text": "Maintain cage security according to rules.",
+     "type": "Core",
+     "onetCode": "41-2012.00",
+     "line": 12070
+    },
+    {
+     "id": 7005,
+     "text": "Reconcile daily summaries of transactions to balance books.",
+     "type": "Core",
+     "onetCode": "41-2012.00",
+     "line": 12071
+    },
+    {
+     "id": 7004,
+     "text": "Obtain customers' signatures on receipts when winnings exceed the amount held in a slot machine.",
+     "type": "Supplemental",
+     "onetCode": "41-2012.00",
+     "line": 12072
+    },
+    {
+     "id": 7007,
+     "text": "Calculate the value of chips won or lost by players.",
+     "type": "Supplemental",
+     "onetCode": "41-2012.00",
+     "line": 12073
+    },
+    {
+     "id": 7009,
+     "text": "Accept credit applications and verify credit references to provide check-cashing authorization or to establish house credit accounts.",
+     "type": "Supplemental",
+     "onetCode": "41-2012.00",
+     "line": 12074
+    },
+    {
+     "id": 7008,
+     "text": "Furnish change persons with a money bank at the start of each shift.",
+     "type": "Supplemental",
+     "onetCode": "41-2012.00",
+     "line": 12075
+    },
+    {
+     "id": 7002,
+     "text": "Listen for jackpot alarm bells and issue payoffs to winners.",
+     "type": "Supplemental",
+     "onetCode": "41-2012.00",
+     "line": 12076
+    },
+    {
+     "id": 7006,
+     "text": "Sell gambling chips, tokens, or tickets to patrons, or to other workers for resale to patrons.",
+     "type": "Supplemental",
+     "onetCode": "41-2012.00",
+     "line": 12077
+    },
+    {
+     "id": 21154,
+     "text": "Clean casino areas.",
+     "type": "Supplemental",
+     "onetCode": "41-2012.00",
+     "line": 12078
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L799",
+    "annualMedian": "oews:national_M2025_dl!AB799",
+    "annualMean": "oews:national_M2025_dl!S799",
+    "hourlyMedian": "oews:national_M2025_dl!W799",
+    "hourlyMean": "oews:national_M2025_dl!R799",
+    "annualPct10": "oews:national_M2025_dl!Z799",
+    "annualPct90": "oews:national_M2025_dl!AD799",
+    "annualOnly": "oews:national_M2025_dl!AE799",
+    "hourlyOnly": "oews:national_M2025_dl!AF799",
+    "title": "oews:national_M2025_dl!J799",
+    "ep.title": "ep:Table 1.2!A652",
+    "ep.employment2025": "ep:Table 1.2!D652",
+    "ep.employment2035": "ep:Table 1.2!E652",
+    "ep.numericChange": "ep:Table 1.2!H652",
+    "ep.percentChange": "ep:Table 1.2!I652",
+    "onetCode": "onet:Occupation Data.txt#L622:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L622:Description"
+   },
+   "nullReasons": {}
+  },
+  "41-2021": {
+   "soc": "41-2021",
+   "title": "Counter and Rental Clerks",
+   "major": "41-0000",
+   "minor": "41-2000",
+   "broad": "41-2020",
+   "oewsRows": [
+    801
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 400810,
+   "annualMedian": 41300,
+   "annualMean": 45700,
+   "hourlyMedian": 19.86,
+   "hourlyMean": 21.97,
+   "annualPct10": 29800,
+   "annualPct90": 65370,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Counter and rental clerks",
+    "employment2025": 409400,
+    "employment2035": 421900,
+    "numericChange": 12400,
+    "percentChange": 3
+   },
+   "onetCode": "41-2021.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Receive orders, generally in person, for repairs, rentals, and services. May describe available options, compute cost, and accept payment.",
+   "tasks": [
+    {
+     "id": 678,
+     "text": "Compute charges for merchandise or services and receive payments.",
+     "type": "Core",
+     "onetCode": "41-2021.00",
+     "line": 12079
+    },
+    {
+     "id": 689,
+     "text": "Receive orders for services, such as rentals, repairs, dry cleaning, and storage.",
+     "type": "Core",
+     "onetCode": "41-2021.00",
+     "line": 12080
+    },
+    {
+     "id": 687,
+     "text": "Explain rental fees, policies, and procedures.",
+     "type": "Core",
+     "onetCode": "41-2021.00",
+     "line": 12081
+    },
+    {
+     "id": 691,
+     "text": "Provide information about rental items, such as availability, operation, or description.",
+     "type": "Core",
+     "onetCode": "41-2021.00",
+     "line": 12082
+    },
+    {
+     "id": 692,
+     "text": "Advise customers on use and care of merchandise.",
+     "type": "Core",
+     "onetCode": "41-2021.00",
+     "line": 12083
+    },
+    {
+     "id": 682,
+     "text": "Greet customers and discuss the type, quality, and quantity of merchandise sought for rental.",
+     "type": "Core",
+     "onetCode": "41-2021.00",
+     "line": 12084
+    },
+    {
+     "id": 681,
+     "text": "Answer telephones to provide information and receive orders.",
+     "type": "Core",
+     "onetCode": "41-2021.00",
+     "line": 12085
+    },
+    {
+     "id": 686,
+     "text": "Inspect and adjust rental items to meet needs of customer.",
+     "type": "Core",
+     "onetCode": "41-2021.00",
+     "line": 12086
+    },
+    {
+     "id": 684,
+     "text": "Prepare rental forms, obtaining customer signature and other information, such as required licenses.",
+     "type": "Core",
+     "onetCode": "41-2021.00",
+     "line": 12087
+    },
+    {
+     "id": 690,
+     "text": "Rent items, arrange for provision of services to customers, and accept returns.",
+     "type": "Core",
+     "onetCode": "41-2021.00",
+     "line": 12088
+    },
+    {
+     "id": 683,
+     "text": "Keep records of transactions and of the number of customers entering an establishment.",
+     "type": "Core",
+     "onetCode": "41-2021.00",
+     "line": 12089
+    },
+    {
+     "id": 685,
+     "text": "Receive, examine, and tag articles to be altered, cleaned, stored, or repaired.",
+     "type": "Core",
+     "onetCode": "41-2021.00",
+     "line": 12090
+    },
+    {
+     "id": 688,
+     "text": "Reserve items for requested times and keep records of items rented.",
+     "type": "Core",
+     "onetCode": "41-2021.00",
+     "line": 12091
+    },
+    {
+     "id": 679,
+     "text": "Prepare merchandise for display or for purchase or rental.",
+     "type": "Core",
+     "onetCode": "41-2021.00",
+     "line": 12092
+    },
+    {
+     "id": 680,
+     "text": "Recommend and provide advice on a wide variety of products and services.",
+     "type": "Core",
+     "onetCode": "41-2021.00",
+     "line": 12093
+    },
+    {
+     "id": 693,
+     "text": "Allocate equipment to participants in sporting events or recreational activities.",
+     "type": "Supplemental",
+     "onetCode": "41-2021.00",
+     "line": 12094
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L801",
+    "annualMedian": "oews:national_M2025_dl!AB801",
+    "annualMean": "oews:national_M2025_dl!S801",
+    "hourlyMedian": "oews:national_M2025_dl!W801",
+    "hourlyMean": "oews:national_M2025_dl!R801",
+    "annualPct10": "oews:national_M2025_dl!Z801",
+    "annualPct90": "oews:national_M2025_dl!AD801",
+    "annualOnly": "oews:national_M2025_dl!AE801",
+    "hourlyOnly": "oews:national_M2025_dl!AF801",
+    "title": "oews:national_M2025_dl!J801",
+    "ep.title": "ep:Table 1.2!A654",
+    "ep.employment2025": "ep:Table 1.2!D654",
+    "ep.employment2035": "ep:Table 1.2!E654",
+    "ep.numericChange": "ep:Table 1.2!H654",
+    "ep.percentChange": "ep:Table 1.2!I654",
+    "onetCode": "onet:Occupation Data.txt#L623:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L623:Description"
+   },
+   "nullReasons": {}
+  },
+  "41-2022": {
+   "soc": "41-2022",
+   "title": "Parts Salespersons",
+   "major": "41-0000",
+   "minor": "41-2000",
+   "broad": "41-2020",
+   "oewsRows": [
+    802
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 270070,
+   "annualMedian": 38630,
+   "annualMean": 43830,
+   "hourlyMedian": 18.57,
+   "hourlyMean": 21.07,
+   "annualPct10": 28240,
+   "annualPct90": 62890,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Parts salespersons",
+    "employment2025": 273300,
+    "employment2035": 281600,
+    "numericChange": 8300,
+    "percentChange": 3
+   },
+   "onetCode": "41-2022.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Sell spare and replacement parts and equipment in repair shop or parts store.",
+   "tasks": [
+    {
+     "id": 2430,
+     "text": "Receive payment or obtain credit authorization.",
+     "type": "Core",
+     "onetCode": "41-2022.00",
+     "line": 12095
+    },
+    {
+     "id": 20776,
+     "text": "Assist customers, such as responding to customer complaints and updating them about back-ordered parts.",
+     "type": "Core",
+     "onetCode": "41-2022.00",
+     "line": 12096
+    },
+    {
+     "id": 20775,
+     "text": "Fill customer orders from stock, and place orders when requested items are out of stock.",
+     "type": "Core",
+     "onetCode": "41-2022.00",
+     "line": 12097
+    },
+    {
+     "id": 2427,
+     "text": "Receive and fill telephone orders for parts.",
+     "type": "Core",
+     "onetCode": "41-2022.00",
+     "line": 12098
+    },
+    {
+     "id": 20777,
+     "text": "Locate and label parts, and maintain inventory of stock.",
+     "type": "Core",
+     "onetCode": "41-2022.00",
+     "line": 12099
+    },
+    {
+     "id": 2429,
+     "text": "Prepare sales slips or sales contracts.",
+     "type": "Core",
+     "onetCode": "41-2022.00",
+     "line": 12100
+    },
+    {
+     "id": 2425,
+     "text": "Read catalogs, microfiche viewers, or computer displays to determine replacement part stock numbers and prices.",
+     "type": "Core",
+     "onetCode": "41-2022.00",
+     "line": 12101
+    },
+    {
+     "id": 2426,
+     "text": "Determine replacement parts required, according to inspections of old parts, customer requests, or customers' descriptions of malfunctions.",
+     "type": "Core",
+     "onetCode": "41-2022.00",
+     "line": 12102
+    },
+    {
+     "id": 2433,
+     "text": "Examine returned parts for defects, and exchange defective parts or refund money.",
+     "type": "Core",
+     "onetCode": "41-2022.00",
+     "line": 12103
+    },
+    {
+     "id": 20780,
+     "text": "Manage shipments by researching shipping methods or costs and tracking packages.",
+     "type": "Core",
+     "onetCode": "41-2022.00",
+     "line": 12104
+    },
+    {
+     "id": 2434,
+     "text": "Mark and store parts in stockrooms, according to prearranged systems.",
+     "type": "Core",
+     "onetCode": "41-2022.00",
+     "line": 12105
+    },
+    {
+     "id": 20779,
+     "text": "Maintain and clean work and inventory areas.",
+     "type": "Core",
+     "onetCode": "41-2022.00",
+     "line": 12106
+    },
+    {
+     "id": 2437,
+     "text": "Place new merchandise on display.",
+     "type": "Core",
+     "onetCode": "41-2022.00",
+     "line": 12107
+    },
+    {
+     "id": 2432,
+     "text": "Advise customers on substitution or modification of parts when identical replacements are not available.",
+     "type": "Core",
+     "onetCode": "41-2022.00",
+     "line": 12108
+    },
+    {
+     "id": 2435,
+     "text": "Discuss use and features of various parts, based on knowledge of machines or equipment.",
+     "type": "Core",
+     "onetCode": "41-2022.00",
+     "line": 12109
+    },
+    {
+     "id": 2436,
+     "text": "Demonstrate equipment to customers, and explain functioning of equipment.",
+     "type": "Core",
+     "onetCode": "41-2022.00",
+     "line": 12110
+    },
+    {
+     "id": 2438,
+     "text": "Measure parts, using precision measuring instruments, to determine whether similar parts may be machined to required sizes.",
+     "type": "Core",
+     "onetCode": "41-2022.00",
+     "line": 12111
+    },
+    {
+     "id": 20778,
+     "text": "Pick up and deliver parts.",
+     "type": "Core",
+     "onetCode": "41-2022.00",
+     "line": 12112
+    },
+    {
+     "id": 2439,
+     "text": "Repair parts or equipment.",
+     "type": "Core",
+     "onetCode": "41-2022.00",
+     "line": 12113
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L802",
+    "annualMedian": "oews:national_M2025_dl!AB802",
+    "annualMean": "oews:national_M2025_dl!S802",
+    "hourlyMedian": "oews:national_M2025_dl!W802",
+    "hourlyMean": "oews:national_M2025_dl!R802",
+    "annualPct10": "oews:national_M2025_dl!Z802",
+    "annualPct90": "oews:national_M2025_dl!AD802",
+    "annualOnly": "oews:national_M2025_dl!AE802",
+    "hourlyOnly": "oews:national_M2025_dl!AF802",
+    "title": "oews:national_M2025_dl!J802",
+    "ep.title": "ep:Table 1.2!A655",
+    "ep.employment2025": "ep:Table 1.2!D655",
+    "ep.employment2035": "ep:Table 1.2!E655",
+    "ep.numericChange": "ep:Table 1.2!H655",
+    "ep.percentChange": "ep:Table 1.2!I655",
+    "onetCode": "onet:Occupation Data.txt#L624:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L624:Description"
+   },
+   "nullReasons": {}
+  },
+  "41-2031": {
+   "soc": "41-2031",
+   "title": "Retail Salespersons",
+   "major": "41-0000",
+   "minor": "41-2000",
+   "broad": "41-2030",
+   "oewsRows": [
+    804
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 3897860,
+   "annualMedian": 35410,
+   "annualMean": 37310,
+   "hourlyMedian": 17.03,
+   "hourlyMean": 17.94,
+   "annualPct10": 27210,
+   "annualPct90": 47890,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Retail salespersons",
+    "employment2025": 3998100,
+    "employment2035": 3984100,
+    "numericChange": -14000,
+    "percentChange": -0.3
+   },
+   "onetCode": "41-2031.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Sell merchandise, such as furniture, motor vehicles, appliances, or apparel to consumers.",
+   "tasks": [
+    {
+     "id": 694,
+     "text": "Greet customers and ascertain what each customer wants or needs.",
+     "type": "Core",
+     "onetCode": "41-2031.00",
+     "line": 12114
+    },
+    {
+     "id": 700,
+     "text": "Recommend, select, and help locate or obtain merchandise based on customer needs and desires.",
+     "type": "Core",
+     "onetCode": "41-2031.00",
+     "line": 12115
+    },
+    {
+     "id": 697,
+     "text": "Compute sales prices, total purchases, and receive and process cash or credit payment.",
+     "type": "Core",
+     "onetCode": "41-2031.00",
+     "line": 12116
+    },
+    {
+     "id": 712,
+     "text": "Prepare merchandise for purchase or rental.",
+     "type": "Core",
+     "onetCode": "41-2031.00",
+     "line": 12117
+    },
+    {
+     "id": 701,
+     "text": "Answer questions regarding the store and its merchandise.",
+     "type": "Core",
+     "onetCode": "41-2031.00",
+     "line": 12118
+    },
+    {
+     "id": 696,
+     "text": "Maintain knowledge of current sales and promotions, policies regarding payment and exchanges, and security practices.",
+     "type": "Core",
+     "onetCode": "41-2031.00",
+     "line": 12119
+    },
+    {
+     "id": 706,
+     "text": "Demonstrate use or operation of merchandise.",
+     "type": "Core",
+     "onetCode": "41-2031.00",
+     "line": 12120
+    },
+    {
+     "id": 702,
+     "text": "Describe merchandise and explain use, operation, and care of merchandise to customers.",
+     "type": "Core",
+     "onetCode": "41-2031.00",
+     "line": 12121
+    },
+    {
+     "id": 703,
+     "text": "Ticket, arrange, and display merchandise to promote sales.",
+     "type": "Core",
+     "onetCode": "41-2031.00",
+     "line": 12122
+    },
+    {
+     "id": 711,
+     "text": "Inventory stock and requisition new stock.",
+     "type": "Core",
+     "onetCode": "41-2031.00",
+     "line": 12123
+    },
+    {
+     "id": 708,
+     "text": "Exchange merchandise for customers and accept returns.",
+     "type": "Core",
+     "onetCode": "41-2031.00",
+     "line": 12124
+    },
+    {
+     "id": 699,
+     "text": "Watch for and recognize security risks and thefts and know how to prevent or handle these situations.",
+     "type": "Core",
+     "onetCode": "41-2031.00",
+     "line": 12125
+    },
+    {
+     "id": 705,
+     "text": "Place special orders or call other stores to find desired items.",
+     "type": "Core",
+     "onetCode": "41-2031.00",
+     "line": 12126
+    },
+    {
+     "id": 707,
+     "text": "Clean shelves, counters, and tables.",
+     "type": "Core",
+     "onetCode": "41-2031.00",
+     "line": 12127
+    },
+    {
+     "id": 698,
+     "text": "Maintain records related to sales.",
+     "type": "Supplemental",
+     "onetCode": "41-2031.00",
+     "line": 12128
+    },
+    {
+     "id": 695,
+     "text": "Open and close cash registers, performing tasks such as counting money, separating charge slips, coupons, and vouchers, balancing cash drawers, and making deposits.",
+     "type": "Supplemental",
+     "onetCode": "41-2031.00",
+     "line": 12129
+    },
+    {
+     "id": 704,
+     "text": "Prepare sales slips or sales contracts.",
+     "type": "Supplemental",
+     "onetCode": "41-2031.00",
+     "line": 12130
+    },
+    {
+     "id": 714,
+     "text": "Estimate and quote trade-in allowances.",
+     "type": "Supplemental",
+     "onetCode": "41-2031.00",
+     "line": 12131
+    },
+    {
+     "id": 709,
+     "text": "Bag or package purchases and wrap gifts.",
+     "type": "Supplemental",
+     "onetCode": "41-2031.00",
+     "line": 12132
+    },
+    {
+     "id": 710,
+     "text": "Help customers try on or fit merchandise.",
+     "type": "Supplemental",
+     "onetCode": "41-2031.00",
+     "line": 12133
+    },
+    {
+     "id": 713,
+     "text": "Sell or arrange for delivery, insurance, financing, or service contracts for merchandise.",
+     "type": "Supplemental",
+     "onetCode": "41-2031.00",
+     "line": 12134
+    },
+    {
+     "id": 716,
+     "text": "Estimate quantity and cost of merchandise required, such as paint or floor covering.",
+     "type": "Supplemental",
+     "onetCode": "41-2031.00",
+     "line": 12135
+    },
+    {
+     "id": 717,
+     "text": "Rent merchandise to customers.",
+     "type": "Supplemental",
+     "onetCode": "41-2031.00",
+     "line": 12136
+    },
+    {
+     "id": 715,
+     "text": "Estimate cost of repair or alteration of merchandise.",
+     "type": "Supplemental",
+     "onetCode": "41-2031.00",
+     "line": 12137
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L804",
+    "annualMedian": "oews:national_M2025_dl!AB804",
+    "annualMean": "oews:national_M2025_dl!S804",
+    "hourlyMedian": "oews:national_M2025_dl!W804",
+    "hourlyMean": "oews:national_M2025_dl!R804",
+    "annualPct10": "oews:national_M2025_dl!Z804",
+    "annualPct90": "oews:national_M2025_dl!AD804",
+    "annualOnly": "oews:national_M2025_dl!AE804",
+    "hourlyOnly": "oews:national_M2025_dl!AF804",
+    "title": "oews:national_M2025_dl!J804",
+    "ep.title": "ep:Table 1.2!A656",
+    "ep.employment2025": "ep:Table 1.2!D656",
+    "ep.employment2035": "ep:Table 1.2!E656",
+    "ep.numericChange": "ep:Table 1.2!H656",
+    "ep.percentChange": "ep:Table 1.2!I656",
+    "onetCode": "onet:Occupation Data.txt#L625:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L625:Description"
+   },
+   "nullReasons": {}
+  },
+  "41-3011": {
+   "soc": "41-3011",
+   "title": "Advertising Sales Agents",
+   "major": "41-0000",
+   "minor": "41-3000",
+   "broad": "41-3010",
+   "oewsRows": [
+    807
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 91700,
+   "annualMedian": 64820,
+   "annualMean": 80670,
+   "hourlyMedian": 31.16,
+   "hourlyMean": 38.79,
+   "annualPct10": 35240,
+   "annualPct90": 146010,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Advertising sales agents",
+    "employment2025": 99300,
+    "employment2035": 92200,
+    "numericChange": -7100,
+    "percentChange": -7.2
+   },
+   "onetCode": "41-3011.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Sell or solicit advertising space, time, or media in publications, signage, TV, radio, or Internet establishments or public spaces.",
+   "tasks": [
+    {
+     "id": 4579,
+     "text": "Prepare and deliver sales presentations to new and existing customers to sell new advertising programs and to protect and increase existing advertising.",
+     "type": "Core",
+     "onetCode": "41-3011.00",
+     "line": 12138
+    },
+    {
+     "id": 4581,
+     "text": "Maintain assigned account bases while developing new accounts.",
+     "type": "Core",
+     "onetCode": "41-3011.00",
+     "line": 12139
+    },
+    {
+     "id": 4586,
+     "text": "Provide clients with estimates of the costs of advertising products or services.",
+     "type": "Core",
+     "onetCode": "41-3011.00",
+     "line": 12140
+    },
+    {
+     "id": 4585,
+     "text": "Locate and contact potential clients to offer advertising services.",
+     "type": "Core",
+     "onetCode": "41-3011.00",
+     "line": 12141
+    },
+    {
+     "id": 4580,
+     "text": "Explain to customers how specific types of advertising will help promote their products or services in the most effective way possible.",
+     "type": "Core",
+     "onetCode": "41-3011.00",
+     "line": 12142
+    },
+    {
+     "id": 4589,
+     "text": "Obtain and study information about clients' products, needs, problems, advertising history, and business practices to offer effective sales presentations and appropriate product assistance.",
+     "type": "Core",
+     "onetCode": "41-3011.00",
+     "line": 12143
+    },
+    {
+     "id": 4592,
+     "text": "Prepare promotional plans, sales literature, media kits, and sales contracts, using computer.",
+     "type": "Core",
+     "onetCode": "41-3011.00",
+     "line": 12144
+    },
+    {
+     "id": 4582,
+     "text": "Process all correspondence and paperwork related to accounts.",
+     "type": "Core",
+     "onetCode": "41-3011.00",
+     "line": 12145
+    },
+    {
+     "id": 4584,
+     "text": "Draw up contracts for advertising work, and collect payments due.",
+     "type": "Core",
+     "onetCode": "41-3011.00",
+     "line": 12146
+    },
+    {
+     "id": 4583,
+     "text": "Deliver advertising or illustration proofs to customers for approval.",
+     "type": "Core",
+     "onetCode": "41-3011.00",
+     "line": 12147
+    },
+    {
+     "id": 4588,
+     "text": "Inform customers of available options for advertisement artwork, and provide samples.",
+     "type": "Core",
+     "onetCode": "41-3011.00",
+     "line": 12148
+    },
+    {
+     "id": 4587,
+     "text": "Recommend appropriate sizes and formats for advertising, depending on medium used.",
+     "type": "Core",
+     "onetCode": "41-3011.00",
+     "line": 12149
+    },
+    {
+     "id": 4594,
+     "text": "Write copy as part of layout.",
+     "type": "Core",
+     "onetCode": "41-3011.00",
+     "line": 12150
+    },
+    {
+     "id": 4590,
+     "text": "Determine advertising medium to be used, and prepare sample advertisements within the selected medium for presentation to customers.",
+     "type": "Core",
+     "onetCode": "41-3011.00",
+     "line": 12151
+    },
+    {
+     "id": 4596,
+     "text": "Gather all relevant material for bid processes, and coordinate bidding and contract approval.",
+     "type": "Core",
+     "onetCode": "41-3011.00",
+     "line": 12152
+    },
+    {
+     "id": 4591,
+     "text": "Consult with company officials, sales departments, and advertising agencies to develop promotional plans.",
+     "type": "Core",
+     "onetCode": "41-3011.00",
+     "line": 12153
+    },
+    {
+     "id": 4593,
+     "text": "Identify new advertising markets, and propose products to serve them.",
+     "type": "Core",
+     "onetCode": "41-3011.00",
+     "line": 12154
+    },
+    {
+     "id": 4597,
+     "text": "Arrange for commercial taping sessions, and accompany clients to sessions.",
+     "type": "Core",
+     "onetCode": "41-3011.00",
+     "line": 12155
+    },
+    {
+     "id": 4595,
+     "text": "Attend sales meetings, industry trade shows, and training seminars to gather information, promote products, expand network of contacts, and increase knowledge.",
+     "type": "Core",
+     "onetCode": "41-3011.00",
+     "line": 12156
+    },
+    {
+     "id": 4598,
+     "text": "Write sales outlines for use by staff.",
+     "type": "Supplemental",
+     "onetCode": "41-3011.00",
+     "line": 12157
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "kelleyTracks": [
+    "Marketing"
+   ],
+   "kelleyTitles": [
+    "Advertising Sales Agent"
+   ],
+   "sources": {
+    "employment": "oews:national_M2025_dl!L807",
+    "annualMedian": "oews:national_M2025_dl!AB807",
+    "annualMean": "oews:national_M2025_dl!S807",
+    "hourlyMedian": "oews:national_M2025_dl!W807",
+    "hourlyMean": "oews:national_M2025_dl!R807",
+    "annualPct10": "oews:national_M2025_dl!Z807",
+    "annualPct90": "oews:national_M2025_dl!AD807",
+    "annualOnly": "oews:national_M2025_dl!AE807",
+    "hourlyOnly": "oews:national_M2025_dl!AF807",
+    "title": "oews:national_M2025_dl!J807",
+    "ep.title": "ep:Table 1.2!A658",
+    "ep.employment2025": "ep:Table 1.2!D658",
+    "ep.employment2035": "ep:Table 1.2!E658",
+    "ep.numericChange": "ep:Table 1.2!H658",
+    "ep.percentChange": "ep:Table 1.2!I658",
+    "onetCode": "onet:Occupation Data.txt#L626:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L626:Description"
+   },
+   "nullReasons": {}
+  },
+  "41-3021": {
+   "soc": "41-3021",
+   "title": "Insurance Sales Agents",
+   "major": "41-0000",
+   "minor": "41-3000",
+   "broad": "41-3020",
+   "oewsRows": [
+    809
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 479100,
+   "annualMedian": 62280,
+   "annualMean": 81480,
+   "hourlyMedian": 29.94,
+   "hourlyMean": 39.18,
+   "annualPct10": 37330,
+   "annualPct90": 138140,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Insurance sales agents",
+    "employment2025": 572600,
+    "employment2035": 591400,
+    "numericChange": 18800,
+    "percentChange": 3.3
+   },
+   "onetCode": "41-3021.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Sell life, property, casualty, health, automotive, or other types of insurance. May refer clients to independent brokers, work as an independent broker, or be employed by an insurance company.",
+   "tasks": [
+    {
+     "id": 720,
+     "text": "Customize insurance programs to suit individual customers, often covering a variety of risks.",
+     "type": "Core",
+     "onetCode": "41-3021.00",
+     "line": 12158
+    },
+    {
+     "id": 721,
+     "text": "Sell various types of insurance policies to businesses and individuals on behalf of insurance companies, including automobile, fire, life, property, medical and dental insurance, or specialized policies, such as marine, farm/crop, and medical malpractice.",
+     "type": "Core",
+     "onetCode": "41-3021.00",
+     "line": 12159
+    },
+    {
+     "id": 724,
+     "text": "Explain features, advantages, and disadvantages of various policies to promote sale of insurance plans.",
+     "type": "Core",
+     "onetCode": "41-3021.00",
+     "line": 12160
+    },
+    {
+     "id": 728,
+     "text": "Perform administrative tasks, such as maintaining records and handling policy renewals.",
+     "type": "Core",
+     "onetCode": "41-3021.00",
+     "line": 12161
+    },
+    {
+     "id": 723,
+     "text": "Seek out new clients and develop clientele by networking to find new customers and generate lists of prospective clients.",
+     "type": "Core",
+     "onetCode": "41-3021.00",
+     "line": 12162
+    },
+    {
+     "id": 718,
+     "text": "Call on policyholders to deliver and explain policy, to analyze insurance program and suggest additions or changes, or to change beneficiaries.",
+     "type": "Core",
+     "onetCode": "41-3021.00",
+     "line": 12163
+    },
+    {
+     "id": 727,
+     "text": "Confer with clients to obtain and provide information when claims are made on a policy.",
+     "type": "Core",
+     "onetCode": "41-3021.00",
+     "line": 12164
+    },
+    {
+     "id": 722,
+     "text": "Interview prospective clients to obtain data about their financial resources and needs, the physical condition of the person or property to be insured, and to discuss any existing coverage.",
+     "type": "Core",
+     "onetCode": "41-3021.00",
+     "line": 12165
+    },
+    {
+     "id": 725,
+     "text": "Contact underwriter and submit forms to obtain binder coverage.",
+     "type": "Core",
+     "onetCode": "41-3021.00",
+     "line": 12166
+    },
+    {
+     "id": 729,
+     "text": "Select company that offers type of coverage requested by client to underwrite policy.",
+     "type": "Core",
+     "onetCode": "41-3021.00",
+     "line": 12167
+    },
+    {
+     "id": 726,
+     "text": "Ensure that policy requirements are fulfilled, including any necessary medical examinations and the completion of appropriate forms.",
+     "type": "Core",
+     "onetCode": "41-3021.00",
+     "line": 12168
+    },
+    {
+     "id": 731,
+     "text": "Develop marketing strategies to compete with other individuals or companies who sell insurance.",
+     "type": "Core",
+     "onetCode": "41-3021.00",
+     "line": 12169
+    },
+    {
+     "id": 719,
+     "text": "Calculate premiums and establish payment method.",
+     "type": "Core",
+     "onetCode": "41-3021.00",
+     "line": 12170
+    },
+    {
+     "id": 732,
+     "text": "Attend meetings, seminars, and programs to learn about new products and services, learn new skills, and receive technical assistance in developing new accounts.",
+     "type": "Core",
+     "onetCode": "41-3021.00",
+     "line": 12171
+    },
+    {
+     "id": 730,
+     "text": "Monitor insurance claims to ensure they are settled equitably for both the client and the insurer.",
+     "type": "Supplemental",
+     "onetCode": "41-3021.00",
+     "line": 12172
+    },
+    {
+     "id": 735,
+     "text": "Plan and oversee incorporation of insurance program into bookkeeping system of company.",
+     "type": "Supplemental",
+     "onetCode": "41-3021.00",
+     "line": 12173
+    },
+    {
+     "id": 733,
+     "text": "Inspect property, examining its general condition, type of construction, age, and other characteristics, to decide if it is a good insurance risk.",
+     "type": "Supplemental",
+     "onetCode": "41-3021.00",
+     "line": 12174
+    },
+    {
+     "id": 734,
+     "text": "Install bookkeeping systems and resolve system problems.",
+     "type": "Supplemental",
+     "onetCode": "41-3021.00",
+     "line": 12175
+    },
+    {
+     "id": 736,
+     "text": "Explain necessary bookkeeping requirements for customer to implement and provide group insurance program.",
+     "type": "Supplemental",
+     "onetCode": "41-3021.00",
+     "line": 12176
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "kelleyTracks": [
+    "Sales"
+   ],
+   "kelleyTitles": [
+    "Insurance Sales Agent"
+   ],
+   "sources": {
+    "employment": "oews:national_M2025_dl!L809",
+    "annualMedian": "oews:national_M2025_dl!AB809",
+    "annualMean": "oews:national_M2025_dl!S809",
+    "hourlyMedian": "oews:national_M2025_dl!W809",
+    "hourlyMean": "oews:national_M2025_dl!R809",
+    "annualPct10": "oews:national_M2025_dl!Z809",
+    "annualPct90": "oews:national_M2025_dl!AD809",
+    "annualOnly": "oews:national_M2025_dl!AE809",
+    "hourlyOnly": "oews:national_M2025_dl!AF809",
+    "title": "oews:national_M2025_dl!J809",
+    "ep.title": "ep:Table 1.2!A659",
+    "ep.employment2025": "ep:Table 1.2!D659",
+    "ep.employment2035": "ep:Table 1.2!E659",
+    "ep.numericChange": "ep:Table 1.2!H659",
+    "ep.percentChange": "ep:Table 1.2!I659",
+    "onetCode": "onet:Occupation Data.txt#L627:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L627:Description"
+   },
+   "nullReasons": {}
+  },
+  "41-3031": {
+   "soc": "41-3031",
+   "title": "Securities, Commodities, and Financial Services Sales Agents",
+   "major": "41-0000",
+   "minor": "41-3000",
+   "broad": "41-3030",
+   "oewsRows": [
+    811
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 489570,
+   "annualMedian": 78660,
+   "annualMean": 109150,
+   "hourlyMedian": 37.82,
+   "hourlyMean": 52.48,
+   "annualPct10": 48040,
+   "annualPct90": 212880,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Securities, commodities, and financial services sales agents",
+    "employment2025": 531000,
+    "employment2035": 538500,
+    "numericChange": 7500,
+    "percentChange": 1.4
+   },
+   "onetCode": "41-3031.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Buy and sell securities or commodities in investment and trading firms, or provide financial services to businesses and individuals. May advise customers about stocks, bonds, mutual funds, commodities, and market conditions.",
+   "tasks": [
+    {
+     "id": 23192,
+     "text": "Make bids or offers to buy or sell securities.",
+     "type": "Core",
+     "onetCode": "41-3031.00",
+     "line": 12177
+    },
+    {
+     "id": 23193,
+     "text": "Monitor markets or positions.",
+     "type": "Core",
+     "onetCode": "41-3031.00",
+     "line": 12178
+    },
+    {
+     "id": 23194,
+     "text": "Agree on buying or selling prices at optimal levels for clients.",
+     "type": "Core",
+     "onetCode": "41-3031.00",
+     "line": 12179
+    },
+    {
+     "id": 23195,
+     "text": "Keep accurate records of transactions.",
+     "type": "Core",
+     "onetCode": "41-3031.00",
+     "line": 12180
+    },
+    {
+     "id": 23196,
+     "text": "Buy or sell stocks, bonds, commodity futures, foreign currencies, or other securities on behalf of investment dealers.",
+     "type": "Core",
+     "onetCode": "41-3031.00",
+     "line": 12181
+    },
+    {
+     "id": 23197,
+     "text": "Complete sales order tickets and submit for processing of client-requested transactions.",
+     "type": "Core",
+     "onetCode": "41-3031.00",
+     "line": 12182
+    },
+    {
+     "id": 23198,
+     "text": "Report all positions or trading results.",
+     "type": "Core",
+     "onetCode": "41-3031.00",
+     "line": 12183
+    },
+    {
+     "id": 23199,
+     "text": "Interview clients to determine clients' assets, liabilities, cash flow, insurance coverage, tax status, or financial objectives.",
+     "type": "Core",
+     "onetCode": "41-3031.00",
+     "line": 12184
+    },
+    {
+     "id": 23200,
+     "text": "Discuss financial options with clients and keep them informed about transactions.",
+     "type": "Core",
+     "onetCode": "41-3031.00",
+     "line": 12185
+    },
+    {
+     "id": 23203,
+     "text": "Identify opportunities or develop channels for purchase or sale of securities or commodities.",
+     "type": "Core",
+     "onetCode": "41-3031.00",
+     "line": 12186
+    },
+    {
+     "id": 23204,
+     "text": "Develop financial plans, based on analysis of clients' financial status.",
+     "type": "Core",
+     "onetCode": "41-3031.00",
+     "line": 12187
+    },
+    {
+     "id": 23205,
+     "text": "Review all securities transactions to ensure accuracy of information and conformance to governing agency regulations.",
+     "type": "Core",
+     "onetCode": "41-3031.00",
+     "line": 12188
+    },
+    {
+     "id": 23207,
+     "text": "Devise trading, option, or hedge strategies.",
+     "type": "Core",
+     "onetCode": "41-3031.00",
+     "line": 12189
+    },
+    {
+     "id": 23201,
+     "text": "Determine customers' financial services needs and prepare proposals to sell services that address these needs.",
+     "type": "Core",
+     "onetCode": "41-3031.00",
+     "line": 12190
+    },
+    {
+     "id": 23208,
+     "text": "Track and analyze factors that affect price movement, such as trade policies, weather conditions, political developments, or supply and demand changes.",
+     "type": "Core",
+     "onetCode": "41-3031.00",
+     "line": 12191
+    },
+    {
+     "id": 23209,
+     "text": "Inform other traders, managers, or customers of market conditions, including volume, price, competition, or dynamics.",
+     "type": "Core",
+     "onetCode": "41-3031.00",
+     "line": 12192
+    },
+    {
+     "id": 23210,
+     "text": "Offer advice on the purchase or sale of particular securities.",
+     "type": "Core",
+     "onetCode": "41-3031.00",
+     "line": 12193
+    },
+    {
+     "id": 23206,
+     "text": "Contact prospective customers to present information and explain available services.",
+     "type": "Core",
+     "onetCode": "41-3031.00",
+     "line": 12194
+    },
+    {
+     "id": 23212,
+     "text": "Explain stock market terms or trading practices to clients.",
+     "type": "Core",
+     "onetCode": "41-3031.00",
+     "line": 12195
+    },
+    {
+     "id": 23213,
+     "text": "Calculate costs for billings or commissions.",
+     "type": "Core",
+     "onetCode": "41-3031.00",
+     "line": 12196
+    },
+    {
+     "id": 23214,
+     "text": "Prepare financial reports to monitor client or corporate finances.",
+     "type": "Core",
+     "onetCode": "41-3031.00",
+     "line": 12197
+    },
+    {
+     "id": 23215,
+     "text": "Supply the latest price quotes on any security, as well as information on the activities or financial positions of the corporations issuing these securities.",
+     "type": "Core",
+     "onetCode": "41-3031.00",
+     "line": 12198
+    },
+    {
+     "id": 23216,
+     "text": "Supervise support staff and ensure proper execution of contracts.",
+     "type": "Supplemental",
+     "onetCode": "41-3031.00",
+     "line": 12199
+    },
+    {
+     "id": 23217,
+     "text": "Relay buy or sell orders to securities exchanges or to firm trading departments.",
+     "type": "Supplemental",
+     "onetCode": "41-3031.00",
+     "line": 12200
+    },
+    {
+     "id": 23211,
+     "text": "Evaluate costs and revenue of agreements to determine continued profitability.",
+     "type": "Supplemental",
+     "onetCode": "41-3031.00",
+     "line": 12201
+    },
+    {
+     "id": 23202,
+     "text": "Sell services or equipment, such as trusts, investments, or check processing services.",
+     "type": "Supplemental",
+     "onetCode": "41-3031.00",
+     "line": 12202
+    },
+    {
+     "id": 23218,
+     "text": "Negotiate prices or contracts for securities or commodities sales or purchases.",
+     "type": "n/a",
+     "onetCode": "41-3031.00",
+     "line": 12203
+    },
+    {
+     "id": 23219,
+     "text": "Prepare and send requests for price quotations to all companies in a particular market.",
+     "type": "n/a",
+     "onetCode": "41-3031.00",
+     "line": 12204
+    },
+    {
+     "id": 23220,
+     "text": "Price securities or commodities based on market conditions.",
+     "type": "n/a",
+     "onetCode": "41-3031.00",
+     "line": 12205
+    },
+    {
+     "id": 23221,
+     "text": "Purchase or sell financial derivatives for customers.",
+     "type": "n/a",
+     "onetCode": "41-3031.00",
+     "line": 12206
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "kelleyTracks": [
+    "Finance"
+   ],
+   "kelleyTitles": [
+    "Securities & Sales Agent"
+   ],
+   "sources": {
+    "employment": "oews:national_M2025_dl!L811",
+    "annualMedian": "oews:national_M2025_dl!AB811",
+    "annualMean": "oews:national_M2025_dl!S811",
+    "hourlyMedian": "oews:national_M2025_dl!W811",
+    "hourlyMean": "oews:national_M2025_dl!R811",
+    "annualPct10": "oews:national_M2025_dl!Z811",
+    "annualPct90": "oews:national_M2025_dl!AD811",
+    "annualOnly": "oews:national_M2025_dl!AE811",
+    "hourlyOnly": "oews:national_M2025_dl!AF811",
+    "title": "oews:national_M2025_dl!J811",
+    "ep.title": "ep:Table 1.2!A660",
+    "ep.employment2025": "ep:Table 1.2!D660",
+    "ep.employment2035": "ep:Table 1.2!E660",
+    "ep.numericChange": "ep:Table 1.2!H660",
+    "ep.percentChange": "ep:Table 1.2!I660",
+    "onetCode": "onet:Occupation Data.txt#L628:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L628:Description"
+   },
+   "nullReasons": {}
+  },
+  "41-3041": {
+   "soc": "41-3041",
+   "title": "Travel Agents",
+   "major": "41-0000",
+   "minor": "41-3000",
+   "broad": "41-3040",
+   "oewsRows": [
+    813
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 55110,
+   "annualMedian": 50160,
+   "annualMean": 54660,
+   "hourlyMedian": 24.11,
+   "hourlyMean": 26.28,
+   "annualPct10": 34610,
+   "annualPct90": 76660,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Travel agents",
+    "employment2025": 61500,
+    "employment2035": 61700,
+    "numericChange": 100,
+    "percentChange": 0.2
+   },
+   "onetCode": "41-3041.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Plan and sell transportation and accommodations for customers. Determine destination, modes of transportation, travel dates, costs, and accommodations required. May also describe, plan, and arrange itineraries and sell tour packages. May assist in resolving clients' travel problems.",
+   "tasks": [
+    {
+     "id": 737,
+     "text": "Collect payment for transportation and accommodations from customer.",
+     "type": "Core",
+     "onetCode": "41-3041.00",
+     "line": 12207
+    },
+    {
+     "id": 741,
+     "text": "Plan, describe, arrange, and sell itinerary tour packages and promotional travel incentives offered by various travel carriers.",
+     "type": "Core",
+     "onetCode": "41-3041.00",
+     "line": 12208
+    },
+    {
+     "id": 738,
+     "text": "Converse with customer to determine destination, mode of transportation, travel dates, financial considerations, and accommodations required.",
+     "type": "Core",
+     "onetCode": "41-3041.00",
+     "line": 12209
+    },
+    {
+     "id": 739,
+     "text": "Compute cost of travel and accommodations, using calculator, computer, carrier tariff books, and hotel rate books, or quote package tour's costs.",
+     "type": "Core",
+     "onetCode": "41-3041.00",
+     "line": 12210
+    },
+    {
+     "id": 20900,
+     "text": "Record and maintain information on clients, vendors, and travel packages.",
+     "type": "Core",
+     "onetCode": "41-3041.00",
+     "line": 12211
+    },
+    {
+     "id": 740,
+     "text": "Book transportation and hotel reservations, using computer or telephone.",
+     "type": "Core",
+     "onetCode": "41-3041.00",
+     "line": 12212
+    },
+    {
+     "id": 743,
+     "text": "Print or request transportation carrier tickets, using computer printer system or system link to travel carrier.",
+     "type": "Core",
+     "onetCode": "41-3041.00",
+     "line": 12213
+    },
+    {
+     "id": 742,
+     "text": "Provide customer with brochures and publications containing travel information, such as local customs, points of interest, or foreign country regulations.",
+     "type": "Core",
+     "onetCode": "41-3041.00",
+     "line": 12214
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L813",
+    "annualMedian": "oews:national_M2025_dl!AB813",
+    "annualMean": "oews:national_M2025_dl!S813",
+    "hourlyMedian": "oews:national_M2025_dl!W813",
+    "hourlyMean": "oews:national_M2025_dl!R813",
+    "annualPct10": "oews:national_M2025_dl!Z813",
+    "annualPct90": "oews:national_M2025_dl!AD813",
+    "annualOnly": "oews:national_M2025_dl!AE813",
+    "hourlyOnly": "oews:national_M2025_dl!AF813",
+    "title": "oews:national_M2025_dl!J813",
+    "ep.title": "ep:Table 1.2!A661",
+    "ep.employment2025": "ep:Table 1.2!D661",
+    "ep.employment2035": "ep:Table 1.2!E661",
+    "ep.numericChange": "ep:Table 1.2!H661",
+    "ep.percentChange": "ep:Table 1.2!I661",
+    "onetCode": "onet:Occupation Data.txt#L629:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L629:Description"
+   },
+   "nullReasons": {}
+  },
+  "41-3091": {
+   "soc": "41-3091",
+   "title": "Sales Representatives of Services, Except Advertising, Insurance, Financial Services, and Travel",
+   "major": "41-0000",
+   "minor": "41-3000",
+   "broad": "41-3090",
+   "oewsRows": [
+    815
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 1256010,
+   "annualMedian": 69990,
+   "annualMean": 82430,
+   "hourlyMedian": 33.65,
+   "hourlyMean": 39.63,
+   "annualPct10": 37980,
+   "annualPct90": 148840,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Sales representatives of services, except advertising, insurance, financial services, and travel",
+    "employment2025": 1272700,
+    "employment2035": 1306700,
+    "numericChange": 33900,
+    "percentChange": 2.7
+   },
+   "onetCode": "41-3091.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Sell services to individuals or businesses. May describe options or resolve client problems.",
+   "tasks": [
+    {
+     "id": 23222,
+     "text": "Answer customers' questions about services, prices, availability, or credit terms.",
+     "type": "n/a",
+     "onetCode": "41-3091.00",
+     "line": 12215
+    },
+    {
+     "id": 23223,
+     "text": "Attend sales or trade meetings or read related publications to obtain information about market conditions, business trends, regulations, or industry developments.",
+     "type": "n/a",
+     "onetCode": "41-3091.00",
+     "line": 12216
+    },
+    {
+     "id": 23224,
+     "text": "Compute and compare costs of services.",
+     "type": "n/a",
+     "onetCode": "41-3091.00",
+     "line": 12217
+    },
+    {
+     "id": 23225,
+     "text": "Consult with clients after sales or contract signings to resolve problems and provide ongoing support.",
+     "type": "n/a",
+     "onetCode": "41-3091.00",
+     "line": 12218
+    },
+    {
+     "id": 23226,
+     "text": "Contact prospective or existing customers to discuss how services can meet their needs.",
+     "type": "n/a",
+     "onetCode": "41-3091.00",
+     "line": 12219
+    },
+    {
+     "id": 23227,
+     "text": "Create forms or agreements to complete sales.",
+     "type": "n/a",
+     "onetCode": "41-3091.00",
+     "line": 12220
+    },
+    {
+     "id": 23228,
+     "text": "Develop sales presentations or proposals to explain service specifications.",
+     "type": "n/a",
+     "onetCode": "41-3091.00",
+     "line": 12221
+    },
+    {
+     "id": 23229,
+     "text": "Distribute promotional materials at meetings, conferences, or trade shows.",
+     "type": "n/a",
+     "onetCode": "41-3091.00",
+     "line": 12222
+    },
+    {
+     "id": 23230,
+     "text": "Emphasize or recommend service features based on knowledge of customers' needs and vendor capabilities and limitations.",
+     "type": "n/a",
+     "onetCode": "41-3091.00",
+     "line": 12223
+    },
+    {
+     "id": 23231,
+     "text": "Identify prospective customers using business directories, leads from clients, or information from conferences or trade shows.",
+     "type": "n/a",
+     "onetCode": "41-3091.00",
+     "line": 12224
+    },
+    {
+     "id": 23232,
+     "text": "Inform customers of contracts or other information pertaining to purchased services.",
+     "type": "n/a",
+     "onetCode": "41-3091.00",
+     "line": 12225
+    },
+    {
+     "id": 23233,
+     "text": "Maintain customer records using automated systems.",
+     "type": "n/a",
+     "onetCode": "41-3091.00",
+     "line": 12226
+    },
+    {
+     "id": 23234,
+     "text": "Monitor market conditions, innovations, and competitors' services, prices, and sales.",
+     "type": "n/a",
+     "onetCode": "41-3091.00",
+     "line": 12227
+    },
+    {
+     "id": 23235,
+     "text": "Negotiate prices or terms of sales or service agreements.",
+     "type": "n/a",
+     "onetCode": "41-3091.00",
+     "line": 12228
+    },
+    {
+     "id": 23236,
+     "text": "Quote prices, credit terms, contract terms, or fulfillment dates for services.",
+     "type": "n/a",
+     "onetCode": "41-3091.00",
+     "line": 12229
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "kelleyTracks": [
+    "Sales"
+   ],
+   "kelleyTitles": [
+    "Account Executive"
+   ],
+   "sources": {
+    "employment": "oews:national_M2025_dl!L815",
+    "annualMedian": "oews:national_M2025_dl!AB815",
+    "annualMean": "oews:national_M2025_dl!S815",
+    "hourlyMedian": "oews:national_M2025_dl!W815",
+    "hourlyMean": "oews:national_M2025_dl!R815",
+    "annualPct10": "oews:national_M2025_dl!Z815",
+    "annualPct90": "oews:national_M2025_dl!AD815",
+    "annualOnly": "oews:national_M2025_dl!AE815",
+    "hourlyOnly": "oews:national_M2025_dl!AF815",
+    "title": "oews:national_M2025_dl!J815",
+    "ep.title": "ep:Table 1.2!A662",
+    "ep.employment2025": "ep:Table 1.2!D662",
+    "ep.employment2035": "ep:Table 1.2!E662",
+    "ep.numericChange": "ep:Table 1.2!H662",
+    "ep.percentChange": "ep:Table 1.2!I662",
+    "onetCode": "onet:Occupation Data.txt#L630:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L630:Description"
+   },
+   "nullReasons": {}
+  },
+  "41-4011": {
+   "soc": "41-4011",
+   "title": "Sales Representatives, Wholesale and Manufacturing, Technical and Scientific Products",
+   "major": "41-0000",
+   "minor": "41-4000",
+   "broad": "41-4010",
+   "oewsRows": [
+    818
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 284800,
+   "annualMedian": 104920,
+   "annualMean": 119730,
+   "hourlyMedian": 50.44,
+   "hourlyMean": 57.56,
+   "annualPct10": 52600,
+   "annualPct90": 200440,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Sales representatives, wholesale and manufacturing, technical and scientific products",
+    "employment2025": 292000,
+    "employment2035": 295500,
+    "numericChange": 3500,
+    "percentChange": 1.2
+   },
+   "onetCode": "41-4011.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [
+    {
+     "code": "41-4011.07",
+     "title": "Solar Sales Representatives and Assessors",
+     "taskCount": 13
+    }
+   ],
+   "description": "Sell goods for wholesalers or manufacturers where technical or scientific knowledge is required in such areas as biology, engineering, chemistry, and electronics, normally obtained from at least 2 years of postsecondary education.",
+   "tasks": [
+    {
+     "id": 11240,
+     "text": "Negotiate prices or terms of sales or service agreements.",
+     "type": "Core",
+     "onetCode": "41-4011.00",
+     "line": 12230
+    },
+    {
+     "id": 20608,
+     "text": "Prepare and submit sales contracts for orders.",
+     "type": "Core",
+     "onetCode": "41-4011.00",
+     "line": 12231
+    },
+    {
+     "id": 11251,
+     "text": "Visit establishments to evaluate needs or to promote product or service sales.",
+     "type": "Core",
+     "onetCode": "41-4011.00",
+     "line": 12232
+    },
+    {
+     "id": 11241,
+     "text": "Maintain customer records, using automated systems.",
+     "type": "Core",
+     "onetCode": "41-4011.00",
+     "line": 12233
+    },
+    {
+     "id": 11237,
+     "text": "Answer customers' questions about products, prices, availability, or credit terms.",
+     "type": "Core",
+     "onetCode": "41-4011.00",
+     "line": 12234
+    },
+    {
+     "id": 11238,
+     "text": "Quote prices, credit terms, or other bid specifications.",
+     "type": "Core",
+     "onetCode": "41-4011.00",
+     "line": 12235
+    },
+    {
+     "id": 20609,
+     "text": "Contact new or existing customers to discuss how specific products or services can meet their needs.",
+     "type": "Core",
+     "onetCode": "41-4011.00",
+     "line": 12236
+    },
+    {
+     "id": 11239,
+     "text": "Emphasize product features, based on analyses of customers' needs and on technical knowledge of product capabilities and limitations.",
+     "type": "Core",
+     "onetCode": "41-4011.00",
+     "line": 12237
+    },
+    {
+     "id": 11261,
+     "text": "Compute customer's installation or production costs and estimate savings from new services, products, or equipment.",
+     "type": "Core",
+     "onetCode": "41-4011.00",
+     "line": 12238
+    },
+    {
+     "id": 20610,
+     "text": "Select or assist customers in selecting products based on customer needs, product specifications, and applicable regulations.",
+     "type": "Core",
+     "onetCode": "41-4011.00",
+     "line": 12239
+    },
+    {
+     "id": 11246,
+     "text": "Prepare sales presentations or proposals to explain product specifications or applications.",
+     "type": "Core",
+     "onetCode": "41-4011.00",
+     "line": 12240
+    },
+    {
+     "id": 11252,
+     "text": "Complete expense reports, sales reports, or other paperwork.",
+     "type": "Core",
+     "onetCode": "41-4011.00",
+     "line": 12241
+    },
+    {
+     "id": 20611,
+     "text": "Verify that delivery schedules meet project deadlines.",
+     "type": "Core",
+     "onetCode": "41-4011.00",
+     "line": 12242
+    },
+    {
+     "id": 20612,
+     "text": "Identify prospective customers, using business directories, leads from existing clients, participation in organizations, or trade show or conference attendance.",
+     "type": "Core",
+     "onetCode": "41-4011.00",
+     "line": 12243
+    },
+    {
+     "id": 11249,
+     "text": "Inform customers of estimated delivery schedules, service contracts, warranties, or other information pertaining to purchased products.",
+     "type": "Core",
+     "onetCode": "41-4011.00",
+     "line": 12244
+    },
+    {
+     "id": 11245,
+     "text": "Collaborate with colleagues to exchange information, such as selling strategies or marketing information.",
+     "type": "Core",
+     "onetCode": "41-4011.00",
+     "line": 12245
+    },
+    {
+     "id": 11248,
+     "text": "Provide customers with ongoing technical support.",
+     "type": "Core",
+     "onetCode": "41-4011.00",
+     "line": 12246
+    },
+    {
+     "id": 20613,
+     "text": "Advise customers on product usage to improve production.",
+     "type": "Core",
+     "onetCode": "41-4011.00",
+     "line": 12247
+    },
+    {
+     "id": 20614,
+     "text": "Study documentation or other information for new scientific or technical products.",
+     "type": "Core",
+     "onetCode": "41-4011.00",
+     "line": 12248
+    },
+    {
+     "id": 11265,
+     "text": "Stock or distribute resources, such as samples or promotional or educational materials.",
+     "type": "Core",
+     "onetCode": "41-4011.00",
+     "line": 12249
+    },
+    {
+     "id": 20615,
+     "text": "Attend sales or trade meetings or read related publications to obtain information about market conditions, business trends, environmental regulations, or industry developments.",
+     "type": "Core",
+     "onetCode": "41-4011.00",
+     "line": 12250
+    },
+    {
+     "id": 20616,
+     "text": "Sell service contracts for technical or scientific products.",
+     "type": "Supplemental",
+     "onetCode": "41-4011.00",
+     "line": 12251
+    },
+    {
+     "id": 20617,
+     "text": "Demonstrate the operation or use of technical or scientific products.",
+     "type": "Supplemental",
+     "onetCode": "41-4011.00",
+     "line": 12252
+    },
+    {
+     "id": 11256,
+     "text": "Provide feedback to product design teams so that products can be tailored to clients' needs.",
+     "type": "Supplemental",
+     "onetCode": "41-4011.00",
+     "line": 12253
+    },
+    {
+     "id": 11257,
+     "text": "Arrange for installation and testing of products or machinery.",
+     "type": "Supplemental",
+     "onetCode": "41-4011.00",
+     "line": 12254
+    },
+    {
+     "id": 20618,
+     "text": "Initiate sales campaigns to meet sales and production expectations.",
+     "type": "Supplemental",
+     "onetCode": "41-4011.00",
+     "line": 12255
+    },
+    {
+     "id": 20619,
+     "text": "Verify accuracy of materials lists.",
+     "type": "Supplemental",
+     "onetCode": "41-4011.00",
+     "line": 12256
+    },
+    {
+     "id": 20620,
+     "text": "Verify customer credit ratings.",
+     "type": "Supplemental",
+     "onetCode": "41-4011.00",
+     "line": 12257
+    },
+    {
+     "id": 11262,
+     "text": "Consult with engineers regarding technical problems with products.",
+     "type": "Supplemental",
+     "onetCode": "41-4011.00",
+     "line": 12258
+    },
+    {
+     "id": 19828,
+     "text": "Sell technical and scientific products that are environmentally sound or designed for environmental remediation.",
+     "type": "Supplemental",
+     "onetCode": "41-4011.00",
+     "line": 12259
+    },
+    {
+     "id": 11267,
+     "text": "Visit establishments, such as pharmacies, to determine product sales.",
+     "type": "Supplemental",
+     "onetCode": "41-4011.00",
+     "line": 12260
+    },
+    {
+     "id": 19826,
+     "text": "Present information to customers about the energy efficiency or environmental impact of scientific or technical products.",
+     "type": "Supplemental",
+     "onetCode": "41-4011.00",
+     "line": 12261
+    },
+    {
+     "id": 19825,
+     "text": "Inform customers about issues related to responsible use and disposal of products, such as waste reduction or product or byproduct recycling or disposal.",
+     "type": "Supplemental",
+     "onetCode": "41-4011.00",
+     "line": 12262
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L818",
+    "annualMedian": "oews:national_M2025_dl!AB818",
+    "annualMean": "oews:national_M2025_dl!S818",
+    "hourlyMedian": "oews:national_M2025_dl!W818",
+    "hourlyMean": "oews:national_M2025_dl!R818",
+    "annualPct10": "oews:national_M2025_dl!Z818",
+    "annualPct90": "oews:national_M2025_dl!AD818",
+    "annualOnly": "oews:national_M2025_dl!AE818",
+    "hourlyOnly": "oews:national_M2025_dl!AF818",
+    "title": "oews:national_M2025_dl!J818",
+    "ep.title": "ep:Table 1.2!A664",
+    "ep.employment2025": "ep:Table 1.2!D664",
+    "ep.employment2035": "ep:Table 1.2!E664",
+    "ep.numericChange": "ep:Table 1.2!H664",
+    "ep.percentChange": "ep:Table 1.2!I664",
+    "onetCode": "onet:Occupation Data.txt#L631:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L631:Description"
+   },
+   "nullReasons": {}
+  },
+  "41-4012": {
+   "soc": "41-4012",
+   "title": "Sales Representatives, Wholesale and Manufacturing, Except Technical and Scientific Products",
+   "major": "41-0000",
+   "minor": "41-4000",
+   "broad": "41-4010",
+   "oewsRows": [
+    819
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 1238190,
+   "annualMedian": 72080,
+   "annualMean": 82530,
+   "hourlyMedian": 34.65,
+   "hourlyMean": 39.68,
+   "annualPct10": 39090,
+   "annualPct90": 137550,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Sales representatives, wholesale and manufacturing, except technical and scientific products",
+    "employment2025": 1279400,
+    "employment2035": 1268200,
+    "numericChange": -11200,
+    "percentChange": -0.9
+   },
+   "onetCode": "41-4012.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Sell goods for wholesalers or manufacturers to businesses or groups of individuals. Work requires substantial knowledge of items sold.",
+   "tasks": [
+    {
+     "id": 8113,
+     "text": "Answer customers' questions about products, prices, availability, product uses, and credit terms.",
+     "type": "Core",
+     "onetCode": "41-4012.00",
+     "line": 12276
+    },
+    {
+     "id": 8114,
+     "text": "Recommend products to customers, based on customers' needs and interests.",
+     "type": "Core",
+     "onetCode": "41-4012.00",
+     "line": 12277
+    },
+    {
+     "id": 8116,
+     "text": "Estimate or quote prices, credit or contract terms, warranties, and delivery dates.",
+     "type": "Core",
+     "onetCode": "41-4012.00",
+     "line": 12278
+    },
+    {
+     "id": 8117,
+     "text": "Consult with clients after sales or contract signings to resolve problems and to provide ongoing support.",
+     "type": "Core",
+     "onetCode": "41-4012.00",
+     "line": 12279
+    },
+    {
+     "id": 20267,
+     "text": "Prepare sales contracts and order forms.",
+     "type": "Core",
+     "onetCode": "41-4012.00",
+     "line": 12280
+    },
+    {
+     "id": 8119,
+     "text": "Provide customers with product samples and catalogs.",
+     "type": "Core",
+     "onetCode": "41-4012.00",
+     "line": 12281
+    },
+    {
+     "id": 8122,
+     "text": "Monitor market conditions, product innovations, and competitors' products, prices, and sales.",
+     "type": "Core",
+     "onetCode": "41-4012.00",
+     "line": 12282
+    },
+    {
+     "id": 8124,
+     "text": "Perform administrative duties, such as preparing sales budgets and reports, keeping sales records, and filing expense account reports.",
+     "type": "Core",
+     "onetCode": "41-4012.00",
+     "line": 12283
+    },
+    {
+     "id": 8115,
+     "text": "Contact regular and prospective customers to demonstrate products, explain product features, and solicit orders.",
+     "type": "Core",
+     "onetCode": "41-4012.00",
+     "line": 12284
+    },
+    {
+     "id": 8120,
+     "text": "Identify prospective customers by using business directories, following leads from existing clients, participating in organizations and clubs, and attending trade shows and conferences.",
+     "type": "Core",
+     "onetCode": "41-4012.00",
+     "line": 12285
+    },
+    {
+     "id": 8129,
+     "text": "Negotiate with retail merchants to improve product exposure, such as shelf positioning and advertising.",
+     "type": "Supplemental",
+     "onetCode": "41-4012.00",
+     "line": 12286
+    },
+    {
+     "id": 8127,
+     "text": "Check stock levels and reorder merchandise as necessary.",
+     "type": "Supplemental",
+     "onetCode": "41-4012.00",
+     "line": 12287
+    },
+    {
+     "id": 8128,
+     "text": "Plan, assemble, and stock product displays in retail stores, or make recommendations to retailers regarding product displays, promotional programs, and advertising.",
+     "type": "Supplemental",
+     "onetCode": "41-4012.00",
+     "line": 12288
+    },
+    {
+     "id": 20268,
+     "text": "Negotiate details of contracts and payments.",
+     "type": "Supplemental",
+     "onetCode": "41-4012.00",
+     "line": 12289
+    },
+    {
+     "id": 8118,
+     "text": "Prepare drawings, estimates, and bids that meet specific customer needs.",
+     "type": "Supplemental",
+     "onetCode": "41-4012.00",
+     "line": 12290
+    },
+    {
+     "id": 8125,
+     "text": "Obtain credit information about prospective customers.",
+     "type": "Supplemental",
+     "onetCode": "41-4012.00",
+     "line": 12291
+    },
+    {
+     "id": 8126,
+     "text": "Forward orders to manufacturers.",
+     "type": "Supplemental",
+     "onetCode": "41-4012.00",
+     "line": 12292
+    },
+    {
+     "id": 8121,
+     "text": "Arrange and direct delivery and installation of products and equipment.",
+     "type": "Supplemental",
+     "onetCode": "41-4012.00",
+     "line": 12293
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "kelleyTracks": [
+    "Sales"
+   ],
+   "kelleyTitles": [
+    "Sales Representative"
+   ],
+   "sources": {
+    "employment": "oews:national_M2025_dl!L819",
+    "annualMedian": "oews:national_M2025_dl!AB819",
+    "annualMean": "oews:national_M2025_dl!S819",
+    "hourlyMedian": "oews:national_M2025_dl!W819",
+    "hourlyMean": "oews:national_M2025_dl!R819",
+    "annualPct10": "oews:national_M2025_dl!Z819",
+    "annualPct90": "oews:national_M2025_dl!AD819",
+    "annualOnly": "oews:national_M2025_dl!AE819",
+    "hourlyOnly": "oews:national_M2025_dl!AF819",
+    "title": "oews:national_M2025_dl!J819",
+    "ep.title": "ep:Table 1.2!A665",
+    "ep.employment2025": "ep:Table 1.2!D665",
+    "ep.employment2035": "ep:Table 1.2!E665",
+    "ep.numericChange": "ep:Table 1.2!H665",
+    "ep.percentChange": "ep:Table 1.2!I665",
+    "onetCode": "onet:Occupation Data.txt#L633:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L633:Description"
+   },
+   "nullReasons": {}
+  },
+  "41-9011": {
+   "soc": "41-9011",
+   "title": "Demonstrators and Product Promoters",
+   "major": "41-0000",
+   "minor": "41-9000",
+   "broad": "41-9010",
+   "oewsRows": [
+    822
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 64520,
+   "annualMedian": 39320,
+   "annualMean": 45580,
+   "hourlyMedian": 18.91,
+   "hourlyMean": 21.91,
+   "annualPct10": 31200,
+   "annualPct90": 63850,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Demonstrators and product promoters",
+    "employment2025": 70400,
+    "employment2035": 70500,
+    "numericChange": 100,
+    "percentChange": 0.2
+   },
+   "onetCode": "41-9011.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Demonstrate merchandise and answer questions for the purpose of creating public interest in buying the product. May sell demonstrated merchandise.",
+   "tasks": [
+    {
+     "id": 13191,
+     "text": "Provide product samples, coupons, informational brochures, or other incentives to persuade people to buy products.",
+     "type": "Core",
+     "onetCode": "41-9011.00",
+     "line": 12294
+    },
+    {
+     "id": 13194,
+     "text": "Sell products being promoted and keep records of sales.",
+     "type": "Core",
+     "onetCode": "41-9011.00",
+     "line": 12295
+    },
+    {
+     "id": 13192,
+     "text": "Keep areas neat while working and return items to correct locations following demonstrations.",
+     "type": "Core",
+     "onetCode": "41-9011.00",
+     "line": 12296
+    },
+    {
+     "id": 13190,
+     "text": "Demonstrate or explain products, methods, or services to persuade customers to purchase products or use services.",
+     "type": "Core",
+     "onetCode": "41-9011.00",
+     "line": 12297
+    },
+    {
+     "id": 13193,
+     "text": "Record and report demonstration-related information, such as the number of questions asked by the audience or the number of coupons distributed.",
+     "type": "Core",
+     "onetCode": "41-9011.00",
+     "line": 12298
+    },
+    {
+     "id": 13196,
+     "text": "Suggest specific product purchases to meet customers' needs.",
+     "type": "Core",
+     "onetCode": "41-9011.00",
+     "line": 12299
+    },
+    {
+     "id": 13206,
+     "text": "Research or investigate products to be presented to prepare for demonstrations.",
+     "type": "Core",
+     "onetCode": "41-9011.00",
+     "line": 12300
+    },
+    {
+     "id": 13195,
+     "text": "Set up and arrange displays or demonstration areas to attract the attention of prospective customers.",
+     "type": "Core",
+     "onetCode": "41-9011.00",
+     "line": 12301
+    },
+    {
+     "id": 13198,
+     "text": "Identify interested and qualified customers to provide them with additional information.",
+     "type": "Core",
+     "onetCode": "41-9011.00",
+     "line": 12302
+    },
+    {
+     "id": 13203,
+     "text": "Visit trade shows, stores, community organizations, or other venues to demonstrate products or services or to answer questions from potential customers.",
+     "type": "Core",
+     "onetCode": "41-9011.00",
+     "line": 12303
+    },
+    {
+     "id": 13197,
+     "text": "Transport, assemble, and disassemble materials used in presentations.",
+     "type": "Core",
+     "onetCode": "41-9011.00",
+     "line": 12304
+    },
+    {
+     "id": 13199,
+     "text": "Practice demonstrations to ensure that they will run smoothly.",
+     "type": "Core",
+     "onetCode": "41-9011.00",
+     "line": 12305
+    },
+    {
+     "id": 13201,
+     "text": "Learn about competitors' products or consumers' interests or concerns to answer questions or provide more complete information.",
+     "type": "Core",
+     "onetCode": "41-9011.00",
+     "line": 12306
+    },
+    {
+     "id": 13205,
+     "text": "Instruct customers in alteration of products.",
+     "type": "Core",
+     "onetCode": "41-9011.00",
+     "line": 12307
+    },
+    {
+     "id": 13202,
+     "text": "Work as part of a team of demonstrators to accommodate large crowds.",
+     "type": "Core",
+     "onetCode": "41-9011.00",
+     "line": 12308
+    },
+    {
+     "id": 13200,
+     "text": "Prepare or alter presentation contents to target specific audiences.",
+     "type": "Supplemental",
+     "onetCode": "41-9011.00",
+     "line": 12309
+    },
+    {
+     "id": 13211,
+     "text": "Stock shelves with products.",
+     "type": "Supplemental",
+     "onetCode": "41-9011.00",
+     "line": 12310
+    },
+    {
+     "id": 13208,
+     "text": "Provide product information, using lectures, films, charts, or slide shows.",
+     "type": "Supplemental",
+     "onetCode": "41-9011.00",
+     "line": 12311
+    },
+    {
+     "id": 13204,
+     "text": "Train demonstrators to present a company's products or services.",
+     "type": "Supplemental",
+     "onetCode": "41-9011.00",
+     "line": 12312
+    },
+    {
+     "id": 13207,
+     "text": "Recommend product or service improvements to employers.",
+     "type": "Supplemental",
+     "onetCode": "41-9011.00",
+     "line": 12313
+    },
+    {
+     "id": 13210,
+     "text": "Wear costumes or sign boards and walk in public to promote merchandise, services, or events.",
+     "type": "Supplemental",
+     "onetCode": "41-9011.00",
+     "line": 12314
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L822",
+    "annualMedian": "oews:national_M2025_dl!AB822",
+    "annualMean": "oews:national_M2025_dl!S822",
+    "hourlyMedian": "oews:national_M2025_dl!W822",
+    "hourlyMean": "oews:national_M2025_dl!R822",
+    "annualPct10": "oews:national_M2025_dl!Z822",
+    "annualPct90": "oews:national_M2025_dl!AD822",
+    "annualOnly": "oews:national_M2025_dl!AE822",
+    "hourlyOnly": "oews:national_M2025_dl!AF822",
+    "title": "oews:national_M2025_dl!J822",
+    "ep.title": "ep:Table 1.2!A668",
+    "ep.employment2025": "ep:Table 1.2!D668",
+    "ep.employment2035": "ep:Table 1.2!E668",
+    "ep.numericChange": "ep:Table 1.2!H668",
+    "ep.percentChange": "ep:Table 1.2!I668",
+    "onetCode": "onet:Occupation Data.txt#L634:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L634:Description"
+   },
+   "nullReasons": {}
+  },
+  "41-9012": {
+   "soc": "41-9012",
+   "title": "Models",
+   "major": "41-0000",
+   "minor": "41-9000",
+   "broad": "41-9010",
+   "oewsRows": [
+    823
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 3780,
+   "annualMedian": 48470,
+   "annualMean": 72800,
+   "hourlyMedian": 23.3,
+   "hourlyMean": 35,
+   "annualPct10": 34190,
+   "annualPct90": 131470,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Models",
+    "employment2025": 4200,
+    "employment2035": 4100,
+    "numericChange": -100,
+    "percentChange": -2.1
+   },
+   "onetCode": "41-9012.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Model garments or other apparel and accessories for prospective buyers at fashion shows, private showings, or retail establishments. May pose for photos to be used in magazines or advertisements. May pose as subject for paintings, sculptures, and other types of artistic expression.",
+   "tasks": [
+    {
+     "id": 23931,
+     "text": "Pose for artists and photographers.",
+     "type": "Core",
+     "onetCode": "41-9012.00",
+     "line": 12315
+    },
+    {
+     "id": 13217,
+     "text": "Record rates of pay and durations of jobs on vouchers.",
+     "type": "Supplemental",
+     "onetCode": "41-9012.00",
+     "line": 12316
+    },
+    {
+     "id": 13215,
+     "text": "Gather information from agents concerning the pay, dates, times, provisions, and lengths of jobs.",
+     "type": "Supplemental",
+     "onetCode": "41-9012.00",
+     "line": 12317
+    },
+    {
+     "id": 13218,
+     "text": "Report job completions to agencies and obtain information about future appointments.",
+     "type": "Supplemental",
+     "onetCode": "41-9012.00",
+     "line": 12318
+    },
+    {
+     "id": 13219,
+     "text": "Assemble and maintain portfolios, print composite cards, and travel to go-sees to obtain jobs.",
+     "type": "Supplemental",
+     "onetCode": "41-9012.00",
+     "line": 12319
+    },
+    {
+     "id": 13225,
+     "text": "Pose as directed, or strike suitable interpretive poses for promoting and selling merchandise or fashions during appearances, filming, or photo sessions.",
+     "type": "Supplemental",
+     "onetCode": "41-9012.00",
+     "line": 12320
+    },
+    {
+     "id": 13216,
+     "text": "Follow strict routines of diet, sleep, and exercise to maintain appearance.",
+     "type": "Supplemental",
+     "onetCode": "41-9012.00",
+     "line": 12321
+    },
+    {
+     "id": 13221,
+     "text": "Apply makeup to face and style hair to enhance appearance, considering such factors as color, camera techniques, and facial features.",
+     "type": "Supplemental",
+     "onetCode": "41-9012.00",
+     "line": 12322
+    },
+    {
+     "id": 13220,
+     "text": "Work closely with photographers, fashion coordinators, directors, producers, stylists, make-up artists, other models, and clients to produce the desired looks, and to finish photo shoots on schedule.",
+     "type": "Supplemental",
+     "onetCode": "41-9012.00",
+     "line": 12323
+    },
+    {
+     "id": 13226,
+     "text": "Dress in sample or completed garments, and select accessories.",
+     "type": "Supplemental",
+     "onetCode": "41-9012.00",
+     "line": 12324
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L823",
+    "annualMedian": "oews:national_M2025_dl!AB823",
+    "annualMean": "oews:national_M2025_dl!S823",
+    "hourlyMedian": "oews:national_M2025_dl!W823",
+    "hourlyMean": "oews:national_M2025_dl!R823",
+    "annualPct10": "oews:national_M2025_dl!Z823",
+    "annualPct90": "oews:national_M2025_dl!AD823",
+    "annualOnly": "oews:national_M2025_dl!AE823",
+    "hourlyOnly": "oews:national_M2025_dl!AF823",
+    "title": "oews:national_M2025_dl!J823",
+    "ep.title": "ep:Table 1.2!A669",
+    "ep.employment2025": "ep:Table 1.2!D669",
+    "ep.employment2035": "ep:Table 1.2!E669",
+    "ep.numericChange": "ep:Table 1.2!H669",
+    "ep.percentChange": "ep:Table 1.2!I669",
+    "onetCode": "onet:Occupation Data.txt#L635:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L635:Description"
+   },
+   "nullReasons": {}
+  },
+  "41-9021": {
+   "soc": "41-9021",
+   "title": "Real Estate Brokers",
+   "major": "41-0000",
+   "minor": "41-9000",
+   "broad": "41-9020",
+   "oewsRows": [
+    825
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 46100,
+   "annualMedian": 73220,
+   "annualMean": 83950,
+   "hourlyMedian": 35.2,
+   "hourlyMean": 40.36,
+   "annualPct10": 37110,
+   "annualPct90": 143300,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Real estate brokers",
+    "employment2025": 103500,
+    "employment2035": 104300,
+    "numericChange": 800,
+    "percentChange": 0.8
+   },
+   "onetCode": "41-9021.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Operate real estate office, or work for commercial real estate firm, overseeing real estate transactions. Other duties usually include selling real estate or renting properties and arranging loans.",
+   "tasks": [
+    {
+     "id": 4599,
+     "text": "Sell, for a fee, real estate owned by others.",
+     "type": "Core",
+     "onetCode": "41-9021.00",
+     "line": 12325
+    },
+    {
+     "id": 4600,
+     "text": "Obtain agreements from property owners to place properties for sale with real estate firms.",
+     "type": "Core",
+     "onetCode": "41-9021.00",
+     "line": 12326
+    },
+    {
+     "id": 4603,
+     "text": "Act as an intermediary in negotiations between buyers and sellers over property prices and settlement details and during the closing of sales.",
+     "type": "Core",
+     "onetCode": "41-9021.00",
+     "line": 12327
+    },
+    {
+     "id": 4604,
+     "text": "Generate lists of properties for sale, their locations, descriptions, and available financing options, using computers.",
+     "type": "Core",
+     "onetCode": "41-9021.00",
+     "line": 12328
+    },
+    {
+     "id": 4610,
+     "text": "Manage or operate real estate offices, handling associated business details.",
+     "type": "Core",
+     "onetCode": "41-9021.00",
+     "line": 12329
+    },
+    {
+     "id": 4602,
+     "text": "Compare a property with similar properties that have recently sold to determine its competitive market price.",
+     "type": "Core",
+     "onetCode": "41-9021.00",
+     "line": 12330
+    },
+    {
+     "id": 4605,
+     "text": "Maintain knowledge of real estate law, local economies, fair housing laws, types of available mortgages, financing options, and government programs.",
+     "type": "Core",
+     "onetCode": "41-9021.00",
+     "line": 12331
+    },
+    {
+     "id": 4601,
+     "text": "Monitor fulfillment of purchase contract terms to ensure that they are handled in a timely manner.",
+     "type": "Core",
+     "onetCode": "41-9021.00",
+     "line": 12332
+    },
+    {
+     "id": 4606,
+     "text": "Check work completed by loan officers, attorneys, or other professionals to ensure that it is performed properly.",
+     "type": "Core",
+     "onetCode": "41-9021.00",
+     "line": 12333
+    },
+    {
+     "id": 4612,
+     "text": "Rent properties or manage rental properties.",
+     "type": "Core",
+     "onetCode": "41-9021.00",
+     "line": 12334
+    },
+    {
+     "id": 4609,
+     "text": "Maintain awareness of current income tax regulations, local zoning, building and tax laws, and growth possibilities of a property's area.",
+     "type": "Core",
+     "onetCode": "41-9021.00",
+     "line": 12335
+    },
+    {
+     "id": 4613,
+     "text": "Arrange for title searches of properties being sold.",
+     "type": "Core",
+     "onetCode": "41-9021.00",
+     "line": 12336
+    },
+    {
+     "id": 4608,
+     "text": "Appraise property values, assessing income potential when relevant.",
+     "type": "Core",
+     "onetCode": "41-9021.00",
+     "line": 12337
+    },
+    {
+     "id": 4611,
+     "text": "Supervise agents who handle real estate transactions.",
+     "type": "Supplemental",
+     "onetCode": "41-9021.00",
+     "line": 12338
+    },
+    {
+     "id": 4607,
+     "text": "Arrange for financing of property purchases.",
+     "type": "Supplemental",
+     "onetCode": "41-9021.00",
+     "line": 12339
+    },
+    {
+     "id": 4614,
+     "text": "Give buyers virtual tours of properties in which they are interested, using computers.",
+     "type": "Supplemental",
+     "onetCode": "41-9021.00",
+     "line": 12340
+    },
+    {
+     "id": 4615,
+     "text": "Review property details to ensure that environmental regulations are met.",
+     "type": "Supplemental",
+     "onetCode": "41-9021.00",
+     "line": 12341
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L825",
+    "annualMedian": "oews:national_M2025_dl!AB825",
+    "annualMean": "oews:national_M2025_dl!S825",
+    "hourlyMedian": "oews:national_M2025_dl!W825",
+    "hourlyMean": "oews:national_M2025_dl!R825",
+    "annualPct10": "oews:national_M2025_dl!Z825",
+    "annualPct90": "oews:national_M2025_dl!AD825",
+    "annualOnly": "oews:national_M2025_dl!AE825",
+    "hourlyOnly": "oews:national_M2025_dl!AF825",
+    "title": "oews:national_M2025_dl!J825",
+    "ep.title": "ep:Table 1.2!A671",
+    "ep.employment2025": "ep:Table 1.2!D671",
+    "ep.employment2035": "ep:Table 1.2!E671",
+    "ep.numericChange": "ep:Table 1.2!H671",
+    "ep.percentChange": "ep:Table 1.2!I671",
+    "onetCode": "onet:Occupation Data.txt#L636:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L636:Description"
+   },
+   "nullReasons": {}
+  },
+  "41-9022": {
+   "soc": "41-9022",
+   "title": "Real Estate Sales Agents",
+   "major": "41-0000",
+   "minor": "41-9000",
+   "broad": "41-9020",
+   "oewsRows": [
+    826
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 193370,
+   "annualMedian": 52830,
+   "annualMean": 69510,
+   "hourlyMedian": 25.4,
+   "hourlyMean": 33.42,
+   "annualPct10": 32970,
+   "annualPct90": 123590,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Real estate sales agents",
+    "employment2025": 427000,
+    "employment2035": 434500,
+    "numericChange": 7400,
+    "percentChange": 1.7
+   },
+   "onetCode": "41-9022.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Rent, buy, or sell property for clients. Perform duties such as study property listings, interview prospective clients, accompany clients to property site, discuss conditions of sale, and draw up real estate contracts. Includes agents who represent buyer.",
+   "tasks": [
+    {
+     "id": 2443,
+     "text": "Prepare documents such as representation contracts, purchase agreements, closing statements, deeds, and leases.",
+     "type": "Core",
+     "onetCode": "41-9022.00",
+     "line": 12342
+    },
+    {
+     "id": 2440,
+     "text": "Present purchase offers to sellers for consideration.",
+     "type": "Core",
+     "onetCode": "41-9022.00",
+     "line": 12343
+    },
+    {
+     "id": 2445,
+     "text": "Act as an intermediary in negotiations between buyers and sellers, generally representing one or the other.",
+     "type": "Core",
+     "onetCode": "41-9022.00",
+     "line": 12344
+    },
+    {
+     "id": 2449,
+     "text": "Generate lists of properties that are compatible with buyers' needs and financial resources.",
+     "type": "Core",
+     "onetCode": "41-9022.00",
+     "line": 12345
+    },
+    {
+     "id": 2441,
+     "text": "Confer with escrow companies, lenders, home inspectors, and pest control operators to ensure that terms and conditions of purchase agreements are met before closing dates.",
+     "type": "Core",
+     "onetCode": "41-9022.00",
+     "line": 12346
+    },
+    {
+     "id": 2446,
+     "text": "Promote sales of properties through advertisements, open houses, and participation in multiple listing services.",
+     "type": "Core",
+     "onetCode": "41-9022.00",
+     "line": 12347
+    },
+    {
+     "id": 2447,
+     "text": "Compare a property with similar properties that have recently sold to determine its competitive market price.",
+     "type": "Core",
+     "onetCode": "41-9022.00",
+     "line": 12348
+    },
+    {
+     "id": 2444,
+     "text": "Coordinate property closings, overseeing signing of documents and disbursement of funds.",
+     "type": "Core",
+     "onetCode": "41-9022.00",
+     "line": 12349
+    },
+    {
+     "id": 2442,
+     "text": "Interview clients to determine what kinds of properties they are seeking.",
+     "type": "Core",
+     "onetCode": "41-9022.00",
+     "line": 12350
+    },
+    {
+     "id": 21155,
+     "text": "Contact previous clients for prospecting of referral business.",
+     "type": "Core",
+     "onetCode": "41-9022.00",
+     "line": 12351
+    },
+    {
+     "id": 2460,
+     "text": "Review property listings, trade journals, and relevant literature, and attend conventions, seminars, and staff and association meetings, to remain knowledgeable about real estate markets.",
+     "type": "Core",
+     "onetCode": "41-9022.00",
+     "line": 12352
+    },
+    {
+     "id": 2453,
+     "text": "Answer clients' questions regarding construction work, financing, maintenance, repairs, and appraisals.",
+     "type": "Core",
+     "onetCode": "41-9022.00",
+     "line": 12353
+    },
+    {
+     "id": 2448,
+     "text": "Coordinate appointments to show homes to prospective buyers.",
+     "type": "Core",
+     "onetCode": "41-9022.00",
+     "line": 12354
+    },
+    {
+     "id": 2462,
+     "text": "Contact property owners and advertise services to solicit property sales listings.",
+     "type": "Core",
+     "onetCode": "41-9022.00",
+     "line": 12355
+    },
+    {
+     "id": 2456,
+     "text": "Advise sellers on how to make homes more appealing to potential buyers.",
+     "type": "Core",
+     "onetCode": "41-9022.00",
+     "line": 12356
+    },
+    {
+     "id": 2458,
+     "text": "Advise clients on market conditions, prices, mortgages, legal requirements, and related matters.",
+     "type": "Core",
+     "onetCode": "41-9022.00",
+     "line": 12357
+    },
+    {
+     "id": 2450,
+     "text": "Display commercial, industrial, agricultural, and residential properties to clients and explain their features.",
+     "type": "Core",
+     "onetCode": "41-9022.00",
+     "line": 12358
+    },
+    {
+     "id": 2455,
+     "text": "Accompany buyers during visits to and inspections of property, advising them on the suitability and value of the homes they are visiting.",
+     "type": "Core",
+     "onetCode": "41-9022.00",
+     "line": 12359
+    },
+    {
+     "id": 2451,
+     "text": "Arrange for title searches to determine whether clients have clear property titles.",
+     "type": "Core",
+     "onetCode": "41-9022.00",
+     "line": 12360
+    },
+    {
+     "id": 2463,
+     "text": "Develop networks of attorneys, mortgage lenders, and contractors to whom clients may be referred.",
+     "type": "Core",
+     "onetCode": "41-9022.00",
+     "line": 12361
+    },
+    {
+     "id": 2452,
+     "text": "Review plans for new construction with clients, enumerating and recommending available options and features.",
+     "type": "Core",
+     "onetCode": "41-9022.00",
+     "line": 12362
+    },
+    {
+     "id": 2454,
+     "text": "Inspect condition of premises, and arrange for necessary maintenance or notify owners of maintenance needs.",
+     "type": "Core",
+     "onetCode": "41-9022.00",
+     "line": 12363
+    },
+    {
+     "id": 2464,
+     "text": "Visit properties to assess them before showing them to clients.",
+     "type": "Core",
+     "onetCode": "41-9022.00",
+     "line": 12364
+    },
+    {
+     "id": 2461,
+     "text": "Investigate clients' financial and credit status to determine eligibility for financing.",
+     "type": "Supplemental",
+     "onetCode": "41-9022.00",
+     "line": 12365
+    },
+    {
+     "id": 2459,
+     "text": "Evaluate mortgage options to help clients obtain financing at the best prevailing rates and terms.",
+     "type": "Supplemental",
+     "onetCode": "41-9022.00",
+     "line": 12366
+    },
+    {
+     "id": 2467,
+     "text": "Appraise properties to determine loan values.",
+     "type": "Supplemental",
+     "onetCode": "41-9022.00",
+     "line": 12367
+    },
+    {
+     "id": 2465,
+     "text": "Contact utility companies for service hookups to clients' property.",
+     "type": "Supplemental",
+     "onetCode": "41-9022.00",
+     "line": 12368
+    },
+    {
+     "id": 2468,
+     "text": "Solicit and compile listings of available rental properties.",
+     "type": "Supplemental",
+     "onetCode": "41-9022.00",
+     "line": 12369
+    },
+    {
+     "id": 2466,
+     "text": "Conduct seminars and training sessions for sales agents to improve sales techniques.",
+     "type": "Supplemental",
+     "onetCode": "41-9022.00",
+     "line": 12370
+    },
+    {
+     "id": 2457,
+     "text": "Arrange meetings between buyers and sellers when details of transactions need to be negotiated.",
+     "type": "Supplemental",
+     "onetCode": "41-9022.00",
+     "line": 12371
+    },
+    {
+     "id": 2470,
+     "text": "Rent or lease properties on behalf of clients.",
+     "type": "Supplemental",
+     "onetCode": "41-9022.00",
+     "line": 12372
+    },
+    {
+     "id": 2469,
+     "text": "Secure construction or purchase financing with own firm or mortgage company.",
+     "type": "Supplemental",
+     "onetCode": "41-9022.00",
+     "line": 12373
+    },
+    {
+     "id": 2471,
+     "text": "Locate and appraise undeveloped areas for building sites, based on evaluations of area market conditions.",
+     "type": "Supplemental",
+     "onetCode": "41-9022.00",
+     "line": 12374
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L826",
+    "annualMedian": "oews:national_M2025_dl!AB826",
+    "annualMean": "oews:national_M2025_dl!S826",
+    "hourlyMedian": "oews:national_M2025_dl!W826",
+    "hourlyMean": "oews:national_M2025_dl!R826",
+    "annualPct10": "oews:national_M2025_dl!Z826",
+    "annualPct90": "oews:national_M2025_dl!AD826",
+    "annualOnly": "oews:national_M2025_dl!AE826",
+    "hourlyOnly": "oews:national_M2025_dl!AF826",
+    "title": "oews:national_M2025_dl!J826",
+    "ep.title": "ep:Table 1.2!A672",
+    "ep.employment2025": "ep:Table 1.2!D672",
+    "ep.employment2035": "ep:Table 1.2!E672",
+    "ep.numericChange": "ep:Table 1.2!H672",
+    "ep.percentChange": "ep:Table 1.2!I672",
+    "onetCode": "onet:Occupation Data.txt#L637:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L637:Description"
+   },
+   "nullReasons": {}
+  },
+  "41-9031": {
+   "soc": "41-9031",
+   "title": "Sales Engineers",
+   "major": "41-0000",
+   "minor": "41-9000",
+   "broad": "41-9030",
+   "oewsRows": [
+    828
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 51790,
+   "annualMedian": 124900,
+   "annualMean": 130140,
+   "hourlyMedian": 60.05,
+   "hourlyMean": 62.57,
+   "annualPct10": 73870,
+   "annualPct90": 195270,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Sales engineers",
+    "employment2025": 51600,
+    "employment2035": 53000,
+    "numericChange": 1400,
+    "percentChange": 2.8
+   },
+   "onetCode": "41-9031.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Sell business goods or services, the selling of which requires a technical background equivalent to a baccalaureate degree in engineering.",
+   "tasks": [
+    {
+     "id": 9682,
+     "text": "Develop, present, or respond to proposals for specific customer requirements, including request for proposal responses and industry-specific solutions.",
+     "type": "Core",
+     "onetCode": "41-9031.00",
+     "line": 12375
+    },
+    {
+     "id": 9680,
+     "text": "Collaborate with sales teams to understand customer requirements, to promote the sale of company products, and to provide sales support.",
+     "type": "Core",
+     "onetCode": "41-9031.00",
+     "line": 12376
+    },
+    {
+     "id": 9690,
+     "text": "Create sales or service contracts for products or services.",
+     "type": "Core",
+     "onetCode": "41-9031.00",
+     "line": 12377
+    },
+    {
+     "id": 9689,
+     "text": "Visit prospective buyers at commercial, industrial, or other establishments to show samples or catalogs, and to inform them about product pricing, availability, and advantages.",
+     "type": "Core",
+     "onetCode": "41-9031.00",
+     "line": 12378
+    },
+    {
+     "id": 9692,
+     "text": "Keep informed on industry news and trends, products, services, competitors, relevant information about legacy, existing, and emerging technologies, and the latest product-line developments.",
+     "type": "Core",
+     "onetCode": "41-9031.00",
+     "line": 12379
+    },
+    {
+     "id": 9697,
+     "text": "Identify resale opportunities and support them to achieve sales plans.",
+     "type": "Core",
+     "onetCode": "41-9031.00",
+     "line": 12380
+    },
+    {
+     "id": 9679,
+     "text": "Confer with customers and engineers to assess equipment needs and to determine system requirements.",
+     "type": "Core",
+     "onetCode": "41-9031.00",
+     "line": 12381
+    },
+    {
+     "id": 9678,
+     "text": "Plan and modify product configurations to meet customer needs.",
+     "type": "Core",
+     "onetCode": "41-9031.00",
+     "line": 12382
+    },
+    {
+     "id": 9686,
+     "text": "Prepare and deliver technical presentations that explain products or services to customers and prospective customers.",
+     "type": "Core",
+     "onetCode": "41-9031.00",
+     "line": 12383
+    },
+    {
+     "id": 9685,
+     "text": "Recommend improved materials or machinery to customers, documenting how such changes will lower costs or increase production.",
+     "type": "Core",
+     "onetCode": "41-9031.00",
+     "line": 12384
+    },
+    {
+     "id": 9700,
+     "text": "Maintain sales forecasting reports.",
+     "type": "Core",
+     "onetCode": "41-9031.00",
+     "line": 12385
+    },
+    {
+     "id": 9698,
+     "text": "Document account activities, generate reports, and keep records of business transactions with customers and suppliers.",
+     "type": "Core",
+     "onetCode": "41-9031.00",
+     "line": 12386
+    },
+    {
+     "id": 9688,
+     "text": "Research and identify potential customers for products or services.",
+     "type": "Core",
+     "onetCode": "41-9031.00",
+     "line": 12387
+    },
+    {
+     "id": 9681,
+     "text": "Secure and renew orders and arrange delivery.",
+     "type": "Core",
+     "onetCode": "41-9031.00",
+     "line": 12388
+    },
+    {
+     "id": 9696,
+     "text": "Develop sales plans to introduce products in new markets.",
+     "type": "Core",
+     "onetCode": "41-9031.00",
+     "line": 12389
+    },
+    {
+     "id": 9701,
+     "text": "Attend trade shows and seminars to promote products or to learn about industry developments.",
+     "type": "Core",
+     "onetCode": "41-9031.00",
+     "line": 12390
+    },
+    {
+     "id": 9693,
+     "text": "Attend company training seminars to become familiar with product lines.",
+     "type": "Core",
+     "onetCode": "41-9031.00",
+     "line": 12391
+    },
+    {
+     "id": 9691,
+     "text": "Arrange for demonstrations or trial installations of equipment.",
+     "type": "Core",
+     "onetCode": "41-9031.00",
+     "line": 12392
+    },
+    {
+     "id": 9699,
+     "text": "Train team members in the customer applications of technologies.",
+     "type": "Core",
+     "onetCode": "41-9031.00",
+     "line": 12393
+    },
+    {
+     "id": 9683,
+     "text": "Sell products requiring extensive technical expertise and support for installation and use, such as material handling equipment, numerical-control machinery, or computer systems.",
+     "type": "Supplemental",
+     "onetCode": "41-9031.00",
+     "line": 12394
+    },
+    {
+     "id": 9694,
+     "text": "Provide information needed for the development of custom-made machinery.",
+     "type": "Supplemental",
+     "onetCode": "41-9031.00",
+     "line": 12395
+    },
+    {
+     "id": 9687,
+     "text": "Provide technical and non-technical support and services to clients or other staff members regarding the use, operation, and maintenance of equipment.",
+     "type": "Supplemental",
+     "onetCode": "41-9031.00",
+     "line": 12396
+    },
+    {
+     "id": 9684,
+     "text": "Diagnose problems with installed equipment.",
+     "type": "Supplemental",
+     "onetCode": "41-9031.00",
+     "line": 12397
+    },
+    {
+     "id": 9695,
+     "text": "Write technical documentation for products.",
+     "type": "Supplemental",
+     "onetCode": "41-9031.00",
+     "line": 12398
+    },
+    {
+     "id": 9702,
+     "text": "Report to supervisors about prospective firms' credit ratings.",
+     "type": "Supplemental",
+     "onetCode": "41-9031.00",
+     "line": 12399
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L828",
+    "annualMedian": "oews:national_M2025_dl!AB828",
+    "annualMean": "oews:national_M2025_dl!S828",
+    "hourlyMedian": "oews:national_M2025_dl!W828",
+    "hourlyMean": "oews:national_M2025_dl!R828",
+    "annualPct10": "oews:national_M2025_dl!Z828",
+    "annualPct90": "oews:national_M2025_dl!AD828",
+    "annualOnly": "oews:national_M2025_dl!AE828",
+    "hourlyOnly": "oews:national_M2025_dl!AF828",
+    "title": "oews:national_M2025_dl!J828",
+    "ep.title": "ep:Table 1.2!A673",
+    "ep.employment2025": "ep:Table 1.2!D673",
+    "ep.employment2035": "ep:Table 1.2!E673",
+    "ep.numericChange": "ep:Table 1.2!H673",
+    "ep.percentChange": "ep:Table 1.2!I673",
+    "onetCode": "onet:Occupation Data.txt#L638:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L638:Description"
+   },
+   "nullReasons": {}
+  },
+  "41-9041": {
+   "soc": "41-9041",
+   "title": "Telemarketers",
+   "major": "41-0000",
+   "minor": "41-9000",
+   "broad": "41-9040",
+   "oewsRows": [
+    830
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 58430,
+   "annualMedian": 35450,
+   "annualMean": 37370,
+   "hourlyMedian": 17.04,
+   "hourlyMean": 17.97,
+   "annualPct10": 27040,
+   "annualPct90": 50350,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Telemarketers",
+    "employment2025": 60900,
+    "employment2035": 47800,
+    "numericChange": -13000,
+    "percentChange": -21.4
+   },
+   "onetCode": "41-9041.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Solicit donations or orders for goods or services over the telephone.",
+   "tasks": [
+    {
+     "id": 4619,
+     "text": "Contact businesses or private individuals by telephone to solicit sales for goods or services, or to request donations for charitable causes.",
+     "type": "Core",
+     "onetCode": "41-9041.00",
+     "line": 12400
+    },
+    {
+     "id": 4621,
+     "text": "Obtain customer information such as name, address, and payment method, and enter orders into computers.",
+     "type": "Core",
+     "onetCode": "41-9041.00",
+     "line": 12401
+    },
+    {
+     "id": 4620,
+     "text": "Explain products or services and prices, and answer questions from customers.",
+     "type": "Core",
+     "onetCode": "41-9041.00",
+     "line": 12402
+    },
+    {
+     "id": 4622,
+     "text": "Record names, addresses, purchases, and reactions of prospects contacted.",
+     "type": "Core",
+     "onetCode": "41-9041.00",
+     "line": 12403
+    },
+    {
+     "id": 4627,
+     "text": "Maintain records of contacts, accounts, and orders.",
+     "type": "Core",
+     "onetCode": "41-9041.00",
+     "line": 12404
+    },
+    {
+     "id": 4625,
+     "text": "Answer telephone calls from potential customers who have been solicited through advertisements.",
+     "type": "Core",
+     "onetCode": "41-9041.00",
+     "line": 12405
+    },
+    {
+     "id": 4618,
+     "text": "Deliver prepared sales talks, reading from scripts that describe products or services, to persuade potential customers to purchase a product or service or to make a donation.",
+     "type": "Core",
+     "onetCode": "41-9041.00",
+     "line": 12406
+    },
+    {
+     "id": 4626,
+     "text": "Telephone or write letters to respond to correspondence from customers or to follow up initial sales contacts.",
+     "type": "Core",
+     "onetCode": "41-9041.00",
+     "line": 12407
+    },
+    {
+     "id": 4623,
+     "text": "Adjust sales scripts to better target the needs and interests of specific individuals.",
+     "type": "Supplemental",
+     "onetCode": "41-9041.00",
+     "line": 12408
+    },
+    {
+     "id": 4624,
+     "text": "Obtain names and telephone numbers of potential customers from sources such as telephone directories, magazine reply cards, and lists purchased from other organizations.",
+     "type": "Supplemental",
+     "onetCode": "41-9041.00",
+     "line": 12409
+    },
+    {
+     "id": 4628,
+     "text": "Schedule appointments for sales representatives to meet with prospective customers or for customers to attend sales presentations.",
+     "type": "Supplemental",
+     "onetCode": "41-9041.00",
+     "line": 12410
+    },
+    {
+     "id": 4629,
+     "text": "Conduct client or market surveys to obtain information about potential customers.",
+     "type": "Supplemental",
+     "onetCode": "41-9041.00",
+     "line": 12411
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L830",
+    "annualMedian": "oews:national_M2025_dl!AB830",
+    "annualMean": "oews:national_M2025_dl!S830",
+    "hourlyMedian": "oews:national_M2025_dl!W830",
+    "hourlyMean": "oews:national_M2025_dl!R830",
+    "annualPct10": "oews:national_M2025_dl!Z830",
+    "annualPct90": "oews:national_M2025_dl!AD830",
+    "annualOnly": "oews:national_M2025_dl!AE830",
+    "hourlyOnly": "oews:national_M2025_dl!AF830",
+    "title": "oews:national_M2025_dl!J830",
+    "ep.title": "ep:Table 1.2!A674",
+    "ep.employment2025": "ep:Table 1.2!D674",
+    "ep.employment2035": "ep:Table 1.2!E674",
+    "ep.numericChange": "ep:Table 1.2!H674",
+    "ep.percentChange": "ep:Table 1.2!I674",
+    "onetCode": "onet:Occupation Data.txt#L639:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L639:Description"
+   },
+   "nullReasons": {}
+  },
+  "41-9091": {
+   "soc": "41-9091",
+   "title": "Door-to-Door Sales Workers, News and Street Vendors, and Related Workers",
+   "major": "41-0000",
+   "minor": "41-9000",
+   "broad": "41-9090",
+   "oewsRows": [
+    832
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 2760,
+   "annualMedian": 41380,
+   "annualMean": 43850,
+   "hourlyMedian": 19.89,
+   "hourlyMean": 21.08,
+   "annualPct10": 32010,
+   "annualPct90": 51470,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Door-to-door sales workers, news and street vendors, and related workers",
+    "employment2025": 50900,
+    "employment2035": 45600,
+    "numericChange": -5300,
+    "percentChange": -10.4
+   },
+   "onetCode": "41-9091.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Sell goods or services door-to-door or on the street.",
+   "tasks": [
+    {
+     "id": 13233,
+     "text": "Explain products or services and prices and demonstrate use of products.",
+     "type": "Core",
+     "onetCode": "41-9091.00",
+     "line": 12412
+    },
+    {
+     "id": 13238,
+     "text": "Develop prospect lists.",
+     "type": "Core",
+     "onetCode": "41-9091.00",
+     "line": 12413
+    },
+    {
+     "id": 13231,
+     "text": "Deliver merchandise and collect payment.",
+     "type": "Core",
+     "onetCode": "41-9091.00",
+     "line": 12414
+    },
+    {
+     "id": 13232,
+     "text": "Write and record orders for merchandise or enter orders into computers.",
+     "type": "Core",
+     "onetCode": "41-9091.00",
+     "line": 12415
+    },
+    {
+     "id": 13235,
+     "text": "Arrange buying parties and solicit sponsorship of such parties to sell merchandise.",
+     "type": "Core",
+     "onetCode": "41-9091.00",
+     "line": 12416
+    },
+    {
+     "id": 13236,
+     "text": "Answer questions about product features and benefits.",
+     "type": "Core",
+     "onetCode": "41-9091.00",
+     "line": 12417
+    },
+    {
+     "id": 13239,
+     "text": "Distribute product samples or literature that details products or services.",
+     "type": "Core",
+     "onetCode": "41-9091.00",
+     "line": 12418
+    },
+    {
+     "id": 13237,
+     "text": "Circulate among potential customers or travel by foot, truck, automobile, or bicycle to deliver or sell merchandise or services.",
+     "type": "Core",
+     "onetCode": "41-9091.00",
+     "line": 12419
+    },
+    {
+     "id": 21075,
+     "text": "Persuade customers to purchase merchandise or services.",
+     "type": "Core",
+     "onetCode": "41-9091.00",
+     "line": 12420
+    },
+    {
+     "id": 13241,
+     "text": "Set up and display sample merchandise at parties or stands.",
+     "type": "Core",
+     "onetCode": "41-9091.00",
+     "line": 12421
+    },
+    {
+     "id": 13240,
+     "text": "Order or purchase supplies.",
+     "type": "Core",
+     "onetCode": "41-9091.00",
+     "line": 12422
+    },
+    {
+     "id": 13242,
+     "text": "Stock carts or stands.",
+     "type": "Supplemental",
+     "onetCode": "41-9091.00",
+     "line": 12423
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L832",
+    "annualMedian": "oews:national_M2025_dl!AB832",
+    "annualMean": "oews:national_M2025_dl!S832",
+    "hourlyMedian": "oews:national_M2025_dl!W832",
+    "hourlyMean": "oews:national_M2025_dl!R832",
+    "annualPct10": "oews:national_M2025_dl!Z832",
+    "annualPct90": "oews:national_M2025_dl!AD832",
+    "annualOnly": "oews:national_M2025_dl!AE832",
+    "hourlyOnly": "oews:national_M2025_dl!AF832",
+    "title": "oews:national_M2025_dl!J832",
+    "ep.title": "ep:Table 1.2!A676",
+    "ep.employment2025": "ep:Table 1.2!D676",
+    "ep.employment2035": "ep:Table 1.2!E676",
+    "ep.numericChange": "ep:Table 1.2!H676",
+    "ep.percentChange": "ep:Table 1.2!I676",
+    "onetCode": "onet:Occupation Data.txt#L640:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L640:Description"
+   },
+   "nullReasons": {}
+  },
+  "41-9099": {
+   "soc": "41-9099",
+   "title": "Sales and Related Workers, All Other",
+   "major": "41-0000",
+   "minor": "41-9000",
+   "broad": "41-9090",
+   "oewsRows": [
+    833
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 93180,
+   "annualMedian": 48280,
+   "annualMean": 58510,
+   "hourlyMedian": 23.21,
+   "hourlyMean": 28.13,
+   "annualPct10": 29720,
+   "annualPct90": 97910,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Sales and related workers, all other",
+    "employment2025": 115300,
+    "employment2035": 116600,
+    "numericChange": 1300,
+    "percentChange": 1.1
+   },
+   "onetCode": "41-9099.00",
+   "onetTaskSource": "none",
+   "onetSubCodes": [],
+   "description": "All sales and related workers not listed separately.",
+   "tasks": [],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L833",
+    "annualMedian": "oews:national_M2025_dl!AB833",
+    "annualMean": "oews:national_M2025_dl!S833",
+    "hourlyMedian": "oews:national_M2025_dl!W833",
+    "hourlyMean": "oews:national_M2025_dl!R833",
+    "annualPct10": "oews:national_M2025_dl!Z833",
+    "annualPct90": "oews:national_M2025_dl!AD833",
+    "annualOnly": "oews:national_M2025_dl!AE833",
+    "hourlyOnly": "oews:national_M2025_dl!AF833",
+    "title": "oews:national_M2025_dl!J833",
+    "ep.title": "ep:Table 1.2!A677",
+    "ep.employment2025": "ep:Table 1.2!D677",
+    "ep.employment2035": "ep:Table 1.2!E677",
+    "ep.numericChange": "ep:Table 1.2!H677",
+    "ep.percentChange": "ep:Table 1.2!I677",
+    "onetCode": "onet:Occupation Data.txt#L641:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L641:Description"
+   },
+   "nullReasons": {
+    "tasks": "O*NET 30.1 has no task statements for 41-9099.00"
+   }
+  }
+ }
+}

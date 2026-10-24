@@ -1,10 +1,12 @@
 # Raw BLS / O*NET dumps — never needed for feature or UI work
 data/all_data_M_2023.xlsx
+data/bls_ep_occupation_2025_35.xlsx
 data/db_30_1_text/
 
 # Large bundled data — grep or read selectively; do not dump whole files
 src/data/geo_real.json
 src/data/ai_scores.json
+src/data/occupations/
 
 # Build / cache noise
 dist/

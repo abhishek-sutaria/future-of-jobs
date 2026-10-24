@@ -1,0 +1,5862 @@
+{
+ "_meta": {
+  "continent": "15-0000",
+  "title": "Computer and Mathematical Occupations",
+  "sources": "see index.json _meta.sources; source refs are <source>:<sheet>!<cell> or <source>:<file>#L<line>:<column>",
+  "extracted": "2026-10-24",
+  "generator": "python3 scripts/build_occupations.py"
+ },
+ "broadGroups": [
+  {
+   "soc": "15-1210",
+   "title": "Computer and Information Analysts",
+   "minor": "15-1200",
+   "employment": 710180,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L134",
+    "title": "oews:national_M2025_dl!J134"
+   }
+  },
+  {
+   "soc": "15-1220",
+   "title": "Computer and Information Research Scientists",
+   "minor": "15-1200",
+   "employment": 37200,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L137",
+    "title": "oews:national_M2025_dl!J137"
+   }
+  },
+  {
+   "soc": "15-1230",
+   "title": "Computer Support Specialists",
+   "minor": "15-1200",
+   "employment": 863380,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L139",
+    "title": "oews:national_M2025_dl!J139"
+   }
+  },
+  {
+   "soc": "15-1240",
+   "title": "Database and Network Administrators and Architects",
+   "minor": "15-1200",
+   "employment": 631200,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L142",
+    "title": "oews:national_M2025_dl!J142"
+   }
+  },
+  {
+   "soc": "15-1250",
+   "title": "Software and Web Developers, Programmers, and Testers",
+   "minor": "15-1200",
+   "employment": 2150380,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L147",
+    "title": "oews:national_M2025_dl!J147"
+   }
+  },
+  {
+   "soc": "15-1290",
+   "title": "Miscellaneous Computer Occupations",
+   "minor": "15-1200",
+   "employment": 435370,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L153",
+    "title": "oews:national_M2025_dl!J153"
+   }
+  },
+  {
+   "soc": "15-2010",
+   "title": "Actuaries",
+   "minor": "15-2000",
+   "employment": 26670,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L156",
+    "title": "oews:national_M2025_dl!J156"
+   }
+  },
+  {
+   "soc": "15-2020",
+   "title": "Mathematicians",
+   "minor": "15-2000",
+   "employment": 2030,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L158",
+    "title": "oews:national_M2025_dl!J158"
+   }
+  },
+  {
+   "soc": "15-2030",
+   "title": "Operations Research Analysts",
+   "minor": "15-2000",
+   "employment": 108510,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L160",
+    "title": "oews:national_M2025_dl!J160"
+   }
+  },
+  {
+   "soc": "15-2040",
+   "title": "Statisticians",
+   "minor": "15-2000",
+   "employment": 29030,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L162",
+    "title": "oews:national_M2025_dl!J162"
+   }
+  },
+  {
+   "soc": "15-2050",
+   "title": "Data Scientists",
+   "minor": "15-2000",
+   "employment": 262440,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L164",
+    "title": "oews:national_M2025_dl!J164"
+   }
+  },
+  {
+   "soc": "15-2090",
+   "title": "Miscellaneous Mathematical Science Occupations",
+   "minor": "15-2000",
+   "employment": 3720,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L166",
+    "title": "oews:national_M2025_dl!J166"
+   }
+  }
+ ],
+ "occupations": {
+  "15-1211": {
+   "soc": "15-1211",
+   "title": "Computer Systems Analysts",
+   "major": "15-0000",
+   "minor": "15-1200",
+   "broad": "15-1210",
+   "oewsRows": [
+    135
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 519530,
+   "annualMedian": 105850,
+   "annualMean": 114610,
+   "hourlyMedian": 50.89,
+   "hourlyMean": 55.1,
+   "annualPct10": 67340,
+   "annualPct90": 167710,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Computer systems analysts",
+    "employment2025": 544400,
+    "employment2035": 587200,
+    "numericChange": 42900,
+    "percentChange": 7.9
+   },
+   "onetCode": "15-1211.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [
+    {
+     "code": "15-1211.01",
+     "title": "Health Informatics Specialists",
+     "taskCount": 17
+    }
+   ],
+   "description": "Analyze science, engineering, business, and other data processing problems to develop and implement solutions to complex applications problems, system administration issues, or network concerns. Perform systems management and integration functions, improve existing computer systems, and review computer system capabilities, workflow, and schedule limitations. May analyze or recommend commercially available software.",
+   "tasks": [
+    {
+     "id": 20950,
+     "text": "Troubleshoot program and system malfunctions to restore normal functioning.",
+     "type": "Core",
+     "onetCode": "15-1211.00",
+     "line": 2210
+    },
+    {
+     "id": 3464,
+     "text": "Provide staff and users with assistance solving computer-related problems, such as malfunctions and program problems.",
+     "type": "Core",
+     "onetCode": "15-1211.00",
+     "line": 2211
+    },
+    {
+     "id": 3465,
+     "text": "Test, maintain, and monitor computer programs and systems, including coordinating the installation of computer programs and systems.",
+     "type": "Core",
+     "onetCode": "15-1211.00",
+     "line": 2212
+    },
+    {
+     "id": 3482,
+     "text": "Use the computer in the analysis and solution of business problems, such as development of integrated production and inventory control and cost analysis systems.",
+     "type": "Core",
+     "onetCode": "15-1211.00",
+     "line": 2213
+    },
+    {
+     "id": 3468,
+     "text": "Coordinate and link the computer systems within an organization to increase compatibility so that information can be shared.",
+     "type": "Core",
+     "onetCode": "15-1211.00",
+     "line": 2214
+    },
+    {
+     "id": 3466,
+     "text": "Use object-oriented programming languages, as well as client and server applications development processes and multimedia and Internet technology.",
+     "type": "Core",
+     "onetCode": "15-1211.00",
+     "line": 2215
+    },
+    {
+     "id": 3474,
+     "text": "Analyze information processing or computation needs and plan and design computer systems, using techniques such as structured analysis, data modeling, and information engineering.",
+     "type": "Core",
+     "onetCode": "15-1211.00",
+     "line": 2216
+    },
+    {
+     "id": 3469,
+     "text": "Consult with management to ensure agreement on system principles.",
+     "type": "Core",
+     "onetCode": "15-1211.00",
+     "line": 2217
+    },
+    {
+     "id": 3484,
+     "text": "Specify inputs accessed by the system and plan the distribution and use of the results.",
+     "type": "Core",
+     "onetCode": "15-1211.00",
+     "line": 2218
+    },
+    {
+     "id": 3470,
+     "text": "Expand or modify system to serve new purposes or improve work flow.",
+     "type": "Core",
+     "onetCode": "15-1211.00",
+     "line": 2219
+    },
+    {
+     "id": 3473,
+     "text": "Train staff and users to work with computer systems and programs.",
+     "type": "Core",
+     "onetCode": "15-1211.00",
+     "line": 2220
+    },
+    {
+     "id": 3475,
+     "text": "Assess the usefulness of pre-developed application packages and adapt them to a user environment.",
+     "type": "Core",
+     "onetCode": "15-1211.00",
+     "line": 2221
+    },
+    {
+     "id": 3472,
+     "text": "Determine computer software or hardware needed to set up or alter systems.",
+     "type": "Core",
+     "onetCode": "15-1211.00",
+     "line": 2222
+    },
+    {
+     "id": 3480,
+     "text": "Read manuals, periodicals, and technical reports to learn how to develop programs that meet staff and user requirements.",
+     "type": "Core",
+     "onetCode": "15-1211.00",
+     "line": 2223
+    },
+    {
+     "id": 3477,
+     "text": "Develop, document, and revise system design procedures, test procedures, and quality standards.",
+     "type": "Core",
+     "onetCode": "15-1211.00",
+     "line": 2224
+    },
+    {
+     "id": 3479,
+     "text": "Recommend new equipment or software packages.",
+     "type": "Core",
+     "onetCode": "15-1211.00",
+     "line": 2225
+    },
+    {
+     "id": 3476,
+     "text": "Define the goals of the system and devise flow charts and diagrams describing logical operational steps of programs.",
+     "type": "Core",
+     "onetCode": "15-1211.00",
+     "line": 2226
+    },
+    {
+     "id": 3467,
+     "text": "Confer with clients regarding the nature of the information processing or computation needs a computer program is to address.",
+     "type": "Core",
+     "onetCode": "15-1211.00",
+     "line": 2227
+    },
+    {
+     "id": 3478,
+     "text": "Review and analyze computer printouts and performance indicators to locate code problems, and correct errors by correcting codes.",
+     "type": "Supplemental",
+     "onetCode": "15-1211.00",
+     "line": 2228
+    },
+    {
+     "id": 3471,
+     "text": "Interview or survey workers, observe job performance, or perform the job to determine what information is processed and how it is processed.",
+     "type": "Supplemental",
+     "onetCode": "15-1211.00",
+     "line": 2229
+    },
+    {
+     "id": 3481,
+     "text": "Supervise computer programmers or other systems analysts or serve as project leaders for particular systems projects.",
+     "type": "Supplemental",
+     "onetCode": "15-1211.00",
+     "line": 2230
+    },
+    {
+     "id": 3483,
+     "text": "Prepare cost-benefit and return-on-investment analyses to aid in decisions on system implementation.",
+     "type": "Supplemental",
+     "onetCode": "15-1211.00",
+     "line": 2231
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "kelleyTracks": [
+    "Analytics"
+   ],
+   "kelleyTitles": [
+    "Computer Systems Analyst"
+   ],
+   "sources": {
+    "employment": "oews:national_M2025_dl!L135",
+    "annualMedian": "oews:national_M2025_dl!AB135",
+    "annualMean": "oews:national_M2025_dl!S135",
+    "hourlyMedian": "oews:national_M2025_dl!W135",
+    "hourlyMean": "oews:national_M2025_dl!R135",
+    "annualPct10": "oews:national_M2025_dl!Z135",
+    "annualPct90": "oews:national_M2025_dl!AD135",
+    "annualOnly": "oews:national_M2025_dl!AE135",
+    "hourlyOnly": "oews:national_M2025_dl!AF135",
+    "title": "oews:national_M2025_dl!J135",
+    "ep.title": "ep:Table 1.2!A96",
+    "ep.employment2025": "ep:Table 1.2!D96",
+    "ep.employment2035": "ep:Table 1.2!E96",
+    "ep.numericChange": "ep:Table 1.2!H96",
+    "ep.percentChange": "ep:Table 1.2!I96",
+    "onetCode": "onet:Occupation Data.txt#L111:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L111:Description"
+   },
+   "nullReasons": {}
+  },
+  "15-1212": {
+   "soc": "15-1212",
+   "title": "Information Security Analysts",
+   "major": "15-0000",
+   "minor": "15-1200",
+   "broad": "15-1210",
+   "oewsRows": [
+    136
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 190650,
+   "annualMedian": 129180,
+   "annualMean": 132510,
+   "hourlyMedian": 62.11,
+   "hourlyMean": 63.71,
+   "annualPct10": 75090,
+   "annualPct90": 199850,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Information security analysts",
+    "employment2025": 192900,
+    "employment2035": 233400,
+    "numericChange": 40600,
+    "percentChange": 21
+   },
+   "onetCode": "15-1212.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Plan, implement, upgrade, or monitor security measures for the protection of computer networks and information. Assess system vulnerabilities for security risks and propose and implement risk mitigation strategies. May ensure appropriate security controls are in place that will safeguard digital files and vital electronic infrastructure. May respond to computer security breaches and viruses.",
+   "tasks": [
+    {
+     "id": 5314,
+     "text": "Develop plans to safeguard computer files against accidental or unauthorized modification, destruction, or disclosure and to meet emergency data processing needs.",
+     "type": "Core",
+     "onetCode": "15-1212.00",
+     "line": 2249
+    },
+    {
+     "id": 5316,
+     "text": "Monitor current reports of computer viruses to determine when to update virus protection systems.",
+     "type": "Core",
+     "onetCode": "15-1212.00",
+     "line": 2250
+    },
+    {
+     "id": 5321,
+     "text": "Encrypt data transmissions and erect firewalls to conceal confidential information as it is being transmitted and to keep out tainted digital transfers.",
+     "type": "Core",
+     "onetCode": "15-1212.00",
+     "line": 2251
+    },
+    {
+     "id": 5320,
+     "text": "Perform risk assessments and execute tests of data processing system to ensure functioning of data processing activities and security measures.",
+     "type": "Core",
+     "onetCode": "15-1212.00",
+     "line": 2252
+    },
+    {
+     "id": 5317,
+     "text": "Modify computer security files to incorporate new software, correct errors, or change individual access status.",
+     "type": "Core",
+     "onetCode": "15-1212.00",
+     "line": 2253
+    },
+    {
+     "id": 5323,
+     "text": "Review violations of computer security procedures and discuss procedures with violators to ensure violations are not repeated.",
+     "type": "Core",
+     "onetCode": "15-1212.00",
+     "line": 2254
+    },
+    {
+     "id": 5322,
+     "text": "Document computer security and emergency measures policies, procedures, and tests.",
+     "type": "Core",
+     "onetCode": "15-1212.00",
+     "line": 2255
+    },
+    {
+     "id": 5315,
+     "text": "Confer with users to discuss issues such as computer data access needs, security violations, and programming changes.",
+     "type": "Core",
+     "onetCode": "15-1212.00",
+     "line": 2256
+    },
+    {
+     "id": 5319,
+     "text": "Monitor use of data files and regulate access to safeguard information in computer files.",
+     "type": "Core",
+     "onetCode": "15-1212.00",
+     "line": 2257
+    },
+    {
+     "id": 5318,
+     "text": "Coordinate implementation of computer system plan with establishment personnel and outside vendors.",
+     "type": "Core",
+     "onetCode": "15-1212.00",
+     "line": 2258
+    },
+    {
+     "id": 5313,
+     "text": "Train users and promote security awareness to ensure system security and to improve server and network efficiency.",
+     "type": "Core",
+     "onetCode": "15-1212.00",
+     "line": 2259
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "kelleyTracks": [
+    "Tech"
+   ],
+   "kelleyTitles": [
+    "Cybersecurity Analyst"
+   ],
+   "sources": {
+    "employment": "oews:national_M2025_dl!L136",
+    "annualMedian": "oews:national_M2025_dl!AB136",
+    "annualMean": "oews:national_M2025_dl!S136",
+    "hourlyMedian": "oews:national_M2025_dl!W136",
+    "hourlyMean": "oews:national_M2025_dl!R136",
+    "annualPct10": "oews:national_M2025_dl!Z136",
+    "annualPct90": "oews:national_M2025_dl!AD136",
+    "annualOnly": "oews:national_M2025_dl!AE136",
+    "hourlyOnly": "oews:national_M2025_dl!AF136",
+    "title": "oews:national_M2025_dl!J136",
+    "ep.title": "ep:Table 1.2!A97",
+    "ep.employment2025": "ep:Table 1.2!D97",
+    "ep.employment2035": "ep:Table 1.2!E97",
+    "ep.numericChange": "ep:Table 1.2!H97",
+    "ep.percentChange": "ep:Table 1.2!I97",
+    "onetCode": "onet:Occupation Data.txt#L113:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L113:Description"
+   },
+   "nullReasons": {}
+  },
+  "15-1221": {
+   "soc": "15-1221",
+   "title": "Computer and Information Research Scientists",
+   "major": "15-0000",
+   "minor": "15-1200",
+   "broad": "15-1220",
+   "oewsRows": [
+    138
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 37200,
+   "annualMedian": 140300,
+   "annualMean": 153930,
+   "hourlyMedian": 67.45,
+   "hourlyMean": 74,
+   "annualPct10": 82200,
+   "annualPct90": 230630,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Computer and information research scientists",
+    "employment2025": 38600,
+    "employment2035": 47000,
+    "numericChange": 8400,
+    "percentChange": 21.8
+   },
+   "onetCode": "15-1221.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Conduct research into fundamental computer and information science as theorists, designers, or inventors. Develop solutions to problems in the field of computer hardware and software.",
+   "tasks": [
+    {
+     "id": 14623,
+     "text": "Analyze problems to develop solutions involving computer hardware and software.",
+     "type": "Core",
+     "onetCode": "15-1221.00",
+     "line": 2260
+    },
+    {
+     "id": 14626,
+     "text": "Apply theoretical expertise and innovation to create or apply new technology, such as adapting principles for applying computers to new uses.",
+     "type": "Core",
+     "onetCode": "15-1221.00",
+     "line": 2261
+    },
+    {
+     "id": 14624,
+     "text": "Assign or schedule tasks to meet work priorities and goals.",
+     "type": "Core",
+     "onetCode": "15-1221.00",
+     "line": 2262
+    },
+    {
+     "id": 14628,
+     "text": "Meet with managers, vendors, and others to solicit cooperation and resolve problems.",
+     "type": "Core",
+     "onetCode": "15-1221.00",
+     "line": 2263
+    },
+    {
+     "id": 14633,
+     "text": "Design computers and the software that runs them.",
+     "type": "Core",
+     "onetCode": "15-1221.00",
+     "line": 2264
+    },
+    {
+     "id": 14629,
+     "text": "Conduct logical analyses of business, scientific, engineering, and other technical problems, formulating mathematical models of problems for solution by computers.",
+     "type": "Core",
+     "onetCode": "15-1221.00",
+     "line": 2265
+    },
+    {
+     "id": 14625,
+     "text": "Evaluate project plans and proposals to assess feasibility issues.",
+     "type": "Core",
+     "onetCode": "15-1221.00",
+     "line": 2266
+    },
+    {
+     "id": 14635,
+     "text": "Participate in multidisciplinary projects in areas such as virtual reality, human-computer interaction, or robotics.",
+     "type": "Core",
+     "onetCode": "15-1221.00",
+     "line": 2267
+    },
+    {
+     "id": 14627,
+     "text": "Consult with users, management, vendors, and technicians to determine computing needs and system requirements.",
+     "type": "Core",
+     "onetCode": "15-1221.00",
+     "line": 2268
+    },
+    {
+     "id": 14630,
+     "text": "Develop and interpret organizational goals, policies, and procedures.",
+     "type": "Core",
+     "onetCode": "15-1221.00",
+     "line": 2269
+    },
+    {
+     "id": 14632,
+     "text": "Develop performance standards, and evaluate work in light of established standards.",
+     "type": "Core",
+     "onetCode": "15-1221.00",
+     "line": 2270
+    },
+    {
+     "id": 14634,
+     "text": "Maintain network hardware and software, direct network security measures, and monitor networks to ensure availability to system users.",
+     "type": "Supplemental",
+     "onetCode": "15-1221.00",
+     "line": 2271
+    },
+    {
+     "id": 14637,
+     "text": "Direct daily operations of departments, coordinating project activities with other departments.",
+     "type": "Supplemental",
+     "onetCode": "15-1221.00",
+     "line": 2272
+    },
+    {
+     "id": 14631,
+     "text": "Participate in staffing decisions and direct training of subordinates.",
+     "type": "Supplemental",
+     "onetCode": "15-1221.00",
+     "line": 2273
+    },
+    {
+     "id": 14636,
+     "text": "Approve, prepare, monitor, and adjust operational budgets.",
+     "type": "Supplemental",
+     "onetCode": "15-1221.00",
+     "line": 2274
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L138",
+    "annualMedian": "oews:national_M2025_dl!AB138",
+    "annualMean": "oews:national_M2025_dl!S138",
+    "hourlyMedian": "oews:national_M2025_dl!W138",
+    "hourlyMean": "oews:national_M2025_dl!R138",
+    "annualPct10": "oews:national_M2025_dl!Z138",
+    "annualPct90": "oews:national_M2025_dl!AD138",
+    "annualOnly": "oews:national_M2025_dl!AE138",
+    "hourlyOnly": "oews:national_M2025_dl!AF138",
+    "title": "oews:national_M2025_dl!J138",
+    "ep.title": "ep:Table 1.2!A98",
+    "ep.employment2025": "ep:Table 1.2!D98",
+    "ep.employment2035": "ep:Table 1.2!E98",
+    "ep.numericChange": "ep:Table 1.2!H98",
+    "ep.percentChange": "ep:Table 1.2!I98",
+    "onetCode": "onet:Occupation Data.txt#L114:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L114:Description"
+   },
+   "nullReasons": {}
+  },
+  "15-1231": {
+   "soc": "15-1231",
+   "title": "Computer Network Support Specialists",
+   "major": "15-0000",
+   "minor": "15-1200",
+   "broad": "15-1230",
+   "oewsRows": [
+    140
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 146190,
+   "annualMedian": 76220,
+   "annualMean": 81870,
+   "hourlyMedian": 36.64,
+   "hourlyMean": 39.36,
+   "annualPct10": 47120,
+   "annualPct90": 127780,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Computer network support specialists",
+    "employment2025": 152500,
+    "employment2035": 154400,
+    "numericChange": 1900,
+    "percentChange": 1.2
+   },
+   "onetCode": "15-1231.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Analyze, test, troubleshoot, and evaluate existing network systems, such as local area networks (LAN), wide area networks (WAN), cloud networks, servers, and other data communications networks. Perform network maintenance to ensure networks operate correctly with minimal interruption.",
+   "tasks": [
+    {
+     "id": 19004,
+     "text": "Back up network data.",
+     "type": "Core",
+     "onetCode": "15-1231.00",
+     "line": 2275
+    },
+    {
+     "id": 18991,
+     "text": "Configure security settings or access permissions for groups or individuals.",
+     "type": "Core",
+     "onetCode": "15-1231.00",
+     "line": 2276
+    },
+    {
+     "id": 19003,
+     "text": "Analyze and report computer network security breaches or attempted breaches.",
+     "type": "Core",
+     "onetCode": "15-1231.00",
+     "line": 2277
+    },
+    {
+     "id": 18995,
+     "text": "Identify the causes of networking problems, using diagnostic testing software and equipment.",
+     "type": "Core",
+     "onetCode": "15-1231.00",
+     "line": 2278
+    },
+    {
+     "id": 18993,
+     "text": "Document network support activities.",
+     "type": "Core",
+     "onetCode": "15-1231.00",
+     "line": 2279
+    },
+    {
+     "id": 18992,
+     "text": "Configure wide area network (WAN) or local area network (LAN) routers or related equipment.",
+     "type": "Core",
+     "onetCode": "15-1231.00",
+     "line": 2280
+    },
+    {
+     "id": 18997,
+     "text": "Install network software, including security or firewall software.",
+     "type": "Core",
+     "onetCode": "15-1231.00",
+     "line": 2281
+    },
+    {
+     "id": 19002,
+     "text": "Troubleshoot network or connectivity problems for users or user groups.",
+     "type": "Core",
+     "onetCode": "15-1231.00",
+     "line": 2282
+    },
+    {
+     "id": 19010,
+     "text": "Provide telephone support related to networking or connectivity issues.",
+     "type": "Core",
+     "onetCode": "15-1231.00",
+     "line": 2283
+    },
+    {
+     "id": 18994,
+     "text": "Evaluate local area network (LAN) or wide area network (WAN) performance data to ensure sufficient availability or speed, to identify network problems, or for disaster recovery purposes.",
+     "type": "Core",
+     "onetCode": "15-1231.00",
+     "line": 2284
+    },
+    {
+     "id": 18989,
+     "text": "Analyze network data to determine network usage, disk space availability, or server function.",
+     "type": "Core",
+     "onetCode": "15-1231.00",
+     "line": 2285
+    },
+    {
+     "id": 19000,
+     "text": "Perform routine maintenance or standard repairs to networking components or equipment.",
+     "type": "Core",
+     "onetCode": "15-1231.00",
+     "line": 2286
+    },
+    {
+     "id": 18990,
+     "text": "Configure and define parameters for installation or testing of local area network (LAN), wide area network (WAN), hubs, routers, switches, controllers, multiplexers, or related networking equipment.",
+     "type": "Core",
+     "onetCode": "15-1231.00",
+     "line": 2287
+    },
+    {
+     "id": 18998,
+     "text": "Install new hardware or software systems or components, ensuring integration with existing network systems.",
+     "type": "Core",
+     "onetCode": "15-1231.00",
+     "line": 2288
+    },
+    {
+     "id": 19001,
+     "text": "Test computer software or hardware, using standard diagnostic testing equipment and procedures.",
+     "type": "Core",
+     "onetCode": "15-1231.00",
+     "line": 2289
+    },
+    {
+     "id": 18999,
+     "text": "Install or repair network cables, including fiber optic cables.",
+     "type": "Core",
+     "onetCode": "15-1231.00",
+     "line": 2290
+    },
+    {
+     "id": 19009,
+     "text": "Monitor industry Web sites or publications for information about patches, releases, viruses, or potential problem identification.",
+     "type": "Core",
+     "onetCode": "15-1231.00",
+     "line": 2291
+    },
+    {
+     "id": 19006,
+     "text": "Create or update technical documentation for network installations or changes to existing installations.",
+     "type": "Core",
+     "onetCode": "15-1231.00",
+     "line": 2292
+    },
+    {
+     "id": 19014,
+     "text": "Train users in procedures related to network applications software or related systems.",
+     "type": "Core",
+     "onetCode": "15-1231.00",
+     "line": 2293
+    },
+    {
+     "id": 19013,
+     "text": "Test repaired items to ensure proper operation.",
+     "type": "Core",
+     "onetCode": "15-1231.00",
+     "line": 2294
+    },
+    {
+     "id": 18996,
+     "text": "Install and configure wireless networking equipment.",
+     "type": "Core",
+     "onetCode": "15-1231.00",
+     "line": 2295
+    },
+    {
+     "id": 19008,
+     "text": "Maintain logs of network activity.",
+     "type": "Core",
+     "onetCode": "15-1231.00",
+     "line": 2296
+    },
+    {
+     "id": 19007,
+     "text": "Document help desk requests and resolutions.",
+     "type": "Core",
+     "onetCode": "15-1231.00",
+     "line": 2297
+    },
+    {
+     "id": 19011,
+     "text": "Research hardware or software products to meet technical networking or security needs.",
+     "type": "Core",
+     "onetCode": "15-1231.00",
+     "line": 2298
+    },
+    {
+     "id": 19005,
+     "text": "Create or revise user instructions, procedures, or manuals.",
+     "type": "Core",
+     "onetCode": "15-1231.00",
+     "line": 2299
+    },
+    {
+     "id": 19012,
+     "text": "Run monthly network reports.",
+     "type": "Core",
+     "onetCode": "15-1231.00",
+     "line": 2300
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L140",
+    "annualMedian": "oews:national_M2025_dl!AB140",
+    "annualMean": "oews:national_M2025_dl!S140",
+    "hourlyMedian": "oews:national_M2025_dl!W140",
+    "hourlyMean": "oews:national_M2025_dl!R140",
+    "annualPct10": "oews:national_M2025_dl!Z140",
+    "annualPct90": "oews:national_M2025_dl!AD140",
+    "annualOnly": "oews:national_M2025_dl!AE140",
+    "hourlyOnly": "oews:national_M2025_dl!AF140",
+    "title": "oews:national_M2025_dl!J140",
+    "ep.title": "ep:Table 1.2!A100",
+    "ep.employment2025": "ep:Table 1.2!D100",
+    "ep.employment2035": "ep:Table 1.2!E100",
+    "ep.numericChange": "ep:Table 1.2!H100",
+    "ep.percentChange": "ep:Table 1.2!I100",
+    "onetCode": "onet:Occupation Data.txt#L115:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L115:Description"
+   },
+   "nullReasons": {}
+  },
+  "15-1232": {
+   "soc": "15-1232",
+   "title": "Computer User Support Specialists",
+   "major": "15-0000",
+   "minor": "15-1200",
+   "broad": "15-1230",
+   "oewsRows": [
+    141
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 717190,
+   "annualMedian": 61860,
+   "annualMean": 67330,
+   "hourlyMedian": 29.74,
+   "hourlyMean": 32.37,
+   "annualPct10": 40980,
+   "annualPct90": 100540,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Computer user support specialists",
+    "employment2025": 750600,
+    "employment2035": 724400,
+    "numericChange": -26200,
+    "percentChange": -3.5
+   },
+   "onetCode": "15-1232.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Provide technical assistance to computer users. Answer questions or resolve computer problems for clients in person, via telephone, or electronically. May provide assistance concerning the use of computer hardware and software, including printing, installation, word processing, electronic mail, and operating systems.",
+   "tasks": [
+    {
+     "id": 1285,
+     "text": "Oversee the daily performance of computer systems.",
+     "type": "Core",
+     "onetCode": "15-1232.00",
+     "line": 2301
+    },
+    {
+     "id": 1286,
+     "text": "Set up equipment for employee use, performing or ensuring proper installation of cables, operating systems, or appropriate software.",
+     "type": "Core",
+     "onetCode": "15-1232.00",
+     "line": 2302
+    },
+    {
+     "id": 1288,
+     "text": "Read technical manuals, confer with users, or conduct computer diagnostics to investigate and resolve problems or to provide technical assistance and support.",
+     "type": "Core",
+     "onetCode": "15-1232.00",
+     "line": 2303
+    },
+    {
+     "id": 1282,
+     "text": "Answer user inquiries regarding computer software or hardware operation to resolve problems.",
+     "type": "Core",
+     "onetCode": "15-1232.00",
+     "line": 2304
+    },
+    {
+     "id": 1284,
+     "text": "Install and perform minor repairs to hardware, software, or peripheral equipment, following design or installation specifications.",
+     "type": "Core",
+     "onetCode": "15-1232.00",
+     "line": 2305
+    },
+    {
+     "id": 1289,
+     "text": "Confer with staff, users, and management to establish requirements for new systems or modifications.",
+     "type": "Core",
+     "onetCode": "15-1232.00",
+     "line": 2306
+    },
+    {
+     "id": 1283,
+     "text": "Enter commands and observe system functioning to verify correct operations and detect errors.",
+     "type": "Core",
+     "onetCode": "15-1232.00",
+     "line": 2307
+    },
+    {
+     "id": 1287,
+     "text": "Maintain records of daily data communication transactions, problems and remedial actions taken, or installation activities.",
+     "type": "Core",
+     "onetCode": "15-1232.00",
+     "line": 2308
+    },
+    {
+     "id": 1291,
+     "text": "Refer major hardware or software problems or defective products to vendors or technicians for service.",
+     "type": "Core",
+     "onetCode": "15-1232.00",
+     "line": 2309
+    },
+    {
+     "id": 1292,
+     "text": "Prepare evaluations of software or hardware, and recommend improvements or upgrades.",
+     "type": "Core",
+     "onetCode": "15-1232.00",
+     "line": 2310
+    },
+    {
+     "id": 1290,
+     "text": "Develop training materials and procedures, or train users in the proper use of hardware or software.",
+     "type": "Core",
+     "onetCode": "15-1232.00",
+     "line": 2311
+    },
+    {
+     "id": 1295,
+     "text": "Inspect equipment and read order sheets to prepare for delivery to users.",
+     "type": "Core",
+     "onetCode": "15-1232.00",
+     "line": 2312
+    },
+    {
+     "id": 1293,
+     "text": "Read trade magazines and technical manuals, or attend conferences and seminars to maintain knowledge of hardware and software.",
+     "type": "Core",
+     "onetCode": "15-1232.00",
+     "line": 2313
+    },
+    {
+     "id": 1297,
+     "text": "Conduct office automation feasibility studies, including workflow analysis, space design, or cost comparison analysis.",
+     "type": "Supplemental",
+     "onetCode": "15-1232.00",
+     "line": 2314
+    },
+    {
+     "id": 15204,
+     "text": "Hire, supervise, and direct workers engaged in special project work, problem-solving, monitoring, and installation of data communication equipment and software.",
+     "type": "Supplemental",
+     "onetCode": "15-1232.00",
+     "line": 2315
+    },
+    {
+     "id": 1296,
+     "text": "Modify and customize commercial programs for internal needs.",
+     "type": "Supplemental",
+     "onetCode": "15-1232.00",
+     "line": 2316
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L141",
+    "annualMedian": "oews:national_M2025_dl!AB141",
+    "annualMean": "oews:national_M2025_dl!S141",
+    "hourlyMedian": "oews:national_M2025_dl!W141",
+    "hourlyMean": "oews:national_M2025_dl!R141",
+    "annualPct10": "oews:national_M2025_dl!Z141",
+    "annualPct90": "oews:national_M2025_dl!AD141",
+    "annualOnly": "oews:national_M2025_dl!AE141",
+    "hourlyOnly": "oews:national_M2025_dl!AF141",
+    "title": "oews:national_M2025_dl!J141",
+    "ep.title": "ep:Table 1.2!A101",
+    "ep.employment2025": "ep:Table 1.2!D101",
+    "ep.employment2035": "ep:Table 1.2!E101",
+    "ep.numericChange": "ep:Table 1.2!H101",
+    "ep.percentChange": "ep:Table 1.2!I101",
+    "onetCode": "onet:Occupation Data.txt#L116:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L116:Description"
+   },
+   "nullReasons": {}
+  },
+  "15-1241": {
+   "soc": "15-1241",
+   "title": "Computer Network Architects",
+   "major": "15-0000",
+   "minor": "15-1200",
+   "broad": "15-1240",
+   "oewsRows": [
+    143
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 179740,
+   "annualMedian": 134050,
+   "annualMean": 139580,
+   "hourlyMedian": 64.45,
+   "hourlyMean": 67.11,
+   "annualPct10": 79900,
+   "annualPct90": 202680,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Computer network architects",
+    "employment2025": 181800,
+    "employment2035": 195800,
+    "numericChange": 14100,
+    "percentChange": 7.7
+   },
+   "onetCode": "15-1241.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [
+    {
+     "code": "15-1241.01",
+     "title": "Telecommunications Engineering Specialists",
+     "taskCount": 26
+    }
+   ],
+   "description": "Design and implement computer and information networks, such as local area networks (LAN), wide area networks (WAN), intranets, extranets, and other data communications networks. Perform network modeling, analysis, and planning, including analysis of capacity needs for network infrastructures. May also design network and computer security measures. May research and recommend network and data communications hardware and software.",
+   "tasks": [
+    {
+     "id": 18968,
+     "text": "Develop disaster recovery plans.",
+     "type": "Core",
+     "onetCode": "15-1241.00",
+     "line": 2317
+    },
+    {
+     "id": 18971,
+     "text": "Develop or recommend network security measures, such as firewalls, network security audits, or automated security probes.",
+     "type": "Core",
+     "onetCode": "15-1241.00",
+     "line": 2318
+    },
+    {
+     "id": 18965,
+     "text": "Develop and implement solutions for network problems.",
+     "type": "Core",
+     "onetCode": "15-1241.00",
+     "line": 2319
+    },
+    {
+     "id": 18977,
+     "text": "Maintain networks by performing activities such as file addition, deletion, or backup.",
+     "type": "Core",
+     "onetCode": "15-1241.00",
+     "line": 2320
+    },
+    {
+     "id": 18960,
+     "text": "Coordinate network operations, maintenance, repairs, or upgrades.",
+     "type": "Core",
+     "onetCode": "15-1241.00",
+     "line": 2321
+    },
+    {
+     "id": 18959,
+     "text": "Coordinate installation of new equipment.",
+     "type": "Core",
+     "onetCode": "15-1241.00",
+     "line": 2322
+    },
+    {
+     "id": 18979,
+     "text": "Monitor and analyze network performance and reports on data input or output to detect problems, identify inefficient use of computer resources, or perform capacity planning.",
+     "type": "Core",
+     "onetCode": "15-1241.00",
+     "line": 2323
+    },
+    {
+     "id": 18969,
+     "text": "Develop network-related documentation.",
+     "type": "Core",
+     "onetCode": "15-1241.00",
+     "line": 2324
+    },
+    {
+     "id": 18966,
+     "text": "Develop and write procedures for installation, use, or troubleshooting of communications hardware or software.",
+     "type": "Core",
+     "onetCode": "15-1241.00",
+     "line": 2325
+    },
+    {
+     "id": 18980,
+     "text": "Participate in network technology upgrade or expansion projects, including installation of hardware and software and integration testing.",
+     "type": "Core",
+     "onetCode": "15-1241.00",
+     "line": 2326
+    },
+    {
+     "id": 18962,
+     "text": "Design, build, or operate equipment configuration prototypes, including network hardware, software, servers, or server operation systems.",
+     "type": "Core",
+     "onetCode": "15-1241.00",
+     "line": 2327
+    },
+    {
+     "id": 18956,
+     "text": "Adjust network sizes to meet volume or capacity demands.",
+     "type": "Core",
+     "onetCode": "15-1241.00",
+     "line": 2328
+    },
+    {
+     "id": 18958,
+     "text": "Communicate with system users to ensure accounts are set up properly or to diagnose and solve operational problems.",
+     "type": "Core",
+     "onetCode": "15-1241.00",
+     "line": 2329
+    },
+    {
+     "id": 18967,
+     "text": "Develop conceptual, logical, or physical network designs.",
+     "type": "Core",
+     "onetCode": "15-1241.00",
+     "line": 2330
+    },
+    {
+     "id": 18975,
+     "text": "Evaluate network designs to determine whether customer requirements are met efficiently and effectively.",
+     "type": "Core",
+     "onetCode": "15-1241.00",
+     "line": 2331
+    },
+    {
+     "id": 18988,
+     "text": "Communicate with vendors to gather information about products, alert them to future needs, resolve problems, or address system maintenance issues.",
+     "type": "Core",
+     "onetCode": "15-1241.00",
+     "line": 2332
+    },
+    {
+     "id": 18972,
+     "text": "Develop plans or budgets for network equipment replacement.",
+     "type": "Core",
+     "onetCode": "15-1241.00",
+     "line": 2333
+    },
+    {
+     "id": 18957,
+     "text": "Communicate with customers, sales staff, or marketing staff to determine customer needs.",
+     "type": "Core",
+     "onetCode": "15-1241.00",
+     "line": 2334
+    },
+    {
+     "id": 18964,
+     "text": "Determine specific network hardware or software requirements, such as platforms, interfaces, bandwidths, or routine schemas.",
+     "type": "Core",
+     "onetCode": "15-1241.00",
+     "line": 2335
+    },
+    {
+     "id": 18982,
+     "text": "Prepare detailed network specifications, including diagrams, charts, equipment configurations, or recommended technologies.",
+     "type": "Core",
+     "onetCode": "15-1241.00",
+     "line": 2336
+    },
+    {
+     "id": 18985,
+     "text": "Supervise engineers or other staff in the design or implementation of network solutions.",
+     "type": "Core",
+     "onetCode": "15-1241.00",
+     "line": 2337
+    },
+    {
+     "id": 18984,
+     "text": "Research and test new or modified hardware or software products to determine performance and interoperability.",
+     "type": "Core",
+     "onetCode": "15-1241.00",
+     "line": 2338
+    },
+    {
+     "id": 18974,
+     "text": "Estimate time and materials needed to complete projects.",
+     "type": "Core",
+     "onetCode": "15-1241.00",
+     "line": 2339
+    },
+    {
+     "id": 18963,
+     "text": "Design, organize, and deliver product awareness, skills transfer, or product education sessions for staff or suppliers.",
+     "type": "Core",
+     "onetCode": "15-1241.00",
+     "line": 2340
+    },
+    {
+     "id": 18976,
+     "text": "Explain design specifications to integration or test engineers.",
+     "type": "Core",
+     "onetCode": "15-1241.00",
+     "line": 2341
+    },
+    {
+     "id": 18973,
+     "text": "Develop procedures to track, project, or report network availability, reliability, capacity, or utilization.",
+     "type": "Core",
+     "onetCode": "15-1241.00",
+     "line": 2342
+    },
+    {
+     "id": 18961,
+     "text": "Coordinate network or design activities with designers of associated networks.",
+     "type": "Core",
+     "onetCode": "15-1241.00",
+     "line": 2343
+    },
+    {
+     "id": 18983,
+     "text": "Prepare or monitor project schedules, budgets, or cost control systems.",
+     "type": "Core",
+     "onetCode": "15-1241.00",
+     "line": 2344
+    },
+    {
+     "id": 18981,
+     "text": "Prepare design presentations and proposals for staff or customers.",
+     "type": "Core",
+     "onetCode": "15-1241.00",
+     "line": 2345
+    },
+    {
+     "id": 18986,
+     "text": "Use network computer-aided design (CAD) software packages to optimize network designs.",
+     "type": "Core",
+     "onetCode": "15-1241.00",
+     "line": 2346
+    },
+    {
+     "id": 18987,
+     "text": "Visit vendors, attend conferences or training sessions, or study technical journals to keep up with changes in technology.",
+     "type": "Supplemental",
+     "onetCode": "15-1241.00",
+     "line": 2347
+    },
+    {
+     "id": 18970,
+     "text": "Develop or maintain project reporting systems.",
+     "type": "Supplemental",
+     "onetCode": "15-1241.00",
+     "line": 2348
+    },
+    {
+     "id": 18978,
+     "text": "Maintain or coordinate the maintenance of network peripherals, such as printers.",
+     "type": "Supplemental",
+     "onetCode": "15-1241.00",
+     "line": 2349
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L143",
+    "annualMedian": "oews:national_M2025_dl!AB143",
+    "annualMean": "oews:national_M2025_dl!S143",
+    "hourlyMedian": "oews:national_M2025_dl!W143",
+    "hourlyMean": "oews:national_M2025_dl!R143",
+    "annualPct10": "oews:national_M2025_dl!Z143",
+    "annualPct90": "oews:national_M2025_dl!AD143",
+    "annualOnly": "oews:national_M2025_dl!AE143",
+    "hourlyOnly": "oews:national_M2025_dl!AF143",
+    "title": "oews:national_M2025_dl!J143",
+    "ep.title": "ep:Table 1.2!A103",
+    "ep.employment2025": "ep:Table 1.2!D103",
+    "ep.employment2035": "ep:Table 1.2!E103",
+    "ep.numericChange": "ep:Table 1.2!H103",
+    "ep.percentChange": "ep:Table 1.2!I103",
+    "onetCode": "onet:Occupation Data.txt#L117:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L117:Description"
+   },
+   "nullReasons": {}
+  },
+  "15-1242": {
+   "soc": "15-1242",
+   "title": "Database Administrators",
+   "major": "15-0000",
+   "minor": "15-1200",
+   "broad": "15-1240",
+   "oewsRows": [
+    144
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 69990,
+   "annualMedian": 104620,
+   "annualMean": 110090,
+   "hourlyMedian": 50.3,
+   "hourlyMean": 52.93,
+   "annualPct10": 60230,
+   "annualPct90": 163320,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Database administrators",
+    "employment2025": 75000,
+    "employment2035": 74900,
+    "numericChange": -100,
+    "percentChange": -0.1
+   },
+   "onetCode": "15-1242.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Administer, test, and implement computer databases, applying knowledge of database management systems. Coordinate changes to computer databases. Identify, investigate, and resolve database performance issues, database capacity, and database scalability. May plan, coordinate, and implement security measures to safeguard computer databases.",
+   "tasks": [
+    {
+     "id": 1299,
+     "text": "Modify existing databases and database management systems or direct programmers and analysts to make changes.",
+     "type": "Core",
+     "onetCode": "15-1242.00",
+     "line": 2376
+    },
+    {
+     "id": 1301,
+     "text": "Plan, coordinate, and implement security measures to safeguard information in computer files against accidental or unauthorized damage, modification or disclosure.",
+     "type": "Core",
+     "onetCode": "15-1242.00",
+     "line": 2377
+    },
+    {
+     "id": 21649,
+     "text": "Plan and install upgrades of database management system software to enhance database performance.",
+     "type": "Core",
+     "onetCode": "15-1242.00",
+     "line": 2378
+    },
+    {
+     "id": 1305,
+     "text": "Specify users and user access levels for each segment of database.",
+     "type": "Core",
+     "onetCode": "15-1242.00",
+     "line": 2379
+    },
+    {
+     "id": 21651,
+     "text": "Test changes to database applications or systems.",
+     "type": "Core",
+     "onetCode": "15-1242.00",
+     "line": 2380
+    },
+    {
+     "id": 1300,
+     "text": "Test programs or databases, correct errors, and make necessary modifications.",
+     "type": "Core",
+     "onetCode": "15-1242.00",
+     "line": 2381
+    },
+    {
+     "id": 1303,
+     "text": "Train users and answer questions.",
+     "type": "Core",
+     "onetCode": "15-1242.00",
+     "line": 2382
+    },
+    {
+     "id": 21650,
+     "text": "Provide technical support to junior staff or clients.",
+     "type": "Core",
+     "onetCode": "15-1242.00",
+     "line": 2383
+    },
+    {
+     "id": 1302,
+     "text": "Approve, schedule, plan, and supervise the installation and testing of new products and improvements to computer systems, such as the installation of new databases.",
+     "type": "Core",
+     "onetCode": "15-1242.00",
+     "line": 2384
+    },
+    {
+     "id": 1298,
+     "text": "Develop standards and guidelines for the use and acquisition of software and to protect vulnerable information.",
+     "type": "Core",
+     "onetCode": "15-1242.00",
+     "line": 2385
+    },
+    {
+     "id": 1313,
+     "text": "Write and code logical and physical database descriptions and specify identifiers of database to management system, or direct others in coding descriptions.",
+     "type": "Core",
+     "onetCode": "15-1242.00",
+     "line": 2386
+    },
+    {
+     "id": 1306,
+     "text": "Develop data models describing data elements and how they are used, following procedures and using pen, template, or computer software.",
+     "type": "Core",
+     "onetCode": "15-1242.00",
+     "line": 2387
+    },
+    {
+     "id": 1311,
+     "text": "Select and enter codes to monitor database performance and to create production databases.",
+     "type": "Core",
+     "onetCode": "15-1242.00",
+     "line": 2388
+    },
+    {
+     "id": 21648,
+     "text": "Identify, evaluate and recommend hardware or software technologies to achieve desired database performance.",
+     "type": "Core",
+     "onetCode": "15-1242.00",
+     "line": 2389
+    },
+    {
+     "id": 1309,
+     "text": "Review procedures in database management system manuals to make changes to database.",
+     "type": "Core",
+     "onetCode": "15-1242.00",
+     "line": 2390
+    },
+    {
+     "id": 1312,
+     "text": "Identify and evaluate industry trends in database systems to serve as a source of information and advice for upper management.",
+     "type": "Supplemental",
+     "onetCode": "15-1242.00",
+     "line": 2391
+    },
+    {
+     "id": 1314,
+     "text": "Review workflow charts developed by programmer analyst to understand tasks computer will perform, such as updating records.",
+     "type": "Supplemental",
+     "onetCode": "15-1242.00",
+     "line": 2392
+    },
+    {
+     "id": 1315,
+     "text": "Revise company definition of data as defined in data dictionary.",
+     "type": "Supplemental",
+     "onetCode": "15-1242.00",
+     "line": 2393
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "kelleyTracks": [
+    "Tech"
+   ],
+   "kelleyTitles": [
+    "Database Administrator"
+   ],
+   "sources": {
+    "employment": "oews:national_M2025_dl!L144",
+    "annualMedian": "oews:national_M2025_dl!AB144",
+    "annualMean": "oews:national_M2025_dl!S144",
+    "hourlyMedian": "oews:national_M2025_dl!W144",
+    "hourlyMean": "oews:national_M2025_dl!R144",
+    "annualPct10": "oews:national_M2025_dl!Z144",
+    "annualPct90": "oews:national_M2025_dl!AD144",
+    "annualOnly": "oews:national_M2025_dl!AE144",
+    "hourlyOnly": "oews:national_M2025_dl!AF144",
+    "title": "oews:national_M2025_dl!J144",
+    "ep.title": "ep:Table 1.2!A104",
+    "ep.employment2025": "ep:Table 1.2!D104",
+    "ep.employment2035": "ep:Table 1.2!E104",
+    "ep.numericChange": "ep:Table 1.2!H104",
+    "ep.percentChange": "ep:Table 1.2!I104",
+    "onetCode": "onet:Occupation Data.txt#L119:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L119:Description"
+   },
+   "nullReasons": {}
+  },
+  "15-1243": {
+   "soc": "15-1243",
+   "title": "Database Architects",
+   "major": "15-0000",
+   "minor": "15-1200",
+   "broad": "15-1240",
+   "oewsRows": [
+    145
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 67140,
+   "annualMedian": 139500,
+   "annualMean": 144440,
+   "hourlyMedian": 67.07,
+   "hourlyMean": 69.44,
+   "annualPct10": 86240,
+   "annualPct90": 204000,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Database architects",
+    "employment2025": 69500,
+    "employment2035": 76000,
+    "numericChange": 6500,
+    "percentChange": 9.4
+   },
+   "onetCode": "15-1243.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [
+    {
+     "code": "15-1243.01",
+     "title": "Data Warehousing Specialists",
+     "taskCount": 18
+    }
+   ],
+   "description": "Design strategies for enterprise databases, data warehouse systems, and multidimensional networks. Set standards for database operations, programming, query processes, and security. Model, design, and construct large relational databases or data warehouses. Create and optimize data models for warehouse infrastructure and workflow. Integrate new systems with existing warehouse structure and refine system performance and functionality.",
+   "tasks": [
+    {
+     "id": 16115,
+     "text": "Develop and document database architectures.",
+     "type": "Core",
+     "onetCode": "15-1243.00",
+     "line": 2394
+    },
+    {
+     "id": 16113,
+     "text": "Collaborate with system architects, software architects, design analysts, and others to understand business or industry requirements.",
+     "type": "Core",
+     "onetCode": "15-1243.00",
+     "line": 2395
+    },
+    {
+     "id": 16114,
+     "text": "Develop database architectural strategies at the modeling, design and implementation stages to address business or industry requirements.",
+     "type": "Core",
+     "onetCode": "15-1243.00",
+     "line": 2396
+    },
+    {
+     "id": 16109,
+     "text": "Design databases to support business applications, ensuring system scalability, security, performance, and reliability.",
+     "type": "Core",
+     "onetCode": "15-1243.00",
+     "line": 2397
+    },
+    {
+     "id": 16108,
+     "text": "Develop data models for applications, metadata tables, views or related database structures.",
+     "type": "Core",
+     "onetCode": "15-1243.00",
+     "line": 2398
+    },
+    {
+     "id": 16110,
+     "text": "Design database applications, such as interfaces, data transfer mechanisms, global temporary tables, data partitions, and function-based indexes to enable efficient access of the generic database structure.",
+     "type": "Core",
+     "onetCode": "15-1243.00",
+     "line": 2399
+    },
+    {
+     "id": 21653,
+     "text": "Develop methods for integrating different products so they work properly together, such as customizing commercial databases to fit specific needs.",
+     "type": "Core",
+     "onetCode": "15-1243.00",
+     "line": 2400
+    },
+    {
+     "id": 16112,
+     "text": "Create and enforce database development standards.",
+     "type": "Core",
+     "onetCode": "15-1243.00",
+     "line": 2401
+    },
+    {
+     "id": 16105,
+     "text": "Document and communicate database schemas, using accepted notations.",
+     "type": "Core",
+     "onetCode": "15-1243.00",
+     "line": 2402
+    },
+    {
+     "id": 21652,
+     "text": "Develop data model describing data elements and their use, following procedures and using pen, template or computer software.",
+     "type": "Core",
+     "onetCode": "15-1243.00",
+     "line": 2403
+    },
+    {
+     "id": 21659,
+     "text": "Work as part of a project team to coordinate database development and determine project scope and limitations.",
+     "type": "Core",
+     "onetCode": "15-1243.00",
+     "line": 2404
+    },
+    {
+     "id": 21655,
+     "text": "Identify and evaluate industry trends in database systems to serve as a source of information and advice for upper management.",
+     "type": "Core",
+     "onetCode": "15-1243.00",
+     "line": 2405
+    },
+    {
+     "id": 16100,
+     "text": "Set up database clusters, backup, or recovery processes.",
+     "type": "Core",
+     "onetCode": "15-1243.00",
+     "line": 2406
+    },
+    {
+     "id": 16111,
+     "text": "Demonstrate database technical functionality, such as performance, security and reliability.",
+     "type": "Core",
+     "onetCode": "15-1243.00",
+     "line": 2407
+    },
+    {
+     "id": 16107,
+     "text": "Develop load-balancing processes to eliminate down time for backup processes.",
+     "type": "Core",
+     "onetCode": "15-1243.00",
+     "line": 2408
+    },
+    {
+     "id": 16102,
+     "text": "Plan and install upgrades of database management system software to enhance database performance.",
+     "type": "Core",
+     "onetCode": "15-1243.00",
+     "line": 2409
+    },
+    {
+     "id": 16101,
+     "text": "Identify, evaluate and recommend hardware or software technologies to achieve desired database performance.",
+     "type": "Core",
+     "onetCode": "15-1243.00",
+     "line": 2410
+    },
+    {
+     "id": 21657,
+     "text": "Test programs or databases, correct errors, and make necessary modifications.",
+     "type": "Core",
+     "onetCode": "15-1243.00",
+     "line": 2411
+    },
+    {
+     "id": 16104,
+     "text": "Identify and correct deviations from database development standards.",
+     "type": "Core",
+     "onetCode": "15-1243.00",
+     "line": 2412
+    },
+    {
+     "id": 21656,
+     "text": "Review project requests describing database user needs to estimate time and cost required to accomplish project.",
+     "type": "Core",
+     "onetCode": "15-1243.00",
+     "line": 2413
+    },
+    {
+     "id": 21660,
+     "text": "Write and code logical and physical database descriptions, and specify identifiers of database to management system or direct others in coding descriptions.",
+     "type": "Core",
+     "onetCode": "15-1243.00",
+     "line": 2414
+    },
+    {
+     "id": 16106,
+     "text": "Develop or maintain archived procedures, procedural codes, or queries for applications.",
+     "type": "Core",
+     "onetCode": "15-1243.00",
+     "line": 2415
+    },
+    {
+     "id": 16099,
+     "text": "Provide technical support to junior staff or clients.",
+     "type": "Core",
+     "onetCode": "15-1243.00",
+     "line": 2416
+    },
+    {
+     "id": 21654,
+     "text": "Establish and calculate optimum values for database parameters, using manuals and calculators.",
+     "type": "Core",
+     "onetCode": "15-1243.00",
+     "line": 2417
+    },
+    {
+     "id": 21658,
+     "text": "Train users and answer questions.",
+     "type": "Supplemental",
+     "onetCode": "15-1243.00",
+     "line": 2418
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L145",
+    "annualMedian": "oews:national_M2025_dl!AB145",
+    "annualMean": "oews:national_M2025_dl!S145",
+    "hourlyMedian": "oews:national_M2025_dl!W145",
+    "hourlyMean": "oews:national_M2025_dl!R145",
+    "annualPct10": "oews:national_M2025_dl!Z145",
+    "annualPct90": "oews:national_M2025_dl!AD145",
+    "annualOnly": "oews:national_M2025_dl!AE145",
+    "hourlyOnly": "oews:national_M2025_dl!AF145",
+    "title": "oews:national_M2025_dl!J145",
+    "ep.title": "ep:Table 1.2!A105",
+    "ep.employment2025": "ep:Table 1.2!D105",
+    "ep.employment2035": "ep:Table 1.2!E105",
+    "ep.numericChange": "ep:Table 1.2!H105",
+    "ep.percentChange": "ep:Table 1.2!I105",
+    "onetCode": "onet:Occupation Data.txt#L120:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L120:Description"
+   },
+   "nullReasons": {}
+  },
+  "15-1244": {
+   "soc": "15-1244",
+   "title": "Network and Computer Systems Administrators",
+   "major": "15-0000",
+   "minor": "15-1200",
+   "broad": "15-1240",
+   "oewsRows": [
+    146
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 314340,
+   "annualMedian": 99130,
+   "annualMean": 103680,
+   "hourlyMedian": 47.66,
+   "hourlyMean": 49.85,
+   "annualPct10": 62640,
+   "annualPct90": 155050,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Network and computer systems administrators",
+    "employment2025": 323600,
+    "employment2035": 310400,
+    "numericChange": -13200,
+    "percentChange": -4.1
+   },
+   "onetCode": "15-1244.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Install, configure, and maintain an organization's local area network (LAN), wide area network (WAN), data communications network, operating systems, and physical and virtual servers. Perform system monitoring and verify the integrity and availability of hardware, network, and server resources and systems. Review system and application logs and verify completion of scheduled jobs, including system backups. Analyze network and server resource consumption and control user access. Install and upgrade software and maintain software licenses. May assist in network modeling, analysis, planning, and coordination between network and data communications hardware and software.",
+   "tasks": [
+    {
+     "id": 1318,
+     "text": "Maintain and administer computer networks and related computing environments, including computer hardware, systems software, applications software, and all configurations.",
+     "type": "Core",
+     "onetCode": "15-1244.00",
+     "line": 2437
+    },
+    {
+     "id": 1317,
+     "text": "Perform data backups and disaster recovery operations.",
+     "type": "Core",
+     "onetCode": "15-1244.00",
+     "line": 2438
+    },
+    {
+     "id": 15205,
+     "text": "Diagnose, troubleshoot, and resolve hardware, software, or other network and system problems, and replace defective components when necessary.",
+     "type": "Core",
+     "onetCode": "15-1244.00",
+     "line": 2439
+    },
+    {
+     "id": 15206,
+     "text": "Configure, monitor, and maintain email applications or virus protection software.",
+     "type": "Core",
+     "onetCode": "15-1244.00",
+     "line": 2440
+    },
+    {
+     "id": 1320,
+     "text": "Operate master consoles to monitor the performance of computer systems and networks and to coordinate computer network access and use.",
+     "type": "Core",
+     "onetCode": "15-1244.00",
+     "line": 2441
+    },
+    {
+     "id": 1325,
+     "text": "Monitor network performance to determine whether adjustments are needed and where changes will be needed in the future.",
+     "type": "Core",
+     "onetCode": "15-1244.00",
+     "line": 2442
+    },
+    {
+     "id": 1319,
+     "text": "Plan, coordinate, and implement network security measures to protect data, software, and hardware.",
+     "type": "Core",
+     "onetCode": "15-1244.00",
+     "line": 2443
+    },
+    {
+     "id": 1329,
+     "text": "Analyze equipment performance records to determine the need for repair or replacement.",
+     "type": "Core",
+     "onetCode": "15-1244.00",
+     "line": 2444
+    },
+    {
+     "id": 1324,
+     "text": "Confer with network users about solutions to existing system problems.",
+     "type": "Core",
+     "onetCode": "15-1244.00",
+     "line": 2445
+    },
+    {
+     "id": 1323,
+     "text": "Recommend changes to improve systems and network configurations, and determine hardware or software requirements related to such changes.",
+     "type": "Core",
+     "onetCode": "15-1244.00",
+     "line": 2446
+    },
+    {
+     "id": 1322,
+     "text": "Design, configure, and test computer hardware, networking software and operating system software.",
+     "type": "Core",
+     "onetCode": "15-1244.00",
+     "line": 2447
+    },
+    {
+     "id": 1321,
+     "text": "Perform routine network startup and shutdown procedures, and maintain control records.",
+     "type": "Core",
+     "onetCode": "15-1244.00",
+     "line": 2448
+    },
+    {
+     "id": 1327,
+     "text": "Load computer tapes and disks, and install software and printer paper or forms.",
+     "type": "Core",
+     "onetCode": "15-1244.00",
+     "line": 2449
+    },
+    {
+     "id": 1326,
+     "text": "Train people in computer system use.",
+     "type": "Core",
+     "onetCode": "15-1244.00",
+     "line": 2450
+    },
+    {
+     "id": 1330,
+     "text": "Maintain logs related to network functions, as well as maintenance and repair records.",
+     "type": "Core",
+     "onetCode": "15-1244.00",
+     "line": 2451
+    },
+    {
+     "id": 1328,
+     "text": "Gather data pertaining to customer needs, and use the information to identify, predict, interpret, and evaluate system and network requirements.",
+     "type": "Core",
+     "onetCode": "15-1244.00",
+     "line": 2452
+    },
+    {
+     "id": 1333,
+     "text": "Coordinate with vendors and with company personnel to facilitate purchases.",
+     "type": "Core",
+     "onetCode": "15-1244.00",
+     "line": 2453
+    },
+    {
+     "id": 15208,
+     "text": "Implement and provide technical support for voice services and equipment, such as private branch exchange, voice mail system, and telecom system.",
+     "type": "Supplemental",
+     "onetCode": "15-1244.00",
+     "line": 2454
+    },
+    {
+     "id": 1332,
+     "text": "Maintain an inventory of parts for emergency repairs.",
+     "type": "Supplemental",
+     "onetCode": "15-1244.00",
+     "line": 2455
+    },
+    {
+     "id": 15207,
+     "text": "Research new technologies by attending seminars, reading trade articles, or taking classes, and implement or recommend the implementation of new technologies.",
+     "type": "Supplemental",
+     "onetCode": "15-1244.00",
+     "line": 2456
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L146",
+    "annualMedian": "oews:national_M2025_dl!AB146",
+    "annualMean": "oews:national_M2025_dl!S146",
+    "hourlyMedian": "oews:national_M2025_dl!W146",
+    "hourlyMean": "oews:national_M2025_dl!R146",
+    "annualPct10": "oews:national_M2025_dl!Z146",
+    "annualPct90": "oews:national_M2025_dl!AD146",
+    "annualOnly": "oews:national_M2025_dl!AE146",
+    "hourlyOnly": "oews:national_M2025_dl!AF146",
+    "title": "oews:national_M2025_dl!J146",
+    "ep.title": "ep:Table 1.2!A106",
+    "ep.employment2025": "ep:Table 1.2!D106",
+    "ep.employment2035": "ep:Table 1.2!E106",
+    "ep.numericChange": "ep:Table 1.2!H106",
+    "ep.percentChange": "ep:Table 1.2!I106",
+    "onetCode": "onet:Occupation Data.txt#L122:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L122:Description"
+   },
+   "nullReasons": {}
+  },
+  "15-1251": {
+   "soc": "15-1251",
+   "title": "Computer Programmers",
+   "major": "15-0000",
+   "minor": "15-1200",
+   "broad": "15-1250",
+   "oewsRows": [
+    148
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 92230,
+   "annualMedian": 100390,
+   "annualMean": 105170,
+   "hourlyMedian": 48.26,
+   "hourlyMean": 50.56,
+   "annualPct10": 57710,
+   "annualPct90": 160460,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Computer programmers",
+    "employment2025": 110800,
+    "employment2035": 102700,
+    "numericChange": -8100,
+    "percentChange": -7.3
+   },
+   "onetCode": "15-1251.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Create, modify, and test the code and scripts that allow computer applications to run. Work from specifications drawn up by software and web developers or other individuals. May develop and write computer programs to store, locate, and retrieve specific documents, data, and information.",
+   "tasks": [
+    {
+     "id": 1273,
+     "text": "Write, analyze, review, and rewrite programs, using workflow chart and diagram, and applying knowledge of computer capabilities, subject matter, and symbolic logic.",
+     "type": "Core",
+     "onetCode": "15-1251.00",
+     "line": 2457
+    },
+    {
+     "id": 1267,
+     "text": "Correct errors by making appropriate changes and rechecking the program to ensure that the desired results are produced.",
+     "type": "Core",
+     "onetCode": "15-1251.00",
+     "line": 2458
+    },
+    {
+     "id": 1272,
+     "text": "Perform or direct revision, repair, or expansion of existing programs to increase operating efficiency or adapt to new requirements.",
+     "type": "Core",
+     "onetCode": "15-1251.00",
+     "line": 2459
+    },
+    {
+     "id": 1270,
+     "text": "Write, update, and maintain computer programs or software packages to handle specific jobs such as tracking inventory, storing or retrieving data, or controlling other equipment.",
+     "type": "Core",
+     "onetCode": "15-1251.00",
+     "line": 2460
+    },
+    {
+     "id": 1271,
+     "text": "Consult with managerial, engineering, and technical personnel to clarify program intent, identify problems, and suggest changes.",
+     "type": "Core",
+     "onetCode": "15-1251.00",
+     "line": 2461
+    },
+    {
+     "id": 1268,
+     "text": "Conduct trial runs of programs and software applications to be sure they will produce the desired information and that the instructions are correct.",
+     "type": "Core",
+     "onetCode": "15-1251.00",
+     "line": 2462
+    },
+    {
+     "id": 1276,
+     "text": "Prepare detailed workflow charts and diagrams that describe input, output, and logical operation, and convert them into a series of instructions coded in a computer language.",
+     "type": "Core",
+     "onetCode": "15-1251.00",
+     "line": 2463
+    },
+    {
+     "id": 1269,
+     "text": "Compile and write documentation of program development and subsequent revisions, inserting comments in the coded instructions so others can understand the program.",
+     "type": "Core",
+     "onetCode": "15-1251.00",
+     "line": 2464
+    },
+    {
+     "id": 1278,
+     "text": "Consult with and assist computer operators or system analysts to define and resolve problems in running computer programs.",
+     "type": "Core",
+     "onetCode": "15-1251.00",
+     "line": 2465
+    },
+    {
+     "id": 1277,
+     "text": "Perform systems analysis and programming tasks to maintain and control the use of computer systems software as a systems programmer.",
+     "type": "Core",
+     "onetCode": "15-1251.00",
+     "line": 2466
+    },
+    {
+     "id": 1274,
+     "text": "Write or contribute to instructions or manuals to guide end users.",
+     "type": "Core",
+     "onetCode": "15-1251.00",
+     "line": 2467
+    },
+    {
+     "id": 1275,
+     "text": "Investigate whether networks, workstations, the central processing unit of the system, or peripheral equipment are responding to a program's instructions.",
+     "type": "Core",
+     "onetCode": "15-1251.00",
+     "line": 2468
+    },
+    {
+     "id": 1279,
+     "text": "Assign, coordinate, and review work and activities of programming personnel.",
+     "type": "Core",
+     "onetCode": "15-1251.00",
+     "line": 2469
+    },
+    {
+     "id": 1281,
+     "text": "Train subordinates in programming and program coding.",
+     "type": "Supplemental",
+     "onetCode": "15-1251.00",
+     "line": 2470
+    },
+    {
+     "id": 21049,
+     "text": "Develop Web sites.",
+     "type": "Supplemental",
+     "onetCode": "15-1251.00",
+     "line": 2471
+    },
+    {
+     "id": 21050,
+     "text": "Train users on the use and function of computer programs.",
+     "type": "Supplemental",
+     "onetCode": "15-1251.00",
+     "line": 2472
+    },
+    {
+     "id": 1280,
+     "text": "Collaborate with computer manufacturers and other users to develop new programming methods.",
+     "type": "Supplemental",
+     "onetCode": "15-1251.00",
+     "line": 2473
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L148",
+    "annualMedian": "oews:national_M2025_dl!AB148",
+    "annualMean": "oews:national_M2025_dl!S148",
+    "hourlyMedian": "oews:national_M2025_dl!W148",
+    "hourlyMean": "oews:national_M2025_dl!R148",
+    "annualPct10": "oews:national_M2025_dl!Z148",
+    "annualPct90": "oews:national_M2025_dl!AD148",
+    "annualOnly": "oews:national_M2025_dl!AE148",
+    "hourlyOnly": "oews:national_M2025_dl!AF148",
+    "title": "oews:national_M2025_dl!J148",
+    "ep.title": "ep:Table 1.2!A108",
+    "ep.employment2025": "ep:Table 1.2!D108",
+    "ep.employment2035": "ep:Table 1.2!E108",
+    "ep.numericChange": "ep:Table 1.2!H108",
+    "ep.percentChange": "ep:Table 1.2!I108",
+    "onetCode": "onet:Occupation Data.txt#L123:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L123:Description"
+   },
+   "nullReasons": {}
+  },
+  "15-1252": {
+   "soc": "15-1252",
+   "title": "Software Developers",
+   "major": "15-0000",
+   "minor": "15-1200",
+   "broad": "15-1250",
+   "oewsRows": [
+    149
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 1687890,
+   "annualMedian": 135980,
+   "annualMean": 148100,
+   "hourlyMedian": 65.38,
+   "hourlyMean": 71.2,
+   "annualPct10": 82460,
+   "annualPct90": 214670,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Software developers",
+    "employment2025": 1717800,
+    "employment2035": 1892600,
+    "numericChange": 174700,
+    "percentChange": 10.2
+   },
+   "onetCode": "15-1252.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Research, design, and develop computer and network software or specialized utility programs. Analyze user needs and develop software solutions, applying principles and techniques of computer science, engineering, and mathematical analysis. Update software or enhance existing software capabilities. May work with computer hardware engineers to integrate hardware and software systems, and develop specifications and performance requirements. May maintain databases within an application area, working individually or coordinating database development as part of a team.",
+   "tasks": [
+    {
+     "id": 21662,
+     "text": "Analyze user needs and software requirements to determine feasibility of design within time and cost constraints.",
+     "type": "Core",
+     "onetCode": "15-1252.00",
+     "line": 2474
+    },
+    {
+     "id": 21669,
+     "text": "Develop or direct software system testing or validation procedures, programming, or documentation.",
+     "type": "Core",
+     "onetCode": "15-1252.00",
+     "line": 2475
+    },
+    {
+     "id": 21664,
+     "text": "Confer with systems analysts, engineers, programmers and others to design systems and to obtain information on project limitations and capabilities, performance requirements and interfaces.",
+     "type": "Core",
+     "onetCode": "15-1252.00",
+     "line": 2476
+    },
+    {
+     "id": 21670,
+     "text": "Modify existing software to correct errors, adapt it to new hardware, or upgrade interfaces and improve performance.",
+     "type": "Core",
+     "onetCode": "15-1252.00",
+     "line": 2477
+    },
+    {
+     "id": 21673,
+     "text": "Prepare reports or correspondence concerning project specifications, activities, or status.",
+     "type": "Core",
+     "onetCode": "15-1252.00",
+     "line": 2478
+    },
+    {
+     "id": 21661,
+     "text": "Analyze information to determine, recommend, and plan installation of a new system or modification of an existing system.",
+     "type": "Core",
+     "onetCode": "15-1252.00",
+     "line": 2479
+    },
+    {
+     "id": 21676,
+     "text": "Store, retrieve, and manipulate data for analysis of system capabilities and requirements.",
+     "type": "Core",
+     "onetCode": "15-1252.00",
+     "line": 2480
+    },
+    {
+     "id": 21667,
+     "text": "Design, develop and modify software systems, using scientific analysis and mathematical models to predict and measure outcomes and consequences of design.",
+     "type": "Core",
+     "onetCode": "15-1252.00",
+     "line": 2481
+    },
+    {
+     "id": 21668,
+     "text": "Determine system performance standards.",
+     "type": "Core",
+     "onetCode": "15-1252.00",
+     "line": 2482
+    },
+    {
+     "id": 21665,
+     "text": "Consult with customers or other departments on project status, proposals, or technical issues, such as software system design or maintenance.",
+     "type": "Core",
+     "onetCode": "15-1252.00",
+     "line": 2483
+    },
+    {
+     "id": 21663,
+     "text": "Confer with data processing or project managers to obtain information on limitations or capabilities for data processing projects.",
+     "type": "Core",
+     "onetCode": "15-1252.00",
+     "line": 2484
+    },
+    {
+     "id": 21671,
+     "text": "Monitor functioning of equipment to ensure system operates in conformance with specifications.",
+     "type": "Supplemental",
+     "onetCode": "15-1252.00",
+     "line": 2485
+    },
+    {
+     "id": 21666,
+     "text": "Coordinate installation of software system.",
+     "type": "Supplemental",
+     "onetCode": "15-1252.00",
+     "line": 2486
+    },
+    {
+     "id": 21678,
+     "text": "Supervise the work of programmers, technologists and technicians and other engineering and scientific personnel.",
+     "type": "Supplemental",
+     "onetCode": "15-1252.00",
+     "line": 2487
+    },
+    {
+     "id": 21677,
+     "text": "Supervise and assign work to programmers, designers, technologists, technicians, or other engineering or scientific personnel.",
+     "type": "Supplemental",
+     "onetCode": "15-1252.00",
+     "line": 2488
+    },
+    {
+     "id": 21672,
+     "text": "Obtain and evaluate information on factors such as reporting formats required, costs, or security needs to determine hardware configuration.",
+     "type": "Supplemental",
+     "onetCode": "15-1252.00",
+     "line": 2489
+    },
+    {
+     "id": 21679,
+     "text": "Train users to use new or modified equipment.",
+     "type": "Supplemental",
+     "onetCode": "15-1252.00",
+     "line": 2490
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "kelleyTracks": [
+    "Tech"
+   ],
+   "kelleyTitles": [
+    "Software Developer"
+   ],
+   "sources": {
+    "employment": "oews:national_M2025_dl!L149",
+    "annualMedian": "oews:national_M2025_dl!AB149",
+    "annualMean": "oews:national_M2025_dl!S149",
+    "hourlyMedian": "oews:national_M2025_dl!W149",
+    "hourlyMean": "oews:national_M2025_dl!R149",
+    "annualPct10": "oews:national_M2025_dl!Z149",
+    "annualPct90": "oews:national_M2025_dl!AD149",
+    "annualOnly": "oews:national_M2025_dl!AE149",
+    "hourlyOnly": "oews:national_M2025_dl!AF149",
+    "title": "oews:national_M2025_dl!J149",
+    "ep.title": "ep:Table 1.2!A109",
+    "ep.employment2025": "ep:Table 1.2!D109",
+    "ep.employment2035": "ep:Table 1.2!E109",
+    "ep.numericChange": "ep:Table 1.2!H109",
+    "ep.percentChange": "ep:Table 1.2!I109",
+    "onetCode": "onet:Occupation Data.txt#L124:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L124:Description"
+   },
+   "nullReasons": {}
+  },
+  "15-1253": {
+   "soc": "15-1253",
+   "title": "Software Quality Assurance Analysts and Testers",
+   "major": "15-0000",
+   "minor": "15-1200",
+   "broad": "15-1250",
+   "oewsRows": [
+    150
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 186740,
+   "annualMedian": 104300,
+   "annualMean": 111490,
+   "hourlyMedian": 50.14,
+   "hourlyMean": 53.6,
+   "annualPct10": 61440,
+   "annualPct90": 167010,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Software quality assurance analysts and testers",
+    "employment2025": 187600,
+    "employment2035": 198200,
+    "numericChange": 10600,
+    "percentChange": 5.7
+   },
+   "onetCode": "15-1253.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Develop and execute software tests to identify software problems and their causes. Test system modifications to prepare for implementation. Document software and application defects using a bug tracking system and report defects to software or web developers. Create and maintain databases of known defects. May participate in software design reviews to provide input on functional requirements, operational characteristics, product designs, and schedules.",
+   "tasks": [
+    {
+     "id": 14642,
+     "text": "Identify, analyze, and document problems with program function, output, online screen, or content.",
+     "type": "Core",
+     "onetCode": "15-1253.00",
+     "line": 2491
+    },
+    {
+     "id": 14641,
+     "text": "Document software defects, using a bug tracking system, and report defects to software developers.",
+     "type": "Core",
+     "onetCode": "15-1253.00",
+     "line": 2492
+    },
+    {
+     "id": 14640,
+     "text": "Develop testing programs that address areas such as database impacts, software scenarios, regression testing, negative testing, error or bug retests, or usability.",
+     "type": "Core",
+     "onetCode": "15-1253.00",
+     "line": 2493
+    },
+    {
+     "id": 14638,
+     "text": "Design test plans, scenarios, scripts, or procedures.",
+     "type": "Core",
+     "onetCode": "15-1253.00",
+     "line": 2494
+    },
+    {
+     "id": 14648,
+     "text": "Document test procedures to ensure replicability and compliance with standards.",
+     "type": "Core",
+     "onetCode": "15-1253.00",
+     "line": 2495
+    },
+    {
+     "id": 14653,
+     "text": "Provide feedback and recommendations to developers on software usability and functionality.",
+     "type": "Core",
+     "onetCode": "15-1253.00",
+     "line": 2496
+    },
+    {
+     "id": 14652,
+     "text": "Install, maintain, or use software testing programs.",
+     "type": "Core",
+     "onetCode": "15-1253.00",
+     "line": 2497
+    },
+    {
+     "id": 14639,
+     "text": "Test system modifications to prepare for implementation.",
+     "type": "Core",
+     "onetCode": "15-1253.00",
+     "line": 2498
+    },
+    {
+     "id": 14644,
+     "text": "Create or maintain databases of known test defects.",
+     "type": "Core",
+     "onetCode": "15-1253.00",
+     "line": 2499
+    },
+    {
+     "id": 14649,
+     "text": "Develop or specify standards, methods, or procedures to determine product quality or release readiness.",
+     "type": "Core",
+     "onetCode": "15-1253.00",
+     "line": 2500
+    },
+    {
+     "id": 14643,
+     "text": "Monitor bug resolution efforts and track successes.",
+     "type": "Core",
+     "onetCode": "15-1253.00",
+     "line": 2501
+    },
+    {
+     "id": 14650,
+     "text": "Update automated test scripts to ensure currency.",
+     "type": "Core",
+     "onetCode": "15-1253.00",
+     "line": 2502
+    },
+    {
+     "id": 14646,
+     "text": "Participate in product design reviews to provide input on functional requirements, product designs, schedules, or potential problems.",
+     "type": "Core",
+     "onetCode": "15-1253.00",
+     "line": 2503
+    },
+    {
+     "id": 14645,
+     "text": "Plan test schedules or strategies in accordance with project scope or delivery dates.",
+     "type": "Core",
+     "onetCode": "15-1253.00",
+     "line": 2504
+    },
+    {
+     "id": 14654,
+     "text": "Monitor program performance to ensure efficient and problem-free operations.",
+     "type": "Core",
+     "onetCode": "15-1253.00",
+     "line": 2505
+    },
+    {
+     "id": 14655,
+     "text": "Conduct software compatibility tests with programs, hardware, operating systems, or network environments.",
+     "type": "Core",
+     "onetCode": "15-1253.00",
+     "line": 2506
+    },
+    {
+     "id": 14651,
+     "text": "Investigate customer problems referred by technical support.",
+     "type": "Core",
+     "onetCode": "15-1253.00",
+     "line": 2507
+    },
+    {
+     "id": 14647,
+     "text": "Review software documentation to ensure technical accuracy, compliance, or completeness, or to mitigate risks.",
+     "type": "Core",
+     "onetCode": "15-1253.00",
+     "line": 2508
+    },
+    {
+     "id": 14658,
+     "text": "Identify program deviance from standards, and suggest modifications to ensure compliance.",
+     "type": "Core",
+     "onetCode": "15-1253.00",
+     "line": 2509
+    },
+    {
+     "id": 14661,
+     "text": "Perform initial debugging procedures by reviewing configuration files, logs, or code pieces to determine breakdown source.",
+     "type": "Core",
+     "onetCode": "15-1253.00",
+     "line": 2510
+    },
+    {
+     "id": 14659,
+     "text": "Design or develop automated testing tools.",
+     "type": "Core",
+     "onetCode": "15-1253.00",
+     "line": 2511
+    },
+    {
+     "id": 14656,
+     "text": "Install and configure recreations of software production environments to allow testing of software performance.",
+     "type": "Core",
+     "onetCode": "15-1253.00",
+     "line": 2512
+    },
+    {
+     "id": 14657,
+     "text": "Collaborate with field staff or customers to evaluate or diagnose problems and recommend possible solutions.",
+     "type": "Core",
+     "onetCode": "15-1253.00",
+     "line": 2513
+    },
+    {
+     "id": 14660,
+     "text": "Coordinate user or third-party testing.",
+     "type": "Core",
+     "onetCode": "15-1253.00",
+     "line": 2514
+    },
+    {
+     "id": 14662,
+     "text": "Visit beta testing sites to evaluate software performance.",
+     "type": "Core",
+     "onetCode": "15-1253.00",
+     "line": 2515
+    },
+    {
+     "id": 14664,
+     "text": "Conduct historical analyses of test results.",
+     "type": "Core",
+     "onetCode": "15-1253.00",
+     "line": 2516
+    },
+    {
+     "id": 14663,
+     "text": "Evaluate or recommend software for testing or bug tracking.",
+     "type": "Core",
+     "onetCode": "15-1253.00",
+     "line": 2517
+    },
+    {
+     "id": 21680,
+     "text": "Modify existing software to correct errors, allow it to adapt to new hardware, or to improve its performance.",
+     "type": "n/a",
+     "onetCode": "15-1253.00",
+     "line": 2518
+    },
+    {
+     "id": 21681,
+     "text": "Recommend purchase of equipment to control dust, temperature, or humidity in area of system installation.",
+     "type": "n/a",
+     "onetCode": "15-1253.00",
+     "line": 2519
+    },
+    {
+     "id": 21682,
+     "text": "Store, retrieve, and manipulate data for analysis of system capabilities and requirements.",
+     "type": "n/a",
+     "onetCode": "15-1253.00",
+     "line": 2520
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L150",
+    "annualMedian": "oews:national_M2025_dl!AB150",
+    "annualMean": "oews:national_M2025_dl!S150",
+    "hourlyMedian": "oews:national_M2025_dl!W150",
+    "hourlyMean": "oews:national_M2025_dl!R150",
+    "annualPct10": "oews:national_M2025_dl!Z150",
+    "annualPct90": "oews:national_M2025_dl!AD150",
+    "annualOnly": "oews:national_M2025_dl!AE150",
+    "hourlyOnly": "oews:national_M2025_dl!AF150",
+    "title": "oews:national_M2025_dl!J150",
+    "ep.title": "ep:Table 1.2!A110",
+    "ep.employment2025": "ep:Table 1.2!D110",
+    "ep.employment2035": "ep:Table 1.2!E110",
+    "ep.numericChange": "ep:Table 1.2!H110",
+    "ep.percentChange": "ep:Table 1.2!I110",
+    "onetCode": "onet:Occupation Data.txt#L125:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L125:Description"
+   },
+   "nullReasons": {}
+  },
+  "15-1254": {
+   "soc": "15-1254",
+   "title": "Web Developers",
+   "major": "15-0000",
+   "minor": "15-1200",
+   "broad": "15-1250",
+   "oewsRows": [
+    151
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 70190,
+   "annualMedian": 92650,
+   "annualMean": 98770,
+   "hourlyMedian": 44.54,
+   "hourlyMean": 47.49,
+   "annualPct10": 48100,
+   "annualPct90": 162290,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Web developers",
+    "employment2025": 87400,
+    "employment2035": 90600,
+    "numericChange": 3300,
+    "percentChange": 3.8
+   },
+   "onetCode": "15-1254.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Develop and implement websites, web applications, application databases, and interactive web interfaces. Evaluate code to ensure that it is properly structured, meets industry standards, and is compatible with browsers and devices. Optimize website performance, scalability, and server-side code and processes. May develop website infrastructure and integrate websites with other computer applications.",
+   "tasks": [
+    {
+     "id": 14707,
+     "text": "Write supporting code for Web applications or Web sites.",
+     "type": "Core",
+     "onetCode": "15-1254.00",
+     "line": 2521
+    },
+    {
+     "id": 14694,
+     "text": "Design, build, or maintain Web sites, using authoring or scripting languages, content creation tools, management tools, and digital media.",
+     "type": "Core",
+     "onetCode": "15-1254.00",
+     "line": 2522
+    },
+    {
+     "id": 14698,
+     "text": "Back up files from Web sites to local directories for instant recovery in case of problems.",
+     "type": "Core",
+     "onetCode": "15-1254.00",
+     "line": 2523
+    },
+    {
+     "id": 14711,
+     "text": "Select programming languages, design tools, or applications.",
+     "type": "Core",
+     "onetCode": "15-1254.00",
+     "line": 2524
+    },
+    {
+     "id": 14700,
+     "text": "Evaluate code to ensure that it is valid, is properly structured, meets industry standards, and is compatible with browsers, devices, or operating systems.",
+     "type": "Core",
+     "onetCode": "15-1254.00",
+     "line": 2525
+    },
+    {
+     "id": 14704,
+     "text": "Develop databases that support Web applications and Web sites.",
+     "type": "Core",
+     "onetCode": "15-1254.00",
+     "line": 2526
+    },
+    {
+     "id": 14710,
+     "text": "Perform Web site tests according to planned schedules, or after any Web site or product revision.",
+     "type": "Core",
+     "onetCode": "15-1254.00",
+     "line": 2527
+    },
+    {
+     "id": 14695,
+     "text": "Perform or direct Web site updates.",
+     "type": "Core",
+     "onetCode": "15-1254.00",
+     "line": 2528
+    },
+    {
+     "id": 14701,
+     "text": "Maintain understanding of current Web technologies or programming practices through continuing education, reading, or participation in professional conferences, workshops, or groups.",
+     "type": "Core",
+     "onetCode": "15-1254.00",
+     "line": 2529
+    },
+    {
+     "id": 14702,
+     "text": "Analyze user needs to determine technical requirements.",
+     "type": "Core",
+     "onetCode": "15-1254.00",
+     "line": 2530
+    },
+    {
+     "id": 14713,
+     "text": "Respond to user email inquiries, or set up automated systems to send responses.",
+     "type": "Core",
+     "onetCode": "15-1254.00",
+     "line": 2531
+    },
+    {
+     "id": 14705,
+     "text": "Renew domain name registrations.",
+     "type": "Core",
+     "onetCode": "15-1254.00",
+     "line": 2532
+    },
+    {
+     "id": 14697,
+     "text": "Confer with management or development teams to prioritize needs, resolve conflicts, develop content criteria, or choose solutions.",
+     "type": "Core",
+     "onetCode": "15-1254.00",
+     "line": 2533
+    },
+    {
+     "id": 14708,
+     "text": "Communicate with network personnel or Web site hosting agencies to address hardware or software issues affecting Web sites.",
+     "type": "Core",
+     "onetCode": "15-1254.00",
+     "line": 2534
+    },
+    {
+     "id": 14706,
+     "text": "Collaborate with management or users to develop e-commerce strategies and to integrate these strategies with Web sites.",
+     "type": "Core",
+     "onetCode": "15-1254.00",
+     "line": 2535
+    },
+    {
+     "id": 14726,
+     "text": "Document test plans, testing procedures, or test results.",
+     "type": "Core",
+     "onetCode": "15-1254.00",
+     "line": 2536
+    },
+    {
+     "id": 14717,
+     "text": "Establish appropriate server directory trees.",
+     "type": "Core",
+     "onetCode": "15-1254.00",
+     "line": 2537
+    },
+    {
+     "id": 14719,
+     "text": "Recommend and implement performance improvements.",
+     "type": "Core",
+     "onetCode": "15-1254.00",
+     "line": 2538
+    },
+    {
+     "id": 14728,
+     "text": "Document technical factors such as server load, bandwidth, database performance, and browser and device types.",
+     "type": "Core",
+     "onetCode": "15-1254.00",
+     "line": 2539
+    },
+    {
+     "id": 14714,
+     "text": "Develop or implement procedures for ongoing Web site revision.",
+     "type": "Core",
+     "onetCode": "15-1254.00",
+     "line": 2540
+    },
+    {
+     "id": 14724,
+     "text": "Create Web models or prototypes that include physical, interface, logical, or data models.",
+     "type": "Core",
+     "onetCode": "15-1254.00",
+     "line": 2541
+    },
+    {
+     "id": 14722,
+     "text": "Provide clear, detailed descriptions of Web site specifications, such as product features, activities, software, communication protocols, programming languages, and operating systems software and hardware.",
+     "type": "Core",
+     "onetCode": "15-1254.00",
+     "line": 2542
+    },
+    {
+     "id": 14725,
+     "text": "Evaluate or recommend server hardware or software.",
+     "type": "Core",
+     "onetCode": "15-1254.00",
+     "line": 2543
+    },
+    {
+     "id": 14723,
+     "text": "Monitor security system performance logs to identify problems and notify security specialists when problems occur.",
+     "type": "Supplemental",
+     "onetCode": "15-1254.00",
+     "line": 2544
+    },
+    {
+     "id": 14729,
+     "text": "Install and configure hypertext transfer protocol (HTTP) servers and associated operating systems.",
+     "type": "Supplemental",
+     "onetCode": "15-1254.00",
+     "line": 2545
+    },
+    {
+     "id": 14727,
+     "text": "Research, document, rate, or select alternatives for Web architecture or technologies.",
+     "type": "Supplemental",
+     "onetCode": "15-1254.00",
+     "line": 2546
+    },
+    {
+     "id": 14730,
+     "text": "Develop system interaction or sequence diagrams.",
+     "type": "Supplemental",
+     "onetCode": "15-1254.00",
+     "line": 2547
+    },
+    {
+     "id": 21683,
+     "text": "Design and implement Web site security measures, such as firewalls and message encryption.",
+     "type": "n/a",
+     "onetCode": "15-1254.00",
+     "line": 2548
+    },
+    {
+     "id": 21684,
+     "text": "Incorporate technical considerations into Web site design plans, such as budgets, equipment, performance requirements, and legal issues including accessibility and privacy.",
+     "type": "n/a",
+     "onetCode": "15-1254.00",
+     "line": 2549
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "kelleyTracks": [
+    "Tech"
+   ],
+   "kelleyTitles": [
+    "Web Developer"
+   ],
+   "sources": {
+    "employment": "oews:national_M2025_dl!L151",
+    "annualMedian": "oews:national_M2025_dl!AB151",
+    "annualMean": "oews:national_M2025_dl!S151",
+    "hourlyMedian": "oews:national_M2025_dl!W151",
+    "hourlyMean": "oews:national_M2025_dl!R151",
+    "annualPct10": "oews:national_M2025_dl!Z151",
+    "annualPct90": "oews:national_M2025_dl!AD151",
+    "annualOnly": "oews:national_M2025_dl!AE151",
+    "hourlyOnly": "oews:national_M2025_dl!AF151",
+    "title": "oews:national_M2025_dl!J151",
+    "ep.title": "ep:Table 1.2!A111",
+    "ep.employment2025": "ep:Table 1.2!D111",
+    "ep.employment2035": "ep:Table 1.2!E111",
+    "ep.numericChange": "ep:Table 1.2!H111",
+    "ep.percentChange": "ep:Table 1.2!I111",
+    "onetCode": "onet:Occupation Data.txt#L126:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L126:Description"
+   },
+   "nullReasons": {}
+  },
+  "15-1255": {
+   "soc": "15-1255",
+   "title": "Web and Digital Interface Designers",
+   "major": "15-0000",
+   "minor": "15-1200",
+   "broad": "15-1250",
+   "oewsRows": [
+    152
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 113330,
+   "annualMedian": 104000,
+   "annualMean": 117490,
+   "hourlyMedian": 50,
+   "hourlyMean": 56.49,
+   "annualPct10": 53750,
+   "annualPct90": 201550,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Web and digital interface designers",
+    "employment2025": 132700,
+    "employment2035": 140800,
+    "numericChange": 8000,
+    "percentChange": 6
+   },
+   "onetCode": "15-1255.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [
+    {
+     "code": "15-1255.01",
+     "title": "Video Game Designers",
+     "taskCount": 24
+    }
+   ],
+   "description": "Design digital user interfaces or websites. Develop and test layouts, interfaces, functionality, and navigation menus to ensure compatibility and usability across browsers or devices. May use web framework applications as well as client-side code and processes. May evaluate web design following web and accessibility standards, and may analyze web use metrics and optimize websites for marketability and search engine ranking. May design and test interfaces that facilitate the human-computer interaction and maximize the usability of digital devices, websites, and software with a focus on aesthetics and design. May create graphics used in websites and manage website content and links.",
+   "tasks": [
+    {
+     "id": 21685,
+     "text": "Collaborate with management or users to develop e-commerce strategies and to integrate these strategies with Web sites.",
+     "type": "n/a",
+     "onetCode": "15-1255.00",
+     "line": 2550
+    },
+    {
+     "id": 21686,
+     "text": "Collaborate with web development professionals, such as front-end or back-end developers, to complete the full scope of Web development projects.",
+     "type": "n/a",
+     "onetCode": "15-1255.00",
+     "line": 2551
+    },
+    {
+     "id": 21687,
+     "text": "Communicate with network personnel or Web site hosting agencies to address hardware or software issues affecting Web sites.",
+     "type": "n/a",
+     "onetCode": "15-1255.00",
+     "line": 2552
+    },
+    {
+     "id": 21688,
+     "text": "Conduct user research to determine design requirements and analyze user feedback to improve design quality.",
+     "type": "n/a",
+     "onetCode": "15-1255.00",
+     "line": 2553
+    },
+    {
+     "id": 21689,
+     "text": "Confer with management or development teams to prioritize needs, resolve conflicts, develop content criteria, or choose solutions.",
+     "type": "n/a",
+     "onetCode": "15-1255.00",
+     "line": 2554
+    },
+    {
+     "id": 21690,
+     "text": "Create searchable indices for Web page content.",
+     "type": "n/a",
+     "onetCode": "15-1255.00",
+     "line": 2555
+    },
+    {
+     "id": 21691,
+     "text": "Create Web models or prototypes that include physical, interface, logical, or data models.",
+     "type": "n/a",
+     "onetCode": "15-1255.00",
+     "line": 2556
+    },
+    {
+     "id": 21692,
+     "text": "Design, build, or maintain Web sites, using authoring or scripting languages, content creation tools, management tools, and digital media.",
+     "type": "n/a",
+     "onetCode": "15-1255.00",
+     "line": 2557
+    },
+    {
+     "id": 21693,
+     "text": "Develop and document style guidelines for Web site content.",
+     "type": "n/a",
+     "onetCode": "15-1255.00",
+     "line": 2558
+    },
+    {
+     "id": 21694,
+     "text": "Develop new visual design concepts and modify concepts based on stakeholder feedback.",
+     "type": "n/a",
+     "onetCode": "15-1255.00",
+     "line": 2559
+    },
+    {
+     "id": 21695,
+     "text": "Develop or implement procedures for ongoing Web site revision.",
+     "type": "n/a",
+     "onetCode": "15-1255.00",
+     "line": 2560
+    },
+    {
+     "id": 21696,
+     "text": "Develop system interaction or sequence diagrams.",
+     "type": "n/a",
+     "onetCode": "15-1255.00",
+     "line": 2561
+    },
+    {
+     "id": 21697,
+     "text": "Develop Web site maps, application models, image templates, or page templates that meet project goals, user needs, or industry standards.",
+     "type": "n/a",
+     "onetCode": "15-1255.00",
+     "line": 2562
+    },
+    {
+     "id": 21698,
+     "text": "Develop, validate, and document test routines and schedules to ensure that test cases mimic external interfaces and address all browser and device types.",
+     "type": "n/a",
+     "onetCode": "15-1255.00",
+     "line": 2563
+    },
+    {
+     "id": 21699,
+     "text": "Direct and execute pre-production activities, such as creating moodboards or storyboards and establishing a project timeline.",
+     "type": "n/a",
+     "onetCode": "15-1255.00",
+     "line": 2564
+    },
+    {
+     "id": 21700,
+     "text": "Document technical factors such as server load, bandwidth, database performance, and browser and device types.",
+     "type": "n/a",
+     "onetCode": "15-1255.00",
+     "line": 2565
+    },
+    {
+     "id": 21701,
+     "text": "Identify or maintain links to and from other Web sites and check links to ensure proper functioning.",
+     "type": "n/a",
+     "onetCode": "15-1255.00",
+     "line": 2566
+    },
+    {
+     "id": 21702,
+     "text": "Identify problems uncovered by testing or customer feedback, and correct problems or refer problems to appropriate personnel for correction.",
+     "type": "n/a",
+     "onetCode": "15-1255.00",
+     "line": 2567
+    },
+    {
+     "id": 21703,
+     "text": "Incorporate technical considerations into Web site design plans, such as budgets, equipment, performance requirements, or legal issues including accessibility and privacy.",
+     "type": "n/a",
+     "onetCode": "15-1255.00",
+     "line": 2568
+    },
+    {
+     "id": 21704,
+     "text": "Maintain understanding of current Web technologies or programming practices through continuing education, reading, or participation in professional conferences, workshops, or groups.",
+     "type": "n/a",
+     "onetCode": "15-1255.00",
+     "line": 2569
+    },
+    {
+     "id": 21705,
+     "text": "Perform or direct Web site updates.",
+     "type": "n/a",
+     "onetCode": "15-1255.00",
+     "line": 2570
+    },
+    {
+     "id": 21706,
+     "text": "Perform Web site tests according to planned schedules, or after any Web site or product revision.",
+     "type": "n/a",
+     "onetCode": "15-1255.00",
+     "line": 2571
+    },
+    {
+     "id": 21707,
+     "text": "Provide clear, detailed descriptions of Web site specifications, such as product features, activities, software, communication protocols, programming languages, and operating systems software and hardware.",
+     "type": "n/a",
+     "onetCode": "15-1255.00",
+     "line": 2572
+    },
+    {
+     "id": 21708,
+     "text": "Register Web sites with search engines to increase Web site traffic.",
+     "type": "n/a",
+     "onetCode": "15-1255.00",
+     "line": 2573
+    },
+    {
+     "id": 21709,
+     "text": "Research and apply innovative solutions for product design, visuals, and user experience to meet the needs of individual Web development projects.",
+     "type": "n/a",
+     "onetCode": "15-1255.00",
+     "line": 2574
+    },
+    {
+     "id": 21710,
+     "text": "Research, document, rate, or select alternatives for Web architecture or technologies.",
+     "type": "n/a",
+     "onetCode": "15-1255.00",
+     "line": 2575
+    },
+    {
+     "id": 21711,
+     "text": "Respond to user email inquiries, or set up automated systems to send responses.",
+     "type": "n/a",
+     "onetCode": "15-1255.00",
+     "line": 2576
+    },
+    {
+     "id": 21712,
+     "text": "Select programming languages, design tools, or applications.",
+     "type": "n/a",
+     "onetCode": "15-1255.00",
+     "line": 2577
+    },
+    {
+     "id": 21713,
+     "text": "Write and edit technical documentation for digital interface products and designs, such as user manuals, testing protocols, and reports.",
+     "type": "n/a",
+     "onetCode": "15-1255.00",
+     "line": 2578
+    },
+    {
+     "id": 21714,
+     "text": "Write supporting code for Web applications or Web sites.",
+     "type": "n/a",
+     "onetCode": "15-1255.00",
+     "line": 2579
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "kelleyTracks": [
+    "Tech"
+   ],
+   "kelleyTitles": [
+    "UX Designer"
+   ],
+   "sources": {
+    "employment": "oews:national_M2025_dl!L152",
+    "annualMedian": "oews:national_M2025_dl!AB152",
+    "annualMean": "oews:national_M2025_dl!S152",
+    "hourlyMedian": "oews:national_M2025_dl!W152",
+    "hourlyMean": "oews:national_M2025_dl!R152",
+    "annualPct10": "oews:national_M2025_dl!Z152",
+    "annualPct90": "oews:national_M2025_dl!AD152",
+    "annualOnly": "oews:national_M2025_dl!AE152",
+    "hourlyOnly": "oews:national_M2025_dl!AF152",
+    "title": "oews:national_M2025_dl!J152",
+    "ep.title": "ep:Table 1.2!A112",
+    "ep.employment2025": "ep:Table 1.2!D112",
+    "ep.employment2035": "ep:Table 1.2!E112",
+    "ep.numericChange": "ep:Table 1.2!H112",
+    "ep.percentChange": "ep:Table 1.2!I112",
+    "onetCode": "onet:Occupation Data.txt#L127:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L127:Description"
+   },
+   "nullReasons": {}
+  },
+  "15-1299": {
+   "soc": "15-1299",
+   "title": "Computer Occupations, All Other",
+   "major": "15-0000",
+   "minor": "15-1200",
+   "broad": "15-1290",
+   "oewsRows": [
+    154
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 435370,
+   "annualMedian": 116580,
+   "annualMean": 122230,
+   "hourlyMedian": 56.05,
+   "hourlyMean": 58.77,
+   "annualPct10": 55940,
+   "annualPct90": 188470,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Computer occupations, all other",
+    "employment2025": 471200,
+    "employment2035": 495300,
+    "numericChange": 24200,
+    "percentChange": 5.1
+   },
+   "onetCode": "15-1299.00",
+   "onetTaskSource": "sub-codes",
+   "onetSubCodes": [
+    {
+     "code": "15-1299.01",
+     "title": "Web Administrators",
+     "taskCount": 35
+    },
+    {
+     "code": "15-1299.02",
+     "title": "Geographic Information Systems Technologists and Technicians",
+     "taskCount": 29
+    },
+    {
+     "code": "15-1299.03",
+     "title": "Document Management Specialists",
+     "taskCount": 23
+    },
+    {
+     "code": "15-1299.04",
+     "title": "Penetration Testers",
+     "taskCount": 22
+    },
+    {
+     "code": "15-1299.05",
+     "title": "Information Security Engineers",
+     "taskCount": 20
+    },
+    {
+     "code": "15-1299.06",
+     "title": "Digital Forensics Analysts",
+     "taskCount": 20
+    },
+    {
+     "code": "15-1299.07",
+     "title": "Blockchain Engineers",
+     "taskCount": 17
+    },
+    {
+     "code": "15-1299.08",
+     "title": "Computer Systems Engineers/Architects",
+     "taskCount": 28
+    },
+    {
+     "code": "15-1299.09",
+     "title": "Information Technology Project Managers",
+     "taskCount": 21
+    }
+   ],
+   "description": "All computer occupations not listed separately.",
+   "tasks": [
+    {
+     "id": 14734,
+     "text": "Monitor systems for intrusions or denial of service attacks, and report security breaches to appropriate personnel.",
+     "type": "Core",
+     "onetCode": "15-1299.01",
+     "line": 2604
+    },
+    {
+     "id": 14741,
+     "text": "Identify or document backup or recovery plans.",
+     "type": "Core",
+     "onetCode": "15-1299.01",
+     "line": 2605
+    },
+    {
+     "id": 14731,
+     "text": "Back up or modify applications and related data to provide for disaster recovery.",
+     "type": "Core",
+     "onetCode": "15-1299.01",
+     "line": 2606
+    },
+    {
+     "id": 14758,
+     "text": "Correct testing-identified problems, or recommend actions for their resolution.",
+     "type": "Core",
+     "onetCode": "15-1299.01",
+     "line": 2607
+    },
+    {
+     "id": 14748,
+     "text": "Identify, standardize, and communicate levels of access and security.",
+     "type": "Core",
+     "onetCode": "15-1299.01",
+     "line": 2608
+    },
+    {
+     "id": 14732,
+     "text": "Determine sources of Web page or server problems, and take action to correct such problems.",
+     "type": "Core",
+     "onetCode": "15-1299.01",
+     "line": 2609
+    },
+    {
+     "id": 14740,
+     "text": "Implement updates, upgrades, and patches in a timely manner to limit loss of service.",
+     "type": "Core",
+     "onetCode": "15-1299.01",
+     "line": 2610
+    },
+    {
+     "id": 14735,
+     "text": "Implement Web site security measures, such as firewalls or message encryption.",
+     "type": "Core",
+     "onetCode": "15-1299.01",
+     "line": 2611
+    },
+    {
+     "id": 14737,
+     "text": "Collaborate with development teams to discuss, analyze, or resolve usability issues.",
+     "type": "Core",
+     "onetCode": "15-1299.01",
+     "line": 2612
+    },
+    {
+     "id": 14750,
+     "text": "Test issues such as system integration, performance, and system security on a regular schedule or after any major program modifications.",
+     "type": "Core",
+     "onetCode": "15-1299.01",
+     "line": 2613
+    },
+    {
+     "id": 14756,
+     "text": "Perform user testing or usage analyses to determine Web sites' effectiveness or usability.",
+     "type": "Core",
+     "onetCode": "15-1299.01",
+     "line": 2614
+    },
+    {
+     "id": 14753,
+     "text": "Document application and Web site changes or change procedures.",
+     "type": "Core",
+     "onetCode": "15-1299.01",
+     "line": 2615
+    },
+    {
+     "id": 14749,
+     "text": "Track, compile, and analyze Web site usage data.",
+     "type": "Core",
+     "onetCode": "15-1299.01",
+     "line": 2616
+    },
+    {
+     "id": 14738,
+     "text": "Test backup or recovery plans regularly and resolve any problems.",
+     "type": "Core",
+     "onetCode": "15-1299.01",
+     "line": 2617
+    },
+    {
+     "id": 14751,
+     "text": "Recommend Web site improvements, and develop budgets to support recommendations.",
+     "type": "Core",
+     "onetCode": "15-1299.01",
+     "line": 2618
+    },
+    {
+     "id": 14733,
+     "text": "Review or update Web page content or links in a timely manner, using appropriate tools.",
+     "type": "Core",
+     "onetCode": "15-1299.01",
+     "line": 2619
+    },
+    {
+     "id": 14743,
+     "text": "Install or configure Web server software or hardware to ensure that directory structure is well-defined, logical, and secure, and that files are named properly.",
+     "type": "Core",
+     "onetCode": "15-1299.01",
+     "line": 2620
+    },
+    {
+     "id": 14744,
+     "text": "Gather, analyze, or document user feedback to locate or resolve sources of problems.",
+     "type": "Core",
+     "onetCode": "15-1299.01",
+     "line": 2621
+    },
+    {
+     "id": 14762,
+     "text": "Set up or maintain monitoring tools on Web servers or Web sites.",
+     "type": "Core",
+     "onetCode": "15-1299.01",
+     "line": 2622
+    },
+    {
+     "id": 14739,
+     "text": "Monitor Web developments through continuing education, reading, or participation in professional conferences, workshops, or groups.",
+     "type": "Core",
+     "onetCode": "15-1299.01",
+     "line": 2623
+    },
+    {
+     "id": 14759,
+     "text": "Develop or document style guidelines for Web site content.",
+     "type": "Core",
+     "onetCode": "15-1299.01",
+     "line": 2624
+    },
+    {
+     "id": 14745,
+     "text": "Develop Web site performance metrics.",
+     "type": "Core",
+     "onetCode": "15-1299.01",
+     "line": 2625
+    },
+    {
+     "id": 14742,
+     "text": "Collaborate with Web developers to create and operate internal and external Web sites, or to manage projects, such as e-marketing campaigns.",
+     "type": "Core",
+     "onetCode": "15-1299.01",
+     "line": 2626
+    },
+    {
+     "id": 14746,
+     "text": "Identify or address interoperability requirements.",
+     "type": "Core",
+     "onetCode": "15-1299.01",
+     "line": 2627
+    },
+    {
+     "id": 14754,
+     "text": "Develop or implement procedures for ongoing Web site revision.",
+     "type": "Core",
+     "onetCode": "15-1299.01",
+     "line": 2628
+    },
+    {
+     "id": 14761,
+     "text": "Check and analyze operating system or application log files regularly to verify proper system performance.",
+     "type": "Core",
+     "onetCode": "15-1299.01",
+     "line": 2629
+    },
+    {
+     "id": 14755,
+     "text": "Provide training or technical assistance in Web site implementation or use.",
+     "type": "Core",
+     "onetCode": "15-1299.01",
+     "line": 2630
+    },
+    {
+     "id": 14764,
+     "text": "Evaluate testing routines or procedures for adequacy, sufficiency, and effectiveness.",
+     "type": "Core",
+     "onetCode": "15-1299.01",
+     "line": 2631
+    },
+    {
+     "id": 14752,
+     "text": "Inform Web site users of problems, problem resolutions, or application changes and updates.",
+     "type": "Core",
+     "onetCode": "15-1299.01",
+     "line": 2632
+    },
+    {
+     "id": 14747,
+     "text": "Document installation or configuration procedures to allow maintenance and repetition.",
+     "type": "Core",
+     "onetCode": "15-1299.01",
+     "line": 2633
+    },
+    {
+     "id": 14763,
+     "text": "Develop testing routines and procedures.",
+     "type": "Core",
+     "onetCode": "15-1299.01",
+     "line": 2634
+    },
+    {
+     "id": 14765,
+     "text": "Test new software packages for use in Web operations or other applications.",
+     "type": "Core",
+     "onetCode": "15-1299.01",
+     "line": 2635
+    },
+    {
+     "id": 14760,
+     "text": "Develop and implement marketing plans for home pages, including print advertising or advertisement rotation.",
+     "type": "Core",
+     "onetCode": "15-1299.01",
+     "line": 2636
+    },
+    {
+     "id": 14757,
+     "text": "Evaluate or recommend server hardware or software.",
+     "type": "Core",
+     "onetCode": "15-1299.01",
+     "line": 2637
+    },
+    {
+     "id": 14736,
+     "text": "Administer internet or intranet infrastructure, including Web, file, and mail servers.",
+     "type": "Supplemental",
+     "onetCode": "15-1299.01",
+     "line": 2638
+    },
+    {
+     "id": 21715,
+     "text": "Produce data layers, maps, tables, or reports, using spatial analysis procedures or Geographic Information Systems (GIS) technology, equipment, or systems.",
+     "type": "Core",
+     "onetCode": "15-1299.02",
+     "line": 2639
+    },
+    {
+     "id": 21716,
+     "text": "Design or prepare graphic representations of Geographic Information Systems (GIS) data, using GIS hardware or software applications.",
+     "type": "Core",
+     "onetCode": "15-1299.02",
+     "line": 2640
+    },
+    {
+     "id": 21717,
+     "text": "Maintain or modify existing Geographic Information Systems (GIS) databases.",
+     "type": "Core",
+     "onetCode": "15-1299.02",
+     "line": 2641
+    },
+    {
+     "id": 21718,
+     "text": "Provide technical expertise in Geographic Information Systems (GIS) technology to clients or users.",
+     "type": "Core",
+     "onetCode": "15-1299.02",
+     "line": 2642
+    },
+    {
+     "id": 21719,
+     "text": "Perform computer programming, data analysis, or software development for Geographic Information Systems (GIS) applications, including the maintenance of existing systems or research and development for future enhancements.",
+     "type": "Core",
+     "onetCode": "15-1299.02",
+     "line": 2643
+    },
+    {
+     "id": 21720,
+     "text": "Enter data into Geographic Information Systems (GIS) databases, using techniques such as coordinate geometry, keyboard entry of tabular data, manual digitizing of maps, scanning or automatic conversion to vectors, or conversion of other sources of digital data.",
+     "type": "Core",
+     "onetCode": "15-1299.02",
+     "line": 2644
+    },
+    {
+     "id": 21721,
+     "text": "Review existing or incoming data for currency, accuracy, usefulness, quality, or completeness of documentation.",
+     "type": "Core",
+     "onetCode": "15-1299.02",
+     "line": 2645
+    },
+    {
+     "id": 21722,
+     "text": "Perform geospatial data building, modeling, or analysis, using advanced spatial analysis, data manipulation, or cartography software.",
+     "type": "Core",
+     "onetCode": "15-1299.02",
+     "line": 2646
+    },
+    {
+     "id": 21723,
+     "text": "Design or coordinate the development of integrated Geographic Information Systems (GIS) spatial or non-spatial databases.",
+     "type": "Core",
+     "onetCode": "15-1299.02",
+     "line": 2647
+    },
+    {
+     "id": 21724,
+     "text": "Perform integrated or computerized Geographic Information Systems (GIS) analyses to address scientific problems.",
+     "type": "Core",
+     "onetCode": "15-1299.02",
+     "line": 2648
+    },
+    {
+     "id": 21725,
+     "text": "Select cartographic elements needed for effective presentation of information.",
+     "type": "Core",
+     "onetCode": "15-1299.02",
+     "line": 2649
+    },
+    {
+     "id": 21726,
+     "text": "Provide technical support to users or clients regarding the maintenance, development, or operation of Geographic Information Systems (GIS) databases, equipment, or applications.",
+     "type": "Core",
+     "onetCode": "15-1299.02",
+     "line": 2650
+    },
+    {
+     "id": 21727,
+     "text": "Collect, compile, or integrate Geographic Information Systems (GIS) data, such as remote sensing or cartographic data for inclusion in map manuscripts.",
+     "type": "Core",
+     "onetCode": "15-1299.02",
+     "line": 2651
+    },
+    {
+     "id": 21728,
+     "text": "Interpret aerial or ortho photographs.",
+     "type": "Core",
+     "onetCode": "15-1299.02",
+     "line": 2652
+    },
+    {
+     "id": 21729,
+     "text": "Meet with clients to discuss topics such as technical specifications, customized solutions, or operational problems.",
+     "type": "Core",
+     "onetCode": "15-1299.02",
+     "line": 2653
+    },
+    {
+     "id": 21730,
+     "text": "Document, design, code, or test Geographic Information Systems (GIS) models, internet mapping solutions, or other applications.",
+     "type": "Core",
+     "onetCode": "15-1299.02",
+     "line": 2654
+    },
+    {
+     "id": 21731,
+     "text": "Create, analyze, report, convert, or transfer data, using specialized applications program software.",
+     "type": "Core",
+     "onetCode": "15-1299.02",
+     "line": 2655
+    },
+    {
+     "id": 21732,
+     "text": "Confer with users to analyze, configure, or troubleshoot applications.",
+     "type": "Core",
+     "onetCode": "15-1299.02",
+     "line": 2656
+    },
+    {
+     "id": 21733,
+     "text": "Design, program, or model Geographic Information Systems (GIS) applications or procedures.",
+     "type": "Core",
+     "onetCode": "15-1299.02",
+     "line": 2657
+    },
+    {
+     "id": 21734,
+     "text": "Develop specialized computer software routines, internet-based Geographic Information Systems (GIS) databases, or business applications to customize geographic information.",
+     "type": "Core",
+     "onetCode": "15-1299.02",
+     "line": 2658
+    },
+    {
+     "id": 21735,
+     "text": "Make recommendations regarding upgrades, considering implications of new or revised Geographic Information Systems (GIS) software, equipment, or applications.",
+     "type": "Core",
+     "onetCode": "15-1299.02",
+     "line": 2659
+    },
+    {
+     "id": 21736,
+     "text": "Assist users in formulating Geographic Information Systems (GIS) requirements or understanding the implications of alternatives.",
+     "type": "Core",
+     "onetCode": "15-1299.02",
+     "line": 2660
+    },
+    {
+     "id": 21737,
+     "text": "Create visual representations of geospatial data, using complex procedures such as analytical modeling, three-dimensional renderings, or plot creation.",
+     "type": "Core",
+     "onetCode": "15-1299.02",
+     "line": 2661
+    },
+    {
+     "id": 21738,
+     "text": "Transfer or rescale information from original photographs onto maps or other photographs.",
+     "type": "Core",
+     "onetCode": "15-1299.02",
+     "line": 2662
+    },
+    {
+     "id": 21739,
+     "text": "Prepare training materials for, or make presentations to, Geographic Information Systems (GIS) users.",
+     "type": "Core",
+     "onetCode": "15-1299.02",
+     "line": 2663
+    },
+    {
+     "id": 21740,
+     "text": "Apply three-dimensional (3D) or four-dimensional (4D) technologies to geospatial data to allow for new or different analyses or applications.",
+     "type": "Supplemental",
+     "onetCode": "15-1299.02",
+     "line": 2664
+    },
+    {
+     "id": 21741,
+     "text": "Conduct research, data analysis, systems design, or support for software such as Geographic Information Systems (GIS) or Global Positioning Systems (GPS) mapping software.",
+     "type": "n/a",
+     "onetCode": "15-1299.02",
+     "line": 2665
+    },
+    {
+     "id": 21742,
+     "text": "Read current literature, talk with colleagues, continue education, or participate in professional organizations or conferences to keep abreast of developments in Geographic Information Systems (GIS) technology, equipment, or systems.",
+     "type": "n/a",
+     "onetCode": "15-1299.02",
+     "line": 2666
+    },
+    {
+     "id": 21743,
+     "text": "Recommend procedures, equipment, or software upgrades to increase data accessibility or ease of use.",
+     "type": "n/a",
+     "onetCode": "15-1299.02",
+     "line": 2667
+    },
+    {
+     "id": 16234,
+     "text": "Assist in determining document management policies to facilitate efficient, legal, and secure access to electronic content.",
+     "type": "Core",
+     "onetCode": "15-1299.03",
+     "line": 2668
+    },
+    {
+     "id": 16232,
+     "text": "Assist in the development of document or content classification taxonomies to facilitate information capture, search, and retrieval.",
+     "type": "Core",
+     "onetCode": "15-1299.03",
+     "line": 2669
+    },
+    {
+     "id": 16238,
+     "text": "Implement electronic document processing, retrieval, and distribution systems in collaboration with other information technology specialists.",
+     "type": "Core",
+     "onetCode": "15-1299.03",
+     "line": 2670
+    },
+    {
+     "id": 16239,
+     "text": "Identify and classify documents or other electronic content according to characteristics such as security level, function, and metadata.",
+     "type": "Core",
+     "onetCode": "15-1299.03",
+     "line": 2671
+    },
+    {
+     "id": 16229,
+     "text": "Develop, document, or maintain standards, best practices, or system usage procedures.",
+     "type": "Core",
+     "onetCode": "15-1299.03",
+     "line": 2672
+    },
+    {
+     "id": 16233,
+     "text": "Assist in the assessment, acquisition, or deployment of new electronic document management systems.",
+     "type": "Core",
+     "onetCode": "15-1299.03",
+     "line": 2673
+    },
+    {
+     "id": 16237,
+     "text": "Administer document and system access rights and revision control to ensure security of system and integrity of master documents.",
+     "type": "Core",
+     "onetCode": "15-1299.03",
+     "line": 2674
+    },
+    {
+     "id": 20368,
+     "text": "Prepare and record changes to official documents and confirm changes with legal and compliance management staff, including enterprise-wide records management staff.",
+     "type": "Core",
+     "onetCode": "15-1299.03",
+     "line": 2675
+    },
+    {
+     "id": 16220,
+     "text": "Write, review, or execute plans for testing new or established document management systems.",
+     "type": "Core",
+     "onetCode": "15-1299.03",
+     "line": 2676
+    },
+    {
+     "id": 16219,
+     "text": "Monitor regulatory activity to maintain compliance with records and document management laws.",
+     "type": "Core",
+     "onetCode": "15-1299.03",
+     "line": 2677
+    },
+    {
+     "id": 16222,
+     "text": "Retrieve electronic assets from repository for distribution to users, collecting and returning to repository, if necessary.",
+     "type": "Core",
+     "onetCode": "15-1299.03",
+     "line": 2678
+    },
+    {
+     "id": 20367,
+     "text": "Keep abreast of developments in document management technologies and techniques by reviewing current literature, talking with colleagues, participating in educational programs, attending meetings or workshops, or participating in professional organizations or conferences.",
+     "type": "Core",
+     "onetCode": "15-1299.03",
+     "line": 2679
+    },
+    {
+     "id": 16231,
+     "text": "Conduct needs assessments to identify document management requirements of departments or end users.",
+     "type": "Core",
+     "onetCode": "15-1299.03",
+     "line": 2680
+    },
+    {
+     "id": 16240,
+     "text": "Develop or configure document management system features, such as user interfaces, access profiles, and document workflow procedures.",
+     "type": "Core",
+     "onetCode": "15-1299.03",
+     "line": 2681
+    },
+    {
+     "id": 16228,
+     "text": "Document technical functions and specifications for new or proposed content management systems.",
+     "type": "Core",
+     "onetCode": "15-1299.03",
+     "line": 2682
+    },
+    {
+     "id": 16226,
+     "text": "Exercise security surveillance over document processing, reproduction, distribution, storage, or archiving.",
+     "type": "Core",
+     "onetCode": "15-1299.03",
+     "line": 2683
+    },
+    {
+     "id": 16230,
+     "text": "Consult with end users regarding problems in accessing electronic content.",
+     "type": "Core",
+     "onetCode": "15-1299.03",
+     "line": 2684
+    },
+    {
+     "id": 16223,
+     "text": "Propose recommendations for improving content management system capabilities.",
+     "type": "Core",
+     "onetCode": "15-1299.03",
+     "line": 2685
+    },
+    {
+     "id": 16236,
+     "text": "Operate data capture technology to import digitized documents into document management system.",
+     "type": "Core",
+     "onetCode": "15-1299.03",
+     "line": 2686
+    },
+    {
+     "id": 16224,
+     "text": "Prepare support documentation and training materials for end users of document management systems.",
+     "type": "Core",
+     "onetCode": "15-1299.03",
+     "line": 2687
+    },
+    {
+     "id": 16221,
+     "text": "Search electronic sources, such as databases or repositories, or manual sources for information.",
+     "type": "Core",
+     "onetCode": "15-1299.03",
+     "line": 2688
+    },
+    {
+     "id": 16227,
+     "text": "Implement scanning or other automated data entry procedures, using imaging devices and document imaging software.",
+     "type": "Core",
+     "onetCode": "15-1299.03",
+     "line": 2689
+    },
+    {
+     "id": 16235,
+     "text": "Analyze, interpret, or disseminate system performance data.",
+     "type": "Supplemental",
+     "onetCode": "15-1299.03",
+     "line": 2690
+    },
+    {
+     "id": 21744,
+     "text": "Assess the physical security of servers, systems, or network devices to identify vulnerability to temperature, vandalism, or natural disasters.",
+     "type": "n/a",
+     "onetCode": "15-1299.04",
+     "line": 2691
+    },
+    {
+     "id": 21745,
+     "text": "Collect stakeholder data to evaluate risk and to develop mitigation strategies.",
+     "type": "n/a",
+     "onetCode": "15-1299.04",
+     "line": 2692
+    },
+    {
+     "id": 21746,
+     "text": "Conduct network and security system audits, using established criteria.",
+     "type": "n/a",
+     "onetCode": "15-1299.04",
+     "line": 2693
+    },
+    {
+     "id": 21747,
+     "text": "Configure information systems to incorporate principles of least functionality and least access.",
+     "type": "n/a",
+     "onetCode": "15-1299.04",
+     "line": 2694
+    },
+    {
+     "id": 21748,
+     "text": "Design security solutions to address known device vulnerabilities.",
+     "type": "n/a",
+     "onetCode": "15-1299.04",
+     "line": 2695
+    },
+    {
+     "id": 21749,
+     "text": "Develop and execute tests that simulate the techniques of known cyber threat actors.",
+     "type": "n/a",
+     "onetCode": "15-1299.04",
+     "line": 2696
+    },
+    {
+     "id": 21750,
+     "text": "Develop infiltration tests that exploit device vulnerabilities.",
+     "type": "n/a",
+     "onetCode": "15-1299.04",
+     "line": 2697
+    },
+    {
+     "id": 21751,
+     "text": "Develop presentations on threat intelligence.",
+     "type": "n/a",
+     "onetCode": "15-1299.04",
+     "line": 2698
+    },
+    {
+     "id": 21752,
+     "text": "Develop security penetration testing processes, such as wireless, data networks, and telecommunication security tests.",
+     "type": "n/a",
+     "onetCode": "15-1299.04",
+     "line": 2699
+    },
+    {
+     "id": 21753,
+     "text": "Discuss security solutions with information technology teams or management.",
+     "type": "n/a",
+     "onetCode": "15-1299.04",
+     "line": 2700
+    },
+    {
+     "id": 21754,
+     "text": "Document penetration test findings.",
+     "type": "n/a",
+     "onetCode": "15-1299.04",
+     "line": 2701
+    },
+    {
+     "id": 21755,
+     "text": "Evaluate vulnerability assessments of local computing environments, networks, infrastructures, or enclave boundaries.",
+     "type": "n/a",
+     "onetCode": "15-1299.04",
+     "line": 2702
+    },
+    {
+     "id": 21756,
+     "text": "Gather cyber intelligence to identify vulnerabilities.",
+     "type": "n/a",
+     "onetCode": "15-1299.04",
+     "line": 2703
+    },
+    {
+     "id": 21757,
+     "text": "Identify new threat tactics, techniques, or procedures used by cyber threat actors.",
+     "type": "n/a",
+     "onetCode": "15-1299.04",
+     "line": 2704
+    },
+    {
+     "id": 21758,
+     "text": "Identify security system weaknesses, using penetration tests.",
+     "type": "n/a",
+     "onetCode": "15-1299.04",
+     "line": 2705,
+     "alsoIn": [
+      "15-1299.05"
+     ]
+    },
+    {
+     "id": 21759,
+     "text": "Investigate security incidents, using computer forensics, network forensics, root cause analysis, or malware analysis.",
+     "type": "n/a",
+     "onetCode": "15-1299.04",
+     "line": 2706
+    },
+    {
+     "id": 21760,
+     "text": "Keep up with new penetration testing tools and methods.",
+     "type": "n/a",
+     "onetCode": "15-1299.04",
+     "line": 2707
+    },
+    {
+     "id": 21761,
+     "text": "Maintain up-to-date knowledge of hacking trends.",
+     "type": "n/a",
+     "onetCode": "15-1299.04",
+     "line": 2708
+    },
+    {
+     "id": 21762,
+     "text": "Prepare and submit reports describing the results of security fixes.",
+     "type": "n/a",
+     "onetCode": "15-1299.04",
+     "line": 2709
+    },
+    {
+     "id": 21763,
+     "text": "Test the security of systems by attempting to gain access to networks, Web-based applications, or computers.",
+     "type": "n/a",
+     "onetCode": "15-1299.04",
+     "line": 2710
+    },
+    {
+     "id": 21764,
+     "text": "Update corporate policies to improve cyber security.",
+     "type": "n/a",
+     "onetCode": "15-1299.04",
+     "line": 2711
+    },
+    {
+     "id": 21765,
+     "text": "Write audit reports to communicate technical and procedural findings and recommend solutions.",
+     "type": "n/a",
+     "onetCode": "15-1299.04",
+     "line": 2712
+    },
+    {
+     "id": 21769,
+     "text": "Coordinate monitoring of networks or systems for security breaches or intrusions.",
+     "type": "Core",
+     "onetCode": "15-1299.05",
+     "line": 2714
+    },
+    {
+     "id": 21766,
+     "text": "Assess the quality of security controls, using performance indicators.",
+     "type": "Core",
+     "onetCode": "15-1299.05",
+     "line": 2715
+    },
+    {
+     "id": 21783,
+     "text": "Train staff on, and oversee the use of, information security standards, policies, and best practices.",
+     "type": "Core",
+     "onetCode": "15-1299.05",
+     "line": 2716
+    },
+    {
+     "id": 21782,
+     "text": "Scan networks, using vulnerability assessment tools to identify vulnerabilities.",
+     "type": "Core",
+     "onetCode": "15-1299.05",
+     "line": 2717
+    },
+    {
+     "id": 21774,
+     "text": "Develop response and recovery strategies for security breaches.",
+     "type": "Core",
+     "onetCode": "15-1299.05",
+     "line": 2718
+    },
+    {
+     "id": 21767,
+     "text": "Conduct investigations of information security breaches to identify vulnerabilities and evaluate the damage.",
+     "type": "Core",
+     "onetCode": "15-1299.05",
+     "line": 2719
+    },
+    {
+     "id": 21773,
+     "text": "Develop or install software, such as firewalls and data encryption programs, to protect sensitive information.",
+     "type": "Core",
+     "onetCode": "15-1299.05",
+     "line": 2720
+    },
+    {
+     "id": 21777,
+     "text": "Oversee development of plans to safeguard computer files against accidental or unauthorized modification, destruction, or disclosure or to meet emergency data processing needs.",
+     "type": "Core",
+     "onetCode": "15-1299.05",
+     "line": 2721
+    },
+    {
+     "id": 21775,
+     "text": "Identify or implement solutions to information security problems.",
+     "type": "Core",
+     "onetCode": "15-1299.05",
+     "line": 2722
+    },
+    {
+     "id": 21771,
+     "text": "Develop information security standards and best practices.",
+     "type": "Core",
+     "onetCode": "15-1299.05",
+     "line": 2723
+    },
+    {
+     "id": 21780,
+     "text": "Recommend information security enhancements to management.",
+     "type": "Core",
+     "onetCode": "15-1299.05",
+     "line": 2724
+    },
+    {
+     "id": 21778,
+     "text": "Oversee performance of risk assessment or execution of system tests to ensure the functioning of data processing activities or security measures.",
+     "type": "Core",
+     "onetCode": "15-1299.05",
+     "line": 2725
+    },
+    {
+     "id": 21770,
+     "text": "Coordinate vulnerability assessments or analysis of information security systems.",
+     "type": "Core",
+     "onetCode": "15-1299.05",
+     "line": 2726
+    },
+    {
+     "id": 21781,
+     "text": "Review security assessments for computing environments or check for compliance with cybersecurity standards and regulations.",
+     "type": "Core",
+     "onetCode": "15-1299.05",
+     "line": 2727
+    },
+    {
+     "id": 21784,
+     "text": "Troubleshoot security and network problems.",
+     "type": "Core",
+     "onetCode": "15-1299.05",
+     "line": 2728
+    },
+    {
+     "id": 21768,
+     "text": "Coordinate documentation of computer security or emergency measure policies, procedures, or tests.",
+     "type": "Core",
+     "onetCode": "15-1299.05",
+     "line": 2729
+    },
+    {
+     "id": 21772,
+     "text": "Develop or implement software tools to assist in the detection, prevention, and analysis of security threats.",
+     "type": "Core",
+     "onetCode": "15-1299.05",
+     "line": 2730
+    },
+    {
+     "id": 21785,
+     "text": "Write reports regarding investigations of information security breaches or network evaluations.",
+     "type": "Core",
+     "onetCode": "15-1299.05",
+     "line": 2731
+    },
+    {
+     "id": 21779,
+     "text": "Provide technical support to computer users for installation and use of security products.",
+     "type": "Core",
+     "onetCode": "15-1299.05",
+     "line": 2732
+    },
+    {
+     "id": 21786,
+     "text": "Adhere to legal policies and procedures related to handling digital media.",
+     "type": "n/a",
+     "onetCode": "15-1299.06",
+     "line": 2733
+    },
+    {
+     "id": 21787,
+     "text": "Analyze log files or other digital information to identify the perpetrators of network intrusions.",
+     "type": "n/a",
+     "onetCode": "15-1299.06",
+     "line": 2734
+    },
+    {
+     "id": 21788,
+     "text": "Conduct predictive or reactive analyses on security measures to support cyber security initiatives.",
+     "type": "n/a",
+     "onetCode": "15-1299.06",
+     "line": 2735
+    },
+    {
+     "id": 21789,
+     "text": "Create system images or capture network settings from information technology environments to preserve as evidence.",
+     "type": "n/a",
+     "onetCode": "15-1299.06",
+     "line": 2736
+    },
+    {
+     "id": 21790,
+     "text": "Develop plans for investigating alleged computer crimes, violations, or suspicious activity.",
+     "type": "n/a",
+     "onetCode": "15-1299.06",
+     "line": 2737
+    },
+    {
+     "id": 21791,
+     "text": "Develop policies or requirements for data collection, processing, or reporting.",
+     "type": "n/a",
+     "onetCode": "15-1299.06",
+     "line": 2738
+    },
+    {
+     "id": 21792,
+     "text": "Duplicate digital evidence to use for data recovery and analysis procedures.",
+     "type": "n/a",
+     "onetCode": "15-1299.06",
+     "line": 2739
+    },
+    {
+     "id": 21793,
+     "text": "Identify or develop reverse-engineering tools to improve system capabilities or detect vulnerabilities.",
+     "type": "n/a",
+     "onetCode": "15-1299.06",
+     "line": 2740
+    },
+    {
+     "id": 21794,
+     "text": "Maintain cyber defense software or hardware to support responses to cyber incidents.",
+     "type": "n/a",
+     "onetCode": "15-1299.06",
+     "line": 2741
+    },
+    {
+     "id": 21795,
+     "text": "Maintain knowledge of laws, regulations, policies or other issuances pertaining to digital forensics or information privacy.",
+     "type": "n/a",
+     "onetCode": "15-1299.06",
+     "line": 2742
+    },
+    {
+     "id": 21796,
+     "text": "Perform file signature analysis to verify files on storage media or discover potential hidden files.",
+     "type": "n/a",
+     "onetCode": "15-1299.06",
+     "line": 2743
+    },
+    {
+     "id": 21797,
+     "text": "Perform forensic investigations of operating or file systems.",
+     "type": "n/a",
+     "onetCode": "15-1299.06",
+     "line": 2744
+    },
+    {
+     "id": 21798,
+     "text": "Perform web service network traffic analysis or waveform analysis to detect anomalies, such as unusual events or trends.",
+     "type": "n/a",
+     "onetCode": "15-1299.06",
+     "line": 2745
+    },
+    {
+     "id": 21799,
+     "text": "Preserve and maintain digital forensic evidence for analysis.",
+     "type": "n/a",
+     "onetCode": "15-1299.06",
+     "line": 2746
+    },
+    {
+     "id": 21800,
+     "text": "Recommend cyber defense software or hardware to support responses to cyber incidents.",
+     "type": "n/a",
+     "onetCode": "15-1299.06",
+     "line": 2747
+    },
+    {
+     "id": 21801,
+     "text": "Recover data or decrypt seized data.",
+     "type": "n/a",
+     "onetCode": "15-1299.06",
+     "line": 2748
+    },
+    {
+     "id": 21802,
+     "text": "Write and execute scripts to automate tasks, such as parsing large data files.",
+     "type": "n/a",
+     "onetCode": "15-1299.06",
+     "line": 2749
+    },
+    {
+     "id": 21803,
+     "text": "Write cyber defense recommendations, reports, or white papers using research or experience.",
+     "type": "n/a",
+     "onetCode": "15-1299.06",
+     "line": 2750
+    },
+    {
+     "id": 21804,
+     "text": "Write reports, sign affidavits, or give depositions for legal proceedings.",
+     "type": "n/a",
+     "onetCode": "15-1299.06",
+     "line": 2751
+    },
+    {
+     "id": 21805,
+     "text": "Write technical summaries to report findings.",
+     "type": "n/a",
+     "onetCode": "15-1299.06",
+     "line": 2752
+    },
+    {
+     "id": 21806,
+     "text": "Assess blockchain threats, such as untested code and unprotected keys.",
+     "type": "n/a",
+     "onetCode": "15-1299.07",
+     "line": 2753
+    },
+    {
+     "id": 21807,
+     "text": "Automate the deployment of software updates over geographically distributed network nodes.",
+     "type": "n/a",
+     "onetCode": "15-1299.07",
+     "line": 2754
+    },
+    {
+     "id": 21808,
+     "text": "Design and deploy blockchain design patterns to make transactions secure, transparent, and immutable.",
+     "type": "n/a",
+     "onetCode": "15-1299.07",
+     "line": 2755
+    },
+    {
+     "id": 21809,
+     "text": "Design and develop blockchain technologies for industries such as finance and music.",
+     "type": "n/a",
+     "onetCode": "15-1299.07",
+     "line": 2756
+    },
+    {
+     "id": 21810,
+     "text": "Design and implement dashboard and data visualizations to meet customer reporting needs.",
+     "type": "n/a",
+     "onetCode": "15-1299.07",
+     "line": 2757
+    },
+    {
+     "id": 21811,
+     "text": "Design and implement data repositories to integrate data.",
+     "type": "n/a",
+     "onetCode": "15-1299.07",
+     "line": 2758
+    },
+    {
+     "id": 21812,
+     "text": "Design and verify cryptographic protocols to protect private information.",
+     "type": "n/a",
+     "onetCode": "15-1299.07",
+     "line": 2759
+    },
+    {
+     "id": 21813,
+     "text": "Determine specifications for, or implement, logging.",
+     "type": "n/a",
+     "onetCode": "15-1299.07",
+     "line": 2760
+    },
+    {
+     "id": 21814,
+     "text": "Develop a maintainable code base using object-oriented design principles, practices, or patterns.",
+     "type": "n/a",
+     "onetCode": "15-1299.07",
+     "line": 2761
+    },
+    {
+     "id": 21815,
+     "text": "Discuss and plan systems with solution architects, system engineers, or cybersecurity experts to meet customer requirements.",
+     "type": "n/a",
+     "onetCode": "15-1299.07",
+     "line": 2762
+    },
+    {
+     "id": 21816,
+     "text": "Discuss data needs with engineers, product managers, or data scientists to identify blockchain requirements.",
+     "type": "n/a",
+     "onetCode": "15-1299.07",
+     "line": 2763
+    },
+    {
+     "id": 21817,
+     "text": "Evaluate blockchain processes or risks based on security assessments or control matrix reviews.",
+     "type": "n/a",
+     "onetCode": "15-1299.07",
+     "line": 2764
+    },
+    {
+     "id": 21818,
+     "text": "Evaluate new blockchain technologies and vendor products.",
+     "type": "n/a",
+     "onetCode": "15-1299.07",
+     "line": 2765
+    },
+    {
+     "id": 21819,
+     "text": "Implement catastrophic failure handlers to identify security breaches and prevent serious damage.",
+     "type": "n/a",
+     "onetCode": "15-1299.07",
+     "line": 2766
+    },
+    {
+     "id": 21820,
+     "text": "Run infrastructure tests to examine the behavior of large peer-to-peer networks.",
+     "type": "n/a",
+     "onetCode": "15-1299.07",
+     "line": 2767
+    },
+    {
+     "id": 21821,
+     "text": "Test the security and performance of blockchain infrastructures.",
+     "type": "n/a",
+     "onetCode": "15-1299.07",
+     "line": 2768
+    },
+    {
+     "id": 21822,
+     "text": "Update client and server applications responsible for integration and business logic.",
+     "type": "n/a",
+     "onetCode": "15-1299.07",
+     "line": 2769
+    },
+    {
+     "id": 14666,
+     "text": "Communicate with staff or clients to understand specific system requirements.",
+     "type": "Core",
+     "onetCode": "15-1299.08",
+     "line": 2770
+    },
+    {
+     "id": 14677,
+     "text": "Investigate system component suitability for specified purposes, and make recommendations regarding component use.",
+     "type": "Core",
+     "onetCode": "15-1299.08",
+     "line": 2771
+    },
+    {
+     "id": 14674,
+     "text": "Provide customers or installation teams guidelines for implementing secure systems.",
+     "type": "Core",
+     "onetCode": "15-1299.08",
+     "line": 2772
+    },
+    {
+     "id": 14676,
+     "text": "Direct the analysis, development, and operation of complete computer systems.",
+     "type": "Core",
+     "onetCode": "15-1299.08",
+     "line": 2773
+    },
+    {
+     "id": 14689,
+     "text": "Direct the installation of operating systems, network or application software, or computer or network hardware.",
+     "type": "Core",
+     "onetCode": "15-1299.08",
+     "line": 2774
+    },
+    {
+     "id": 14675,
+     "text": "Monitor system operation to detect potential problems.",
+     "type": "Core",
+     "onetCode": "15-1299.08",
+     "line": 2775
+    },
+    {
+     "id": 14673,
+     "text": "Identify system data, hardware, or software components required to meet user needs.",
+     "type": "Core",
+     "onetCode": "15-1299.08",
+     "line": 2776
+    },
+    {
+     "id": 14678,
+     "text": "Perform ongoing hardware and software maintenance operations, including installing or upgrading hardware or software.",
+     "type": "Core",
+     "onetCode": "15-1299.08",
+     "line": 2777
+    },
+    {
+     "id": 14669,
+     "text": "Verify stability, interoperability, portability, security, or scalability of system architecture.",
+     "type": "Core",
+     "onetCode": "15-1299.08",
+     "line": 2778
+    },
+    {
+     "id": 14686,
+     "text": "Research, test, or verify proper functioning of software patches and fixes.",
+     "type": "Core",
+     "onetCode": "15-1299.08",
+     "line": 2779
+    },
+    {
+     "id": 14679,
+     "text": "Configure servers to meet functional specifications.",
+     "type": "Core",
+     "onetCode": "15-1299.08",
+     "line": 2780
+    },
+    {
+     "id": 14670,
+     "text": "Collaborate with engineers or software developers to select appropriate design solutions or ensure the compatibility of system components.",
+     "type": "Core",
+     "onetCode": "15-1299.08",
+     "line": 2781
+    },
+    {
+     "id": 14683,
+     "text": "Design and conduct hardware or software tests.",
+     "type": "Core",
+     "onetCode": "15-1299.08",
+     "line": 2782
+    },
+    {
+     "id": 14685,
+     "text": "Evaluate existing systems to determine effectiveness, and suggest changes to meet organizational requirements.",
+     "type": "Core",
+     "onetCode": "15-1299.08",
+     "line": 2783
+    },
+    {
+     "id": 14668,
+     "text": "Document design specifications, installation instructions, and other system-related information.",
+     "type": "Core",
+     "onetCode": "15-1299.08",
+     "line": 2784
+    },
+    {
+     "id": 14691,
+     "text": "Perform security analyses of developed or packaged software components.",
+     "type": "Core",
+     "onetCode": "15-1299.08",
+     "line": 2785
+    },
+    {
+     "id": 14672,
+     "text": "Provide technical guidance or support for the development or troubleshooting of systems.",
+     "type": "Core",
+     "onetCode": "15-1299.08",
+     "line": 2786
+    },
+    {
+     "id": 14681,
+     "text": "Define and analyze objectives, scope, issues, or organizational impact of information systems.",
+     "type": "Core",
+     "onetCode": "15-1299.08",
+     "line": 2787
+    },
+    {
+     "id": 14684,
+     "text": "Establish functional or system standards to address operational requirements, quality requirements, and design constraints.",
+     "type": "Core",
+     "onetCode": "15-1299.08",
+     "line": 2788
+    },
+    {
+     "id": 14682,
+     "text": "Develop system engineering, software engineering, system integration, or distributed system architectures.",
+     "type": "Core",
+     "onetCode": "15-1299.08",
+     "line": 2789
+    },
+    {
+     "id": 14667,
+     "text": "Provide advice on project costs, design concepts, or design changes.",
+     "type": "Core",
+     "onetCode": "15-1299.08",
+     "line": 2790
+    },
+    {
+     "id": 14671,
+     "text": "Evaluate current or emerging technologies to consider factors such as cost, portability, compatibility, or usability.",
+     "type": "Core",
+     "onetCode": "15-1299.08",
+     "line": 2791
+    },
+    {
+     "id": 14680,
+     "text": "Develop or approve project plans, schedules, or budgets.",
+     "type": "Core",
+     "onetCode": "15-1299.08",
+     "line": 2792
+    },
+    {
+     "id": 14687,
+     "text": "Communicate project information through presentations, technical reports, or white papers.",
+     "type": "Core",
+     "onetCode": "15-1299.08",
+     "line": 2793
+    },
+    {
+     "id": 14690,
+     "text": "Train system users in system operation or maintenance.",
+     "type": "Core",
+     "onetCode": "15-1299.08",
+     "line": 2794
+    },
+    {
+     "id": 14688,
+     "text": "Complete models and simulations, using manual or automated tools, to analyze or predict system performance under different operating conditions.",
+     "type": "Core",
+     "onetCode": "15-1299.08",
+     "line": 2795
+    },
+    {
+     "id": 14693,
+     "text": "Develop efficient and effective system controllers.",
+     "type": "Core",
+     "onetCode": "15-1299.08",
+     "line": 2796
+    },
+    {
+     "id": 14692,
+     "text": "Develop application-specific software.",
+     "type": "Supplemental",
+     "onetCode": "15-1299.08",
+     "line": 2797
+    },
+    {
+     "id": 16169,
+     "text": "Manage project execution to ensure adherence to budget, schedule, and scope.",
+     "type": "Core",
+     "onetCode": "15-1299.09",
+     "line": 2798
+    },
+    {
+     "id": 16154,
+     "text": "Confer with project personnel to identify and resolve problems.",
+     "type": "Core",
+     "onetCode": "15-1299.09",
+     "line": 2799
+    },
+    {
+     "id": 16157,
+     "text": "Monitor or track project milestones and deliverables.",
+     "type": "Core",
+     "onetCode": "15-1299.09",
+     "line": 2800
+    },
+    {
+     "id": 16152,
+     "text": "Submit project deliverables, ensuring adherence to quality standards.",
+     "type": "Core",
+     "onetCode": "15-1299.09",
+     "line": 2801
+    },
+    {
+     "id": 16155,
+     "text": "Assess current or future customer needs and priorities by communicating directly with customers, conducting surveys, or other methods.",
+     "type": "Core",
+     "onetCode": "15-1299.09",
+     "line": 2802
+    },
+    {
+     "id": 16159,
+     "text": "Initiate, review, or approve modifications to project plans.",
+     "type": "Core",
+     "onetCode": "15-1299.09",
+     "line": 2803
+    },
+    {
+     "id": 16156,
+     "text": "Schedule and facilitate meetings related to information technology projects.",
+     "type": "Core",
+     "onetCode": "15-1299.09",
+     "line": 2804
+    },
+    {
+     "id": 16163,
+     "text": "Direct or coordinate activities of project personnel.",
+     "type": "Core",
+     "onetCode": "15-1299.09",
+     "line": 2805
+    },
+    {
+     "id": 16164,
+     "text": "Develop implementation plans that include analyses such as cost-benefit or return on investment (ROI).",
+     "type": "Core",
+     "onetCode": "15-1299.09",
+     "line": 2806
+    },
+    {
+     "id": 16162,
+     "text": "Identify need for initial or supplemental project resources.",
+     "type": "Core",
+     "onetCode": "15-1299.09",
+     "line": 2807
+    },
+    {
+     "id": 16170,
+     "text": "Develop or update project plans for information technology projects including information such as project objectives, technologies, systems, information specifications, schedules, funding, and staffing.",
+     "type": "Core",
+     "onetCode": "15-1299.09",
+     "line": 2808
+    },
+    {
+     "id": 16151,
+     "text": "Perform risk assessments to develop response strategies.",
+     "type": "Core",
+     "onetCode": "15-1299.09",
+     "line": 2809
+    },
+    {
+     "id": 16168,
+     "text": "Prepare project status reports by collecting, analyzing, and summarizing information and trends.",
+     "type": "Core",
+     "onetCode": "15-1299.09",
+     "line": 2810
+    },
+    {
+     "id": 16160,
+     "text": "Identify, review, or select vendors or consultants to meet project needs.",
+     "type": "Core",
+     "onetCode": "15-1299.09",
+     "line": 2811
+    },
+    {
+     "id": 16166,
+     "text": "Develop and manage annual budgets for information technology projects.",
+     "type": "Core",
+     "onetCode": "15-1299.09",
+     "line": 2812
+    },
+    {
+     "id": 16161,
+     "text": "Establish and execute a project communication plan.",
+     "type": "Core",
+     "onetCode": "15-1299.09",
+     "line": 2813
+    },
+    {
+     "id": 16171,
+     "text": "Develop and manage work breakdown structure (WBS) of information technology projects.",
+     "type": "Core",
+     "onetCode": "15-1299.09",
+     "line": 2814
+    },
+    {
+     "id": 16153,
+     "text": "Monitor the performance of project team members, providing and documenting performance feedback.",
+     "type": "Core",
+     "onetCode": "15-1299.09",
+     "line": 2815
+    },
+    {
+     "id": 16165,
+     "text": "Coordinate recruitment or selection of project personnel.",
+     "type": "Core",
+     "onetCode": "15-1299.09",
+     "line": 2816
+    },
+    {
+     "id": 16167,
+     "text": "Assign duties, responsibilities, and spans of authority to project personnel.",
+     "type": "Core",
+     "onetCode": "15-1299.09",
+     "line": 2817
+    },
+    {
+     "id": 16158,
+     "text": "Negotiate with project stakeholders or suppliers to obtain resources or materials.",
+     "type": "Core",
+     "onetCode": "15-1299.09",
+     "line": 2818
+    }
+   ],
+   "dedupedTasks": 1,
+   "aiStatus": "not yet scored",
+   "kelleyTracks": [
+    "Tech"
+   ],
+   "kelleyTitles": [
+    "IT Project Manager"
+   ],
+   "sources": {
+    "employment": "oews:national_M2025_dl!L154",
+    "annualMedian": "oews:national_M2025_dl!AB154",
+    "annualMean": "oews:national_M2025_dl!S154",
+    "hourlyMedian": "oews:national_M2025_dl!W154",
+    "hourlyMean": "oews:national_M2025_dl!R154",
+    "annualPct10": "oews:national_M2025_dl!Z154",
+    "annualPct90": "oews:national_M2025_dl!AD154",
+    "annualOnly": "oews:national_M2025_dl!AE154",
+    "hourlyOnly": "oews:national_M2025_dl!AF154",
+    "title": "oews:national_M2025_dl!J154",
+    "ep.title": "ep:Table 1.2!A113",
+    "ep.employment2025": "ep:Table 1.2!D113",
+    "ep.employment2035": "ep:Table 1.2!E113",
+    "ep.numericChange": "ep:Table 1.2!H113",
+    "ep.percentChange": "ep:Table 1.2!I113",
+    "onetCode": "onet:Occupation Data.txt#L129:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L129:Description"
+   },
+   "nullReasons": {}
+  },
+  "15-2011": {
+   "soc": "15-2011",
+   "title": "Actuaries",
+   "major": "15-0000",
+   "minor": "15-2000",
+   "broad": "15-2010",
+   "oewsRows": [
+    157
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 26670,
+   "annualMedian": 130000,
+   "annualMean": 141480,
+   "hourlyMedian": 62.5,
+   "hourlyMean": 68.02,
+   "annualPct10": 78570,
+   "annualPct90": 215100,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Actuaries",
+    "employment2025": 31200,
+    "employment2035": 34100,
+    "numericChange": 2900,
+    "percentChange": 9.2
+   },
+   "onetCode": "15-2011.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Analyze statistical data, such as mortality, accident, sickness, disability, and retirement rates and construct probability tables to forecast risk and liability for payment of future benefits. May ascertain insurance rates required and cash reserves necessary to ensure payment of future benefits.",
+   "tasks": [
+    {
+     "id": 3500,
+     "text": "Ascertain premium rates required and cash reserves and liabilities necessary to ensure payment of future benefits.",
+     "type": "Core",
+     "onetCode": "15-2011.00",
+     "line": 2819
+    },
+    {
+     "id": 3503,
+     "text": "Collaborate with programmers, underwriters, accounts, claims experts, and senior management to help companies develop plans for new lines of business or improvements to existing business.",
+     "type": "Core",
+     "onetCode": "15-2011.00",
+     "line": 2820
+    },
+    {
+     "id": 3501,
+     "text": "Analyze statistical information to estimate mortality, accident, sickness, disability, and retirement rates.",
+     "type": "Core",
+     "onetCode": "15-2011.00",
+     "line": 2821
+    },
+    {
+     "id": 3502,
+     "text": "Design, review, and help administer insurance, annuity and pension plans, determining financial soundness and calculating premiums.",
+     "type": "Core",
+     "onetCode": "15-2011.00",
+     "line": 2822
+    },
+    {
+     "id": 3504,
+     "text": "Determine, or help determine, company policy, and explain complex technical matters to company executives, government officials, shareholders, policyholders, or the public.",
+     "type": "Core",
+     "onetCode": "15-2011.00",
+     "line": 2823
+    },
+    {
+     "id": 3508,
+     "text": "Construct probability tables for events such as fires, natural disasters, and unemployment, based on analysis of statistical data and other pertinent information.",
+     "type": "Core",
+     "onetCode": "15-2011.00",
+     "line": 2824
+    },
+    {
+     "id": 3506,
+     "text": "Provide advice to clients on a contract basis, working as a consultant.",
+     "type": "Core",
+     "onetCode": "15-2011.00",
+     "line": 2825
+    },
+    {
+     "id": 3512,
+     "text": "Determine equitable basis for distributing surplus earnings under participating insurance and annuity contracts in mutual companies.",
+     "type": "Core",
+     "onetCode": "15-2011.00",
+     "line": 2826
+    },
+    {
+     "id": 20951,
+     "text": "Negotiate terms and conditions of reinsurance with other companies.",
+     "type": "Core",
+     "onetCode": "15-2011.00",
+     "line": 2827
+    },
+    {
+     "id": 3511,
+     "text": "Provide expertise to help financial institutions manage risks and maximize returns associated with investment products or credit offerings.",
+     "type": "Core",
+     "onetCode": "15-2011.00",
+     "line": 2828
+    },
+    {
+     "id": 3505,
+     "text": "Testify before public agencies on proposed legislation affecting businesses.",
+     "type": "Core",
+     "onetCode": "15-2011.00",
+     "line": 2829
+    },
+    {
+     "id": 3509,
+     "text": "Determine policy contract provisions for each type of insurance.",
+     "type": "Core",
+     "onetCode": "15-2011.00",
+     "line": 2830
+    },
+    {
+     "id": 3507,
+     "text": "Testify in court as expert witness or to provide legal evidence on matters such as the value of potential lifetime earnings of a person disabled or killed in an accident.",
+     "type": "Supplemental",
+     "onetCode": "15-2011.00",
+     "line": 2831
+    },
+    {
+     "id": 3513,
+     "text": "Explain changes in contract provisions to customers.",
+     "type": "Supplemental",
+     "onetCode": "15-2011.00",
+     "line": 2832
+    },
+    {
+     "id": 3510,
+     "text": "Manage credit and help price corporate security offerings.",
+     "type": "Supplemental",
+     "onetCode": "15-2011.00",
+     "line": 2833
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "kelleyTracks": [
+    "Finance"
+   ],
+   "kelleyTitles": [
+    "Actuary"
+   ],
+   "sources": {
+    "employment": "oews:national_M2025_dl!L157",
+    "annualMedian": "oews:national_M2025_dl!AB157",
+    "annualMean": "oews:national_M2025_dl!S157",
+    "hourlyMedian": "oews:national_M2025_dl!W157",
+    "hourlyMean": "oews:national_M2025_dl!R157",
+    "annualPct10": "oews:national_M2025_dl!Z157",
+    "annualPct90": "oews:national_M2025_dl!AD157",
+    "annualOnly": "oews:national_M2025_dl!AE157",
+    "hourlyOnly": "oews:national_M2025_dl!AF157",
+    "title": "oews:national_M2025_dl!J157",
+    "ep.title": "ep:Table 1.2!A115",
+    "ep.employment2025": "ep:Table 1.2!D115",
+    "ep.employment2035": "ep:Table 1.2!E115",
+    "ep.numericChange": "ep:Table 1.2!H115",
+    "ep.percentChange": "ep:Table 1.2!I115",
+    "onetCode": "onet:Occupation Data.txt#L139:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L139:Description"
+   },
+   "nullReasons": {}
+  },
+  "15-2021": {
+   "soc": "15-2021",
+   "title": "Mathematicians",
+   "major": "15-0000",
+   "minor": "15-2000",
+   "broad": "15-2020",
+   "oewsRows": [
+    159
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 2030,
+   "annualMedian": 126710,
+   "annualMean": 129260,
+   "hourlyMedian": 60.92,
+   "hourlyMean": 62.15,
+   "annualPct10": 69240,
+   "annualPct90": 195190,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Mathematicians",
+    "employment2025": 2200,
+    "employment2035": 2200,
+    "numericChange": 0,
+    "percentChange": 0.6
+   },
+   "onetCode": "15-2021.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Conduct research in fundamental mathematics or in application of mathematical techniques to science, management, and other fields. Solve problems in various fields using mathematical methods.",
+   "tasks": [
+    {
+     "id": 24002,
+     "text": "Mentor others on mathematical techniques.",
+     "type": "Core",
+     "onetCode": "15-2021.00",
+     "line": 2834
+    },
+    {
+     "id": 7369,
+     "text": "Maintain knowledge in the field by reading professional journals, talking with other mathematicians, and attending professional conferences.",
+     "type": "Core",
+     "onetCode": "15-2021.00",
+     "line": 2835
+    },
+    {
+     "id": 7374,
+     "text": "Develop new principles and new relationships between existing mathematical principles to advance mathematical science.",
+     "type": "Core",
+     "onetCode": "15-2021.00",
+     "line": 2836
+    },
+    {
+     "id": 20191,
+     "text": "Disseminate research by writing reports, publishing papers, or presenting at professional conferences.",
+     "type": "Core",
+     "onetCode": "15-2021.00",
+     "line": 2837
+    },
+    {
+     "id": 7372,
+     "text": "Assemble sets of assumptions, and explore the consequences of each set.",
+     "type": "Core",
+     "onetCode": "15-2021.00",
+     "line": 2838
+    },
+    {
+     "id": 7370,
+     "text": "Perform computations and apply methods of numerical analysis to data.",
+     "type": "Core",
+     "onetCode": "15-2021.00",
+     "line": 2839
+    },
+    {
+     "id": 7373,
+     "text": "Address the relationships of quantities, magnitudes, and forms through the use of numbers and symbols.",
+     "type": "Core",
+     "onetCode": "15-2021.00",
+     "line": 2840
+    },
+    {
+     "id": 7376,
+     "text": "Conduct research to extend mathematical knowledge in traditional areas, such as algebra, geometry, probability, and logic.",
+     "type": "Core",
+     "onetCode": "15-2021.00",
+     "line": 2841
+    },
+    {
+     "id": 7371,
+     "text": "Develop mathematical or statistical models of phenomena to be used for analysis or for computational simulation.",
+     "type": "Core",
+     "onetCode": "15-2021.00",
+     "line": 2842
+    },
+    {
+     "id": 7367,
+     "text": "Apply mathematical theories and techniques to the solution of practical problems in business, engineering, the sciences, or other fields.",
+     "type": "Core",
+     "onetCode": "15-2021.00",
+     "line": 2843
+    },
+    {
+     "id": 7368,
+     "text": "Develop computational methods for solving problems that occur in areas of science and engineering or that come from applications in business or industry.",
+     "type": "Core",
+     "onetCode": "15-2021.00",
+     "line": 2844
+    },
+    {
+     "id": 7375,
+     "text": "Design, analyze, and decipher encryption systems designed to transmit military, political, financial, or law-enforcement-related information in code.",
+     "type": "Supplemental",
+     "onetCode": "15-2021.00",
+     "line": 2845
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L159",
+    "annualMedian": "oews:national_M2025_dl!AB159",
+    "annualMean": "oews:national_M2025_dl!S159",
+    "hourlyMedian": "oews:national_M2025_dl!W159",
+    "hourlyMean": "oews:national_M2025_dl!R159",
+    "annualPct10": "oews:national_M2025_dl!Z159",
+    "annualPct90": "oews:national_M2025_dl!AD159",
+    "annualOnly": "oews:national_M2025_dl!AE159",
+    "hourlyOnly": "oews:national_M2025_dl!AF159",
+    "title": "oews:national_M2025_dl!J159",
+    "ep.title": "ep:Table 1.2!A116",
+    "ep.employment2025": "ep:Table 1.2!D116",
+    "ep.employment2035": "ep:Table 1.2!E116",
+    "ep.numericChange": "ep:Table 1.2!H116",
+    "ep.percentChange": "ep:Table 1.2!I116",
+    "onetCode": "onet:Occupation Data.txt#L140:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L140:Description"
+   },
+   "nullReasons": {}
+  },
+  "15-2031": {
+   "soc": "15-2031",
+   "title": "Operations Research Analysts",
+   "major": "15-0000",
+   "minor": "15-2000",
+   "broad": "15-2030",
+   "oewsRows": [
+    161
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 108510,
+   "annualMedian": 88940,
+   "annualMean": 99730,
+   "hourlyMedian": 42.76,
+   "hourlyMean": 47.95,
+   "annualPct10": 57060,
+   "annualPct90": 159910,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Operations research analysts",
+    "employment2025": 113100,
+    "employment2035": 126600,
+    "numericChange": 13500,
+    "percentChange": 11.9
+   },
+   "onetCode": "15-2031.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Formulate and apply mathematical modeling and other optimizing methods to develop and interpret information that assists management with decisionmaking, policy formulation, or other managerial functions. May collect and analyze data and develop decision support software, services, or products. May develop and supply optimal time, cost, or logistics networks for program evaluation, review, or implementation.",
+   "tasks": [
+    {
+     "id": 20952,
+     "text": "Present the results of mathematical modeling and data analysis to management or other end users.",
+     "type": "Core",
+     "onetCode": "15-2031.00",
+     "line": 2846
+    },
+    {
+     "id": 7382,
+     "text": "Define data requirements, and gather and validate information, applying judgment and statistical tests.",
+     "type": "Core",
+     "onetCode": "15-2031.00",
+     "line": 2847
+    },
+    {
+     "id": 7380,
+     "text": "Perform validation and testing of models to ensure adequacy, and reformulate models, as necessary.",
+     "type": "Core",
+     "onetCode": "15-2031.00",
+     "line": 2848
+    },
+    {
+     "id": 7384,
+     "text": "Prepare management reports defining and evaluating problems and recommending solutions.",
+     "type": "Core",
+     "onetCode": "15-2031.00",
+     "line": 2849
+    },
+    {
+     "id": 7378,
+     "text": "Collaborate with others in the organization to ensure successful implementation of chosen problem solutions.",
+     "type": "Core",
+     "onetCode": "15-2031.00",
+     "line": 2850
+    },
+    {
+     "id": 7377,
+     "text": "Formulate mathematical or simulation models of problems, relating constants and variables, restrictions, alternatives, conflicting objectives, and their numerical parameters.",
+     "type": "Core",
+     "onetCode": "15-2031.00",
+     "line": 2851
+    },
+    {
+     "id": 7387,
+     "text": "Observe the current system in operation, and gather and analyze information about each of the component problems, using a variety of sources.",
+     "type": "Core",
+     "onetCode": "15-2031.00",
+     "line": 2852
+    },
+    {
+     "id": 7379,
+     "text": "Analyze information obtained from management to conceptualize and define operational problems.",
+     "type": "Core",
+     "onetCode": "15-2031.00",
+     "line": 2853
+    },
+    {
+     "id": 7383,
+     "text": "Study and analyze information about alternative courses of action to determine which plan will offer the best outcomes.",
+     "type": "Core",
+     "onetCode": "15-2031.00",
+     "line": 2854
+    },
+    {
+     "id": 7381,
+     "text": "Collaborate with senior managers and decision makers to identify and solve a variety of problems and to clarify management objectives.",
+     "type": "Core",
+     "onetCode": "15-2031.00",
+     "line": 2855
+    },
+    {
+     "id": 7386,
+     "text": "Specify manipulative or computational methods to be applied to models.",
+     "type": "Core",
+     "onetCode": "15-2031.00",
+     "line": 2856
+    },
+    {
+     "id": 7388,
+     "text": "Design, conduct, and evaluate experimental operational models in cases where models cannot be developed from existing data.",
+     "type": "Core",
+     "onetCode": "15-2031.00",
+     "line": 2857
+    },
+    {
+     "id": 7389,
+     "text": "Develop and apply time and cost networks to plan, control, and review large projects.",
+     "type": "Core",
+     "onetCode": "15-2031.00",
+     "line": 2858
+    },
+    {
+     "id": 7385,
+     "text": "Break systems into their components, assign numerical values to each component, and examine the mathematical relationships between them.",
+     "type": "Core",
+     "onetCode": "15-2031.00",
+     "line": 2859
+    },
+    {
+     "id": 20953,
+     "text": "Educate staff in the use of mathematical models.",
+     "type": "Core",
+     "onetCode": "15-2031.00",
+     "line": 2860
+    },
+    {
+     "id": 7390,
+     "text": "Develop business methods and procedures, including accounting systems, file systems, office systems, logistics systems, and production schedules.",
+     "type": "Core",
+     "onetCode": "15-2031.00",
+     "line": 2861
+    },
+    {
+     "id": 23986,
+     "text": "Review research literature.",
+     "type": "Core",
+     "onetCode": "15-2031.00",
+     "line": 2862
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "kelleyTracks": [
+    "Ops"
+   ],
+   "kelleyTitles": [
+    "Operations Research Analyst"
+   ],
+   "sources": {
+    "employment": "oews:national_M2025_dl!L161",
+    "annualMedian": "oews:national_M2025_dl!AB161",
+    "annualMean": "oews:national_M2025_dl!S161",
+    "hourlyMedian": "oews:national_M2025_dl!W161",
+    "hourlyMean": "oews:national_M2025_dl!R161",
+    "annualPct10": "oews:national_M2025_dl!Z161",
+    "annualPct90": "oews:national_M2025_dl!AD161",
+    "annualOnly": "oews:national_M2025_dl!AE161",
+    "hourlyOnly": "oews:national_M2025_dl!AF161",
+    "title": "oews:national_M2025_dl!J161",
+    "ep.title": "ep:Table 1.2!A117",
+    "ep.employment2025": "ep:Table 1.2!D117",
+    "ep.employment2035": "ep:Table 1.2!E117",
+    "ep.numericChange": "ep:Table 1.2!H117",
+    "ep.percentChange": "ep:Table 1.2!I117",
+    "onetCode": "onet:Occupation Data.txt#L141:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L141:Description"
+   },
+   "nullReasons": {}
+  },
+  "15-2041": {
+   "soc": "15-2041",
+   "title": "Statisticians",
+   "major": "15-0000",
+   "minor": "15-2000",
+   "broad": "15-2040",
+   "oewsRows": [
+    163
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 29030,
+   "annualMedian": 105650,
+   "annualMean": 115700,
+   "hourlyMedian": 50.79,
+   "hourlyMean": 55.63,
+   "annualPct10": 64000,
+   "annualPct90": 174050,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Statisticians",
+    "employment2025": 31300,
+    "employment2035": 34700,
+    "numericChange": 3400,
+    "percentChange": 11
+   },
+   "onetCode": "15-2041.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [
+    {
+     "code": "15-2041.01",
+     "title": "Biostatisticians",
+     "taskCount": 25
+    }
+   ],
+   "description": "Develop or apply mathematical or statistical theory and methods to collect, organize, interpret, and summarize numerical data to provide usable information. May specialize in fields such as biostatistics, agricultural statistics, business statistics, or economic statistics. Includes mathematical and survey statisticians.",
+   "tasks": [
+    {
+     "id": 8956,
+     "text": "Analyze and interpret statistical data to identify significant differences in relationships among sources of information.",
+     "type": "Core",
+     "onetCode": "15-2041.00",
+     "line": 2863
+    },
+    {
+     "id": 8958,
+     "text": "Evaluate the statistical methods and procedures used to obtain data to ensure validity, applicability, efficiency, and accuracy.",
+     "type": "Core",
+     "onetCode": "15-2041.00",
+     "line": 2864
+    },
+    {
+     "id": 8953,
+     "text": "Report results of statistical analyses, including information in the form of graphs, charts, and tables.",
+     "type": "Core",
+     "onetCode": "15-2041.00",
+     "line": 2865
+    },
+    {
+     "id": 21100,
+     "text": "Determine whether statistical methods are appropriate, based on user needs or research questions of interest.",
+     "type": "Core",
+     "onetCode": "15-2041.00",
+     "line": 2866
+    },
+    {
+     "id": 8957,
+     "text": "Prepare data for processing by organizing information, checking for inaccuracies, and adjusting and weighting the raw data.",
+     "type": "Core",
+     "onetCode": "15-2041.00",
+     "line": 2867
+    },
+    {
+     "id": 8966,
+     "text": "Develop and test experimental designs, sampling techniques, and analytical methods.",
+     "type": "Core",
+     "onetCode": "15-2041.00",
+     "line": 2868
+    },
+    {
+     "id": 8955,
+     "text": "Identify relationships and trends in data, as well as any factors that could affect the results of research.",
+     "type": "Core",
+     "onetCode": "15-2041.00",
+     "line": 2869
+    },
+    {
+     "id": 20194,
+     "text": "Present statistical and nonstatistical results, using charts, bullets, and graphs, in meetings or conferences to audiences such as clients, peers, and students.",
+     "type": "Core",
+     "onetCode": "15-2041.00",
+     "line": 2870
+    },
+    {
+     "id": 8961,
+     "text": "Design research projects that apply valid scientific techniques, and use information obtained from baselines or historical data to structure uncompromised and efficient analyses.",
+     "type": "Core",
+     "onetCode": "15-2041.00",
+     "line": 2871
+    },
+    {
+     "id": 8965,
+     "text": "Adapt statistical methods to solve specific problems in many fields, such as economics, biology, and engineering.",
+     "type": "Core",
+     "onetCode": "15-2041.00",
+     "line": 2872
+    },
+    {
+     "id": 8959,
+     "text": "Evaluate sources of information to determine any limitations, in terms of reliability or usability.",
+     "type": "Core",
+     "onetCode": "15-2041.00",
+     "line": 2873
+    },
+    {
+     "id": 8954,
+     "text": "Process large amounts of data for statistical modeling and graphic analysis, using computers.",
+     "type": "Core",
+     "onetCode": "15-2041.00",
+     "line": 2874
+    },
+    {
+     "id": 20193,
+     "text": "Develop software applications or programming for statistical modeling and graphic analysis.",
+     "type": "Core",
+     "onetCode": "15-2041.00",
+     "line": 2875
+    },
+    {
+     "id": 20192,
+     "text": "Report results of statistical analyses in peer-reviewed papers and technical manuals.",
+     "type": "Core",
+     "onetCode": "15-2041.00",
+     "line": 2876
+    },
+    {
+     "id": 8960,
+     "text": "Plan data collection methods for specific projects, and determine the types and sizes of sample groups to be used.",
+     "type": "Core",
+     "onetCode": "15-2041.00",
+     "line": 2877
+    },
+    {
+     "id": 8964,
+     "text": "Apply sampling techniques, or use complete enumeration bases to determine and define groups to be surveyed.",
+     "type": "Core",
+     "onetCode": "15-2041.00",
+     "line": 2878
+    },
+    {
+     "id": 8967,
+     "text": "Examine theories, such as those of probability and inference, to discover mathematical bases for new or improved methods of obtaining and evaluating numerical data.",
+     "type": "Core",
+     "onetCode": "15-2041.00",
+     "line": 2879
+    },
+    {
+     "id": 8963,
+     "text": "Supervise and provide instructions for workers collecting and tabulating data.",
+     "type": "Core",
+     "onetCode": "15-2041.00",
+     "line": 2880
+    },
+    {
+     "id": 21101,
+     "text": "Prepare and structure data warehouses for storing data.",
+     "type": "Supplemental",
+     "onetCode": "15-2041.00",
+     "line": 2881
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "kelleyTracks": [
+    "Analytics"
+   ],
+   "kelleyTitles": [
+    "Statistician"
+   ],
+   "sources": {
+    "employment": "oews:national_M2025_dl!L163",
+    "annualMedian": "oews:national_M2025_dl!AB163",
+    "annualMean": "oews:national_M2025_dl!S163",
+    "hourlyMedian": "oews:national_M2025_dl!W163",
+    "hourlyMean": "oews:national_M2025_dl!R163",
+    "annualPct10": "oews:national_M2025_dl!Z163",
+    "annualPct90": "oews:national_M2025_dl!AD163",
+    "annualOnly": "oews:national_M2025_dl!AE163",
+    "hourlyOnly": "oews:national_M2025_dl!AF163",
+    "title": "oews:national_M2025_dl!J163",
+    "ep.title": "ep:Table 1.2!A118",
+    "ep.employment2025": "ep:Table 1.2!D118",
+    "ep.employment2035": "ep:Table 1.2!E118",
+    "ep.numericChange": "ep:Table 1.2!H118",
+    "ep.percentChange": "ep:Table 1.2!I118",
+    "onetCode": "onet:Occupation Data.txt#L142:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L142:Description"
+   },
+   "nullReasons": {}
+  },
+  "15-2051": {
+   "soc": "15-2051",
+   "title": "Data Scientists",
+   "major": "15-0000",
+   "minor": "15-2000",
+   "broad": "15-2050",
+   "oewsRows": [
+    165
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 262440,
+   "annualMedian": 120230,
+   "annualMean": 126800,
+   "hourlyMedian": 57.8,
+   "hourlyMean": 60.96,
+   "annualPct10": 67240,
+   "annualPct90": 199130,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Data scientists",
+    "employment2025": 275600,
+    "employment2035": 371000,
+    "numericChange": 95400,
+    "percentChange": 34.6
+   },
+   "onetCode": "15-2051.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [
+    {
+     "code": "15-2051.01",
+     "title": "Business Intelligence Analysts",
+     "taskCount": 17
+    },
+    {
+     "code": "15-2051.02",
+     "title": "Clinical Data Managers",
+     "taskCount": 21
+    }
+   ],
+   "description": "Develop and implement a set of techniques or analytics applications to transform raw data into meaningful information using data-oriented programming languages and visualization software. Apply data mining, data modeling, natural language processing, and machine learning to extract and analyze information from large structured and unstructured datasets. Visualize, interpret, and report data findings. May create dynamic data reports.",
+   "tasks": [
+    {
+     "id": 21823,
+     "text": "Analyze, manipulate, or process large sets of data using statistical software.",
+     "type": "n/a",
+     "onetCode": "15-2051.00",
+     "line": 2907
+    },
+    {
+     "id": 21824,
+     "text": "Apply feature selection algorithms to models predicting outcomes of interest, such as sales, attrition, and healthcare use.",
+     "type": "n/a",
+     "onetCode": "15-2051.00",
+     "line": 2908
+    },
+    {
+     "id": 21825,
+     "text": "Apply sampling techniques to determine groups to be surveyed or use complete enumeration methods.",
+     "type": "n/a",
+     "onetCode": "15-2051.00",
+     "line": 2909
+    },
+    {
+     "id": 21826,
+     "text": "Clean and manipulate raw data using statistical software.",
+     "type": "n/a",
+     "onetCode": "15-2051.00",
+     "line": 2910
+    },
+    {
+     "id": 21827,
+     "text": "Compare models using statistical performance metrics, such as loss functions or proportion of explained variance.",
+     "type": "n/a",
+     "onetCode": "15-2051.00",
+     "line": 2911
+    },
+    {
+     "id": 21828,
+     "text": "Create graphs, charts, or other visualizations to convey the results of data analysis using specialized software.",
+     "type": "n/a",
+     "onetCode": "15-2051.00",
+     "line": 2912
+    },
+    {
+     "id": 21829,
+     "text": "Deliver oral or written presentations of the results of mathematical modeling and data analysis to management or other end users.",
+     "type": "n/a",
+     "onetCode": "15-2051.00",
+     "line": 2913
+    },
+    {
+     "id": 21830,
+     "text": "Design surveys, opinion polls, or other instruments to collect data.",
+     "type": "n/a",
+     "onetCode": "15-2051.00",
+     "line": 2914
+    },
+    {
+     "id": 21831,
+     "text": "Identify business problems or management objectives that can be addressed through data analysis.",
+     "type": "n/a",
+     "onetCode": "15-2051.00",
+     "line": 2915
+    },
+    {
+     "id": 21832,
+     "text": "Identify relationships and trends or any factors that could affect the results of research.",
+     "type": "n/a",
+     "onetCode": "15-2051.00",
+     "line": 2916
+    },
+    {
+     "id": 21833,
+     "text": "Identify solutions to business problems, such as budgeting, staffing, and marketing decisions, using the results of data analysis.",
+     "type": "n/a",
+     "onetCode": "15-2051.00",
+     "line": 2917
+    },
+    {
+     "id": 21834,
+     "text": "Propose solutions in engineering, the sciences, and other fields using mathematical theories and techniques.",
+     "type": "n/a",
+     "onetCode": "15-2051.00",
+     "line": 2918
+    },
+    {
+     "id": 21835,
+     "text": "Read scientific articles, conference papers, or other sources of research to identify emerging analytic trends and technologies.",
+     "type": "n/a",
+     "onetCode": "15-2051.00",
+     "line": 2919
+    },
+    {
+     "id": 21836,
+     "text": "Recommend data-driven solutions to key stakeholders.",
+     "type": "n/a",
+     "onetCode": "15-2051.00",
+     "line": 2920
+    },
+    {
+     "id": 21837,
+     "text": "Test, validate, and reformulate models to ensure accurate prediction of outcomes of interest.",
+     "type": "n/a",
+     "onetCode": "15-2051.00",
+     "line": 2921
+    },
+    {
+     "id": 21838,
+     "text": "Write new functions or applications in programming languages to conduct analyses.",
+     "type": "n/a",
+     "onetCode": "15-2051.00",
+     "line": 2922
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "kelleyTracks": [
+    "Analytics",
+    "Tech"
+   ],
+   "kelleyTitles": [
+    "Business Intelligence Analyst",
+    "Data Scientist"
+   ],
+   "sources": {
+    "employment": "oews:national_M2025_dl!L165",
+    "annualMedian": "oews:national_M2025_dl!AB165",
+    "annualMean": "oews:national_M2025_dl!S165",
+    "hourlyMedian": "oews:national_M2025_dl!W165",
+    "hourlyMean": "oews:national_M2025_dl!R165",
+    "annualPct10": "oews:national_M2025_dl!Z165",
+    "annualPct90": "oews:national_M2025_dl!AD165",
+    "annualOnly": "oews:national_M2025_dl!AE165",
+    "hourlyOnly": "oews:national_M2025_dl!AF165",
+    "title": "oews:national_M2025_dl!J165",
+    "ep.title": "ep:Table 1.2!A119",
+    "ep.employment2025": "ep:Table 1.2!D119",
+    "ep.employment2035": "ep:Table 1.2!E119",
+    "ep.numericChange": "ep:Table 1.2!H119",
+    "ep.percentChange": "ep:Table 1.2!I119",
+    "onetCode": "onet:Occupation Data.txt#L144:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L144:Description"
+   },
+   "nullReasons": {}
+  },
+  "15-2099": {
+   "soc": "15-2099",
+   "title": "Mathematical Science Occupations, All Other",
+   "major": "15-0000",
+   "minor": "15-2000",
+   "broad": "15-2090",
+   "oewsRows": [
+    167
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 3720,
+   "annualMedian": 81490,
+   "annualMean": 91550,
+   "hourlyMedian": 39.18,
+   "hourlyMean": 44.02,
+   "annualPct10": 47980,
+   "annualPct90": 154580,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Mathematical science occupations, all other",
+    "employment2025": 4000,
+    "employment2035": 4200,
+    "numericChange": 300,
+    "percentChange": 7.1
+   },
+   "onetCode": "15-2099.00",
+   "onetTaskSource": "sub-codes",
+   "onetSubCodes": [
+    {
+     "code": "15-2099.01",
+     "title": "Bioinformatics Technicians",
+     "taskCount": 19
+    }
+   ],
+   "description": "All mathematical scientists not listed separately.",
+   "tasks": [
+    {
+     "id": 17709,
+     "text": "Analyze or manipulate bioinformatics data using software packages, statistical applications, or data mining techniques.",
+     "type": "Core",
+     "onetCode": "15-2099.01",
+     "line": 2961
+    },
+    {
+     "id": 17715,
+     "text": "Extend existing software programs, web-based interactive tools, or database queries as sequence management and analysis needs evolve.",
+     "type": "Core",
+     "onetCode": "15-2099.01",
+     "line": 2962
+    },
+    {
+     "id": 17716,
+     "text": "Maintain awareness of new and emerging computational methods and technologies.",
+     "type": "Core",
+     "onetCode": "15-2099.01",
+     "line": 2963
+    },
+    {
+     "id": 17721,
+     "text": "Conduct quality analyses of data inputs and resulting analyses or predictions.",
+     "type": "Core",
+     "onetCode": "15-2099.01",
+     "line": 2964
+    },
+    {
+     "id": 17707,
+     "text": "Enter or retrieve information from structural databases, protein sequence motif databases, mutation databases, genomic databases or gene expression databases.",
+     "type": "Core",
+     "onetCode": "15-2099.01",
+     "line": 2965
+    },
+    {
+     "id": 17706,
+     "text": "Develop or maintain applications that process biologically based data into searchable databases for purposes of analysis, calculation, or presentation.",
+     "type": "Core",
+     "onetCode": "15-2099.01",
+     "line": 2966
+    },
+    {
+     "id": 17710,
+     "text": "Confer with researchers, clinicians, or information technology staff to determine data needs and programming requirements and to provide assistance with database-related research activities.",
+     "type": "Core",
+     "onetCode": "15-2099.01",
+     "line": 2967
+    },
+    {
+     "id": 17717,
+     "text": "Participate in the preparation of reports or scientific publications.",
+     "type": "Core",
+     "onetCode": "15-2099.01",
+     "line": 2968
+    },
+    {
+     "id": 17720,
+     "text": "Write computer programs or scripts to be used in querying databases.",
+     "type": "Core",
+     "onetCode": "15-2099.01",
+     "line": 2969
+    },
+    {
+     "id": 17714,
+     "text": "Document all database changes, modifications, or problems.",
+     "type": "Core",
+     "onetCode": "15-2099.01",
+     "line": 2970
+    },
+    {
+     "id": 17711,
+     "text": "Create data management or error-checking procedures and user manuals.",
+     "type": "Core",
+     "onetCode": "15-2099.01",
+     "line": 2971
+    },
+    {
+     "id": 17713,
+     "text": "Develop or apply data mining and machine learning algorithms.",
+     "type": "Supplemental",
+     "onetCode": "15-2099.01",
+     "line": 2972
+    },
+    {
+     "id": 17712,
+     "text": "Design or implement web-based tools for querying large-scale biological databases.",
+     "type": "Supplemental",
+     "onetCode": "15-2099.01",
+     "line": 2973
+    },
+    {
+     "id": 17708,
+     "text": "Monitor database performance and perform any necessary maintenance, upgrades, or repairs.",
+     "type": "Supplemental",
+     "onetCode": "15-2099.01",
+     "line": 2974
+    },
+    {
+     "id": 17722,
+     "text": "Confer with database users about project timelines and changes.",
+     "type": "Supplemental",
+     "onetCode": "15-2099.01",
+     "line": 2975
+    },
+    {
+     "id": 17724,
+     "text": "Perform routine system administrative functions, such as troubleshooting, back-ups, or upgrades.",
+     "type": "Supplemental",
+     "onetCode": "15-2099.01",
+     "line": 2976
+    },
+    {
+     "id": 17723,
+     "text": "Package bioinformatics data for submission to public repositories.",
+     "type": "Supplemental",
+     "onetCode": "15-2099.01",
+     "line": 2977
+    },
+    {
+     "id": 17719,
+     "text": "Train bioinformatics staff or researchers in the use of databases.",
+     "type": "Supplemental",
+     "onetCode": "15-2099.01",
+     "line": 2978
+    },
+    {
+     "id": 17718,
+     "text": "Test new or updated software or tools and provide feedback to developers.",
+     "type": "Supplemental",
+     "onetCode": "15-2099.01",
+     "line": 2979
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L167",
+    "annualMedian": "oews:national_M2025_dl!AB167",
+    "annualMean": "oews:national_M2025_dl!S167",
+    "hourlyMedian": "oews:national_M2025_dl!W167",
+    "hourlyMean": "oews:national_M2025_dl!R167",
+    "annualPct10": "oews:national_M2025_dl!Z167",
+    "annualPct90": "oews:national_M2025_dl!AD167",
+    "annualOnly": "oews:national_M2025_dl!AE167",
+    "hourlyOnly": "oews:national_M2025_dl!AF167",
+    "title": "oews:national_M2025_dl!J167",
+    "ep.title": "ep:Table 1.2!A120",
+    "ep.employment2025": "ep:Table 1.2!D120",
+    "ep.employment2035": "ep:Table 1.2!E120",
+    "ep.numericChange": "ep:Table 1.2!H120",
+    "ep.percentChange": "ep:Table 1.2!I120",
+    "onetCode": "onet:Occupation Data.txt#L147:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L147:Description"
+   },
+   "nullReasons": {}
+  }
+ }
+}

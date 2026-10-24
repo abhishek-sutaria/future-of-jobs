@@ -1,0 +1,4887 @@
+{
+ "_meta": {
+  "continent": "33-0000",
+  "title": "Protective Service Occupations",
+  "sources": "see index.json _meta.sources; source refs are <source>:<sheet>!<cell> or <source>:<file>#L<line>:<column>",
+  "extracted": "2026-10-24",
+  "generator": "python3 scripts/build_occupations.py"
+ },
+ "broadGroups": [
+  {
+   "soc": "33-1010",
+   "title": "First-Line Supervisors of Law Enforcement Workers",
+   "minor": "33-1000",
+   "employment": 208000,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L639",
+    "title": "oews:national_M2025_dl!J639"
+   }
+  },
+  {
+   "soc": "33-1020",
+   "title": "First-Line Supervisors of Firefighting and Prevention Workers",
+   "minor": "33-1000",
+   "employment": 99140,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L642",
+    "title": "oews:national_M2025_dl!J642"
+   }
+  },
+  {
+   "soc": "33-1090",
+   "title": "Miscellaneous First-Line Supervisors, Protective Service Workers",
+   "minor": "33-1000",
+   "employment": 102170,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L644",
+    "title": "oews:national_M2025_dl!J644"
+   }
+  },
+  {
+   "soc": "33-2010",
+   "title": "Firefighters",
+   "minor": "33-2000",
+   "employment": 345990,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L648",
+    "title": "oews:national_M2025_dl!J648"
+   }
+  },
+  {
+   "soc": "33-2020",
+   "title": "Fire Inspectors",
+   "minor": "33-2000",
+   "employment": 16580,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L650",
+    "title": "oews:national_M2025_dl!J650"
+   }
+  },
+  {
+   "soc": "33-3010",
+   "title": "Bailiffs, Correctional Officers, and Jailers",
+   "minor": "33-3000",
+   "employment": 397800,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L654",
+    "title": "oews:national_M2025_dl!J654"
+   }
+  },
+  {
+   "soc": "33-3020",
+   "title": "Detectives and Criminal Investigators",
+   "minor": "33-3000",
+   "employment": 114430,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L657",
+    "title": "oews:national_M2025_dl!J657"
+   }
+  },
+  {
+   "soc": "33-3030",
+   "title": "Fish and Game Wardens",
+   "minor": "33-3000",
+   "employment": 5770,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L659",
+    "title": "oews:national_M2025_dl!J659"
+   }
+  },
+  {
+   "soc": "33-3040",
+   "title": "Parking Enforcement Workers",
+   "minor": "33-3000",
+   "employment": 9050,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L661",
+    "title": "oews:national_M2025_dl!J661"
+   }
+  },
+  {
+   "soc": "33-3050",
+   "title": "Police Officers",
+   "minor": "33-3000",
+   "employment": 674910,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L663",
+    "title": "oews:national_M2025_dl!J663"
+   }
+  },
+  {
+   "soc": "33-9010",
+   "title": "Animal Control Workers",
+   "minor": "33-9000",
+   "employment": 12070,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L667",
+    "title": "oews:national_M2025_dl!J667"
+   }
+  },
+  {
+   "soc": "33-9020",
+   "title": "Private Detectives and Investigators",
+   "minor": "33-9000",
+   "employment": 35580,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L669",
+    "title": "oews:national_M2025_dl!J669"
+   }
+  },
+  {
+   "soc": "33-9030",
+   "title": "Security Guards and Gambling Surveillance Officers",
+   "minor": "33-9000",
+   "employment": 1292990,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L671",
+    "title": "oews:national_M2025_dl!J671"
+   }
+  },
+  {
+   "soc": "33-9090",
+   "title": "Miscellaneous Protective Service Workers",
+   "minor": "33-9000",
+   "employment": 462130,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L674",
+    "title": "oews:national_M2025_dl!J674"
+   }
+  }
+ ],
+ "occupations": {
+  "33-1011": {
+   "soc": "33-1011",
+   "title": "First-Line Supervisors of Correctional Officers",
+   "major": "33-0000",
+   "minor": "33-1000",
+   "broad": "33-1010",
+   "oewsRows": [
+    640
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 53380,
+   "annualMedian": 77970,
+   "annualMean": 84380,
+   "hourlyMedian": 37.49,
+   "hourlyMean": 40.57,
+   "annualPct10": 52330,
+   "annualPct90": 127780,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "First-line supervisors of correctional officers",
+    "employment2025": 56300,
+    "employment2035": 54800,
+    "numericChange": -1400,
+    "percentChange": -2.5
+   },
+   "onetCode": "33-1011.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Directly supervise and coordinate activities of correctional officers and jailers.",
+   "tasks": [
+    {
+     "id": 9428,
+     "text": "Take, receive, or check periodic inmate counts.",
+     "type": "Core",
+     "onetCode": "33-1011.00",
+     "line": 10373
+    },
+    {
+     "id": 9429,
+     "text": "Maintain order, discipline, and security within assigned areas in accordance with relevant rules, regulations, policies, and laws.",
+     "type": "Core",
+     "onetCode": "33-1011.00",
+     "line": 10374
+    },
+    {
+     "id": 9431,
+     "text": "Maintain knowledge of, comply with, and enforce all institutional policies, rules, procedures, and regulations.",
+     "type": "Core",
+     "onetCode": "33-1011.00",
+     "line": 10375
+    },
+    {
+     "id": 9430,
+     "text": "Respond to emergencies, such as escapes.",
+     "type": "Core",
+     "onetCode": "33-1011.00",
+     "line": 10376
+    },
+    {
+     "id": 9432,
+     "text": "Supervise and direct the work of correctional officers to ensure the safe custody, discipline, and welfare of inmates.",
+     "type": "Core",
+     "onetCode": "33-1011.00",
+     "line": 10377
+    },
+    {
+     "id": 9434,
+     "text": "Supervise or perform searches of inmates or their quarters to locate contraband items.",
+     "type": "Core",
+     "onetCode": "33-1011.00",
+     "line": 10378
+    },
+    {
+     "id": 9435,
+     "text": "Monitor behavior of subordinates to ensure alert, courteous, and professional behavior toward inmates, parolees, fellow employees, visitors, and the public.",
+     "type": "Core",
+     "onetCode": "33-1011.00",
+     "line": 10379
+    },
+    {
+     "id": 9433,
+     "text": "Restrain, secure, or control offenders, using chemical agents, firearms, or other weapons of force as necessary.",
+     "type": "Core",
+     "onetCode": "33-1011.00",
+     "line": 10380
+    },
+    {
+     "id": 9440,
+     "text": "Carry injured offenders or employees to safety and provide emergency first aid when necessary.",
+     "type": "Core",
+     "onetCode": "33-1011.00",
+     "line": 10381
+    },
+    {
+     "id": 9436,
+     "text": "Complete administrative paperwork or supervise the preparation or maintenance of records, forms, or reports.",
+     "type": "Core",
+     "onetCode": "33-1011.00",
+     "line": 10382
+    },
+    {
+     "id": 9439,
+     "text": "Supervise activities, such as searches, shakedowns, riot control, or institutional tours.",
+     "type": "Core",
+     "onetCode": "33-1011.00",
+     "line": 10383
+    },
+    {
+     "id": 9438,
+     "text": "Conduct roll calls of correctional officers.",
+     "type": "Core",
+     "onetCode": "33-1011.00",
+     "line": 10384
+    },
+    {
+     "id": 9437,
+     "text": "Instruct employees or provide on-the-job training.",
+     "type": "Core",
+     "onetCode": "33-1011.00",
+     "line": 10385
+    },
+    {
+     "id": 9444,
+     "text": "Resolve problems between inmates.",
+     "type": "Core",
+     "onetCode": "33-1011.00",
+     "line": 10386
+    },
+    {
+     "id": 9443,
+     "text": "Set up employee work schedules.",
+     "type": "Core",
+     "onetCode": "33-1011.00",
+     "line": 10387
+    },
+    {
+     "id": 9448,
+     "text": "Examine incoming or outgoing mail to ensure conformance with regulations.",
+     "type": "Core",
+     "onetCode": "33-1011.00",
+     "line": 10388
+    },
+    {
+     "id": 9447,
+     "text": "Transfer or transport offenders on foot or by driving vehicles, such as trailers, vans, or buses.",
+     "type": "Core",
+     "onetCode": "33-1011.00",
+     "line": 10389
+    },
+    {
+     "id": 20255,
+     "text": "Review offender information to identify issues that require special attention.",
+     "type": "Core",
+     "onetCode": "33-1011.00",
+     "line": 10390
+    },
+    {
+     "id": 9442,
+     "text": "Develop work or security procedures.",
+     "type": "Core",
+     "onetCode": "33-1011.00",
+     "line": 10391
+    },
+    {
+     "id": 9449,
+     "text": "Convey correctional officers' or inmates' complaints to superiors.",
+     "type": "Core",
+     "onetCode": "33-1011.00",
+     "line": 10392
+    },
+    {
+     "id": 9441,
+     "text": "Supervise or provide security for offenders performing tasks, such as construction, maintenance, laundry, food service, or other industrial or agricultural operations.",
+     "type": "Core",
+     "onetCode": "33-1011.00",
+     "line": 10393
+    },
+    {
+     "id": 21196,
+     "text": "Conduct evaluations of employees' performance.",
+     "type": "Core",
+     "onetCode": "33-1011.00",
+     "line": 10394
+    },
+    {
+     "id": 9446,
+     "text": "Rate behavior of inmates, promoting acceptable attitudes and behaviors to those with low ratings.",
+     "type": "Core",
+     "onetCode": "33-1011.00",
+     "line": 10395
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L640",
+    "annualMedian": "oews:national_M2025_dl!AB640",
+    "annualMean": "oews:national_M2025_dl!S640",
+    "hourlyMedian": "oews:national_M2025_dl!W640",
+    "hourlyMean": "oews:national_M2025_dl!R640",
+    "annualPct10": "oews:national_M2025_dl!Z640",
+    "annualPct90": "oews:national_M2025_dl!AD640",
+    "annualOnly": "oews:national_M2025_dl!AE640",
+    "hourlyOnly": "oews:national_M2025_dl!AF640",
+    "title": "oews:national_M2025_dl!J640",
+    "ep.title": "ep:Table 1.2!A526",
+    "ep.employment2025": "ep:Table 1.2!D526",
+    "ep.employment2035": "ep:Table 1.2!E526",
+    "ep.numericChange": "ep:Table 1.2!H526",
+    "ep.percentChange": "ep:Table 1.2!I526",
+    "onetCode": "onet:Occupation Data.txt#L529:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L529:Description"
+   },
+   "nullReasons": {}
+  },
+  "33-1012": {
+   "soc": "33-1012",
+   "title": "First-Line Supervisors of Police and Detectives",
+   "major": "33-0000",
+   "minor": "33-1000",
+   "broad": "33-1010",
+   "oewsRows": [
+    641
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 154610,
+   "annualMedian": 106040,
+   "annualMean": 112190,
+   "hourlyMedian": 50.98,
+   "hourlyMean": 53.94,
+   "annualPct10": 63350,
+   "annualPct90": 165110,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "First-line supervisors of police and detectives",
+    "employment2025": 160200,
+    "employment2035": 165400,
+    "numericChange": 5200,
+    "percentChange": 3.3
+   },
+   "onetCode": "33-1012.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Directly supervise and coordinate activities of members of police force.",
+   "tasks": [
+    {
+     "id": 566,
+     "text": "Supervise and coordinate the investigation of criminal cases, offering guidance and expertise to investigators, and ensuring that procedures are conducted in accordance with laws and regulations.",
+     "type": "Core",
+     "onetCode": "33-1012.00",
+     "line": 10396
+    },
+    {
+     "id": 574,
+     "text": "Prepare work schedules and assign duties to subordinates.",
+     "type": "Core",
+     "onetCode": "33-1012.00",
+     "line": 10397
+    },
+    {
+     "id": 571,
+     "text": "Direct collection, preparation, and handling of evidence and personal property of prisoners.",
+     "type": "Core",
+     "onetCode": "33-1012.00",
+     "line": 10398
+    },
+    {
+     "id": 567,
+     "text": "Investigate and resolve personnel problems within organization and charges of misconduct against staff.",
+     "type": "Core",
+     "onetCode": "33-1012.00",
+     "line": 10399
+    },
+    {
+     "id": 564,
+     "text": "Explain police operations to subordinates to assist them in performing their job duties.",
+     "type": "Core",
+     "onetCode": "33-1012.00",
+     "line": 10400
+    },
+    {
+     "id": 569,
+     "text": "Maintain logs, prepare reports, and direct the preparation, handling, and maintenance of departmental records.",
+     "type": "Core",
+     "onetCode": "33-1012.00",
+     "line": 10401
+    },
+    {
+     "id": 565,
+     "text": "Inform personnel of changes in regulations and policies, implications of new or amended laws, and new techniques of police work.",
+     "type": "Core",
+     "onetCode": "33-1012.00",
+     "line": 10402
+    },
+    {
+     "id": 568,
+     "text": "Train staff in proper police work procedures.",
+     "type": "Core",
+     "onetCode": "33-1012.00",
+     "line": 10403
+    },
+    {
+     "id": 575,
+     "text": "Discipline staff for violation of department rules and regulations.",
+     "type": "Core",
+     "onetCode": "33-1012.00",
+     "line": 10404
+    },
+    {
+     "id": 570,
+     "text": "Monitor and evaluate the job performance of subordinates, and authorize promotions and transfers.",
+     "type": "Core",
+     "onetCode": "33-1012.00",
+     "line": 10405
+    },
+    {
+     "id": 577,
+     "text": "Review contents of written orders to ensure adherence to legal requirements.",
+     "type": "Core",
+     "onetCode": "33-1012.00",
+     "line": 10406
+    },
+    {
+     "id": 573,
+     "text": "Conduct raids and order detention of witnesses and suspects for questioning.",
+     "type": "Core",
+     "onetCode": "33-1012.00",
+     "line": 10407
+    },
+    {
+     "id": 576,
+     "text": "Cooperate with court personnel and officials from other law enforcement agencies and testify in court, as necessary.",
+     "type": "Core",
+     "onetCode": "33-1012.00",
+     "line": 10408
+    },
+    {
+     "id": 581,
+     "text": "Meet with civic, educational, and community groups to develop community programs and events, and to discuss law enforcement subjects.",
+     "type": "Core",
+     "onetCode": "33-1012.00",
+     "line": 10409
+    },
+    {
+     "id": 578,
+     "text": "Inspect facilities, supplies, vehicles, and equipment to ensure conformance to standards.",
+     "type": "Core",
+     "onetCode": "33-1012.00",
+     "line": 10410
+    },
+    {
+     "id": 582,
+     "text": "Direct release or transfer of prisoners.",
+     "type": "Core",
+     "onetCode": "33-1012.00",
+     "line": 10411
+    },
+    {
+     "id": 580,
+     "text": "Requisition and issue equipment and supplies.",
+     "type": "Core",
+     "onetCode": "33-1012.00",
+     "line": 10412
+    },
+    {
+     "id": 572,
+     "text": "Develop, implement, and revise departmental policies and procedures.",
+     "type": "Supplemental",
+     "onetCode": "33-1012.00",
+     "line": 10413
+    },
+    {
+     "id": 579,
+     "text": "Prepare news releases and respond to police correspondence.",
+     "type": "Supplemental",
+     "onetCode": "33-1012.00",
+     "line": 10414
+    },
+    {
+     "id": 583,
+     "text": "Prepare budgets and manage expenditures of department funds.",
+     "type": "Supplemental",
+     "onetCode": "33-1012.00",
+     "line": 10415
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L641",
+    "annualMedian": "oews:national_M2025_dl!AB641",
+    "annualMean": "oews:national_M2025_dl!S641",
+    "hourlyMedian": "oews:national_M2025_dl!W641",
+    "hourlyMean": "oews:national_M2025_dl!R641",
+    "annualPct10": "oews:national_M2025_dl!Z641",
+    "annualPct90": "oews:national_M2025_dl!AD641",
+    "annualOnly": "oews:national_M2025_dl!AE641",
+    "hourlyOnly": "oews:national_M2025_dl!AF641",
+    "title": "oews:national_M2025_dl!J641",
+    "ep.title": "ep:Table 1.2!A527",
+    "ep.employment2025": "ep:Table 1.2!D527",
+    "ep.employment2035": "ep:Table 1.2!E527",
+    "ep.numericChange": "ep:Table 1.2!H527",
+    "ep.percentChange": "ep:Table 1.2!I527",
+    "onetCode": "onet:Occupation Data.txt#L530:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L530:Description"
+   },
+   "nullReasons": {}
+  },
+  "33-1021": {
+   "soc": "33-1021",
+   "title": "First-Line Supervisors of Firefighting and Prevention Workers",
+   "major": "33-0000",
+   "minor": "33-1000",
+   "broad": "33-1020",
+   "oewsRows": [
+    643
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 99140,
+   "annualMedian": 93530,
+   "annualMean": 96930,
+   "hourlyMedian": 44.96,
+   "hourlyMean": 46.6,
+   "annualPct10": 53430,
+   "annualPct90": 140010,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "First-line supervisors of firefighting and prevention workers",
+    "employment2025": 101600,
+    "employment2035": 105400,
+    "numericChange": 3800,
+    "percentChange": 3.7
+   },
+   "onetCode": "33-1021.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Directly supervise and coordinate activities of workers engaged in firefighting and fire prevention and control.",
+   "tasks": [
+    {
+     "id": 22910,
+     "text": "Assign firefighters to jobs at strategic locations to facilitate rescue of persons and maximize application of extinguishing agents.",
+     "type": "Core",
+     "onetCode": "33-1021.00",
+     "line": 10416
+    },
+    {
+     "id": 22911,
+     "text": "Provide emergency medical services as required, and perform light to heavy rescue functions at emergencies.",
+     "type": "Core",
+     "onetCode": "33-1021.00",
+     "line": 10417
+    },
+    {
+     "id": 22912,
+     "text": "Assess nature and extent of fire, condition of building, danger to adjacent buildings, and water supply status to determine crew or company requirements.",
+     "type": "Core",
+     "onetCode": "33-1021.00",
+     "line": 10418
+    },
+    {
+     "id": 22913,
+     "text": "Communicate fire details to superiors, subordinates, or interagency dispatch centers, using two-way radios.",
+     "type": "Core",
+     "onetCode": "33-1021.00",
+     "line": 10419
+    },
+    {
+     "id": 22914,
+     "text": "Serve as a working leader of an engine, hand, helicopter, or prescribed fire crew of three or more firefighters.",
+     "type": "Core",
+     "onetCode": "33-1021.00",
+     "line": 10420
+    },
+    {
+     "id": 22915,
+     "text": "Instruct and drill fire department personnel in assigned duties, including firefighting, medical care, hazardous materials response, fire prevention, and related subjects.",
+     "type": "Core",
+     "onetCode": "33-1021.00",
+     "line": 10421
+    },
+    {
+     "id": 22916,
+     "text": "Maintain fire suppression equipment in good condition, checking equipment periodically to ensure that it is ready for use.",
+     "type": "Core",
+     "onetCode": "33-1021.00",
+     "line": 10422
+    },
+    {
+     "id": 22917,
+     "text": "Evaluate the performance of assigned firefighting personnel.",
+     "type": "Core",
+     "onetCode": "33-1021.00",
+     "line": 10423
+    },
+    {
+     "id": 22918,
+     "text": "Direct the training of firefighters, assigning of instructors to training classes, and providing of supervisors with reports on training progress and status.",
+     "type": "Core",
+     "onetCode": "33-1021.00",
+     "line": 10424
+    },
+    {
+     "id": 22919,
+     "text": "Perform maintenance and minor repairs on firefighting equipment, including vehicles, and write and submit proposals to modify, replace, and repair equipment.",
+     "type": "Core",
+     "onetCode": "33-1021.00",
+     "line": 10425
+    },
+    {
+     "id": 22920,
+     "text": "Schedule employee work assignments and set work priorities.",
+     "type": "Core",
+     "onetCode": "33-1021.00",
+     "line": 10426
+    },
+    {
+     "id": 22921,
+     "text": "Monitor fire suppression expenditures to ensure that they are necessary and reasonable.",
+     "type": "Core",
+     "onetCode": "33-1021.00",
+     "line": 10427
+    },
+    {
+     "id": 22922,
+     "text": "Participate in creating fire safety guidelines and evacuation schemes for nonresidential buildings.",
+     "type": "Core",
+     "onetCode": "33-1021.00",
+     "line": 10428
+    },
+    {
+     "id": 22923,
+     "text": "Maintain required maps and records.",
+     "type": "Core",
+     "onetCode": "33-1021.00",
+     "line": 10429
+    },
+    {
+     "id": 22924,
+     "text": "Drive crew carriers to transport firefighters to fire sites.",
+     "type": "Core",
+     "onetCode": "33-1021.00",
+     "line": 10430
+    },
+    {
+     "id": 22925,
+     "text": "Inspect stations, uniforms, equipment, or recreation areas to ensure compliance with safety standards, taking corrective action as necessary.",
+     "type": "Core",
+     "onetCode": "33-1021.00",
+     "line": 10431
+    },
+    {
+     "id": 22926,
+     "text": "Evaluate fire station procedures to ensure efficiency and enforcement of departmental regulations.",
+     "type": "Core",
+     "onetCode": "33-1021.00",
+     "line": 10432
+    },
+    {
+     "id": 22927,
+     "text": "Direct firefighters in station maintenance duties, and participate in these duties.",
+     "type": "Core",
+     "onetCode": "33-1021.00",
+     "line": 10433
+    },
+    {
+     "id": 22928,
+     "text": "Recommend personnel actions related to disciplinary procedures, performance, leaves of absence, and grievances.",
+     "type": "Core",
+     "onetCode": "33-1021.00",
+     "line": 10434
+    },
+    {
+     "id": 22929,
+     "text": "Perform administrative duties, such as compiling and maintaining records, completing forms, preparing reports, or composing correspondence.",
+     "type": "Core",
+     "onetCode": "33-1021.00",
+     "line": 10435
+    },
+    {
+     "id": 22930,
+     "text": "Direct investigation of cases of suspected arson, hazards, and false alarms and submit reports outlining findings.",
+     "type": "Core",
+     "onetCode": "33-1021.00",
+     "line": 10436
+    },
+    {
+     "id": 22931,
+     "text": "Recommend equipment modifications or new equipment purchases.",
+     "type": "Core",
+     "onetCode": "33-1021.00",
+     "line": 10437
+    },
+    {
+     "id": 22932,
+     "text": "Supervise and participate in the inspection of properties to ensure that they are in compliance with applicable fire codes, ordinances, laws, regulations, and standards.",
+     "type": "Core",
+     "onetCode": "33-1021.00",
+     "line": 10438
+    },
+    {
+     "id": 22933,
+     "text": "Inspect and test new and existing fire protection systems, fire detection systems, and fire safety equipment to ensure that they are operating properly.",
+     "type": "Supplemental",
+     "onetCode": "33-1021.00",
+     "line": 10439
+    },
+    {
+     "id": 22934,
+     "text": "Study and interpret fire safety codes to establish procedures for issuing permits to handle hazardous or flammable substances.",
+     "type": "Supplemental",
+     "onetCode": "33-1021.00",
+     "line": 10440
+    },
+    {
+     "id": 22935,
+     "text": "Analyze burn conditions and results, and prepare postburn reports.",
+     "type": "n/a",
+     "onetCode": "33-1021.00",
+     "line": 10441
+    },
+    {
+     "id": 22936,
+     "text": "Evaluate size, location, and condition of fires.",
+     "type": "n/a",
+     "onetCode": "33-1021.00",
+     "line": 10442
+    },
+    {
+     "id": 22937,
+     "text": "Maintain knowledge of fire laws and fire prevention techniques and tactics.",
+     "type": "n/a",
+     "onetCode": "33-1021.00",
+     "line": 10443
+    },
+    {
+     "id": 22938,
+     "text": "Plan, direct, and supervise prescribed burn projects.",
+     "type": "n/a",
+     "onetCode": "33-1021.00",
+     "line": 10444
+    },
+    {
+     "id": 22939,
+     "text": "Recruit or hire firefighting personnel.",
+     "type": "n/a",
+     "onetCode": "33-1021.00",
+     "line": 10445
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L643",
+    "annualMedian": "oews:national_M2025_dl!AB643",
+    "annualMean": "oews:national_M2025_dl!S643",
+    "hourlyMedian": "oews:national_M2025_dl!W643",
+    "hourlyMean": "oews:national_M2025_dl!R643",
+    "annualPct10": "oews:national_M2025_dl!Z643",
+    "annualPct90": "oews:national_M2025_dl!AD643",
+    "annualOnly": "oews:national_M2025_dl!AE643",
+    "hourlyOnly": "oews:national_M2025_dl!AF643",
+    "title": "oews:national_M2025_dl!J643",
+    "ep.title": "ep:Table 1.2!A528",
+    "ep.employment2025": "ep:Table 1.2!D528",
+    "ep.employment2035": "ep:Table 1.2!E528",
+    "ep.numericChange": "ep:Table 1.2!H528",
+    "ep.percentChange": "ep:Table 1.2!I528",
+    "onetCode": "onet:Occupation Data.txt#L531:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L531:Description"
+   },
+   "nullReasons": {}
+  },
+  "33-1091": {
+   "soc": "33-1091",
+   "title": "First-Line Supervisors of Security Workers",
+   "major": "33-0000",
+   "minor": "33-1000",
+   "broad": "33-1090",
+   "oewsRows": [
+    645
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 81480,
+   "annualMedian": 55940,
+   "annualMean": 59900,
+   "hourlyMedian": 26.9,
+   "hourlyMean": 28.8,
+   "annualPct10": 37300,
+   "annualPct90": 92260,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "First-line supervisors of security workers",
+    "employment2025": 82700,
+    "employment2035": 85700,
+    "numericChange": 3000,
+    "percentChange": 3.7
+   },
+   "onetCode": "33-1091.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Directly supervise and coordinate activities of security workers and security guards.",
+   "tasks": [
+    {
+     "id": 22947,
+     "text": "Investigate disturbances on the premises, such as security alarms, altercations, and suspicious activity.",
+     "type": "Core",
+     "onetCode": "33-1091.00",
+     "line": 10446
+    },
+    {
+     "id": 22953,
+     "text": "Patrol the premises to prevent or detect intrusion, protect property, or preserve order.",
+     "type": "Core",
+     "onetCode": "33-1091.00",
+     "line": 10447
+    },
+    {
+     "id": 22949,
+     "text": "Monitor and authorize entry of employees, visitors, or other persons.",
+     "type": "Core",
+     "onetCode": "33-1091.00",
+     "line": 10448
+    },
+    {
+     "id": 22957,
+     "text": "Secure entrances and exits by locking doors and gates.",
+     "type": "Core",
+     "onetCode": "33-1091.00",
+     "line": 10449
+    },
+    {
+     "id": 22960,
+     "text": "Write reports documenting observations made while on patrol.",
+     "type": "Core",
+     "onetCode": "33-1091.00",
+     "line": 10450
+    },
+    {
+     "id": 22951,
+     "text": "Monitor the behavior of security employees to ensure adherence to quality standards, deadlines, or procedures.",
+     "type": "Core",
+     "onetCode": "33-1091.00",
+     "line": 10451
+    },
+    {
+     "id": 22940,
+     "text": "Advise employees in handling problems or resolving complaints from customers, tenants, detainees, or other persons.",
+     "type": "Core",
+     "onetCode": "33-1091.00",
+     "line": 10452
+    },
+    {
+     "id": 22954,
+     "text": "Recruit, interview, and hire security personnel.",
+     "type": "Core",
+     "onetCode": "33-1091.00",
+     "line": 10453
+    },
+    {
+     "id": 22942,
+     "text": "Assign security personnel to posts or patrols.",
+     "type": "Core",
+     "onetCode": "33-1091.00",
+     "line": 10454
+    },
+    {
+     "id": 22943,
+     "text": "Call police or fire departments in cases of emergency, such as fire, bomb threats, and presence of unauthorized persons.",
+     "type": "Core",
+     "onetCode": "33-1091.00",
+     "line": 10455
+    },
+    {
+     "id": 22941,
+     "text": "Apprehend or evict trespassers, rule violators, or other security threats from the premises.",
+     "type": "Core",
+     "onetCode": "33-1091.00",
+     "line": 10456
+    },
+    {
+     "id": 22956,
+     "text": "Screen individuals and belongings to prevent passage of prohibited materials using walkthrough detectors, wands, or bag searches.",
+     "type": "Core",
+     "onetCode": "33-1091.00",
+     "line": 10457
+    },
+    {
+     "id": 22950,
+     "text": "Monitor closed-circuit television cameras.",
+     "type": "Core",
+     "onetCode": "33-1091.00",
+     "line": 10458
+    },
+    {
+     "id": 22946,
+     "text": "Inspect and adjust security equipment to ensure it is operational or to detect evidence of tampering.",
+     "type": "Core",
+     "onetCode": "33-1091.00",
+     "line": 10459
+    },
+    {
+     "id": 22958,
+     "text": "Train security personnel on protective procedures, first aid, fire safety, and other duties.",
+     "type": "Core",
+     "onetCode": "33-1091.00",
+     "line": 10460
+    },
+    {
+     "id": 22945,
+     "text": "Explain company policies and procedures to staff using oral or written communication.",
+     "type": "Core",
+     "onetCode": "33-1091.00",
+     "line": 10461
+    },
+    {
+     "id": 22944,
+     "text": "Develop and document security procedures, policies, or standards.",
+     "type": "Core",
+     "onetCode": "33-1091.00",
+     "line": 10462
+    },
+    {
+     "id": 22955,
+     "text": "Schedule training or drills for emergencies, such as fires, bombs, and other threats.",
+     "type": "Core",
+     "onetCode": "33-1091.00",
+     "line": 10463
+    },
+    {
+     "id": 22948,
+     "text": "Log items distributed to persons, such as keys and key cards.",
+     "type": "Core",
+     "onetCode": "33-1091.00",
+     "line": 10464
+    },
+    {
+     "id": 22959,
+     "text": "Write and present department budgets to upper management or other stakeholders.",
+     "type": "Supplemental",
+     "onetCode": "33-1091.00",
+     "line": 10465
+    },
+    {
+     "id": 22952,
+     "text": "Order materials or supplies, such as keys, uniforms, and badges.",
+     "type": "Supplemental",
+     "onetCode": "33-1091.00",
+     "line": 10466
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L645",
+    "annualMedian": "oews:national_M2025_dl!AB645",
+    "annualMean": "oews:national_M2025_dl!S645",
+    "hourlyMedian": "oews:national_M2025_dl!W645",
+    "hourlyMean": "oews:national_M2025_dl!R645",
+    "annualPct10": "oews:national_M2025_dl!Z645",
+    "annualPct90": "oews:national_M2025_dl!AD645",
+    "annualOnly": "oews:national_M2025_dl!AE645",
+    "hourlyOnly": "oews:national_M2025_dl!AF645",
+    "title": "oews:national_M2025_dl!J645",
+    "ep.title": "ep:Table 1.2!A530",
+    "ep.employment2025": "ep:Table 1.2!D530",
+    "ep.employment2035": "ep:Table 1.2!E530",
+    "ep.numericChange": "ep:Table 1.2!H530",
+    "ep.percentChange": "ep:Table 1.2!I530",
+    "onetCode": "onet:Occupation Data.txt#L532:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L532:Description"
+   },
+   "nullReasons": {}
+  },
+  "33-1099": {
+   "soc": "33-1099",
+   "title": "First-Line Supervisors of Protective Service Workers, All Other",
+   "major": "33-0000",
+   "minor": "33-1000",
+   "broad": "33-1090",
+   "oewsRows": [
+    646
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 20690,
+   "annualMedian": 76400,
+   "annualMean": 74390,
+   "hourlyMedian": 36.73,
+   "hourlyMean": 35.76,
+   "annualPct10": 41110,
+   "annualPct90": 103420,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "First-line supervisors of protective service workers, all other",
+    "employment2025": 21600,
+    "employment2035": 22000,
+    "numericChange": 400,
+    "percentChange": 1.9
+   },
+   "onetCode": "33-1099.00",
+   "onetTaskSource": "none",
+   "onetSubCodes": [],
+   "description": "All protective service supervisors not listed separately above.",
+   "tasks": [],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L646",
+    "annualMedian": "oews:national_M2025_dl!AB646",
+    "annualMean": "oews:national_M2025_dl!S646",
+    "hourlyMedian": "oews:national_M2025_dl!W646",
+    "hourlyMean": "oews:national_M2025_dl!R646",
+    "annualPct10": "oews:national_M2025_dl!Z646",
+    "annualPct90": "oews:national_M2025_dl!AD646",
+    "annualOnly": "oews:national_M2025_dl!AE646",
+    "hourlyOnly": "oews:national_M2025_dl!AF646",
+    "title": "oews:national_M2025_dl!J646",
+    "ep.title": "ep:Table 1.2!A531",
+    "ep.employment2025": "ep:Table 1.2!D531",
+    "ep.employment2035": "ep:Table 1.2!E531",
+    "ep.numericChange": "ep:Table 1.2!H531",
+    "ep.percentChange": "ep:Table 1.2!I531",
+    "onetCode": "onet:Occupation Data.txt#L533:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L533:Description"
+   },
+   "nullReasons": {
+    "tasks": "O*NET 30.1 has no task statements for 33-1099.00"
+   }
+  },
+  "33-2011": {
+   "soc": "33-2011",
+   "title": "Firefighters",
+   "major": "33-0000",
+   "minor": "33-2000",
+   "broad": "33-2010",
+   "oewsRows": [
+    649
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 345990,
+   "annualMedian": 59280,
+   "annualMean": 63630,
+   "hourlyMedian": 28.5,
+   "hourlyMean": 30.59,
+   "annualPct10": 34910,
+   "annualPct90": 101040,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Firefighters",
+    "employment2025": 355300,
+    "employment2035": 368400,
+    "numericChange": 13100,
+    "percentChange": 3.7
+   },
+   "onetCode": "33-2011.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Control and extinguish fires or respond to emergency situations where life, property, or the environment is at risk. Duties may include fire prevention, emergency medical service, hazardous material response, search and rescue, and disaster assistance.",
+   "tasks": [
+    {
+     "id": 22961,
+     "text": "Rescue survivors from burning buildings, accident sites, and water hazards.",
+     "type": "Core",
+     "onetCode": "33-2011.00",
+     "line": 10467
+    },
+    {
+     "id": 22962,
+     "text": "Dress with equipment such as fire-resistant clothing and breathing apparatus.",
+     "type": "Core",
+     "onetCode": "33-2011.00",
+     "line": 10468
+    },
+    {
+     "id": 22963,
+     "text": "Assess fires and situations and report conditions to superiors to receive instructions, using two-way radios.",
+     "type": "Core",
+     "onetCode": "33-2011.00",
+     "line": 10469
+    },
+    {
+     "id": 22964,
+     "text": "Move toward the source of a fire, using knowledge of types of fires, construction design, building materials, and physical layout of properties.",
+     "type": "Core",
+     "onetCode": "33-2011.00",
+     "line": 10470
+    },
+    {
+     "id": 22965,
+     "text": "Respond to fire alarms and other calls for assistance, such as automobile and industrial accidents.",
+     "type": "Core",
+     "onetCode": "33-2011.00",
+     "line": 10471
+    },
+    {
+     "id": 22966,
+     "text": "Create openings in buildings for ventilation or entrance, using axes, chisels, crowbars, electric saws, or core cutters.",
+     "type": "Core",
+     "onetCode": "33-2011.00",
+     "line": 10472
+    },
+    {
+     "id": 22967,
+     "text": "Drive and operate fire fighting vehicles and equipment.",
+     "type": "Core",
+     "onetCode": "33-2011.00",
+     "line": 10473
+    },
+    {
+     "id": 22968,
+     "text": "Inspect fire sites after flames have been extinguished to ensure that there is no further danger.",
+     "type": "Core",
+     "onetCode": "33-2011.00",
+     "line": 10474
+    },
+    {
+     "id": 22969,
+     "text": "Position and climb ladders to gain access to upper levels of buildings, or to rescue individuals from burning structures.",
+     "type": "Core",
+     "onetCode": "33-2011.00",
+     "line": 10475
+    },
+    {
+     "id": 22970,
+     "text": "Select and attach hose nozzles, depending on fire type, and direct streams of water or chemicals onto fires.",
+     "type": "Core",
+     "onetCode": "33-2011.00",
+     "line": 10476
+    },
+    {
+     "id": 22988,
+     "text": "Operate pumps connected to high-pressure hoses.",
+     "type": "Core",
+     "onetCode": "33-2011.00",
+     "line": 10477
+    },
+    {
+     "id": 22971,
+     "text": "Maintain contact with fire dispatchers at all times to notify them of the need for additional firefighters and supplies, or to detail any difficulties encountered.",
+     "type": "Core",
+     "onetCode": "33-2011.00",
+     "line": 10478
+    },
+    {
+     "id": 22972,
+     "text": "Collaborate with other firefighters as a member of a firefighting crew.",
+     "type": "Core",
+     "onetCode": "33-2011.00",
+     "line": 10479
+    },
+    {
+     "id": 22973,
+     "text": "Patrol burned areas after fires to locate and eliminate hot spots that may restart fires.",
+     "type": "Core",
+     "onetCode": "33-2011.00",
+     "line": 10480
+    },
+    {
+     "id": 22974,
+     "text": "Collaborate with police to respond to accidents, disasters, and arson investigation calls.",
+     "type": "Core",
+     "onetCode": "33-2011.00",
+     "line": 10481
+    },
+    {
+     "id": 22975,
+     "text": "Participate in fire drills and demonstrations of fire fighting techniques.",
+     "type": "Core",
+     "onetCode": "33-2011.00",
+     "line": 10482
+    },
+    {
+     "id": 22977,
+     "text": "Prepare written reports that detail specifics of fire incidents.",
+     "type": "Core",
+     "onetCode": "33-2011.00",
+     "line": 10483
+    },
+    {
+     "id": 22976,
+     "text": "Maintain knowledge of current firefighting practices by participating in drills and by attending seminars, conventions, and conferences.",
+     "type": "Core",
+     "onetCode": "33-2011.00",
+     "line": 10484
+    },
+    {
+     "id": 22978,
+     "text": "Participate in physical training activities to maintain a high level of physical fitness.",
+     "type": "Core",
+     "onetCode": "33-2011.00",
+     "line": 10485
+    },
+    {
+     "id": 22979,
+     "text": "Protect property from water and smoke, using waterproof salvage covers, smoke ejectors, and deodorants.",
+     "type": "Core",
+     "onetCode": "33-2011.00",
+     "line": 10486
+    },
+    {
+     "id": 22980,
+     "text": "Inform and educate the public on fire prevention.",
+     "type": "Core",
+     "onetCode": "33-2011.00",
+     "line": 10487
+    },
+    {
+     "id": 22981,
+     "text": "Salvage property by removing broken glass, pumping out water, and ventilating buildings to remove smoke.",
+     "type": "Core",
+     "onetCode": "33-2011.00",
+     "line": 10488
+    },
+    {
+     "id": 22982,
+     "text": "Orient self in relation to fire, using compass and map, and collect supplies and equipment dropped by parachute.",
+     "type": "Core",
+     "onetCode": "33-2011.00",
+     "line": 10489
+    },
+    {
+     "id": 22983,
+     "text": "Clean and maintain fire stations and fire fighting equipment and apparatus.",
+     "type": "Core",
+     "onetCode": "33-2011.00",
+     "line": 10490
+    },
+    {
+     "id": 22984,
+     "text": "Inspect buildings for fire hazards and compliance with fire prevention ordinances, testing and checking smoke alarms and fire suppression equipment as necessary.",
+     "type": "Core",
+     "onetCode": "33-2011.00",
+     "line": 10491
+    },
+    {
+     "id": 22985,
+     "text": "Take action to contain any hazardous chemicals that could catch fire, leak, or spill.",
+     "type": "Core",
+     "onetCode": "33-2011.00",
+     "line": 10492
+    },
+    {
+     "id": 22986,
+     "text": "Extinguish flames and embers to suppress fires, using shovels or engine- or hand-driven water or chemical pumps.",
+     "type": "Core",
+     "onetCode": "33-2011.00",
+     "line": 10493
+    },
+    {
+     "id": 22987,
+     "text": "Administer first aid and cardiopulmonary resuscitation to injured persons or provide emergency medical care such as basic or advanced life support.",
+     "type": "n/a",
+     "onetCode": "33-2011.00",
+     "line": 10494
+    },
+    {
+     "id": 22989,
+     "text": "Search to locate fire survivors.",
+     "type": "n/a",
+     "onetCode": "33-2011.00",
+     "line": 10495
+    },
+    {
+     "id": 22990,
+     "text": "Train new employees to control and suppress fires.",
+     "type": "n/a",
+     "onetCode": "33-2011.00",
+     "line": 10496
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L649",
+    "annualMedian": "oews:national_M2025_dl!AB649",
+    "annualMean": "oews:national_M2025_dl!S649",
+    "hourlyMedian": "oews:national_M2025_dl!W649",
+    "hourlyMean": "oews:national_M2025_dl!R649",
+    "annualPct10": "oews:national_M2025_dl!Z649",
+    "annualPct90": "oews:national_M2025_dl!AD649",
+    "annualOnly": "oews:national_M2025_dl!AE649",
+    "hourlyOnly": "oews:national_M2025_dl!AF649",
+    "title": "oews:national_M2025_dl!J649",
+    "ep.title": "ep:Table 1.2!A533",
+    "ep.employment2025": "ep:Table 1.2!D533",
+    "ep.employment2035": "ep:Table 1.2!E533",
+    "ep.numericChange": "ep:Table 1.2!H533",
+    "ep.percentChange": "ep:Table 1.2!I533",
+    "onetCode": "onet:Occupation Data.txt#L534:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L534:Description"
+   },
+   "nullReasons": {}
+  },
+  "33-2021": {
+   "soc": "33-2021",
+   "title": "Fire Inspectors and Investigators",
+   "major": "33-0000",
+   "minor": "33-2000",
+   "broad": "33-2020",
+   "oewsRows": [
+    651
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 13800,
+   "annualMedian": 75920,
+   "annualMean": 78670,
+   "hourlyMedian": 36.5,
+   "hourlyMean": 37.82,
+   "annualPct10": 46530,
+   "annualPct90": 118750,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Fire inspectors and investigators",
+    "employment2025": 14700,
+    "employment2035": 15300,
+    "numericChange": 600,
+    "percentChange": 4.2
+   },
+   "onetCode": "33-2021.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Inspect buildings to detect fire hazards and enforce local ordinances and state laws, or investigate and gather facts to determine cause of fires and explosions.",
+   "tasks": [
+    {
+     "id": 22991,
+     "text": "Prepare and maintain reports of investigation results, and records of convicted arsonists and arson suspects.",
+     "type": "Core",
+     "onetCode": "33-2021.00",
+     "line": 10497
+    },
+    {
+     "id": 22992,
+     "text": "Testify in court cases involving fires, suspected arson, and false alarms.",
+     "type": "Core",
+     "onetCode": "33-2021.00",
+     "line": 10498
+    },
+    {
+     "id": 22993,
+     "text": "Package collected pieces of evidence in securely closed containers, such as bags, crates, or boxes, to protect them.",
+     "type": "Core",
+     "onetCode": "33-2021.00",
+     "line": 10499
+    },
+    {
+     "id": 22994,
+     "text": "Conduct inspections and acceptance testing of newly installed fire protection systems.",
+     "type": "Core",
+     "onetCode": "33-2021.00",
+     "line": 10500
+    },
+    {
+     "id": 22995,
+     "text": "Analyze evidence and other information to determine probable cause of fire or explosion.",
+     "type": "Core",
+     "onetCode": "33-2021.00",
+     "line": 10501
+    },
+    {
+     "id": 22996,
+     "text": "Photograph damage and evidence related to causes of fires or explosions to document investigation findings.",
+     "type": "Core",
+     "onetCode": "33-2021.00",
+     "line": 10502
+    },
+    {
+     "id": 22998,
+     "text": "Inspect buildings to locate hazardous conditions and fire code violations, such as accumulations of combustible material, electrical wiring problems, and inadequate or non-functional fire exits.",
+     "type": "Core",
+     "onetCode": "33-2021.00",
+     "line": 10503
+    },
+    {
+     "id": 22997,
+     "text": "Examine fire sites and collect evidence such as glass, metal fragments, charred wood, and accelerant residue for use in determining the cause of a fire.",
+     "type": "Core",
+     "onetCode": "33-2021.00",
+     "line": 10504
+    },
+    {
+     "id": 22999,
+     "text": "Instruct children about the dangers of fire.",
+     "type": "Core",
+     "onetCode": "33-2021.00",
+     "line": 10505
+    },
+    {
+     "id": 23000,
+     "text": "Conduct fire code compliance follow-ups to ensure that corrective actions have been taken in cases where violations were found.",
+     "type": "Core",
+     "onetCode": "33-2021.00",
+     "line": 10506
+    },
+    {
+     "id": 23001,
+     "text": "Inspect properties that store, handle, and use hazardous materials to ensure compliance with laws, codes, and regulations, and issue hazardous materials permits to facilities found in compliance.",
+     "type": "Core",
+     "onetCode": "33-2021.00",
+     "line": 10507
+    },
+    {
+     "id": 23002,
+     "text": "Write detailed reports of fire inspections performed, fire code violations observed, and corrective recommendations offered.",
+     "type": "Core",
+     "onetCode": "33-2021.00",
+     "line": 10508
+    },
+    {
+     "id": 23003,
+     "text": "Identify corrective actions necessary to bring properties into compliance with applicable fire codes, laws, regulations, and standards, and explain these measures to property owners or their representatives.",
+     "type": "Core",
+     "onetCode": "33-2021.00",
+     "line": 10509
+    },
+    {
+     "id": 23004,
+     "text": "Develop or review fire exit plans.",
+     "type": "Core",
+     "onetCode": "33-2021.00",
+     "line": 10510
+    },
+    {
+     "id": 23005,
+     "text": "Inspect and test fire protection or fire detection systems to verify that such systems are installed in accordance with appropriate laws, codes, ordinances, regulations, and standards.",
+     "type": "Core",
+     "onetCode": "33-2021.00",
+     "line": 10511
+    },
+    {
+     "id": 23006,
+     "text": "Coordinate efforts with other organizations, such as law enforcement agencies.",
+     "type": "Core",
+     "onetCode": "33-2021.00",
+     "line": 10512
+    },
+    {
+     "id": 23007,
+     "text": "Attend training classes to maintain current knowledge of fire prevention, safety, and firefighting procedures.",
+     "type": "Core",
+     "onetCode": "33-2021.00",
+     "line": 10513
+    },
+    {
+     "id": 23008,
+     "text": "Review blueprints and plans for new or remodeled buildings to ensure the structures meet fire safety codes.",
+     "type": "Core",
+     "onetCode": "33-2021.00",
+     "line": 10514
+    },
+    {
+     "id": 23009,
+     "text": "Teach fire investigation techniques to other firefighter personnel.",
+     "type": "Core",
+     "onetCode": "33-2021.00",
+     "line": 10515
+    },
+    {
+     "id": 23010,
+     "text": "Conduct fire exit drills to monitor and evaluate evacuation procedures.",
+     "type": "Core",
+     "onetCode": "33-2021.00",
+     "line": 10516
+    },
+    {
+     "id": 23011,
+     "text": "Teach public education programs on fire safety and prevention.",
+     "type": "Core",
+     "onetCode": "33-2021.00",
+     "line": 10517
+    },
+    {
+     "id": 23012,
+     "text": "Recommend changes to fire prevention, inspection, and fire code endorsement procedures.",
+     "type": "Core",
+     "onetCode": "33-2021.00",
+     "line": 10518
+    },
+    {
+     "id": 23013,
+     "text": "Subpoena and interview witnesses, property owners, and building occupants to obtain information and sworn testimony.",
+     "type": "Supplemental",
+     "onetCode": "33-2021.00",
+     "line": 10519
+    },
+    {
+     "id": 23014,
+     "text": "Conduct internal investigation to determine negligence and violation of laws and regulations by fire department employees.",
+     "type": "Supplemental",
+     "onetCode": "33-2021.00",
+     "line": 10520
+    },
+    {
+     "id": 23015,
+     "text": "Test sites and materials to establish facts, such as burn patterns and flash points of materials, using test equipment.",
+     "type": "Supplemental",
+     "onetCode": "33-2021.00",
+     "line": 10521
+    },
+    {
+     "id": 23016,
+     "text": "Dust evidence or portions of fire scenes for latent fingerprints.",
+     "type": "Supplemental",
+     "onetCode": "33-2021.00",
+     "line": 10522
+    },
+    {
+     "id": 23017,
+     "text": "Arrange for the replacement of defective fire fighting equipment and for repair of fire alarm and sprinkler systems, making minor repairs such as servicing fire extinguishers when feasible.",
+     "type": "Supplemental",
+     "onetCode": "33-2021.00",
+     "line": 10523
+    },
+    {
+     "id": 23018,
+     "text": "Issue permits for public assemblies.",
+     "type": "Supplemental",
+     "onetCode": "33-2021.00",
+     "line": 10524
+    },
+    {
+     "id": 23019,
+     "text": "Supervise staff, training them, planning their work, and evaluating their performance.",
+     "type": "Supplemental",
+     "onetCode": "33-2021.00",
+     "line": 10525
+    },
+    {
+     "id": 23020,
+     "text": "Develop and coordinate fire prevention programs, such as false alarm billing, fire inspection reporting, and hazardous materials management.",
+     "type": "Supplemental",
+     "onetCode": "33-2021.00",
+     "line": 10526
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L651",
+    "annualMedian": "oews:national_M2025_dl!AB651",
+    "annualMean": "oews:national_M2025_dl!S651",
+    "hourlyMedian": "oews:national_M2025_dl!W651",
+    "hourlyMean": "oews:national_M2025_dl!R651",
+    "annualPct10": "oews:national_M2025_dl!Z651",
+    "annualPct90": "oews:national_M2025_dl!AD651",
+    "annualOnly": "oews:national_M2025_dl!AE651",
+    "hourlyOnly": "oews:national_M2025_dl!AF651",
+    "title": "oews:national_M2025_dl!J651",
+    "ep.title": "ep:Table 1.2!A535",
+    "ep.employment2025": "ep:Table 1.2!D535",
+    "ep.employment2035": "ep:Table 1.2!E535",
+    "ep.numericChange": "ep:Table 1.2!H535",
+    "ep.percentChange": "ep:Table 1.2!I535",
+    "onetCode": "onet:Occupation Data.txt#L535:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L535:Description"
+   },
+   "nullReasons": {}
+  },
+  "33-2022": {
+   "soc": "33-2022",
+   "title": "Forest Fire Inspectors and Prevention Specialists",
+   "major": "33-0000",
+   "minor": "33-2000",
+   "broad": "33-2020",
+   "oewsRows": [
+    652
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 2780,
+   "annualMedian": 56870,
+   "annualMean": 66640,
+   "hourlyMedian": 27.34,
+   "hourlyMean": 32.04,
+   "annualPct10": 35420,
+   "annualPct90": 105460,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Forest fire inspectors and prevention specialists",
+    "employment2025": 3000,
+    "employment2035": 3400,
+    "numericChange": 400,
+    "percentChange": 13.1
+   },
+   "onetCode": "33-2022.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Enforce fire regulations, inspect forest for fire hazards, and recommend forest fire prevention or control measures. May report forest fires and weather conditions.",
+   "tasks": [
+    {
+     "id": 11102,
+     "text": "Relay messages about emergencies, accidents, locations of crew and personnel, and fire hazard conditions.",
+     "type": "Core",
+     "onetCode": "33-2022.00",
+     "line": 10527
+    },
+    {
+     "id": 21143,
+     "text": "Conduct wildland firefighting training.",
+     "type": "Core",
+     "onetCode": "33-2022.00",
+     "line": 10528
+    },
+    {
+     "id": 11104,
+     "text": "Estimate sizes and characteristics of fires, and report findings to base camps by radio or telephone.",
+     "type": "Core",
+     "onetCode": "33-2022.00",
+     "line": 10529
+    },
+    {
+     "id": 11103,
+     "text": "Direct crews working on firelines during forest fires.",
+     "type": "Core",
+     "onetCode": "33-2022.00",
+     "line": 10530
+    },
+    {
+     "id": 11107,
+     "text": "Locate forest fires on area maps, using azimuth sighters and known landmarks.",
+     "type": "Core",
+     "onetCode": "33-2022.00",
+     "line": 10531
+    },
+    {
+     "id": 11106,
+     "text": "Extinguish smaller fires with portable extinguishers, shovels, and axes.",
+     "type": "Core",
+     "onetCode": "33-2022.00",
+     "line": 10532
+    },
+    {
+     "id": 11112,
+     "text": "Patrol assigned areas, looking for forest fires, hazardous conditions, and weather phenomena.",
+     "type": "Core",
+     "onetCode": "33-2022.00",
+     "line": 10533
+    },
+    {
+     "id": 11113,
+     "text": "Compile and report meteorological data, such as temperature, relative humidity, wind direction and velocity, and types of cloud formations.",
+     "type": "Core",
+     "onetCode": "33-2022.00",
+     "line": 10534
+    },
+    {
+     "id": 11109,
+     "text": "Examine and inventory firefighting equipment, such as axes, fire hoses, shovels, pumps, buckets, and fire extinguishers, to determine amount and condition.",
+     "type": "Core",
+     "onetCode": "33-2022.00",
+     "line": 10535
+    },
+    {
+     "id": 21144,
+     "text": "Educate the public about fire safety and prevention.",
+     "type": "Core",
+     "onetCode": "33-2022.00",
+     "line": 10536
+    },
+    {
+     "id": 11110,
+     "text": "Direct maintenance and repair of firefighting equipment, or requisition new equipment.",
+     "type": "Core",
+     "onetCode": "33-2022.00",
+     "line": 10537
+    },
+    {
+     "id": 11108,
+     "text": "Maintain records and logbooks.",
+     "type": "Core",
+     "onetCode": "33-2022.00",
+     "line": 10538
+    },
+    {
+     "id": 11105,
+     "text": "Administer regulations regarding sanitation, fire prevention, violation corrections, and related forest regulations.",
+     "type": "Core",
+     "onetCode": "33-2022.00",
+     "line": 10539
+    },
+    {
+     "id": 11111,
+     "text": "Restrict public access and recreational use of forest lands during critical fire seasons.",
+     "type": "Core",
+     "onetCode": "33-2022.00",
+     "line": 10540
+    },
+    {
+     "id": 11114,
+     "text": "Inspect camp sites to ensure that campers are in compliance with forest use regulations.",
+     "type": "Core",
+     "onetCode": "33-2022.00",
+     "line": 10541
+    },
+    {
+     "id": 11115,
+     "text": "Inspect forest tracts and logging areas for fire hazards such as accumulated wastes or mishandling of combustibles, and recommend appropriate fire prevention measures.",
+     "type": "Core",
+     "onetCode": "33-2022.00",
+     "line": 10542
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L652",
+    "annualMedian": "oews:national_M2025_dl!AB652",
+    "annualMean": "oews:national_M2025_dl!S652",
+    "hourlyMedian": "oews:national_M2025_dl!W652",
+    "hourlyMean": "oews:national_M2025_dl!R652",
+    "annualPct10": "oews:national_M2025_dl!Z652",
+    "annualPct90": "oews:national_M2025_dl!AD652",
+    "annualOnly": "oews:national_M2025_dl!AE652",
+    "hourlyOnly": "oews:national_M2025_dl!AF652",
+    "title": "oews:national_M2025_dl!J652",
+    "ep.title": "ep:Table 1.2!A536",
+    "ep.employment2025": "ep:Table 1.2!D536",
+    "ep.employment2035": "ep:Table 1.2!E536",
+    "ep.numericChange": "ep:Table 1.2!H536",
+    "ep.percentChange": "ep:Table 1.2!I536",
+    "onetCode": "onet:Occupation Data.txt#L536:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L536:Description"
+   },
+   "nullReasons": {}
+  },
+  "33-3011": {
+   "soc": "33-3011",
+   "title": "Bailiffs",
+   "major": "33-0000",
+   "minor": "33-3000",
+   "broad": "33-3010",
+   "oewsRows": [
+    655
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 17310,
+   "annualMedian": 56600,
+   "annualMean": 61660,
+   "hourlyMedian": 27.21,
+   "hourlyMean": 29.65,
+   "annualPct10": 32140,
+   "annualPct90": 96770,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Bailiffs",
+    "employment2025": 18000,
+    "employment2035": 17700,
+    "numericChange": -300,
+    "percentChange": -1.9
+   },
+   "onetCode": "33-3011.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Maintain order in courts of law.",
+   "tasks": [
+    {
+     "id": 20123,
+     "text": "Screen persons entering courthouse using magnetometers, x-ray machines, and other devices to collect and retain unauthorized firearms and other contraband.",
+     "type": "Core",
+     "onetCode": "33-3011.00",
+     "line": 10543
+    },
+    {
+     "id": 20127,
+     "text": "Escort prisoners to and from courthouse and maintain custody of prisoners during court proceedings.",
+     "type": "Core",
+     "onetCode": "33-3011.00",
+     "line": 10544
+    },
+    {
+     "id": 2091,
+     "text": "Maintain order in courtroom during trial and guard jury from outside contact.",
+     "type": "Core",
+     "onetCode": "33-3011.00",
+     "line": 10545
+    },
+    {
+     "id": 20124,
+     "text": "Provide security by patrolling interior and exterior of courthouse and escorting judges and other court employees.",
+     "type": "Core",
+     "onetCode": "33-3011.00",
+     "line": 10546
+    },
+    {
+     "id": 2092,
+     "text": "Guard lodging of sequestered jury.",
+     "type": "Core",
+     "onetCode": "33-3011.00",
+     "line": 10547
+    },
+    {
+     "id": 2094,
+     "text": "Enforce courtroom rules of behavior and warn persons not to smoke or disturb court procedure.",
+     "type": "Core",
+     "onetCode": "33-3011.00",
+     "line": 10548
+    },
+    {
+     "id": 21197,
+     "text": "Arrest persons in court when arrest warrants have been issued.",
+     "type": "Core",
+     "onetCode": "33-3011.00",
+     "line": 10549
+    },
+    {
+     "id": 2095,
+     "text": "Report need for police or medical assistance to sheriff's office.",
+     "type": "Core",
+     "onetCode": "33-3011.00",
+     "line": 10550
+    },
+    {
+     "id": 20125,
+     "text": "Check courtroom for security and cleanliness and assure availability of sundry supplies, such as notepads, for use by judge, jurors, and attorneys.",
+     "type": "Core",
+     "onetCode": "33-3011.00",
+     "line": 10551
+    },
+    {
+     "id": 2098,
+     "text": "Stop people from entering courtroom while judge charges jury.",
+     "type": "Core",
+     "onetCode": "33-3011.00",
+     "line": 10552
+    },
+    {
+     "id": 20126,
+     "text": "Screen, control, and handle evidence and exhibits during court proceedings.",
+     "type": "Core",
+     "onetCode": "33-3011.00",
+     "line": 10553
+    },
+    {
+     "id": 21198,
+     "text": "Provide assistance to the public, such as directions to court offices.",
+     "type": "Core",
+     "onetCode": "33-3011.00",
+     "line": 10554
+    },
+    {
+     "id": 2097,
+     "text": "Announce entrance of judge.",
+     "type": "Core",
+     "onetCode": "33-3011.00",
+     "line": 10555
+    },
+    {
+     "id": 20128,
+     "text": "Maintain court docket.",
+     "type": "Supplemental",
+     "onetCode": "33-3011.00",
+     "line": 10556
+    },
+    {
+     "id": 2093,
+     "text": "Provide jury escort to restaurant and other areas outside of courtroom to prevent jury contact with public.",
+     "type": "Supplemental",
+     "onetCode": "33-3011.00",
+     "line": 10557
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L655",
+    "annualMedian": "oews:national_M2025_dl!AB655",
+    "annualMean": "oews:national_M2025_dl!S655",
+    "hourlyMedian": "oews:national_M2025_dl!W655",
+    "hourlyMean": "oews:national_M2025_dl!R655",
+    "annualPct10": "oews:national_M2025_dl!Z655",
+    "annualPct90": "oews:national_M2025_dl!AD655",
+    "annualOnly": "oews:national_M2025_dl!AE655",
+    "hourlyOnly": "oews:national_M2025_dl!AF655",
+    "title": "oews:national_M2025_dl!J655",
+    "ep.title": "ep:Table 1.2!A539",
+    "ep.employment2025": "ep:Table 1.2!D539",
+    "ep.employment2035": "ep:Table 1.2!E539",
+    "ep.numericChange": "ep:Table 1.2!H539",
+    "ep.percentChange": "ep:Table 1.2!I539",
+    "onetCode": "onet:Occupation Data.txt#L537:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L537:Description"
+   },
+   "nullReasons": {}
+  },
+  "33-3012": {
+   "soc": "33-3012",
+   "title": "Correctional Officers and Jailers",
+   "major": "33-0000",
+   "minor": "33-3000",
+   "broad": "33-3010",
+   "oewsRows": [
+    656
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 380500,
+   "annualMedian": 58940,
+   "annualMean": 63630,
+   "hourlyMedian": 28.34,
+   "hourlyMean": 30.59,
+   "annualPct10": 42760,
+   "annualPct90": 93220,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Correctional officers and jailers",
+    "employment2025": 397800,
+    "employment2035": 368200,
+    "numericChange": -29500,
+    "percentChange": -7.4
+   },
+   "onetCode": "33-3012.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Guard inmates in penal or rehabilitative institutions in accordance with established regulations and procedures. May guard prisoners in transit between jail, courtroom, prison, or other point. Includes deputy sheriffs and police who spend the majority of their time guarding prisoners in correctional institutions.",
+   "tasks": [
+    {
+     "id": 15252,
+     "text": "Conduct head counts to ensure that each prisoner is present.",
+     "type": "Core",
+     "onetCode": "33-3012.00",
+     "line": 10558
+    },
+    {
+     "id": 15254,
+     "text": "Inspect conditions of locks, window bars, grills, doors, and gates at correctional facilities to ensure security and help prevent escapes.",
+     "type": "Core",
+     "onetCode": "33-3012.00",
+     "line": 10559
+    },
+    {
+     "id": 15253,
+     "text": "Monitor conduct of prisoners in housing unit, or during work or recreational activities, according to established policies, regulations, and procedures, to prevent escape or violence.",
+     "type": "Core",
+     "onetCode": "33-3012.00",
+     "line": 10560
+    },
+    {
+     "id": 15256,
+     "text": "Search prisoners and vehicles and conduct shakedowns of cells for valuables and contraband, such as weapons or drugs.",
+     "type": "Core",
+     "onetCode": "33-3012.00",
+     "line": 10561
+    },
+    {
+     "id": 2102,
+     "text": "Guard facility entrances to screen visitors.",
+     "type": "Core",
+     "onetCode": "33-3012.00",
+     "line": 10562
+    },
+    {
+     "id": 15255,
+     "text": "Record information, such as prisoner identification, charges, and incidents of inmate disturbance, keeping daily logs of prisoner activities.",
+     "type": "Core",
+     "onetCode": "33-3012.00",
+     "line": 10563
+    },
+    {
+     "id": 2104,
+     "text": "Inspect mail for the presence of contraband.",
+     "type": "Core",
+     "onetCode": "33-3012.00",
+     "line": 10564
+    },
+    {
+     "id": 2117,
+     "text": "Maintain records of prisoners' identification and charges.",
+     "type": "Core",
+     "onetCode": "33-3012.00",
+     "line": 10565
+    },
+    {
+     "id": 2107,
+     "text": "Use weapons, handcuffs, and physical force to maintain discipline and order among prisoners.",
+     "type": "Core",
+     "onetCode": "33-3012.00",
+     "line": 10566
+    },
+    {
+     "id": 15261,
+     "text": "Use nondisciplinary tools and equipment, such as a computer.",
+     "type": "Core",
+     "onetCode": "33-3012.00",
+     "line": 10567
+    },
+    {
+     "id": 2108,
+     "text": "Conduct fire, safety, and sanitation inspections.",
+     "type": "Core",
+     "onetCode": "33-3012.00",
+     "line": 10568
+    },
+    {
+     "id": 2105,
+     "text": "Take prisoners into custody and escort to locations within and outside of facility, such as visiting room, courtroom, or airport.",
+     "type": "Core",
+     "onetCode": "33-3012.00",
+     "line": 10569
+    },
+    {
+     "id": 15258,
+     "text": "Participate in required job training.",
+     "type": "Core",
+     "onetCode": "33-3012.00",
+     "line": 10570
+    },
+    {
+     "id": 15259,
+     "text": "Serve meals, distribute commissary items, and dispense prescribed medication to prisoners.",
+     "type": "Core",
+     "onetCode": "33-3012.00",
+     "line": 10571
+    },
+    {
+     "id": 2110,
+     "text": "Settle disputes between inmates.",
+     "type": "Core",
+     "onetCode": "33-3012.00",
+     "line": 10572
+    },
+    {
+     "id": 2109,
+     "text": "Provide to supervisors oral and written reports of the quality and quantity of work performed by inmates, inmate disturbances and rule violations, and unusual occurrences.",
+     "type": "Core",
+     "onetCode": "33-3012.00",
+     "line": 10573
+    },
+    {
+     "id": 2111,
+     "text": "Drive passenger vehicles and trucks used to transport inmates to other institutions, courtrooms, hospitals, and work sites.",
+     "type": "Core",
+     "onetCode": "33-3012.00",
+     "line": 10574
+    },
+    {
+     "id": 15260,
+     "text": "Counsel inmates and respond to legitimate questions, concerns, and requests.",
+     "type": "Core",
+     "onetCode": "33-3012.00",
+     "line": 10575
+    },
+    {
+     "id": 2113,
+     "text": "Assign duties to inmates, providing instructions as needed.",
+     "type": "Core",
+     "onetCode": "33-3012.00",
+     "line": 10576
+    },
+    {
+     "id": 2114,
+     "text": "Issue clothing, tools, and other authorized items to inmates.",
+     "type": "Core",
+     "onetCode": "33-3012.00",
+     "line": 10577
+    },
+    {
+     "id": 2112,
+     "text": "Arrange daily schedules for prisoners, including library visits, work assignments, family visits, and counseling appointments.",
+     "type": "Core",
+     "onetCode": "33-3012.00",
+     "line": 10578
+    },
+    {
+     "id": 2103,
+     "text": "Search for and recapture escapees.",
+     "type": "Supplemental",
+     "onetCode": "33-3012.00",
+     "line": 10579
+    },
+    {
+     "id": 15257,
+     "text": "Process or book convicted individuals into prison.",
+     "type": "Supplemental",
+     "onetCode": "33-3012.00",
+     "line": 10580
+    },
+    {
+     "id": 2118,
+     "text": "Supervise and coordinate work of other correctional service officers.",
+     "type": "Supplemental",
+     "onetCode": "33-3012.00",
+     "line": 10581
+    },
+    {
+     "id": 23976,
+     "text": "Take fingerprints of arrestees, prisoners, or the general public.",
+     "type": "Supplemental",
+     "onetCode": "33-3012.00",
+     "line": 10582
+    },
+    {
+     "id": 2116,
+     "text": "Investigate crimes that have occurred within an institution, or assist police in their investigations of crimes and inmates.",
+     "type": "Supplemental",
+     "onetCode": "33-3012.00",
+     "line": 10583
+    },
+    {
+     "id": 2119,
+     "text": "Sponsor inmate recreational activities, such as newspapers and self-help groups.",
+     "type": "Supplemental",
+     "onetCode": "33-3012.00",
+     "line": 10584
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L656",
+    "annualMedian": "oews:national_M2025_dl!AB656",
+    "annualMean": "oews:national_M2025_dl!S656",
+    "hourlyMedian": "oews:national_M2025_dl!W656",
+    "hourlyMean": "oews:national_M2025_dl!R656",
+    "annualPct10": "oews:national_M2025_dl!Z656",
+    "annualPct90": "oews:national_M2025_dl!AD656",
+    "annualOnly": "oews:national_M2025_dl!AE656",
+    "hourlyOnly": "oews:national_M2025_dl!AF656",
+    "title": "oews:national_M2025_dl!J656",
+    "ep.title": "ep:Table 1.2!A540",
+    "ep.employment2025": "ep:Table 1.2!D540",
+    "ep.employment2035": "ep:Table 1.2!E540",
+    "ep.numericChange": "ep:Table 1.2!H540",
+    "ep.percentChange": "ep:Table 1.2!I540",
+    "onetCode": "onet:Occupation Data.txt#L538:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L538:Description"
+   },
+   "nullReasons": {}
+  },
+  "33-3021": {
+   "soc": "33-3021",
+   "title": "Detectives and Criminal Investigators",
+   "major": "33-0000",
+   "minor": "33-3000",
+   "broad": "33-3020",
+   "oewsRows": [
+    658
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 114430,
+   "annualMedian": 93790,
+   "annualMean": 99430,
+   "hourlyMedian": 45.09,
+   "hourlyMean": 47.8,
+   "annualPct10": 55390,
+   "annualPct90": 160540,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Detectives and criminal investigators",
+    "employment2025": 120500,
+    "employment2035": 120700,
+    "numericChange": 200,
+    "percentChange": 0.2
+   },
+   "onetCode": "33-3021.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [
+    {
+     "code": "33-3021.02",
+     "title": "Police Identification and Records Officers",
+     "taskCount": 16
+    },
+    {
+     "code": "33-3021.06",
+     "title": "Intelligence Analysts",
+     "taskCount": 21
+    }
+   ],
+   "description": "Conduct investigations related to suspected violations of federal, state, or local laws to prevent or solve crimes.",
+   "tasks": [
+    {
+     "id": 23021,
+     "text": "Check victims for signs of life, such as breathing and pulse.",
+     "type": "Core",
+     "onetCode": "33-3021.00",
+     "line": 10585
+    },
+    {
+     "id": 23022,
+     "text": "Obtain facts or statements from complainants, witnesses, and accused persons and record interviews, using recording device.",
+     "type": "Core",
+     "onetCode": "33-3021.00",
+     "line": 10586
+    },
+    {
+     "id": 23023,
+     "text": "Secure deceased body and obtain evidence from it, preventing bystanders from tampering with it prior to medical examiner's arrival.",
+     "type": "Core",
+     "onetCode": "33-3021.00",
+     "line": 10587
+    },
+    {
+     "id": 23024,
+     "text": "Record progress of investigation, maintain informational files on suspects, and submit reports to commanding officer or magistrate to authorize warrants.",
+     "type": "Core",
+     "onetCode": "33-3021.00",
+     "line": 10588
+    },
+    {
+     "id": 23029,
+     "text": "Prepare reports that detail investigation findings.",
+     "type": "Core",
+     "onetCode": "33-3021.00",
+     "line": 10589
+    },
+    {
+     "id": 23025,
+     "text": "Prepare charges or responses to charges, or information for court cases, according to formalized procedures.",
+     "type": "Core",
+     "onetCode": "33-3021.00",
+     "line": 10590
+    },
+    {
+     "id": 23026,
+     "text": "Preserve, process, and analyze items of evidence obtained from crime scenes and suspects, placing them in proper containers and destroying evidence no longer needed.",
+     "type": "Core",
+     "onetCode": "33-3021.00",
+     "line": 10591
+    },
+    {
+     "id": 23027,
+     "text": "Obtain summary of incident from officer in charge at crime scene, taking care to avoid disturbing evidence.",
+     "type": "Core",
+     "onetCode": "33-3021.00",
+     "line": 10592
+    },
+    {
+     "id": 23028,
+     "text": "Note, mark, and photograph location of objects found, such as footprints, tire tracks, bullets and bloodstains, and take measurements of the scene.",
+     "type": "Core",
+     "onetCode": "33-3021.00",
+     "line": 10593
+    },
+    {
+     "id": 23030,
+     "text": "Examine records and governmental agency files to find identifying data about suspects.",
+     "type": "Core",
+     "onetCode": "33-3021.00",
+     "line": 10594
+    },
+    {
+     "id": 23031,
+     "text": "Secure persons at scene, keeping witnesses from conversing or leaving the scene before investigators arrive.",
+     "type": "Core",
+     "onetCode": "33-3021.00",
+     "line": 10595
+    },
+    {
+     "id": 23032,
+     "text": "Provide information to lab personnel concerning the source of an item of evidence and tests to be performed.",
+     "type": "Core",
+     "onetCode": "33-3021.00",
+     "line": 10596
+    },
+    {
+     "id": 23033,
+     "text": "Analyze completed police reports to determine what additional information and investigative work is needed.",
+     "type": "Core",
+     "onetCode": "33-3021.00",
+     "line": 10597
+    },
+    {
+     "id": 23050,
+     "text": "Examine records to locate links in chains of evidence or information.",
+     "type": "Core",
+     "onetCode": "33-3021.00",
+     "line": 10598
+    },
+    {
+     "id": 23045,
+     "text": "Search for and collect evidence, such as fingerprints, using investigative equipment.",
+     "type": "Core",
+     "onetCode": "33-3021.00",
+     "line": 10599
+    },
+    {
+     "id": 23035,
+     "text": "Prepare and serve search and arrest warrants.",
+     "type": "Core",
+     "onetCode": "33-3021.00",
+     "line": 10600
+    },
+    {
+     "id": 23036,
+     "text": "Question individuals or observe persons and establishments to confirm information given to patrol officers.",
+     "type": "Core",
+     "onetCode": "33-3021.00",
+     "line": 10601
+    },
+    {
+     "id": 23046,
+     "text": "Determine scope, timing, and direction of investigations.",
+     "type": "Core",
+     "onetCode": "33-3021.00",
+     "line": 10602
+    },
+    {
+     "id": 23034,
+     "text": "Obtain and verify evidence by interviewing and observing suspects and witnesses or by analyzing records.",
+     "type": "Core",
+     "onetCode": "33-3021.00",
+     "line": 10603
+    },
+    {
+     "id": 23038,
+     "text": "Participate or assist in raids and arrests.",
+     "type": "Core",
+     "onetCode": "33-3021.00",
+     "line": 10604
+    },
+    {
+     "id": 23039,
+     "text": "Organize scene search, assigning specific tasks and areas of search to individual officers and obtaining adequate lighting as necessary.",
+     "type": "Core",
+     "onetCode": "33-3021.00",
+     "line": 10605
+    },
+    {
+     "id": 23040,
+     "text": "Summon medical help for injured individuals and alert medical personnel to take statements from them.",
+     "type": "Core",
+     "onetCode": "33-3021.00",
+     "line": 10606
+    },
+    {
+     "id": 23041,
+     "text": "Notify command of situation and request assistance.",
+     "type": "Core",
+     "onetCode": "33-3021.00",
+     "line": 10607
+    },
+    {
+     "id": 23043,
+     "text": "Block or rope off scene and check perimeter to ensure that entire scene is secured.",
+     "type": "Core",
+     "onetCode": "33-3021.00",
+     "line": 10608
+    },
+    {
+     "id": 23037,
+     "text": "Identify case issues and evidence needed, based on analysis of charges, complaints, or allegations of law violations.",
+     "type": "Core",
+     "onetCode": "33-3021.00",
+     "line": 10609
+    },
+    {
+     "id": 23044,
+     "text": "Notify, or request notification of, medical examiner or district attorney representative.",
+     "type": "Core",
+     "onetCode": "33-3021.00",
+     "line": 10610
+    },
+    {
+     "id": 23048,
+     "text": "Collaborate with other offices and agencies to exchange information and coordinate activities.",
+     "type": "Core",
+     "onetCode": "33-3021.00",
+     "line": 10611
+    },
+    {
+     "id": 23047,
+     "text": "Maintain surveillance of establishments to obtain identifying information on suspects.",
+     "type": "Core",
+     "onetCode": "33-3021.00",
+     "line": 10612
+    },
+    {
+     "id": 23042,
+     "text": "Testify before grand juries concerning criminal activity investigations.",
+     "type": "Core",
+     "onetCode": "33-3021.00",
+     "line": 10613
+    },
+    {
+     "id": 23049,
+     "text": "Perform undercover assignments and maintain surveillance, including monitoring authorized wiretaps.",
+     "type": "Core",
+     "onetCode": "33-3021.00",
+     "line": 10614
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L658",
+    "annualMedian": "oews:national_M2025_dl!AB658",
+    "annualMean": "oews:national_M2025_dl!S658",
+    "hourlyMedian": "oews:national_M2025_dl!W658",
+    "hourlyMean": "oews:national_M2025_dl!R658",
+    "annualPct10": "oews:national_M2025_dl!Z658",
+    "annualPct90": "oews:national_M2025_dl!AD658",
+    "annualOnly": "oews:national_M2025_dl!AE658",
+    "hourlyOnly": "oews:national_M2025_dl!AF658",
+    "title": "oews:national_M2025_dl!J658",
+    "ep.title": "ep:Table 1.2!A541",
+    "ep.employment2025": "ep:Table 1.2!D541",
+    "ep.employment2035": "ep:Table 1.2!E541",
+    "ep.numericChange": "ep:Table 1.2!H541",
+    "ep.percentChange": "ep:Table 1.2!I541",
+    "onetCode": "onet:Occupation Data.txt#L539:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L539:Description"
+   },
+   "nullReasons": {}
+  },
+  "33-3031": {
+   "soc": "33-3031",
+   "title": "Fish and Game Wardens",
+   "major": "33-0000",
+   "minor": "33-3000",
+   "broad": "33-3030",
+   "oewsRows": [
+    660
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 5770,
+   "annualMedian": 74060,
+   "annualMean": 74950,
+   "hourlyMedian": 35.6,
+   "hourlyMean": 36.03,
+   "annualPct10": 50990,
+   "annualPct90": 100980,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Fish and game wardens",
+    "employment2025": 6200,
+    "employment2035": 5800,
+    "numericChange": -400,
+    "percentChange": -5.7
+   },
+   "onetCode": "33-3031.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Patrol assigned area to prevent fish and game law violations. Investigate reports of damage to crops or property by wildlife. Compile biological data.",
+   "tasks": [
+    {
+     "id": 7915,
+     "text": "Patrol assigned areas by car, boat, airplane, horse, or on foot to enforce game, fish, or boating laws or to manage wildlife programs, lakes, or land.",
+     "type": "Core",
+     "onetCode": "33-3031.00",
+     "line": 10652
+    },
+    {
+     "id": 20582,
+     "text": "Compile and present evidence for court actions.",
+     "type": "Core",
+     "onetCode": "33-3031.00",
+     "line": 10653
+    },
+    {
+     "id": 20583,
+     "text": "Investigate hunting accidents or reports of fish or game law violations.",
+     "type": "Core",
+     "onetCode": "33-3031.00",
+     "line": 10654
+    },
+    {
+     "id": 7918,
+     "text": "Protect and preserve native wildlife, plants, or ecosystems.",
+     "type": "Core",
+     "onetCode": "33-3031.00",
+     "line": 10655
+    },
+    {
+     "id": 20584,
+     "text": "Issue warnings or citations and file reports as necessary.",
+     "type": "Core",
+     "onetCode": "33-3031.00",
+     "line": 10656
+    },
+    {
+     "id": 20585,
+     "text": "Serve warrants and make arrests.",
+     "type": "Core",
+     "onetCode": "33-3031.00",
+     "line": 10657
+    },
+    {
+     "id": 7921,
+     "text": "Provide assistance to other local law enforcement agencies as required.",
+     "type": "Core",
+     "onetCode": "33-3031.00",
+     "line": 10658
+    },
+    {
+     "id": 7919,
+     "text": "Promote or provide hunter or trapper safety training.",
+     "type": "Core",
+     "onetCode": "33-3031.00",
+     "line": 10659
+    },
+    {
+     "id": 20586,
+     "text": "Participate in search-and-rescue operations.",
+     "type": "Core",
+     "onetCode": "33-3031.00",
+     "line": 10660
+    },
+    {
+     "id": 20587,
+     "text": "Arrange for disposition of fish or game illegally taken or possessed.",
+     "type": "Core",
+     "onetCode": "33-3031.00",
+     "line": 10661
+    },
+    {
+     "id": 20588,
+     "text": "Seize equipment used in fish and game law violations.",
+     "type": "Core",
+     "onetCode": "33-3031.00",
+     "line": 10662
+    },
+    {
+     "id": 7922,
+     "text": "Address schools, civic groups, sporting clubs, or the media to disseminate information concerning wildlife conservation and regulations.",
+     "type": "Core",
+     "onetCode": "33-3031.00",
+     "line": 10663
+    },
+    {
+     "id": 7923,
+     "text": "Recommend revisions in hunting and trapping regulations or in animal management programs so that wildlife balances or habitats can be maintained.",
+     "type": "Core",
+     "onetCode": "33-3031.00",
+     "line": 10664
+    },
+    {
+     "id": 7924,
+     "text": "Inspect commercial operations relating to fish or wildlife, recreation, or protected areas.",
+     "type": "Core",
+     "onetCode": "33-3031.00",
+     "line": 10665
+    },
+    {
+     "id": 7926,
+     "text": "Survey areas and compile figures of bag counts of hunters to determine the effectiveness of control measures.",
+     "type": "Core",
+     "onetCode": "33-3031.00",
+     "line": 10666
+    },
+    {
+     "id": 7925,
+     "text": "Collect and report information on populations or conditions of fish and wildlife in their habitats, availability of game food or cover, or suspected pollution.",
+     "type": "Core",
+     "onetCode": "33-3031.00",
+     "line": 10667
+    },
+    {
+     "id": 7929,
+     "text": "Design or implement control measures to prevent or counteract damage caused by wildlife or people.",
+     "type": "Core",
+     "onetCode": "33-3031.00",
+     "line": 10668
+    },
+    {
+     "id": 7933,
+     "text": "Provide advice or information to park or reserve visitors.",
+     "type": "Core",
+     "onetCode": "33-3031.00",
+     "line": 10669
+    },
+    {
+     "id": 7928,
+     "text": "Investigate crop, property, or habitat damage or destruction or instances of water pollution to determine causes and to advise property owners of preventive measures.",
+     "type": "Core",
+     "onetCode": "33-3031.00",
+     "line": 10670
+    },
+    {
+     "id": 7932,
+     "text": "Issue licenses, permits, or other documentation.",
+     "type": "Core",
+     "onetCode": "33-3031.00",
+     "line": 10671
+    },
+    {
+     "id": 7930,
+     "text": "Document the extent of crop, property, or habitat damage and make financial loss estimates or compensation recommendations.",
+     "type": "Supplemental",
+     "onetCode": "33-3031.00",
+     "line": 10672
+    },
+    {
+     "id": 7931,
+     "text": "Supervise the activities of seasonal workers.",
+     "type": "Supplemental",
+     "onetCode": "33-3031.00",
+     "line": 10673
+    },
+    {
+     "id": 7934,
+     "text": "Perform facilities maintenance work, such as constructing or repairing structures or controlling weeds or pests.",
+     "type": "Supplemental",
+     "onetCode": "33-3031.00",
+     "line": 10674
+    },
+    {
+     "id": 20589,
+     "text": "Participate in firefighting efforts.",
+     "type": "Supplemental",
+     "onetCode": "33-3031.00",
+     "line": 10675
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L660",
+    "annualMedian": "oews:national_M2025_dl!AB660",
+    "annualMean": "oews:national_M2025_dl!S660",
+    "hourlyMedian": "oews:national_M2025_dl!W660",
+    "hourlyMean": "oews:national_M2025_dl!R660",
+    "annualPct10": "oews:national_M2025_dl!Z660",
+    "annualPct90": "oews:national_M2025_dl!AD660",
+    "annualOnly": "oews:national_M2025_dl!AE660",
+    "hourlyOnly": "oews:national_M2025_dl!AF660",
+    "title": "oews:national_M2025_dl!J660",
+    "ep.title": "ep:Table 1.2!A542",
+    "ep.employment2025": "ep:Table 1.2!D542",
+    "ep.employment2035": "ep:Table 1.2!E542",
+    "ep.numericChange": "ep:Table 1.2!H542",
+    "ep.percentChange": "ep:Table 1.2!I542",
+    "onetCode": "onet:Occupation Data.txt#L542:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L542:Description"
+   },
+   "nullReasons": {}
+  },
+  "33-3041": {
+   "soc": "33-3041",
+   "title": "Parking Enforcement Workers",
+   "major": "33-0000",
+   "minor": "33-3000",
+   "broad": "33-3040",
+   "oewsRows": [
+    662
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 9050,
+   "annualMedian": 46730,
+   "annualMean": 51190,
+   "hourlyMedian": 22.47,
+   "hourlyMean": 24.61,
+   "annualPct10": 35130,
+   "annualPct90": 75340,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Parking enforcement workers",
+    "employment2025": 9400,
+    "employment2035": 9300,
+    "numericChange": -100,
+    "percentChange": -1.1
+   },
+   "onetCode": "33-3041.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Patrol assigned area, such as public parking lot or city streets to issue tickets to overtime parking violators and illegally parked vehicles.",
+   "tasks": [
+    {
+     "id": 7951,
+     "text": "Enter and retrieve information pertaining to vehicle registration, identification, and status, using hand-held computers.",
+     "type": "Core",
+     "onetCode": "33-3041.00",
+     "line": 10676
+    },
+    {
+     "id": 7935,
+     "text": "Patrol an assigned area by vehicle or on foot to ensure public compliance with existing parking ordinance.",
+     "type": "Core",
+     "onetCode": "33-3041.00",
+     "line": 10677
+    },
+    {
+     "id": 7937,
+     "text": "Write warnings and citations for illegally parked vehicles.",
+     "type": "Core",
+     "onetCode": "33-3041.00",
+     "line": 10678
+    },
+    {
+     "id": 7947,
+     "text": "Appear in court at hearings regarding contested traffic citations.",
+     "type": "Core",
+     "onetCode": "33-3041.00",
+     "line": 10679
+    },
+    {
+     "id": 7945,
+     "text": "Maintain assigned equipment and supplies, such as hand-held citation computers, citation books, rain gear, tire-marking chalk, and street cones.",
+     "type": "Core",
+     "onetCode": "33-3041.00",
+     "line": 10680
+    },
+    {
+     "id": 7939,
+     "text": "Respond to and make radio dispatch calls regarding parking violations and complaints.",
+     "type": "Core",
+     "onetCode": "33-3041.00",
+     "line": 10681
+    },
+    {
+     "id": 7936,
+     "text": "Maintain close communications with dispatching personnel, using two-way radios or cell phones.",
+     "type": "Core",
+     "onetCode": "33-3041.00",
+     "line": 10682
+    },
+    {
+     "id": 7942,
+     "text": "Perform simple vehicle maintenance procedures, such as checking oil and gas, and report mechanical problems to supervisors.",
+     "type": "Core",
+     "onetCode": "33-3041.00",
+     "line": 10683
+    },
+    {
+     "id": 7943,
+     "text": "Observe and report hazardous conditions, such as missing traffic signals or signs, and street markings that need to be repainted.",
+     "type": "Core",
+     "onetCode": "33-3041.00",
+     "line": 10684
+    },
+    {
+     "id": 7941,
+     "text": "Identify vehicles in violation of parking codes, checking with dispatchers when necessary to confirm identities or to determine whether vehicles need to be booted or towed.",
+     "type": "Core",
+     "onetCode": "33-3041.00",
+     "line": 10685
+    },
+    {
+     "id": 7940,
+     "text": "Train new or temporary staff.",
+     "type": "Core",
+     "onetCode": "33-3041.00",
+     "line": 10686
+    },
+    {
+     "id": 7948,
+     "text": "Make arrangements for illegally parked or abandoned vehicles to be towed, and direct tow-truck drivers to the correct vehicles.",
+     "type": "Core",
+     "onetCode": "33-3041.00",
+     "line": 10687
+    },
+    {
+     "id": 7944,
+     "text": "Investigate and answer complaints regarding contested parking citations, determining their validity and routing them appropriately.",
+     "type": "Core",
+     "onetCode": "33-3041.00",
+     "line": 10688
+    },
+    {
+     "id": 7946,
+     "text": "Provide information to the public regarding parking regulations and facilities, and the location of streets, buildings and points of interest.",
+     "type": "Core",
+     "onetCode": "33-3041.00",
+     "line": 10689
+    },
+    {
+     "id": 7953,
+     "text": "Prepare and maintain required records, including logs of parking enforcement activities, and records of contested citations.",
+     "type": "Core",
+     "onetCode": "33-3041.00",
+     "line": 10690
+    },
+    {
+     "id": 7949,
+     "text": "Perform traffic control duties such as setting up barricades and temporary signs, placing bags on parking meters to limit their use, or directing traffic.",
+     "type": "Core",
+     "onetCode": "33-3041.00",
+     "line": 10691
+    },
+    {
+     "id": 7938,
+     "text": "Mark tires of parked vehicles with chalk and record time of marking, and return at regular intervals to ensure that parking time limits are not exceeded.",
+     "type": "Supplemental",
+     "onetCode": "33-3041.00",
+     "line": 10692
+    },
+    {
+     "id": 7954,
+     "text": "Locate lost, stolen, and counterfeit parking permits, and take necessary enforcement action.",
+     "type": "Supplemental",
+     "onetCode": "33-3041.00",
+     "line": 10693
+    },
+    {
+     "id": 7952,
+     "text": "Collect coins deposited in meters.",
+     "type": "Supplemental",
+     "onetCode": "33-3041.00",
+     "line": 10694
+    },
+    {
+     "id": 7955,
+     "text": "Wind parking meter clocks.",
+     "type": "Supplemental",
+     "onetCode": "33-3041.00",
+     "line": 10695
+    },
+    {
+     "id": 7950,
+     "text": "Provide assistance to motorists needing help with problems, such as flat tires, keys locked in cars, or dead batteries.",
+     "type": "Supplemental",
+     "onetCode": "33-3041.00",
+     "line": 10696
+    },
+    {
+     "id": 7956,
+     "text": "Assign and review the work of subordinates.",
+     "type": "Supplemental",
+     "onetCode": "33-3041.00",
+     "line": 10697
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L662",
+    "annualMedian": "oews:national_M2025_dl!AB662",
+    "annualMean": "oews:national_M2025_dl!S662",
+    "hourlyMedian": "oews:national_M2025_dl!W662",
+    "hourlyMean": "oews:national_M2025_dl!R662",
+    "annualPct10": "oews:national_M2025_dl!Z662",
+    "annualPct90": "oews:national_M2025_dl!AD662",
+    "annualOnly": "oews:national_M2025_dl!AE662",
+    "hourlyOnly": "oews:national_M2025_dl!AF662",
+    "title": "oews:national_M2025_dl!J662",
+    "ep.title": "ep:Table 1.2!A543",
+    "ep.employment2025": "ep:Table 1.2!D543",
+    "ep.employment2035": "ep:Table 1.2!E543",
+    "ep.numericChange": "ep:Table 1.2!H543",
+    "ep.percentChange": "ep:Table 1.2!I543",
+    "onetCode": "onet:Occupation Data.txt#L543:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L543:Description"
+   },
+   "nullReasons": {}
+  },
+  "33-3051": {
+   "soc": "33-3051",
+   "title": "Police and Sheriff's Patrol Officers",
+   "major": "33-0000",
+   "minor": "33-3000",
+   "broad": "33-3050",
+   "oewsRows": [
+    664
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 670520,
+   "annualMedian": 76210,
+   "annualMean": 79200,
+   "hourlyMedian": 36.64,
+   "hourlyMean": 38.08,
+   "annualPct10": 47510,
+   "annualPct90": 115120,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Police and sheriff's patrol officers",
+    "employment2025": 693200,
+    "employment2035": 717300,
+    "numericChange": 24200,
+    "percentChange": 3.5
+   },
+   "onetCode": "33-3051.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [
+    {
+     "code": "33-3051.04",
+     "title": "Customs and Border Protection Officers",
+     "taskCount": 11
+    }
+   ],
+   "description": "Maintain order and protect life and property by enforcing local, tribal, state, or federal laws and ordinances. Perform a combination of the following duties: patrol a specific area; direct traffic; issue traffic summonses; investigate accidents; apprehend and arrest suspects, or serve legal processes of courts. Includes police officers working at educational institutions.",
+   "tasks": [
+    {
+     "id": 23051,
+     "text": "Identify, pursue, and arrest suspects and perpetrators of criminal acts.",
+     "type": "Core",
+     "onetCode": "33-3051.00",
+     "line": 10698
+    },
+    {
+     "id": 23052,
+     "text": "Provide for public safety by maintaining order, responding to emergencies, protecting people and property, enforcing motor vehicle and criminal laws, and promoting good community relations.",
+     "type": "Core",
+     "onetCode": "33-3051.00",
+     "line": 10699
+    },
+    {
+     "id": 23053,
+     "text": "Record facts to prepare reports that document incidents and activities.",
+     "type": "Core",
+     "onetCode": "33-3051.00",
+     "line": 10700
+    },
+    {
+     "id": 23054,
+     "text": "Render aid to accident survivors and other persons requiring first aid for physical injuries.",
+     "type": "Core",
+     "onetCode": "33-3051.00",
+     "line": 10701
+    },
+    {
+     "id": 23056,
+     "text": "Review facts of incidents to determine if criminal act or statute violations were involved.",
+     "type": "Core",
+     "onetCode": "33-3051.00",
+     "line": 10702
+    },
+    {
+     "id": 23055,
+     "text": "Investigate illegal or suspicious activities.",
+     "type": "Core",
+     "onetCode": "33-3051.00",
+     "line": 10703
+    },
+    {
+     "id": 23057,
+     "text": "Monitor, note, report, and investigate suspicious persons and situations, safety hazards, and unusual or illegal activity in patrol area.",
+     "type": "Core",
+     "onetCode": "33-3051.00",
+     "line": 10704
+    },
+    {
+     "id": 23058,
+     "text": "Testify in court to present evidence or act as witness in traffic and criminal cases.",
+     "type": "Core",
+     "onetCode": "33-3051.00",
+     "line": 10705
+    },
+    {
+     "id": 23061,
+     "text": "Relay complaint and emergency-request information to appropriate agency dispatchers.",
+     "type": "Core",
+     "onetCode": "33-3051.00",
+     "line": 10706
+    },
+    {
+     "id": 23060,
+     "text": "Monitor traffic to ensure motorists observe traffic regulations and exhibit safe driving procedures.",
+     "type": "Core",
+     "onetCode": "33-3051.00",
+     "line": 10707
+    },
+    {
+     "id": 23059,
+     "text": "Drive vehicles or patrol specific areas to detect law violators, issue citations, and make arrests.",
+     "type": "Core",
+     "onetCode": "33-3051.00",
+     "line": 10708
+    },
+    {
+     "id": 23065,
+     "text": "Execute arrest warrants, locating and taking persons into custody.",
+     "type": "Core",
+     "onetCode": "33-3051.00",
+     "line": 10709
+    },
+    {
+     "id": 23072,
+     "text": "Patrol and guard courthouses, grand jury rooms, or assigned areas to provide security, enforce laws, maintain order, and arrest violators.",
+     "type": "Core",
+     "onetCode": "33-3051.00",
+     "line": 10710
+    },
+    {
+     "id": 23063,
+     "text": "Photograph or draw diagrams of crime or accident scenes and interview principals and eyewitnesses.",
+     "type": "Core",
+     "onetCode": "33-3051.00",
+     "line": 10711
+    },
+    {
+     "id": 23064,
+     "text": "Evaluate complaint and emergency-request information to determine response requirements.",
+     "type": "Core",
+     "onetCode": "33-3051.00",
+     "line": 10712
+    },
+    {
+     "id": 23066,
+     "text": "Patrol specific area on foot, horseback, or motorized conveyance, responding promptly to calls for assistance.",
+     "type": "Core",
+     "onetCode": "33-3051.00",
+     "line": 10713
+    },
+    {
+     "id": 23067,
+     "text": "Investigate traffic accidents and other accidents to determine causes and to determine if a crime has been committed.",
+     "type": "Core",
+     "onetCode": "33-3051.00",
+     "line": 10714
+    },
+    {
+     "id": 23062,
+     "text": "Verify that the proper legal charges have been made against law offenders.",
+     "type": "Core",
+     "onetCode": "33-3051.00",
+     "line": 10715
+    },
+    {
+     "id": 23073,
+     "text": "Transport or escort prisoners and defendants en route to courtrooms, prisons or jails, attorneys' offices, or medical facilities.",
+     "type": "Core",
+     "onetCode": "33-3051.00",
+     "line": 10716
+    },
+    {
+     "id": 23068,
+     "text": "Direct traffic flow and reroute traffic in case of emergencies.",
+     "type": "Core",
+     "onetCode": "33-3051.00",
+     "line": 10717
+    },
+    {
+     "id": 23071,
+     "text": "Question individuals entering secured areas to determine their business, directing and rerouting individuals as necessary.",
+     "type": "Core",
+     "onetCode": "33-3051.00",
+     "line": 10718
+    },
+    {
+     "id": 23069,
+     "text": "Notify patrol units to take violators into custody or to provide needed assistance or medical aid.",
+     "type": "Core",
+     "onetCode": "33-3051.00",
+     "line": 10719
+    },
+    {
+     "id": 23079,
+     "text": "Place people in protective custody.",
+     "type": "Core",
+     "onetCode": "33-3051.00",
+     "line": 10720
+    },
+    {
+     "id": 23070,
+     "text": "Serve statements of claims, subpoenas, summonses, jury summonses, orders to pay alimony, and other court orders.",
+     "type": "Core",
+     "onetCode": "33-3051.00",
+     "line": 10721
+    },
+    {
+     "id": 23074,
+     "text": "Inform citizens of community services and recommend options to facilitate longer-term problem resolution.",
+     "type": "Core",
+     "onetCode": "33-3051.00",
+     "line": 10722
+    },
+    {
+     "id": 23075,
+     "text": "Locate and confiscate real or personal property, as directed by court order.",
+     "type": "Core",
+     "onetCode": "33-3051.00",
+     "line": 10723
+    },
+    {
+     "id": 23076,
+     "text": "Provide road information to assist motorists.",
+     "type": "Core",
+     "onetCode": "33-3051.00",
+     "line": 10724
+    },
+    {
+     "id": 23080,
+     "text": "Conduct community programs for all ages concerning topics such as drugs and violence.",
+     "type": "Core",
+     "onetCode": "33-3051.00",
+     "line": 10725
+    },
+    {
+     "id": 23077,
+     "text": "Process prisoners, and prepare and maintain records of prisoner bookings and prisoner status during booking and pre-trial process.",
+     "type": "Supplemental",
+     "onetCode": "33-3051.00",
+     "line": 10726
+    },
+    {
+     "id": 23078,
+     "text": "Supervise law enforcement staff, such as jail staff, officers, and deputy sheriffs.",
+     "type": "Supplemental",
+     "onetCode": "33-3051.00",
+     "line": 10727
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L664",
+    "annualMedian": "oews:national_M2025_dl!AB664",
+    "annualMean": "oews:national_M2025_dl!S664",
+    "hourlyMedian": "oews:national_M2025_dl!W664",
+    "hourlyMean": "oews:national_M2025_dl!R664",
+    "annualPct10": "oews:national_M2025_dl!Z664",
+    "annualPct90": "oews:national_M2025_dl!AD664",
+    "annualOnly": "oews:national_M2025_dl!AE664",
+    "hourlyOnly": "oews:national_M2025_dl!AF664",
+    "title": "oews:national_M2025_dl!J664",
+    "ep.title": "ep:Table 1.2!A545",
+    "ep.employment2025": "ep:Table 1.2!D545",
+    "ep.employment2035": "ep:Table 1.2!E545",
+    "ep.numericChange": "ep:Table 1.2!H545",
+    "ep.percentChange": "ep:Table 1.2!I545",
+    "onetCode": "onet:Occupation Data.txt#L544:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L544:Description"
+   },
+   "nullReasons": {}
+  },
+  "33-3052": {
+   "soc": "33-3052",
+   "title": "Transit and Railroad Police",
+   "major": "33-0000",
+   "minor": "33-3000",
+   "broad": "33-3050",
+   "oewsRows": [
+    665
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 4390,
+   "annualMedian": 90230,
+   "annualMean": 91810,
+   "hourlyMedian": 43.38,
+   "hourlyMean": 44.14,
+   "annualPct10": 57690,
+   "annualPct90": 125910,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Transit and railroad police",
+    "employment2025": 4400,
+    "employment2035": 4500,
+    "numericChange": 100,
+    "percentChange": 3.2
+   },
+   "onetCode": "33-3052.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Protect and police railroad and transit property, employees, or passengers.",
+   "tasks": [
+    {
+     "id": 9478,
+     "text": "Prepare reports documenting investigation activities and results.",
+     "type": "Core",
+     "onetCode": "33-3052.00",
+     "line": 10739
+    },
+    {
+     "id": 21002,
+     "text": "Monitor transit areas and conduct security checks to protect railroad properties, patrons, and employees.",
+     "type": "Core",
+     "onetCode": "33-3052.00",
+     "line": 10740
+    },
+    {
+     "id": 9477,
+     "text": "Apprehend or remove trespassers or thieves from railroad property or coordinate with law enforcement agencies in apprehensions and removals.",
+     "type": "Core",
+     "onetCode": "33-3052.00",
+     "line": 10741
+    },
+    {
+     "id": 9480,
+     "text": "Direct security activities at derailments, fires, floods, or strikes involving railroad property.",
+     "type": "Core",
+     "onetCode": "33-3052.00",
+     "line": 10742
+    },
+    {
+     "id": 9475,
+     "text": "Patrol railroad yards, cars, stations, or other facilities to protect company property or shipments and to maintain order.",
+     "type": "Core",
+     "onetCode": "33-3052.00",
+     "line": 10743
+    },
+    {
+     "id": 9479,
+     "text": "Investigate or direct investigations of freight theft, suspicious damage or loss of passengers' valuables, or other crimes on railroad property.",
+     "type": "Core",
+     "onetCode": "33-3052.00",
+     "line": 10744
+    },
+    {
+     "id": 9476,
+     "text": "Examine credentials of unauthorized persons attempting to enter secured areas.",
+     "type": "Core",
+     "onetCode": "33-3052.00",
+     "line": 10745
+    },
+    {
+     "id": 21003,
+     "text": "Enforce traffic laws regarding the transit system and reprimand individuals who violate them.",
+     "type": "Core",
+     "onetCode": "33-3052.00",
+     "line": 10746
+    },
+    {
+     "id": 21004,
+     "text": "Provide training to the public or law enforcement personnel in railroad safety or security.",
+     "type": "Core",
+     "onetCode": "33-3052.00",
+     "line": 10747
+    },
+    {
+     "id": 9484,
+     "text": "Plan or implement special safety or preventive programs, such as fire or accident prevention.",
+     "type": "Core",
+     "onetCode": "33-3052.00",
+     "line": 10748
+    },
+    {
+     "id": 9481,
+     "text": "Direct or coordinate the daily activities or training of security staff.",
+     "type": "Supplemental",
+     "onetCode": "33-3052.00",
+     "line": 10749
+    },
+    {
+     "id": 9482,
+     "text": "Interview neighbors, associates, or former employers of job applicants to verify personal references or to obtain work history data.",
+     "type": "Supplemental",
+     "onetCode": "33-3052.00",
+     "line": 10750
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L665",
+    "annualMedian": "oews:national_M2025_dl!AB665",
+    "annualMean": "oews:national_M2025_dl!S665",
+    "hourlyMedian": "oews:national_M2025_dl!W665",
+    "hourlyMean": "oews:national_M2025_dl!R665",
+    "annualPct10": "oews:national_M2025_dl!Z665",
+    "annualPct90": "oews:national_M2025_dl!AD665",
+    "annualOnly": "oews:national_M2025_dl!AE665",
+    "hourlyOnly": "oews:national_M2025_dl!AF665",
+    "title": "oews:national_M2025_dl!J665",
+    "ep.title": "ep:Table 1.2!A546",
+    "ep.employment2025": "ep:Table 1.2!D546",
+    "ep.employment2035": "ep:Table 1.2!E546",
+    "ep.numericChange": "ep:Table 1.2!H546",
+    "ep.percentChange": "ep:Table 1.2!I546",
+    "onetCode": "onet:Occupation Data.txt#L546:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L546:Description"
+   },
+   "nullReasons": {}
+  },
+  "33-9011": {
+   "soc": "33-9011",
+   "title": "Animal Control Workers",
+   "major": "33-0000",
+   "minor": "33-9000",
+   "broad": "33-9010",
+   "oewsRows": [
+    668
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 12070,
+   "annualMedian": 45660,
+   "annualMean": 48440,
+   "hourlyMedian": 21.95,
+   "hourlyMean": 23.29,
+   "annualPct10": 33090,
+   "annualPct90": 68070,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Animal control workers",
+    "employment2025": 13800,
+    "employment2035": 14300,
+    "numericChange": 600,
+    "percentChange": 4
+   },
+   "onetCode": "33-9011.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Handle animals for the purpose of investigations of mistreatment, or control of abandoned, dangerous, or unattended animals.",
+   "tasks": [
+    {
+     "id": 7968,
+     "text": "Write reports of activities, and maintain files of impoundments and dispositions of animals.",
+     "type": "Core",
+     "onetCode": "33-9011.00",
+     "line": 10751
+    },
+    {
+     "id": 7958,
+     "text": "Investigate reports of animal attacks or animal cruelty, interviewing witnesses, collecting evidence, and writing reports.",
+     "type": "Core",
+     "onetCode": "33-9011.00",
+     "line": 10752
+    },
+    {
+     "id": 7960,
+     "text": "Examine animals for injuries or malnutrition, and arrange for any necessary medical treatment.",
+     "type": "Core",
+     "onetCode": "33-9011.00",
+     "line": 10753
+    },
+    {
+     "id": 7967,
+     "text": "Contact animal owners to inform them that their pets are at animal holding facilities.",
+     "type": "Core",
+     "onetCode": "33-9011.00",
+     "line": 10754
+    },
+    {
+     "id": 7966,
+     "text": "Educate the public about animal welfare, and animal control laws and regulations.",
+     "type": "Core",
+     "onetCode": "33-9011.00",
+     "line": 10755
+    },
+    {
+     "id": 7961,
+     "text": "Remove captured animals from animal-control service vehicles and place animals in shelter cages or other enclosures.",
+     "type": "Core",
+     "onetCode": "33-9011.00",
+     "line": 10756
+    },
+    {
+     "id": 7970,
+     "text": "Answer inquiries from the public concerning animal control operations.",
+     "type": "Core",
+     "onetCode": "33-9011.00",
+     "line": 10757
+    },
+    {
+     "id": 7959,
+     "text": "Capture and remove stray, uncontrolled, or abused animals from undesirable conditions, using nets, nooses, or tranquilizer darts as necessary.",
+     "type": "Core",
+     "onetCode": "33-9011.00",
+     "line": 10758
+    },
+    {
+     "id": 7965,
+     "text": "Prepare for prosecutions related to animal treatment, and give evidence in court.",
+     "type": "Core",
+     "onetCode": "33-9011.00",
+     "line": 10759
+    },
+    {
+     "id": 7963,
+     "text": "Supply animals with food, water, and personal care.",
+     "type": "Core",
+     "onetCode": "33-9011.00",
+     "line": 10760
+    },
+    {
+     "id": 7969,
+     "text": "Issue warnings or citations in connection with animal-related offenses, or contact police to report violations and request arrests.",
+     "type": "Core",
+     "onetCode": "33-9011.00",
+     "line": 10761
+    },
+    {
+     "id": 7962,
+     "text": "Euthanize rabid, unclaimed, or severely injured animals.",
+     "type": "Core",
+     "onetCode": "33-9011.00",
+     "line": 10762
+    },
+    {
+     "id": 7964,
+     "text": "Clean facilities and equipment such as dog pens and animal control trucks.",
+     "type": "Core",
+     "onetCode": "33-9011.00",
+     "line": 10763
+    },
+    {
+     "id": 7972,
+     "text": "Organize the adoption of unclaimed animals.",
+     "type": "Core",
+     "onetCode": "33-9011.00",
+     "line": 10764
+    },
+    {
+     "id": 7971,
+     "text": "Examine animal licenses, and inspect establishments housing animals for compliance with laws.",
+     "type": "Core",
+     "onetCode": "33-9011.00",
+     "line": 10765
+    },
+    {
+     "id": 7973,
+     "text": "Train police officers in dog handling and training techniques for tracking, crowd control, and narcotics and bomb detection.",
+     "type": "Supplemental",
+     "onetCode": "33-9011.00",
+     "line": 10766
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L668",
+    "annualMedian": "oews:national_M2025_dl!AB668",
+    "annualMean": "oews:national_M2025_dl!S668",
+    "hourlyMedian": "oews:national_M2025_dl!W668",
+    "hourlyMean": "oews:national_M2025_dl!R668",
+    "annualPct10": "oews:national_M2025_dl!Z668",
+    "annualPct90": "oews:national_M2025_dl!AD668",
+    "annualOnly": "oews:national_M2025_dl!AE668",
+    "hourlyOnly": "oews:national_M2025_dl!AF668",
+    "title": "oews:national_M2025_dl!J668",
+    "ep.title": "ep:Table 1.2!A548",
+    "ep.employment2025": "ep:Table 1.2!D548",
+    "ep.employment2035": "ep:Table 1.2!E548",
+    "ep.numericChange": "ep:Table 1.2!H548",
+    "ep.percentChange": "ep:Table 1.2!I548",
+    "onetCode": "onet:Occupation Data.txt#L547:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L547:Description"
+   },
+   "nullReasons": {}
+  },
+  "33-9021": {
+   "soc": "33-9021",
+   "title": "Private Detectives and Investigators",
+   "major": "33-0000",
+   "minor": "33-9000",
+   "broad": "33-9020",
+   "oewsRows": [
+    670
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 35580,
+   "annualMedian": 51220,
+   "annualMean": 60150,
+   "hourlyMedian": 24.62,
+   "hourlyMean": 28.92,
+   "annualPct10": 36740,
+   "annualPct90": 97630,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Private detectives and investigators",
+    "employment2025": 39500,
+    "employment2035": 41700,
+    "numericChange": 2200,
+    "percentChange": 5.5
+   },
+   "onetCode": "33-9021.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Gather, analyze, compile, and report information regarding individuals or organizations to clients, or detect occurrences of unlawful acts or infractions of rules in private establishment.",
+   "tasks": [
+    {
+     "id": 13095,
+     "text": "Write reports or case summaries to document investigations.",
+     "type": "Core",
+     "onetCode": "33-9021.00",
+     "line": 10767
+    },
+    {
+     "id": 13099,
+     "text": "Conduct private investigations on a paid basis.",
+     "type": "Core",
+     "onetCode": "33-9021.00",
+     "line": 10768
+    },
+    {
+     "id": 13096,
+     "text": "Search computer databases, credit reports, public records, tax or legal filings, or other resources to locate persons or to compile information for investigations.",
+     "type": "Core",
+     "onetCode": "33-9021.00",
+     "line": 10769
+    },
+    {
+     "id": 20758,
+     "text": "Conduct personal background investigations, such as pre-employment checks, to obtain information about an individual's character, financial status, or personal history.",
+     "type": "Core",
+     "onetCode": "33-9021.00",
+     "line": 10770
+    },
+    {
+     "id": 13106,
+     "text": "Expose fraudulent insurance claims or stolen funds.",
+     "type": "Core",
+     "onetCode": "33-9021.00",
+     "line": 10771
+    },
+    {
+     "id": 13097,
+     "text": "Obtain and analyze information on suspects, crimes, or disturbances to solve cases, to identify criminal activity, or to gather information for court cases.",
+     "type": "Core",
+     "onetCode": "33-9021.00",
+     "line": 10772
+    },
+    {
+     "id": 13100,
+     "text": "Testify at hearings or court trials to present evidence.",
+     "type": "Core",
+     "onetCode": "33-9021.00",
+     "line": 10773
+    },
+    {
+     "id": 13101,
+     "text": "Question persons to obtain evidence for cases of divorce, child custody, or missing persons or information about individuals' character or financial status.",
+     "type": "Core",
+     "onetCode": "33-9021.00",
+     "line": 10774
+    },
+    {
+     "id": 13102,
+     "text": "Observe and document activities of individuals to detect unlawful acts or to obtain evidence for cases, using binoculars and still or video cameras.",
+     "type": "Core",
+     "onetCode": "33-9021.00",
+     "line": 10775
+    },
+    {
+     "id": 13107,
+     "text": "Confer with establishment officials, security departments, police, or postal officials to identify problems, provide information, or receive instructions.",
+     "type": "Core",
+     "onetCode": "33-9021.00",
+     "line": 10776
+    },
+    {
+     "id": 13105,
+     "text": "Investigate companies' financial standings, or locate funds stolen by embezzlers, using accounting skills.",
+     "type": "Supplemental",
+     "onetCode": "33-9021.00",
+     "line": 10777
+    },
+    {
+     "id": 13104,
+     "text": "Perform undercover operations, such as evaluating the performance or honesty of employees by posing as customers or employees.",
+     "type": "Supplemental",
+     "onetCode": "33-9021.00",
+     "line": 10778
+    },
+    {
+     "id": 13103,
+     "text": "Alert appropriate personnel to suspects' locations.",
+     "type": "Supplemental",
+     "onetCode": "33-9021.00",
+     "line": 10779
+    },
+    {
+     "id": 13109,
+     "text": "Count cash and review transactions, sales checks, or register tapes to verify amounts or to identify shortages.",
+     "type": "Supplemental",
+     "onetCode": "33-9021.00",
+     "line": 10780
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L670",
+    "annualMedian": "oews:national_M2025_dl!AB670",
+    "annualMean": "oews:national_M2025_dl!S670",
+    "hourlyMedian": "oews:national_M2025_dl!W670",
+    "hourlyMean": "oews:national_M2025_dl!R670",
+    "annualPct10": "oews:national_M2025_dl!Z670",
+    "annualPct90": "oews:national_M2025_dl!AD670",
+    "annualOnly": "oews:national_M2025_dl!AE670",
+    "hourlyOnly": "oews:national_M2025_dl!AF670",
+    "title": "oews:national_M2025_dl!J670",
+    "ep.title": "ep:Table 1.2!A549",
+    "ep.employment2025": "ep:Table 1.2!D549",
+    "ep.employment2035": "ep:Table 1.2!E549",
+    "ep.numericChange": "ep:Table 1.2!H549",
+    "ep.percentChange": "ep:Table 1.2!I549",
+    "onetCode": "onet:Occupation Data.txt#L548:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L548:Description"
+   },
+   "nullReasons": {}
+  },
+  "33-9031": {
+   "soc": "33-9031",
+   "title": "Gambling Surveillance Officers and Gambling Investigators",
+   "major": "33-0000",
+   "minor": "33-9000",
+   "broad": "33-9030",
+   "oewsRows": [
+    672
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 9520,
+   "annualMedian": 43370,
+   "annualMean": 45630,
+   "hourlyMedian": 20.85,
+   "hourlyMean": 21.94,
+   "annualPct10": 32730,
+   "annualPct90": 61970,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Gambling surveillance officers and gambling investigators",
+    "employment2025": 9800,
+    "employment2035": 9600,
+    "numericChange": -200,
+    "percentChange": -1.8
+   },
+   "onetCode": "33-9031.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Observe gambling operation for irregular activities such as cheating or theft by either employees or patrons. Investigate potential threats to gambling assets such as money, chips, and gambling equipment. Act as oversight and security agent for management and customers.",
+   "tasks": [
+    {
+     "id": 4409,
+     "text": "Monitor establishment activities to ensure adherence to all state gaming regulations and company policies and procedures.",
+     "type": "Core",
+     "onetCode": "33-9031.00",
+     "line": 10781
+    },
+    {
+     "id": 4407,
+     "text": "Observe casino or casino hotel operations for irregular activities, such as cheating or theft by employees or patrons, using audio and video equipment and one-way mirrors.",
+     "type": "Core",
+     "onetCode": "33-9031.00",
+     "line": 10782
+    },
+    {
+     "id": 4408,
+     "text": "Report all violations and suspicious behaviors to supervisors, verbally or in writing.",
+     "type": "Core",
+     "onetCode": "33-9031.00",
+     "line": 10783
+    },
+    {
+     "id": 21145,
+     "text": "Develop and maintain log of surveillance observations.",
+     "type": "Core",
+     "onetCode": "33-9031.00",
+     "line": 10784
+    },
+    {
+     "id": 21146,
+     "text": "Inspect and monitor audio or video surveillance equipment to ensure it is working appropriately.",
+     "type": "Core",
+     "onetCode": "33-9031.00",
+     "line": 10785
+    },
+    {
+     "id": 21147,
+     "text": "Review video surveillance footage.",
+     "type": "Core",
+     "onetCode": "33-9031.00",
+     "line": 10786
+    },
+    {
+     "id": 4410,
+     "text": "Act as oversight or security agents for management or customers.",
+     "type": "Core",
+     "onetCode": "33-9031.00",
+     "line": 10787
+    },
+    {
+     "id": 4411,
+     "text": "Supervise or train surveillance observers.",
+     "type": "Core",
+     "onetCode": "33-9031.00",
+     "line": 10788
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L672",
+    "annualMedian": "oews:national_M2025_dl!AB672",
+    "annualMean": "oews:national_M2025_dl!S672",
+    "hourlyMedian": "oews:national_M2025_dl!W672",
+    "hourlyMean": "oews:national_M2025_dl!R672",
+    "annualPct10": "oews:national_M2025_dl!Z672",
+    "annualPct90": "oews:national_M2025_dl!AD672",
+    "annualOnly": "oews:national_M2025_dl!AE672",
+    "hourlyOnly": "oews:national_M2025_dl!AF672",
+    "title": "oews:national_M2025_dl!J672",
+    "ep.title": "ep:Table 1.2!A551",
+    "ep.employment2025": "ep:Table 1.2!D551",
+    "ep.employment2035": "ep:Table 1.2!E551",
+    "ep.numericChange": "ep:Table 1.2!H551",
+    "ep.percentChange": "ep:Table 1.2!I551",
+    "onetCode": "onet:Occupation Data.txt#L549:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L549:Description"
+   },
+   "nullReasons": {}
+  },
+  "33-9032": {
+   "soc": "33-9032",
+   "title": "Security Guards",
+   "major": "33-0000",
+   "minor": "33-9000",
+   "broad": "33-9030",
+   "oewsRows": [
+    673
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 1283470,
+   "annualMedian": 38020,
+   "annualMean": 42470,
+   "hourlyMedian": 18.28,
+   "hourlyMean": 20.42,
+   "annualPct10": 30210,
+   "annualPct90": 58840,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Security guards",
+    "employment2025": 1294300,
+    "employment2035": 1305600,
+    "numericChange": 11300,
+    "percentChange": 0.9
+   },
+   "onetCode": "33-9032.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Guard, patrol, or monitor premises to prevent theft, violence, or infractions of rules. May operate x-ray and metal detector equipment.",
+   "tasks": [
+    {
+     "id": 20894,
+     "text": "Lock doors and gates of entrances and exits to secure buildings.",
+     "type": "Core",
+     "onetCode": "33-9032.00",
+     "line": 10789
+    },
+    {
+     "id": 2131,
+     "text": "Patrol industrial or commercial premises to prevent and detect signs of intrusion and ensure security of doors, windows, and gates.",
+     "type": "Core",
+     "onetCode": "33-9032.00",
+     "line": 10790
+    },
+    {
+     "id": 20895,
+     "text": "Respond to medical emergencies by administering basic first aid or by obtaining assistance from paramedics.",
+     "type": "Core",
+     "onetCode": "33-9032.00",
+     "line": 10791
+    },
+    {
+     "id": 2132,
+     "text": "Answer alarms and investigate disturbances.",
+     "type": "Core",
+     "onetCode": "33-9032.00",
+     "line": 10792
+    },
+    {
+     "id": 2136,
+     "text": "Circulate among visitors, patrons, or employees to preserve order and protect property.",
+     "type": "Core",
+     "onetCode": "33-9032.00",
+     "line": 10793
+    },
+    {
+     "id": 2133,
+     "text": "Monitor and authorize entrance and departure of employees, visitors, and other persons to guard against theft and maintain security of premises.",
+     "type": "Core",
+     "onetCode": "33-9032.00",
+     "line": 10794
+    },
+    {
+     "id": 2134,
+     "text": "Write reports of daily activities and irregularities, such as equipment or property damage, theft, presence of unauthorized persons, or unusual occurrences.",
+     "type": "Core",
+     "onetCode": "33-9032.00",
+     "line": 10795
+    },
+    {
+     "id": 2138,
+     "text": "Warn persons of rule infractions or violations, and apprehend or evict violators from premises, using force when necessary.",
+     "type": "Core",
+     "onetCode": "33-9032.00",
+     "line": 10796
+    },
+    {
+     "id": 2137,
+     "text": "Answer telephone calls to take messages, answer questions, and provide information during non-business hours or when switchboard is closed.",
+     "type": "Core",
+     "onetCode": "33-9032.00",
+     "line": 10797
+    },
+    {
+     "id": 2135,
+     "text": "Call police or fire departments in cases of emergency, such as fire or presence of unauthorized persons.",
+     "type": "Core",
+     "onetCode": "33-9032.00",
+     "line": 10798
+    },
+    {
+     "id": 2139,
+     "text": "Operate detecting devices to screen individuals and prevent passage of prohibited articles into restricted areas.",
+     "type": "Core",
+     "onetCode": "33-9032.00",
+     "line": 10799
+    },
+    {
+     "id": 2141,
+     "text": "Inspect and adjust security systems, equipment, or machinery to ensure operational use and to detect evidence of tampering.",
+     "type": "Core",
+     "onetCode": "33-9032.00",
+     "line": 10800
+    },
+    {
+     "id": 2140,
+     "text": "Escort or drive motor vehicle to transport individuals to specified locations or to provide personal protection.",
+     "type": "Core",
+     "onetCode": "33-9032.00",
+     "line": 10801
+    },
+    {
+     "id": 2143,
+     "text": "Monitor and adjust controls that regulate building systems, such as air conditioning, furnace, or boiler.",
+     "type": "Supplemental",
+     "onetCode": "33-9032.00",
+     "line": 10802
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L673",
+    "annualMedian": "oews:national_M2025_dl!AB673",
+    "annualMean": "oews:national_M2025_dl!S673",
+    "hourlyMedian": "oews:national_M2025_dl!W673",
+    "hourlyMean": "oews:national_M2025_dl!R673",
+    "annualPct10": "oews:national_M2025_dl!Z673",
+    "annualPct90": "oews:national_M2025_dl!AD673",
+    "annualOnly": "oews:national_M2025_dl!AE673",
+    "hourlyOnly": "oews:national_M2025_dl!AF673",
+    "title": "oews:national_M2025_dl!J673",
+    "ep.title": "ep:Table 1.2!A552",
+    "ep.employment2025": "ep:Table 1.2!D552",
+    "ep.employment2035": "ep:Table 1.2!E552",
+    "ep.numericChange": "ep:Table 1.2!H552",
+    "ep.percentChange": "ep:Table 1.2!I552",
+    "onetCode": "onet:Occupation Data.txt#L550:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L550:Description"
+   },
+   "nullReasons": {}
+  },
+  "33-9091": {
+   "soc": "33-9091",
+   "title": "Crossing Guards and Flaggers",
+   "major": "33-0000",
+   "minor": "33-9000",
+   "broad": "33-9090",
+   "oewsRows": [
+    675
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 94360,
+   "annualMedian": 38100,
+   "annualMean": 43350,
+   "hourlyMedian": 18.32,
+   "hourlyMean": 20.84,
+   "annualPct10": 30840,
+   "annualPct90": 61690,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Crossing guards and flaggers",
+    "employment2025": 94800,
+    "employment2035": 98100,
+    "numericChange": 3300,
+    "percentChange": 3.5
+   },
+   "onetCode": "33-9091.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Guide or control vehicular or pedestrian traffic at such places as streets, schools, railroad crossings, or construction sites.",
+   "tasks": [
+    {
+     "id": 11117,
+     "text": "Direct or escort pedestrians across streets, stopping traffic, as necessary.",
+     "type": "Core",
+     "onetCode": "33-9091.00",
+     "line": 10803
+    },
+    {
+     "id": 11118,
+     "text": "Guide or control vehicular or pedestrian traffic at such places as street and railroad crossings and construction sites.",
+     "type": "Core",
+     "onetCode": "33-9091.00",
+     "line": 10804
+    },
+    {
+     "id": 11116,
+     "text": "Monitor traffic flow to locate safe gaps through which pedestrians can cross streets.",
+     "type": "Core",
+     "onetCode": "33-9091.00",
+     "line": 10805
+    },
+    {
+     "id": 11119,
+     "text": "Communicate traffic and crossing rules and other information to students and adults.",
+     "type": "Core",
+     "onetCode": "33-9091.00",
+     "line": 10806
+    },
+    {
+     "id": 11122,
+     "text": "Direct traffic movement or warn of hazards, using signs, flags, lanterns, and hand signals.",
+     "type": "Core",
+     "onetCode": "33-9091.00",
+     "line": 10807
+    },
+    {
+     "id": 11120,
+     "text": "Report unsafe behavior of children to school officials.",
+     "type": "Core",
+     "onetCode": "33-9091.00",
+     "line": 10808
+    },
+    {
+     "id": 11121,
+     "text": "Record license numbers of vehicles disregarding traffic signals, and report infractions to appropriate authorities.",
+     "type": "Core",
+     "onetCode": "33-9091.00",
+     "line": 10809
+    },
+    {
+     "id": 11125,
+     "text": "Distribute traffic control signs and markers at designated points.",
+     "type": "Supplemental",
+     "onetCode": "33-9091.00",
+     "line": 10810
+    },
+    {
+     "id": 11124,
+     "text": "Stop speeding vehicles to warn drivers of traffic laws.",
+     "type": "Supplemental",
+     "onetCode": "33-9091.00",
+     "line": 10811
+    },
+    {
+     "id": 11123,
+     "text": "Learn the location and purpose of street traffic signs within assigned patrol areas.",
+     "type": "Supplemental",
+     "onetCode": "33-9091.00",
+     "line": 10812
+    },
+    {
+     "id": 11126,
+     "text": "Discuss traffic routing plans and control-point locations with superiors.",
+     "type": "Supplemental",
+     "onetCode": "33-9091.00",
+     "line": 10813
+    },
+    {
+     "id": 11127,
+     "text": "Inform drivers of detour routes through construction sites.",
+     "type": "Supplemental",
+     "onetCode": "33-9091.00",
+     "line": 10814
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L675",
+    "annualMedian": "oews:national_M2025_dl!AB675",
+    "annualMean": "oews:national_M2025_dl!S675",
+    "hourlyMedian": "oews:national_M2025_dl!W675",
+    "hourlyMean": "oews:national_M2025_dl!R675",
+    "annualPct10": "oews:national_M2025_dl!Z675",
+    "annualPct90": "oews:national_M2025_dl!AD675",
+    "annualOnly": "oews:national_M2025_dl!AE675",
+    "hourlyOnly": "oews:national_M2025_dl!AF675",
+    "title": "oews:national_M2025_dl!J675",
+    "ep.title": "ep:Table 1.2!A554",
+    "ep.employment2025": "ep:Table 1.2!D554",
+    "ep.employment2035": "ep:Table 1.2!E554",
+    "ep.numericChange": "ep:Table 1.2!H554",
+    "ep.percentChange": "ep:Table 1.2!I554",
+    "onetCode": "onet:Occupation Data.txt#L551:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L551:Description"
+   },
+   "nullReasons": {}
+  },
+  "33-9092": {
+   "soc": "33-9092",
+   "title": "Lifeguards, Ski Patrol, and Other Recreational Protective Service Workers",
+   "major": "33-0000",
+   "minor": "33-9000",
+   "broad": "33-9090",
+   "oewsRows": [
+    676
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 157550,
+   "annualMedian": 33580,
+   "annualMean": 34470,
+   "hourlyMedian": 16.14,
+   "hourlyMean": 16.57,
+   "annualPct10": 25780,
+   "annualPct90": 43970,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Lifeguards, ski patrol, and other recreational protective service workers",
+    "employment2025": 162000,
+    "employment2035": 170800,
+    "numericChange": 8900,
+    "percentChange": 5.5
+   },
+   "onetCode": "33-9092.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Monitor recreational areas, such as pools, beaches, or ski slopes, to provide assistance and protection to participants.",
+   "tasks": [
+    {
+     "id": 5041,
+     "text": "Patrol or monitor recreational areas, such as trails, slopes, or swimming areas, on foot, in vehicles, or from towers.",
+     "type": "Core",
+     "onetCode": "33-9092.00",
+     "line": 10815
+    },
+    {
+     "id": 5039,
+     "text": "Rescue distressed persons, using rescue techniques and equipment.",
+     "type": "Core",
+     "onetCode": "33-9092.00",
+     "line": 10816
+    },
+    {
+     "id": 5040,
+     "text": "Contact emergency medical personnel in case of serious injury.",
+     "type": "Core",
+     "onetCode": "33-9092.00",
+     "line": 10817
+    },
+    {
+     "id": 5042,
+     "text": "Examine injured persons and administer first aid or cardiopulmonary resuscitation, if necessary, using training and medical supplies and equipment.",
+     "type": "Core",
+     "onetCode": "33-9092.00",
+     "line": 10818
+    },
+    {
+     "id": 5044,
+     "text": "Warn recreational participants of inclement weather, unsafe areas, or illegal conduct.",
+     "type": "Core",
+     "onetCode": "33-9092.00",
+     "line": 10819
+    },
+    {
+     "id": 20129,
+     "text": "Maintain quality of pool water by testing chemical levels.",
+     "type": "Core",
+     "onetCode": "33-9092.00",
+     "line": 10820
+    },
+    {
+     "id": 5045,
+     "text": "Complete and maintain records of weather and beach conditions, emergency medical treatments performed, and other relevant incident information.",
+     "type": "Core",
+     "onetCode": "33-9092.00",
+     "line": 10821
+    },
+    {
+     "id": 5043,
+     "text": "Instruct participants in skiing, swimming, or other recreational activities and provide safety precaution information.",
+     "type": "Core",
+     "onetCode": "33-9092.00",
+     "line": 10822
+    },
+    {
+     "id": 5046,
+     "text": "Inspect recreational equipment, such as rope tows, T-bars, J-bars, or chair lifts, for safety hazards and damage or wear.",
+     "type": "Core",
+     "onetCode": "33-9092.00",
+     "line": 10823
+    },
+    {
+     "id": 5048,
+     "text": "Inspect recreational facilities for cleanliness.",
+     "type": "Core",
+     "onetCode": "33-9092.00",
+     "line": 10824
+    },
+    {
+     "id": 5049,
+     "text": "Observe activities in assigned areas, using binoculars, to detect hazards, disturbances, or safety infractions.",
+     "type": "Supplemental",
+     "onetCode": "33-9092.00",
+     "line": 10825
+    },
+    {
+     "id": 5051,
+     "text": "Operate underwater recovery units.",
+     "type": "Supplemental",
+     "onetCode": "33-9092.00",
+     "line": 10826
+    },
+    {
+     "id": 5047,
+     "text": "Provide assistance with staff selection, training, and supervision.",
+     "type": "Supplemental",
+     "onetCode": "33-9092.00",
+     "line": 10827
+    },
+    {
+     "id": 5050,
+     "text": "Provide assistance in the safe use of equipment, such as ski lifts.",
+     "type": "Supplemental",
+     "onetCode": "33-9092.00",
+     "line": 10828
+    },
+    {
+     "id": 5052,
+     "text": "Participate in recreational demonstrations to entertain resort guests.",
+     "type": "Supplemental",
+     "onetCode": "33-9092.00",
+     "line": 10829
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L676",
+    "annualMedian": "oews:national_M2025_dl!AB676",
+    "annualMean": "oews:national_M2025_dl!S676",
+    "hourlyMedian": "oews:national_M2025_dl!W676",
+    "hourlyMean": "oews:national_M2025_dl!R676",
+    "annualPct10": "oews:national_M2025_dl!Z676",
+    "annualPct90": "oews:national_M2025_dl!AD676",
+    "annualOnly": "oews:national_M2025_dl!AE676",
+    "hourlyOnly": "oews:national_M2025_dl!AF676",
+    "title": "oews:national_M2025_dl!J676",
+    "ep.title": "ep:Table 1.2!A555",
+    "ep.employment2025": "ep:Table 1.2!D555",
+    "ep.employment2035": "ep:Table 1.2!E555",
+    "ep.numericChange": "ep:Table 1.2!H555",
+    "ep.percentChange": "ep:Table 1.2!I555",
+    "onetCode": "onet:Occupation Data.txt#L552:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L552:Description"
+   },
+   "nullReasons": {}
+  },
+  "33-9093": {
+   "soc": "33-9093",
+   "title": "Transportation Security Screeners",
+   "major": "33-0000",
+   "minor": "33-9000",
+   "broad": "33-9090",
+   "oewsRows": [
+    677
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 50290,
+   "annualMedian": 66770,
+   "annualMean": 64310,
+   "hourlyMedian": 32.1,
+   "hourlyMean": 30.92,
+   "annualPct10": 44700,
+   "annualPct90": 78350,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Transportation security screeners",
+    "employment2025": 53500,
+    "employment2035": 51200,
+    "numericChange": -2200,
+    "percentChange": -4.2
+   },
+   "onetCode": "33-9093.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Conduct screening of passengers, baggage, or cargo to ensure compliance with Transportation Security Administration (TSA) regulations. May operate basic security equipment such as x-ray machines and hand wands at screening checkpoints.",
+   "tasks": [
+    {
+     "id": 15341,
+     "text": "Inspect carry-on items, using x-ray viewing equipment, to determine whether items contain objects that warrant further investigation.",
+     "type": "Core",
+     "onetCode": "33-9093.00",
+     "line": 10830
+    },
+    {
+     "id": 15348,
+     "text": "Search carry-on or checked baggage by hand when it is suspected to contain prohibited items such as weapons.",
+     "type": "Core",
+     "onetCode": "33-9093.00",
+     "line": 10831
+    },
+    {
+     "id": 15332,
+     "text": "Check passengers' tickets to ensure that they are valid, and to determine whether passengers have designations that require special handling, such as providing photo identification.",
+     "type": "Core",
+     "onetCode": "33-9093.00",
+     "line": 10832
+    },
+    {
+     "id": 15350,
+     "text": "Test baggage for any explosive materials, using equipment such as explosive detection machines or chemical swab systems.",
+     "type": "Core",
+     "onetCode": "33-9093.00",
+     "line": 10833
+    },
+    {
+     "id": 15346,
+     "text": "Perform pat-down or hand-held wand searches of passengers who have triggered machine alarms, who are unable to pass through metal detectors, or who have been randomly identified for such searches.",
+     "type": "Core",
+     "onetCode": "33-9093.00",
+     "line": 10834
+    },
+    {
+     "id": 15345,
+     "text": "Notify supervisors or other appropriate personnel when security breaches occur.",
+     "type": "Core",
+     "onetCode": "33-9093.00",
+     "line": 10835
+    },
+    {
+     "id": 15349,
+     "text": "Send checked baggage through automated screening machines, and set bags aside for searching or rescreening as indicated by equipment.",
+     "type": "Core",
+     "onetCode": "33-9093.00",
+     "line": 10836
+    },
+    {
+     "id": 15337,
+     "text": "Decide whether baggage that triggers alarms should be searched or should be allowed to pass through.",
+     "type": "Core",
+     "onetCode": "33-9093.00",
+     "line": 10837
+    },
+    {
+     "id": 15354,
+     "text": "Follow those who breach security until police or other security personnel arrive to apprehend them.",
+     "type": "Core",
+     "onetCode": "33-9093.00",
+     "line": 10838
+    },
+    {
+     "id": 15339,
+     "text": "Inform other screeners when baggage should not be opened because it might contain explosives.",
+     "type": "Core",
+     "onetCode": "33-9093.00",
+     "line": 10839
+    },
+    {
+     "id": 15342,
+     "text": "Inspect checked baggage for signs of tampering.",
+     "type": "Core",
+     "onetCode": "33-9093.00",
+     "line": 10840
+    },
+    {
+     "id": 15331,
+     "text": "Ask passengers to remove shoes and divest themselves of metal objects prior to walking through metal detectors.",
+     "type": "Core",
+     "onetCode": "33-9093.00",
+     "line": 10841
+    },
+    {
+     "id": 15333,
+     "text": "Close entry areas following security breaches or reopen areas after receiving notification that the airport is secure.",
+     "type": "Core",
+     "onetCode": "33-9093.00",
+     "line": 10842
+    },
+    {
+     "id": 15353,
+     "text": "Challenge suspicious people, requesting their badges and asking what their business is in a particular areas.",
+     "type": "Core",
+     "onetCode": "33-9093.00",
+     "line": 10843
+    },
+    {
+     "id": 15355,
+     "text": "Patrol work areas to detect any suspicious items.",
+     "type": "Core",
+     "onetCode": "33-9093.00",
+     "line": 10844
+    },
+    {
+     "id": 15336,
+     "text": "Contact police directly in cases of urgent security issues, using phones or two-way radios.",
+     "type": "Core",
+     "onetCode": "33-9093.00",
+     "line": 10845
+    },
+    {
+     "id": 15347,
+     "text": "Record information about any baggage that sets off alarms in monitoring equipment.",
+     "type": "Core",
+     "onetCode": "33-9093.00",
+     "line": 10846
+    },
+    {
+     "id": 15352,
+     "text": "Watch for potentially dangerous persons whose pictures are posted at checkpoints.",
+     "type": "Core",
+     "onetCode": "33-9093.00",
+     "line": 10847
+    },
+    {
+     "id": 15335,
+     "text": "Contact leads or supervisors to discuss objects of concern that are not on prohibited object lists.",
+     "type": "Core",
+     "onetCode": "33-9093.00",
+     "line": 10848
+    },
+    {
+     "id": 15334,
+     "text": "Confiscate dangerous items and hazardous materials found in opened bags and turn them over to airlines for disposal.",
+     "type": "Core",
+     "onetCode": "33-9093.00",
+     "line": 10849
+    },
+    {
+     "id": 15344,
+     "text": "Monitor passenger flow through screening checkpoints to ensure order and efficiency.",
+     "type": "Core",
+     "onetCode": "33-9093.00",
+     "line": 10850
+    },
+    {
+     "id": 15340,
+     "text": "Inform passengers of how to mail prohibited items to themselves, or confiscate these items.",
+     "type": "Core",
+     "onetCode": "33-9093.00",
+     "line": 10851
+    },
+    {
+     "id": 15356,
+     "text": "Provide directions and respond to passenger inquiries.",
+     "type": "Core",
+     "onetCode": "33-9093.00",
+     "line": 10852
+    },
+    {
+     "id": 15338,
+     "text": "Direct passengers to areas where they can pick up their baggage after screening is complete.",
+     "type": "Core",
+     "onetCode": "33-9093.00",
+     "line": 10853
+    },
+    {
+     "id": 15351,
+     "text": "View images of checked bags and cargo, using remote screening equipment, and alert baggage screeners or handlers to any possible problems.",
+     "type": "Supplemental",
+     "onetCode": "33-9093.00",
+     "line": 10854
+    },
+    {
+     "id": 15343,
+     "text": "Locate suspicious bags pictured in printouts sent from remote monitoring areas, and set these bags aside for inspection.",
+     "type": "Supplemental",
+     "onetCode": "33-9093.00",
+     "line": 10855
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L677",
+    "annualMedian": "oews:national_M2025_dl!AB677",
+    "annualMean": "oews:national_M2025_dl!S677",
+    "hourlyMedian": "oews:national_M2025_dl!W677",
+    "hourlyMean": "oews:national_M2025_dl!R677",
+    "annualPct10": "oews:national_M2025_dl!Z677",
+    "annualPct90": "oews:national_M2025_dl!AD677",
+    "annualOnly": "oews:national_M2025_dl!AE677",
+    "hourlyOnly": "oews:national_M2025_dl!AF677",
+    "title": "oews:national_M2025_dl!J677",
+    "ep.title": "ep:Table 1.2!A556",
+    "ep.employment2025": "ep:Table 1.2!D556",
+    "ep.employment2035": "ep:Table 1.2!E556",
+    "ep.numericChange": "ep:Table 1.2!H556",
+    "ep.percentChange": "ep:Table 1.2!I556",
+    "onetCode": "onet:Occupation Data.txt#L553:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L553:Description"
+   },
+   "nullReasons": {}
+  },
+  "33-9094": {
+   "soc": "33-9094",
+   "title": "School Bus Monitors",
+   "major": "33-0000",
+   "minor": "33-9000",
+   "broad": "33-9090",
+   "oewsRows": [
+    678
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 78420,
+   "annualMedian": 35100,
+   "annualMean": 35150,
+   "hourlyMedian": 16.88,
+   "hourlyMean": 16.9,
+   "annualPct10": 28130,
+   "annualPct90": 43250,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "School bus monitors",
+    "employment2025": 76700,
+    "employment2035": 75300,
+    "numericChange": -1400,
+    "percentChange": -1.9
+   },
+   "onetCode": "33-9094.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Maintain order among students on a school bus. Duties include helping students safely board and exit and communicating behavioral problems. May perform pretrip and posttrip inspections and prepare for and assist in emergency evacuations.",
+   "tasks": [
+    {
+     "id": 23081,
+     "text": "Announce routes or stops.",
+     "type": "n/a",
+     "onetCode": "33-9094.00",
+     "line": 10856
+    },
+    {
+     "id": 23082,
+     "text": "Assist children with disabilities or children with psychological, emotional, or behavioral issues with boarding and exiting the school bus.",
+     "type": "n/a",
+     "onetCode": "33-9094.00",
+     "line": 10857
+    },
+    {
+     "id": 23083,
+     "text": "Buckle seatbelts or fasten wheelchair tie-down straps to secure passengers for transportation.",
+     "type": "n/a",
+     "onetCode": "33-9094.00",
+     "line": 10858
+    },
+    {
+     "id": 23084,
+     "text": "Clean school bus interiors by picking up waste, wiping down windows, or vacuuming.",
+     "type": "n/a",
+     "onetCode": "33-9094.00",
+     "line": 10859
+    },
+    {
+     "id": 23085,
+     "text": "Direct students boarding and exiting the school bus.",
+     "type": "n/a",
+     "onetCode": "33-9094.00",
+     "line": 10860
+    },
+    {
+     "id": 23086,
+     "text": "Direct students evacuating the bus during safety drills.",
+     "type": "n/a",
+     "onetCode": "33-9094.00",
+     "line": 10861
+    },
+    {
+     "id": 23087,
+     "text": "Escort young children across roads or highways.",
+     "type": "n/a",
+     "onetCode": "33-9094.00",
+     "line": 10862
+    },
+    {
+     "id": 23088,
+     "text": "Evacuate students from the school bus in emergency situations.",
+     "type": "n/a",
+     "onetCode": "33-9094.00",
+     "line": 10863
+    },
+    {
+     "id": 23089,
+     "text": "Guide the driver when the bus is moving in reverse gear.",
+     "type": "n/a",
+     "onetCode": "33-9094.00",
+     "line": 10864
+    },
+    {
+     "id": 23090,
+     "text": "Monitor for trains at railroad crossings and signal the bus driver when it is safe to proceed.",
+     "type": "n/a",
+     "onetCode": "33-9094.00",
+     "line": 10865
+    },
+    {
+     "id": 23091,
+     "text": "Monitor the conduct of students to maintain discipline and safety.",
+     "type": "n/a",
+     "onetCode": "33-9094.00",
+     "line": 10866
+    },
+    {
+     "id": 23092,
+     "text": "Open and close school bus doors for students.",
+     "type": "n/a",
+     "onetCode": "33-9094.00",
+     "line": 10867
+    },
+    {
+     "id": 23093,
+     "text": "Operate a wheelchair lift to load or unload wheelchairs.",
+     "type": "n/a",
+     "onetCode": "33-9094.00",
+     "line": 10868
+    },
+    {
+     "id": 23094,
+     "text": "Prevent or defuse altercations between students.",
+     "type": "n/a",
+     "onetCode": "33-9094.00",
+     "line": 10869
+    },
+    {
+     "id": 23095,
+     "text": "Report delays, accidents, or other traffic and transportation situations to dispatchers or other bus drivers, using phones or mobile two-way radios.",
+     "type": "n/a",
+     "onetCode": "33-9094.00",
+     "line": 10870
+    },
+    {
+     "id": 23096,
+     "text": "Respond to students' questions, requests, or complaints.",
+     "type": "n/a",
+     "onetCode": "33-9094.00",
+     "line": 10871
+    },
+    {
+     "id": 23097,
+     "text": "Talk to children's parents or guardians about problematic behaviors, emotional or developmental problems, or related issues.",
+     "type": "n/a",
+     "onetCode": "33-9094.00",
+     "line": 10872
+    },
+    {
+     "id": 23098,
+     "text": "Write and submit reports that include data such as the number of passengers or trips, hours worked, mileage driven, or fuel consumed.",
+     "type": "n/a",
+     "onetCode": "33-9094.00",
+     "line": 10873
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L678",
+    "annualMedian": "oews:national_M2025_dl!AB678",
+    "annualMean": "oews:national_M2025_dl!S678",
+    "hourlyMedian": "oews:national_M2025_dl!W678",
+    "hourlyMean": "oews:national_M2025_dl!R678",
+    "annualPct10": "oews:national_M2025_dl!Z678",
+    "annualPct90": "oews:national_M2025_dl!AD678",
+    "annualOnly": "oews:national_M2025_dl!AE678",
+    "hourlyOnly": "oews:national_M2025_dl!AF678",
+    "title": "oews:national_M2025_dl!J678",
+    "ep.title": "ep:Table 1.2!A557",
+    "ep.employment2025": "ep:Table 1.2!D557",
+    "ep.employment2035": "ep:Table 1.2!E557",
+    "ep.numericChange": "ep:Table 1.2!H557",
+    "ep.percentChange": "ep:Table 1.2!I557",
+    "onetCode": "onet:Occupation Data.txt#L554:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L554:Description"
+   },
+   "nullReasons": {}
+  },
+  "33-9099": {
+   "soc": "33-9099",
+   "title": "Protective Service Workers, All Other",
+   "major": "33-0000",
+   "minor": "33-9000",
+   "broad": "33-9090",
+   "oewsRows": [
+    679
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 81500,
+   "annualMedian": 42540,
+   "annualMean": 48070,
+   "hourlyMedian": 20.45,
+   "hourlyMean": 23.11,
+   "annualPct10": 32470,
+   "annualPct90": 74590,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Protective service workers, all other",
+    "employment2025": 82100,
+    "employment2035": 84600,
+    "numericChange": 2400,
+    "percentChange": 3
+   },
+   "onetCode": "33-9099.00",
+   "onetTaskSource": "sub-codes",
+   "onetSubCodes": [
+    {
+     "code": "33-9099.02",
+     "title": "Retail Loss Prevention Specialists",
+     "taskCount": 21
+    }
+   ],
+   "description": "All protective service workers not listed separately.",
+   "tasks": [
+    {
+     "id": 17561,
+     "text": "Investigate known or suspected internal theft, external theft, or vendor fraud.",
+     "type": "Core",
+     "onetCode": "33-9099.02",
+     "line": 10874
+    },
+    {
+     "id": 17560,
+     "text": "Implement or monitor processes to reduce property or financial losses.",
+     "type": "Core",
+     "onetCode": "33-9099.02",
+     "line": 10875
+    },
+    {
+     "id": 17565,
+     "text": "Identify and report merchandise or stock shortages.",
+     "type": "Core",
+     "onetCode": "33-9099.02",
+     "line": 10876
+    },
+    {
+     "id": 17567,
+     "text": "Maintain documentation or reports on security-related incidents or investigations.",
+     "type": "Core",
+     "onetCode": "33-9099.02",
+     "line": 10877
+    },
+    {
+     "id": 17575,
+     "text": "Apprehend shoplifters in accordance with guidelines.",
+     "type": "Core",
+     "onetCode": "33-9099.02",
+     "line": 10878
+    },
+    {
+     "id": 17573,
+     "text": "Verify proper functioning of physical security systems, such as closed-circuit televisions, alarms, sensor tag systems, or locks.",
+     "type": "Core",
+     "onetCode": "33-9099.02",
+     "line": 10879
+    },
+    {
+     "id": 17578,
+     "text": "Identify and report safety concerns to maintain a safe shopping and working environment.",
+     "type": "Core",
+     "onetCode": "33-9099.02",
+     "line": 10880
+    },
+    {
+     "id": 17563,
+     "text": "Conduct store audits to identify problem areas or procedural deficiencies.",
+     "type": "Core",
+     "onetCode": "33-9099.02",
+     "line": 10881
+    },
+    {
+     "id": 17568,
+     "text": "Monitor compliance with standard operating procedures for loss prevention, physical security, or risk management.",
+     "type": "Core",
+     "onetCode": "33-9099.02",
+     "line": 10882
+    },
+    {
+     "id": 17566,
+     "text": "Inspect buildings, equipment, or access points to determine security risks.",
+     "type": "Core",
+     "onetCode": "33-9099.02",
+     "line": 10883
+    },
+    {
+     "id": 17569,
+     "text": "Perform covert surveillance of areas susceptible to loss, such loading docks, distribution centers, or warehouses.",
+     "type": "Core",
+     "onetCode": "33-9099.02",
+     "line": 10884
+    },
+    {
+     "id": 17570,
+     "text": "Prepare written reports on investigations.",
+     "type": "Core",
+     "onetCode": "33-9099.02",
+     "line": 10885
+    },
+    {
+     "id": 17562,
+     "text": "Collaborate with law enforcement agencies to report or investigate crimes.",
+     "type": "Core",
+     "onetCode": "33-9099.02",
+     "line": 10886
+    },
+    {
+     "id": 17574,
+     "text": "Testify in civil or criminal court proceedings.",
+     "type": "Core",
+     "onetCode": "33-9099.02",
+     "line": 10887
+    },
+    {
+     "id": 17579,
+     "text": "Recommend methods to reduce potential financial fraud losses.",
+     "type": "Core",
+     "onetCode": "33-9099.02",
+     "line": 10888
+    },
+    {
+     "id": 17572,
+     "text": "Train establishment personnel in loss prevention activities.",
+     "type": "Core",
+     "onetCode": "33-9099.02",
+     "line": 10889
+    },
+    {
+     "id": 17577,
+     "text": "Coordinate with risk management, human resources, or other departments to assist in company programs, investigations, or training.",
+     "type": "Core",
+     "onetCode": "33-9099.02",
+     "line": 10890
+    },
+    {
+     "id": 17580,
+     "text": "Respond to critical incidents, such as catastrophic events, violent weather, or civil disorders.",
+     "type": "Core",
+     "onetCode": "33-9099.02",
+     "line": 10891
+    },
+    {
+     "id": 17571,
+     "text": "Recommend new or improved processes or equipment to reduce risk exposure.",
+     "type": "Core",
+     "onetCode": "33-9099.02",
+     "line": 10892
+    },
+    {
+     "id": 17564,
+     "text": "Direct work of contract security officers or other loss prevention agents.",
+     "type": "Core",
+     "onetCode": "33-9099.02",
+     "line": 10893
+    },
+    {
+     "id": 17576,
+     "text": "Conduct employee background investigations and review reports with operational or human resources managers.",
+     "type": "Supplemental",
+     "onetCode": "33-9099.02",
+     "line": 10894
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L679",
+    "annualMedian": "oews:national_M2025_dl!AB679",
+    "annualMean": "oews:national_M2025_dl!S679",
+    "hourlyMedian": "oews:national_M2025_dl!W679",
+    "hourlyMean": "oews:national_M2025_dl!R679",
+    "annualPct10": "oews:national_M2025_dl!Z679",
+    "annualPct90": "oews:national_M2025_dl!AD679",
+    "annualOnly": "oews:national_M2025_dl!AE679",
+    "hourlyOnly": "oews:national_M2025_dl!AF679",
+    "title": "oews:national_M2025_dl!J679",
+    "ep.title": "ep:Table 1.2!A558",
+    "ep.employment2025": "ep:Table 1.2!D558",
+    "ep.employment2035": "ep:Table 1.2!E558",
+    "ep.numericChange": "ep:Table 1.2!H558",
+    "ep.percentChange": "ep:Table 1.2!I558",
+    "onetCode": "onet:Occupation Data.txt#L555:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L555:Description"
+   },
+   "nullReasons": {}
+  }
+ }
+}

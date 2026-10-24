@@ -1,0 +1,3217 @@
+{
+ "_meta": {
+  "continent": "35-0000",
+  "title": "Food Preparation and Serving Related Occupations",
+  "sources": "see index.json _meta.sources; source refs are <source>:<sheet>!<cell> or <source>:<file>#L<line>:<column>",
+  "extracted": "2026-10-24",
+  "generator": "python3 scripts/build_occupations.py"
+ },
+ "broadGroups": [
+  {
+   "soc": "35-1010",
+   "title": "Supervisors of Food Preparation and Serving Workers",
+   "minor": "35-1000",
+   "employment": 1423280,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L682",
+    "title": "oews:national_M2025_dl!J682"
+   }
+  },
+  {
+   "soc": "35-2010",
+   "title": "Cooks",
+   "minor": "35-2000",
+   "employment": 2651090,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L686",
+    "title": "oews:national_M2025_dl!J686"
+   }
+  },
+  {
+   "soc": "35-2020",
+   "title": "Food Preparation Workers",
+   "minor": "35-2000",
+   "employment": 893600,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L693",
+    "title": "oews:national_M2025_dl!J693"
+   }
+  },
+  {
+   "soc": "35-3010",
+   "title": "Bartenders",
+   "minor": "35-3000",
+   "employment": 756390,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L696",
+    "title": "oews:national_M2025_dl!J696"
+   }
+  },
+  {
+   "soc": "35-3020",
+   "title": "Fast Food and Counter Workers",
+   "minor": "35-3000",
+   "employment": 3854050,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L698",
+    "title": "oews:national_M2025_dl!J698"
+   }
+  },
+  {
+   "soc": "35-3030",
+   "title": "Waiters and Waitresses",
+   "minor": "35-3000",
+   "employment": 2270910,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L700",
+    "title": "oews:national_M2025_dl!J700"
+   }
+  },
+  {
+   "soc": "35-3040",
+   "title": "Food Servers, Nonrestaurant",
+   "minor": "35-3000",
+   "employment": 293900,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L702",
+    "title": "oews:national_M2025_dl!J702"
+   }
+  },
+  {
+   "soc": "35-9010",
+   "title": "Dining Room and Cafeteria Attendants and Bartender Helpers",
+   "minor": "35-9000",
+   "employment": 542750,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L705",
+    "title": "oews:national_M2025_dl!J705"
+   }
+  },
+  {
+   "soc": "35-9020",
+   "title": "Dishwashers",
+   "minor": "35-9000",
+   "employment": 477450,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L707",
+    "title": "oews:national_M2025_dl!J707"
+   }
+  },
+  {
+   "soc": "35-9030",
+   "title": "Hosts and Hostesses, Restaurant, Lounge, and Coffee Shop",
+   "minor": "35-9000",
+   "employment": 432690,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L709",
+    "title": "oews:national_M2025_dl!J709"
+   }
+  },
+  {
+   "soc": "35-9090",
+   "title": "Miscellaneous Food Preparation and Serving Related Workers",
+   "minor": "35-9000",
+   "employment": 84630,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L711",
+    "title": "oews:national_M2025_dl!J711"
+   }
+  }
+ ],
+ "occupations": {
+  "35-1011": {
+   "soc": "35-1011",
+   "title": "Chefs and Head Cooks",
+   "major": "35-0000",
+   "minor": "35-1000",
+   "broad": "35-1010",
+   "oewsRows": [
+    683
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 200040,
+   "annualMedian": 62470,
+   "annualMean": 66700,
+   "hourlyMedian": 30.03,
+   "hourlyMean": 32.07,
+   "annualPct10": 37900,
+   "annualPct90": 98560,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Chefs and head cooks",
+    "employment2025": 220300,
+    "employment2035": 234700,
+    "numericChange": 14400,
+    "percentChange": 6.6
+   },
+   "onetCode": "35-1011.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Direct and may participate in the preparation, seasoning, and cooking of salads, soups, fish, meats, vegetables, desserts, or other foods. May plan and price menu items, order supplies, and keep records and accounts.",
+   "tasks": [
+    {
+     "id": 11129,
+     "text": "Monitor sanitation practices to ensure that employees follow standards and regulations.",
+     "type": "Core",
+     "onetCode": "35-1011.00",
+     "line": 10895
+    },
+    {
+     "id": 11135,
+     "text": "Instruct cooks or other workers in the preparation, cooking, garnishing, or presentation of food.",
+     "type": "Core",
+     "onetCode": "35-1011.00",
+     "line": 10896
+    },
+    {
+     "id": 11132,
+     "text": "Supervise or coordinate activities of cooks or workers engaged in food preparation.",
+     "type": "Core",
+     "onetCode": "35-1011.00",
+     "line": 10897
+    },
+    {
+     "id": 11131,
+     "text": "Order or requisition food or other supplies needed to ensure efficient operation.",
+     "type": "Core",
+     "onetCode": "35-1011.00",
+     "line": 10898
+    },
+    {
+     "id": 11133,
+     "text": "Inspect supplies, equipment, or work areas to ensure conformance to established standards.",
+     "type": "Core",
+     "onetCode": "35-1011.00",
+     "line": 10899
+    },
+    {
+     "id": 11130,
+     "text": "Check the quantity and quality of received products.",
+     "type": "Core",
+     "onetCode": "35-1011.00",
+     "line": 10900
+    },
+    {
+     "id": 11128,
+     "text": "Check the quality of raw or cooked food products to ensure that standards are met.",
+     "type": "Core",
+     "onetCode": "35-1011.00",
+     "line": 10901
+    },
+    {
+     "id": 11136,
+     "text": "Estimate amounts and costs of required supplies, such as food and ingredients.",
+     "type": "Core",
+     "onetCode": "35-1011.00",
+     "line": 10902
+    },
+    {
+     "id": 11148,
+     "text": "Coordinate planning, budgeting, or purchasing for all the food operations within establishments such as clubs, hotels, or restaurant chains.",
+     "type": "Core",
+     "onetCode": "35-1011.00",
+     "line": 10903
+    },
+    {
+     "id": 11138,
+     "text": "Analyze recipes to assign prices to menu items, based on food, labor, and overhead costs.",
+     "type": "Core",
+     "onetCode": "35-1011.00",
+     "line": 10904
+    },
+    {
+     "id": 11147,
+     "text": "Plan, direct, or supervise food preparation or cooking activities of multiple kitchens or restaurants in an establishment such as a restaurant chain, hospital, or hotel.",
+     "type": "Core",
+     "onetCode": "35-1011.00",
+     "line": 10905
+    },
+    {
+     "id": 11134,
+     "text": "Determine how food should be presented and create decorative food displays.",
+     "type": "Core",
+     "onetCode": "35-1011.00",
+     "line": 10906
+    },
+    {
+     "id": 11139,
+     "text": "Prepare and cook foods of all types, either on a regular basis or for special guests or functions.",
+     "type": "Core",
+     "onetCode": "35-1011.00",
+     "line": 10907
+    },
+    {
+     "id": 11140,
+     "text": "Determine production schedules and staff requirements necessary to ensure timely delivery of services.",
+     "type": "Core",
+     "onetCode": "35-1011.00",
+     "line": 10908
+    },
+    {
+     "id": 11142,
+     "text": "Meet with customers to discuss menus for special occasions, such as weddings, parties, or banquets.",
+     "type": "Core",
+     "onetCode": "35-1011.00",
+     "line": 10909
+    },
+    {
+     "id": 11141,
+     "text": "Recruit and hire staff, such as cooks and other kitchen workers.",
+     "type": "Core",
+     "onetCode": "35-1011.00",
+     "line": 10910
+    },
+    {
+     "id": 11146,
+     "text": "Record production or operational data on specified forms.",
+     "type": "Core",
+     "onetCode": "35-1011.00",
+     "line": 10911
+    },
+    {
+     "id": 11144,
+     "text": "Meet with sales representatives to negotiate prices or order supplies.",
+     "type": "Core",
+     "onetCode": "35-1011.00",
+     "line": 10912
+    },
+    {
+     "id": 11145,
+     "text": "Arrange for equipment purchases or repairs.",
+     "type": "Core",
+     "onetCode": "35-1011.00",
+     "line": 10913
+    },
+    {
+     "id": 11143,
+     "text": "Demonstrate new cooking techniques or equipment to staff.",
+     "type": "Core",
+     "onetCode": "35-1011.00",
+     "line": 10914
+    },
+    {
+     "id": 11137,
+     "text": "Collaborate with other personnel to plan and develop recipes or menus, taking into account such factors as seasonal availability of ingredients or the likely number of customers.",
+     "type": "Core",
+     "onetCode": "35-1011.00",
+     "line": 10915
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L683",
+    "annualMedian": "oews:national_M2025_dl!AB683",
+    "annualMean": "oews:national_M2025_dl!S683",
+    "hourlyMedian": "oews:national_M2025_dl!W683",
+    "hourlyMean": "oews:national_M2025_dl!R683",
+    "annualPct10": "oews:national_M2025_dl!Z683",
+    "annualPct90": "oews:national_M2025_dl!AD683",
+    "annualOnly": "oews:national_M2025_dl!AE683",
+    "hourlyOnly": "oews:national_M2025_dl!AF683",
+    "title": "oews:national_M2025_dl!J683",
+    "ep.title": "ep:Table 1.2!A561",
+    "ep.employment2025": "ep:Table 1.2!D561",
+    "ep.employment2035": "ep:Table 1.2!E561",
+    "ep.numericChange": "ep:Table 1.2!H561",
+    "ep.percentChange": "ep:Table 1.2!I561",
+    "onetCode": "onet:Occupation Data.txt#L557:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L557:Description"
+   },
+   "nullReasons": {}
+  },
+  "35-1012": {
+   "soc": "35-1012",
+   "title": "First-Line Supervisors of Food Preparation and Serving Workers",
+   "major": "35-0000",
+   "minor": "35-1000",
+   "broad": "35-1010",
+   "oewsRows": [
+    684
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 1223240,
+   "annualMedian": 44080,
+   "annualMean": 46180,
+   "hourlyMedian": 21.19,
+   "hourlyMean": 22.2,
+   "annualPct10": 29940,
+   "annualPct90": 65570,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "First-line supervisors of food preparation and serving workers",
+    "employment2025": 1236400,
+    "employment2035": 1303500,
+    "numericChange": 67100,
+    "percentChange": 5.4
+   },
+   "onetCode": "35-1012.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Directly supervise and coordinate activities of workers engaged in preparing and serving food.",
+   "tasks": [
+    {
+     "id": 2145,
+     "text": "Resolve customer complaints regarding food service.",
+     "type": "Core",
+     "onetCode": "35-1012.00",
+     "line": 10916
+    },
+    {
+     "id": 2146,
+     "text": "Train workers in food preparation, and in service, sanitation, and safety procedures.",
+     "type": "Core",
+     "onetCode": "35-1012.00",
+     "line": 10917
+    },
+    {
+     "id": 2150,
+     "text": "Assign duties, responsibilities, and work stations to employees in accordance with work requirements.",
+     "type": "Core",
+     "onetCode": "35-1012.00",
+     "line": 10918
+    },
+    {
+     "id": 2157,
+     "text": "Present bills and accept payments.",
+     "type": "Core",
+     "onetCode": "35-1012.00",
+     "line": 10919
+    },
+    {
+     "id": 18714,
+     "text": "Perform various financial activities, such as cash handling, deposit preparation, and payroll.",
+     "type": "Core",
+     "onetCode": "35-1012.00",
+     "line": 10920
+    },
+    {
+     "id": 18715,
+     "text": "Supervise and participate in kitchen and dining area cleaning activities.",
+     "type": "Core",
+     "onetCode": "35-1012.00",
+     "line": 10921
+    },
+    {
+     "id": 2155,
+     "text": "Recommend measures for improving work procedures and worker performance to increase service quality and enhance job safety.",
+     "type": "Core",
+     "onetCode": "35-1012.00",
+     "line": 10922
+    },
+    {
+     "id": 2154,
+     "text": "Specify food portions and courses, production and time sequences, and workstation and equipment arrangements.",
+     "type": "Core",
+     "onetCode": "35-1012.00",
+     "line": 10923
+    },
+    {
+     "id": 2148,
+     "text": "Control inventories of food, equipment, smallware, and liquor, and report shortages to designated personnel.",
+     "type": "Core",
+     "onetCode": "35-1012.00",
+     "line": 10924
+    },
+    {
+     "id": 18716,
+     "text": "Observe and evaluate workers and work procedures to ensure quality standards and service, and complete disciplinary write-ups.",
+     "type": "Core",
+     "onetCode": "35-1012.00",
+     "line": 10925
+    },
+    {
+     "id": 2153,
+     "text": "Analyze operational problems, such as theft and wastage, and establish procedures to alleviate these problems.",
+     "type": "Core",
+     "onetCode": "35-1012.00",
+     "line": 10926
+    },
+    {
+     "id": 2147,
+     "text": "Inspect supplies, equipment, and work areas to ensure efficient service and conformance to standards.",
+     "type": "Core",
+     "onetCode": "35-1012.00",
+     "line": 10927
+    },
+    {
+     "id": 2156,
+     "text": "Greet and seat guests, and present menus and wine lists.",
+     "type": "Core",
+     "onetCode": "35-1012.00",
+     "line": 10928
+    },
+    {
+     "id": 2167,
+     "text": "Evaluate new products for usefulness and suitability.",
+     "type": "Core",
+     "onetCode": "35-1012.00",
+     "line": 10929
+    },
+    {
+     "id": 2144,
+     "text": "Compile and balance cash receipts at the end of the day or shift.",
+     "type": "Supplemental",
+     "onetCode": "35-1012.00",
+     "line": 10930
+    },
+    {
+     "id": 2158,
+     "text": "Forecast staff, equipment, and supply requirements, based on a master menu.",
+     "type": "Supplemental",
+     "onetCode": "35-1012.00",
+     "line": 10931
+    },
+    {
+     "id": 18721,
+     "text": "Assess nutritional needs of patients, plan special menus, supervise the assembly of regular and special diet trays, and oversee the delivery of food trolleys to hospital patients.",
+     "type": "Supplemental",
+     "onetCode": "35-1012.00",
+     "line": 10932
+    },
+    {
+     "id": 18719,
+     "text": "Record production, operational, and personnel data on specified forms.",
+     "type": "Supplemental",
+     "onetCode": "35-1012.00",
+     "line": 10933
+    },
+    {
+     "id": 18717,
+     "text": "Perform personnel actions, such as hiring and firing staff, providing employee orientation and training, and conducting supervisory activities, such as creating work schedules or organizing employee time sheets.",
+     "type": "Supplemental",
+     "onetCode": "35-1012.00",
+     "line": 10934
+    },
+    {
+     "id": 2151,
+     "text": "Estimate ingredients and supplies required to prepare a recipe.",
+     "type": "Supplemental",
+     "onetCode": "35-1012.00",
+     "line": 10935
+    },
+    {
+     "id": 2161,
+     "text": "Purchase or requisition supplies and equipment needed to ensure quality and timely delivery of services.",
+     "type": "Supplemental",
+     "onetCode": "35-1012.00",
+     "line": 10936
+    },
+    {
+     "id": 18718,
+     "text": "Perform food preparation and serving duties, such as carving meat, preparing flambe dishes, or serving wine and liquor.",
+     "type": "Supplemental",
+     "onetCode": "35-1012.00",
+     "line": 10937
+    },
+    {
+     "id": 2164,
+     "text": "Schedule parties and take reservations.",
+     "type": "Supplemental",
+     "onetCode": "35-1012.00",
+     "line": 10938
+    },
+    {
+     "id": 2165,
+     "text": "Develop departmental objectives, budgets, policies, procedures, and strategies.",
+     "type": "Supplemental",
+     "onetCode": "35-1012.00",
+     "line": 10939
+    },
+    {
+     "id": 18720,
+     "text": "Conduct meetings and collaborate with other personnel for menu planning, serving arrangements, and related details.",
+     "type": "Supplemental",
+     "onetCode": "35-1012.00",
+     "line": 10940
+    },
+    {
+     "id": 2166,
+     "text": "Develop equipment maintenance schedules and arrange for repairs.",
+     "type": "Supplemental",
+     "onetCode": "35-1012.00",
+     "line": 10941
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L684",
+    "annualMedian": "oews:national_M2025_dl!AB684",
+    "annualMean": "oews:national_M2025_dl!S684",
+    "hourlyMedian": "oews:national_M2025_dl!W684",
+    "hourlyMean": "oews:national_M2025_dl!R684",
+    "annualPct10": "oews:national_M2025_dl!Z684",
+    "annualPct90": "oews:national_M2025_dl!AD684",
+    "annualOnly": "oews:national_M2025_dl!AE684",
+    "hourlyOnly": "oews:national_M2025_dl!AF684",
+    "title": "oews:national_M2025_dl!J684",
+    "ep.title": "ep:Table 1.2!A562",
+    "ep.employment2025": "ep:Table 1.2!D562",
+    "ep.employment2035": "ep:Table 1.2!E562",
+    "ep.numericChange": "ep:Table 1.2!H562",
+    "ep.percentChange": "ep:Table 1.2!I562",
+    "onetCode": "onet:Occupation Data.txt#L558:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L558:Description"
+   },
+   "nullReasons": {}
+  },
+  "35-2011": {
+   "soc": "35-2011",
+   "title": "Cooks, Fast Food",
+   "major": "35-0000",
+   "minor": "35-2000",
+   "broad": "35-2010",
+   "oewsRows": [
+    687
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 641070,
+   "annualMedian": 30890,
+   "annualMean": 32390,
+   "hourlyMedian": 14.85,
+   "hourlyMean": 15.57,
+   "annualPct10": 22580,
+   "annualPct90": 42910,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Cooks, fast food",
+    "employment2025": 640500,
+    "employment2035": 644100,
+    "numericChange": 3600,
+    "percentChange": 0.6
+   },
+   "onetCode": "35-2011.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Prepare and cook food in a fast food restaurant with a limited menu. Duties of these cooks are limited to preparation of a few basic items and normally involve operating large-volume single-purpose cooking equipment.",
+   "tasks": [
+    {
+     "id": 5070,
+     "text": "Order and take delivery of supplies.",
+     "type": "Core",
+     "onetCode": "35-2011.00",
+     "line": 10942
+    },
+    {
+     "id": 5062,
+     "text": "Cook the exact number of items ordered by each customer, working on several different orders simultaneously.",
+     "type": "Core",
+     "onetCode": "35-2011.00",
+     "line": 10943
+    },
+    {
+     "id": 5065,
+     "text": "Prepare specialty foods, such as pizzas, fish and chips, sandwiches, or tacos, following specific methods that usually require short preparation time.",
+     "type": "Core",
+     "onetCode": "35-2011.00",
+     "line": 10944
+    },
+    {
+     "id": 5055,
+     "text": "Operate large-volume cooking equipment, such as grills, deep-fat fryers, or griddles.",
+     "type": "Core",
+     "onetCode": "35-2011.00",
+     "line": 10945
+    },
+    {
+     "id": 5059,
+     "text": "Wash, cut, and prepare foods designated for cooking.",
+     "type": "Core",
+     "onetCode": "35-2011.00",
+     "line": 10946
+    },
+    {
+     "id": 5068,
+     "text": "Prepare and serve beverages, such as coffee or fountain drinks.",
+     "type": "Core",
+     "onetCode": "35-2011.00",
+     "line": 10947
+    },
+    {
+     "id": 5054,
+     "text": "Clean food preparation areas, cooking surfaces, and utensils.",
+     "type": "Core",
+     "onetCode": "35-2011.00",
+     "line": 10948
+    },
+    {
+     "id": 5058,
+     "text": "Read food order slips or receive verbal instructions as to food required by patron, and prepare and cook food according to instructions.",
+     "type": "Core",
+     "onetCode": "35-2011.00",
+     "line": 10949
+    },
+    {
+     "id": 5063,
+     "text": "Serve orders to customers at windows, counters, or tables.",
+     "type": "Core",
+     "onetCode": "35-2011.00",
+     "line": 10950
+    },
+    {
+     "id": 5064,
+     "text": "Clean, stock, and restock workstations and display cases.",
+     "type": "Core",
+     "onetCode": "35-2011.00",
+     "line": 10951
+    },
+    {
+     "id": 5053,
+     "text": "Maintain sanitation, health, and safety standards in work areas.",
+     "type": "Core",
+     "onetCode": "35-2011.00",
+     "line": 10952
+    },
+    {
+     "id": 5061,
+     "text": "Cook and package batches of food, such as hamburgers or fried chicken, prepared to order or kept warm until sold.",
+     "type": "Core",
+     "onetCode": "35-2011.00",
+     "line": 10953
+    },
+    {
+     "id": 5066,
+     "text": "Prepare dough, following recipe.",
+     "type": "Core",
+     "onetCode": "35-2011.00",
+     "line": 10954
+    },
+    {
+     "id": 5057,
+     "text": "Take food and drink orders and receive payment from customers.",
+     "type": "Core",
+     "onetCode": "35-2011.00",
+     "line": 10955
+    },
+    {
+     "id": 5056,
+     "text": "Verify that prepared food meets requirements for quality and quantity.",
+     "type": "Core",
+     "onetCode": "35-2011.00",
+     "line": 10956
+    },
+    {
+     "id": 5071,
+     "text": "Pre-cook items, such as bacon, to prepare them for later use.",
+     "type": "Core",
+     "onetCode": "35-2011.00",
+     "line": 10957
+    },
+    {
+     "id": 5060,
+     "text": "Measure ingredients required for specific food items.",
+     "type": "Core",
+     "onetCode": "35-2011.00",
+     "line": 10958
+    },
+    {
+     "id": 5069,
+     "text": "Mix ingredients, such as pancake or waffle batters.",
+     "type": "Core",
+     "onetCode": "35-2011.00",
+     "line": 10959
+    },
+    {
+     "id": 5067,
+     "text": "Schedule activities and equipment use with managers, using information about daily menus to help coordinate cooking times.",
+     "type": "Core",
+     "onetCode": "35-2011.00",
+     "line": 10960
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L687",
+    "annualMedian": "oews:national_M2025_dl!AB687",
+    "annualMean": "oews:national_M2025_dl!S687",
+    "hourlyMedian": "oews:national_M2025_dl!W687",
+    "hourlyMean": "oews:national_M2025_dl!R687",
+    "annualPct10": "oews:national_M2025_dl!Z687",
+    "annualPct90": "oews:national_M2025_dl!AD687",
+    "annualOnly": "oews:national_M2025_dl!AE687",
+    "hourlyOnly": "oews:national_M2025_dl!AF687",
+    "title": "oews:national_M2025_dl!J687",
+    "ep.title": "ep:Table 1.2!A565",
+    "ep.employment2025": "ep:Table 1.2!D565",
+    "ep.employment2035": "ep:Table 1.2!E565",
+    "ep.numericChange": "ep:Table 1.2!H565",
+    "ep.percentChange": "ep:Table 1.2!I565",
+    "onetCode": "onet:Occupation Data.txt#L559:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L559:Description"
+   },
+   "nullReasons": {}
+  },
+  "35-2012": {
+   "soc": "35-2012",
+   "title": "Cooks, Institution and Cafeteria",
+   "major": "35-0000",
+   "minor": "35-2000",
+   "broad": "35-2010",
+   "oewsRows": [
+    688
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 441050,
+   "annualMedian": 37450,
+   "annualMean": 38810,
+   "hourlyMedian": 18.01,
+   "hourlyMean": 18.66,
+   "annualPct10": 28480,
+   "annualPct90": 49670,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Cooks, institution and cafeteria",
+    "employment2025": 454000,
+    "employment2035": 466600,
+    "numericChange": 12600,
+    "percentChange": 2.8
+   },
+   "onetCode": "35-2012.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Prepare and cook large quantities of food for institutions, such as schools, hospitals, or cafeterias.",
+   "tasks": [
+    {
+     "id": 21148,
+     "text": "Monitor and record food temperatures to ensure food safety.",
+     "type": "Core",
+     "onetCode": "35-2012.00",
+     "line": 10961
+    },
+    {
+     "id": 9488,
+     "text": "Cook foodstuffs according to menus, special dietary or nutritional restrictions, or numbers of portions to be served.",
+     "type": "Core",
+     "onetCode": "35-2012.00",
+     "line": 10962
+    },
+    {
+     "id": 21149,
+     "text": "Rotate and store food supplies.",
+     "type": "Core",
+     "onetCode": "35-2012.00",
+     "line": 10963
+    },
+    {
+     "id": 9491,
+     "text": "Wash pots, pans, dishes, utensils, or other cooking equipment.",
+     "type": "Core",
+     "onetCode": "35-2012.00",
+     "line": 10964
+    },
+    {
+     "id": 9487,
+     "text": "Apportion and serve food to facility residents, employees, or patrons.",
+     "type": "Core",
+     "onetCode": "35-2012.00",
+     "line": 10965
+    },
+    {
+     "id": 9486,
+     "text": "Clean and inspect galley equipment, kitchen appliances, and work areas to ensure cleanliness and functional operation.",
+     "type": "Core",
+     "onetCode": "35-2012.00",
+     "line": 10966
+    },
+    {
+     "id": 9489,
+     "text": "Clean, cut, and cook meat, fish, or poultry.",
+     "type": "Core",
+     "onetCode": "35-2012.00",
+     "line": 10967
+    },
+    {
+     "id": 9493,
+     "text": "Direct activities of one or more workers who assist in preparing and serving meals.",
+     "type": "Core",
+     "onetCode": "35-2012.00",
+     "line": 10968
+    },
+    {
+     "id": 9495,
+     "text": "Train new employees.",
+     "type": "Core",
+     "onetCode": "35-2012.00",
+     "line": 10969
+    },
+    {
+     "id": 9496,
+     "text": "Take inventory of supplies and equipment.",
+     "type": "Core",
+     "onetCode": "35-2012.00",
+     "line": 10970
+    },
+    {
+     "id": 9499,
+     "text": "Requisition food supplies, kitchen equipment, and appliances, based on estimates of future needs.",
+     "type": "Core",
+     "onetCode": "35-2012.00",
+     "line": 10971
+    },
+    {
+     "id": 9494,
+     "text": "Bake breads, rolls, or other pastries.",
+     "type": "Core",
+     "onetCode": "35-2012.00",
+     "line": 10972
+    },
+    {
+     "id": 9490,
+     "text": "Monitor use of government food commodities to ensure that proper procedures are followed.",
+     "type": "Supplemental",
+     "onetCode": "35-2012.00",
+     "line": 10973
+    },
+    {
+     "id": 9498,
+     "text": "Plan menus that are varied, nutritionally balanced, and appetizing, taking advantage of foods in season and local availability.",
+     "type": "Supplemental",
+     "onetCode": "35-2012.00",
+     "line": 10974
+    },
+    {
+     "id": 9497,
+     "text": "Monitor menus and spending to ensure that meals are prepared economically.",
+     "type": "Supplemental",
+     "onetCode": "35-2012.00",
+     "line": 10975
+    },
+    {
+     "id": 9492,
+     "text": "Compile and maintain records of food use and expenditures.",
+     "type": "Supplemental",
+     "onetCode": "35-2012.00",
+     "line": 10976
+    },
+    {
+     "id": 9500,
+     "text": "Determine meal prices, based on calculations of ingredient prices.",
+     "type": "Supplemental",
+     "onetCode": "35-2012.00",
+     "line": 10977
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L688",
+    "annualMedian": "oews:national_M2025_dl!AB688",
+    "annualMean": "oews:national_M2025_dl!S688",
+    "hourlyMedian": "oews:national_M2025_dl!W688",
+    "hourlyMean": "oews:national_M2025_dl!R688",
+    "annualPct10": "oews:national_M2025_dl!Z688",
+    "annualPct90": "oews:national_M2025_dl!AD688",
+    "annualOnly": "oews:national_M2025_dl!AE688",
+    "hourlyOnly": "oews:national_M2025_dl!AF688",
+    "title": "oews:national_M2025_dl!J688",
+    "ep.title": "ep:Table 1.2!A566",
+    "ep.employment2025": "ep:Table 1.2!D566",
+    "ep.employment2035": "ep:Table 1.2!E566",
+    "ep.numericChange": "ep:Table 1.2!H566",
+    "ep.percentChange": "ep:Table 1.2!I566",
+    "onetCode": "onet:Occupation Data.txt#L560:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L560:Description"
+   },
+   "nullReasons": {}
+  },
+  "35-2013": {
+   "soc": "35-2013",
+   "title": "Cooks, Private Household",
+   "major": "35-0000",
+   "minor": "35-2000",
+   "broad": "35-2010",
+   "oewsRows": [
+    689
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 1100,
+   "annualMedian": 47940,
+   "annualMean": 53680,
+   "hourlyMedian": 23.05,
+   "hourlyMean": 25.81,
+   "annualPct10": 36090,
+   "annualPct90": 91130,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Cooks, private household",
+    "employment2025": 35400,
+    "employment2035": 37200,
+    "numericChange": 1800,
+    "percentChange": 5.1
+   },
+   "onetCode": "35-2013.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Prepare meals in private homes. Includes personal chefs.",
+   "tasks": [
+    {
+     "id": 9503,
+     "text": "Peel, wash, trim, and cook vegetables and meats, and bake breads and pastries.",
+     "type": "Core",
+     "onetCode": "35-2013.00",
+     "line": 10978
+    },
+    {
+     "id": 20896,
+     "text": "Cool, package, label, and freeze foods for later consumption and provide instructions for reheating.",
+     "type": "Core",
+     "onetCode": "35-2013.00",
+     "line": 10979
+    },
+    {
+     "id": 9501,
+     "text": "Plan menus according to employers' needs and diet restrictions.",
+     "type": "Core",
+     "onetCode": "35-2013.00",
+     "line": 10980
+    },
+    {
+     "id": 9502,
+     "text": "Shop for or order food and kitchen supplies and equipment.",
+     "type": "Core",
+     "onetCode": "35-2013.00",
+     "line": 10981
+    },
+    {
+     "id": 9504,
+     "text": "Prepare meals in private homes according to employers' recipes or tastes, handling all meals for the family and possibly for other household staff.",
+     "type": "Core",
+     "onetCode": "35-2013.00",
+     "line": 10982
+    },
+    {
+     "id": 20897,
+     "text": "Keep records pertaining to menus, finances, and other business-related issues.",
+     "type": "Core",
+     "onetCode": "35-2013.00",
+     "line": 10983
+    },
+    {
+     "id": 9505,
+     "text": "Stock, organize, and clean kitchens and cooking utensils.",
+     "type": "Core",
+     "onetCode": "35-2013.00",
+     "line": 10984
+    },
+    {
+     "id": 9508,
+     "text": "Direct the operation and organization of kitchens and all food-related activities, including the presentation and serving of food.",
+     "type": "Core",
+     "onetCode": "35-2013.00",
+     "line": 10985
+    },
+    {
+     "id": 9506,
+     "text": "Specialize in preparing fancy dishes or food for special diets.",
+     "type": "Core",
+     "onetCode": "35-2013.00",
+     "line": 10986
+    },
+    {
+     "id": 9509,
+     "text": "Plan and prepare food for parties, holiday meals, luncheons, special functions, and other social events.",
+     "type": "Core",
+     "onetCode": "35-2013.00",
+     "line": 10987
+    },
+    {
+     "id": 9507,
+     "text": "Create and explore new cuisines.",
+     "type": "Core",
+     "onetCode": "35-2013.00",
+     "line": 10988
+    },
+    {
+     "id": 9510,
+     "text": "Serve meals and snacks to employing families and their guests.",
+     "type": "Core",
+     "onetCode": "35-2013.00",
+     "line": 10989
+    },
+    {
+     "id": 9511,
+     "text": "Travel with employers to vacation homes to provide meal preparation at those locations.",
+     "type": "Supplemental",
+     "onetCode": "35-2013.00",
+     "line": 10990
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L689",
+    "annualMedian": "oews:national_M2025_dl!AB689",
+    "annualMean": "oews:national_M2025_dl!S689",
+    "hourlyMedian": "oews:national_M2025_dl!W689",
+    "hourlyMean": "oews:national_M2025_dl!R689",
+    "annualPct10": "oews:national_M2025_dl!Z689",
+    "annualPct90": "oews:national_M2025_dl!AD689",
+    "annualOnly": "oews:national_M2025_dl!AE689",
+    "hourlyOnly": "oews:national_M2025_dl!AF689",
+    "title": "oews:national_M2025_dl!J689",
+    "ep.title": "ep:Table 1.2!A567",
+    "ep.employment2025": "ep:Table 1.2!D567",
+    "ep.employment2035": "ep:Table 1.2!E567",
+    "ep.numericChange": "ep:Table 1.2!H567",
+    "ep.percentChange": "ep:Table 1.2!I567",
+    "onetCode": "onet:Occupation Data.txt#L561:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L561:Description"
+   },
+   "nullReasons": {}
+  },
+  "35-2014": {
+   "soc": "35-2014",
+   "title": "Cooks, Restaurant",
+   "major": "35-0000",
+   "minor": "35-2000",
+   "broad": "35-2010",
+   "oewsRows": [
+    690
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 1409890,
+   "annualMedian": 37390,
+   "annualMean": 38730,
+   "hourlyMedian": 17.98,
+   "hourlyMean": 18.62,
+   "annualPct10": 28700,
+   "annualPct90": 47900,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Cooks, restaurant",
+    "employment2025": 1417500,
+    "employment2035": 1588800,
+    "numericChange": 171400,
+    "percentChange": 12.1
+   },
+   "onetCode": "35-2014.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Prepare, season, and cook dishes such as soups, meats, vegetables, or desserts in restaurants. May order supplies, keep records and accounts, price items on menu, or plan menu.",
+   "tasks": [
+    {
+     "id": 18723,
+     "text": "Ensure food is stored and cooked at correct temperature by regulating temperature of ovens, broilers, grills, and roasters.",
+     "type": "Core",
+     "onetCode": "35-2014.00",
+     "line": 10991
+    },
+    {
+     "id": 18722,
+     "text": "Inspect and clean food preparation areas, such as equipment, work surfaces, and serving areas, to ensure safe and sanitary food-handling practices.",
+     "type": "Core",
+     "onetCode": "35-2014.00",
+     "line": 10992
+    },
+    {
+     "id": 2173,
+     "text": "Portion, arrange, and garnish food, and serve food to waiters or patrons.",
+     "type": "Core",
+     "onetCode": "35-2014.00",
+     "line": 10993
+    },
+    {
+     "id": 18724,
+     "text": "Ensure freshness of food and ingredients by checking for quality, keeping track of old and new items, and rotating stock.",
+     "type": "Core",
+     "onetCode": "35-2014.00",
+     "line": 10994
+    },
+    {
+     "id": 2170,
+     "text": "Season and cook food according to recipes or personal judgment and experience.",
+     "type": "Core",
+     "onetCode": "35-2014.00",
+     "line": 10995
+    },
+    {
+     "id": 2180,
+     "text": "Coordinate and supervise work of kitchen staff.",
+     "type": "Core",
+     "onetCode": "35-2014.00",
+     "line": 10996
+    },
+    {
+     "id": 2176,
+     "text": "Bake, roast, broil, and steam meats, fish, vegetables, and other foods.",
+     "type": "Core",
+     "onetCode": "35-2014.00",
+     "line": 10997
+    },
+    {
+     "id": 2172,
+     "text": "Weigh, measure, and mix ingredients according to recipes or personal judgment, using various kitchen utensils and equipment.",
+     "type": "Core",
+     "onetCode": "35-2014.00",
+     "line": 10998
+    },
+    {
+     "id": 2169,
+     "text": "Turn or stir foods to ensure even cooking.",
+     "type": "Core",
+     "onetCode": "35-2014.00",
+     "line": 10999
+    },
+    {
+     "id": 2171,
+     "text": "Observe and test foods to determine if they have been cooked sufficiently, using methods such as tasting, smelling, or piercing them with utensils.",
+     "type": "Core",
+     "onetCode": "35-2014.00",
+     "line": 11000
+    },
+    {
+     "id": 2175,
+     "text": "Substitute for or assist other cooks during emergencies or rush periods.",
+     "type": "Core",
+     "onetCode": "35-2014.00",
+     "line": 11001
+    },
+    {
+     "id": 2177,
+     "text": "Wash, peel, cut, and seed fruits and vegetables to prepare them for consumption.",
+     "type": "Core",
+     "onetCode": "35-2014.00",
+     "line": 11002
+    },
+    {
+     "id": 2183,
+     "text": "Bake breads, rolls, cakes, and pastries.",
+     "type": "Core",
+     "onetCode": "35-2014.00",
+     "line": 11003
+    },
+    {
+     "id": 2179,
+     "text": "Carve and trim meats such as beef, veal, ham, pork, and lamb for hot or cold service, or for sandwiches.",
+     "type": "Core",
+     "onetCode": "35-2014.00",
+     "line": 11004
+    },
+    {
+     "id": 2185,
+     "text": "Keep records and accounts.",
+     "type": "Supplemental",
+     "onetCode": "35-2014.00",
+     "line": 11005
+    },
+    {
+     "id": 2184,
+     "text": "Prepare relishes and hors d'oeuvres.",
+     "type": "Supplemental",
+     "onetCode": "35-2014.00",
+     "line": 11006
+    },
+    {
+     "id": 2178,
+     "text": "Estimate expected food consumption, requisition or purchase supplies, or procure food from storage.",
+     "type": "Supplemental",
+     "onetCode": "35-2014.00",
+     "line": 11007
+    },
+    {
+     "id": 2181,
+     "text": "Consult with supervisory staff to plan menus, taking into consideration factors such as costs and special event needs.",
+     "type": "Supplemental",
+     "onetCode": "35-2014.00",
+     "line": 11008
+    },
+    {
+     "id": 2182,
+     "text": "Butcher and dress animals, fowl, or shellfish, or cut and bone meat prior to cooking.",
+     "type": "Supplemental",
+     "onetCode": "35-2014.00",
+     "line": 11009
+    },
+    {
+     "id": 2186,
+     "text": "Plan and price menu items.",
+     "type": "Supplemental",
+     "onetCode": "35-2014.00",
+     "line": 11010
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L690",
+    "annualMedian": "oews:national_M2025_dl!AB690",
+    "annualMean": "oews:national_M2025_dl!S690",
+    "hourlyMedian": "oews:national_M2025_dl!W690",
+    "hourlyMean": "oews:national_M2025_dl!R690",
+    "annualPct10": "oews:national_M2025_dl!Z690",
+    "annualPct90": "oews:national_M2025_dl!AD690",
+    "annualOnly": "oews:national_M2025_dl!AE690",
+    "hourlyOnly": "oews:national_M2025_dl!AF690",
+    "title": "oews:national_M2025_dl!J690",
+    "ep.title": "ep:Table 1.2!A568",
+    "ep.employment2025": "ep:Table 1.2!D568",
+    "ep.employment2035": "ep:Table 1.2!E568",
+    "ep.numericChange": "ep:Table 1.2!H568",
+    "ep.percentChange": "ep:Table 1.2!I568",
+    "onetCode": "onet:Occupation Data.txt#L562:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L562:Description"
+   },
+   "nullReasons": {}
+  },
+  "35-2015": {
+   "soc": "35-2015",
+   "title": "Cooks, Short Order",
+   "major": "35-0000",
+   "minor": "35-2000",
+   "broad": "35-2010",
+   "oewsRows": [
+    691
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 138650,
+   "annualMedian": 35880,
+   "annualMean": 36120,
+   "hourlyMedian": 17.25,
+   "hourlyMean": 17.37,
+   "annualPct10": 23440,
+   "annualPct90": 46460,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Cooks, short order",
+    "employment2025": 138700,
+    "employment2035": 131500,
+    "numericChange": -7200,
+    "percentChange": -5.2
+   },
+   "onetCode": "35-2015.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Prepare and cook to order a variety of foods that require only a short preparation time. May take orders from customers and serve patrons at counters or tables.",
+   "tasks": [
+    {
+     "id": 2187,
+     "text": "Clean food preparation equipment, work areas, and counters or tables.",
+     "type": "Core",
+     "onetCode": "35-2015.00",
+     "line": 11011
+    },
+    {
+     "id": 18725,
+     "text": "Restock kitchen supplies, rotate food, and stamp the time and date on food in coolers.",
+     "type": "Core",
+     "onetCode": "35-2015.00",
+     "line": 11012
+    },
+    {
+     "id": 2192,
+     "text": "Complete orders from steam tables, placing food on plates and serving customers at tables or counters.",
+     "type": "Core",
+     "onetCode": "35-2015.00",
+     "line": 11013
+    },
+    {
+     "id": 2188,
+     "text": "Plan work on orders so that items served together are finished at the same time.",
+     "type": "Core",
+     "onetCode": "35-2015.00",
+     "line": 11014
+    },
+    {
+     "id": 2189,
+     "text": "Grill, cook, and fry foods such as french fries, eggs, and pancakes.",
+     "type": "Core",
+     "onetCode": "35-2015.00",
+     "line": 11015
+    },
+    {
+     "id": 18726,
+     "text": "Perform food preparation tasks, such as making sandwiches, carving meats, making soups or salads, baking breads or desserts, and brewing coffee or tea.",
+     "type": "Core",
+     "onetCode": "35-2015.00",
+     "line": 11016
+    },
+    {
+     "id": 18727,
+     "text": "Perform general cleaning activities in kitchen and dining areas.",
+     "type": "Core",
+     "onetCode": "35-2015.00",
+     "line": 11017
+    },
+    {
+     "id": 2190,
+     "text": "Take orders from customers and cook foods requiring short preparation times, according to customer requirements.",
+     "type": "Core",
+     "onetCode": "35-2015.00",
+     "line": 11018
+    },
+    {
+     "id": 2191,
+     "text": "Grill and garnish hamburgers or other meats, such as steaks and chops.",
+     "type": "Supplemental",
+     "onetCode": "35-2015.00",
+     "line": 11019
+    },
+    {
+     "id": 2194,
+     "text": "Order supplies and stock them on shelves.",
+     "type": "Supplemental",
+     "onetCode": "35-2015.00",
+     "line": 11020
+    },
+    {
+     "id": 2195,
+     "text": "Accept payments, and make change or write charge slips as necessary.",
+     "type": "Supplemental",
+     "onetCode": "35-2015.00",
+     "line": 11021
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L691",
+    "annualMedian": "oews:national_M2025_dl!AB691",
+    "annualMean": "oews:national_M2025_dl!S691",
+    "hourlyMedian": "oews:national_M2025_dl!W691",
+    "hourlyMean": "oews:national_M2025_dl!R691",
+    "annualPct10": "oews:national_M2025_dl!Z691",
+    "annualPct90": "oews:national_M2025_dl!AD691",
+    "annualOnly": "oews:national_M2025_dl!AE691",
+    "hourlyOnly": "oews:national_M2025_dl!AF691",
+    "title": "oews:national_M2025_dl!J691",
+    "ep.title": "ep:Table 1.2!A569",
+    "ep.employment2025": "ep:Table 1.2!D569",
+    "ep.employment2035": "ep:Table 1.2!E569",
+    "ep.numericChange": "ep:Table 1.2!H569",
+    "ep.percentChange": "ep:Table 1.2!I569",
+    "onetCode": "onet:Occupation Data.txt#L563:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L563:Description"
+   },
+   "nullReasons": {}
+  },
+  "35-2019": {
+   "soc": "35-2019",
+   "title": "Cooks, All Other",
+   "major": "35-0000",
+   "minor": "35-2000",
+   "broad": "35-2010",
+   "oewsRows": [
+    692
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 19350,
+   "annualMedian": 37690,
+   "annualMean": 39150,
+   "hourlyMedian": 18.12,
+   "hourlyMean": 18.82,
+   "annualPct10": 27040,
+   "annualPct90": 51140,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Cooks, all other",
+    "employment2025": 19700,
+    "employment2035": 20800,
+    "numericChange": 1000,
+    "percentChange": 5.2
+   },
+   "onetCode": "35-2019.00",
+   "onetTaskSource": "none",
+   "onetSubCodes": [],
+   "description": "All cooks not listed separately.",
+   "tasks": [],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L692",
+    "annualMedian": "oews:national_M2025_dl!AB692",
+    "annualMean": "oews:national_M2025_dl!S692",
+    "hourlyMedian": "oews:national_M2025_dl!W692",
+    "hourlyMean": "oews:national_M2025_dl!R692",
+    "annualPct10": "oews:national_M2025_dl!Z692",
+    "annualPct90": "oews:national_M2025_dl!AD692",
+    "annualOnly": "oews:national_M2025_dl!AE692",
+    "hourlyOnly": "oews:national_M2025_dl!AF692",
+    "title": "oews:national_M2025_dl!J692",
+    "ep.title": "ep:Table 1.2!A570",
+    "ep.employment2025": "ep:Table 1.2!D570",
+    "ep.employment2035": "ep:Table 1.2!E570",
+    "ep.numericChange": "ep:Table 1.2!H570",
+    "ep.percentChange": "ep:Table 1.2!I570",
+    "onetCode": "onet:Occupation Data.txt#L564:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L564:Description"
+   },
+   "nullReasons": {
+    "tasks": "O*NET 30.1 has no task statements for 35-2019.00"
+   }
+  },
+  "35-2021": {
+   "soc": "35-2021",
+   "title": "Food Preparation Workers",
+   "major": "35-0000",
+   "minor": "35-2000",
+   "broad": "35-2020",
+   "oewsRows": [
+    694
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 893600,
+   "annualMedian": 35320,
+   "annualMean": 35290,
+   "hourlyMedian": 16.98,
+   "hourlyMean": 16.96,
+   "annualPct10": 25810,
+   "annualPct90": 45340,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Food preparation workers",
+    "employment2025": 908500,
+    "employment2035": 881300,
+    "numericChange": -27200,
+    "percentChange": -3
+   },
+   "onetCode": "35-2021.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Perform a variety of food preparation duties other than cooking, such as preparing cold foods and shellfish, slicing meat, and brewing coffee or tea.",
+   "tasks": [
+    {
+     "id": 18728,
+     "text": "Clean and sanitize work areas, equipment, utensils, dishes, or silverware.",
+     "type": "Core",
+     "onetCode": "35-2021.00",
+     "line": 11022
+    },
+    {
+     "id": 2204,
+     "text": "Assist cooks and kitchen staff with various tasks as needed, and provide cooks with needed items.",
+     "type": "Core",
+     "onetCode": "35-2021.00",
+     "line": 11023
+    },
+    {
+     "id": 18730,
+     "text": "Take and record temperature of food and food storage areas, such as refrigerators and freezers.",
+     "type": "Core",
+     "onetCode": "35-2021.00",
+     "line": 11024
+    },
+    {
+     "id": 2210,
+     "text": "Carry food supplies, equipment, and utensils to and from storage and work areas.",
+     "type": "Core",
+     "onetCode": "35-2021.00",
+     "line": 11025
+    },
+    {
+     "id": 2208,
+     "text": "Remove trash and clean kitchen garbage containers.",
+     "type": "Core",
+     "onetCode": "35-2021.00",
+     "line": 11026
+    },
+    {
+     "id": 2197,
+     "text": "Store food in designated containers and storage areas to prevent spoilage.",
+     "type": "Core",
+     "onetCode": "35-2021.00",
+     "line": 11027
+    },
+    {
+     "id": 2203,
+     "text": "Weigh or measure ingredients.",
+     "type": "Core",
+     "onetCode": "35-2021.00",
+     "line": 11028
+    },
+    {
+     "id": 18734,
+     "text": "Vacuum dining area and sweep and mop kitchen floor.",
+     "type": "Core",
+     "onetCode": "35-2021.00",
+     "line": 11029
+    },
+    {
+     "id": 18732,
+     "text": "Inform supervisors when equipment is not working properly and when food and supplies are getting low, and order needed items.",
+     "type": "Core",
+     "onetCode": "35-2021.00",
+     "line": 11030
+    },
+    {
+     "id": 18731,
+     "text": "Wash, peel, and cut various foods, such as fruits and vegetables, to prepare for cooking or serving.",
+     "type": "Core",
+     "onetCode": "35-2021.00",
+     "line": 11031
+    },
+    {
+     "id": 18729,
+     "text": "Prepare a variety of foods, such as meats, vegetables, or desserts, according to customers' orders or supervisors' instructions, following approved procedures.",
+     "type": "Core",
+     "onetCode": "35-2021.00",
+     "line": 11032
+    },
+    {
+     "id": 21005,
+     "text": "Assemble meal trays with foods in accordance with patients' diets.",
+     "type": "Core",
+     "onetCode": "35-2021.00",
+     "line": 11033
+    },
+    {
+     "id": 2207,
+     "text": "Stock cupboards and refrigerators, and tend salad bars and buffet meals.",
+     "type": "Core",
+     "onetCode": "35-2021.00",
+     "line": 11034
+    },
+    {
+     "id": 2213,
+     "text": "Use manual or electric appliances to clean, peel, slice, and trim foods.",
+     "type": "Core",
+     "onetCode": "35-2021.00",
+     "line": 11035
+    },
+    {
+     "id": 2217,
+     "text": "Load dishes, glasses, and tableware into dishwashing machines.",
+     "type": "Core",
+     "onetCode": "35-2021.00",
+     "line": 11036
+    },
+    {
+     "id": 2200,
+     "text": "Portion and wrap food, or place it directly on plates for service to patrons.",
+     "type": "Core",
+     "onetCode": "35-2021.00",
+     "line": 11037
+    },
+    {
+     "id": 2220,
+     "text": "Add cutlery, napkins, food, and other items to trays on assembly lines in hospitals, cafeterias, airline kitchens, and similar establishments.",
+     "type": "Core",
+     "onetCode": "35-2021.00",
+     "line": 11038
+    },
+    {
+     "id": 2201,
+     "text": "Place food trays over food warmers for immediate service, or store them in refrigerated storage cabinets.",
+     "type": "Core",
+     "onetCode": "35-2021.00",
+     "line": 11039
+    },
+    {
+     "id": 2209,
+     "text": "Prepare and serve a variety of beverages, such as coffee, tea, and soft drinks.",
+     "type": "Core",
+     "onetCode": "35-2021.00",
+     "line": 11040
+    },
+    {
+     "id": 2221,
+     "text": "Mix ingredients for green salads, molded fruit salads, vegetable salads, and pasta salads.",
+     "type": "Core",
+     "onetCode": "35-2021.00",
+     "line": 11041
+    },
+    {
+     "id": 2206,
+     "text": "Receive and store food supplies, equipment, and utensils in refrigerators, cupboards, and other storage areas.",
+     "type": "Core",
+     "onetCode": "35-2021.00",
+     "line": 11042
+    },
+    {
+     "id": 2214,
+     "text": "Stir and strain soups and sauces.",
+     "type": "Core",
+     "onetCode": "35-2021.00",
+     "line": 11043
+    },
+    {
+     "id": 2211,
+     "text": "Make special dressings and sauces as condiments for sandwiches.",
+     "type": "Core",
+     "onetCode": "35-2021.00",
+     "line": 11044
+    },
+    {
+     "id": 2212,
+     "text": "Scrape leftovers from dishes into garbage containers.",
+     "type": "Core",
+     "onetCode": "35-2021.00",
+     "line": 11045
+    },
+    {
+     "id": 2215,
+     "text": "Distribute food to waiters and waitresses to serve to customers.",
+     "type": "Supplemental",
+     "onetCode": "35-2021.00",
+     "line": 11046
+    },
+    {
+     "id": 18733,
+     "text": "Operate cash register, handle money, and give correct change.",
+     "type": "Supplemental",
+     "onetCode": "35-2021.00",
+     "line": 11047
+    },
+    {
+     "id": 2222,
+     "text": "Distribute menus to hospital patients, collect diet sheets, and deliver food trays and snacks to nursing units or directly to patients.",
+     "type": "Supplemental",
+     "onetCode": "35-2021.00",
+     "line": 11048
+    },
+    {
+     "id": 2199,
+     "text": "Package take-out foods or serve food to customers.",
+     "type": "Supplemental",
+     "onetCode": "35-2021.00",
+     "line": 11049
+    },
+    {
+     "id": 2219,
+     "text": "Cut, slice or grind meat, poultry, and seafood to prepare for cooking.",
+     "type": "Supplemental",
+     "onetCode": "35-2021.00",
+     "line": 11050
+    },
+    {
+     "id": 2218,
+     "text": "Butcher and clean fowl, fish, poultry, and shellfish to prepare for cooking or serving.",
+     "type": "Supplemental",
+     "onetCode": "35-2021.00",
+     "line": 11051
+    },
+    {
+     "id": 2216,
+     "text": "Keep records of the quantities of food used.",
+     "type": "Supplemental",
+     "onetCode": "35-2021.00",
+     "line": 11052
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L694",
+    "annualMedian": "oews:national_M2025_dl!AB694",
+    "annualMean": "oews:national_M2025_dl!S694",
+    "hourlyMedian": "oews:national_M2025_dl!W694",
+    "hourlyMean": "oews:national_M2025_dl!R694",
+    "annualPct10": "oews:national_M2025_dl!Z694",
+    "annualPct90": "oews:national_M2025_dl!AD694",
+    "annualOnly": "oews:national_M2025_dl!AE694",
+    "hourlyOnly": "oews:national_M2025_dl!AF694",
+    "title": "oews:national_M2025_dl!J694",
+    "ep.title": "ep:Table 1.2!A571",
+    "ep.employment2025": "ep:Table 1.2!D571",
+    "ep.employment2035": "ep:Table 1.2!E571",
+    "ep.numericChange": "ep:Table 1.2!H571",
+    "ep.percentChange": "ep:Table 1.2!I571",
+    "onetCode": "onet:Occupation Data.txt#L565:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L565:Description"
+   },
+   "nullReasons": {}
+  },
+  "35-3011": {
+   "soc": "35-3011",
+   "title": "Bartenders",
+   "major": "35-0000",
+   "minor": "35-3000",
+   "broad": "35-3010",
+   "oewsRows": [
+    697
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 756390,
+   "annualMedian": 34340,
+   "annualMean": 40790,
+   "hourlyMedian": 16.51,
+   "hourlyMean": 19.61,
+   "annualPct10": 20110,
+   "annualPct90": 73770,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Bartenders",
+    "employment2025": 762600,
+    "employment2035": 800500,
+    "numericChange": 37900,
+    "percentChange": 5
+   },
+   "onetCode": "35-3011.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Mix and serve drinks to patrons, directly or through waitstaff.",
+   "tasks": [
+    {
+     "id": 2227,
+     "text": "Clean glasses, utensils, and bar equipment.",
+     "type": "Core",
+     "onetCode": "35-3011.00",
+     "line": 11053
+    },
+    {
+     "id": 2223,
+     "text": "Collect money for drinks served.",
+     "type": "Core",
+     "onetCode": "35-3011.00",
+     "line": 11054
+    },
+    {
+     "id": 2225,
+     "text": "Balance cash receipts.",
+     "type": "Core",
+     "onetCode": "35-3011.00",
+     "line": 11055
+    },
+    {
+     "id": 2224,
+     "text": "Check identification of customers to verify age requirements for purchase of alcohol.",
+     "type": "Core",
+     "onetCode": "35-3011.00",
+     "line": 11056
+    },
+    {
+     "id": 2230,
+     "text": "Clean bars, work areas, and tables.",
+     "type": "Core",
+     "onetCode": "35-3011.00",
+     "line": 11057
+    },
+    {
+     "id": 2226,
+     "text": "Attempt to limit problems and liability related to customers' excessive drinking by taking steps such as persuading customers to stop drinking, or ordering taxis or other transportation for intoxicated patrons.",
+     "type": "Core",
+     "onetCode": "35-3011.00",
+     "line": 11058
+    },
+    {
+     "id": 2228,
+     "text": "Take beverage orders from serving staff or directly from patrons.",
+     "type": "Core",
+     "onetCode": "35-3011.00",
+     "line": 11059
+    },
+    {
+     "id": 2229,
+     "text": "Serve wine, and bottled or draft beer.",
+     "type": "Core",
+     "onetCode": "35-3011.00",
+     "line": 11060
+    },
+    {
+     "id": 2237,
+     "text": "Plan, organize, and control the operations of a cocktail lounge or bar.",
+     "type": "Core",
+     "onetCode": "35-3011.00",
+     "line": 11061
+    },
+    {
+     "id": 18735,
+     "text": "Stock bar with beer, wine, liquor, and related supplies such as ice, glassware, napkins, or straws.",
+     "type": "Core",
+     "onetCode": "35-3011.00",
+     "line": 11062
+    },
+    {
+     "id": 2232,
+     "text": "Serve snacks or food items to customers seated at the bar.",
+     "type": "Core",
+     "onetCode": "35-3011.00",
+     "line": 11063
+    },
+    {
+     "id": 2231,
+     "text": "Mix ingredients, such as liquor, soda, water, sugar, and bitters, to prepare cocktails and other drinks.",
+     "type": "Core",
+     "onetCode": "35-3011.00",
+     "line": 11064
+    },
+    {
+     "id": 2235,
+     "text": "Slice and pit fruit for garnishing drinks.",
+     "type": "Core",
+     "onetCode": "35-3011.00",
+     "line": 11065
+    },
+    {
+     "id": 2234,
+     "text": "Ask customers who become loud and obnoxious to leave, or physically remove them.",
+     "type": "Core",
+     "onetCode": "35-3011.00",
+     "line": 11066
+    },
+    {
+     "id": 2236,
+     "text": "Arrange bottles and glasses to make attractive displays.",
+     "type": "Core",
+     "onetCode": "35-3011.00",
+     "line": 11067
+    },
+    {
+     "id": 2241,
+     "text": "Create drink recipes.",
+     "type": "Core",
+     "onetCode": "35-3011.00",
+     "line": 11068
+    },
+    {
+     "id": 2238,
+     "text": "Supervise the work of bar staff and other bartenders.",
+     "type": "Supplemental",
+     "onetCode": "35-3011.00",
+     "line": 11069
+    },
+    {
+     "id": 2233,
+     "text": "Order or requisition liquors and supplies.",
+     "type": "Supplemental",
+     "onetCode": "35-3011.00",
+     "line": 11070
+    },
+    {
+     "id": 2239,
+     "text": "Plan bar menus.",
+     "type": "Supplemental",
+     "onetCode": "35-3011.00",
+     "line": 11071
+    },
+    {
+     "id": 2240,
+     "text": "Prepare appetizers such as pickles, cheese, and cold meats.",
+     "type": "Supplemental",
+     "onetCode": "35-3011.00",
+     "line": 11072
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L697",
+    "annualMedian": "oews:national_M2025_dl!AB697",
+    "annualMean": "oews:national_M2025_dl!S697",
+    "hourlyMedian": "oews:national_M2025_dl!W697",
+    "hourlyMean": "oews:national_M2025_dl!R697",
+    "annualPct10": "oews:national_M2025_dl!Z697",
+    "annualPct90": "oews:national_M2025_dl!AD697",
+    "annualOnly": "oews:national_M2025_dl!AE697",
+    "hourlyOnly": "oews:national_M2025_dl!AF697",
+    "title": "oews:national_M2025_dl!J697",
+    "ep.title": "ep:Table 1.2!A573",
+    "ep.employment2025": "ep:Table 1.2!D573",
+    "ep.employment2035": "ep:Table 1.2!E573",
+    "ep.numericChange": "ep:Table 1.2!H573",
+    "ep.percentChange": "ep:Table 1.2!I573",
+    "onetCode": "onet:Occupation Data.txt#L566:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L566:Description"
+   },
+   "nullReasons": {}
+  },
+  "35-3023": {
+   "soc": "35-3023",
+   "title": "Fast Food and Counter Workers",
+   "major": "35-0000",
+   "minor": "35-3000",
+   "broad": "35-3020",
+   "oewsRows": [
+    699
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 3854050,
+   "annualMedian": 31200,
+   "annualMean": 32150,
+   "hourlyMedian": 15,
+   "hourlyMean": 15.46,
+   "annualPct10": 22840,
+   "annualPct90": 42650,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Fast food and counter workers",
+    "employment2025": 3855900,
+    "employment2035": 4079100,
+    "numericChange": 223300,
+    "percentChange": 5.8
+   },
+   "onetCode": "35-3023.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [
+    {
+     "code": "35-3023.01",
+     "title": "Baristas",
+     "taskCount": 19
+    }
+   ],
+   "description": "Perform duties such as taking orders and serving food and beverages. Serve customers at counter or from a steam table. May take payment. May prepare food and beverages.",
+   "tasks": [
+    {
+     "id": 23100,
+     "text": "Accept payment from customers, and make change as necessary.",
+     "type": "Core",
+     "onetCode": "35-3023.00",
+     "line": 11073
+    },
+    {
+     "id": 23110,
+     "text": "Serve customers in eating places that specialize in fast service and inexpensive carry-out food.",
+     "type": "Core",
+     "onetCode": "35-3023.00",
+     "line": 11074
+    },
+    {
+     "id": 23104,
+     "text": "Request and record customer orders, and compute bills, using cash registers, multi-counting machines, or pencil and paper.",
+     "type": "Core",
+     "onetCode": "35-3023.00",
+     "line": 11075
+    },
+    {
+     "id": 23103,
+     "text": "Balance receipts and payments in cash registers.",
+     "type": "Core",
+     "onetCode": "35-3023.00",
+     "line": 11076
+    },
+    {
+     "id": 23099,
+     "text": "Communicate with customers regarding orders, comments, and complaints.",
+     "type": "Core",
+     "onetCode": "35-3023.00",
+     "line": 11077
+    },
+    {
+     "id": 23105,
+     "text": "Serve food, beverages, or desserts to customers in such settings as take-out counters of restaurants or lunchrooms, business or industrial establishments, hotel rooms, and cars.",
+     "type": "Core",
+     "onetCode": "35-3023.00",
+     "line": 11078
+    },
+    {
+     "id": 23108,
+     "text": "Monitor and order supplies or food items, and restock as necessary to maintain inventory.",
+     "type": "Core",
+     "onetCode": "35-3023.00",
+     "line": 11079
+    },
+    {
+     "id": 23102,
+     "text": "Perform cleaning duties, such as sweeping, mopping, and washing dishes, to keep equipment and facilities sanitary.",
+     "type": "Core",
+     "onetCode": "35-3023.00",
+     "line": 11080
+    },
+    {
+     "id": 23109,
+     "text": "Brew coffee and tea, and fill containers with requested beverages.",
+     "type": "Core",
+     "onetCode": "35-3023.00",
+     "line": 11081
+    },
+    {
+     "id": 23107,
+     "text": "Clean and organize eating, service, and kitchen areas.",
+     "type": "Core",
+     "onetCode": "35-3023.00",
+     "line": 11082
+    },
+    {
+     "id": 23106,
+     "text": "Prepare daily food items, and cook simple foods and beverages, such as sandwiches, salads, soups, pizza, or coffee, using proper safety precautions and sanitary measures.",
+     "type": "Core",
+     "onetCode": "35-3023.00",
+     "line": 11083
+    },
+    {
+     "id": 23115,
+     "text": "Prepare and serve cold drinks, frozen milk drinks, or desserts, using drink-dispensing, milkshake, or frozen-custard machines.",
+     "type": "Core",
+     "onetCode": "35-3023.00",
+     "line": 11084
+    },
+    {
+     "id": 23113,
+     "text": "Wrap menu items such as sandwiches, hot entrees, and desserts for serving or for takeout.",
+     "type": "Core",
+     "onetCode": "35-3023.00",
+     "line": 11085
+    },
+    {
+     "id": 23121,
+     "text": "Set up dining areas for meals, and clear them following meals.",
+     "type": "Core",
+     "onetCode": "35-3023.00",
+     "line": 11086
+    },
+    {
+     "id": 23111,
+     "text": "Collect and return dirty dishes to the kitchen for washing.",
+     "type": "Core",
+     "onetCode": "35-3023.00",
+     "line": 11087
+    },
+    {
+     "id": 23101,
+     "text": "Scrub and polish counters, steam tables, and other equipment, and clean glasses, dishes, and fountain equipment.",
+     "type": "Core",
+     "onetCode": "35-3023.00",
+     "line": 11088
+    },
+    {
+     "id": 23123,
+     "text": "Deliver orders to kitchens, and pick up and serve food when it is ready.",
+     "type": "Core",
+     "onetCode": "35-3023.00",
+     "line": 11089
+    },
+    {
+     "id": 23118,
+     "text": "Perform personnel activities, such as supervising and training employees.",
+     "type": "Supplemental",
+     "onetCode": "35-3023.00",
+     "line": 11090
+    },
+    {
+     "id": 23122,
+     "text": "Add relishes and garnishes to food orders, according to instructions.",
+     "type": "Supplemental",
+     "onetCode": "35-3023.00",
+     "line": 11091
+    },
+    {
+     "id": 23120,
+     "text": "Distribute food to servers.",
+     "type": "Supplemental",
+     "onetCode": "35-3023.00",
+     "line": 11092
+    },
+    {
+     "id": 23116,
+     "text": "Select food items from serving or storage areas and place them in dishes, on serving trays, or in take-out bags.",
+     "type": "Supplemental",
+     "onetCode": "35-3023.00",
+     "line": 11093
+    },
+    {
+     "id": 23114,
+     "text": "Notify kitchen personnel of shortages or special orders.",
+     "type": "Supplemental",
+     "onetCode": "35-3023.00",
+     "line": 11094
+    },
+    {
+     "id": 23119,
+     "text": "Take customers' orders and write ordered items on tickets, giving ticket stubs to customers when needed to identify filled orders.",
+     "type": "Supplemental",
+     "onetCode": "35-3023.00",
+     "line": 11095
+    },
+    {
+     "id": 23125,
+     "text": "Plan, prepare, and deliver meals to individuals with special dietary needs.",
+     "type": "Supplemental",
+     "onetCode": "35-3023.00",
+     "line": 11096
+    },
+    {
+     "id": 23117,
+     "text": "Replenish foods at serving stations.",
+     "type": "Supplemental",
+     "onetCode": "35-3023.00",
+     "line": 11097
+    },
+    {
+     "id": 23112,
+     "text": "Wash dishes, glassware, and silverware after meals.",
+     "type": "Supplemental",
+     "onetCode": "35-3023.00",
+     "line": 11098
+    },
+    {
+     "id": 23124,
+     "text": "Arrange tables and decorations according to instructions.",
+     "type": "Supplemental",
+     "onetCode": "35-3023.00",
+     "line": 11099
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L699",
+    "annualMedian": "oews:national_M2025_dl!AB699",
+    "annualMean": "oews:national_M2025_dl!S699",
+    "hourlyMedian": "oews:national_M2025_dl!W699",
+    "hourlyMean": "oews:national_M2025_dl!R699",
+    "annualPct10": "oews:national_M2025_dl!Z699",
+    "annualPct90": "oews:national_M2025_dl!AD699",
+    "annualOnly": "oews:national_M2025_dl!AE699",
+    "hourlyOnly": "oews:national_M2025_dl!AF699",
+    "title": "oews:national_M2025_dl!J699",
+    "ep.title": "ep:Table 1.2!A574",
+    "ep.employment2025": "ep:Table 1.2!D574",
+    "ep.employment2035": "ep:Table 1.2!E574",
+    "ep.numericChange": "ep:Table 1.2!H574",
+    "ep.percentChange": "ep:Table 1.2!I574",
+    "onetCode": "onet:Occupation Data.txt#L567:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L567:Description"
+   },
+   "nullReasons": {}
+  },
+  "35-3031": {
+   "soc": "35-3031",
+   "title": "Waiters and Waitresses",
+   "major": "35-0000",
+   "minor": "35-3000",
+   "broad": "35-3030",
+   "oewsRows": [
+    701
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 2270910,
+   "annualMedian": 35230,
+   "annualMean": 40060,
+   "hourlyMedian": 16.94,
+   "hourlyMean": 19.26,
+   "annualPct10": 18100,
+   "annualPct90": 64720,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Waiters and waitresses",
+    "employment2025": 2284400,
+    "employment2035": 2330900,
+    "numericChange": 46500,
+    "percentChange": 2
+   },
+   "onetCode": "35-3031.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Take orders and serve food and beverages to patrons at tables in dining establishment.",
+   "tasks": [
+    {
+     "id": 2276,
+     "text": "Collect payments from customers.",
+     "type": "Core",
+     "onetCode": "35-3031.00",
+     "line": 11119
+    },
+    {
+     "id": 2275,
+     "text": "Check patrons' identification to ensure that they meet minimum age requirements for consumption of alcoholic beverages.",
+     "type": "Core",
+     "onetCode": "35-3031.00",
+     "line": 11120
+    },
+    {
+     "id": 2277,
+     "text": "Write patrons' food orders on order slips, memorize orders, or enter orders into computers for transmittal to kitchen staff.",
+     "type": "Core",
+     "onetCode": "35-3031.00",
+     "line": 11121
+    },
+    {
+     "id": 2279,
+     "text": "Check with customers to ensure that they are enjoying their meals, and take action to correct any problems.",
+     "type": "Core",
+     "onetCode": "35-3031.00",
+     "line": 11122
+    },
+    {
+     "id": 2278,
+     "text": "Take orders from patrons for food or beverages.",
+     "type": "Core",
+     "onetCode": "35-3031.00",
+     "line": 11123
+    },
+    {
+     "id": 2281,
+     "text": "Prepare checks that itemize and total meal costs and sales taxes.",
+     "type": "Core",
+     "onetCode": "35-3031.00",
+     "line": 11124
+    },
+    {
+     "id": 18745,
+     "text": "Remove dishes and glasses from tables or counters, and take them to kitchen for cleaning.",
+     "type": "Core",
+     "onetCode": "35-3031.00",
+     "line": 11125
+    },
+    {
+     "id": 2285,
+     "text": "Clean tables or counters after patrons have finished dining.",
+     "type": "Core",
+     "onetCode": "35-3031.00",
+     "line": 11126
+    },
+    {
+     "id": 2280,
+     "text": "Serve food or beverages to patrons, and prepare or serve specialty dishes at tables as required.",
+     "type": "Core",
+     "onetCode": "35-3031.00",
+     "line": 11127
+    },
+    {
+     "id": 18747,
+     "text": "Perform cleaning duties, such as sweeping and mopping floors, vacuuming carpet, tidying up server station, taking out trash, or checking and cleaning bathroom.",
+     "type": "Core",
+     "onetCode": "35-3031.00",
+     "line": 11128
+    },
+    {
+     "id": 2283,
+     "text": "Present menus to patrons and answer questions about menu items, making recommendations upon request.",
+     "type": "Core",
+     "onetCode": "35-3031.00",
+     "line": 11129
+    },
+    {
+     "id": 2288,
+     "text": "Prepare tables for meals, including setting up items such as linens, silverware, and glassware.",
+     "type": "Core",
+     "onetCode": "35-3031.00",
+     "line": 11130
+    },
+    {
+     "id": 2290,
+     "text": "Stock service areas with supplies such as coffee, food, tableware, and linens.",
+     "type": "Core",
+     "onetCode": "35-3031.00",
+     "line": 11131
+    },
+    {
+     "id": 18744,
+     "text": "Roll silverware, set up food stations, or set up dining areas to prepare for the next shift or for large parties.",
+     "type": "Core",
+     "onetCode": "35-3031.00",
+     "line": 11132
+    },
+    {
+     "id": 2284,
+     "text": "Inform customers of daily specials.",
+     "type": "Core",
+     "onetCode": "35-3031.00",
+     "line": 11133
+    },
+    {
+     "id": 2287,
+     "text": "Explain how various menu items are prepared, describing ingredients and cooking methods.",
+     "type": "Core",
+     "onetCode": "35-3031.00",
+     "line": 11134
+    },
+    {
+     "id": 18746,
+     "text": "Assist host or hostess by answering phones to take reservations or to-go orders, and by greeting, seating, and thanking guests.",
+     "type": "Core",
+     "onetCode": "35-3031.00",
+     "line": 11135
+    },
+    {
+     "id": 2292,
+     "text": "Fill salt, pepper, sugar, cream, condiment, and napkin containers.",
+     "type": "Core",
+     "onetCode": "35-3031.00",
+     "line": 11136
+    },
+    {
+     "id": 2289,
+     "text": "Perform food preparation duties, such as preparing salads, appetizers, and cold dishes, portioning desserts, and brewing coffee.",
+     "type": "Core",
+     "onetCode": "35-3031.00",
+     "line": 11137
+    },
+    {
+     "id": 2286,
+     "text": "Prepare hot, cold, and mixed drinks for patrons, and chill bottles of wine.",
+     "type": "Core",
+     "onetCode": "35-3031.00",
+     "line": 11138
+    },
+    {
+     "id": 2293,
+     "text": "Escort customers to their tables.",
+     "type": "Core",
+     "onetCode": "35-3031.00",
+     "line": 11139
+    },
+    {
+     "id": 18748,
+     "text": "Provide guests with information about local areas, including directions.",
+     "type": "Core",
+     "onetCode": "35-3031.00",
+     "line": 11140
+    },
+    {
+     "id": 2291,
+     "text": "Garnish and decorate dishes in preparation for serving.",
+     "type": "Supplemental",
+     "onetCode": "35-3031.00",
+     "line": 11141
+    },
+    {
+     "id": 2295,
+     "text": "Bring wine selections to tables with appropriate glasses, and pour the wines for customers.",
+     "type": "Supplemental",
+     "onetCode": "35-3031.00",
+     "line": 11142
+    },
+    {
+     "id": 2294,
+     "text": "Describe and recommend wines to customers.",
+     "type": "Supplemental",
+     "onetCode": "35-3031.00",
+     "line": 11143
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L701",
+    "annualMedian": "oews:national_M2025_dl!AB701",
+    "annualMean": "oews:national_M2025_dl!S701",
+    "hourlyMedian": "oews:national_M2025_dl!W701",
+    "hourlyMean": "oews:national_M2025_dl!R701",
+    "annualPct10": "oews:national_M2025_dl!Z701",
+    "annualPct90": "oews:national_M2025_dl!AD701",
+    "annualOnly": "oews:national_M2025_dl!AE701",
+    "hourlyOnly": "oews:national_M2025_dl!AF701",
+    "title": "oews:national_M2025_dl!J701",
+    "ep.title": "ep:Table 1.2!A575",
+    "ep.employment2025": "ep:Table 1.2!D575",
+    "ep.employment2035": "ep:Table 1.2!E575",
+    "ep.numericChange": "ep:Table 1.2!H575",
+    "ep.percentChange": "ep:Table 1.2!I575",
+    "onetCode": "onet:Occupation Data.txt#L569:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L569:Description"
+   },
+   "nullReasons": {}
+  },
+  "35-3041": {
+   "soc": "35-3041",
+   "title": "Food Servers, Nonrestaurant",
+   "major": "35-0000",
+   "minor": "35-3000",
+   "broad": "35-3040",
+   "oewsRows": [
+    703
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 293900,
+   "annualMedian": 35360,
+   "annualMean": 36140,
+   "hourlyMedian": 17,
+   "hourlyMean": 17.37,
+   "annualPct10": 28030,
+   "annualPct90": 46120,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Food servers, nonrestaurant",
+    "employment2025": 296300,
+    "employment2035": 309600,
+    "numericChange": 13300,
+    "percentChange": 4.5
+   },
+   "onetCode": "35-3041.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Serve food to individuals outside of a restaurant environment, such as in hotel rooms, hospital rooms, residential care facilities, or cars.",
+   "tasks": [
+    {
+     "id": 11152,
+     "text": "Place food servings on plates or trays according to orders or instructions.",
+     "type": "Core",
+     "onetCode": "35-3041.00",
+     "line": 11144
+    },
+    {
+     "id": 11150,
+     "text": "Clean or sterilize dishes, kitchen utensils, equipment, or facilities.",
+     "type": "Core",
+     "onetCode": "35-3041.00",
+     "line": 11145
+    },
+    {
+     "id": 11149,
+     "text": "Monitor food distribution, ensuring that meals are delivered to the correct recipients and that guidelines, such as those for special diets, are followed.",
+     "type": "Core",
+     "onetCode": "35-3041.00",
+     "line": 11146
+    },
+    {
+     "id": 11151,
+     "text": "Examine trays to ensure that they contain required items.",
+     "type": "Core",
+     "onetCode": "35-3041.00",
+     "line": 11147
+    },
+    {
+     "id": 11153,
+     "text": "Load trays with accessories, such as eating utensils, napkins, or condiments.",
+     "type": "Core",
+     "onetCode": "35-3041.00",
+     "line": 11148
+    },
+    {
+     "id": 11154,
+     "text": "Take food orders and relay orders to kitchens or serving counters so they can be filled.",
+     "type": "Core",
+     "onetCode": "35-3041.00",
+     "line": 11149
+    },
+    {
+     "id": 11158,
+     "text": "Monitor food preparation or serving techniques to ensure that proper procedures are followed.",
+     "type": "Core",
+     "onetCode": "35-3041.00",
+     "line": 11150
+    },
+    {
+     "id": 11156,
+     "text": "Remove trays and stack dishes for return to kitchen after meals are finished.",
+     "type": "Core",
+     "onetCode": "35-3041.00",
+     "line": 11151
+    },
+    {
+     "id": 11159,
+     "text": "Carry food, silverware, or linen on trays or use carts to carry trays.",
+     "type": "Core",
+     "onetCode": "35-3041.00",
+     "line": 11152
+    },
+    {
+     "id": 11161,
+     "text": "Record amounts and types of special food items served to customers.",
+     "type": "Core",
+     "onetCode": "35-3041.00",
+     "line": 11153
+    },
+    {
+     "id": 11155,
+     "text": "Stock service stations with items, such as ice, napkins, or straws.",
+     "type": "Core",
+     "onetCode": "35-3041.00",
+     "line": 11154
+    },
+    {
+     "id": 11157,
+     "text": "Prepare food items, such as sandwiches, salads, soups, or beverages.",
+     "type": "Core",
+     "onetCode": "35-3041.00",
+     "line": 11155
+    },
+    {
+     "id": 11160,
+     "text": "Determine where patients or patrons would like to eat their meals and help them get situated.",
+     "type": "Core",
+     "onetCode": "35-3041.00",
+     "line": 11156
+    },
+    {
+     "id": 11162,
+     "text": "Total checks, present them to customers, and accept payment for services.",
+     "type": "Supplemental",
+     "onetCode": "35-3041.00",
+     "line": 11157
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L703",
+    "annualMedian": "oews:national_M2025_dl!AB703",
+    "annualMean": "oews:national_M2025_dl!S703",
+    "hourlyMedian": "oews:national_M2025_dl!W703",
+    "hourlyMean": "oews:national_M2025_dl!R703",
+    "annualPct10": "oews:national_M2025_dl!Z703",
+    "annualPct90": "oews:national_M2025_dl!AD703",
+    "annualOnly": "oews:national_M2025_dl!AE703",
+    "hourlyOnly": "oews:national_M2025_dl!AF703",
+    "title": "oews:national_M2025_dl!J703",
+    "ep.title": "ep:Table 1.2!A576",
+    "ep.employment2025": "ep:Table 1.2!D576",
+    "ep.employment2035": "ep:Table 1.2!E576",
+    "ep.numericChange": "ep:Table 1.2!H576",
+    "ep.percentChange": "ep:Table 1.2!I576",
+    "onetCode": "onet:Occupation Data.txt#L570:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L570:Description"
+   },
+   "nullReasons": {}
+  },
+  "35-9011": {
+   "soc": "35-9011",
+   "title": "Dining Room and Cafeteria Attendants and Bartender Helpers",
+   "major": "35-0000",
+   "minor": "35-9000",
+   "broad": "35-9010",
+   "oewsRows": [
+    706
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 542750,
+   "annualMedian": 33980,
+   "annualMean": 34230,
+   "hourlyMedian": 16.34,
+   "hourlyMean": 16.46,
+   "annualPct10": 21300,
+   "annualPct90": 46570,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Dining room and cafeteria attendants and bartender helpers",
+    "employment2025": 546600,
+    "employment2035": 575500,
+    "numericChange": 28900,
+    "percentChange": 5.3
+   },
+   "onetCode": "35-9011.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Facilitate food service. Clean tables; remove dirty dishes; replace soiled table linens; set tables; replenish supply of clean linens, silverware, glassware, and dishes; supply service bar with food; and serve items such as water, condiments, and coffee to patrons.",
+   "tasks": [
+    {
+     "id": 11178,
+     "text": "Run cash registers.",
+     "type": "Core",
+     "onetCode": "35-9011.00",
+     "line": 11158
+    },
+    {
+     "id": 11169,
+     "text": "Serve ice water, coffee, rolls, or butter to patrons.",
+     "type": "Core",
+     "onetCode": "35-9011.00",
+     "line": 11159
+    },
+    {
+     "id": 11165,
+     "text": "Scrape and stack dirty dishes and carry dishes and other tableware to kitchens for cleaning.",
+     "type": "Core",
+     "onetCode": "35-9011.00",
+     "line": 11160
+    },
+    {
+     "id": 11163,
+     "text": "Wipe tables or seats with dampened cloths or replace dirty tablecloths.",
+     "type": "Core",
+     "onetCode": "35-9011.00",
+     "line": 11161
+    },
+    {
+     "id": 11164,
+     "text": "Set tables with clean linens, condiments, or other supplies.",
+     "type": "Core",
+     "onetCode": "35-9011.00",
+     "line": 11162
+    },
+    {
+     "id": 23929,
+     "text": "Greet and seat customers.",
+     "type": "Core",
+     "onetCode": "35-9011.00",
+     "line": 11163
+    },
+    {
+     "id": 11166,
+     "text": "Clean up spilled food or drink or broken dishes and remove empty bottles and trash.",
+     "type": "Core",
+     "onetCode": "35-9011.00",
+     "line": 11164
+    },
+    {
+     "id": 11168,
+     "text": "Maintain adequate supplies of items, such as clean linens, silverware, glassware, dishes, or trays.",
+     "type": "Core",
+     "onetCode": "35-9011.00",
+     "line": 11165
+    },
+    {
+     "id": 11172,
+     "text": "Locate items requested by customers.",
+     "type": "Core",
+     "onetCode": "35-9011.00",
+     "line": 11166
+    },
+    {
+     "id": 11170,
+     "text": "Fill beverage or ice dispensers.",
+     "type": "Core",
+     "onetCode": "35-9011.00",
+     "line": 11167
+    },
+    {
+     "id": 11173,
+     "text": "Carry food, dishes, trays, or silverware from kitchens or supply departments to serving counters.",
+     "type": "Core",
+     "onetCode": "35-9011.00",
+     "line": 11168
+    },
+    {
+     "id": 11167,
+     "text": "Perform serving, cleaning, or stocking duties in establishments, such as cafeterias or dining rooms, to facilitate customer service.",
+     "type": "Core",
+     "onetCode": "35-9011.00",
+     "line": 11169
+    },
+    {
+     "id": 11176,
+     "text": "Carry trays from food counters to tables for cafeteria patrons.",
+     "type": "Core",
+     "onetCode": "35-9011.00",
+     "line": 11170
+    },
+    {
+     "id": 11171,
+     "text": "Stock cabinets or serving areas with condiments and refill condiment containers.",
+     "type": "Core",
+     "onetCode": "35-9011.00",
+     "line": 11171
+    },
+    {
+     "id": 11174,
+     "text": "Serve food to customers when waiters or waitresses need assistance.",
+     "type": "Core",
+     "onetCode": "35-9011.00",
+     "line": 11172
+    },
+    {
+     "id": 11175,
+     "text": "Clean and polish counters, shelves, walls, furniture, or equipment in food service areas or other areas of restaurants and mop or vacuum floors.",
+     "type": "Core",
+     "onetCode": "35-9011.00",
+     "line": 11173
+    },
+    {
+     "id": 11177,
+     "text": "Replenish supplies of food or equipment at steam tables or service bars.",
+     "type": "Supplemental",
+     "onetCode": "35-9011.00",
+     "line": 11174
+    },
+    {
+     "id": 11179,
+     "text": "Wash glasses or other serving equipment at bars.",
+     "type": "Supplemental",
+     "onetCode": "35-9011.00",
+     "line": 11175
+    },
+    {
+     "id": 11181,
+     "text": "Carry linens to or from laundry areas.",
+     "type": "Supplemental",
+     "onetCode": "35-9011.00",
+     "line": 11176
+    },
+    {
+     "id": 11180,
+     "text": "Garnish foods and position them on tables to make them visible and accessible.",
+     "type": "Supplemental",
+     "onetCode": "35-9011.00",
+     "line": 11177
+    },
+    {
+     "id": 11183,
+     "text": "Mix and prepare flavors for mixed drinks.",
+     "type": "Supplemental",
+     "onetCode": "35-9011.00",
+     "line": 11178
+    },
+    {
+     "id": 11184,
+     "text": "Slice and pit fruit used to garnish drinks.",
+     "type": "Supplemental",
+     "onetCode": "35-9011.00",
+     "line": 11179
+    },
+    {
+     "id": 11182,
+     "text": "Stock refrigerating units with wines or bottled beer or replace empty beer kegs.",
+     "type": "Supplemental",
+     "onetCode": "35-9011.00",
+     "line": 11180
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L706",
+    "annualMedian": "oews:national_M2025_dl!AB706",
+    "annualMean": "oews:national_M2025_dl!S706",
+    "hourlyMedian": "oews:national_M2025_dl!W706",
+    "hourlyMean": "oews:national_M2025_dl!R706",
+    "annualPct10": "oews:national_M2025_dl!Z706",
+    "annualPct90": "oews:national_M2025_dl!AD706",
+    "annualOnly": "oews:national_M2025_dl!AE706",
+    "hourlyOnly": "oews:national_M2025_dl!AF706",
+    "title": "oews:national_M2025_dl!J706",
+    "ep.title": "ep:Table 1.2!A578",
+    "ep.employment2025": "ep:Table 1.2!D578",
+    "ep.employment2035": "ep:Table 1.2!E578",
+    "ep.numericChange": "ep:Table 1.2!H578",
+    "ep.percentChange": "ep:Table 1.2!I578",
+    "onetCode": "onet:Occupation Data.txt#L571:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L571:Description"
+   },
+   "nullReasons": {}
+  },
+  "35-9021": {
+   "soc": "35-9021",
+   "title": "Dishwashers",
+   "major": "35-0000",
+   "minor": "35-9000",
+   "broad": "35-9020",
+   "oewsRows": [
+    708
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 477450,
+   "annualMedian": 34810,
+   "annualMean": 34310,
+   "hourlyMedian": 16.73,
+   "hourlyMean": 16.49,
+   "annualPct10": 26200,
+   "annualPct90": 42860,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Dishwashers",
+    "employment2025": 480400,
+    "employment2035": 475600,
+    "numericChange": -4800,
+    "percentChange": -1
+   },
+   "onetCode": "35-9021.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Clean dishes, kitchen, food preparation equipment, or utensils.",
+   "tasks": [
+    {
+     "id": 11186,
+     "text": "Wash dishes, glassware, flatware, pots, or pans, using dishwashers or by hand.",
+     "type": "Core",
+     "onetCode": "35-9021.00",
+     "line": 11181
+    },
+    {
+     "id": 11188,
+     "text": "Maintain kitchen work areas, equipment, or utensils in clean and orderly condition.",
+     "type": "Core",
+     "onetCode": "35-9021.00",
+     "line": 11182
+    },
+    {
+     "id": 11187,
+     "text": "Place clean dishes, utensils, or cooking equipment in storage areas.",
+     "type": "Core",
+     "onetCode": "35-9021.00",
+     "line": 11183
+    },
+    {
+     "id": 11190,
+     "text": "Sweep or scrub floors.",
+     "type": "Core",
+     "onetCode": "35-9021.00",
+     "line": 11184
+    },
+    {
+     "id": 11189,
+     "text": "Stock supplies, such as food or utensils, in serving stations, cupboards, refrigerators, or salad bars.",
+     "type": "Core",
+     "onetCode": "35-9021.00",
+     "line": 11185
+    },
+    {
+     "id": 11193,
+     "text": "Clean or prepare various foods for cooking or serving.",
+     "type": "Core",
+     "onetCode": "35-9021.00",
+     "line": 11186
+    },
+    {
+     "id": 11192,
+     "text": "Sort and remove trash, placing it in designated pickup areas.",
+     "type": "Core",
+     "onetCode": "35-9021.00",
+     "line": 11187
+    },
+    {
+     "id": 11195,
+     "text": "Transfer supplies or equipment between storage and work areas, by hand or using hand trucks.",
+     "type": "Core",
+     "onetCode": "35-9021.00",
+     "line": 11188
+    },
+    {
+     "id": 11196,
+     "text": "Receive and store supplies.",
+     "type": "Core",
+     "onetCode": "35-9021.00",
+     "line": 11189
+    },
+    {
+     "id": 11191,
+     "text": "Clean garbage cans with water or steam.",
+     "type": "Core",
+     "onetCode": "35-9021.00",
+     "line": 11190
+    },
+    {
+     "id": 11198,
+     "text": "Load or unload trucks that deliver or pick up food or supplies.",
+     "type": "Supplemental",
+     "onetCode": "35-9021.00",
+     "line": 11191
+    },
+    {
+     "id": 11197,
+     "text": "Prepare and package individual place settings.",
+     "type": "Supplemental",
+     "onetCode": "35-9021.00",
+     "line": 11192
+    },
+    {
+     "id": 11194,
+     "text": "Set up banquet tables.",
+     "type": "Supplemental",
+     "onetCode": "35-9021.00",
+     "line": 11193
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L708",
+    "annualMedian": "oews:national_M2025_dl!AB708",
+    "annualMean": "oews:national_M2025_dl!S708",
+    "hourlyMedian": "oews:national_M2025_dl!W708",
+    "hourlyMean": "oews:national_M2025_dl!R708",
+    "annualPct10": "oews:national_M2025_dl!Z708",
+    "annualPct90": "oews:national_M2025_dl!AD708",
+    "annualOnly": "oews:national_M2025_dl!AE708",
+    "hourlyOnly": "oews:national_M2025_dl!AF708",
+    "title": "oews:national_M2025_dl!J708",
+    "ep.title": "ep:Table 1.2!A579",
+    "ep.employment2025": "ep:Table 1.2!D579",
+    "ep.employment2035": "ep:Table 1.2!E579",
+    "ep.numericChange": "ep:Table 1.2!H579",
+    "ep.percentChange": "ep:Table 1.2!I579",
+    "onetCode": "onet:Occupation Data.txt#L572:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L572:Description"
+   },
+   "nullReasons": {}
+  },
+  "35-9031": {
+   "soc": "35-9031",
+   "title": "Hosts and Hostesses, Restaurant, Lounge, and Coffee Shop",
+   "major": "35-0000",
+   "minor": "35-9000",
+   "broad": "35-9030",
+   "oewsRows": [
+    710
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 432690,
+   "annualMedian": 31200,
+   "annualMean": 32690,
+   "hourlyMedian": 15,
+   "hourlyMean": 15.72,
+   "annualPct10": 22340,
+   "annualPct90": 43990,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Hosts and hostesses, restaurant, lounge, and coffee shop",
+    "employment2025": 444200,
+    "employment2035": 459500,
+    "numericChange": 15300,
+    "percentChange": 3.4
+   },
+   "onetCode": "35-9031.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Welcome patrons, seat them at tables or in lounge, and help ensure quality of facilities and service.",
+   "tasks": [
+    {
+     "id": 2296,
+     "text": "Provide guests with menus.",
+     "type": "Core",
+     "onetCode": "35-9031.00",
+     "line": 11194
+    },
+    {
+     "id": 2297,
+     "text": "Greet guests and seat them at tables or in waiting areas.",
+     "type": "Core",
+     "onetCode": "35-9031.00",
+     "line": 11195
+    },
+    {
+     "id": 2302,
+     "text": "Maintain contact with kitchen staff, management, serving staff, and customers to ensure that dining details are handled properly and customers' concerns are addressed.",
+     "type": "Core",
+     "onetCode": "35-9031.00",
+     "line": 11196
+    },
+    {
+     "id": 18749,
+     "text": "Assign patrons to tables suitable for their needs and according to rotation so that servers receive an appropriate number of seatings.",
+     "type": "Core",
+     "onetCode": "35-9031.00",
+     "line": 11197
+    },
+    {
+     "id": 18750,
+     "text": "Speak with patrons to ensure satisfaction with food and service, to respond to complaints, or to make conversation.",
+     "type": "Core",
+     "onetCode": "35-9031.00",
+     "line": 11198
+    },
+    {
+     "id": 18752,
+     "text": "Inspect dining and serving areas to ensure cleanliness and proper setup.",
+     "type": "Core",
+     "onetCode": "35-9031.00",
+     "line": 11199
+    },
+    {
+     "id": 2307,
+     "text": "Supervise and coordinate activities of dining room staff to ensure that patrons receive prompt and courteous service.",
+     "type": "Core",
+     "onetCode": "35-9031.00",
+     "line": 11200
+    },
+    {
+     "id": 18751,
+     "text": "Answer telephone calls and respond to inquiries or transfer calls.",
+     "type": "Core",
+     "onetCode": "35-9031.00",
+     "line": 11201
+    },
+    {
+     "id": 21070,
+     "text": "Assist other restaurant workers by serving food and beverages, or by bussing tables.",
+     "type": "Core",
+     "onetCode": "35-9031.00",
+     "line": 11202
+    },
+    {
+     "id": 18753,
+     "text": "Inspect restrooms for cleanliness and availability of supplies, and clean restrooms when necessary.",
+     "type": "Core",
+     "onetCode": "35-9031.00",
+     "line": 11203
+    },
+    {
+     "id": 18754,
+     "text": "Take and prepare to-go orders.",
+     "type": "Core",
+     "onetCode": "35-9031.00",
+     "line": 11204
+    },
+    {
+     "id": 2303,
+     "text": "Inform patrons of establishment specialties and features.",
+     "type": "Core",
+     "onetCode": "35-9031.00",
+     "line": 11205
+    },
+    {
+     "id": 2301,
+     "text": "Receive and record patrons' dining reservations.",
+     "type": "Core",
+     "onetCode": "35-9031.00",
+     "line": 11206
+    },
+    {
+     "id": 2305,
+     "text": "Operate cash registers to accept payments for food and beverages.",
+     "type": "Supplemental",
+     "onetCode": "35-9031.00",
+     "line": 11207
+    },
+    {
+     "id": 2304,
+     "text": "Direct patrons to coatrooms and waiting areas, such as lounges.",
+     "type": "Supplemental",
+     "onetCode": "35-9031.00",
+     "line": 11208
+    },
+    {
+     "id": 2306,
+     "text": "Prepare cash receipts after establishments close, and make bank deposits.",
+     "type": "Supplemental",
+     "onetCode": "35-9031.00",
+     "line": 11209
+    },
+    {
+     "id": 2309,
+     "text": "Order or requisition supplies and equipment for tables and serving stations.",
+     "type": "Supplemental",
+     "onetCode": "35-9031.00",
+     "line": 11210
+    },
+    {
+     "id": 2310,
+     "text": "Hire, train, and supervise food and beverage service staff.",
+     "type": "Supplemental",
+     "onetCode": "35-9031.00",
+     "line": 11211
+    },
+    {
+     "id": 2312,
+     "text": "Confer with other staff to help plan establishments' menus.",
+     "type": "Supplemental",
+     "onetCode": "35-9031.00",
+     "line": 11212
+    },
+    {
+     "id": 2313,
+     "text": "Perform marketing and advertising services.",
+     "type": "Supplemental",
+     "onetCode": "35-9031.00",
+     "line": 11213
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L710",
+    "annualMedian": "oews:national_M2025_dl!AB710",
+    "annualMean": "oews:national_M2025_dl!S710",
+    "hourlyMedian": "oews:national_M2025_dl!W710",
+    "hourlyMean": "oews:national_M2025_dl!R710",
+    "annualPct10": "oews:national_M2025_dl!Z710",
+    "annualPct90": "oews:national_M2025_dl!AD710",
+    "annualOnly": "oews:national_M2025_dl!AE710",
+    "hourlyOnly": "oews:national_M2025_dl!AF710",
+    "title": "oews:national_M2025_dl!J710",
+    "ep.title": "ep:Table 1.2!A580",
+    "ep.employment2025": "ep:Table 1.2!D580",
+    "ep.employment2035": "ep:Table 1.2!E580",
+    "ep.numericChange": "ep:Table 1.2!H580",
+    "ep.percentChange": "ep:Table 1.2!I580",
+    "onetCode": "onet:Occupation Data.txt#L573:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L573:Description"
+   },
+   "nullReasons": {}
+  },
+  "35-9099": {
+   "soc": "35-9099",
+   "title": "Food Preparation and Serving Related Workers, All Other",
+   "major": "35-0000",
+   "minor": "35-9000",
+   "broad": "35-9090",
+   "oewsRows": [
+    712
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 84630,
+   "annualMedian": 35840,
+   "annualMean": 36810,
+   "hourlyMedian": 17.23,
+   "hourlyMean": 17.7,
+   "annualPct10": 25470,
+   "annualPct90": 47550,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Food preparation and serving related workers, all other",
+    "employment2025": 85100,
+    "employment2035": 89700,
+    "numericChange": 4700,
+    "percentChange": 5.5
+   },
+   "onetCode": "35-9099.00",
+   "onetTaskSource": "none",
+   "onetSubCodes": [],
+   "description": "All food preparation and serving related workers not listed separately.",
+   "tasks": [],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L712",
+    "annualMedian": "oews:national_M2025_dl!AB712",
+    "annualMean": "oews:national_M2025_dl!S712",
+    "hourlyMedian": "oews:national_M2025_dl!W712",
+    "hourlyMean": "oews:national_M2025_dl!R712",
+    "annualPct10": "oews:national_M2025_dl!Z712",
+    "annualPct90": "oews:national_M2025_dl!AD712",
+    "annualOnly": "oews:national_M2025_dl!AE712",
+    "hourlyOnly": "oews:national_M2025_dl!AF712",
+    "title": "oews:national_M2025_dl!J712",
+    "ep.title": "ep:Table 1.2!A581",
+    "ep.employment2025": "ep:Table 1.2!D581",
+    "ep.employment2035": "ep:Table 1.2!E581",
+    "ep.numericChange": "ep:Table 1.2!H581",
+    "ep.percentChange": "ep:Table 1.2!I581",
+    "onetCode": "onet:Occupation Data.txt#L574:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L574:Description"
+   },
+   "nullReasons": {
+    "tasks": "O*NET 30.1 has no task statements for 35-9099.00"
+   }
+  }
+ }
+}

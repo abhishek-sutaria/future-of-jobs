@@ -1,0 +1,1379 @@
+{
+ "_meta": {
+  "continent": "23-0000",
+  "title": "Legal Occupations",
+  "sources": "see index.json _meta.sources; source refs are <source>:<sheet>!<cell> or <source>:<file>#L<line>:<column>",
+  "extracted": "2026-10-24",
+  "generator": "python3 scripts/build_occupations.py"
+ },
+ "broadGroups": [
+  {
+   "soc": "23-1010",
+   "title": "Lawyers and Judicial Law Clerks",
+   "minor": "23-1000",
+   "employment": 767800,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L336",
+    "title": "oews:national_M2025_dl!J336"
+   }
+  },
+  {
+   "soc": "23-1020",
+   "title": "Judges, Magistrates, and Other Judicial Workers",
+   "minor": "23-1000",
+   "employment": 49610,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L339",
+    "title": "oews:national_M2025_dl!J339"
+   }
+  },
+  {
+   "soc": "23-2010",
+   "title": "Paralegals and Legal Assistants",
+   "minor": "23-2000",
+   "employment": 392880,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L344",
+    "title": "oews:national_M2025_dl!J344"
+   }
+  },
+  {
+   "soc": "23-2090",
+   "title": "Miscellaneous Legal Support Workers",
+   "minor": "23-2000",
+   "employment": 95340,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L346",
+    "title": "oews:national_M2025_dl!J346"
+   }
+  }
+ ],
+ "occupations": {
+  "23-1011": {
+   "soc": "23-1011",
+   "title": "Lawyers",
+   "major": "23-0000",
+   "minor": "23-1000",
+   "broad": "23-1010",
+   "oewsRows": [
+    337
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 754500,
+   "annualMedian": 159670,
+   "annualMean": 185840,
+   "hourlyMedian": 76.76,
+   "hourlyMean": 89.35,
+   "annualPct10": 78360,
+   "annualPct90": 351600,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Lawyers",
+    "employment2025": 863700,
+    "employment2035": 904300,
+    "numericChange": 40600,
+    "percentChange": 4.7
+   },
+   "onetCode": "23-1011.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Represent clients in criminal and civil litigation and other legal proceedings, draw up legal documents, or manage or advise clients on legal transactions. May specialize in a single area or may practice broadly in many areas of law.",
+   "tasks": [
+    {
+     "id": 3774,
+     "text": "Interpret laws, rulings and regulations for individuals and businesses.",
+     "type": "Core",
+     "onetCode": "23-1011.00",
+     "line": 5744
+    },
+    {
+     "id": 3775,
+     "text": "Analyze the probable outcomes of cases, using knowledge of legal precedents.",
+     "type": "Core",
+     "onetCode": "23-1011.00",
+     "line": 5745
+    },
+    {
+     "id": 3778,
+     "text": "Gather evidence to formulate defense or to initiate legal actions by such means as interviewing clients and witnesses to ascertain the facts of a case.",
+     "type": "Core",
+     "onetCode": "23-1011.00",
+     "line": 5746
+    },
+    {
+     "id": 3779,
+     "text": "Represent clients in court or before government agencies.",
+     "type": "Core",
+     "onetCode": "23-1011.00",
+     "line": 5747
+    },
+    {
+     "id": 3777,
+     "text": "Evaluate findings and develop strategies and arguments in preparation for presentation of cases.",
+     "type": "Core",
+     "onetCode": "23-1011.00",
+     "line": 5748
+    },
+    {
+     "id": 3773,
+     "text": "Advise clients concerning business transactions, claim liability, advisability of prosecuting or defending lawsuits, or legal rights and obligations.",
+     "type": "Core",
+     "onetCode": "23-1011.00",
+     "line": 5749
+    },
+    {
+     "id": 3780,
+     "text": "Examine legal data to determine advisability of defending or prosecuting lawsuit.",
+     "type": "Core",
+     "onetCode": "23-1011.00",
+     "line": 5750
+    },
+    {
+     "id": 20877,
+     "text": "Prepare, draft, and review legal documents, such as wills, deeds, patent applications, mortgages, leases, and contracts.",
+     "type": "Core",
+     "onetCode": "23-1011.00",
+     "line": 5751
+    },
+    {
+     "id": 3783,
+     "text": "Study Constitution, statutes, decisions, regulations, and ordinances of quasi-judicial bodies to determine ramifications for cases.",
+     "type": "Core",
+     "onetCode": "23-1011.00",
+     "line": 5752
+    },
+    {
+     "id": 3786,
+     "text": "Negotiate settlements of civil disputes.",
+     "type": "Core",
+     "onetCode": "23-1011.00",
+     "line": 5753
+    },
+    {
+     "id": 3789,
+     "text": "Supervise legal assistants.",
+     "type": "Core",
+     "onetCode": "23-1011.00",
+     "line": 5754
+    },
+    {
+     "id": 23992,
+     "text": "Negotiate contractual agreements.",
+     "type": "Core",
+     "onetCode": "23-1011.00",
+     "line": 5755
+    },
+    {
+     "id": 3787,
+     "text": "Confer with colleagues with specialties in appropriate areas of legal issue to establish and verify bases for legal proceedings.",
+     "type": "Core",
+     "onetCode": "23-1011.00",
+     "line": 5756
+    },
+    {
+     "id": 3788,
+     "text": "Search for and examine public and other legal records to write opinions or establish ownership.",
+     "type": "Core",
+     "onetCode": "23-1011.00",
+     "line": 5757
+    },
+    {
+     "id": 3790,
+     "text": "Perform administrative and management functions related to the practice of law.",
+     "type": "Core",
+     "onetCode": "23-1011.00",
+     "line": 5758
+    },
+    {
+     "id": 3776,
+     "text": "Present and summarize cases to judges and juries.",
+     "type": "Supplemental",
+     "onetCode": "23-1011.00",
+     "line": 5759
+    },
+    {
+     "id": 3781,
+     "text": "Select jurors, argue motions, meet with judges, and question witnesses during the course of a trial.",
+     "type": "Supplemental",
+     "onetCode": "23-1011.00",
+     "line": 5760
+    },
+    {
+     "id": 3782,
+     "text": "Present evidence to defend clients or prosecute defendants in criminal or civil litigation.",
+     "type": "Supplemental",
+     "onetCode": "23-1011.00",
+     "line": 5761
+    },
+    {
+     "id": 3792,
+     "text": "Probate wills and represent and advise executors and administrators of estates.",
+     "type": "Supplemental",
+     "onetCode": "23-1011.00",
+     "line": 5762
+    },
+    {
+     "id": 3785,
+     "text": "Prepare legal briefs and opinions, and file appeals in state and federal courts of appeal.",
+     "type": "Supplemental",
+     "onetCode": "23-1011.00",
+     "line": 5763
+    },
+    {
+     "id": 3791,
+     "text": "Act as agent, trustee, guardian, or executor for businesses or individuals.",
+     "type": "Supplemental",
+     "onetCode": "23-1011.00",
+     "line": 5764
+    },
+    {
+     "id": 3793,
+     "text": "Help develop federal and state programs, draft and interpret laws and legislation, and establish enforcement procedures.",
+     "type": "Supplemental",
+     "onetCode": "23-1011.00",
+     "line": 5765
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L337",
+    "annualMedian": "oews:national_M2025_dl!AB337",
+    "annualMean": "oews:national_M2025_dl!S337",
+    "hourlyMedian": "oews:national_M2025_dl!W337",
+    "hourlyMean": "oews:national_M2025_dl!R337",
+    "annualPct10": "oews:national_M2025_dl!Z337",
+    "annualPct90": "oews:national_M2025_dl!AD337",
+    "annualOnly": "oews:national_M2025_dl!AE337",
+    "hourlyOnly": "oews:national_M2025_dl!AF337",
+    "title": "oews:national_M2025_dl!J337",
+    "ep.title": "ep:Table 1.2!A259",
+    "ep.employment2025": "ep:Table 1.2!D259",
+    "ep.employment2035": "ep:Table 1.2!E259",
+    "ep.numericChange": "ep:Table 1.2!H259",
+    "ep.percentChange": "ep:Table 1.2!I259",
+    "onetCode": "onet:Occupation Data.txt#L292:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L292:Description"
+   },
+   "nullReasons": {}
+  },
+  "23-1012": {
+   "soc": "23-1012",
+   "title": "Judicial Law Clerks",
+   "major": "23-0000",
+   "minor": "23-1000",
+   "broad": "23-1010",
+   "oewsRows": [
+    338
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 13290,
+   "annualMedian": 64920,
+   "annualMean": 72950,
+   "hourlyMedian": 31.21,
+   "hourlyMean": 35.07,
+   "annualPct10": 46180,
+   "annualPct90": 113140,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Judicial law clerks",
+    "employment2025": 14000,
+    "employment2035": 14400,
+    "numericChange": 400,
+    "percentChange": 2.8
+   },
+   "onetCode": "23-1012.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Assist judges in court or by conducting research or preparing legal documents.",
+   "tasks": [
+    {
+     "id": 19050,
+     "text": "Prepare briefs, legal memoranda, or statements of issues involved in cases, including appropriate suggestions or recommendations.",
+     "type": "Core",
+     "onetCode": "23-1012.00",
+     "line": 5766
+    },
+    {
+     "id": 19051,
+     "text": "Research laws, court decisions, documents, opinions, briefs, or other information related to cases before the court.",
+     "type": "Core",
+     "onetCode": "23-1012.00",
+     "line": 5767
+    },
+    {
+     "id": 19047,
+     "text": "Draft or proofread judicial opinions, decisions, or citations.",
+     "type": "Core",
+     "onetCode": "23-1012.00",
+     "line": 5768
+    },
+    {
+     "id": 19046,
+     "text": "Confer with judges concerning legal questions, construction of documents, or granting of orders.",
+     "type": "Core",
+     "onetCode": "23-1012.00",
+     "line": 5769
+    },
+    {
+     "id": 19052,
+     "text": "Review complaints, petitions, motions, or pleadings that have been filed to determine issues involved or basis for relief.",
+     "type": "Core",
+     "onetCode": "23-1012.00",
+     "line": 5770
+    },
+    {
+     "id": 19048,
+     "text": "Keep abreast of changes in the law and inform judges when cases are affected by such changes.",
+     "type": "Core",
+     "onetCode": "23-1012.00",
+     "line": 5771
+    },
+    {
+     "id": 19044,
+     "text": "Attend court sessions to hear oral arguments or record necessary case information.",
+     "type": "Core",
+     "onetCode": "23-1012.00",
+     "line": 5772
+    },
+    {
+     "id": 19053,
+     "text": "Review dockets of pending litigation to ensure adequate progress.",
+     "type": "Core",
+     "onetCode": "23-1012.00",
+     "line": 5773
+    },
+    {
+     "id": 19045,
+     "text": "Communicate with counsel regarding case management or procedural requirements.",
+     "type": "Core",
+     "onetCode": "23-1012.00",
+     "line": 5774
+    },
+    {
+     "id": 19061,
+     "text": "Respond to questions from judicial officers or court staff on general legal issues.",
+     "type": "Core",
+     "onetCode": "23-1012.00",
+     "line": 5775
+    },
+    {
+     "id": 19057,
+     "text": "Enter information into computerized court calendar, filing, or case management systems.",
+     "type": "Supplemental",
+     "onetCode": "23-1012.00",
+     "line": 5776
+    },
+    {
+     "id": 19054,
+     "text": "Verify that all files, complaints, or other papers are available and in the proper order.",
+     "type": "Supplemental",
+     "onetCode": "23-1012.00",
+     "line": 5777
+    },
+    {
+     "id": 19056,
+     "text": "Coordinate judges' meeting and appointment schedules.",
+     "type": "Supplemental",
+     "onetCode": "23-1012.00",
+     "line": 5778
+    },
+    {
+     "id": 19049,
+     "text": "Participate in conferences or discussions between trial attorneys and judges.",
+     "type": "Supplemental",
+     "onetCode": "23-1012.00",
+     "line": 5779
+    },
+    {
+     "id": 19060,
+     "text": "Prepare periodic reports on court proceedings, as required.",
+     "type": "Supplemental",
+     "onetCode": "23-1012.00",
+     "line": 5780
+    },
+    {
+     "id": 19062,
+     "text": "Supervise law students, volunteers, or other personnel assigned to the court.",
+     "type": "Supplemental",
+     "onetCode": "23-1012.00",
+     "line": 5781
+    },
+    {
+     "id": 19058,
+     "text": "Maintain judges' law libraries by assembling or updating appropriate documents.",
+     "type": "Supplemental",
+     "onetCode": "23-1012.00",
+     "line": 5782
+    },
+    {
+     "id": 19059,
+     "text": "Perform courtroom duties, including calling calendars, administering oaths, and swearing in jury panels and witnesses.",
+     "type": "Supplemental",
+     "onetCode": "23-1012.00",
+     "line": 5783
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L338",
+    "annualMedian": "oews:national_M2025_dl!AB338",
+    "annualMean": "oews:national_M2025_dl!S338",
+    "hourlyMedian": "oews:national_M2025_dl!W338",
+    "hourlyMean": "oews:national_M2025_dl!R338",
+    "annualPct10": "oews:national_M2025_dl!Z338",
+    "annualPct90": "oews:national_M2025_dl!AD338",
+    "annualOnly": "oews:national_M2025_dl!AE338",
+    "hourlyOnly": "oews:national_M2025_dl!AF338",
+    "title": "oews:national_M2025_dl!J338",
+    "ep.title": "ep:Table 1.2!A260",
+    "ep.employment2025": "ep:Table 1.2!D260",
+    "ep.employment2035": "ep:Table 1.2!E260",
+    "ep.numericChange": "ep:Table 1.2!H260",
+    "ep.percentChange": "ep:Table 1.2!I260",
+    "onetCode": "onet:Occupation Data.txt#L293:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L293:Description"
+   },
+   "nullReasons": {}
+  },
+  "23-1021": {
+   "soc": "23-1021",
+   "title": "Administrative Law Judges, Adjudicators, and Hearing Officers",
+   "major": "23-0000",
+   "minor": "23-1000",
+   "broad": "23-1020",
+   "oewsRows": [
+    340
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 16370,
+   "annualMedian": 117860,
+   "annualMean": 125990,
+   "hourlyMedian": 56.67,
+   "hourlyMean": 60.57,
+   "annualPct10": 61110,
+   "annualPct90": 207480,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Administrative law judges, adjudicators, and hearing officers",
+    "employment2025": 17400,
+    "employment2035": 17400,
+    "numericChange": 0,
+    "percentChange": 0
+   },
+   "onetCode": "23-1021.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Conduct hearings to recommend or make decisions on claims concerning government programs or other government-related matters. Determine liability, sanctions, or penalties, or recommend the acceptance or rejection of claims or settlements.",
+   "tasks": [
+    {
+     "id": 7627,
+     "text": "Determine existence and amount of liability according to current laws, administrative and judicial precedents, and available evidence.",
+     "type": "Core",
+     "onetCode": "23-1021.00",
+     "line": 5784
+    },
+    {
+     "id": 7623,
+     "text": "Monitor and direct the activities of trials and hearings to ensure that they are conducted fairly and that courts administer justice while safeguarding the legal rights of all involved parties.",
+     "type": "Core",
+     "onetCode": "23-1021.00",
+     "line": 5785
+    },
+    {
+     "id": 7617,
+     "text": "Prepare written opinions and decisions.",
+     "type": "Core",
+     "onetCode": "23-1021.00",
+     "line": 5786
+    },
+    {
+     "id": 7624,
+     "text": "Authorize payment of valid claims and determine method of payment.",
+     "type": "Core",
+     "onetCode": "23-1021.00",
+     "line": 5787
+    },
+    {
+     "id": 7625,
+     "text": "Conduct hearings to review and decide claims regarding issues, such as social program eligibility, environmental protection, or enforcement of health and safety regulations.",
+     "type": "Core",
+     "onetCode": "23-1021.00",
+     "line": 5788
+    },
+    {
+     "id": 7619,
+     "text": "Research and analyze laws, regulations, policies, and precedent decisions to prepare for hearings and to determine conclusions.",
+     "type": "Core",
+     "onetCode": "23-1021.00",
+     "line": 5789
+    },
+    {
+     "id": 7618,
+     "text": "Review and evaluate data on documents, such as claim applications, birth or death certificates, or physician or employer records.",
+     "type": "Core",
+     "onetCode": "23-1021.00",
+     "line": 5790
+    },
+    {
+     "id": 7621,
+     "text": "Recommend the acceptance or rejection of claims or compromise settlements according to laws, regulations, policies, and precedent decisions.",
+     "type": "Core",
+     "onetCode": "23-1021.00",
+     "line": 5791
+    },
+    {
+     "id": 7626,
+     "text": "Rule on exceptions, motions, and admissibility of evidence.",
+     "type": "Core",
+     "onetCode": "23-1021.00",
+     "line": 5792
+    },
+    {
+     "id": 7622,
+     "text": "Explain to claimants how they can appeal rulings that go against them.",
+     "type": "Core",
+     "onetCode": "23-1021.00",
+     "line": 5793
+    },
+    {
+     "id": 7620,
+     "text": "Confer with individuals or organizations involved in cases to obtain relevant information.",
+     "type": "Core",
+     "onetCode": "23-1021.00",
+     "line": 5794
+    },
+    {
+     "id": 7628,
+     "text": "Issue subpoenas and administer oaths in preparation for formal hearings.",
+     "type": "Core",
+     "onetCode": "23-1021.00",
+     "line": 5795
+    },
+    {
+     "id": 21181,
+     "text": "Schedule hearings.",
+     "type": "Supplemental",
+     "onetCode": "23-1021.00",
+     "line": 5796
+    },
+    {
+     "id": 7629,
+     "text": "Conduct studies of appeals procedures in field agencies to ensure adherence to legal requirements and to facilitate determination of cases.",
+     "type": "Supplemental",
+     "onetCode": "23-1021.00",
+     "line": 5797
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L340",
+    "annualMedian": "oews:national_M2025_dl!AB340",
+    "annualMean": "oews:national_M2025_dl!S340",
+    "hourlyMedian": "oews:national_M2025_dl!W340",
+    "hourlyMean": "oews:national_M2025_dl!R340",
+    "annualPct10": "oews:national_M2025_dl!Z340",
+    "annualPct90": "oews:national_M2025_dl!AD340",
+    "annualOnly": "oews:national_M2025_dl!AE340",
+    "hourlyOnly": "oews:national_M2025_dl!AF340",
+    "title": "oews:national_M2025_dl!J340",
+    "ep.title": "ep:Table 1.2!A262",
+    "ep.employment2025": "ep:Table 1.2!D262",
+    "ep.employment2035": "ep:Table 1.2!E262",
+    "ep.numericChange": "ep:Table 1.2!H262",
+    "ep.percentChange": "ep:Table 1.2!I262",
+    "onetCode": "onet:Occupation Data.txt#L294:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L294:Description"
+   },
+   "nullReasons": {}
+  },
+  "23-1022": {
+   "soc": "23-1022",
+   "title": "Arbitrators, Mediators, and Conciliators",
+   "major": "23-0000",
+   "minor": "23-1000",
+   "broad": "23-1020",
+   "oewsRows": [
+    341
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 9210,
+   "annualMedian": 75530,
+   "annualMean": 91010,
+   "hourlyMedian": 36.31,
+   "hourlyMean": 43.76,
+   "annualPct10": 47220,
+   "annualPct90": 155440,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Arbitrators, mediators, and conciliators",
+    "employment2025": 10500,
+    "employment2035": 11000,
+    "numericChange": 500,
+    "percentChange": 4.7
+   },
+   "onetCode": "23-1022.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Facilitate negotiation and conflict resolution through dialogue. Resolve conflicts outside of the court system by mutual consent of parties involved.",
+   "tasks": [
+    {
+     "id": 12999,
+     "text": "Prepare written opinions or decisions regarding cases.",
+     "type": "Core",
+     "onetCode": "23-1022.00",
+     "line": 5798
+    },
+    {
+     "id": 20238,
+     "text": "Apply relevant laws, regulations, policies, or precedents to reach conclusions.",
+     "type": "Core",
+     "onetCode": "23-1022.00",
+     "line": 5799
+    },
+    {
+     "id": 20239,
+     "text": "Conduct hearings to obtain information or evidence relative to disposition of claims.",
+     "type": "Core",
+     "onetCode": "23-1022.00",
+     "line": 5800
+    },
+    {
+     "id": 20240,
+     "text": "Determine extent of liability according to evidence, laws, or administrative or judicial precedents.",
+     "type": "Core",
+     "onetCode": "23-1022.00",
+     "line": 5801
+    },
+    {
+     "id": 13001,
+     "text": "Rule on exceptions, motions, or admissibility of evidence.",
+     "type": "Core",
+     "onetCode": "23-1022.00",
+     "line": 5802
+    },
+    {
+     "id": 12993,
+     "text": "Confer with disputants to clarify issues, identify underlying concerns, and develop an understanding of their respective needs and interests.",
+     "type": "Core",
+     "onetCode": "23-1022.00",
+     "line": 5803
+    },
+    {
+     "id": 12994,
+     "text": "Use mediation techniques to facilitate communication between disputants, to further parties' understanding of different perspectives, and to guide parties toward mutual agreement.",
+     "type": "Core",
+     "onetCode": "23-1022.00",
+     "line": 5804
+    },
+    {
+     "id": 13008,
+     "text": "Conduct initial meetings with disputants to outline the arbitration process, settle procedural matters, such as fees, or determine details, such as witness numbers or time requirements.",
+     "type": "Core",
+     "onetCode": "23-1022.00",
+     "line": 5805
+    },
+    {
+     "id": 13003,
+     "text": "Evaluate information from documents, such as claim applications, birth or death certificates, or physician or employer records.",
+     "type": "Core",
+     "onetCode": "23-1022.00",
+     "line": 5806
+    },
+    {
+     "id": 13005,
+     "text": "Research laws, regulations, policies, or precedent decisions to prepare for hearings.",
+     "type": "Core",
+     "onetCode": "23-1022.00",
+     "line": 5807
+    },
+    {
+     "id": 13010,
+     "text": "Issue subpoenas or administer oaths to prepare for formal hearings.",
+     "type": "Core",
+     "onetCode": "23-1022.00",
+     "line": 5808
+    },
+    {
+     "id": 12995,
+     "text": "Set up appointments for parties to meet for mediation.",
+     "type": "Core",
+     "onetCode": "23-1022.00",
+     "line": 5809
+    },
+    {
+     "id": 13007,
+     "text": "Recommend acceptance or rejection of compromise settlement offers.",
+     "type": "Core",
+     "onetCode": "23-1022.00",
+     "line": 5810
+    },
+    {
+     "id": 12996,
+     "text": "Prepare settlement agreements for disputants to sign.",
+     "type": "Core",
+     "onetCode": "23-1022.00",
+     "line": 5811
+    },
+    {
+     "id": 13011,
+     "text": "Authorize payment of valid claims.",
+     "type": "Core",
+     "onetCode": "23-1022.00",
+     "line": 5812
+    },
+    {
+     "id": 13004,
+     "text": "Interview claimants, agents, or witnesses to obtain information about disputed issues.",
+     "type": "Supplemental",
+     "onetCode": "23-1022.00",
+     "line": 5813
+    },
+    {
+     "id": 13012,
+     "text": "Conduct studies of appeals procedures to ensure adherence to legal requirements or to facilitate disposition of cases.",
+     "type": "Supplemental",
+     "onetCode": "23-1022.00",
+     "line": 5814
+    },
+    {
+     "id": 19807,
+     "text": "Specialize in the negotiation and resolution of environmental conflicts involving issues such as natural resource allocation or regional development planning.",
+     "type": "Supplemental",
+     "onetCode": "23-1022.00",
+     "line": 5815
+    },
+    {
+     "id": 12997,
+     "text": "Organize or deliver public presentations about mediation to organizations, such as community agencies or schools.",
+     "type": "Supplemental",
+     "onetCode": "23-1022.00",
+     "line": 5816
+    },
+    {
+     "id": 13009,
+     "text": "Participate in court proceedings.",
+     "type": "Supplemental",
+     "onetCode": "23-1022.00",
+     "line": 5817
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L341",
+    "annualMedian": "oews:national_M2025_dl!AB341",
+    "annualMean": "oews:national_M2025_dl!S341",
+    "hourlyMedian": "oews:national_M2025_dl!W341",
+    "hourlyMean": "oews:national_M2025_dl!R341",
+    "annualPct10": "oews:national_M2025_dl!Z341",
+    "annualPct90": "oews:national_M2025_dl!AD341",
+    "annualOnly": "oews:national_M2025_dl!AE341",
+    "hourlyOnly": "oews:national_M2025_dl!AF341",
+    "title": "oews:national_M2025_dl!J341",
+    "ep.title": "ep:Table 1.2!A263",
+    "ep.employment2025": "ep:Table 1.2!D263",
+    "ep.employment2035": "ep:Table 1.2!E263",
+    "ep.numericChange": "ep:Table 1.2!H263",
+    "ep.percentChange": "ep:Table 1.2!I263",
+    "onetCode": "onet:Occupation Data.txt#L295:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L295:Description"
+   },
+   "nullReasons": {}
+  },
+  "23-1023": {
+   "soc": "23-1023",
+   "title": "Judges, Magistrate Judges, and Magistrates",
+   "major": "23-0000",
+   "minor": "23-1000",
+   "broad": "23-1020",
+   "oewsRows": [
+    342
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 24030,
+   "annualMedian": 153990,
+   "annualMean": 143830,
+   "hourlyMedian": 74.03,
+   "hourlyMean": 69.15,
+   "annualPct10": 46950,
+   "annualPct90": 221710,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Judges, magistrate judges, and magistrates",
+    "employment2025": 25300,
+    "employment2035": 26000,
+    "numericChange": 700,
+    "percentChange": 2.8
+   },
+   "onetCode": "23-1023.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Arbitrate, advise, adjudicate, or administer justice in a court of law. May sentence defendant in criminal cases according to government statutes or sentencing guidelines. May determine liability of defendant in civil cases. May perform wedding ceremonies.",
+   "tasks": [
+    {
+     "id": 5644,
+     "text": "Sentence defendants in criminal cases, on conviction by jury, according to applicable government statutes.",
+     "type": "Core",
+     "onetCode": "23-1023.00",
+     "line": 5818
+    },
+    {
+     "id": 5649,
+     "text": "Monitor proceedings to ensure that all applicable rules and procedures are followed.",
+     "type": "Core",
+     "onetCode": "23-1023.00",
+     "line": 5819
+    },
+    {
+     "id": 5643,
+     "text": "Instruct juries on applicable laws, direct juries to deduce the facts from the evidence presented, and hear their verdicts.",
+     "type": "Core",
+     "onetCode": "23-1023.00",
+     "line": 5820
+    },
+    {
+     "id": 5653,
+     "text": "Write decisions on cases.",
+     "type": "Core",
+     "onetCode": "23-1023.00",
+     "line": 5821
+    },
+    {
+     "id": 5647,
+     "text": "Read documents on pleadings and motions to ascertain facts and issues.",
+     "type": "Core",
+     "onetCode": "23-1023.00",
+     "line": 5822
+    },
+    {
+     "id": 5645,
+     "text": "Rule on admissibility of evidence and methods of conducting testimony.",
+     "type": "Core",
+     "onetCode": "23-1023.00",
+     "line": 5823
+    },
+    {
+     "id": 5646,
+     "text": "Preside over hearings and listen to allegations made by plaintiffs to determine whether the evidence supports the charges.",
+     "type": "Core",
+     "onetCode": "23-1023.00",
+     "line": 5824
+    },
+    {
+     "id": 5654,
+     "text": "Award compensation for damages to litigants in civil cases in relation to findings by juries or by the court.",
+     "type": "Core",
+     "onetCode": "23-1023.00",
+     "line": 5825
+    },
+    {
+     "id": 5650,
+     "text": "Advise attorneys, juries, litigants, and court personnel regarding conduct, issues, and proceedings.",
+     "type": "Core",
+     "onetCode": "23-1023.00",
+     "line": 5826
+    },
+    {
+     "id": 5651,
+     "text": "Research legal issues and write opinions on the issues.",
+     "type": "Core",
+     "onetCode": "23-1023.00",
+     "line": 5827
+    },
+    {
+     "id": 5648,
+     "text": "Interpret and enforce rules of procedure or establish new rules in situations where there are no procedures already established by law.",
+     "type": "Core",
+     "onetCode": "23-1023.00",
+     "line": 5828
+    },
+    {
+     "id": 21182,
+     "text": "Issue arrest warrants.",
+     "type": "Core",
+     "onetCode": "23-1023.00",
+     "line": 5829
+    },
+    {
+     "id": 5655,
+     "text": "Settle disputes between opposing attorneys.",
+     "type": "Core",
+     "onetCode": "23-1023.00",
+     "line": 5830
+    },
+    {
+     "id": 5657,
+     "text": "Impose restrictions upon parties in civil cases until trials can be held.",
+     "type": "Core",
+     "onetCode": "23-1023.00",
+     "line": 5831
+    },
+    {
+     "id": 5656,
+     "text": "Supervise other judges, court officers, and the court's administrative staff.",
+     "type": "Core",
+     "onetCode": "23-1023.00",
+     "line": 5832
+    },
+    {
+     "id": 5658,
+     "text": "Rule on custody and access disputes, and enforce court orders regarding custody and support of children.",
+     "type": "Supplemental",
+     "onetCode": "23-1023.00",
+     "line": 5833
+    },
+    {
+     "id": 5652,
+     "text": "Conduct preliminary hearings to decide issues, such as whether there is reasonable and probable cause to hold defendants in felony cases.",
+     "type": "Supplemental",
+     "onetCode": "23-1023.00",
+     "line": 5834
+    },
+    {
+     "id": 5659,
+     "text": "Grant divorces and divide assets between spouses.",
+     "type": "Supplemental",
+     "onetCode": "23-1023.00",
+     "line": 5835
+    },
+    {
+     "id": 5660,
+     "text": "Participate in judicial tribunals to help resolve disputes.",
+     "type": "Supplemental",
+     "onetCode": "23-1023.00",
+     "line": 5836
+    },
+    {
+     "id": 20057,
+     "text": "Provide information regarding the judicial system or other legal issues through the media and public speeches.",
+     "type": "Supplemental",
+     "onetCode": "23-1023.00",
+     "line": 5837
+    },
+    {
+     "id": 5661,
+     "text": "Perform wedding ceremonies.",
+     "type": "Supplemental",
+     "onetCode": "23-1023.00",
+     "line": 5838
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L342",
+    "annualMedian": "oews:national_M2025_dl!AB342",
+    "annualMean": "oews:national_M2025_dl!S342",
+    "hourlyMedian": "oews:national_M2025_dl!W342",
+    "hourlyMean": "oews:national_M2025_dl!R342",
+    "annualPct10": "oews:national_M2025_dl!Z342",
+    "annualPct90": "oews:national_M2025_dl!AD342",
+    "annualOnly": "oews:national_M2025_dl!AE342",
+    "hourlyOnly": "oews:national_M2025_dl!AF342",
+    "title": "oews:national_M2025_dl!J342",
+    "ep.title": "ep:Table 1.2!A264",
+    "ep.employment2025": "ep:Table 1.2!D264",
+    "ep.employment2035": "ep:Table 1.2!E264",
+    "ep.numericChange": "ep:Table 1.2!H264",
+    "ep.percentChange": "ep:Table 1.2!I264",
+    "onetCode": "onet:Occupation Data.txt#L296:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L296:Description"
+   },
+   "nullReasons": {}
+  },
+  "23-2011": {
+   "soc": "23-2011",
+   "title": "Paralegals and Legal Assistants",
+   "major": "23-0000",
+   "minor": "23-2000",
+   "broad": "23-2010",
+   "oewsRows": [
+    345
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 392880,
+   "annualMedian": 62890,
+   "annualMean": 69700,
+   "hourlyMedian": 30.24,
+   "hourlyMean": 33.51,
+   "annualPct10": 44740,
+   "annualPct90": 101500,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Paralegals and legal assistants",
+    "employment2025": 404900,
+    "employment2035": 403800,
+    "numericChange": -1100,
+    "percentChange": -0.3
+   },
+   "onetCode": "23-2011.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Assist lawyers by investigating facts, preparing legal documents, or researching legal precedent. Conduct research to support a legal proceeding, to formulate a defense, or to initiate legal action.",
+   "tasks": [
+    {
+     "id": 18491,
+     "text": "Prepare affidavits or other documents, such as legal correspondence, and organize and maintain documents in paper or electronic filing system.",
+     "type": "Core",
+     "onetCode": "23-2011.00",
+     "line": 5839
+    },
+    {
+     "id": 23994,
+     "text": "Prepare, edit, or review legal documents, including legislation, briefs, pleadings, appeals, wills, contracts, and real estate closing statements.",
+     "type": "Core",
+     "onetCode": "23-2011.00",
+     "line": 5840
+    },
+    {
+     "id": 21062,
+     "text": "Investigate facts and law of cases and search pertinent sources, such as public records and internet sources, to determine causes of action and to prepare cases.",
+     "type": "Core",
+     "onetCode": "23-2011.00",
+     "line": 5841
+    },
+    {
+     "id": 18492,
+     "text": "Prepare for trial by performing tasks such as organizing exhibits.",
+     "type": "Core",
+     "onetCode": "23-2011.00",
+     "line": 5842
+    },
+    {
+     "id": 18493,
+     "text": "Meet with clients and other professionals to discuss details of cases.",
+     "type": "Core",
+     "onetCode": "23-2011.00",
+     "line": 5843
+    },
+    {
+     "id": 1636,
+     "text": "Gather and analyze research data, such as statutes, decisions, and legal articles, codes, and documents.",
+     "type": "Core",
+     "onetCode": "23-2011.00",
+     "line": 5844
+    },
+    {
+     "id": 18494,
+     "text": "File pleadings with court clerks.",
+     "type": "Supplemental",
+     "onetCode": "23-2011.00",
+     "line": 5845
+    },
+    {
+     "id": 1639,
+     "text": "Direct and coordinate law office activity, including delivery of subpoenas.",
+     "type": "Supplemental",
+     "onetCode": "23-2011.00",
+     "line": 5846
+    },
+    {
+     "id": 1638,
+     "text": "Call upon witnesses to testify at hearings.",
+     "type": "Supplemental",
+     "onetCode": "23-2011.00",
+     "line": 5847
+    },
+    {
+     "id": 18496,
+     "text": "Arbitrate disputes between parties and assist in the real estate closing process, such as by reviewing title searches.",
+     "type": "Supplemental",
+     "onetCode": "23-2011.00",
+     "line": 5848
+    },
+    {
+     "id": 1642,
+     "text": "Appraise and inventory real and personal property for estate planning.",
+     "type": "Supplemental",
+     "onetCode": "23-2011.00",
+     "line": 5849
+    },
+    {
+     "id": 1641,
+     "text": "Keep and monitor legal volumes to ensure that the law library is up-to-date.",
+     "type": "Supplemental",
+     "onetCode": "23-2011.00",
+     "line": 5850
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L345",
+    "annualMedian": "oews:national_M2025_dl!AB345",
+    "annualMean": "oews:national_M2025_dl!S345",
+    "hourlyMedian": "oews:national_M2025_dl!W345",
+    "hourlyMean": "oews:national_M2025_dl!R345",
+    "annualPct10": "oews:national_M2025_dl!Z345",
+    "annualPct90": "oews:national_M2025_dl!AD345",
+    "annualOnly": "oews:national_M2025_dl!AE345",
+    "hourlyOnly": "oews:national_M2025_dl!AF345",
+    "title": "oews:national_M2025_dl!J345",
+    "ep.title": "ep:Table 1.2!A266",
+    "ep.employment2025": "ep:Table 1.2!D266",
+    "ep.employment2035": "ep:Table 1.2!E266",
+    "ep.numericChange": "ep:Table 1.2!H266",
+    "ep.percentChange": "ep:Table 1.2!I266",
+    "onetCode": "onet:Occupation Data.txt#L297:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L297:Description"
+   },
+   "nullReasons": {}
+  },
+  "23-2093": {
+   "soc": "23-2093",
+   "title": "Title Examiners, Abstractors, and Searchers",
+   "major": "23-0000",
+   "minor": "23-2000",
+   "broad": "23-2090",
+   "oewsRows": [
+    347
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 48580,
+   "annualMedian": 58650,
+   "annualMean": 62350,
+   "hourlyMedian": 28.2,
+   "hourlyMean": 29.97,
+   "annualPct10": 38170,
+   "annualPct90": 90830,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Title examiners, abstractors, and searchers",
+    "employment2025": 59800,
+    "employment2035": 61100,
+    "numericChange": 1300,
+    "percentChange": 2.1
+   },
+   "onetCode": "23-2093.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Search real estate records, examine titles, or summarize pertinent legal or insurance documents or details for a variety of purposes. May compile lists of mortgages, contracts, and other instruments pertaining to titles by searching public and private records for law firms, real estate agencies, or title insurance companies.",
+   "tasks": [
+    {
+     "id": 9231,
+     "text": "Examine documentation such as mortgages, liens, judgments, easements, plat books, maps, contracts, and agreements to verify factors such as properties' legal descriptions, ownership, or restrictions.",
+     "type": "Core",
+     "onetCode": "23-2093.00",
+     "line": 5851
+    },
+    {
+     "id": 9234,
+     "text": "Examine individual titles to determine if restrictions, such as delinquent taxes, will affect titles and limit property use.",
+     "type": "Core",
+     "onetCode": "23-2093.00",
+     "line": 5852
+    },
+    {
+     "id": 9235,
+     "text": "Prepare reports describing any title encumbrances encountered during searching activities and outlining actions needed to clear titles.",
+     "type": "Core",
+     "onetCode": "23-2093.00",
+     "line": 5853
+    },
+    {
+     "id": 9233,
+     "text": "Copy or summarize recorded documents, such as mortgages, trust deeds, and contracts, that affect property titles.",
+     "type": "Core",
+     "onetCode": "23-2093.00",
+     "line": 5854
+    },
+    {
+     "id": 9236,
+     "text": "Verify accuracy and completeness of land-related documents accepted for registration, preparing rejection notices when documents are not acceptable.",
+     "type": "Core",
+     "onetCode": "23-2093.00",
+     "line": 5855
+    },
+    {
+     "id": 9230,
+     "text": "Prepare lists of all legal instruments applying to a specific piece of land and the buildings on it.",
+     "type": "Core",
+     "onetCode": "23-2093.00",
+     "line": 5856
+    },
+    {
+     "id": 9232,
+     "text": "Read search requests to ascertain types of title evidence required and to obtain descriptions of properties and names of involved parties.",
+     "type": "Core",
+     "onetCode": "23-2093.00",
+     "line": 5857
+    },
+    {
+     "id": 9240,
+     "text": "Obtain maps or drawings delineating properties from company title plants, county surveyors, or assessors' offices.",
+     "type": "Core",
+     "onetCode": "23-2093.00",
+     "line": 5858
+    },
+    {
+     "id": 9237,
+     "text": "Confer with realtors, lending institution personnel, buyers, sellers, contractors, surveyors, and courthouse personnel to exchange title-related information or to resolve problems.",
+     "type": "Core",
+     "onetCode": "23-2093.00",
+     "line": 5859
+    },
+    {
+     "id": 9238,
+     "text": "Enter into record-keeping systems appropriate data needed to create new title records or to update existing ones.",
+     "type": "Core",
+     "onetCode": "23-2093.00",
+     "line": 5860
+    },
+    {
+     "id": 9243,
+     "text": "Retrieve and examine real estate closing files for accuracy and to ensure that information included is recorded and executed according to regulations.",
+     "type": "Core",
+     "onetCode": "23-2093.00",
+     "line": 5861
+    },
+    {
+     "id": 9241,
+     "text": "Prepare and issue title commitments and title insurance policies, based on information compiled from title searches.",
+     "type": "Supplemental",
+     "onetCode": "23-2093.00",
+     "line": 5862
+    },
+    {
+     "id": 9239,
+     "text": "Direct activities of workers who search records and examine titles, assigning, scheduling, and evaluating work, and providing technical guidance as necessary.",
+     "type": "Supplemental",
+     "onetCode": "23-2093.00",
+     "line": 5863
+    },
+    {
+     "id": 9245,
+     "text": "Determine whether land-related documents can be registered under the relevant legislation, such as the Land Titles Act.",
+     "type": "Supplemental",
+     "onetCode": "23-2093.00",
+     "line": 5864
+    },
+    {
+     "id": 9246,
+     "text": "Assess fees related to registration of property-related documents.",
+     "type": "Supplemental",
+     "onetCode": "23-2093.00",
+     "line": 5865
+    },
+    {
+     "id": 9242,
+     "text": "Summarize pertinent legal or insurance details, or sections of statutes or case law from reference books for use in examinations or as proofs or ready reference.",
+     "type": "Supplemental",
+     "onetCode": "23-2093.00",
+     "line": 5866
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L347",
+    "annualMedian": "oews:national_M2025_dl!AB347",
+    "annualMean": "oews:national_M2025_dl!S347",
+    "hourlyMedian": "oews:national_M2025_dl!W347",
+    "hourlyMean": "oews:national_M2025_dl!R347",
+    "annualPct10": "oews:national_M2025_dl!Z347",
+    "annualPct90": "oews:national_M2025_dl!AD347",
+    "annualOnly": "oews:national_M2025_dl!AE347",
+    "hourlyOnly": "oews:national_M2025_dl!AF347",
+    "title": "oews:national_M2025_dl!J347",
+    "ep.title": "ep:Table 1.2!A268",
+    "ep.employment2025": "ep:Table 1.2!D268",
+    "ep.employment2035": "ep:Table 1.2!E268",
+    "ep.numericChange": "ep:Table 1.2!H268",
+    "ep.percentChange": "ep:Table 1.2!I268",
+    "onetCode": "onet:Occupation Data.txt#L298:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L298:Description"
+   },
+   "nullReasons": {}
+  },
+  "23-2099": {
+   "soc": "23-2099",
+   "title": "Legal Support Workers, All Other",
+   "major": "23-0000",
+   "minor": "23-2000",
+   "broad": "23-2090",
+   "oewsRows": [
+    348
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 46760,
+   "annualMedian": 72110,
+   "annualMean": 89660,
+   "hourlyMedian": 34.67,
+   "hourlyMean": 43.1,
+   "annualPct10": 43800,
+   "annualPct90": 179960,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Legal support workers, all other",
+    "employment2025": 50200,
+    "employment2035": 50000,
+    "numericChange": -100,
+    "percentChange": -0.3
+   },
+   "onetCode": "23-2099.00",
+   "onetTaskSource": "none",
+   "onetSubCodes": [],
+   "description": "All legal support workers not listed separately.",
+   "tasks": [],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L348",
+    "annualMedian": "oews:national_M2025_dl!AB348",
+    "annualMean": "oews:national_M2025_dl!S348",
+    "hourlyMedian": "oews:national_M2025_dl!W348",
+    "hourlyMean": "oews:national_M2025_dl!R348",
+    "annualPct10": "oews:national_M2025_dl!Z348",
+    "annualPct90": "oews:national_M2025_dl!AD348",
+    "annualOnly": "oews:national_M2025_dl!AE348",
+    "hourlyOnly": "oews:national_M2025_dl!AF348",
+    "title": "oews:national_M2025_dl!J348",
+    "ep.title": "ep:Table 1.2!A269",
+    "ep.employment2025": "ep:Table 1.2!D269",
+    "ep.employment2035": "ep:Table 1.2!E269",
+    "ep.numericChange": "ep:Table 1.2!H269",
+    "ep.percentChange": "ep:Table 1.2!I269",
+    "onetCode": "onet:Occupation Data.txt#L299:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L299:Description"
+   },
+   "nullReasons": {
+    "tasks": "O*NET 30.1 has no task statements for 23-2099.00"
+   }
+  }
+ }
+}

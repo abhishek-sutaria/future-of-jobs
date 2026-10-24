@@ -1,0 +1,2176 @@
+{
+ "_meta": {
+  "continent": "45-0000",
+  "title": "Farming, Fishing, and Forestry Occupations",
+  "sources": "see index.json _meta.sources; source refs are <source>:<sheet>!<cell> or <source>:<file>#L<line>:<column>",
+  "extracted": "2026-10-24",
+  "generator": "python3 scripts/build_occupations.py"
+ },
+ "broadGroups": [
+  {
+   "soc": "45-1010",
+   "title": "First-Line Supervisors of Farming, Fishing, and Forestry Workers",
+   "minor": "45-1000",
+   "employment": 27960,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L945",
+    "title": "oews:national_M2025_dl!J945"
+   }
+  },
+  {
+   "soc": "45-2010",
+   "title": "Agricultural Inspectors",
+   "minor": "45-2000",
+   "employment": 14410,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L948",
+    "title": "oews:national_M2025_dl!J948"
+   }
+  },
+  {
+   "soc": "45-2020",
+   "title": "Animal Breeders",
+   "minor": "45-2000",
+   "employment": 1330,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L950",
+    "title": "oews:national_M2025_dl!J950"
+   }
+  },
+  {
+   "soc": "45-2040",
+   "title": "Graders and Sorters, Agricultural Products",
+   "minor": "45-2000",
+   "employment": 25180,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L952",
+    "title": "oews:national_M2025_dl!J952"
+   }
+  },
+  {
+   "soc": "45-2090",
+   "title": "Miscellaneous Agricultural Workers",
+   "minor": "45-2000",
+   "employment": 330420,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L954",
+    "title": "oews:national_M2025_dl!J954"
+   }
+  },
+  {
+   "soc": "45-4010",
+   "title": "Forest and Conservation Workers",
+   "minor": "45-4000",
+   "employment": 6050,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L960",
+    "title": "oews:national_M2025_dl!J960"
+   }
+  },
+  {
+   "soc": "45-4020",
+   "title": "Logging Workers",
+   "minor": "45-4000",
+   "employment": 28960,
+   "sources": {
+    "employment": "oews:national_M2025_dl!L962",
+    "title": "oews:national_M2025_dl!J962"
+   }
+  }
+ ],
+ "occupations": {
+  "45-1011": {
+   "soc": "45-1011",
+   "title": "First-Line Supervisors of Farming, Fishing, and Forestry Workers",
+   "major": "45-0000",
+   "minor": "45-1000",
+   "broad": "45-1010",
+   "oewsRows": [
+    946
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 27960,
+   "annualMedian": 59320,
+   "annualMean": 62730,
+   "hourlyMedian": 28.52,
+   "hourlyMean": 30.16,
+   "annualPct10": 38990,
+   "annualPct90": 91770,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "First-line supervisors of farming, fishing, and forestry workers",
+    "employment2025": 57600,
+    "employment2035": 59800,
+    "numericChange": 2200,
+    "percentChange": 3.8
+   },
+   "onetCode": "45-1011.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Directly supervise and coordinate the activities of agricultural, forestry, aquacultural, and related workers.",
+   "tasks": [
+    {
+     "id": 23340,
+     "text": "Assign tasks such as feeding and treatment of animals, and cleaning and maintenance of animal quarters.",
+     "type": "Core",
+     "onetCode": "45-1011.00",
+     "line": 13395
+    },
+    {
+     "id": 23341,
+     "text": "Record the numbers and types of fish or shellfish reared, harvested, released, sold, and shipped.",
+     "type": "Core",
+     "onetCode": "45-1011.00",
+     "line": 13396
+    },
+    {
+     "id": 23342,
+     "text": "Monitor workers to ensure that safety regulations are followed, warning or disciplining those who violate safety regulations.",
+     "type": "Core",
+     "onetCode": "45-1011.00",
+     "line": 13397
+    },
+    {
+     "id": 23343,
+     "text": "Observe animals for signs of illness, injury, or unusual behavior, notifying veterinarians or managers as warranted.",
+     "type": "Core",
+     "onetCode": "45-1011.00",
+     "line": 13398
+    },
+    {
+     "id": 23344,
+     "text": "Observe fish and beds or ponds to detect diseases, monitor fish growth, determine quality of fish, or determine completeness of harvesting.",
+     "type": "Core",
+     "onetCode": "45-1011.00",
+     "line": 13399
+    },
+    {
+     "id": 23345,
+     "text": "Train workers in tree felling or bucking, operation of tractors or loading machines, yarding or loading techniques, or safety regulations.",
+     "type": "Core",
+     "onetCode": "45-1011.00",
+     "line": 13400
+    },
+    {
+     "id": 23346,
+     "text": "Treat animal illnesses or injuries, following experience or instructions of veterinarians.",
+     "type": "Core",
+     "onetCode": "45-1011.00",
+     "line": 13401
+    },
+    {
+     "id": 23347,
+     "text": "Train workers in spawning, rearing, cultivating, and harvesting methods, and in the use of equipment.",
+     "type": "Core",
+     "onetCode": "45-1011.00",
+     "line": 13402
+    },
+    {
+     "id": 23348,
+     "text": "Train workers in techniques such as planting, harvesting, weeding, or insect identification and in the use of safety measures.",
+     "type": "Core",
+     "onetCode": "45-1011.00",
+     "line": 13403
+    },
+    {
+     "id": 23349,
+     "text": "Confer with managers to evaluate weather or soil conditions, to develop plans or procedures, or to discuss issues such as changes in fertilizers, herbicides, or cultivating techniques.",
+     "type": "Core",
+     "onetCode": "45-1011.00",
+     "line": 13404
+    },
+    {
+     "id": 23350,
+     "text": "Communicate with forestry personnel regarding forest harvesting or forest management plans, procedures, or schedules.",
+     "type": "Core",
+     "onetCode": "45-1011.00",
+     "line": 13405
+    },
+    {
+     "id": 23351,
+     "text": "Inspect crops, fields, or plant stock to determine conditions and need for cultivating, spraying, weeding, or harvesting.",
+     "type": "Core",
+     "onetCode": "45-1011.00",
+     "line": 13406
+    },
+    {
+     "id": 23352,
+     "text": "Coordinate dismantling, moving, and setting up equipment at new work sites.",
+     "type": "Core",
+     "onetCode": "45-1011.00",
+     "line": 13407
+    },
+    {
+     "id": 23353,
+     "text": "Coordinate the selection and movement of logs from storage areas, according to transportation schedules or production requirements.",
+     "type": "Core",
+     "onetCode": "45-1011.00",
+     "line": 13408
+    },
+    {
+     "id": 23354,
+     "text": "Schedule work crews, equipment, or transportation for several different work locations.",
+     "type": "Core",
+     "onetCode": "45-1011.00",
+     "line": 13409
+    },
+    {
+     "id": 23355,
+     "text": "Drive or operate farm machinery, such as trucks, tractors, or self-propelled harvesters, to transport workers or supplies or to cultivate or harvest fields.",
+     "type": "Core",
+     "onetCode": "45-1011.00",
+     "line": 13410
+    },
+    {
+     "id": 23356,
+     "text": "Perform both supervisory and management functions, such as accounting, marketing, and personnel work.",
+     "type": "Core",
+     "onetCode": "45-1011.00",
+     "line": 13411
+    },
+    {
+     "id": 23357,
+     "text": "Transport or arrange for transport of animals, equipment, food, animal feed, and other supplies to and from work sites.",
+     "type": "Core",
+     "onetCode": "45-1011.00",
+     "line": 13412
+    },
+    {
+     "id": 23358,
+     "text": "Inspect buildings, fences, fields or ranges, supplies, and equipment to determine work to be performed.",
+     "type": "Core",
+     "onetCode": "45-1011.00",
+     "line": 13413
+    },
+    {
+     "id": 23359,
+     "text": "Read inventory records, customer orders, or shipping schedules to determine required activities.",
+     "type": "Core",
+     "onetCode": "45-1011.00",
+     "line": 13414
+    },
+    {
+     "id": 23360,
+     "text": "Inspect facilities to determine maintenance needs.",
+     "type": "Core",
+     "onetCode": "45-1011.00",
+     "line": 13415
+    },
+    {
+     "id": 23361,
+     "text": "Confer with managers to determine production requirements, conditions of equipment and supplies, and work schedules.",
+     "type": "Core",
+     "onetCode": "45-1011.00",
+     "line": 13416
+    },
+    {
+     "id": 23362,
+     "text": "Prepare and maintain time or payroll reports, as well as details of personnel actions, such as performance evaluations, hires, promotions, or disciplinary actions.",
+     "type": "Core",
+     "onetCode": "45-1011.00",
+     "line": 13417
+    },
+    {
+     "id": 23363,
+     "text": "Requisition or purchase supplies, such as insecticides, machine parts or lubricants, or tools.",
+     "type": "Core",
+     "onetCode": "45-1011.00",
+     "line": 13418
+    },
+    {
+     "id": 23364,
+     "text": "Monitor or oversee construction projects, such as horticultural buildings or irrigation systems.",
+     "type": "Core",
+     "onetCode": "45-1011.00",
+     "line": 13419
+    },
+    {
+     "id": 23365,
+     "text": "Issue equipment, such as farm implements, machinery, ladders, or containers to workers, and collect equipment when work is complete.",
+     "type": "Core",
+     "onetCode": "45-1011.00",
+     "line": 13420
+    },
+    {
+     "id": 23366,
+     "text": "Calculate or monitor budgets for maintenance or development of collections, grounds, or infrastructure.",
+     "type": "Core",
+     "onetCode": "45-1011.00",
+     "line": 13421
+    },
+    {
+     "id": 23367,
+     "text": "Direct or assist with the adjustment or repair of equipment or machinery.",
+     "type": "n/a",
+     "onetCode": "45-1011.00",
+     "line": 13422
+    },
+    {
+     "id": 23368,
+     "text": "Monitor operations to identify and solve problems, improve work methods, and ensure compliance with safety, company, and government regulations.",
+     "type": "n/a",
+     "onetCode": "45-1011.00",
+     "line": 13423
+    },
+    {
+     "id": 23369,
+     "text": "Plan work schedules according to personnel and equipment availability.",
+     "type": "n/a",
+     "onetCode": "45-1011.00",
+     "line": 13424
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L946",
+    "annualMedian": "oews:national_M2025_dl!AB946",
+    "annualMean": "oews:national_M2025_dl!S946",
+    "hourlyMedian": "oews:national_M2025_dl!W946",
+    "hourlyMean": "oews:national_M2025_dl!R946",
+    "annualPct10": "oews:national_M2025_dl!Z946",
+    "annualPct90": "oews:national_M2025_dl!AD946",
+    "annualOnly": "oews:national_M2025_dl!AE946",
+    "hourlyOnly": "oews:national_M2025_dl!AF946",
+    "title": "oews:national_M2025_dl!J946",
+    "ep.title": "ep:Table 1.2!A745",
+    "ep.employment2025": "ep:Table 1.2!D745",
+    "ep.employment2035": "ep:Table 1.2!E745",
+    "ep.numericChange": "ep:Table 1.2!H745",
+    "ep.percentChange": "ep:Table 1.2!I745",
+    "onetCode": "onet:Occupation Data.txt#L697:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L697:Description"
+   },
+   "nullReasons": {}
+  },
+  "45-2011": {
+   "soc": "45-2011",
+   "title": "Agricultural Inspectors",
+   "major": "45-0000",
+   "minor": "45-2000",
+   "broad": "45-2010",
+   "oewsRows": [
+    949
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 14410,
+   "annualMedian": 49940,
+   "annualMean": 54910,
+   "hourlyMedian": 24.01,
+   "hourlyMean": 26.4,
+   "annualPct10": 37020,
+   "annualPct90": 79580,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Agricultural inspectors",
+    "employment2025": 17800,
+    "employment2035": 18200,
+    "numericChange": 400,
+    "percentChange": 2.3
+   },
+   "onetCode": "45-2011.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Inspect agricultural commodities, processing equipment, and facilities, and fish and logging operations, to ensure compliance with regulations and laws governing health, quality, and safety.",
+   "tasks": [
+    {
+     "id": 14854,
+     "text": "Inspect food products and processing procedures to determine whether products are safe to eat.",
+     "type": "Core",
+     "onetCode": "45-2011.00",
+     "line": 13425
+    },
+    {
+     "id": 14850,
+     "text": "Interpret and enforce government acts and regulations and explain required standards to agricultural workers.",
+     "type": "Core",
+     "onetCode": "45-2011.00",
+     "line": 13426
+    },
+    {
+     "id": 14846,
+     "text": "Inspect agricultural commodities or related operations, as well as fish or logging operations, for compliance with laws and regulations governing health, quality, and safety.",
+     "type": "Supplemental",
+     "onetCode": "45-2011.00",
+     "line": 13427
+    },
+    {
+     "id": 14857,
+     "text": "Label and seal graded products and issue official grading certificates.",
+     "type": "Supplemental",
+     "onetCode": "45-2011.00",
+     "line": 13428
+    },
+    {
+     "id": 14853,
+     "text": "Monitor the operations and sanitary conditions of slaughtering or meat processing plants.",
+     "type": "Supplemental",
+     "onetCode": "45-2011.00",
+     "line": 13429
+    },
+    {
+     "id": 14855,
+     "text": "Take emergency actions, such as closing production facilities, if product safety is compromised.",
+     "type": "Supplemental",
+     "onetCode": "45-2011.00",
+     "line": 13430
+    },
+    {
+     "id": 14848,
+     "text": "Verify that transportation and handling procedures meet regulatory requirements.",
+     "type": "Supplemental",
+     "onetCode": "45-2011.00",
+     "line": 13431
+    },
+    {
+     "id": 14852,
+     "text": "Inspect the cleanliness and practices of establishment employees.",
+     "type": "Supplemental",
+     "onetCode": "45-2011.00",
+     "line": 13432
+    },
+    {
+     "id": 14863,
+     "text": "Examine, weigh, and measure commodities, such as poultry, eggs, meat, or seafood to certify qualities, grades, and weights.",
+     "type": "Supplemental",
+     "onetCode": "45-2011.00",
+     "line": 13433
+    },
+    {
+     "id": 14847,
+     "text": "Inspect or test horticultural products or livestock to detect harmful diseases, chemical residues, or infestations and to determine the quality of products or animals.",
+     "type": "Supplemental",
+     "onetCode": "45-2011.00",
+     "line": 13434
+    },
+    {
+     "id": 14856,
+     "text": "Monitor the grading performed by company employees to verify conformance to standards.",
+     "type": "Supplemental",
+     "onetCode": "45-2011.00",
+     "line": 13435
+    },
+    {
+     "id": 14851,
+     "text": "Write reports of findings and recommendations and advise farmers, growers, or processors of corrective action to be taken.",
+     "type": "Supplemental",
+     "onetCode": "45-2011.00",
+     "line": 13436
+    },
+    {
+     "id": 14849,
+     "text": "Collect samples from animals, plants, or products and route them to laboratories for microbiological assessment, ingredient verification, or other testing.",
+     "type": "Supplemental",
+     "onetCode": "45-2011.00",
+     "line": 13437
+    },
+    {
+     "id": 14866,
+     "text": "Provide consultative services in areas such as equipment or product evaluation, plant construction or layout, or food safety systems.",
+     "type": "Supplemental",
+     "onetCode": "45-2011.00",
+     "line": 13438
+    },
+    {
+     "id": 14868,
+     "text": "Testify in legal proceedings.",
+     "type": "Supplemental",
+     "onetCode": "45-2011.00",
+     "line": 13439
+    },
+    {
+     "id": 14864,
+     "text": "Compare product recipes with government-approved formulas or recipes to determine acceptability.",
+     "type": "Supplemental",
+     "onetCode": "45-2011.00",
+     "line": 13440
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L949",
+    "annualMedian": "oews:national_M2025_dl!AB949",
+    "annualMean": "oews:national_M2025_dl!S949",
+    "hourlyMedian": "oews:national_M2025_dl!W949",
+    "hourlyMean": "oews:national_M2025_dl!R949",
+    "annualPct10": "oews:national_M2025_dl!Z949",
+    "annualPct90": "oews:national_M2025_dl!AD949",
+    "annualOnly": "oews:national_M2025_dl!AE949",
+    "hourlyOnly": "oews:national_M2025_dl!AF949",
+    "title": "oews:national_M2025_dl!J949",
+    "ep.title": "ep:Table 1.2!A747",
+    "ep.employment2025": "ep:Table 1.2!D747",
+    "ep.employment2035": "ep:Table 1.2!E747",
+    "ep.numericChange": "ep:Table 1.2!H747",
+    "ep.percentChange": "ep:Table 1.2!I747",
+    "onetCode": "onet:Occupation Data.txt#L698:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L698:Description"
+   },
+   "nullReasons": {}
+  },
+  "45-2021": {
+   "soc": "45-2021",
+   "title": "Animal Breeders",
+   "major": "45-0000",
+   "minor": "45-2000",
+   "broad": "45-2020",
+   "oewsRows": [
+    951
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 1330,
+   "annualMedian": 51130,
+   "annualMean": 57010,
+   "hourlyMedian": 24.58,
+   "hourlyMean": 27.41,
+   "annualPct10": 38480,
+   "annualPct90": 90550,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Animal breeders",
+    "employment2025": 6900,
+    "employment2035": 7100,
+    "numericChange": 200,
+    "percentChange": 3
+   },
+   "onetCode": "45-2021.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Select and breed animals according to their genealogy, characteristics, and offspring. May require knowledge of artificial insemination techniques and equipment use. May involve keeping records on heats, birth intervals, or pedigree.",
+   "tasks": [
+    {
+     "id": 8232,
+     "text": "Feed and water animals, and clean and disinfect pens, cages, yards, and hutches.",
+     "type": "Core",
+     "onetCode": "45-2021.00",
+     "line": 13441
+    },
+    {
+     "id": 8237,
+     "text": "Observe animals in heat to detect approach of estrus and exercise animals to induce or hasten estrus, if necessary.",
+     "type": "Core",
+     "onetCode": "45-2021.00",
+     "line": 13442
+    },
+    {
+     "id": 8236,
+     "text": "Treat minor injuries and ailments and contact veterinarians to obtain treatment for animals with serious illnesses or injuries.",
+     "type": "Core",
+     "onetCode": "45-2021.00",
+     "line": 13443
+    },
+    {
+     "id": 21080,
+     "text": "Purchase and stock supplies of feed and medicines.",
+     "type": "Core",
+     "onetCode": "45-2021.00",
+     "line": 13444
+    },
+    {
+     "id": 8235,
+     "text": "Select animals to be bred, and semen specimens to be used, according to knowledge of animals, genealogies, traits, and desired offspring characteristics.",
+     "type": "Core",
+     "onetCode": "45-2021.00",
+     "line": 13445
+    },
+    {
+     "id": 8233,
+     "text": "Examine animals to detect symptoms of illness or injury.",
+     "type": "Core",
+     "onetCode": "45-2021.00",
+     "line": 13446
+    },
+    {
+     "id": 8240,
+     "text": "Build hutches, pens, and fenced yards.",
+     "type": "Core",
+     "onetCode": "45-2021.00",
+     "line": 13447
+    },
+    {
+     "id": 8238,
+     "text": "Record animal characteristics such as weights, growth patterns, and diets.",
+     "type": "Core",
+     "onetCode": "45-2021.00",
+     "line": 13448
+    },
+    {
+     "id": 8251,
+     "text": "Brand, tattoo, or tag animals to allow animal identification.",
+     "type": "Core",
+     "onetCode": "45-2021.00",
+     "line": 13449
+    },
+    {
+     "id": 8246,
+     "text": "Arrange for sale of animals and eggs to hospitals, research centers, pet shops, and food processing plants.",
+     "type": "Supplemental",
+     "onetCode": "45-2021.00",
+     "line": 13450
+    },
+    {
+     "id": 8234,
+     "text": "Place vaccines in drinking water, inject vaccines, or dust air with vaccine powder to protect animals from diseases.",
+     "type": "Supplemental",
+     "onetCode": "45-2021.00",
+     "line": 13451
+    },
+    {
+     "id": 21081,
+     "text": "Bathe and groom animals.",
+     "type": "Supplemental",
+     "onetCode": "45-2021.00",
+     "line": 13452
+    },
+    {
+     "id": 21082,
+     "text": "Exercise animals to keep them in healthy condition.",
+     "type": "Supplemental",
+     "onetCode": "45-2021.00",
+     "line": 13453
+    },
+    {
+     "id": 8249,
+     "text": "Adjust controls to maintain specific building temperatures required for animals' health and safety.",
+     "type": "Supplemental",
+     "onetCode": "45-2021.00",
+     "line": 13454
+    },
+    {
+     "id": 8245,
+     "text": "Maintain logs of semen specimens used and animals bred.",
+     "type": "Supplemental",
+     "onetCode": "45-2021.00",
+     "line": 13455
+    },
+    {
+     "id": 8248,
+     "text": "Inject prepared animal semen into female animals for breeding purposes, by inserting nozzle of syringe into vagina and depressing syringe plunger.",
+     "type": "Supplemental",
+     "onetCode": "45-2021.00",
+     "line": 13456
+    },
+    {
+     "id": 8241,
+     "text": "Clip or shear hair on animals.",
+     "type": "Supplemental",
+     "onetCode": "45-2021.00",
+     "line": 13457
+    },
+    {
+     "id": 8243,
+     "text": "Package and label semen to be used for artificial insemination, recording information such as the date, source, quality, and concentration.",
+     "type": "Supplemental",
+     "onetCode": "45-2021.00",
+     "line": 13458
+    },
+    {
+     "id": 8239,
+     "text": "Exhibit animals at shows.",
+     "type": "Supplemental",
+     "onetCode": "45-2021.00",
+     "line": 13459
+    },
+    {
+     "id": 8247,
+     "text": "Measure specified amounts of semen into calibrated syringes, and insert syringes into inseminating guns.",
+     "type": "Supplemental",
+     "onetCode": "45-2021.00",
+     "line": 13460
+    },
+    {
+     "id": 8250,
+     "text": "Examine semen microscopically to assess and record density and motility of gametes, and dilute semen with prescribed diluents, according to formulas.",
+     "type": "Supplemental",
+     "onetCode": "45-2021.00",
+     "line": 13461
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L951",
+    "annualMedian": "oews:national_M2025_dl!AB951",
+    "annualMean": "oews:national_M2025_dl!S951",
+    "hourlyMedian": "oews:national_M2025_dl!W951",
+    "hourlyMean": "oews:national_M2025_dl!R951",
+    "annualPct10": "oews:national_M2025_dl!Z951",
+    "annualPct90": "oews:national_M2025_dl!AD951",
+    "annualOnly": "oews:national_M2025_dl!AE951",
+    "hourlyOnly": "oews:national_M2025_dl!AF951",
+    "title": "oews:national_M2025_dl!J951",
+    "ep.title": "ep:Table 1.2!A748",
+    "ep.employment2025": "ep:Table 1.2!D748",
+    "ep.employment2035": "ep:Table 1.2!E748",
+    "ep.numericChange": "ep:Table 1.2!H748",
+    "ep.percentChange": "ep:Table 1.2!I748",
+    "onetCode": "onet:Occupation Data.txt#L699:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L699:Description"
+   },
+   "nullReasons": {}
+  },
+  "45-2041": {
+   "soc": "45-2041",
+   "title": "Graders and Sorters, Agricultural Products",
+   "major": "45-0000",
+   "minor": "45-2000",
+   "broad": "45-2040",
+   "oewsRows": [
+    953
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 25180,
+   "annualMedian": 35730,
+   "annualMean": 36430,
+   "hourlyMedian": 17.18,
+   "hourlyMean": 17.51,
+   "annualPct10": 29580,
+   "annualPct90": 44490,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Graders and sorters, agricultural products",
+    "employment2025": 45400,
+    "employment2035": 43800,
+    "numericChange": -1500,
+    "percentChange": -3.4
+   },
+   "onetCode": "45-2041.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Grade, sort, or classify unprocessed food and other agricultural products by size, weight, color, or condition.",
+   "tasks": [
+    {
+     "id": 13352,
+     "text": "Place products in containers according to grade and mark grades on containers.",
+     "type": "Core",
+     "onetCode": "45-2041.00",
+     "line": 13462
+    },
+    {
+     "id": 13351,
+     "text": "Weigh products or estimate their weight, visually or by feel.",
+     "type": "Core",
+     "onetCode": "45-2041.00",
+     "line": 13463
+    },
+    {
+     "id": 13350,
+     "text": "Discard inferior or defective products or foreign matter, and place acceptable products in containers for further processing.",
+     "type": "Core",
+     "onetCode": "45-2041.00",
+     "line": 13464
+    },
+    {
+     "id": 13349,
+     "text": "Grade and sort products according to factors such as color, species, length, width, appearance, feel, smell, and quality to ensure correct processing and usage.",
+     "type": "Core",
+     "onetCode": "45-2041.00",
+     "line": 13465
+    },
+    {
+     "id": 13353,
+     "text": "Record grade or identification numbers on tags or on shipping, receiving, or sales sheets.",
+     "type": "Supplemental",
+     "onetCode": "45-2041.00",
+     "line": 13466
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L953",
+    "annualMedian": "oews:national_M2025_dl!AB953",
+    "annualMean": "oews:national_M2025_dl!S953",
+    "hourlyMedian": "oews:national_M2025_dl!W953",
+    "hourlyMean": "oews:national_M2025_dl!R953",
+    "annualPct10": "oews:national_M2025_dl!Z953",
+    "annualPct90": "oews:national_M2025_dl!AD953",
+    "annualOnly": "oews:national_M2025_dl!AE953",
+    "hourlyOnly": "oews:national_M2025_dl!AF953",
+    "title": "oews:national_M2025_dl!J953",
+    "ep.title": "ep:Table 1.2!A749",
+    "ep.employment2025": "ep:Table 1.2!D749",
+    "ep.employment2035": "ep:Table 1.2!E749",
+    "ep.numericChange": "ep:Table 1.2!H749",
+    "ep.percentChange": "ep:Table 1.2!I749",
+    "onetCode": "onet:Occupation Data.txt#L700:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L700:Description"
+   },
+   "nullReasons": {}
+  },
+  "45-2091": {
+   "soc": "45-2091",
+   "title": "Agricultural Equipment Operators",
+   "major": "45-0000",
+   "minor": "45-2000",
+   "broad": "45-2090",
+   "oewsRows": [
+    955
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 28500,
+   "annualMedian": 41730,
+   "annualMean": 43710,
+   "hourlyMedian": 20.06,
+   "hourlyMean": 21.02,
+   "annualPct10": 33500,
+   "annualPct90": 58650,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Agricultural equipment operators",
+    "employment2025": 66900,
+    "employment2035": 72600,
+    "numericChange": 5700,
+    "percentChange": 8.6
+   },
+   "onetCode": "45-2091.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Drive and control equipment to support agricultural activities such as tilling soil; planting, cultivating, and harvesting crops; feeding and herding livestock; or removing animal waste. May perform tasks such as crop baling or hay bucking. May operate stationary equipment to perform post-harvest tasks such as husking, shelling, threshing, and ginning.",
+   "tasks": [
+    {
+     "id": 13369,
+     "text": "Load and unload crops or containers of materials, manually or using conveyors, handtrucks, forklifts, or transfer augers.",
+     "type": "Core",
+     "onetCode": "45-2091.00",
+     "line": 13467
+    },
+    {
+     "id": 13358,
+     "text": "Mix specified materials or chemicals, and dump solutions, powders, or seeds into planter or sprayer machinery.",
+     "type": "Core",
+     "onetCode": "45-2091.00",
+     "line": 13468
+    },
+    {
+     "id": 13363,
+     "text": "Spray fertilizer or pesticide solutions to control insects, fungus and weed growth, and diseases, using hand sprayers.",
+     "type": "Core",
+     "onetCode": "45-2091.00",
+     "line": 13469
+    },
+    {
+     "id": 13356,
+     "text": "Observe and listen to machinery operation to detect equipment malfunctions.",
+     "type": "Core",
+     "onetCode": "45-2091.00",
+     "line": 13470
+    },
+    {
+     "id": 13360,
+     "text": "Manipulate controls to set, activate, and adjust mechanisms on machinery.",
+     "type": "Core",
+     "onetCode": "45-2091.00",
+     "line": 13471
+    },
+    {
+     "id": 13359,
+     "text": "Operate or tend equipment used in agricultural production, such as tractors, combines, and irrigation equipment.",
+     "type": "Core",
+     "onetCode": "45-2091.00",
+     "line": 13472
+    },
+    {
+     "id": 13355,
+     "text": "Adjust, repair, and service farm machinery and notify supervisors when machinery malfunctions.",
+     "type": "Core",
+     "onetCode": "45-2091.00",
+     "line": 13473
+    },
+    {
+     "id": 13364,
+     "text": "Attach farm implements such as plows, discs, sprayers, or harvesters to tractors, using bolts and hand tools.",
+     "type": "Core",
+     "onetCode": "45-2091.00",
+     "line": 13474
+    },
+    {
+     "id": 13362,
+     "text": "Load hoppers, containers, or conveyors to feed machines with products, using forklifts, transfer augers, suction gates, shovels, or pitchforks.",
+     "type": "Supplemental",
+     "onetCode": "45-2091.00",
+     "line": 13475
+    },
+    {
+     "id": 13361,
+     "text": "Direct and monitor the activities of work crews engaged in planting, weeding, or harvesting activities.",
+     "type": "Supplemental",
+     "onetCode": "45-2091.00",
+     "line": 13476
+    },
+    {
+     "id": 13365,
+     "text": "Operate towed machines such as seed drills or manure spreaders to plant, fertilize, dust, and spray crops.",
+     "type": "Supplemental",
+     "onetCode": "45-2091.00",
+     "line": 13477
+    },
+    {
+     "id": 13368,
+     "text": "Weigh crop-filled containers, and record weights and other identifying information.",
+     "type": "Supplemental",
+     "onetCode": "45-2091.00",
+     "line": 13478
+    },
+    {
+     "id": 13367,
+     "text": "Walk beside or ride on planting machines while inserting plants in planter mechanisms at specified intervals.",
+     "type": "Supplemental",
+     "onetCode": "45-2091.00",
+     "line": 13479
+    },
+    {
+     "id": 13366,
+     "text": "Drive trucks to haul crops, supplies, tools, or farm workers.",
+     "type": "Supplemental",
+     "onetCode": "45-2091.00",
+     "line": 13480
+    },
+    {
+     "id": 13370,
+     "text": "Guide products on conveyors to regulate flow through machines, and to discard diseased or rotten products.",
+     "type": "Supplemental",
+     "onetCode": "45-2091.00",
+     "line": 13481
+    },
+    {
+     "id": 13371,
+     "text": "Position boxes or attach bags at discharge ends of machinery to catch products, removing and closing full containers.",
+     "type": "Supplemental",
+     "onetCode": "45-2091.00",
+     "line": 13482
+    },
+    {
+     "id": 13357,
+     "text": "Irrigate soil, using portable pipes or ditch systems, and maintain ditches or pipes and pumps.",
+     "type": "Supplemental",
+     "onetCode": "45-2091.00",
+     "line": 13483
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L955",
+    "annualMedian": "oews:national_M2025_dl!AB955",
+    "annualMean": "oews:national_M2025_dl!S955",
+    "hourlyMedian": "oews:national_M2025_dl!W955",
+    "hourlyMean": "oews:national_M2025_dl!R955",
+    "annualPct10": "oews:national_M2025_dl!Z955",
+    "annualPct90": "oews:national_M2025_dl!AD955",
+    "annualOnly": "oews:national_M2025_dl!AE955",
+    "hourlyOnly": "oews:national_M2025_dl!AF955",
+    "title": "oews:national_M2025_dl!J955",
+    "ep.title": "ep:Table 1.2!A751",
+    "ep.employment2025": "ep:Table 1.2!D751",
+    "ep.employment2035": "ep:Table 1.2!E751",
+    "ep.numericChange": "ep:Table 1.2!H751",
+    "ep.percentChange": "ep:Table 1.2!I751",
+    "onetCode": "onet:Occupation Data.txt#L701:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L701:Description"
+   },
+   "nullReasons": {}
+  },
+  "45-2092": {
+   "soc": "45-2092",
+   "title": "Farmworkers and Laborers, Crop, Nursery, and Greenhouse",
+   "major": "45-0000",
+   "minor": "45-2000",
+   "broad": "45-2090",
+   "oewsRows": [
+    956
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 265500,
+   "annualMedian": 35660,
+   "annualMean": 37630,
+   "hourlyMedian": 17.15,
+   "hourlyMean": 18.09,
+   "annualPct10": 32900,
+   "annualPct90": 45690,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Farmworkers and laborers, crop, nursery, and greenhouse",
+    "employment2025": 546800,
+    "employment2035": 533600,
+    "numericChange": -13200,
+    "percentChange": -2.4
+   },
+   "onetCode": "45-2092.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Manually plant, cultivate, and harvest vegetables, fruits, nuts, horticultural specialties, and field crops. Use hand tools, such as shovels, trowels, hoes, tampers, pruning hooks, shears, and knives. Duties may include tilling soil and applying fertilizers; transplanting, weeding, thinning, or pruning crops; applying pesticides; or cleaning, grading, sorting, packing, and loading harvested products. May construct trellises, repair fences and farm buildings, or participate in irrigation activities.",
+   "tasks": [
+    {
+     "id": 23387,
+     "text": "Record information about crops, such as pesticide use, yields, or costs.",
+     "type": "Core",
+     "onetCode": "45-2092.00",
+     "line": 13484
+    },
+    {
+     "id": 23379,
+     "text": "Direct and monitor the work of casual and seasonal help during planting and harvesting.",
+     "type": "Core",
+     "onetCode": "45-2092.00",
+     "line": 13485
+    },
+    {
+     "id": 23392,
+     "text": "Participate in the inspection, grading, sorting, storage, and post-harvest treatment of crops.",
+     "type": "Core",
+     "onetCode": "45-2092.00",
+     "line": 13486
+    },
+    {
+     "id": 23370,
+     "text": "Harvest plants, and transplant or pot and label them.",
+     "type": "Core",
+     "onetCode": "45-2092.00",
+     "line": 13487
+    },
+    {
+     "id": 23373,
+     "text": "Repair and maintain farm vehicles, implements, and mechanical equipment.",
+     "type": "Core",
+     "onetCode": "45-2092.00",
+     "line": 13488
+    },
+    {
+     "id": 23374,
+     "text": "Harvest fruits and vegetables by hand.",
+     "type": "Core",
+     "onetCode": "45-2092.00",
+     "line": 13489
+    },
+    {
+     "id": 23372,
+     "text": "Set up and operate irrigation equipment.",
+     "type": "Core",
+     "onetCode": "45-2092.00",
+     "line": 13490
+    },
+    {
+     "id": 23378,
+     "text": "Inform farmers or farm managers of crop progress.",
+     "type": "Core",
+     "onetCode": "45-2092.00",
+     "line": 13491
+    },
+    {
+     "id": 23380,
+     "text": "Identify plants, pests, and weeds to determine the selection and application of pesticides and fertilizers.",
+     "type": "Core",
+     "onetCode": "45-2092.00",
+     "line": 13492
+    },
+    {
+     "id": 23371,
+     "text": "Operate tractors, tractor-drawn machinery, and self-propelled machinery to plow, harrow and fertilize soil, or to plant, cultivate, spray and harvest crops.",
+     "type": "Core",
+     "onetCode": "45-2092.00",
+     "line": 13493
+    },
+    {
+     "id": 23397,
+     "text": "Load agricultural products into trucks, and drive trucks to market or storage facilities.",
+     "type": "Core",
+     "onetCode": "45-2092.00",
+     "line": 13494
+    },
+    {
+     "id": 23375,
+     "text": "Clean work areas, and maintain grounds and landscaping.",
+     "type": "Core",
+     "onetCode": "45-2092.00",
+     "line": 13495
+    },
+    {
+     "id": 23376,
+     "text": "Sell and deliver plants and flowers to customers.",
+     "type": "Supplemental",
+     "onetCode": "45-2092.00",
+     "line": 13496
+    },
+    {
+     "id": 23381,
+     "text": "Regulate greenhouse conditions, and indoor and outdoor irrigation systems.",
+     "type": "Supplemental",
+     "onetCode": "45-2092.00",
+     "line": 13497
+    },
+    {
+     "id": 23383,
+     "text": "Feel plants' leaves and note their coloring to detect the presence of insects or disease.",
+     "type": "Supplemental",
+     "onetCode": "45-2092.00",
+     "line": 13498
+    },
+    {
+     "id": 23384,
+     "text": "Provide information and advice to the public regarding the selection, purchase, and care of products.",
+     "type": "Supplemental",
+     "onetCode": "45-2092.00",
+     "line": 13499
+    },
+    {
+     "id": 23385,
+     "text": "Maintain and repair irrigation and climate control systems.",
+     "type": "Supplemental",
+     "onetCode": "45-2092.00",
+     "line": 13500
+    },
+    {
+     "id": 23386,
+     "text": "Dig, cut, and transplant seedlings, cuttings, trees, and shrubs.",
+     "type": "Supplemental",
+     "onetCode": "45-2092.00",
+     "line": 13501
+    },
+    {
+     "id": 23390,
+     "text": "Record information about plants and plant growth.",
+     "type": "Supplemental",
+     "onetCode": "45-2092.00",
+     "line": 13502
+    },
+    {
+     "id": 23389,
+     "text": "Maintain inventory, ordering materials as required.",
+     "type": "Supplemental",
+     "onetCode": "45-2092.00",
+     "line": 13503
+    },
+    {
+     "id": 23391,
+     "text": "Dig, rake, and screen soil, filling cold frames and hot beds in preparation for planting.",
+     "type": "Supplemental",
+     "onetCode": "45-2092.00",
+     "line": 13504
+    },
+    {
+     "id": 23393,
+     "text": "Inspect plants and bud ties to assess quality.",
+     "type": "Supplemental",
+     "onetCode": "45-2092.00",
+     "line": 13505
+    },
+    {
+     "id": 23395,
+     "text": "Move containerized shrubs, plants, and trees, using wheelbarrows or tractors.",
+     "type": "Supplemental",
+     "onetCode": "45-2092.00",
+     "line": 13506
+    },
+    {
+     "id": 23396,
+     "text": "Tie and bunch flowers, plants, shrubs, and trees, wrap their roots, and pack them into boxes to fill orders.",
+     "type": "Supplemental",
+     "onetCode": "45-2092.00",
+     "line": 13507
+    },
+    {
+     "id": 23398,
+     "text": "Haul and spread topsoil, fertilizer, peat moss, and other materials to condition soil, using wheelbarrows or carts and shovels.",
+     "type": "Supplemental",
+     "onetCode": "45-2092.00",
+     "line": 13508
+    },
+    {
+     "id": 23388,
+     "text": "Repair farm buildings, fences, and other structures.",
+     "type": "Supplemental",
+     "onetCode": "45-2092.00",
+     "line": 13509
+    },
+    {
+     "id": 23399,
+     "text": "Plant, spray, weed, fertilize, water, and prune plants, shrubs, and trees, using gardening tools.",
+     "type": "n/a",
+     "onetCode": "45-2092.00",
+     "line": 13510
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L956",
+    "annualMedian": "oews:national_M2025_dl!AB956",
+    "annualMean": "oews:national_M2025_dl!S956",
+    "hourlyMedian": "oews:national_M2025_dl!W956",
+    "hourlyMean": "oews:national_M2025_dl!R956",
+    "annualPct10": "oews:national_M2025_dl!Z956",
+    "annualPct90": "oews:national_M2025_dl!AD956",
+    "annualOnly": "oews:national_M2025_dl!AE956",
+    "hourlyOnly": "oews:national_M2025_dl!AF956",
+    "title": "oews:national_M2025_dl!J956",
+    "ep.title": "ep:Table 1.2!A752",
+    "ep.employment2025": "ep:Table 1.2!D752",
+    "ep.employment2035": "ep:Table 1.2!E752",
+    "ep.numericChange": "ep:Table 1.2!H752",
+    "ep.percentChange": "ep:Table 1.2!I752",
+    "onetCode": "onet:Occupation Data.txt#L702:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L702:Description"
+   },
+   "nullReasons": {}
+  },
+  "45-2093": {
+   "soc": "45-2093",
+   "title": "Farmworkers, Farm, Ranch, and Aquacultural Animals",
+   "major": "45-0000",
+   "minor": "45-2000",
+   "broad": "45-2090",
+   "oewsRows": [
+    957
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 32810,
+   "annualMedian": 36670,
+   "annualMean": 39260,
+   "hourlyMedian": 17.63,
+   "hourlyMean": 18.88,
+   "annualPct10": 27360,
+   "annualPct90": 54080,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Farmworkers, farm, ranch, and aquacultural animals",
+    "employment2025": 202100,
+    "employment2035": 195700,
+    "numericChange": -6400,
+    "percentChange": -3.2
+   },
+   "onetCode": "45-2093.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Attend to live farm, ranch, open range or aquacultural animals that may include cattle, sheep, swine, goats, horses and other equines, poultry, rabbits, finfish, shellfish, and bees. Attend to animals produced for animal products, such as meat, fur, skins, feathers, eggs, milk, and honey. Duties may include feeding, watering, herding, grazing, milking, castrating, branding, de-beaking, weighing, catching, and loading animals. May maintain records on animals; examine animals to detect diseases and injuries; assist in birth deliveries; and administer medications, vaccinations, or insecticides as appropriate. May clean and maintain animal housing areas. Includes workers who shear wool from sheep and collect eggs in hatcheries.",
+   "tasks": [
+    {
+     "id": 13410,
+     "text": "Feed and water livestock and monitor food and water supplies.",
+     "type": "Core",
+     "onetCode": "45-2093.00",
+     "line": 13511
+    },
+    {
+     "id": 13419,
+     "text": "Herd livestock to pastures for grazing or to scales, trucks, or other enclosures.",
+     "type": "Core",
+     "onetCode": "45-2093.00",
+     "line": 13512
+    },
+    {
+     "id": 13412,
+     "text": "Examine animals to detect illness, injury, or disease, and to check physical characteristics, such as rate of weight gain.",
+     "type": "Core",
+     "onetCode": "45-2093.00",
+     "line": 13513
+    },
+    {
+     "id": 13413,
+     "text": "Provide medical treatment, such as administering medications and vaccinations, or arrange for veterinarians to provide more extensive treatment.",
+     "type": "Core",
+     "onetCode": "45-2093.00",
+     "line": 13514
+    },
+    {
+     "id": 13418,
+     "text": "Mark livestock to identify ownership and grade, using brands, tags, paint, or tattoos.",
+     "type": "Core",
+     "onetCode": "45-2093.00",
+     "line": 13515
+    },
+    {
+     "id": 13411,
+     "text": "Drive trucks, tractors, and other equipment to distribute feed to animals.",
+     "type": "Core",
+     "onetCode": "45-2093.00",
+     "line": 13516
+    },
+    {
+     "id": 13424,
+     "text": "Segregate animals according to weight, age, color, and physical condition.",
+     "type": "Core",
+     "onetCode": "45-2093.00",
+     "line": 13517
+    },
+    {
+     "id": 13415,
+     "text": "Inspect, maintain, and repair equipment, machinery, buildings, pens, yards, and fences.",
+     "type": "Core",
+     "onetCode": "45-2093.00",
+     "line": 13518
+    },
+    {
+     "id": 13416,
+     "text": "Move equipment, poultry, or livestock from one location to another, manually or using trucks or carts.",
+     "type": "Core",
+     "onetCode": "45-2093.00",
+     "line": 13519
+    },
+    {
+     "id": 13417,
+     "text": "Clean stalls, pens, and equipment, using disinfectant solutions, brushes, shovels, water hoses, or pumps.",
+     "type": "Core",
+     "onetCode": "45-2093.00",
+     "line": 13520
+    },
+    {
+     "id": 13414,
+     "text": "Mix feed, additives, and medicines in prescribed portions.",
+     "type": "Supplemental",
+     "onetCode": "45-2093.00",
+     "line": 13521
+    },
+    {
+     "id": 13420,
+     "text": "Shift animals between grazing areas to ensure that they have sufficient access to food.",
+     "type": "Supplemental",
+     "onetCode": "45-2093.00",
+     "line": 13522
+    },
+    {
+     "id": 13430,
+     "text": "Protect herds from predators, using trained dogs.",
+     "type": "Supplemental",
+     "onetCode": "45-2093.00",
+     "line": 13523
+    },
+    {
+     "id": 13421,
+     "text": "Order food for animals, and arrange for its delivery.",
+     "type": "Supplemental",
+     "onetCode": "45-2093.00",
+     "line": 13524
+    },
+    {
+     "id": 13422,
+     "text": "Perform duties related to livestock reproduction, such as breeding animals within appropriate timeframes, performing artificial inseminations, and helping with animal births.",
+     "type": "Supplemental",
+     "onetCode": "45-2093.00",
+     "line": 13525
+    },
+    {
+     "id": 13425,
+     "text": "Patrol grazing lands on horseback or using all-terrain vehicles.",
+     "type": "Supplemental",
+     "onetCode": "45-2093.00",
+     "line": 13526
+    },
+    {
+     "id": 13426,
+     "text": "Maintain growth, feeding, production, and cost records.",
+     "type": "Supplemental",
+     "onetCode": "45-2093.00",
+     "line": 13527
+    },
+    {
+     "id": 13427,
+     "text": "Groom, clip, trim, or castrate animals, dock ears and tails, or shear coats to collect hair.",
+     "type": "Supplemental",
+     "onetCode": "45-2093.00",
+     "line": 13528
+    },
+    {
+     "id": 13428,
+     "text": "Spray livestock with disinfectants and insecticides, or dip or bathe animals.",
+     "type": "Supplemental",
+     "onetCode": "45-2093.00",
+     "line": 13529
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L957",
+    "annualMedian": "oews:national_M2025_dl!AB957",
+    "annualMean": "oews:national_M2025_dl!S957",
+    "hourlyMedian": "oews:national_M2025_dl!W957",
+    "hourlyMean": "oews:national_M2025_dl!R957",
+    "annualPct10": "oews:national_M2025_dl!Z957",
+    "annualPct90": "oews:national_M2025_dl!AD957",
+    "annualOnly": "oews:national_M2025_dl!AE957",
+    "hourlyOnly": "oews:national_M2025_dl!AF957",
+    "title": "oews:national_M2025_dl!J957",
+    "ep.title": "ep:Table 1.2!A753",
+    "ep.employment2025": "ep:Table 1.2!D753",
+    "ep.employment2035": "ep:Table 1.2!E753",
+    "ep.numericChange": "ep:Table 1.2!H753",
+    "ep.percentChange": "ep:Table 1.2!I753",
+    "onetCode": "onet:Occupation Data.txt#L703:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L703:Description"
+   },
+   "nullReasons": {}
+  },
+  "45-2099": {
+   "soc": "45-2099",
+   "title": "Agricultural Workers, All Other",
+   "major": "45-0000",
+   "minor": "45-2000",
+   "broad": "45-2090",
+   "oewsRows": [
+    958
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 3620,
+   "annualMedian": 39850,
+   "annualMean": 45510,
+   "hourlyMedian": 19.16,
+   "hourlyMean": 21.88,
+   "annualPct10": 27760,
+   "annualPct90": 76940,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Agricultural workers, all other",
+    "employment2025": 9300,
+    "employment2035": 9700,
+    "numericChange": 400,
+    "percentChange": 3.8
+   },
+   "onetCode": "45-2099.00",
+   "onetTaskSource": "none",
+   "onetSubCodes": [],
+   "description": "All agricultural workers not listed separately.",
+   "tasks": [],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L958",
+    "annualMedian": "oews:national_M2025_dl!AB958",
+    "annualMean": "oews:national_M2025_dl!S958",
+    "hourlyMedian": "oews:national_M2025_dl!W958",
+    "hourlyMean": "oews:national_M2025_dl!R958",
+    "annualPct10": "oews:national_M2025_dl!Z958",
+    "annualPct90": "oews:national_M2025_dl!AD958",
+    "annualOnly": "oews:national_M2025_dl!AE958",
+    "hourlyOnly": "oews:national_M2025_dl!AF958",
+    "title": "oews:national_M2025_dl!J958",
+    "ep.title": "ep:Table 1.2!A754",
+    "ep.employment2025": "ep:Table 1.2!D754",
+    "ep.employment2035": "ep:Table 1.2!E754",
+    "ep.numericChange": "ep:Table 1.2!H754",
+    "ep.percentChange": "ep:Table 1.2!I754",
+    "onetCode": "onet:Occupation Data.txt#L704:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L704:Description"
+   },
+   "nullReasons": {
+    "tasks": "O*NET 30.1 has no task statements for 45-2099.00"
+   }
+  },
+  "45-4011": {
+   "soc": "45-4011",
+   "title": "Forest and Conservation Workers",
+   "major": "45-0000",
+   "minor": "45-4000",
+   "broad": "45-4010",
+   "oewsRows": [
+    961
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 6050,
+   "annualMedian": 43680,
+   "annualMean": 43680,
+   "hourlyMedian": 21,
+   "hourlyMean": 21,
+   "annualPct10": 33780,
+   "annualPct90": 57220,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Forest and conservation workers",
+    "employment2025": 14700,
+    "employment2035": 14500,
+    "numericChange": -200,
+    "percentChange": -1.5
+   },
+   "onetCode": "45-4011.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Under supervision, perform manual labor necessary to develop, maintain, or protect areas such as forests, forested areas, woodlands, wetlands, and rangelands through such activities as raising and transporting seedlings; combating insects, pests, and diseases harmful to plant life; and building structures to control water, erosion, and leaching of soil. Includes forester aides, seedling pullers, tree planters, and gatherers of nontimber forestry products such as pine straw.",
+   "tasks": [
+    {
+     "id": 7026,
+     "text": "Check equipment to ensure that it is operating properly.",
+     "type": "Core",
+     "onetCode": "45-4011.00",
+     "line": 13559
+    },
+    {
+     "id": 7028,
+     "text": "Fight forest fires or perform prescribed burning tasks under the direction of fire suppression officers or forestry technicians.",
+     "type": "Core",
+     "onetCode": "45-4011.00",
+     "line": 13560
+    },
+    {
+     "id": 7029,
+     "text": "Perform fire protection or suppression duties, such as constructing fire breaks or disposing of brush.",
+     "type": "Core",
+     "onetCode": "45-4011.00",
+     "line": 13561
+    },
+    {
+     "id": 7027,
+     "text": "Confer with other workers to discuss issues, such as safety, cutting heights, or work needs.",
+     "type": "Core",
+     "onetCode": "45-4011.00",
+     "line": 13562
+    },
+    {
+     "id": 7035,
+     "text": "Maintain tallies of trees examined and counted during tree marking or measuring efforts.",
+     "type": "Supplemental",
+     "onetCode": "45-4011.00",
+     "line": 13563
+    },
+    {
+     "id": 7041,
+     "text": "Explain or enforce regulations regarding camping, vehicle use, fires, use of buildings, or sanitation.",
+     "type": "Supplemental",
+     "onetCode": "45-4011.00",
+     "line": 13564
+    },
+    {
+     "id": 7042,
+     "text": "Operate skidders, bulldozers, or other prime movers to pull a variety of scarification or site preparation equipment over areas to be regenerated.",
+     "type": "Supplemental",
+     "onetCode": "45-4011.00",
+     "line": 13565
+    },
+    {
+     "id": 7032,
+     "text": "Spray or inject vegetation with insecticides to kill insects or to protect against disease or with herbicides to reduce competing vegetation.",
+     "type": "Supplemental",
+     "onetCode": "45-4011.00",
+     "line": 13566
+    },
+    {
+     "id": 7034,
+     "text": "Thin or space trees, using power thinning saws.",
+     "type": "Supplemental",
+     "onetCode": "45-4011.00",
+     "line": 13567
+    },
+    {
+     "id": 7031,
+     "text": "Identify diseased or undesirable trees and remove them, using power saws or hand saws.",
+     "type": "Supplemental",
+     "onetCode": "45-4011.00",
+     "line": 13568
+    },
+    {
+     "id": 7030,
+     "text": "Select or cut trees according to markings or sizes, types, or grades.",
+     "type": "Supplemental",
+     "onetCode": "45-4011.00",
+     "line": 13569
+    },
+    {
+     "id": 7038,
+     "text": "Prune or shear tree tops or limbs to control growth, increase density, or improve shape.",
+     "type": "Supplemental",
+     "onetCode": "45-4011.00",
+     "line": 13570
+    },
+    {
+     "id": 7045,
+     "text": "Maintain campsites or recreational areas, replenishing firewood or other supplies and cleaning kitchens or restrooms.",
+     "type": "Supplemental",
+     "onetCode": "45-4011.00",
+     "line": 13571
+    },
+    {
+     "id": 7037,
+     "text": "Erect signs or fences, using posthole diggers, shovels, or other hand tools.",
+     "type": "Supplemental",
+     "onetCode": "45-4011.00",
+     "line": 13572
+    },
+    {
+     "id": 7039,
+     "text": "Select tree seedlings, prepare the ground, or plant the trees in reforestation areas, using manual planting tools.",
+     "type": "Supplemental",
+     "onetCode": "45-4011.00",
+     "line": 13573
+    },
+    {
+     "id": 7040,
+     "text": "Provide assistance to forest survey crews by clearing site-lines, holding measuring tools, or setting stakes.",
+     "type": "Supplemental",
+     "onetCode": "45-4011.00",
+     "line": 13574
+    },
+    {
+     "id": 20632,
+     "text": "Sort tree seedlings, discarding substandard seedlings, according to standard charts or verbal instructions.",
+     "type": "Supplemental",
+     "onetCode": "45-4011.00",
+     "line": 13575
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L961",
+    "annualMedian": "oews:national_M2025_dl!AB961",
+    "annualMean": "oews:national_M2025_dl!S961",
+    "hourlyMedian": "oews:national_M2025_dl!W961",
+    "hourlyMean": "oews:national_M2025_dl!R961",
+    "annualPct10": "oews:national_M2025_dl!Z961",
+    "annualPct90": "oews:national_M2025_dl!AD961",
+    "annualOnly": "oews:national_M2025_dl!AE961",
+    "hourlyOnly": "oews:national_M2025_dl!AF961",
+    "title": "oews:national_M2025_dl!J961",
+    "ep.title": "ep:Table 1.2!A758",
+    "ep.employment2025": "ep:Table 1.2!D758",
+    "ep.employment2035": "ep:Table 1.2!E758",
+    "ep.numericChange": "ep:Table 1.2!H758",
+    "ep.percentChange": "ep:Table 1.2!I758",
+    "onetCode": "onet:Occupation Data.txt#L706:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L706:Description"
+   },
+   "nullReasons": {}
+  },
+  "45-4021": {
+   "soc": "45-4021",
+   "title": "Fallers",
+   "major": "45-0000",
+   "minor": "45-4000",
+   "broad": "45-4020",
+   "oewsRows": [
+    963
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 3130,
+   "annualMedian": 52100,
+   "annualMean": 57110,
+   "hourlyMedian": 25.05,
+   "hourlyMean": 27.46,
+   "annualPct10": 35180,
+   "annualPct90": 82360,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Fallers",
+    "employment2025": 4300,
+    "employment2035": 3900,
+    "numericChange": -400,
+    "percentChange": -9.9
+   },
+   "onetCode": "45-4021.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Use axes or chainsaws to fell trees using knowledge of tree characteristics and cutting techniques to control direction of fall and minimize tree damage.",
+   "tasks": [
+    {
+     "id": 13484,
+     "text": "Stop saw engines, pull cutting bars from cuts, and run to safety as tree falls.",
+     "type": "Core",
+     "onetCode": "45-4021.00",
+     "line": 13576
+    },
+    {
+     "id": 13485,
+     "text": "Appraise trees for certain characteristics, such as twist, rot, and heavy limb growth, and gauge amount and direction of lean, to determine how to control the direction of a tree's fall with the least damage.",
+     "type": "Core",
+     "onetCode": "45-4021.00",
+     "line": 13577
+    },
+    {
+     "id": 13486,
+     "text": "Saw back-cuts, leaving sufficient sound wood to control direction of fall.",
+     "type": "Core",
+     "onetCode": "45-4021.00",
+     "line": 13578
+    },
+    {
+     "id": 13487,
+     "text": "Clear brush from work areas and escape routes, and cut saplings and other trees from direction of falls, using axes, chainsaws, or bulldozers.",
+     "type": "Core",
+     "onetCode": "45-4021.00",
+     "line": 13579
+    },
+    {
+     "id": 13488,
+     "text": "Measure felled trees and cut them into specified log lengths, using chain saws and axes.",
+     "type": "Core",
+     "onetCode": "45-4021.00",
+     "line": 13580
+    },
+    {
+     "id": 13489,
+     "text": "Assess logs after cutting to ensure that the quality and length are correct.",
+     "type": "Core",
+     "onetCode": "45-4021.00",
+     "line": 13581
+    },
+    {
+     "id": 13490,
+     "text": "Determine position, direction, and depth of cuts to be made, and placement of wedges or jacks.",
+     "type": "Core",
+     "onetCode": "45-4021.00",
+     "line": 13582
+    },
+    {
+     "id": 13491,
+     "text": "Control the direction of a tree's fall by scoring cutting lines with axes, sawing undercuts along scored lines with chainsaws, knocking slabs from cuts with single-bit axes, and driving wedges.",
+     "type": "Core",
+     "onetCode": "45-4021.00",
+     "line": 13583
+    },
+    {
+     "id": 13492,
+     "text": "Trim off the tops and limbs of trees, using chainsaws, delimbers, or axes.",
+     "type": "Core",
+     "onetCode": "45-4021.00",
+     "line": 13584
+    },
+    {
+     "id": 13493,
+     "text": "Select trees to be cut down, assessing factors such as site, terrain, and weather conditions before beginning work.",
+     "type": "Core",
+     "onetCode": "45-4021.00",
+     "line": 13585
+    },
+    {
+     "id": 13494,
+     "text": "Maintain and repair chainsaws and other equipment, cleaning, oiling, and greasing equipment, and sharpening equipment properly.",
+     "type": "Core",
+     "onetCode": "45-4021.00",
+     "line": 13586
+    },
+    {
+     "id": 13495,
+     "text": "Insert jacks or drive wedges behind saws to prevent binding of saws and to start trees falling.",
+     "type": "Core",
+     "onetCode": "45-4021.00",
+     "line": 13587
+    },
+    {
+     "id": 13496,
+     "text": "Tag unsafe trees with high-visibility ribbons.",
+     "type": "Core",
+     "onetCode": "45-4021.00",
+     "line": 13588
+    },
+    {
+     "id": 13497,
+     "text": "Secure steel cables or chains to logs for dragging by tractors or for pulling by cable yarding systems.",
+     "type": "Supplemental",
+     "onetCode": "45-4021.00",
+     "line": 13589
+    },
+    {
+     "id": 13498,
+     "text": "Load logs or wood onto trucks, trailers, or railroad cars, by hand or using loaders or winches.",
+     "type": "Supplemental",
+     "onetCode": "45-4021.00",
+     "line": 13590
+    },
+    {
+     "id": 13499,
+     "text": "Mark logs for identification.",
+     "type": "Supplemental",
+     "onetCode": "45-4021.00",
+     "line": 13591
+    },
+    {
+     "id": 13500,
+     "text": "Work as a member of a team, rotating between chain saw operation and skidder operation.",
+     "type": "Supplemental",
+     "onetCode": "45-4021.00",
+     "line": 13592
+    },
+    {
+     "id": 13501,
+     "text": "Place supporting limbs or poles under felled trees to avoid splitting undersides, and to prevent logs from rolling.",
+     "type": "Supplemental",
+     "onetCode": "45-4021.00",
+     "line": 13593
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L963",
+    "annualMedian": "oews:national_M2025_dl!AB963",
+    "annualMean": "oews:national_M2025_dl!S963",
+    "hourlyMedian": "oews:national_M2025_dl!W963",
+    "hourlyMean": "oews:national_M2025_dl!R963",
+    "annualPct10": "oews:national_M2025_dl!Z963",
+    "annualPct90": "oews:national_M2025_dl!AD963",
+    "annualOnly": "oews:national_M2025_dl!AE963",
+    "hourlyOnly": "oews:national_M2025_dl!AF963",
+    "title": "oews:national_M2025_dl!J963",
+    "ep.title": "ep:Table 1.2!A760",
+    "ep.employment2025": "ep:Table 1.2!D760",
+    "ep.employment2035": "ep:Table 1.2!E760",
+    "ep.numericChange": "ep:Table 1.2!H760",
+    "ep.percentChange": "ep:Table 1.2!I760",
+    "onetCode": "onet:Occupation Data.txt#L707:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L707:Description"
+   },
+   "nullReasons": {}
+  },
+  "45-4022": {
+   "soc": "45-4022",
+   "title": "Logging Equipment Operators",
+   "major": "45-0000",
+   "minor": "45-4000",
+   "broad": "45-4020",
+   "oewsRows": [
+    964
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 21060,
+   "annualMedian": 49740,
+   "annualMean": 53190,
+   "hourlyMedian": 23.91,
+   "hourlyMean": 25.57,
+   "annualPct10": 35170,
+   "annualPct90": 74300,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Logging equipment operators",
+    "employment2025": 29300,
+    "employment2035": 28200,
+    "numericChange": -1100,
+    "percentChange": -3.8
+   },
+   "onetCode": "45-4022.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Drive logging tractor or wheeled vehicle equipped with one or more accessories, such as bulldozer blade, frontal shear, grapple, logging arch, cable winches, hoisting rack, or crane boom, to fell tree; to skid, load, unload, or stack logs; or to pull stumps or clear brush. Includes operating stand-alone logging machines, such as log chippers.",
+   "tasks": [
+    {
+     "id": 9802,
+     "text": "Inspect equipment for safety prior to use, and perform necessary basic maintenance tasks.",
+     "type": "Core",
+     "onetCode": "45-4022.00",
+     "line": 13594
+    },
+    {
+     "id": 9807,
+     "text": "Control hydraulic tractors equipped with tree clamps and booms to lift, swing, and bunch sheared trees.",
+     "type": "Core",
+     "onetCode": "45-4022.00",
+     "line": 13595
+    },
+    {
+     "id": 9806,
+     "text": "Grade logs according to characteristics such as knot size and straightness, and according to established industry or company standards.",
+     "type": "Core",
+     "onetCode": "45-4022.00",
+     "line": 13596
+    },
+    {
+     "id": 9803,
+     "text": "Drive straight or articulated tractors equipped with accessories such as bulldozer blades, grapples, logging arches, cable winches, and crane booms to skid, load, unload, or stack logs, pull stumps, or clear brush.",
+     "type": "Core",
+     "onetCode": "45-4022.00",
+     "line": 13597
+    },
+    {
+     "id": 9804,
+     "text": "Drive crawler or wheeled tractors to drag or transport logs from felling sites to log landing areas for processing and loading.",
+     "type": "Core",
+     "onetCode": "45-4022.00",
+     "line": 13598
+    },
+    {
+     "id": 9809,
+     "text": "Fill out required job or shift report forms.",
+     "type": "Core",
+     "onetCode": "45-4022.00",
+     "line": 13599
+    },
+    {
+     "id": 9805,
+     "text": "Drive tractors for building or repairing logging and skid roads.",
+     "type": "Core",
+     "onetCode": "45-4022.00",
+     "line": 13600
+    },
+    {
+     "id": 9808,
+     "text": "Drive and maneuver tractors and tree harvesters to shear the tops off of trees, cut and limb the trees, and cut the logs into desired lengths.",
+     "type": "Supplemental",
+     "onetCode": "45-4022.00",
+     "line": 13601
+    },
+    {
+     "id": 9810,
+     "text": "Calculate total board feet, cordage, or other wood measurement units, using conversion tables.",
+     "type": "Supplemental",
+     "onetCode": "45-4022.00",
+     "line": 13602
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L964",
+    "annualMedian": "oews:national_M2025_dl!AB964",
+    "annualMean": "oews:national_M2025_dl!S964",
+    "hourlyMedian": "oews:national_M2025_dl!W964",
+    "hourlyMean": "oews:national_M2025_dl!R964",
+    "annualPct10": "oews:national_M2025_dl!Z964",
+    "annualPct90": "oews:national_M2025_dl!AD964",
+    "annualOnly": "oews:national_M2025_dl!AE964",
+    "hourlyOnly": "oews:national_M2025_dl!AF964",
+    "title": "oews:national_M2025_dl!J964",
+    "ep.title": "ep:Table 1.2!A761",
+    "ep.employment2025": "ep:Table 1.2!D761",
+    "ep.employment2035": "ep:Table 1.2!E761",
+    "ep.numericChange": "ep:Table 1.2!H761",
+    "ep.percentChange": "ep:Table 1.2!I761",
+    "onetCode": "onet:Occupation Data.txt#L708:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L708:Description"
+   },
+   "nullReasons": {}
+  },
+  "45-4023": {
+   "soc": "45-4023",
+   "title": "Log Graders and Scalers",
+   "major": "45-0000",
+   "minor": "45-4000",
+   "broad": "45-4020",
+   "oewsRows": [
+    965
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 3070,
+   "annualMedian": 46330,
+   "annualMean": 47770,
+   "hourlyMedian": 22.27,
+   "hourlyMean": 22.97,
+   "annualPct10": 34950,
+   "annualPct90": 62400,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Log graders and scalers",
+    "employment2025": 4400,
+    "employment2035": 4300,
+    "numericChange": -100,
+    "percentChange": -2.2
+   },
+   "onetCode": "45-4023.00",
+   "onetTaskSource": ".00",
+   "onetSubCodes": [],
+   "description": "Grade logs or estimate the marketable content or value of logs or pulpwood in sorting yards, millpond, log deck, or similar locations. Inspect logs for defects or measure logs to determine volume.",
+   "tasks": [
+    {
+     "id": 9811,
+     "text": "Evaluate log characteristics and determine grades, using established criteria.",
+     "type": "Core",
+     "onetCode": "45-4023.00",
+     "line": 13603
+    },
+    {
+     "id": 9812,
+     "text": "Record data about individual trees or load volumes into tally books or hand-held collection terminals.",
+     "type": "Core",
+     "onetCode": "45-4023.00",
+     "line": 13604
+    },
+    {
+     "id": 9814,
+     "text": "Measure felled logs or loads of pulpwood to calculate volume, weight, dimensions, and marketable value, using measuring devices and conversion tables.",
+     "type": "Core",
+     "onetCode": "45-4023.00",
+     "line": 13605
+    },
+    {
+     "id": 9813,
+     "text": "Paint identification marks of specified colors on logs to identify grades or species, using spray cans, or call out grades to log markers.",
+     "type": "Core",
+     "onetCode": "45-4023.00",
+     "line": 13606
+    },
+    {
+     "id": 9817,
+     "text": "Jab logs with metal ends of scale sticks, and inspect logs to ascertain characteristics or defects such as water damage, splits, knots, broken ends, rotten areas, twists, and curves.",
+     "type": "Core",
+     "onetCode": "45-4023.00",
+     "line": 13607
+    },
+    {
+     "id": 9816,
+     "text": "Identify logs of substandard or special grade so that they can be returned to shippers, regraded, recut, or transferred for other processing.",
+     "type": "Core",
+     "onetCode": "45-4023.00",
+     "line": 13608
+    },
+    {
+     "id": 21015,
+     "text": "Arrange for hauling of logs to appropriate mill sites.",
+     "type": "Supplemental",
+     "onetCode": "45-4023.00",
+     "line": 13609
+    },
+    {
+     "id": 9820,
+     "text": "Weigh log trucks before and after unloading, and record load weights and supplier identities.",
+     "type": "Supplemental",
+     "onetCode": "45-4023.00",
+     "line": 13610
+    },
+    {
+     "id": 9815,
+     "text": "Measure log lengths and mark boles for bucking into logs, according to specifications.",
+     "type": "Supplemental",
+     "onetCode": "45-4023.00",
+     "line": 13611
+    },
+    {
+     "id": 9819,
+     "text": "Communicate with coworkers by signals to direct log movement.",
+     "type": "Supplemental",
+     "onetCode": "45-4023.00",
+     "line": 13612
+    },
+    {
+     "id": 9818,
+     "text": "Drive to sawmills, wharfs, or skids to inspect logs or pulpwood.",
+     "type": "Supplemental",
+     "onetCode": "45-4023.00",
+     "line": 13613
+    },
+    {
+     "id": 9821,
+     "text": "Saw felled trees into lengths.",
+     "type": "Supplemental",
+     "onetCode": "45-4023.00",
+     "line": 13614
+    }
+   ],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L965",
+    "annualMedian": "oews:national_M2025_dl!AB965",
+    "annualMean": "oews:national_M2025_dl!S965",
+    "hourlyMedian": "oews:national_M2025_dl!W965",
+    "hourlyMean": "oews:national_M2025_dl!R965",
+    "annualPct10": "oews:national_M2025_dl!Z965",
+    "annualPct90": "oews:national_M2025_dl!AD965",
+    "annualOnly": "oews:national_M2025_dl!AE965",
+    "hourlyOnly": "oews:national_M2025_dl!AF965",
+    "title": "oews:national_M2025_dl!J965",
+    "ep.title": "ep:Table 1.2!A762",
+    "ep.employment2025": "ep:Table 1.2!D762",
+    "ep.employment2035": "ep:Table 1.2!E762",
+    "ep.numericChange": "ep:Table 1.2!H762",
+    "ep.percentChange": "ep:Table 1.2!I762",
+    "onetCode": "onet:Occupation Data.txt#L709:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L709:Description"
+   },
+   "nullReasons": {}
+  },
+  "45-4029": {
+   "soc": "45-4029",
+   "title": "Logging Workers, All Other",
+   "major": "45-0000",
+   "minor": "45-4000",
+   "broad": "45-4020",
+   "oewsRows": [
+    966
+   ],
+   "oewsOGroups": [
+    "detailed"
+   ],
+   "employment": 1700,
+   "annualMedian": 50840,
+   "annualMean": 52910,
+   "hourlyMedian": 24.44,
+   "hourlyMean": 25.44,
+   "annualPct10": 36380,
+   "annualPct90": 69350,
+   "annualOnly": false,
+   "hourlyOnly": false,
+   "topcoded": {},
+   "ep": {
+    "title": "Logging workers, all other",
+    "employment2025": 2400,
+    "employment2035": 2200,
+    "numericChange": -200,
+    "percentChange": -7.6
+   },
+   "onetCode": "45-4029.00",
+   "onetTaskSource": "none",
+   "onetSubCodes": [],
+   "description": "All logging workers not listed separately.",
+   "tasks": [],
+   "dedupedTasks": 0,
+   "aiStatus": "not yet scored",
+   "sources": {
+    "employment": "oews:national_M2025_dl!L966",
+    "annualMedian": "oews:national_M2025_dl!AB966",
+    "annualMean": "oews:national_M2025_dl!S966",
+    "hourlyMedian": "oews:national_M2025_dl!W966",
+    "hourlyMean": "oews:national_M2025_dl!R966",
+    "annualPct10": "oews:national_M2025_dl!Z966",
+    "annualPct90": "oews:national_M2025_dl!AD966",
+    "annualOnly": "oews:national_M2025_dl!AE966",
+    "hourlyOnly": "oews:national_M2025_dl!AF966",
+    "title": "oews:national_M2025_dl!J966",
+    "ep.title": "ep:Table 1.2!A763",
+    "ep.employment2025": "ep:Table 1.2!D763",
+    "ep.employment2035": "ep:Table 1.2!E763",
+    "ep.numericChange": "ep:Table 1.2!H763",
+    "ep.percentChange": "ep:Table 1.2!I763",
+    "onetCode": "onet:Occupation Data.txt#L710:O*NET-SOC Code",
+    "description": "onet:Occupation Data.txt#L710:Description"
+   },
+   "nullReasons": {
+    "tasks": "O*NET 30.1 has no task statements for 45-4029.00"
+   }
+  }
+ }
+}
