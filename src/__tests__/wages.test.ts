@@ -16,6 +16,7 @@ import { MAP_TITLE_TO_SOC } from '../utils/onet';
 import { initialJobs } from '../data';
 import { jobSourceProvenanceChips, panelSourceList } from '../utils/provenance';
 import {
+    BLS_COMBINED_SOCS,
     WAGES_BY_SOC,
     WAGES_META,
     WIDER_BLS_GROUP_TITLES,
@@ -152,8 +153,21 @@ describe('titles that share a SOC', () => {
         for (const titles of aliasGroups) {
             const [first, ...rest] = titles.map((t) => wageForTitle(t)!.entry);
             for (const other of rest) expect(other).toEqual(first);
-            for (const t of titles) expect(payScopeNote(t), t).toMatch(/^Combined BLS code/);
         }
+    });
+
+    it('only 13-1020 counts as a BLS combined code, read from the workbook "broad" row', () => {
+        expect([...BLS_COMBINED_SOCS]).toEqual(['13-1020']);
+        expect(WAGES_BY_SOC['13-1020'].occTitle).toBe('Buyers and Purchasing Agents');
+    });
+
+    it('each alias title gets the exact note: "Combined" only for 13-1020, "Shares" otherwise', () => {
+        expect(payScopeNote('Wholesale & Retail Buyer')).toBe('Combined BLS code 13-1020, shared with Purchasing Agent.');
+        expect(payScopeNote('Purchasing Agent')).toBe('Combined BLS code 13-1020, shared with Wholesale & Retail Buyer.');
+        expect(payScopeNote('Marketing Manager')).toBe('Shares BLS code 11-2021 with Brand Manager.');
+        expect(payScopeNote('Brand Manager')).toBe('Shares BLS code 11-2021 with Marketing Manager.');
+        expect(payScopeNote('Business Intelligence Analyst')).toBe('Shares BLS code 15-2051 with Data Scientist.');
+        expect(payScopeNote('Data Scientist')).toBe('Shares BLS code 15-2051 with Business Intelligence Analyst.');
     });
 
     it('roles on an "All Other" or broader BLS code say the pay covers the wider group', () => {

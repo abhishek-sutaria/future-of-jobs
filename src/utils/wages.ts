@@ -127,6 +127,19 @@ export function paySummary(entry: WageEntry, meta: WagesMeta = WAGES_META): PayS
     };
 }
 
+/**
+ * SOCs that BLS itself publishes as a combined code. Read from the workbook:
+ * OEWS lists an occupation it only publishes at the broad level on a "broad"
+ * row (and again as "detailed"). Today that is 13-1020 Buyers and Purchasing
+ * Agents alone. Other shared codes (11-2021, 15-2051) are ordinary detailed
+ * BLS occupations that two of our titles happen to map to.
+ */
+export const BLS_COMBINED_SOCS: ReadonlySet<string> = new Set(
+    Object.entries(WAGES_BY_SOC)
+        .filter(([, entry]) => entry.source.oGroups.includes('broad'))
+        .map(([soc]) => soc)
+);
+
 /** The small mapping note under the pay line, or null when the code is the role's own. */
 export function payScopeNote(title: string): string | null {
     const found = wageForTitle(title);
@@ -134,7 +147,9 @@ export function payScopeNote(title: string): string | null {
     const { soc, entry } = found;
     const partners = socPartnerTitles(title);
     if (partners.length > 0) {
-        return `Combined BLS code ${soc} (${entry.occTitle}), shared with ${partners.join(', ')}, so the pay is the same.`;
+        return BLS_COMBINED_SOCS.has(soc)
+            ? `Combined BLS code ${soc}, shared with ${partners.join(', ')}.`
+            : `Shares BLS code ${soc} with ${partners.join(', ')}.`;
     }
     if (WIDER_BLS_GROUP_TITLES.has(title)) {
         return `Pay covers the wider BLS group ${soc} (${entry.occTitle}).`;
