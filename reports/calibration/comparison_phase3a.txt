@@ -1,0 +1,91 @@
+PER-TASK (250 tasks; "bias" = mine − published)
+metric                 aiCapability   humanCriticality
+mean abs diff          0.109          0.172
+median abs diff        0.100          0.150
+90th pct abs diff      0.200          0.300
+max abs diff           0.350          0.550
+Pearson r              0.880          0.831
+bias (mine − pub)      0.099          -0.170
+share within 0.10      52.0%         28.8%
+
+PER-ROLE AUTOMATION RISK (mean AI capability, percentage points)
+mean abs diff 9.94 pp · median 10.50 · p90 18.00 · max 21.00
+signed mean (mine − pub) 9.94 pp · risk correlation r=0.897
+roles within ±5 pp: 12/50
+risk band (tercile of each set's own 50 scores, as the app does): same 39/50
+risk band (published cut-offs 0.500/0.560 applied to mine): same 27/50
+  my own cut-offs would be 0.590/0.680
+
+ROLE TABLE (pub%, mine%, diff pp, band pub→mine[own scale])
+Operations Research Analyst            47   68 + 21  safe→high
+Statistician                           56   77 + 21  high→high
+Risk Specialist                        51   70 + 19  hybrid→high
+Web Developer                          66   85 + 19  high→high
+Software Developer                     55   73 + 18  hybrid→high
+Compensation & Benefits Manager        55   73 + 18  hybrid→high
+Cybersecurity Analyst                  57   73 + 16  high→high
+Financial Risk Analyst                 56   71 + 15  high→high
+Business Intelligence Analyst          58   72 + 14  high→high
+Cost Estimator                         52   66 + 14  hybrid→hybrid
+Purchasing Agent                       57   71 + 14  high→high
+Database Administrator                 57   71 + 14  high→high
+Project Management Specialist          43   57 + 14  safe→safe
+IT Project Manager                     43   56 + 13  safe→safe
+Actuary                                50   63 + 13  hybrid→hybrid
+UX Designer                            47   60 + 13  safe→hybrid
+Financial Analyst                      30   42 + 12  safe→safe
+Management Consultant                  56   68 + 12  high→high
+Budget Analyst                         67   79 + 12  high→high
+Computer Systems Analyst               54   66 + 12  hybrid→hybrid
+Data Scientist                         70   81 + 11  high→high
+Market Research Analyst                61   72 + 11  high→high
+Logistics Analyst                      40   51 + 11  safe→safe
+Personal Financial Advisor             50   61 + 11  hybrid→hybrid
+Compensation Analyst                   55   66 + 11  hybrid→hybrid
+Credit Analyst                         73   83 + 10  high→high
+Account Executive                      59   68 +  9  high→high
+Public Relations Manager               37   46 +  9  safe→safe
+IT Manager                             40   49 +  9  safe→safe
+HR Specialist                          58   66 +  8  high→hybrid
+Event Coordinator                      45   53 +  8  safe→safe
+Marketing Manager                      53   61 +  8  hybrid→hybrid
+Wholesale & Retail Buyer               52   60 +  8  hybrid→hybrid
+Sales Manager                          47   53 +  6  safe→safe
+Sales Representative                   54   60 +  6  hybrid→hybrid
+Purchasing Manager                     51   57 +  6  hybrid→safe
+General Manager                        54   60 +  6  hybrid→hybrid
+Training & Development Manager         53   59 +  6  hybrid→hybrid
+Insurance Sales Agent                  57   62 +  5  high→hybrid
+Industrial Production Manager          40   45 +  5  safe→safe
+Securities & Sales Agent               74   78 +  4  high→high
+Accountant & Auditor                   60   64 +  4  high→hybrid
+Brand Manager                          49   53 +  4  safe→safe
+Supply Chain Manager                   33   37 +  4  safe→safe
+Advertising Sales Agent                55   59 +  4  hybrid→hybrid
+Financial Manager                      44   47 +  3  safe→safe
+Insurance Underwriter                  72   74 +  2  high→high
+Loan Officer                           64   66 +  2  high→hybrid
+Training & Development Specialist      56   58 +  2  high→safe
+HR Manager                             26   26 +  0  safe→safe
+
+TOP 5 ROLES BY |DIFF| — task drivers (mine − published AI capability)
+Operations Research Analyst: pub 47% vs mine 68% (+21 pp)
+   +0.30  Perform validation and testing of models to ensure adequacy, and reformulate models, as ne
+   +0.25  Prepare management reports defining and evaluating problems and recommending solutions.
+   +0.20  Collaborate with others in the organization to ensure successful implementation of chosen 
+Statistician: pub 56% vs mine 77% (+21 pp)
+   +0.25  Analyze and interpret statistical data to identify significant differences in relationship
+   +0.25  Determine whether statistical methods are appropriate, based on user needs or research que
+   +0.20  Evaluate the statistical methods and procedures used to obtain data to ensure validity, ap
+Risk Specialist: pub 51% vs mine 70% (+19 pp)
+   +0.25  Define or recommend model specifications or data collection methods.
+   +0.25  Interpret results of financial analysis procedures.
+   +0.20  Develop core analytical capabilities or model libraries, using advanced statistical, quant
+Web Developer: pub 66% vs mine 85% (+19 pp)
+   +0.30  Back up files from Web sites to local directories for instant recovery in case of problems
+   +0.25  Select programming languages, design tools, or applications.
+   +0.20  Evaluate code to ensure that it is valid, is properly structured, meets industry standards
+Software Developer: pub 55% vs mine 73% (+18 pp)
+   +0.25  Modify existing software to correct errors, adapt it to new hardware, or upgrade interface
+   +0.20  Confer with systems analysts, engineers, programmers and others to design systems and to o
+   +0.15  Develop or direct software system testing or validation procedures, programming, or docume
