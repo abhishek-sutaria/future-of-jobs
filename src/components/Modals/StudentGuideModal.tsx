@@ -16,11 +16,11 @@ interface Feature {
 
 const FEATURES: Feature[] = [
     {
-        emoji: '🏔️',
-        title: '3D Terrain Map',
+        emoji: '🌍',
+        title: '3D Globe',
         description:
-            'The map is one landscape split into 22 fields: the BLS major occupation groups, from Arts & Media to Healthcare and Construction. A field\'s area is its share of all U.S. workers in 2025 (BLS Employment Projections, self-employed included); where a field sits and its shape are only layout. Each peak is one occupation, and its height is its number of jobs from BLS Employment Projections. Zoomed into a field, heights are rescaled within that field (its largest occupation is full height), so compare them within the field.',
-        tip: 'Click a field, or pick it from the Fields list, to zoom in on its occupations. The largest are labelled; hover or tap any other peak for its name.',
+            'The 3D view is a globe of 22 continents, one per BLS major occupation group, from Arts & Media to Healthcare and Construction. A continent\'s area is its share of all U.S. workers in 2025 (BLS Employment Projections, self-employed included). The globe is equal-area, so continent sizes are true to the BLS counts: twice the workers, twice the surface. Where a continent sits, its outline and the ocean around it are only layout. Each peak is one occupation, and its height is its number of jobs from BLS Employment Projections, on one national scale. Zoomed into a field, heights are rescaled within that field (its largest occupation is full height), so compare them within the field.',
+        tip: 'Drag to spin the globe; pinch or scroll to zoom. Tap a continent, or pick it from the Fields list, to fly into its occupations, and All fields to come back. The largest are labelled; hover or tap any other peak for its name.',
         color: 'cyan',
     },
     {

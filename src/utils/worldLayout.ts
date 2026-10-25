@@ -43,7 +43,18 @@ const aspect = (w: number, h: number) => Math.max(w / h, h / w);
  */
 const MAX_STACK = 3;
 
-export function orderedTreemap(weights: readonly number[], bounds: Rect): Rect[] {
+export interface TreemapOptions {
+    /**
+     * How long one unit of x is, relative to one unit of z, at depth z
+     * (default 1). Only the aspect-ratio cost reads it, so it changes which
+     * cuts are chosen, never any area. The globe passes cos²(latitude): in
+     * equal-area coordinates a cell near a pole is narrower and taller on the
+     * sphere than it looks in the plane.
+     */
+    xScaleAt?: (z: number) => number;
+}
+
+export function orderedTreemap(weights: readonly number[], bounds: Rect, opts: TreemapOptions = {}): Rect[] {
     const n = weights.length;
     const width = rectWidth(bounds);
     const total = weights.reduce((a, b) => a + b, 0);
@@ -53,24 +64,32 @@ export function orderedTreemap(weights: readonly number[], bounds: Rect): Rect[]
     for (const w of weights) prefix.push(prefix[prefix.length - 1] + w);
     const sum = (i: number, j: number) => prefix[j] - prefix[i];
     const cost = (a: number) => Math.log(a) ** 2;
+    const xScaleAt = opts.xScaleAt ?? (() => 1);
 
-    // Items i..j-1 stacked in one column of the given depth.
-    const columnCost = (i: number, j: number, depth: number) => {
+    // Items i..j-1 stacked in one column of the given depth, from z0 down.
+    const columnCost = (i: number, j: number, depth: number, z0: number) => {
         const colWidth = (sum(i, j) * areaPerUnit) / depth;
         let c = 0;
-        for (let k = i; k < j; k++) c += cost(aspect(colWidth, (weights[k] * areaPerUnit) / colWidth));
+        let z = z0;
+        for (let k = i; k < j; k++) {
+            const d = (weights[k] * areaPerUnit) / colWidth;
+            c += cost(aspect(colWidth * xScaleAt(z + d / 2), d));
+            z += d;
+        }
         return c;
     };
 
-    // Best split of items i..j-1 (one row) into columns.
+    // Best split of items i..j-1 (one row) into columns. Rows span the full
+    // width, so a row starting at item i always starts at the same depth.
     const rowPlan = (i: number, j: number) => {
         const depth = (sum(i, j) * areaPerUnit) / width;
+        const z0 = bounds.z0 + (sum(0, i) * areaPerUnit) / width;
         const m = j - i;
         const best = [0, ...new Array<number>(m).fill(Infinity)];
         const prev = new Array<number>(m + 1).fill(0);
         for (let b = 1; b <= m; b++) {
             for (let a = Math.max(0, b - MAX_STACK); a < b; a++) {
-                const c = best[a] + columnCost(i + a, i + b, depth);
+                const c = best[a] + columnCost(i + a, i + b, depth, z0);
                 if (c < best[b]) {
                     best[b] = c;
                     prev[b] = a;

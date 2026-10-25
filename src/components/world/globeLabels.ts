@@ -1,0 +1,78 @@
+import { Vector3, type Camera } from 'three';
+import { LAND_RADIUS } from '../../utils/globeLayout';
+import { layoutLabelsByWeight, type LabelBand, type LabelCandidate } from '../../utils/labelLayout';
+
+/**
+ * Labels on the globe show only on the side facing the camera and fade out
+ * toward its edge. `facing` is how far a point is inside the horizon: the
+ * cosine of its angle from the camera direction minus that of the horizon
+ * (R / camera distance). Hidden below FACING_HIDE, full above FACING_FULL.
+ */
+export const FACING_HIDE = 0.04;
+export const FACING_FULL = 0.22;
+/** Below this opacity a label is not placed at all, so a near-invisible one never crowds out a readable one. */
+export const MIN_PLACED_ALPHA = 0.12;
+
+/** Visibility of a surface point (unit normal n) seen from a camera at c: 0 behind the horizon, 1 well inside it. */
+export function horizonAlpha(nx: number, ny: number, nz: number, cx: number, cy: number, cz: number, radius = LAND_RADIUS): number {
+    const d = Math.hypot(cx, cy, cz);
+    if (!(d > radius)) return 0;
+    const facing = (nx * cx + ny * cy + nz * cz) / d - radius / d;
+    if (facing <= FACING_HIDE) return 0;
+    return Math.min(1, (facing - FACING_HIDE) / (FACING_FULL - FACING_HIDE));
+}
+
+export interface GlobeLabel {
+    id: string;
+    /** Unit normal of the surface point the label belongs to. */
+    n: readonly [number, number, number];
+    /** World position of the label's anchor (above that point). */
+    anchor: readonly [number, number, number];
+    halfWidth: number;
+    halfHeight: number;
+    /** How far the label may sit off its anchor, in half-sizes (see LabelCandidate.slack). */
+    slack?: number;
+}
+
+const projected = new Vector3();
+
+/**
+ * One frame of label placement on the globe: labels behind the horizon (or
+ * too faint) are left out entirely, the rest go through the flat map's
+ * collision pass, where the smaller field (lower weight) yields. Writes
+ * screen positions to `out` (absent = hidden) and each label's opacity to
+ * `alphas`.
+ */
+export function layoutGlobeLabels(
+    labels: readonly GlobeLabel[],
+    weights: ReadonlyMap<string, number>,
+    camera: Camera,
+    width: number,
+    height: number,
+    band: LabelBand,
+    out: Map<string, [number, number]>,
+    offsets: Map<string, [number, number]>,
+    alphas: Map<string, number>,
+    hideAll = false,
+): void {
+    const { x: cx, y: cy, z: cz } = camera.position;
+    const list: LabelCandidate[] = [];
+    for (const label of labels) {
+        const [nx, ny, nz] = label.n;
+        const alpha = hideAll ? 0 : horizonAlpha(nx, ny, nz, cx, cy, cz);
+        alphas.set(label.id, alpha);
+        // Behind the horizon: no label, and no say in where the others go.
+        if (alpha < MIN_PLACED_ALPHA) continue;
+        projected.set(label.anchor[0], label.anchor[1], label.anchor[2]).project(camera);
+        list.push({
+            id: label.id,
+            anchorX: (projected.x * width) / 2 + width / 2,
+            anchorY: -((projected.y * height) / 2) + height / 2,
+            halfWidth: label.halfWidth,
+            halfHeight: label.halfHeight,
+            inFront: projected.z >= -1 && projected.z <= 1,
+            slack: label.slack,
+        });
+    }
+    layoutLabelsByWeight(list, weights, width, height, band, out, offsets, 2, 4);
+}

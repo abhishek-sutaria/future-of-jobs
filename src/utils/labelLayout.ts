@@ -264,7 +264,8 @@ export function layoutLabels(
  * than whichever happened to be placed into a gap first.
  *
  * Only ids in `weights` take part; any other item (a hovered label, say)
- * keeps its place and never yields.
+ * keeps its place and never yields. A label that is not in front (behind the
+ * camera, or on the far side of the globe) never makes another give way.
  */
 export function layoutLabelsByWeight(
     items: readonly LabelCandidate[],
@@ -284,7 +285,7 @@ export function layoutLabelsByWeight(
         let changed = false;
         for (const h of active) {
             const wh = weights.get(h.id);
-            if (wh === undefined || !isHiddenLabelPosition(out.get(h.id) ?? HIDDEN_LABEL_POSITION)) continue;
+            if (wh === undefined || !h.inFront || !isHiddenLabelPosition(out.get(h.id) ?? HIDDEN_LABEL_POSITION)) continue;
             // Only a label that would otherwise fit on screen at its own anchor.
             if (isHiddenLabelPosition(resolveLabelPosition(h.anchorX, h.anchorY, h.halfWidth, h.halfHeight, viewportWidth, viewportHeight, band, margin))) continue;
             for (const p of active) {

@@ -18,7 +18,7 @@ const ALL_STEPS: Step[] = [
     {
         target: 'tour-fields',
         title: 'Fields & Kelley roles',
-        description: 'Pick a field to zoom in on its occupations, or click one on the map. A field’s size is its number of workers. Kelley roles highlights the 50 business roles that have AI scores today.',
+        description: 'Pick a field to zoom in on its occupations, or tap its continent on the globe. A continent’s size is its number of workers. Kelley roles highlights the 50 business roles that have AI scores today.',
         padding: 8,
     },
     {
@@ -48,7 +48,7 @@ const ALL_STEPS: Step[] = [
     {
         target: 'tour-toggle',
         title: 'Switch view',
-        description: 'Switch between the 3D terrain, a 2D US map, and the Tasks list here. The highlighted button always shows which view you are in — click another to switch.',
+        description: 'Switch between the 3D globe, a 2D US map, and the Tasks list here. The highlighted button always shows which view you are in — click another to switch.',
         padding: 10,
     },
     {

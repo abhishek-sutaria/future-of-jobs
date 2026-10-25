@@ -14,6 +14,8 @@ import { socPartnerTitles } from '../../utils/onet';
 import { HIDDEN_LABEL_POSITION, isHiddenLabelPosition, layoutLabelsByWeight, type LabelCandidate } from '../../utils/labelLayout';
 import { displayedPeakHeight, fieldMaxEmploymentAt, GROUND_Y, peakEmploymentAt, type ScenePeak, type WorldScene } from './worldScene';
 import { worldPointer } from './worldPointer';
+import { useLabelSafeBand } from './labelBand';
+import { useWorldView } from './worldCamera';
 
 /** Labelled peaks in a zoomed region: the largest by EP 2025 employment. */
 export const REGION_LABEL_CAP = { mobile: 12, desktop: 25 } as const;
@@ -31,7 +33,8 @@ const groundPlane = new Plane(new Vector3(0, 1, 0), -GROUND_Y);
 const groundHit = new Vector3();
 
 /**
- * Every label on the world and all of its pointer input.
+ * Every label on the flat map and all of its pointer input. Mounted for the
+ * zoomed field view; the globe has its own (GlobeMarkers).
  *
  * World view: the 22 region labels (short names; the full BLS title is in the
  * hover card). Zoomed into a region: labels for its largest occupations only,
@@ -49,6 +52,8 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
     const isOrbiting = useStore((s) => s.isOrbiting);
     const focused = useWorldStore((s) => s.focusedContinent);
     const kelleyOnly = useWorldStore((s) => s.kelleyOnly);
+    // On the way back up to the globe there is no field left to label.
+    const leaving = useWorldView((s) => s.moving) && !focused;
     const isMobile = useIsMobile();
 
     // Hover and tap belong to the view they happened in: zooming, leaving a
@@ -68,7 +73,7 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
     const getThree = useThree((s) => s.get);
 
     const labelHalfSize = useRef<Map<string, { x: number; y: number }>>(new Map());
-    const safeBand = useRef({ top: 4, bottom: 4 });
+    const safeBand = useLabelSafeBand(viewKey);
     const placements = useRef<Map<string, [number, number]>>(new Map());
     const labelOffsets = useRef<Map<string, [number, number]>>(new Map());
     const candidates = useRef<LabelCandidate[]>([]);
@@ -79,36 +84,6 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
     // Read by the canvas listeners, which must not rebind mid-gesture.
     const tappedKeyRef = useRef<string | null>(null);
     const labelledKeysRef = useRef<Set<string>>(new Set());
-
-    useEffect(() => {
-        const measure = () => {
-            const box = (sel: string) => document.querySelector(sel)?.getBoundingClientRect();
-            const header = box('header');
-            const search = box('[data-tour="tour-search"]');
-            const bar = box('[data-world-bar]');
-            const slider = box('[data-tour="tour-slider"]');
-            const top = Math.max(header?.bottom ?? 0, search?.bottom ?? 0, bar?.bottom ?? 0, 4);
-            const bottom = slider ? Math.max(window.innerHeight - slider.top, 4) : 4;
-            safeBand.current = { top: top + 6, bottom: bottom + 6 };
-        };
-        measure();
-        // The chrome mounts after the canvas and re-wraps as buttons come and
-        // go, so watch it rather than only the window.
-        const t = setTimeout(measure, 1200);
-        const observer = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(measure) : null;
-        for (const sel of ['header', '[data-world-bar]', '[data-tour="tour-slider"]']) {
-            const el = document.querySelector(sel);
-            if (el && observer) observer.observe(el);
-        }
-        window.addEventListener('resize', measure);
-        window.addEventListener('orientationchange', measure);
-        return () => {
-            clearTimeout(t);
-            observer?.disconnect();
-            window.removeEventListener('resize', measure);
-            window.removeEventListener('orientationchange', measure);
-        };
-    }, [focused, kelleyOnly]);
 
     useEffect(() => {
         const clear = () => {
@@ -122,6 +97,8 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
         return () => {
             window.removeEventListener('blur', clear);
             document.removeEventListener('visibilitychange', clear);
+            // Leaving for the globe: nothing on the flat map is hovered any more.
+            clear();
         };
     }, []);
 
@@ -379,7 +356,7 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
         pos.needsUpdate = true;
     });
 
-    if (mapView !== 'globe') return null;
+    if (mapView !== 'globe' || leaving) return null;
 
     const anyHover = !!hoveredId;
     return (
@@ -418,7 +395,7 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
     );
 };
 
-const RegionLabel: React.FC<{ code: string; expanded: boolean }> = ({ code, expanded }) => {
+export const RegionLabel: React.FC<{ code: string; expanded: boolean; hint?: string }> = ({ code, expanded, hint = 'click to explore' }) => {
     const c = INDEX_CONTINENT_BY_CODE.get(code)!;
     return (
         <div
@@ -439,14 +416,14 @@ const RegionLabel: React.FC<{ code: string; expanded: boolean }> = ({ code, expa
                     <p className="text-[10px] font-mono" style={{ color: growthColor(c.ep.percentChange) }}>
                         {formatGrowth(c.ep.percentChange)} by {YEAR_MAX}
                     </p>
-                    <p className="text-[9px] text-slate-500">{c.occupationCount} occupations · click to explore</p>
+                    <p className="text-[9px] text-slate-500">{c.occupationCount} occupations · {hint}</p>
                 </div>
             )}
         </div>
     );
 };
 
-const PeakLabel: React.FC<{ peak: ScenePeak; expanded: boolean; year: number }> = ({ peak, expanded, year }) => {
+export const PeakLabel: React.FC<{ peak: ScenePeak; expanded: boolean; year: number }> = ({ peak, expanded, year }) => {
     const { entry } = peak;
     const partners = entry.kind === 'kelley' ? socPartnerTitles(entry.title) : [];
     return (

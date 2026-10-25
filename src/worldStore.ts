@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { useStore } from './store';
 import { loadContinentFile, type ContinentFile } from './utils/occupationIndex';
 import type { RoleEntry } from './utils/roles';
+import { worldCamera } from './components/world/worldCamera';
 
 /**
  * Navigation state for the 22-continent world: which region is zoomed, the
@@ -30,7 +31,7 @@ interface WorldState {
     continentErrors: Record<string, string>;
     loadContinent: (code: string) => Promise<ContinentFile | null>;
 
-    /** Fly to the role's region and open its panel. */
+    /** Fly to the role's region (from the globe: turn, dive, settle) and open its panel. */
     openRole: (entry: RoleEntry) => void;
 }
 
@@ -78,14 +79,18 @@ export const useWorldStore = create<WorldState>((set, get) => ({
 
     openRole: (entry) => {
         get().focusContinent(entry.continent);
-        if (entry.kind === 'kelley') {
-            const job = useStore.getState().jobs.find((j) => j.id === entry.jobId);
-            set({ selectedOccupationSoc: null });
-            if (job) useStore.getState().setSelectedJob(job);
-            return;
-        }
-        useStore.getState().setSelectedJob(null);
-        set({ selectedOccupationSoc: entry.soc });
+        // From the globe the panel waits until the camera has landed in the
+        // field (turn, dive, settle); everywhere else it opens at once.
+        worldCamera.whenArrived(entry.continent, () => {
+            if (entry.kind === 'kelley') {
+                const job = useStore.getState().jobs.find((j) => j.id === entry.jobId);
+                set({ selectedOccupationSoc: null });
+                if (job) useStore.getState().setSelectedJob(job);
+                return;
+            }
+            useStore.getState().setSelectedJob(null);
+            set({ selectedOccupationSoc: entry.soc });
+        });
     },
 }));
 
