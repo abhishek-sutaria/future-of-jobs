@@ -60,7 +60,7 @@ export function worldFraming(fovDeg: number, aspect: number): Framing {
     return frameRect(WORLD_BOUNDS, fovDeg, aspect);
 }
 
-/** Where the globe's default view looks: a longitude and latitude, radians. Layout, not data. */
+/** Where the canvas first points before CameraRig turns it to the Kelley side: a longitude and latitude, radians. Layout, not data. */
 export const GLOBE_FRONT = { lon: -0.5, lat: 0.32 } as const;
 /** Steepest the globe camera goes, so a turn toward a far-north field still reads as a globe. */
 export const GLOBE_MAX_TILT = 0.85;

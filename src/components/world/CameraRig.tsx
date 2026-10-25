@@ -29,8 +29,9 @@ const ZOOM_OUT_MS = 650;
 const FADE_MS = 240;
 /** Auto-rotation starts this long after the last interaction. */
 const AUTO_ROTATE_DELAY_MS = 4000;
-/** One turn in about two minutes at 60 fps (OrbitControls counts per frame). */
-const AUTO_ROTATE_SPEED = 0.5;
+/** One turn in two minutes, on any device (OrbitControls' own auto-rotate counts frames, so a slow phone barely moved). */
+const AUTO_ROTATE_RAD_PER_S = (2 * Math.PI) / 120;
+const UP = new Vector3(0, 1, 0);
 
 /** Camera elevation when framing a region, from the horizontal. */
 const REGION_ELEVATION_DEG = 58;
@@ -93,8 +94,10 @@ export const CameraRig: React.FC<{
     scene: WorldScene;
     globe: GlobeScene;
     reducedMotion: boolean;
+    /** Phones: the first interaction stops auto-rotation for good (it costs battery). */
+    spinUntilFirstTouch: boolean;
     fadeRef: React.RefObject<HTMLDivElement | null>;
-}> = ({ controlsRef, scene, globe, reducedMotion, fadeRef }) => {
+}> = ({ controlsRef, scene, globe, reducedMotion, spinUntilFirstTouch, fadeRef }) => {
     const focused = useWorldStore((s) => s.focusedContinent);
     const requestId = useWorldStore((s) => s.focusRequestId);
     const kelleyOnly = useWorldStore((s) => s.kelleyOnly);
@@ -170,6 +173,9 @@ export const CameraRig: React.FC<{
         return Math.min(from * 0.8, Math.max(GLOBE_RADIUS * 1.3, LAND_RADIUS + above));
     };
 
+    /** The home view looks at the Kelley side of the globe (as the Kelley toggle does). */
+    const homeDirection = () => kelleyDirection(globe) ?? new Vector3(...globeFraming(camera.fov, aspect()).position).normalize();
+
     const flush = (code: string | null) => {
         if (safety.current) clearTimeout(safety.current);
         safety.current = null;
@@ -223,7 +229,7 @@ export const CameraRig: React.FC<{
             const framing = globeFraming(camera.fov, aspect(), freeBand('[data-world-bar] > div'));
             home.current = Math.hypot(...framing.position);
             controls.target.set(...framing.target);
-            camera.position.set(...framing.position);
+            camera.position.copy(homeDirection()).multiplyScalar(home.current);
             controls.update();
         };
         return () => {
@@ -254,9 +260,13 @@ export const CameraRig: React.FC<{
             useWorldView.setState({ view: 'globe', moving: false });
             if (controls) {
                 configureControls(controls, 'globe', defaultDistance());
-                // The canvas was framed before the chrome existed; fit the globe between it now.
+                // The canvas was framed before the chrome existed; fit the globe
+                // between it now, turned to the side with the most Kelley roles
+                // so a first visit opens on coloured peaks.
                 home.current = defaultDistance();
-                camera.position.setLength(home.current);
+                camera.position.copy(homeDirection()).multiplyScalar(home.current);
+                // Hold that first view a moment before any auto-rotation.
+                worldPointer.lastInteraction = performance.now();
                 controls.update();
             }
         }
@@ -342,7 +352,7 @@ export const CameraRig: React.FC<{
         if (fadeRef.current) fadeRef.current.style.opacity = String(v01);
     };
 
-    useFrame(() => {
+    useFrame((_, delta) => {
         const controls = controlsRef.current;
         if (!controls) return;
         const now = performance.now();
@@ -350,9 +360,19 @@ export const CameraRig: React.FC<{
         applyViewShift(view);
 
         // Slow spin on the globe once the user has let go for a while.
-        controls.autoRotate = view === 'globe' && !moving && !reducedMotion && phase.current === null
-            && !worldPointer.hoverRegion && now - worldPointer.lastInteraction > AUTO_ROTATE_DELAY_MS;
-        controls.autoRotateSpeed = AUTO_ROTATE_SPEED;
+        // It holds still while the pointer is over the globe or a continent's
+        // name, and on phones stops for good at the first touch.
+        const spin = view === 'globe' && !moving && !reducedMotion && phase.current === null
+            && !useStore.getState().isOrbiting
+            && !worldPointer.hoverRegion && !worldPointer.overGlobe && !worldPointer.overLabel
+            && !(spinUntilFirstTouch && worldPointer.interacted)
+            && now - worldPointer.lastInteraction > AUTO_ROTATE_DELAY_MS;
+        if (spin) {
+            // Turn the camera about the globe's axis by elapsed time (capped, so
+            // a paused tab does not jump on its return).
+            camera.position.applyAxisAngle(UP, -AUTO_ROTATE_RAD_PER_S * Math.min(delta, 0.25));
+            controls.update();
+        }
         if (view === 'globe') {
             // A drag across the globe turns it about half a turn at the default
             // view, and proportionally less as you zoom in on the surface.

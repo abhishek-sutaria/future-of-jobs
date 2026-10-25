@@ -36,7 +36,7 @@ const MAX_CONTEXT_LOSS_RETRIES = 2;
 
 /** Phones pause the loop after this much quiet on a field (Ray's freeze path, see below). */
 const MOBILE_IDLE_MS = 2500;
-/** On the globe they first let it spin a while (auto-rotation starts after CameraRig's AUTO_ROTATE_DELAY_MS). */
+/** Before the first touch the globe may spin a while on phones; the first touch stops it for good. */
 const MOBILE_GLOBE_IDLE_MS = 20000;
 /** The globe counts as the default view while the camera is within this share of its default distance (rotation never strands anyone). */
 const DEFAULT_GLOBE_DISTANCE_TOLERANCE = 0.08;
@@ -99,7 +99,9 @@ export const Landscape: React.FC = () => {
         if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
         // 2.5s of no orbit/zoom → pause the loop; any new gesture resumes it.
         // The globe gets longer so its slow spin can run for a while first.
-        const spin = useWorldView.getState().view === 'globe' && !reducedMotion;
+        // Until the first touch, that is: then auto-rotation stops for good
+        // and the phase-2 2.5 s pause applies everywhere.
+        const spin = useWorldView.getState().view === 'globe' && !reducedMotion && !worldPointer.interacted;
         idleTimerRef.current = setTimeout(() => setMobileIdle(true), spin ? MOBILE_GLOBE_IDLE_MS : MOBILE_IDLE_MS);
     }, [isMobile, reducedMotion]);
 
@@ -288,7 +290,7 @@ export const Landscape: React.FC = () => {
             <GlobeTerrain globe={globe} isMobile={isMobile} />
             <WorldTerrain scene={scene} isMobile={isMobile} visible={view === 'field'} />
             {view === 'globe' ? <GlobeMarkers globe={globe} /> : <WorldMarkers scene={scene} />}
-            <CameraRig controlsRef={controlsRef} scene={scene} globe={globe} reducedMotion={reducedMotion} fadeRef={fadeRef} />
+            <CameraRig controlsRef={controlsRef} scene={scene} globe={globe} reducedMotion={reducedMotion} spinUntilFirstTouch={isMobile} fadeRef={fadeRef} />
 
             {/* Distance, pan and tilt limits differ between the globe and a
                 field; CameraRig's configureControls sets them at each cut. */}
@@ -301,11 +303,16 @@ export const Landscape: React.FC = () => {
                 touches={{ ONE: TOUCH.ROTATE, TWO: TOUCH.DOLLY_PAN }}
                 onChange={() => {
                     clampPanTarget();
-                    // The globe's own slow spin is not the user doing anything.
-                    if (!controlsRef.current?.autoRotate) bumpInteraction();
+                    // Only a gesture in progress or a camera move between globe and
+                    // field keeps a phone awake. The globe's slow spin and the
+                    // momentum glide after a drag are not the user doing anything
+                    // (on a slow phone the glide alone kept it rendering ~20 s);
+                    // onEnd re-arms the idle timer at release.
+                    if (useStore.getState().isOrbiting || useWorldView.getState().moving) bumpInteraction();
                 }}
                 onStart={() => {
                     worldPointer.lastInteraction = performance.now();
+                    worldPointer.interacted = true;
                     worldCamera.cancel();
                     setIsOrbiting(true);
                     bumpInteraction();

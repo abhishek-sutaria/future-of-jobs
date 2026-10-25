@@ -11,7 +11,8 @@ import { continentLabelPoint, GLOBE_PEAK_LABEL_LIFT, globePeakHeightAt, type Glo
 import { worldPointer } from './worldPointer';
 import { useWorldView } from './worldCamera';
 import { useLabelSafeBand } from './labelBand';
-import { PeakLabel, RegionLabel } from './WorldMarkers';
+import { PeakLabel } from './WorldMarkers';
+import { ContinentLabelButton } from './ContinentLabelButton';
 import { horizonAlpha, layoutGlobeLabels, type GlobeLabel } from './globeLabels';
 
 const PEAK_HIT_RADIUS_PX = 28;
@@ -75,6 +76,8 @@ export const GlobeMarkers: React.FC<{ globe: GlobeScene }> = ({ globe }) => {
             worldPointer.hoverRegion = null;
             worldPointer.hoverPeakContinent = null;
             worldPointer.hoverPeakIndex = -1;
+            worldPointer.overGlobe = false;
+            worldPointer.overLabel = false;
         };
         window.addEventListener('blur', clear);
         document.addEventListener('visibilitychange', clear);
@@ -134,8 +137,11 @@ export const GlobeMarkers: React.FC<{ globe: GlobeScene }> = ({ globe }) => {
         };
         const busy = () => useWorldView.getState().moving || useWorldView.getState().view !== 'globe';
 
+        // Continent names are buttons of their own (ContinentLabelButton); only
+        // the Kelley peak labels are hit-tested here.
         const hitLabel = (x: number, y: number): GlobeItem | null => {
             for (const item of itemsRef.current) {
+                if (item.kind !== 'peak') continue;
                 const pos = placements.current.get(item.id);
                 const half = labelHalfSize.current.get(item.id);
                 if (!pos || isHiddenLabelPosition(pos) || !half || (alphas.current.get(item.id) ?? 0) < 0.3) continue;
@@ -173,6 +179,7 @@ export const GlobeMarkers: React.FC<{ globe: GlobeScene }> = ({ globe }) => {
 
         const onDown = (e: PointerEvent) => {
             worldPointer.lastInteraction = performance.now();
+            worldPointer.interacted = true;
             if (e.button !== 0) return;
             downX = e.clientX;
             downY = e.clientY;
@@ -188,10 +195,6 @@ export const GlobeMarkers: React.FC<{ globe: GlobeScene }> = ({ globe }) => {
             const touch = e.pointerType === 'touch';
 
             const label = hitLabel(x, y);
-            if (label?.kind === 'region') {
-                world.focusContinent(label.code);
-                return;
-            }
             if (label?.kind === 'peak') {
                 world.openRole(label.g.peak.entry);
                 return;
@@ -215,19 +218,20 @@ export const GlobeMarkers: React.FC<{ globe: GlobeScene }> = ({ globe }) => {
                 return;
             }
             const p = hitGlobe(x, y, w, h);
+            worldPointer.overGlobe = !!p;
             worldPointer.globeX = p?.x ?? 0;
             worldPointer.globeY = p?.y ?? 0;
             worldPointer.globeZ = p?.z ?? 0;
             const label = hitLabel(x, y);
             const peak = label ? null : hitPeak(x, y);
             const hoverPeak = label?.kind === 'peak' ? label.g : peak;
-            const region = !hoverPeak ? (label?.kind === 'region' ? label.code : continentUnder(p)?.code ?? null) : null;
+            const region = !hoverPeak ? continentUnder(p)?.code ?? null : null;
             setHoveredId(hoverPeak ? hoverPeak.peak.entry.key : region ? `region:${region}` : null);
             worldPointer.hoverPeakContinent = hoverPeak ? hoverPeak.peak.entry.continent : null;
             worldPointer.hoverPeakIndex = hoverPeak ? hoverPeak.peak.index : -1;
             worldPointer.hoverRegion = region;
-            // Holding the pointer over a continent keeps the globe still under it.
-            if (region || hoverPeak) worldPointer.lastInteraction = performance.now();
+            // Holding the pointer over the globe keeps it still under it.
+            if (p) worldPointer.lastInteraction = performance.now();
             el.style.cursor = hoverPeak || region ? 'pointer' : '';
         };
 
@@ -236,12 +240,14 @@ export const GlobeMarkers: React.FC<{ globe: GlobeScene }> = ({ globe }) => {
             worldPointer.hoverRegion = null;
             worldPointer.hoverPeakContinent = null;
             worldPointer.hoverPeakIndex = -1;
+            worldPointer.overGlobe = false;
             worldPointer.globeX = worldPointer.globeY = worldPointer.globeZ = 0;
             el.style.cursor = '';
         };
 
         const onWheel = () => {
             worldPointer.lastInteraction = performance.now();
+            worldPointer.interacted = true;
         };
 
         el.addEventListener('pointerdown', onDown);
@@ -376,7 +382,11 @@ export const GlobeMarkers: React.FC<{ globe: GlobeScene }> = ({ globe }) => {
                             }}
                         >
                             {item.kind === 'region' ? (
-                                <RegionLabel code={item.code} expanded={isHovered} />
+                                <ContinentLabelButton
+                                    code={item.code}
+                                    expanded={isHovered}
+                                    onHover={(on) => setHoveredId(on ? item.id : null)}
+                                />
                             ) : (
                                 <PeakLabel peak={item.g.peak} expanded={isHovered} year={year} />
                             )}

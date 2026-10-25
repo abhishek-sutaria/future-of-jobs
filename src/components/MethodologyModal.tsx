@@ -78,7 +78,7 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                                     <td className="px-3 py-2">3D peak height (jobs over time)</td>
                                     <td className="px-3 py-2 text-gray-400">
                                         <SourceLink href="https://www.bls.gov/emp/tables/occupational-projections-and-characteristics.htm">BLS Employment Projections 2025–2035</SourceLink>
-                                        {' '}(official employment levels in 2025 and 2035; landscape interpolates in a straight line between them).
+                                        {' '}(official employment levels in 2025 and 2035; peaks move in a straight line between them).
                                     </td>
                                 </tr>
                                 <tr className="border-t border-white/[0.06]">
@@ -123,7 +123,7 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                                 <tr className="border-t border-white/[0.06]">
                                     <td className="px-3 py-2">Growth outlook (role page)</td>
                                     <td className="px-3 py-2 text-gray-400">
-                                        BLS Employment Projections percent change 2025–35, with a straight-line path between those years (same vintage as landscape peak height)
+                                        BLS Employment Projections percent change 2025–35, with a straight-line path between those years (same vintage as the peak heights on the globe)
                                     </td>
                                 </tr>
                                 <tr className="border-t border-white/[0.06]">
@@ -137,7 +137,7 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                     </div>
 
                     <p className="text-[11px] text-gray-500 leading-relaxed mt-2 italic">
-                        Peak height on the 3D landscape and the Growth Outlook tile on each role page
+                        Peak height on the 3D globe and the Growth Outlook tile on each role page
                         both follow BLS Employment Projections only (2025→2035, straight-line path).
                         Neither uses Claude employment forecasts.
                     </p>

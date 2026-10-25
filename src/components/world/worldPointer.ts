@@ -18,4 +18,9 @@ export const worldPointer = {
     globeZ: 0,
     /** performance.now() of the last thing the user did to the 3D view (auto-rotation waits for quiet). */
     lastInteraction: 0,
+    /** The pointer is over the globe, or over a continent's name: the globe holds still. */
+    overGlobe: false,
+    overLabel: false,
+    /** The user has pressed, dragged or zoomed at least once (phones stop auto-rotation for good). */
+    interacted: false,
 };

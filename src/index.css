@@ -273,3 +273,37 @@ canvas {
   opacity: 0.28;
 }
 
+
+/* Continent names on the globe are real buttons (ContinentLabelButton): they
+   take the pointer even though their drei wrapper does not. */
+.foj-globe-label-btn {
+  pointer-events: auto;
+  position: relative;
+  display: block;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: inherit;
+  cursor: pointer;
+}
+.foj-globe-label-btn:focus-visible {
+  outline: 2px solid #22d3ee;
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+/* Phones: a hit area of at least 44 x 44 px around the compact chip, without
+   changing the chip's measured size (the collision layout uses that). */
+@media (max-width: 767px), (pointer: coarse) {
+  .foj-globe-label-btn::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+    transform: translate(-50%, -50%);
+  }
+}

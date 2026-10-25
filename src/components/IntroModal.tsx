@@ -34,9 +34,10 @@ export const IntroModal: React.FC = () => {
                         <IconLayers size={18} className="text-blue-400" />
                     </div>
                     <div>
-                        <h3 className="text-white font-semibold mb-1 text-sm">Terrain Height = BLS Jobs</h3>
+                        <h3 className="text-white font-semibold mb-1 text-sm">A Globe of 22 Fields</h3>
                         <p className="text-gray-400 text-sm leading-relaxed">
-                            Peak height is the number of jobs from BLS Employment Projections. Drag the year slider from 2025 to 2035 to follow the official path between those two levels.
+                            Each continent is one field, sized by its number of workers. Each peak is an occupation; its height is the number of jobs from BLS Employment Projections. Drag the year slider from 2025 to 2035 to follow the official path between those two levels.
+                            Tap a continent to zoom into that field.
                         </p>
                     </div>
                 </div>
@@ -72,7 +73,7 @@ export const IntroModal: React.FC = () => {
                 onClick={handleClose}
                 className="w-full py-3 bg-cyan-600 hover:bg-cyan-500 text-white font-semibold rounded-lg transition-colors"
             >
-                Explore the Landscape
+                Explore the Globe
             </button>
         </Modal>
     );
