@@ -1,0 +1,3057 @@
+{
+  "version": 5,
+  "model": "claude-sonnet-5-5 (in-session rating, phase 3a)",
+  "generatedAt": "2026-10-25T06:52:41.236Z",
+  "scores": {
+    "job-15": {
+      "tasks": [
+        {
+          "taskName": "Identify, develop, or evaluate marketing strategy, based on knowledge of establishment objectives, market characteristics, and cost and markup factors.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.7
+        },
+        {
+          "taskName": "Formulate, direct, or coordinate marketing activities or policies to promote products or services, working with advertising or promotion managers.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.7
+        },
+        {
+          "taskName": "Evaluate the financial aspects of product development, such as budgets, expenditures, research and development appropriations, or return-on-investment and profit-loss projections.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.6
+        },
+        {
+          "taskName": "Develop pricing strategies, balancing firm objectives and customer satisfaction.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.65
+        },
+        {
+          "taskName": "Compile lists describing product or service offerings.",
+          "aiCapabilityScore": 0.9,
+          "humanCriticalityScore": 0.15
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.58,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 1.36,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 2.33,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 3.18,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 3.88,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        }
+      ]
+    },
+    "job-2": {
+      "tasks": [
+        {
+          "taskName": "Prepare reports of findings, illustrating data graphically and translating complex findings into written text.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.35
+        },
+        {
+          "taskName": "Collect and analyze data on customer demographics, preferences, needs, and buying habits to identify potential markets and factors affecting product demand.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.35
+        },
+        {
+          "taskName": "Conduct research on consumer opinions and marketing strategies, collaborating with marketing professionals, statisticians, pollsters, and other professionals.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.5
+        },
+        {
+          "taskName": "Measure and assess customer and employee satisfaction.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.4
+        },
+        {
+          "taskName": "Devise and evaluate methods and procedures for collecting data, such as surveys, opinion polls, or questionnaires, or arrange to obtain existing data.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.45
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.58,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 1.36,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 2.33,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 3.18,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 3.88,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        }
+      ]
+    },
+    "job-3": {
+      "tasks": [
+        {
+          "taskName": "Create or review technical specifications for data dashboards, reports, or visualizations to ensure they meet business requirements.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.4
+        },
+        {
+          "taskName": "Query databases, using structured query language (SQL), to compile, manipulate, and retrieve data.",
+          "aiCapabilityScore": 0.9,
+          "humanCriticalityScore": 0.2
+        },
+        {
+          "taskName": "Identify, communicate, and interpret business or operational data patterns and trends to guide strategic decisions.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.45
+        },
+        {
+          "taskName": "Design and develop key performance metrics, scorecards, and reporting frameworks aligned to business objectives.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.45
+        },
+        {
+          "taskName": "Present findings and insights from data analysis to senior leadership, translating technical results into actionable business recommendations.",
+          "aiCapabilityScore": 0.5,
+          "humanCriticalityScore": 0.65
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 2.83,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 6.61,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 11.33,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 15.48,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 18.88,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        }
+      ]
+    },
+    "job-4": {
+      "tasks": [
+        {
+          "taskName": "Advise clients on aspects of capitalization, such as amounts, sources, or timing.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.7
+        },
+        {
+          "taskName": "Analyze financial or operational performance of companies facing financial difficulties to identify or recommend remedies.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.6
+        },
+        {
+          "taskName": "Assess companies as investments for clients by examining company facilities.",
+          "aiCapabilityScore": 0.25,
+          "humanCriticalityScore": 0.75
+        },
+        {
+          "taskName": "Collaborate with investment bankers to attract new corporate clients.",
+          "aiCapabilityScore": 0.25,
+          "humanCriticalityScore": 0.8
+        },
+        {
+          "taskName": "Collaborate on projects with other professionals, such as lawyers, accountants, or public relations experts.",
+          "aiCapabilityScore": 0.4,
+          "humanCriticalityScore": 0.55
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.5,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 1.16,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 2,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 2.73,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 3.33,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        }
+      ]
+    },
+    "job-5": {
+      "tasks": [
+        {
+          "taskName": "Establish and maintain relationships with individual or business customers or provide assistance with problems these customers may encounter.",
+          "aiCapabilityScore": 0.3,
+          "humanCriticalityScore": 0.8
+        },
+        {
+          "taskName": "Oversee the flow of cash or financial instruments.",
+          "aiCapabilityScore": 0.5,
+          "humanCriticalityScore": 0.7
+        },
+        {
+          "taskName": "Plan, direct, or coordinate the activities of workers in branches, offices, or departments of establishments, such as branch banks, brokerage firms, risk and insurance departments, or credit departments.",
+          "aiCapabilityScore": 0.35,
+          "humanCriticalityScore": 0.75
+        },
+        {
+          "taskName": "Recruit staff members.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.65
+        },
+        {
+          "taskName": "Evaluate data pertaining to costs to plan budgets.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.45
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 1.25,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 2.91,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 5,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 6.83,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 8.33,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        }
+      ]
+    },
+    "job-6": {
+      "tasks": [
+        {
+          "taskName": "Gather and organize information on problems or procedures.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.3
+        },
+        {
+          "taskName": "Confer with personnel concerned to ensure successful functioning of newly implemented systems or procedures.",
+          "aiCapabilityScore": 0.4,
+          "humanCriticalityScore": 0.65
+        },
+        {
+          "taskName": "Analyze data gathered and develop solutions or alternative methods of proceeding.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.5
+        },
+        {
+          "taskName": "Document findings of study and prepare recommendations for implementation of new systems, procedures, or organizational changes.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.3
+        },
+        {
+          "taskName": "Plan study of work problems and procedures, such as organizational change, communications, information flow, integrated production methods, inventory control, or cost analysis.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.45
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.75,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 1.75,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 3,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 4.09,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 5,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        }
+      ]
+    },
+    "job-7": {
+      "tasks": [
+        {
+          "taskName": "Supervise the activities of workers engaged in receiving, storing, testing, and shipping products or materials.",
+          "aiCapabilityScore": 0.3,
+          "humanCriticalityScore": 0.7
+        },
+        {
+          "taskName": "Plan, develop, or implement warehouse safety and security programs and activities.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.55
+        },
+        {
+          "taskName": "Inspect physical conditions of warehouses, vehicle fleets, or equipment and order testing, maintenance, repairs, or replacements.",
+          "aiCapabilityScore": 0.15,
+          "humanCriticalityScore": 0.8
+        },
+        {
+          "taskName": "Plan, organize, or manage the work of subordinate staff to ensure that the work is accomplished in a manner consistent with organizational requirements.",
+          "aiCapabilityScore": 0.35,
+          "humanCriticalityScore": 0.7
+        },
+        {
+          "taskName": "Collaborate with other departments to integrate logistics with business systems or processes, such as customer sales, order management, accounting, or shipping.",
+          "aiCapabilityScore": 0.5,
+          "humanCriticalityScore": 0.55
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.5,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 1.16,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 2,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 2.73,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 3.33,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        }
+      ]
+    },
+    "job-8": {
+      "tasks": [
+        {
+          "taskName": "Maintain and develop positive business relationships with a customer's key personnel involved in, or directly relevant to, a logistics activity.",
+          "aiCapabilityScore": 0.3,
+          "humanCriticalityScore": 0.75
+        },
+        {
+          "taskName": "Develop an understanding of customers' needs and take actions to ensure that such needs are met.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.65
+        },
+        {
+          "taskName": "Manage subcontractor activities, reviewing proposals, developing performance specifications, and serving as liaisons between subcontractors and organizations.",
+          "aiCapabilityScore": 0.4,
+          "humanCriticalityScore": 0.65
+        },
+        {
+          "taskName": "Develop proposals that include documentation for estimates.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.45
+        },
+        {
+          "taskName": "Review logistics performance with customers against targets, benchmarks, and service agreements.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.4
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 1.41,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 3.3,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 5.66,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 7.74,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 9.44,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        }
+      ]
+    },
+    "job-9": {
+      "tasks": [
+        {
+          "taskName": "Analyze user needs and software requirements to determine feasibility of design within time and cost constraints.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.5
+        },
+        {
+          "taskName": "Develop or direct software system testing or validation procedures, programming, or documentation.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.3
+        },
+        {
+          "taskName": "Confer with systems analysts, engineers, programmers and others to design systems and to obtain information on project limitations and capabilities, performance requirements, and interfaces.",
+          "aiCapabilityScore": 0.5,
+          "humanCriticalityScore": 0.5
+        },
+        {
+          "taskName": "Modify existing software to correct errors, adapt it to new hardware, or upgrade interfaces and improve performance.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.3
+        },
+        {
+          "taskName": "Prepare reports or correspondence concerning project specifications, activities, or status.",
+          "aiCapabilityScore": 0.9,
+          "humanCriticalityScore": 0.2
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 1.33,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 3.11,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 5.33,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 7.28,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 8.88,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        }
+      ]
+    },
+    "job-10": {
+      "tasks": [
+        {
+          "taskName": "Present the results of mathematical modeling and data analysis to management or other end users.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.5
+        },
+        {
+          "taskName": "Define data requirements, and gather and validate information, applying judgment and statistical tests.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.45
+        },
+        {
+          "taskName": "Perform validation and testing of models to ensure adequacy, and reformulate models, as necessary.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.4
+        },
+        {
+          "taskName": "Prepare management reports defining and evaluating problems and recommending solutions.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.3
+        },
+        {
+          "taskName": "Collaborate with others in the organization to ensure successful implementation of chosen problem solutions.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.55
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 1.83,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 4.27,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 7.33,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 10.02,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 12.22,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        }
+      ]
+    },
+    "job-11": {
+      "tasks": [
+        {
+          "taskName": "Make bids or offers to buy or sell securities.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.4
+        },
+        {
+          "taskName": "Monitor markets or positions.",
+          "aiCapabilityScore": 0.9,
+          "humanCriticalityScore": 0.2
+        },
+        {
+          "taskName": "Agree on buying or selling prices at optimal levels for clients.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.55
+        },
+        {
+          "taskName": "Keep accurate records of transactions.",
+          "aiCapabilityScore": 0.92,
+          "humanCriticalityScore": 0.1
+        },
+        {
+          "taskName": "Buy or sell stocks, bonds, commodity futures, foreign currencies, or other securities on behalf of investment dealers.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.4
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.25,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 0.58,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 1,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 1.36,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 1.66,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        }
+      ]
+    },
+    "job-12": {
+      "tasks": [
+        {
+          "taskName": "Oversee regional and local sales managers and their staffs.",
+          "aiCapabilityScore": 0.3,
+          "humanCriticalityScore": 0.8
+        },
+        {
+          "taskName": "Resolve customer complaints regarding sales and service.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.7
+        },
+        {
+          "taskName": "Monitor customer preferences to determine focus of sales efforts.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.4
+        },
+        {
+          "taskName": "Confer with potential customers regarding equipment needs, and advise customers on types of equipment to purchase.",
+          "aiCapabilityScore": 0.4,
+          "humanCriticalityScore": 0.65
+        },
+        {
+          "taskName": "Review operational records and reports to project sales and determine profitability.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.45
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.41,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 0.97,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 1.66,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 2.27,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 2.77,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        }
+      ]
+    },
+    "job-13": {
+      "tasks": [
+        {
+          "taskName": "Prepare detailed reports on audit findings.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.35
+        },
+        {
+          "taskName": "Report to management about asset utilization and audit results, and recommend changes in operations and financial activities.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.65
+        },
+        {
+          "taskName": "Collect and analyze data to detect deficient controls, duplicated effort, extravagance, fraud, or non-compliance with laws, regulations, and management policies.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.4
+        },
+        {
+          "taskName": "Inspect account books and accounting systems for efficiency, effectiveness, and use of accepted accounting procedures to record transactions.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.45
+        },
+        {
+          "taskName": "Supervise auditing of establishments, and determine scope of investigation required.",
+          "aiCapabilityScore": 0.35,
+          "humanCriticalityScore": 0.7
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.41,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 0.97,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 1.66,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 2.27,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 2.77,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        }
+      ]
+    },
+    "job-14": {
+      "tasks": [
+        {
+          "taskName": "Plan and prepare advertising and promotional material to increase sales of products or services, working with customers, company officials, sales departments, and advertising agencies.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.55
+        },
+        {
+          "taskName": "Inspect layouts and advertising copy, and edit scripts, audio, video, and other promotional material for adherence to specifications.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.5
+        },
+        {
+          "taskName": "Confer with department heads or staff to discuss topics such as contracts, selection of advertising media, or product to be advertised.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.55
+        },
+        {
+          "taskName": "Coordinate with the media to disseminate advertising.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.45
+        },
+        {
+          "taskName": "Coordinate activities of departments, such as sales, graphic arts, media, finance, and research.",
+          "aiCapabilityScore": 0.4,
+          "humanCriticalityScore": 0.6
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.58,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 1.36,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 2.33,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 3.18,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 3.88,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        }
+      ]
+    },
+    "job-16": {
+      "tasks": [
+        {
+          "taskName": "Develop and implement public relations programs to promote a favorable image for the organization with the public, press, and other stakeholders.",
+          "aiCapabilityScore": 0.5,
+          "humanCriticalityScore": 0.65
+        },
+        {
+          "taskName": "Manage media relations, including responding to press inquiries and pitching stories to journalists and media outlets.",
+          "aiCapabilityScore": 0.4,
+          "humanCriticalityScore": 0.7
+        },
+        {
+          "taskName": "Write and edit press releases, speeches, and other communications materials for executive and organizational use.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.35
+        },
+        {
+          "taskName": "Lead crisis communications planning and real-time response to reputational threats.",
+          "aiCapabilityScore": 0.35,
+          "humanCriticalityScore": 0.8
+        },
+        {
+          "taskName": "Build and maintain relationships with community organizations, media, government, and other external stakeholders.",
+          "aiCapabilityScore": 0.2,
+          "humanCriticalityScore": 0.85
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.41,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 0.97,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 1.66,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 2.27,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 2.77,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        }
+      ]
+    },
+    "job-17": {
+      "tasks": [
+        {
+          "taskName": "Prepare and deliver sales presentations to new and existing customers to sell new advertising programs and to protect and increase existing advertising.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.65
+        },
+        {
+          "taskName": "Maintain assigned account bases while developing new accounts.",
+          "aiCapabilityScore": 0.5,
+          "humanCriticalityScore": 0.55
+        },
+        {
+          "taskName": "Provide clients with estimates of the costs of advertising products or services.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.3
+        },
+        {
+          "taskName": "Locate and contact potential clients to offer advertising services.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.35
+        },
+        {
+          "taskName": "Explain to customers how specific types of advertising will help promote their products or services in the most effective way possible.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.5
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -0.5,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -1.16,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -2,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -2.73,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -3.33,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        }
+      ]
+    },
+    "job-18": {
+      "tasks": [
+        {
+          "taskName": "Consult with customers to determine objectives and requirements for events, such as meetings, conferences, and conventions.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.6
+        },
+        {
+          "taskName": "Review event bills for accuracy and approve payment.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.4
+        },
+        {
+          "taskName": "Coordinate services for events, such as accommodation and transportation for participants, facilities, catering, signage, displays, and event security.",
+          "aiCapabilityScore": 0.5,
+          "humanCriticalityScore": 0.6
+        },
+        {
+          "taskName": "Arrange the availability of audio-visual equipment, transportation, displays, and other event needs.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.45
+        },
+        {
+          "taskName": "Confer with staff at a chosen event site to coordinate details.",
+          "aiCapabilityScore": 0.4,
+          "humanCriticalityScore": 0.55
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.41,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 0.97,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 1.66,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 2.27,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 2.77,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        }
+      ]
+    },
+    "job-19": {
+      "tasks": [
+        {
+          "taskName": "Answer customers' questions about services, prices, availability, or credit terms.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.3
+        },
+        {
+          "taskName": "Attend sales or trade meetings or read related publications to obtain information about market conditions, business trends, or industry developments.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.3
+        },
+        {
+          "taskName": "Compute and compare costs of services.",
+          "aiCapabilityScore": 0.9,
+          "humanCriticalityScore": 0.15
+        },
+        {
+          "taskName": "Consult with clients after sales or contract signings to resolve problems and provide ongoing support.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.65
+        },
+        {
+          "taskName": "Contact prospective or existing customers to discuss how services can meet their needs.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.55
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.25,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 0.58,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 1,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 1.36,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 1.66,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        }
+      ]
+    },
+    "job-20": {
+      "tasks": [
+        {
+          "taskName": "Negotiate prices or terms of sales or service agreements.",
+          "aiCapabilityScore": 0.35,
+          "humanCriticalityScore": 0.7
+        },
+        {
+          "taskName": "Prepare and submit sales contracts for orders.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.3
+        },
+        {
+          "taskName": "Visit establishments to evaluate needs or to promote product or service sales.",
+          "aiCapabilityScore": 0.15,
+          "humanCriticalityScore": 0.8
+        },
+        {
+          "taskName": "Maintain customer records, using automated systems.",
+          "aiCapabilityScore": 0.9,
+          "humanCriticalityScore": 0.1
+        },
+        {
+          "taskName": "Answer customers' questions about products, prices, availability, or credit terms.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.2
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 0,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 0,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 0,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 0,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        }
+      ]
+    },
+    "job-21": {
+      "tasks": [
+        {
+          "taskName": "Customize insurance programs to suit individual customers, often covering a variety of risks.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.6
+        },
+        {
+          "taskName": "Sell various types of insurance policies to businesses and individuals on behalf of insurance companies, including automobile, fire, life, property, and medical insurance.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.65
+        },
+        {
+          "taskName": "Explain features, advantages, and disadvantages of various policies to promote sale of insurance plans.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.5
+        },
+        {
+          "taskName": "Perform administrative tasks, such as maintaining records and handling policy renewals.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.2
+        },
+        {
+          "taskName": "Seek out new clients and develop clientele by networking to find new customers and generate lists of prospective clients.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.45
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.33,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 0.77,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 1.33,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 1.82,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 2.22,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        }
+      ]
+    },
+    "job-22": {
+      "tasks": [
+        {
+          "taskName": "Interview clients to determine their current income, expenses, insurance coverage, tax status, financial objectives, and risk tolerance needed to develop a financial plan.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.7
+        },
+        {
+          "taskName": "Analyze financial information obtained from clients to determine strategies for meeting clients' financial objectives.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.45
+        },
+        {
+          "taskName": "Answer clients' questions about the purposes and details of financial plans and strategies.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.6
+        },
+        {
+          "taskName": "Review clients' accounts and plans regularly to determine whether life changes, economic changes, or financial performance indicate a need for plan reassessment.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.45
+        },
+        {
+          "taskName": "Manage client portfolios, keeping client plans up-to-date.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.6
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.83,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 1.94,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 3.33,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 4.55,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 5.55,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        }
+      ]
+    },
+    "job-23": {
+      "tasks": [
+        {
+          "taskName": "Analyze credit data and financial statements to determine the degree of risk involved in extending credit or lending money.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.4
+        },
+        {
+          "taskName": "Complete loan applications, including credit analyses and summaries of loan requests, and submit to loan committees for approval.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.35
+        },
+        {
+          "taskName": "Generate financial ratios, using computer programs, to evaluate customers' financial status.",
+          "aiCapabilityScore": 0.92,
+          "humanCriticalityScore": 0.1
+        },
+        {
+          "taskName": "Prepare reports that include the degree of risk involved in extending credit or lending money.",
+          "aiCapabilityScore": 0.88,
+          "humanCriticalityScore": 0.25
+        },
+        {
+          "taskName": "Analyze financial data, such as income growth, quality of management, and market share to determine expected profitability of loans.",
+          "aiCapabilityScore": 0.78,
+          "humanCriticalityScore": 0.4
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -0.33,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -0.77,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -1.33,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -1.82,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -2.22,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        }
+      ]
+    },
+    "job-24": {
+      "tasks": [
+        {
+          "taskName": "Develop and analyze annual budgets for departments or organizations, identifying areas where costs can be reduced or resources optimized.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.45
+        },
+        {
+          "taskName": "Analyze budget proposals submitted by departments to determine whether they comply with organizational goals and legal requirements.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.5
+        },
+        {
+          "taskName": "Monitor budget allocations and expenditures to ensure spending stays within approved budget limits.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.3
+        },
+        {
+          "taskName": "Forecast future financial needs of the organization based on economic trends, historical data, and operational requirements.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.4
+        },
+        {
+          "taskName": "Prepare budget variance reports comparing actual spending against forecasts, and recommend corrective actions.",
+          "aiCapabilityScore": 0.88,
+          "humanCriticalityScore": 0.25
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.08,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 0.19,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 0.33,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 0.45,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 0.55,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        }
+      ]
+    },
+    "job-25": {
+      "tasks": [
+        {
+          "taskName": "Apply mathematical or statistical techniques to address practical issues in finance, such as derivative valuation, securities trading, and risk management.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.4
+        },
+        {
+          "taskName": "Research or develop analytical tools to address issues such as portfolio construction, performance measurement, or pricing models.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.4
+        },
+        {
+          "taskName": "Interpret results of financial analysis procedures.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.45
+        },
+        {
+          "taskName": "Develop core analytical capabilities or model libraries, using advanced statistical, quantitative, or econometric techniques.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.4
+        },
+        {
+          "taskName": "Define or recommend model specifications or data collection methods.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.45
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.25,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 0.58,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 1,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 1.36,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 1.66,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        }
+      ]
+    },
+    "job-26": {
+      "tasks": [
+        {
+          "taskName": "Examine documents to determine degree of risk from factors such as applicant health, financial standing and value, and condition of property.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.4
+        },
+        {
+          "taskName": "Decline excessive risks based on established underwriting guidelines and loss experience data.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.55
+        },
+        {
+          "taskName": "Write to field representatives, medical personnel, or others to obtain further information, quote rates, or explain company underwriting policies.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.35
+        },
+        {
+          "taskName": "Evaluate possibility of losses due to catastrophe or excessive insurance using actuarial and statistical data.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.4
+        },
+        {
+          "taskName": "Review company records to determine amount of insurance in force on single risk or group of closely related risks.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.2
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -0.25,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -0.58,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -1,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -1.36,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -1.66,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        }
+      ]
+    },
+    "job-27": {
+      "tasks": [
+        {
+          "taskName": "Ascertain premium rates required and cash reserves and liabilities necessary to ensure payment of future benefits.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.5
+        },
+        {
+          "taskName": "Collaborate with programmers, underwriters, accounts, claims experts, and senior management to help companies develop plans for new lines of business.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.6
+        },
+        {
+          "taskName": "Analyze statistical information to estimate mortality, accident, sickness, disability, and retirement rates.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.35
+        },
+        {
+          "taskName": "Design, review, and help administer insurance, annuity and pension plans, determining financial soundness and calculating premiums.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.5
+        },
+        {
+          "taskName": "Determine company policy and explain complex technical matters to company executives, government officials, shareholders, and policyholders.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.65
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 1.83,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 4.27,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 7.33,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 10.02,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 12.22,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        }
+      ]
+    },
+    "job-28": {
+      "tasks": [
+        {
+          "taskName": "Meet with applicants to obtain information for loan applications and to answer questions about the process.",
+          "aiCapabilityScore": 0.5,
+          "humanCriticalityScore": 0.55
+        },
+        {
+          "taskName": "Analyze applicants' financial status, credit, and property evaluations to determine feasibility of granting loans.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.4
+        },
+        {
+          "taskName": "Approve loans within specified limits, and refer loan applications outside those limits to management for approval.",
+          "aiCapabilityScore": 0.5,
+          "humanCriticalityScore": 0.65
+        },
+        {
+          "taskName": "Explain to customers the different types of loans and credit options that are available, as well as the terms of those services.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.45
+        },
+        {
+          "taskName": "Submit applications to credit analysts for verification and recommendation.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.15
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.16,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 0.38,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 0.66,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 0.91,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 1.11,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        }
+      ]
+    },
+    "job-29": {
+      "tasks": [
+        {
+          "taskName": "Analyze, manipulate, or process large sets of data using statistical software to identify patterns and generate insights.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.4
+        },
+        {
+          "taskName": "Apply feature selection algorithms to models predicting outcomes of interest, such as sales, attrition, and customer behaviour.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.4
+        },
+        {
+          "taskName": "Apply sampling techniques to determine groups to be surveyed or use complete enumeration methods.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.4
+        },
+        {
+          "taskName": "Clean and manipulate raw data using statistical software to prepare it for analysis.",
+          "aiCapabilityScore": 0.9,
+          "humanCriticalityScore": 0.2
+        },
+        {
+          "taskName": "Compare models using statistical performance metrics, such as loss functions or proportion of explained variance.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.25
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 2.83,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 6.61,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 11.33,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 15.48,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 18.88,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        }
+      ]
+    },
+    "job-30": {
+      "tasks": [
+        {
+          "taskName": "Analyze and interpret statistical data to identify significant differences in relationships among sources of information.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.4
+        },
+        {
+          "taskName": "Evaluate the statistical methods and procedures used to obtain data to ensure validity, applicability, efficiency, and accuracy.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.55
+        },
+        {
+          "taskName": "Report results of statistical analyses, including information in the form of graphs, charts, and tables.",
+          "aiCapabilityScore": 0.88,
+          "humanCriticalityScore": 0.2
+        },
+        {
+          "taskName": "Determine whether statistical methods are appropriate, based on user needs or research questions of interest.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.55
+        },
+        {
+          "taskName": "Prepare data for processing by organizing information, checking for inaccuracies, and adjusting and weighting the raw data.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.2
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.75,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 1.75,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 3,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 4.09,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 5,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        }
+      ]
+    },
+    "job-31": {
+      "tasks": [
+        {
+          "taskName": "Troubleshoot program and system malfunctions to restore normal functioning.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.45
+        },
+        {
+          "taskName": "Provide staff and users with assistance solving computer-related problems, such as malfunctions and program problems.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.4
+        },
+        {
+          "taskName": "Test, maintain, and monitor computer programs and systems, including coordinating the installation of computer programs and systems.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.4
+        },
+        {
+          "taskName": "Use the computer in the analysis and solution of business problems, such as development of integrated production and inventory control and cost analysis systems.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.45
+        },
+        {
+          "taskName": "Coordinate and link the computer systems within an organization to increase compatibility so that information can be shared.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.5
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.75,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 1.75,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 3,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 4.09,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 5,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        }
+      ]
+    },
+    "job-32": {
+      "tasks": [
+        {
+          "taskName": "Analyze blueprints and other documentation to prepare time, cost, materials, and labor estimates.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.35
+        },
+        {
+          "taskName": "Confer with engineers, architects, owners, contractors, and subcontractors on changes and adjustments to cost estimates.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.6
+        },
+        {
+          "taskName": "Collect historical cost data to estimate costs for current or future products.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.2
+        },
+        {
+          "taskName": "Assess cost effectiveness of products, projects or services, tracking actual costs relative to bids as the project develops.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.35
+        },
+        {
+          "taskName": "Consult with clients, vendors, or construction foremen to discuss and formulate estimates and resolve issues.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.6
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -0.33,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -0.77,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -1.33,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -1.82,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -2.22,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        }
+      ]
+    },
+    "job-33": {
+      "tasks": [
+        {
+          "taskName": "Administer employee insurance, pension, and savings plans, working with insurance brokers and plan carriers.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.5
+        },
+        {
+          "taskName": "Ensure company compliance with federal and state laws, including reporting requirements.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.55
+        },
+        {
+          "taskName": "Research employee benefit and health and safety practices, and recommend changes or modifications to existing policies.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.4
+        },
+        {
+          "taskName": "Advise managers and employees on state and federal employment regulations, collective agreements, benefit and compensation policies, and classification programs.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.6
+        },
+        {
+          "taskName": "Plan and develop curricula and materials for training programs and conduct training.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.35
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.41,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 0.97,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 1.66,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 2.27,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 2.77,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        }
+      ]
+    },
+    "job-34": {
+      "tasks": [
+        {
+          "taskName": "Develop and implement purchasing and contract management instructions, policies, and procedures.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.55
+        },
+        {
+          "taskName": "Locate vendors of materials, equipment or supplies, and interview them to determine product availability and terms of sales.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.55
+        },
+        {
+          "taskName": "Prepare bid awards requiring board approval.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.5
+        },
+        {
+          "taskName": "Direct and coordinate activities of personnel engaged in buying, selling, and distributing materials, equipment, machinery, and supplies.",
+          "aiCapabilityScore": 0.35,
+          "humanCriticalityScore": 0.7
+        },
+        {
+          "taskName": "Review purchase order claims and contracts for conformance to company policy.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.35
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.25,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 0.58,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 1,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 1.36,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 1.66,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        }
+      ]
+    },
+    "job-35": {
+      "tasks": [
+        {
+          "taskName": "Buy merchandise or commodities for resale to wholesale or retail consumers.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.45
+        },
+        {
+          "taskName": "Negotiate prices, discount terms, or transportation arrangements with suppliers.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.6
+        },
+        {
+          "taskName": "Examine, select, order, or purchase merchandise consistent with quality, quantity, specification requirements, or other factors.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.45
+        },
+        {
+          "taskName": "Recommend mark-up rates, mark-down rates, or merchandise selling prices.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.4
+        },
+        {
+          "taskName": "Obtain information about customer needs or preferences by conferring with sales or purchasing personnel.",
+          "aiCapabilityScore": 0.5,
+          "humanCriticalityScore": 0.45
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.5,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 1.16,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 2,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 2.73,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 3.33,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        }
+      ]
+    },
+    "job-36": {
+      "tasks": [
+        {
+          "taskName": "Monitor and follow applicable laws and regulations related to procurement and contracting.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.5
+        },
+        {
+          "taskName": "Purchase the highest quality merchandise at the lowest possible price and in correct amounts.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.5
+        },
+        {
+          "taskName": "Formulate policies and procedures for bid proposals and procurement of goods and services.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.4
+        },
+        {
+          "taskName": "Prepare purchase orders, solicit bid proposals, and review requisitions for goods and services.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.2
+        },
+        {
+          "taskName": "Write and review product specifications, maintaining a working technical knowledge of the goods or services to be purchased.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.3
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.5,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 1.16,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 2,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 2.73,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 3.33,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        }
+      ]
+    },
+    "job-37": {
+      "tasks": [
+        {
+          "taskName": "Set and monitor product standards, examining samples of raw products or directing testing during processing, to ensure finished products are of prescribed quality.",
+          "aiCapabilityScore": 0.4,
+          "humanCriticalityScore": 0.65
+        },
+        {
+          "taskName": "Direct or coordinate production, processing, distribution, or marketing activities of industrial organizations.",
+          "aiCapabilityScore": 0.35,
+          "humanCriticalityScore": 0.75
+        },
+        {
+          "taskName": "Review processing schedules or production orders to make decisions concerning inventory requirements, staffing requirements, work procedures, or duty assignments.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.4
+        },
+        {
+          "taskName": "Review operations and confer with technical or administrative staff to resolve production or processing problems.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.6
+        },
+        {
+          "taskName": "Hire, train, evaluate, or discharge staff or resolve personnel grievances.",
+          "aiCapabilityScore": 0.35,
+          "humanCriticalityScore": 0.75
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.16,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 0.38,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 0.66,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 0.91,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 1.11,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        }
+      ]
+    },
+    "job-38": {
+      "tasks": [
+        {
+          "taskName": "Conduct user research, including usability testing, interviews, and surveys, to determine design requirements and user pain points.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.55
+        },
+        {
+          "taskName": "Collaborate with front-end and back-end developers to complete the full scope of digital product development projects.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.55
+        },
+        {
+          "taskName": "Analyze user feedback and behavioral data to identify improvements to interface designs and user flows.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.35
+        },
+        {
+          "taskName": "Create wireframes, prototypes, and high-fidelity mockups to communicate design solutions to stakeholders.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.35
+        },
+        {
+          "taskName": "Confer with management or development teams to prioritize needs, resolve conflicts, develop content criteria, or choose solutions.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.6
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.58,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 1.36,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 2.33,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 3.18,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 3.88,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        }
+      ]
+    },
+    "job-39": {
+      "tasks": [
+        {
+          "taskName": "Direct daily operations of department, analyzing workflow, establishing priorities, developing standards and setting deadlines.",
+          "aiCapabilityScore": 0.4,
+          "humanCriticalityScore": 0.65
+        },
+        {
+          "taskName": "Meet with department heads, managers, supervisors, vendors, and others, to solicit cooperation and resolve problems.",
+          "aiCapabilityScore": 0.35,
+          "humanCriticalityScore": 0.65
+        },
+        {
+          "taskName": "Review project plans to plan and coordinate project activity.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.45
+        },
+        {
+          "taskName": "Assign and review the work of systems analysts, programmers, and other computer-related workers.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.65
+        },
+        {
+          "taskName": "Provide users with technical support for computer problems.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.4
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 1.25,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 2.91,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 5,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 6.83,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 8.33,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        }
+      ]
+    },
+    "job-40": {
+      "tasks": [
+        {
+          "taskName": "Develop plans to safeguard computer files against accidental or unauthorized modification, destruction, or disclosure and to meet emergency data processing needs.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.55
+        },
+        {
+          "taskName": "Monitor current reports of computer viruses to determine when to update virus protection systems.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.25
+        },
+        {
+          "taskName": "Encrypt data transmissions and erect firewalls to conceal confidential information and to keep out tainted digital transfers.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.4
+        },
+        {
+          "taskName": "Perform risk assessments and execute tests of data processing system to ensure functioning of data processing activities and security measures.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.5
+        },
+        {
+          "taskName": "Modify computer security files to incorporate new software, correct errors, or change individual access status.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.3
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 2.41,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 5.63,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 9.66,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 13.21,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 16.11,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        }
+      ]
+    },
+    "job-41": {
+      "tasks": [
+        {
+          "taskName": "Write supporting code for Web applications or Web sites.",
+          "aiCapabilityScore": 0.88,
+          "humanCriticalityScore": 0.2
+        },
+        {
+          "taskName": "Design, build, or maintain Web sites, using authoring or scripting languages, content creation tools, management tools, and digital media.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.25
+        },
+        {
+          "taskName": "Back up files from Web sites to local directories for instant recovery in case of problems.",
+          "aiCapabilityScore": 0.9,
+          "humanCriticalityScore": 0.15
+        },
+        {
+          "taskName": "Select programming languages, design tools, or applications.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.3
+        },
+        {
+          "taskName": "Evaluate code to ensure that it is valid, is properly structured, meets industry standards, and is compatible with browsers, devices, or operating systems.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.25
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.66,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 1.55,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 2.66,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 3.64,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 4.44,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        }
+      ]
+    },
+    "job-42": {
+      "tasks": [
+        {
+          "taskName": "Modify existing databases and database management systems or direct programmers and analysts to make changes.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.45
+        },
+        {
+          "taskName": "Plan, coordinate, and implement security measures to safeguard information in computer files against accidental or unauthorized damage, modification or disclosure.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.55
+        },
+        {
+          "taskName": "Plan and install upgrades of database management system software to enhance database performance.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.4
+        },
+        {
+          "taskName": "Specify users and user access levels for each segment of database.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.2
+        },
+        {
+          "taskName": "Test changes to database applications or systems.",
+          "aiCapabilityScore": 0.78,
+          "humanCriticalityScore": 0.3
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -0.08,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -0.19,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -0.33,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -0.45,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -0.55,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        }
+      ]
+    },
+    "job-43": {
+      "tasks": [
+        {
+          "taskName": "Define project scope, goals, and deliverables that support business objectives in collaboration with senior management and stakeholders.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.65
+        },
+        {
+          "taskName": "Develop detailed project plans and manage all implementation processes including resource allocation, progress tracking, and risk mitigation.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.5
+        },
+        {
+          "taskName": "Communicate project status, issues, and changes to stakeholders and sponsors in a clear and timely manner.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.25
+        },
+        {
+          "taskName": "Identify and manage project risks and issues, developing contingency plans as necessary.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.55
+        },
+        {
+          "taskName": "Coordinate cross-functional teams, facilitating collaboration across development, QA, operations, and business units.",
+          "aiCapabilityScore": 0.35,
+          "humanCriticalityScore": 0.7
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.66,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 1.55,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 2.66,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 3.64,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 4.44,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        }
+      ]
+    },
+    "job-44": {
+      "tasks": [
+        {
+          "taskName": "Review financial statements, sales or activity reports, or other performance data to measure productivity or goal achievement or to identify areas needing cost reduction or program improvement.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.45
+        },
+        {
+          "taskName": "Direct and coordinate activities of businesses or departments concerned with the production, pricing, sales, or distribution of products.",
+          "aiCapabilityScore": 0.4,
+          "humanCriticalityScore": 0.7
+        },
+        {
+          "taskName": "Direct administrative activities directly related to making products or providing services.",
+          "aiCapabilityScore": 0.4,
+          "humanCriticalityScore": 0.65
+        },
+        {
+          "taskName": "Prepare staff work schedules and assign specific duties.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.25
+        },
+        {
+          "taskName": "Direct or coordinate financial or budget activities to fund operations, maximize investments, or increase efficiency.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.55
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.33,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 0.77,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 1.33,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 1.82,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 2.22,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        }
+      ]
+    },
+    "job-45": {
+      "tasks": [
+        {
+          "taskName": "Serve as a link between management and employees by handling questions, interpreting and administering contracts and helping resolve work-related problems.",
+          "aiCapabilityScore": 0.3,
+          "humanCriticalityScore": 0.8
+        },
+        {
+          "taskName": "Plan, direct, supervise, and coordinate work activities of subordinates and staff relating to employment, compensation, labor relations, and employee relations.",
+          "aiCapabilityScore": 0.35,
+          "humanCriticalityScore": 0.75
+        },
+        {
+          "taskName": "Perform difficult staffing duties, including dealing with understaffing, refereeing disputes, firing employees, and administering disciplinary procedures.",
+          "aiCapabilityScore": 0.15,
+          "humanCriticalityScore": 0.9
+        },
+        {
+          "taskName": "Represent organization at personnel-related hearings and investigations.",
+          "aiCapabilityScore": 0.2,
+          "humanCriticalityScore": 0.9
+        },
+        {
+          "taskName": "Negotiate bargaining agreements and help interpret labor contracts.",
+          "aiCapabilityScore": 0.3,
+          "humanCriticalityScore": 0.85
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.41,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 0.97,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 1.66,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 2.27,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 2.77,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        }
+      ]
+    },
+    "job-46": {
+      "tasks": [
+        {
+          "taskName": "Assign duties or responsibilities to project personnel.",
+          "aiCapabilityScore": 0.5,
+          "humanCriticalityScore": 0.55
+        },
+        {
+          "taskName": "Communicate with key stakeholders to determine project requirements and objectives.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.6
+        },
+        {
+          "taskName": "Confer with project personnel to identify and resolve problems.",
+          "aiCapabilityScore": 0.35,
+          "humanCriticalityScore": 0.65
+        },
+        {
+          "taskName": "Create project status presentations for delivery to customers or project personnel.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.25
+        },
+        {
+          "taskName": "Develop or update project plans including information such as objectives, technologies, schedules, funding, and staffing.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.4
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.5,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 1.16,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 2,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 2.73,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 3.33,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        }
+      ]
+    },
+    "job-47": {
+      "tasks": [
+        {
+          "taskName": "Present information with a variety of instructional techniques or formats, such as role playing, simulations, team exercises, group discussions, videos, or lectures.",
+          "aiCapabilityScore": 0.35,
+          "humanCriticalityScore": 0.65
+        },
+        {
+          "taskName": "Obtain, organize, or develop training procedure manuals, guides, or course materials, such as handouts or visual materials.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.25
+        },
+        {
+          "taskName": "Evaluate modes of training delivery, such as in-person or virtual, to optimize training effectiveness, training costs, or environmental impacts.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.45
+        },
+        {
+          "taskName": "Offer specific training programs to help workers maintain or improve job skills.",
+          "aiCapabilityScore": 0.5,
+          "humanCriticalityScore": 0.55
+        },
+        {
+          "taskName": "Assess training needs through surveys, interviews with employees, focus groups, or consultation with managers, instructors, or customer representatives.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.45
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.91,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 2.13,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 3.66,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 5.01,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 6.11,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        }
+      ]
+    },
+    "job-48": {
+      "tasks": [
+        {
+          "taskName": "Interpret and explain human resources policies, procedures, laws, standards, or regulations.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.45
+        },
+        {
+          "taskName": "Hire employees and process hiring-related paperwork.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.45
+        },
+        {
+          "taskName": "Maintain current knowledge of Equal Employment Opportunity (EEO) and affirmative action guidelines and laws.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.25
+        },
+        {
+          "taskName": "Prepare or maintain employment records related to events, such as hiring, termination, leaves, transfers, or promotions, using human resources management system software.",
+          "aiCapabilityScore": 0.92,
+          "humanCriticalityScore": 0.1
+        },
+        {
+          "taskName": "Address employee relations issues, such as harassment allegations, work complaints, or other employee concerns.",
+          "aiCapabilityScore": 0.3,
+          "humanCriticalityScore": 0.8
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.5,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 1.16,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 2,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 2.73,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 3.33,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        }
+      ]
+    },
+    "job-49": {
+      "tasks": [
+        {
+          "taskName": "Analyze training needs to develop new training programs or modify and improve existing programs.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.5
+        },
+        {
+          "taskName": "Evaluate instructor performance and the effectiveness of training programs, providing recommendations for improvement.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.55
+        },
+        {
+          "taskName": "Plan, develop, and provide training and staff development programs, using knowledge of the effectiveness of methods such as classroom training, demonstrations, on-the-job training, meetings, conferences, and workshops.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.5
+        },
+        {
+          "taskName": "Confer with management and conduct surveys to identify training needs based on projected production processes, changes, and other factors.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.45
+        },
+        {
+          "taskName": "Conduct orientation sessions and arrange on-the-job training for new hires.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.5
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.5,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 1.16,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 2,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 2.73,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 3.33,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        }
+      ]
+    },
+    "job-50": {
+      "tasks": [
+        {
+          "taskName": "Direct preparation and distribution of written and verbal information to inform employees of benefits, compensation, and personnel policies.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.3
+        },
+        {
+          "taskName": "Design, evaluate, and modify benefits policies to ensure that programs are current, competitive, and in compliance with legal requirements.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.55
+        },
+        {
+          "taskName": "Fulfill all reporting requirements of all relevant government rules and regulations, including ERISA.",
+          "aiCapabilityScore": 0.88,
+          "humanCriticalityScore": 0.2
+        },
+        {
+          "taskName": "Analyze compensation policies, government regulations, and prevailing wage rates to develop competitive compensation plan.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.4
+        },
+        {
+          "taskName": "Identify and implement benefits to increase the quality of life for employees by working with brokers and researching benefits issues.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.45
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 0,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 0,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 0,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 0,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        }
+      ]
+    },
+    "job-51": {
+      "tasks": [
+        {
+          "taskName": "Analyze areas of potential risk to the assets, earning capacity, or success of organizations.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.45
+        },
+        {
+          "taskName": "Analyze new legislation to determine impact on risk exposure.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.4
+        },
+        {
+          "taskName": "Conduct statistical analyses to quantify risk, using statistical analysis software or econometric models.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.3
+        },
+        {
+          "taskName": "Confer with traders to identify and communicate risks associated with specific trading strategies or positions.",
+          "aiCapabilityScore": 0.4,
+          "humanCriticalityScore": 0.6
+        },
+        {
+          "taskName": "Consult financial literature to ensure use of the latest models or statistical techniques.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.2
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.25,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 0.58,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 1,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 1.36,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 1.66,
+          "reasoning": "Smooth progression toward the BLS-implied 2030 endpoint."
+        }
+      ]
+    }
+  }
+}
