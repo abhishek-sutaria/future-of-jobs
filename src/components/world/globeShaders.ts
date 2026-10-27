@@ -26,11 +26,36 @@ const SPHERE_VERTEX = /* glsl */ `
 
 export const oceanVertexShader = SPHERE_VERTEX;
 
-/** Dark sea, a little lighter toward the limb, with a cool rim. */
+/** The five BLS job family cells uploaded to the ocean shader (equal-area coordinates). */
+export const MAX_GLOBE_FAMILIES = 5;
+
+/**
+ * Dark sea, a little lighter toward the limb, with a cool rim, and a thin
+ * line around each BLS job family's cell. A continent keeps only part of its
+ * cell, so the family lines run through open sea.
+ */
 export const oceanFragmentShader = /* glsl */ `
   ${GRATICULE}
   uniform vec3 uLightDir;
+  uniform vec4 uFamilies[${MAX_GLOBE_FAMILIES}]; // lon0, -sinLat0, lon1, -sinLat1
   varying vec3 vPos;
+
+  // Arc (unit sphere) from n to the edge of the family cell it is in; large outside every cell.
+  float familyEdge(vec3 n) {
+    float lon = atan(n.x, n.z);
+    float z = -n.y;
+    float cosLat = max(sqrt(1.0 - n.y * n.y), 0.05);
+    for (int i = 0; i < ${MAX_GLOBE_FAMILIES}; i++) {
+      vec4 r = uFamilies[i];
+      if (lon >= r.x && lon <= r.z && z >= r.y && z <= r.w) {
+        float du = min(lon - r.x, r.z - lon) * cosLat;
+        float dv = min(z - r.y, r.w - z) / cosLat;
+        return min(du, dv);
+      }
+    }
+    return 1e3;
+  }
+
   void main() {
     vec3 n = normalize(vPos);
     vec3 v = normalize(cameraPosition - vPos);
@@ -38,6 +63,9 @@ export const oceanFragmentShader = /* glsl */ `
     vec3 color = mix(vec3(0.034, 0.064, 0.105), vec3(0.018, 0.034, 0.062), facing);
     color *= 0.78 + 0.32 * max(dot(n, uLightDir), 0.0);
     color += vec3(0.05, 0.09, 0.13) * graticule(n) * 0.45;
+    float e = familyEdge(n);
+    float w = max(fwidth(e), 1e-5);
+    color = mix(color, vec3(0.30, 0.52, 0.64), (1.0 - smoothstep(0.0025, 0.0025 + 1.5 * w, e)) * 0.55);
     color += vec3(0.10, 0.28, 0.40) * pow(1.0 - facing, 2.5) * 0.5;
     gl_FragColor = vec4(color, 1.0);
   }

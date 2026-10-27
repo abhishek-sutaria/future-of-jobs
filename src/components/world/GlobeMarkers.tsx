@@ -6,12 +6,13 @@ import { useStore } from '../../store';
 import { useWorldStore } from '../../worldStore';
 import { INDEX_CONTINENT_BY_CODE } from '../../utils/occupationIndex';
 import { HIDDEN_LABEL_POSITION, isHiddenLabelPosition } from '../../utils/labelLayout';
-import { continentAt, LAND_RADIUS, lonSinOf } from '../../utils/globeLayout';
+import { continentAt, LAND_RADIUS, lonSinOf, unitVector } from '../../utils/globeLayout';
+import type { FamilyLayout } from '../../utils/worldLayout';
 import { continentLabelPoint, GLOBE_PEAK_LABEL_LIFT, globePeakHeightAt, type GlobePeak, type GlobeScene } from './globeScene';
 import { worldPointer } from './worldPointer';
 import { useWorldView } from './worldCamera';
 import { useLabelSafeBand } from './labelBand';
-import { PeakLabel } from './WorldMarkers';
+import { FamilyLabel, PeakLabel } from './WorldMarkers';
 import { ContinentLabelButton } from './ContinentLabelButton';
 import { horizonAlpha, layoutGlobeLabels, type GlobeLabel } from './globeLabels';
 
@@ -19,7 +20,19 @@ const PEAK_HIT_RADIUS_PX = 28;
 
 type GlobeItem =
     | { kind: 'region'; id: string; code: string; n: [number, number, number]; anchor: [number, number, number] }
+    | { kind: 'family'; id: string; family: FamilyLayout; n: [number, number, number]; anchor: [number, number, number] }
     | { kind: 'peak'; id: string; g: GlobePeak };
+
+/** How far inside its cell's north-west corner a family name is pinned, in equal-area units (about 1.7° of arc). */
+const FAMILY_CORNER_INSET = 0.03;
+
+/** A family's name, hanging from just inside the north-west corner of its cell. */
+function familyItem(f: FamilyLayout): GlobeItem {
+    const sinLat = -(f.rect.z0 + FAMILY_CORNER_INSET);
+    const cosLat = Math.sqrt(1 - sinLat * sinLat);
+    const n = unitVector(f.rect.x0 + FAMILY_CORNER_INSET / cosLat, sinLat);
+    return { kind: 'family', id: `family:${f.family.id}`, family: f, n, anchor: [n[0] * LAND_RADIUS, n[1] * LAND_RADIUS, n[2] * LAND_RADIUS] };
+}
 
 const projected = new Vector3();
 const ndc = new Vector2();
@@ -69,6 +82,8 @@ export const GlobeMarkers: React.FC<{ globe: GlobeScene }> = ({ globe }) => {
     const tappablePeaksRef = useRef<GlobePeak[]>([]);
     const tappedKeyRef = useRef<string | null>(null);
     const regionWeights = useRef<Map<string, number>>(new Map());
+    // How far up its stalk each Kelley label's anchor ended up this frame (1 = full stalk).
+    const tipFractions = useRef<Map<string, number>>(new Map());
 
     useEffect(() => {
         const clear = () => {
@@ -99,24 +114,30 @@ export const GlobeMarkers: React.FC<{ globe: GlobeScene }> = ({ globe }) => {
         if (mapView !== 'globe') return [];
         const out: GlobeItem[] = kelleyOnly
             ? tappablePeaks.map((g) => ({ kind: 'peak' as const, id: g.peak.entry.key, g }))
-            : globe.layout.continents.map((c) => {
-                const anchor = continentLabelPoint(c);
-                const l = Math.hypot(...anchor);
-                return { kind: 'region' as const, id: `region:${c.code}`, code: c.code, n: [anchor[0] / l, anchor[1] / l, anchor[2] / l] as [number, number, number], anchor };
-            });
-        // Hovered / tapped first, then size: earlier items win collisions.
-        const size = (m: GlobeItem) => (m.kind === 'peak' ? m.g.peak.entry.ep2025 ?? 0 : INDEX_CONTINENT_BY_CODE.get(m.code)?.ep.employment2025 ?? 0);
-        const pri = (m: GlobeItem) => Number(m.id === hoveredId || m.id === tappedKey);
-        out.sort((a, b) => pri(b) - pri(a) || size(b) - size(a));
+            : [
+                ...globe.layout.continents.map((c) => {
+                    const anchor = continentLabelPoint(c);
+                    const l = Math.hypot(...anchor);
+                    return { kind: 'region' as const, id: `region:${c.code}`, code: c.code, n: [anchor[0] / l, anchor[1] / l, anchor[2] / l] as [number, number, number], anchor };
+                }),
+                ...globe.layout.families.map(familyItem),
+            ];
+        // Hovered / tapped first, then size, then the family names, which take
+        // whatever room is left: earlier items win collisions.
+        const size = (m: GlobeItem) =>
+            m.kind === 'peak' ? m.g.peak.entry.ep2025 ?? 0 : m.kind === 'region' ? INDEX_CONTINENT_BY_CODE.get(m.code)?.ep.employment2025 ?? 0 : 0;
+        const tier = (m: GlobeItem) => (m.id === hoveredId || m.id === tappedKey ? 0 : m.kind === 'family' ? 2 : 1);
+        out.sort((a, b) => tier(a) - tier(b) || size(b) - size(a));
         return out;
     }, [mapView, kelleyOnly, tappablePeaks, globe, hoveredId, tappedKey]);
 
     useLayoutEffect(() => {
-        // Continent names compete by size (EP 2025); a hovered one never yields.
+        // Continent names compete by size (EP 2025), family names weigh 0 (they
+        // give way to any continent name they would hide); a hovered one never yields.
         regionWeights.current = new Map(
             items
-                .filter((m) => m.kind === 'region' && m.id !== hoveredId)
-                .map((m) => [m.id, INDEX_CONTINENT_BY_CODE.get((m as { code: string }).code)?.ep.employment2025 ?? 0]),
+                .filter((m) => m.kind !== 'peak' && m.id !== hoveredId)
+                .map((m) => [m.id, m.kind === 'region' ? INDEX_CONTINENT_BY_CODE.get(m.code)?.ep.employment2025 ?? 0 : 0]),
         );
         viewKeyRef.current = viewKey;
         itemsRef.current = items;
@@ -312,11 +333,27 @@ export const GlobeMarkers: React.FC<{ globe: GlobeScene }> = ({ globe }) => {
                 list.push({ id: item.id, n: item.n, anchor: item.anchor, halfWidth: half.x, halfHeight: half.y, slack: 2 });
                 continue;
             }
+            if (item.kind === 'family') {
+                list.push({ id: item.id, n: item.n, anchor: item.anchor, halfWidth: half.x, halfHeight: half.y, slack: 2, hang: true });
+                continue;
+            }
             const [nx, ny, nz] = item.g.dir;
             const r = LAND_RADIUS + globePeakHeightAt(item.g.peak.entry, yearNow) + GLOBE_PEAK_LABEL_LIFT;
-            list.push({ id: item.id, n: item.g.dir, anchor: [nx * r, ny * r, nz * r], halfWidth: half.x, halfHeight: half.y, slack: 1 });
+            list.push({
+                id: item.id,
+                n: item.g.dir,
+                anchor: [nx * r, ny * r, nz * r],
+                // A tall peak's label slides down its stalk, then onto the peak, rather than vanish under the chrome.
+                foot: [nx * LAND_RADIUS, ny * LAND_RADIUS, nz * LAND_RADIUS],
+                halfWidth: half.x,
+                halfHeight: half.y,
+                slack: 1,
+            });
         }
-        layoutGlobeLabels(list, regionWeights.current, camera, size.width, size.height, safeBand.current, placements.current, labelOffsets.current, alphas.current, hidden);
+        layoutGlobeLabels(
+            list, regionWeights.current, camera, size.width, size.height, safeBand.current,
+            placements.current, labelOffsets.current, alphas.current, hidden, tipFractions.current,
+        );
 
         for (const item of itemsRef.current) {
             const el = labelEls.current.get(item.id);
@@ -337,7 +374,9 @@ export const GlobeMarkers: React.FC<{ globe: GlobeScene }> = ({ globe }) => {
             if (!placed || isHiddenLabelPosition(placed)) continue;
             const [nx, ny, nz] = item.g.dir;
             const r0 = LAND_RADIUS + globePeakHeightAt(item.g.peak.entry, yearNow);
-            const r1 = r0 + GLOBE_PEAK_LABEL_LIFT;
+            // The stalk ends where the label's anchor did; a label lowered onto the peak has none.
+            const r1 = LAND_RADIUS + (r0 + GLOBE_PEAK_LABEL_LIFT - LAND_RADIUS) * (tipFractions.current.get(item.id) ?? 1);
+            if (r1 <= r0) continue;
             p.set([nx * r0, ny * r0, nz * r0, nx * r1, ny * r1, nz * r1], k * 6);
             const a = (alphas.current.get(item.id) ?? 0) * 0.55;
             c.set([1, 1, 1, a, 1, 1, 1, a], k * 8);
@@ -360,7 +399,7 @@ export const GlobeMarkers: React.FC<{ globe: GlobeScene }> = ({ globe }) => {
                 const isHovered = item.id === hoveredId || item.id === tappedKey;
                 // Only drei's depth ordering reads this; calculatePosition places the label.
                 const r = item.kind === 'peak' ? LAND_RADIUS + globePeakHeightAt(item.g.peak.entry, year) + GLOBE_PEAK_LABEL_LIFT : 0;
-                const position: [number, number, number] = item.kind === 'region' ? item.anchor : [item.g.dir[0] * r, item.g.dir[1] * r, item.g.dir[2] * r];
+                const position: [number, number, number] = item.kind === 'peak' ? [item.g.dir[0] * r, item.g.dir[1] * r, item.g.dir[2] * r] : item.anchor;
                 return (
                     <Html
                         key={item.id}
@@ -387,6 +426,8 @@ export const GlobeMarkers: React.FC<{ globe: GlobeScene }> = ({ globe }) => {
                                     expanded={isHovered}
                                     onHover={(on) => setHoveredId(on ? item.id : null)}
                                 />
+                            ) : item.kind === 'family' ? (
+                                <FamilyLabel family={item.family} />
                             ) : (
                                 <PeakLabel peak={item.g.peak} expanded={isHovered} year={year} />
                             )}

@@ -1,8 +1,9 @@
 /**
  * Where the 22 continents and their peaks sit on the globe.
  *
- * SIZE is data, and the globe is equal-area. The ordered treemap of the flat
- * map (worldLayout.orderedTreemap) runs in Lambert cylindrical equal-area
+ * SIZE is data, and the globe is equal-area. The two-level treemap of the
+ * flat map (worldLayout.familyTreemap: the five BLS job families, then each
+ * family's fields in SOC order) runs in Lambert cylindrical equal-area
  * coordinates: x = longitude, y = sin(latitude). That projection keeps area
  * exactly (a cell Δλ × Δy covers R²·Δλ·Δy of the sphere), so a continent's
  * share of the land is its share of BLS Employment Projections 2025
@@ -24,7 +25,7 @@
 
 import { INDEX_CONTINENTS } from './occupationIndex';
 import type { RoleEntry } from './roles';
-import { layoutRegionPeaks, orderedTreemap, type PeakPlacement, type Rect } from './worldLayout';
+import { familyTreemap, layoutRegionPeaks, type FamilyLayout, type PeakPlacement, type Rect } from './worldLayout';
 
 /** Ocean radius in world units. Chosen so the land holds about as much area as the flat map did. */
 export const GLOBE_RADIUS = 20;
@@ -200,12 +201,17 @@ function coastSamples(halfCellU: number, halfCellV: number): number {
  * The 22 continents in SOC order. Each is sized by its EP 2025 summary row
  * (through its treemap cell) and keeps exactly LAND_FRACTION of that cell.
  */
+/** cos²(latitude) = 1 − sin²(latitude) = 1 − z²: how much shorter a unit of longitude is than a unit of z on the sphere. */
+const globeXScale = (z: number) => 1 - z * z;
+
+/** The five BLS job families' cells on the globe (equal-area coordinates); each holds its continents' cells exactly. */
+export function layoutGlobeFamilies(): FamilyLayout[] {
+    return familyTreemap(GLOBE_TREEMAP_BOUNDS, globeXScale).families;
+}
+
 export function layoutContinents(): GlobeContinent[] {
     const weights = INDEX_CONTINENTS.map((c) => c.ep.employment2025);
-    const cells = orderedTreemap(weights, GLOBE_TREEMAP_BOUNDS, {
-        // cos²(latitude) = 1 − sin²(latitude) = 1 − z².
-        xScaleAt: (z) => 1 - z * z,
-    });
+    const cells = familyTreemap(GLOBE_TREEMAP_BOUNDS, globeXScale).fields;
     return cells.map((cell, i) => {
         const code = INDEX_CONTINENTS[i].code;
         const lon = (cell.x0 + cell.x1) / 2;
@@ -367,6 +373,8 @@ export function layoutContinentPeaks(c: GlobeContinent, keys: readonly string[],
 }
 
 export interface GlobeLayout {
+    /** The five BLS job families' cells (equal-area coordinates), in family order. */
+    families: FamilyLayout[];
     continents: GlobeContinent[];
     continentByCode: Map<string, GlobeContinent>;
     peaksByContinent: Map<string, GlobePeakPlacement[]>;
@@ -383,7 +391,7 @@ export function buildGlobeLayout(entries: readonly RoleEntry[]): GlobeLayout {
     }
     const peaksByContinent = new Map<string, GlobePeakPlacement[]>();
     for (const c of continents) peaksByContinent.set(c.code, layoutContinentPeaks(c, keysByContinent.get(c.code) ?? []));
-    return { continents, continentByCode, peaksByContinent };
+    return { families: layoutGlobeFamilies(), continents, continentByCode, peaksByContinent };
 }
 
 /** Continent whose land contains the point (longitude, sin latitude), or null for ocean. */

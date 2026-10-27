@@ -15,6 +15,7 @@ import {
     SphereGeometry,
     Vector2,
     Vector3,
+    Vector4,
 } from 'three';
 import { useStore } from '../../store';
 import { useWorldStore } from '../../worldStore';
@@ -27,6 +28,7 @@ import {
     globePeakVertexShader,
     landFragmentShader,
     landVertexShader,
+    MAX_GLOBE_FAMILIES,
     oceanFragmentShader,
     oceanVertexShader,
 } from './globeShaders';
@@ -107,7 +109,13 @@ export const GlobeTerrain: React.FC<{ globe: GlobeScene; isMobile: boolean }> = 
         uLightDir: lightUniform,
         uRadius: { value: LAND_RADIUS },
     }), [lightUniform]);
-    const oceanUniforms = useMemo(() => ({ uLightDir: lightUniform }), [lightUniform]);
+    const oceanUniforms = useMemo(() => ({
+        uLightDir: lightUniform,
+        uFamilies: { value: Array.from({ length: MAX_GLOBE_FAMILIES }, (_, i) => {
+            const r = globe.layout.families[i]?.rect;
+            return r ? new Vector4(r.x0, r.z0, r.x1, r.z1) : new Vector4(9, 9, 9, 9);
+        }) },
+    }), [lightUniform, globe.layout.families]);
     const atmosphereUniforms = useMemo(() => ({
         uInner: { value: Math.sqrt(1 - (GLOBE_RADIUS / ATMOSPHERE_RADIUS) ** 2) },
     }), []);

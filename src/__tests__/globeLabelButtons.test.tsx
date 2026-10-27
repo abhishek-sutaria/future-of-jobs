@@ -122,7 +122,11 @@ describe('continent names on the globe are buttons for their own continent', () 
         }
         // The situation the review hit is common, not a corner case.
         expect(cases.length).toBeGreaterThan(10);
-        expect(cases.some((c) => c.code === '25')).toBe(true); // Education
+        // The review hit it on Education under the SOC-order layout; with the
+        // fields grouped into the five BLS families it is small fields such as
+        // Legal that sit beside a neighbour, for many fields in all.
+        expect(new Set(cases.map((c) => c.code)).size).toBeGreaterThanOrEqual(5);
+        expect(cases.some((c) => c.code === '23')).toBe(true); // Legal
         for (const c of cases) {
             const opened = await clickLabel(c.code);
             expect(opened, `${c.where}: name ${c.code} over ${c.under}`).toBe(c.code);

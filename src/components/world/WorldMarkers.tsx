@@ -408,7 +408,7 @@ export const RegionLabel: React.FC<{ code: string; expanded: boolean; hint?: str
 };
 
 /** A BLS job family: a quiet name in the corner of its block, under the field names. */
-const FamilyLabel: React.FC<{ family: FamilyLayout }> = ({ family }) => (
+export const FamilyLabel: React.FC<{ family: FamilyLayout }> = ({ family }) => (
     <div
         className="w-max max-w-[11rem] max-md:max-w-[9.5rem] px-1 rounded-sm bg-[#0F172A]/60 select-none text-[9px] max-md:text-[7px] leading-tight max-md:leading-none font-semibold uppercase tracking-[0.12em] max-md:tracking-wider text-cyan-200/55"
         title={family.family.title}

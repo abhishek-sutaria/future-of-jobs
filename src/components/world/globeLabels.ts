@@ -1,6 +1,6 @@
 import { Vector3, type Camera } from 'three';
 import { LAND_RADIUS } from '../../utils/globeLayout';
-import { layoutLabelsByWeight, type LabelBand, type LabelCandidate } from '../../utils/labelLayout';
+import { anchorHeightInBand, bandTopAt, layoutLabelsByWeight, type LabelBand, type LabelCandidate } from '../../utils/labelLayout';
 
 /**
  * Labels on the globe show only on the side facing the camera and fade out
@@ -32,7 +32,18 @@ export interface GlobeLabel {
     halfHeight: number;
     /** How far the label may sit off its anchor, in half-sizes (see LabelCandidate.slack). */
     slack?: number;
+    /**
+     * A peak label's foot (where its peak meets the land). When the anchor
+     * would put the label under the top chrome, the anchor slides toward the
+     * foot until it fits (anchorHeightInBand), so a tall peak keeps its label.
+     */
+    foot?: readonly [number, number, number];
+    /** Hang the label below and to the right of its anchor (a family name at its cell's north-west corner). */
+    hang?: boolean;
 }
+
+/** Gap, in CSS pixels, between a hanging label and its anchor. */
+const HANG_GAP = 4;
 
 const projected = new Vector3();
 
@@ -41,7 +52,8 @@ const projected = new Vector3();
  * too faint) are left out entirely, the rest go through the flat map's
  * collision pass, where the smaller field (lower weight) yields. Writes
  * screen positions to `out` (absent = hidden) and each label's opacity to
- * `alphas`.
+ * `alphas`. `tips` receives, for each label with a foot, how far up from the
+ * foot (0) to its full anchor (1) the anchor ended up.
  */
 export function layoutGlobeLabels(
     labels: readonly GlobeLabel[],
@@ -54,6 +66,7 @@ export function layoutGlobeLabels(
     offsets: Map<string, [number, number]>,
     alphas: Map<string, number>,
     hideAll = false,
+    tips?: Map<string, number>,
 ): void {
     const { x: cx, y: cy, z: cz } = camera.position;
     const list: LabelCandidate[] = [];
@@ -63,14 +76,30 @@ export function layoutGlobeLabels(
         alphas.set(label.id, alpha);
         // Behind the horizon: no label, and no say in where the others go.
         if (alpha < MIN_PLACED_ALPHA) continue;
-        projected.set(label.anchor[0], label.anchor[1], label.anchor[2]).project(camera);
+        const [ax, ay, az] = label.anchor;
+        const toScreen = (t: number) => {
+            const f = label.foot;
+            if (f) projected.set(f[0] + (ax - f[0]) * t, f[1] + (ay - f[1]) * t, f[2] + (az - f[2]) * t);
+            else projected.set(ax, ay, az);
+            projected.project(camera);
+            return { x: (projected.x * width) / 2 + width / 2, y: -((projected.y * height) / 2) + height / 2, z: projected.z };
+        };
+        let t = 1;
+        if (label.foot) {
+            const sx = toScreen(1).x;
+            t = anchorHeightInBand((u) => toScreen(u).y, 0, 1, bandTopAt(band, sx - label.halfWidth, sx + label.halfWidth) + label.halfHeight + 2);
+            tips?.set(label.id, t);
+        }
+        const s = toScreen(t);
+        const dx = label.hang ? label.halfWidth + HANG_GAP : 0;
+        const dy = label.hang ? label.halfHeight + HANG_GAP : 0;
         list.push({
             id: label.id,
-            anchorX: (projected.x * width) / 2 + width / 2,
-            anchorY: -((projected.y * height) / 2) + height / 2,
+            anchorX: s.x + dx,
+            anchorY: s.y + dy,
             halfWidth: label.halfWidth,
             halfHeight: label.halfHeight,
-            inFront: projected.z >= -1 && projected.z <= 1,
+            inFront: s.z >= -1 && s.z <= 1,
             slack: label.slack,
         });
     }

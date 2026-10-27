@@ -15,16 +15,19 @@ import {
     continentAt,
     GLOBE_LAT_LIMIT,
     GLOBE_RADIUS,
+    GLOBE_TREEMAP_BOUNDS,
     LAND_FRACTION,
     LAND_RADIUS,
     layoutContinents,
+    layoutGlobeFamilies,
     lonSinOf,
     lonSinToLocal,
     pointInPolygon,
     sphericalTrianglesArea,
     unitVector,
 } from '../utils/globeLayout';
-import { familyTreemap, layoutRegions, WORLD_BOUNDS } from '../utils/worldLayout';
+import { familyTreemap, layoutRegions, rectArea, WORLD_BOUNDS } from '../utils/worldLayout';
+import { familyOf } from '../config/socFamilies';
 import { getRoleEntries } from '../utils/roles';
 import { useStore } from '../store';
 import { continentLabelPoint } from '../components/world/globeScene';
@@ -117,6 +120,25 @@ describe('ocean, poles and overlap', () => {
     it('leaves the flat field layout as phase 2 drew it', () => {
         // The globe passes a latitude correction to the treemap; the flat map passes none, which is a scale of 1.
         expect(familyTreemap(WORLD_BOUNDS, () => 1).fields).toEqual(layoutRegions().map((r) => r.rect));
+    });
+});
+
+describe('the five BLS job families on the globe', () => {
+    const families = layoutGlobeFamilies();
+    const inside = (c: { x0: number; z0: number; x1: number; z1: number }, f: typeof c) =>
+        c.x0 >= f.x0 - 1e-9 && c.x1 <= f.x1 + 1e-9 && c.z0 >= f.z0 - 1e-9 && c.z1 <= f.z1 + 1e-9;
+
+    it('puts every continent\'s cell inside its family\'s cell', () => {
+        for (const c of continents) {
+            const f = families.find((x) => x.family.id === familyOf(c.code).id)!;
+            expect(inside(c.cell, f.rect), c.code).toBe(true);
+        }
+    });
+
+    it('sizes each family cell by its fields\' EP 2025 rows, tiling the land band exactly', () => {
+        const band = rectArea(GLOBE_TREEMAP_BOUNDS);
+        for (const f of families) expect(rectArea(f.rect) / band, f.family.shortName).toBeCloseTo(f.ep2025 / totalEp, 12);
+        expect(families.reduce((a, f) => a + rectArea(f.rect), 0)).toBeCloseTo(band, 9);
     });
 });
 
