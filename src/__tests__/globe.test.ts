@@ -24,7 +24,7 @@ import {
     sphericalTrianglesArea,
     unitVector,
 } from '../utils/globeLayout';
-import { layoutRegions, orderedTreemap, WORLD_BOUNDS } from '../utils/worldLayout';
+import { familyTreemap, layoutRegions, WORLD_BOUNDS } from '../utils/worldLayout';
 import { getRoleEntries } from '../utils/roles';
 import { useStore } from '../store';
 import { continentLabelPoint } from '../components/world/globeScene';
@@ -116,8 +116,7 @@ describe('ocean, poles and overlap', () => {
 
     it('leaves the flat field layout as phase 2 drew it', () => {
         // The globe passes a latitude correction to the treemap; the flat map passes none, which is a scale of 1.
-        const weights = INDEX_CONTINENTS.map((c) => c.ep.employment2025);
-        expect(orderedTreemap(weights, WORLD_BOUNDS, { xScaleAt: () => 1 })).toEqual(layoutRegions().map((r) => r.rect));
+        expect(familyTreemap(WORLD_BOUNDS, () => 1).fields).toEqual(layoutRegions().map((r) => r.rect));
     });
 });
 

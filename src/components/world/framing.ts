@@ -1,7 +1,7 @@
 import { SCENE } from '../../config/constants';
 import { rectDepth, rectWidth, WORLD_BOUNDS, type Rect } from '../../utils/worldLayout';
 import { GLOBE_RADIUS, unitVector } from '../../utils/globeLayout';
-import { GROUND_Y } from './worldScene';
+import { FIELD_PEAK_MAX, GROUND_Y } from './worldScene';
 
 export interface Framing {
     target: [number, number, number];
@@ -93,4 +93,25 @@ export function globeCameraPosition(lon: number, lat: number, dist: number): [nu
 
 export function globeFraming(fovDeg: number, aspect: number, opts: Pick<FrameOptions, 'usableHeight'> = {}): Framing {
     return { target: [0, 0, 0], position: globeCameraPosition(GLOBE_FRONT.lon, GLOBE_FRONT.lat, globeDistance(fovDeg, aspect, opts)) };
+}
+
+/** Camera elevation when framing a region, from the horizontal. */
+export const REGION_ELEVATION_DEG = 58;
+/** Room left around a region so its edge peaks stay clear of the screen edges. */
+export const REGION_MARGIN = 1.2;
+
+/**
+ * A zoomed field, framed in the free band. Leaves room above for the tallest
+ * peak's label: zoomed in, the field is drawn to its own scale, whose tallest
+ * peak is FIELD_PEAK_MAX, and its leader line ends SCENE.LABEL.BASE_HEIGHT above.
+ */
+export function regionFraming(
+    rect: Rect,
+    fovDeg: number,
+    aspect: number,
+    band: Pick<FrameOptions, 'usableHeight' | 'bandCenter'> = {},
+    { elevationDeg = REGION_ELEVATION_DEG, margin = REGION_MARGIN }: Pick<FrameOptions, 'elevationDeg' | 'margin'> = {},
+): Framing {
+    const lift = (FIELD_PEAK_MAX + SCENE.LABEL.BASE_HEIGHT + 1) * Math.cos((elevationDeg * Math.PI) / 180);
+    return frameRect(rect, fovDeg, aspect, { elevationDeg, margin, lift, ...band });
 }

@@ -4,13 +4,12 @@ import { PerspectiveCamera, Quaternion, Vector3 } from 'three';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import { useWorldStore } from '../../worldStore';
 import { useStore } from '../../store';
-import { FIELD_PEAK_MAX, type WorldScene } from './worldScene';
+import type { WorldScene } from './worldScene';
 import type { GlobeScene } from './globeScene';
-import { SCENE } from '../../config/constants';
 import { useWorldView, worldCamera } from './worldCamera';
 import { configureControls, freeBand } from './cameraControls';
 import { worldPointer } from './worldPointer';
-import { frameRect, GLOBE_MAX_TILT, globeDistance, globeFraming, globeViewShift, type Framing } from './framing';
+import { GLOBE_MAX_TILT, globeDistance, globeFraming, globeViewShift, REGION_MARGIN, regionFraming as frameRegion, type Framing } from './framing';
 import { GLOBE_RADIUS, LAND_RADIUS, unitVector } from '../../utils/globeLayout';
 
 /** Phase-2 flight between two framings of the flat map. */
@@ -33,12 +32,8 @@ const AUTO_ROTATE_DELAY_MS = 4000;
 const AUTO_ROTATE_RAD_PER_S = (2 * Math.PI) / 120;
 const UP = new Vector3(0, 1, 0);
 
-/** Camera elevation when framing a region, from the horizontal. */
-const REGION_ELEVATION_DEG = 58;
 /** Straight-down-ish view the flat field starts from and leaves through. */
 const OVERHEAD_ELEVATION_DEG = 84;
-/** Room left around a region so its edge peaks stay clear of the screen edges. */
-const REGION_MARGIN = 1.2;
 
 const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
 const smooth = (a: number, b: number, x: number) => {
@@ -116,14 +111,9 @@ export const CameraRig: React.FC<{
     const ms = (n: number) => (reducedMotion ? 0 : n);
     const aspect = () => size.width / Math.max(1, size.height);
 
-    const regionFraming = (code: string, elevationDeg = REGION_ELEVATION_DEG, margin = REGION_MARGIN): Framing | null => {
+    const regionFraming = (code: string, elevationDeg?: number, margin?: number): Framing | null => {
         const region = scene.layout.regionByCode.get(code);
-        if (!region) return null;
-        // Leave room above for the tallest peak's label (its tip sits
-        // SCENE.LABEL.BASE_HEIGHT above the peak). Zoomed in, the field is
-        // drawn to its own scale, whose tallest peak is FIELD_PEAK_MAX.
-        const lift = (FIELD_PEAK_MAX + SCENE.LABEL.BASE_HEIGHT + 1) * Math.cos((elevationDeg * Math.PI) / 180);
-        return frameRect(region.rect, camera.fov, aspect(), { elevationDeg, margin, lift, ...freeBand() });
+        return region ? frameRegion(region.rect, camera.fov, aspect(), freeBand(), { elevationDeg, margin }) : null;
     };
     // The band the globe sits in: below the header and the fields bar's row
     // of buttons (the notes under it come and go with the filter), above the

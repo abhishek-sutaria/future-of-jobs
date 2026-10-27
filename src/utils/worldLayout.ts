@@ -3,15 +3,18 @@
  *
  * Region SIZE is data: each region's area is proportional to its BLS
  * Employment Projections 2025 summary row (all workers, self-employed
- * included). Region POSITION and SHAPE are layout only: an ordered treemap
- * keeps the SOC order (related groups side by side) and keeps each rectangle
- * close to square. Inside a region, peaks sit on an even grid in
- * SOC order; only their height carries data.
+ * included). Region POSITION and SHAPE are layout only, in two levels: an
+ * ordered treemap of the five BLS job families (config/socFamilies.ts, SOC
+ * User Guide Table 6), each sized by the sum of its fields' rows, then each
+ * family's fields inside its block, in SOC order. So neighbours share a
+ * family, and every rectangle stays close to square. Inside a region, peaks
+ * sit on an even grid in SOC order; only their height carries data.
  *
  * Pure (no three.js, no DOM) so it can be unit-tested.
  */
 
 import { INDEX_CONTINENTS } from './occupationIndex';
+import { familyOf, SOC_FAMILIES, type SocFamily } from '../config/socFamilies';
 import type { RoleEntry } from './roles';
 
 export interface Rect {
@@ -40,6 +43,11 @@ const aspect = (w: number, h: number) => Math.max(w / h, h / w);
  *
  * Every rectangle's area is exactly its share of the total weight: the layout
  * only decides where each region goes and what shape it has.
+ *
+ * `itemCost` (TreemapOptions) scores item k drawn as a cell; by default it is
+ * the squared log aspect ratio. A family block passes the cost of laying its
+ * own fields out inside that cell, so the blocks are shaped for what goes in
+ * them.
  */
 const MAX_STACK = 3;
 
@@ -52,6 +60,16 @@ export interface TreemapOptions {
      * sphere than it looks in the plane.
      */
     xScaleAt?: (z: number) => number;
+    /**
+     * Cost of item k drawn as `cell` (its x0 is not meaningful, only its size
+     * and depth). Default: the squared log aspect ratio, x scaled by xScaleAt.
+     */
+    itemCost?: (k: number, cell: Rect) => number;
+}
+
+/** Squared log aspect ratio of a cell, with x scaled by xScaleAt at the cell's middle depth. */
+export function cellAspectCost(cell: Rect, xScaleAt: (z: number) => number = () => 1): number {
+    return Math.log(aspect(rectWidth(cell) * xScaleAt((cell.z0 + cell.z1) / 2), rectDepth(cell))) ** 2;
 }
 
 export function orderedTreemap(weights: readonly number[], bounds: Rect, opts: TreemapOptions = {}): Rect[] {
@@ -63,8 +81,8 @@ export function orderedTreemap(weights: readonly number[], bounds: Rect, opts: T
     const prefix = [0];
     for (const w of weights) prefix.push(prefix[prefix.length - 1] + w);
     const sum = (i: number, j: number) => prefix[j] - prefix[i];
-    const cost = (a: number) => Math.log(a) ** 2;
     const xScaleAt = opts.xScaleAt ?? (() => 1);
+    const itemCost = opts.itemCost ?? ((_k: number, cell: Rect) => cellAspectCost(cell, xScaleAt));
 
     // Items i..j-1 stacked in one column of the given depth, from z0 down.
     const columnCost = (i: number, j: number, depth: number, z0: number) => {
@@ -73,7 +91,7 @@ export function orderedTreemap(weights: readonly number[], bounds: Rect, opts: T
         let z = z0;
         for (let k = i; k < j; k++) {
             const d = (weights[k] * areaPerUnit) / colWidth;
-            c += cost(aspect(colWidth * xScaleAt(z + d / 2), d));
+            c += itemCost(k, { x0: 0, z0: z, x1: colWidth, z1: z + d });
             z += d;
         }
         return c;
@@ -143,18 +161,70 @@ export interface RegionLayout {
     cz: number;
     /** EP 2025 summary-row employment that sized the region. */
     ep2025: number;
+    /** BLS job family (SocFamily.id) the region sits in. */
+    family: number;
 }
 
-/** The 22 regions, in SOC order, sized by their EP 2025 summary rows. */
+export interface FamilyLayout {
+    family: SocFamily;
+    /** The block the family's regions tile exactly. */
+    rect: Rect;
+    /** Sum of its regions' EP 2025 summary rows. */
+    ep2025: number;
+    /** Its regions' SOC major codes, in SOC order. */
+    codes: string[];
+}
+
+/**
+ * Two-level ordered treemap: the five family blocks, sized by their fields'
+ * EP 2025 summary rows, then each block cut among its own fields in SOC
+ * order. A field's area is its share of the family times the family's share
+ * of the whole, which is its share of the whole. `xScaleAt` is the treemap's
+ * (the globe's latitude correction), applied at both levels.
+ *
+ * Returns the family blocks in family order and the field cells in SOC order
+ * (INDEX_CONTINENTS order).
+ */
+export function familyTreemap(bounds: Rect, xScaleAt?: (z: number) => number): { families: FamilyLayout[]; fields: Rect[] } {
+    const families = SOC_FAMILIES.map((family) => ({ family, ep2025: 0, codes: [] as string[], weights: [] as number[] }));
+    for (const c of INDEX_CONTINENTS) {
+        const f = families[familyOf(c.code).id - 1];
+        f.ep2025 += c.ep.employment2025;
+        f.codes.push(c.code);
+        f.weights.push(c.ep.employment2025);
+    }
+    const used = families.filter((f) => f.codes.length > 0);
+    // A block is as good as the fields laid out inside it.
+    const fieldsIn = (k: number, cell: Rect) => orderedTreemap(used[k].weights, cell, { xScaleAt });
+    const blockCost = (k: number, cell: Rect) => fieldsIn(k, cell).reduce((c, r) => c + cellAspectCost(r, xScaleAt), 0);
+    const blocks = orderedTreemap(used.map((f) => f.ep2025), bounds, { xScaleAt, itemCost: blockCost });
+    const byCode = new Map<string, Rect>();
+    blocks.forEach((rect, k) => fieldsIn(k, rect).forEach((cell, i) => byCode.set(used[k].codes[i], cell)));
+    return {
+        families: used.map(({ family, ep2025, codes }, k) => ({ family, ep2025, codes, rect: blocks[k] })),
+        fields: INDEX_CONTINENTS.map((c) => byCode.get(c.code)!),
+    };
+}
+
+/** The five family blocks, in family order, sized by their fields' EP 2025 summary rows. */
+export function layoutFamilies(bounds: Rect = WORLD_BOUNDS): FamilyLayout[] {
+    return familyTreemap(bounds).families;
+}
+
+/** The 22 regions, in SOC order, sized by their EP 2025 summary rows, inside their family blocks (familyTreemap). */
 export function layoutRegions(bounds: Rect = WORLD_BOUNDS): RegionLayout[] {
-    const weights = INDEX_CONTINENTS.map((c) => c.ep.employment2025);
-    return orderedTreemap(weights, bounds).map((rect, i) => ({
-        code: INDEX_CONTINENTS[i].code,
-        rect,
-        cx: (rect.x0 + rect.x1) / 2,
-        cz: (rect.z0 + rect.z1) / 2,
-        ep2025: weights[i],
-    }));
+    const { fields } = familyTreemap(bounds);
+    return INDEX_CONTINENTS.map((c, i) => {
+        const rect = fields[i];
+        return {
+            code: c.code,
+            rect,
+            cx: (rect.x0 + rect.x1) / 2,
+            cz: (rect.z0 + rect.z1) / 2,
+            ep2025: c.ep.employment2025,
+            family: familyOf(c.code).id,
+        };
+    });
 }
 
 export interface PeakPlacement {
@@ -202,6 +272,7 @@ export function layoutRegionPeaks(region: Rect, keys: readonly string[]): PeakPl
 }
 
 export interface WorldLayout {
+    families: FamilyLayout[];
     regions: RegionLayout[];
     regionByCode: Map<string, RegionLayout>;
     /** Peaks per continent code, in SOC order. */
@@ -210,6 +281,7 @@ export interface WorldLayout {
 }
 
 export function buildWorldLayout(entries: readonly RoleEntry[], bounds: Rect = WORLD_BOUNDS): WorldLayout {
+    const families = layoutFamilies(bounds);
     const regions = layoutRegions(bounds);
     const regionByCode = new Map(regions.map((r) => [r.code, r]));
     const keysByContinent = new Map<string, string[]>();
@@ -225,7 +297,7 @@ export function buildWorldLayout(entries: readonly RoleEntry[], bounds: Rect = W
         peaksByContinent.set(region.code, peaks);
         for (const p of peaks) peakByKey.set(p.key, { ...p, continent: region.code });
     }
-    return { regions, regionByCode, peaksByContinent, peakByKey };
+    return { families, regions, regionByCode, peaksByContinent, peakByKey };
 }
 
 /** Region whose rectangle contains the world point, or null. */
