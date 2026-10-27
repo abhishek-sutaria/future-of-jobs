@@ -17,10 +17,13 @@ import { useStore } from '../store';
 
 const CLIPPING = /(^|\s)(truncate|text-ellipsis|text-clip|line-clamp-\d+|whitespace-nowrap|max-md:whitespace-nowrap|max-md:truncate)(\s|$)/;
 
+// Each case renders all 833 labels; allow for a slow CI runner.
+const ALL_LABELS = { timeout: 60_000 };
+
 describe('peak labels show the whole title', () => {
     const scene = buildWorldScene(useStore.getState().jobs);
 
-    it.each([false, true])('on every peak (hover card open: %s)', (expanded) => {
+    it.each([false, true])('on every peak (hover card open: %s)', ALL_LABELS, (expanded) => {
         expect(scene.peaks.length).toBeGreaterThan(800);
         for (const peak of scene.peaks) {
             const html = renderToStaticMarkup(createElement(PeakLabel, { peak, expanded, year: 2025 }));
