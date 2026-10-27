@@ -1,6 +1,6 @@
 import { SCENE } from '../../config/constants';
 import { rectDepth, rectWidth, WORLD_BOUNDS, type Rect } from '../../utils/worldLayout';
-import { GROUND_Y } from './worldScene';
+import { FIELD_PEAK_MAX, GROUND_Y } from './worldScene';
 
 export interface Framing {
     target: [number, number, number];
@@ -57,4 +57,19 @@ export function frameRect(rect: Rect, fovDeg: number, aspect: number, opts: Fram
 
 export function worldFraming(fovDeg: number, aspect: number): Framing {
     return frameRect(WORLD_BOUNDS, fovDeg, aspect);
+}
+
+/** Camera elevation when framing a region, from the horizontal. */
+const REGION_ELEVATION_DEG = 58;
+/** Room left around a region so its edge peaks stay clear of the screen edges. */
+const REGION_MARGIN = 1.2;
+
+/**
+ * A zoomed field, framed in the free band. Leaves room above for the tallest
+ * peak's label: zoomed in, the field is drawn to its own scale, whose tallest
+ * peak is FIELD_PEAK_MAX, and its leader line ends SCENE.LABEL.BASE_HEIGHT above.
+ */
+export function regionFraming(rect: Rect, fovDeg: number, aspect: number, band: Pick<FrameOptions, 'usableHeight' | 'bandCenter'> = {}): Framing {
+    const lift = (FIELD_PEAK_MAX + SCENE.LABEL.BASE_HEIGHT + 1) * Math.cos((REGION_ELEVATION_DEG * Math.PI) / 180);
+    return frameRect(rect, fovDeg, aspect, { elevationDeg: REGION_ELEVATION_DEG, margin: REGION_MARGIN, lift, ...band });
 }

@@ -3,15 +3,18 @@
  *
  * Region SIZE is data: each region's area is proportional to its BLS
  * Employment Projections 2025 summary row (all workers, self-employed
- * included). Region POSITION and SHAPE are layout only: an ordered treemap
- * keeps the SOC order (related groups side by side) and keeps each rectangle
- * close to square. Inside a region, peaks sit on an even grid in
- * SOC order; only their height carries data.
+ * included). Region POSITION and SHAPE are layout only, in two levels: an
+ * ordered treemap of the five BLS job families (config/socFamilies.ts, SOC
+ * User Guide Table 6), each sized by the sum of its fields' rows, then each
+ * family's fields inside its block, in SOC order. So neighbours share a
+ * family, and every rectangle stays close to square. Inside a region, peaks
+ * sit on an even grid in SOC order; only their height carries data.
  *
  * Pure (no three.js, no DOM) so it can be unit-tested.
  */
 
 import { INDEX_CONTINENTS } from './occupationIndex';
+import { familyOf, SOC_FAMILIES, type SocFamily } from '../config/socFamilies';
 import type { RoleEntry } from './roles';
 
 export interface Rect {
@@ -40,10 +43,21 @@ const aspect = (w: number, h: number) => Math.max(w / h, h / w);
  *
  * Every rectangle's area is exactly its share of the total weight: the layout
  * only decides where each region goes and what shape it has.
+ *
+ * `itemCost` scores item k drawn as a w × d rectangle; by default it is the
+ * squared log aspect ratio. A family block passes the cost of laying its own
+ * fields out inside that rectangle, so the blocks are shaped for what goes in
+ * them.
  */
 const MAX_STACK = 3;
 
-export function orderedTreemap(weights: readonly number[], bounds: Rect): Rect[] {
+const aspectCost = (w: number, d: number) => Math.log(aspect(w, d)) ** 2;
+
+export function orderedTreemap(
+    weights: readonly number[],
+    bounds: Rect,
+    itemCost: (k: number, w: number, d: number) => number = (_k, w, d) => aspectCost(w, d),
+): Rect[] {
     const n = weights.length;
     const width = rectWidth(bounds);
     const total = weights.reduce((a, b) => a + b, 0);
@@ -52,13 +66,12 @@ export function orderedTreemap(weights: readonly number[], bounds: Rect): Rect[]
     const prefix = [0];
     for (const w of weights) prefix.push(prefix[prefix.length - 1] + w);
     const sum = (i: number, j: number) => prefix[j] - prefix[i];
-    const cost = (a: number) => Math.log(a) ** 2;
 
     // Items i..j-1 stacked in one column of the given depth.
     const columnCost = (i: number, j: number, depth: number) => {
         const colWidth = (sum(i, j) * areaPerUnit) / depth;
         let c = 0;
-        for (let k = i; k < j; k++) c += cost(aspect(colWidth, (weights[k] * areaPerUnit) / colWidth));
+        for (let k = i; k < j; k++) c += itemCost(k, colWidth, (weights[k] * areaPerUnit) / colWidth);
         return c;
     };
 
@@ -124,18 +137,53 @@ export interface RegionLayout {
     cz: number;
     /** EP 2025 summary-row employment that sized the region. */
     ep2025: number;
+    /** BLS job family (SocFamily.id) the region sits in. */
+    family: number;
 }
 
-/** The 22 regions, in SOC order, sized by their EP 2025 summary rows. */
+export interface FamilyLayout {
+    family: SocFamily;
+    /** The block the family's regions tile exactly. */
+    rect: Rect;
+    /** Sum of its regions' EP 2025 summary rows. */
+    ep2025: number;
+    /** Its regions' SOC major codes, in SOC order. */
+    codes: string[];
+}
+
+/** The five family blocks, in family order, sized by their fields' EP 2025 summary rows. */
+export function layoutFamilies(bounds: Rect = WORLD_BOUNDS): FamilyLayout[] {
+    const families = SOC_FAMILIES.map((family) => ({ family, ep2025: 0, codes: [] as string[] }));
+    for (const c of INDEX_CONTINENTS) {
+        const f = families[familyOf(c.code).id - 1];
+        f.ep2025 += c.ep.employment2025;
+        f.codes.push(c.code);
+    }
+    const used = families.filter((f) => f.codes.length > 0);
+    const fieldWeights = used.map((f) => f.codes.map((code) => INDEX_CONTINENTS.find((c) => c.code === code)!.ep.employment2025));
+    // A block is as good as the fields laid out inside it.
+    const blockCost = (k: number, w: number, d: number) =>
+        orderedTreemap(fieldWeights[k], { x0: 0, z0: 0, x1: w, z1: d }).reduce((c, r) => c + aspectCost(rectWidth(r), rectDepth(r)), 0);
+    return orderedTreemap(used.map((f) => f.ep2025), bounds, blockCost).map((rect, i) => ({ ...used[i], rect }));
+}
+
+/**
+ * The 22 regions, in SOC order, sized by their EP 2025 summary rows: each
+ * family block is cut, by the same ordered treemap, among its own fields.
+ * A field's area is its share of the family times the family's share of the
+ * world, which is its share of the world.
+ */
 export function layoutRegions(bounds: Rect = WORLD_BOUNDS): RegionLayout[] {
-    const weights = INDEX_CONTINENTS.map((c) => c.ep.employment2025);
-    return orderedTreemap(weights, bounds).map((rect, i) => ({
-        code: INDEX_CONTINENTS[i].code,
-        rect,
-        cx: (rect.x0 + rect.x1) / 2,
-        cz: (rect.z0 + rect.z1) / 2,
-        ep2025: weights[i],
-    }));
+    const byCode = new Map(INDEX_CONTINENTS.map((c) => [c.code, c]));
+    const out = new Map<string, RegionLayout>();
+    for (const f of layoutFamilies(bounds)) {
+        const weights = f.codes.map((code) => byCode.get(code)!.ep.employment2025);
+        orderedTreemap(weights, f.rect).forEach((rect, i) => {
+            const code = f.codes[i];
+            out.set(code, { code, rect, cx: (rect.x0 + rect.x1) / 2, cz: (rect.z0 + rect.z1) / 2, ep2025: weights[i], family: f.family.id });
+        });
+    }
+    return INDEX_CONTINENTS.map((c) => out.get(c.code)!);
 }
 
 export interface PeakPlacement {
@@ -183,6 +231,7 @@ export function layoutRegionPeaks(region: Rect, keys: readonly string[]): PeakPl
 }
 
 export interface WorldLayout {
+    families: FamilyLayout[];
     regions: RegionLayout[];
     regionByCode: Map<string, RegionLayout>;
     /** Peaks per continent code, in SOC order. */
@@ -191,6 +240,7 @@ export interface WorldLayout {
 }
 
 export function buildWorldLayout(entries: readonly RoleEntry[], bounds: Rect = WORLD_BOUNDS): WorldLayout {
+    const families = layoutFamilies(bounds);
     const regions = layoutRegions(bounds);
     const regionByCode = new Map(regions.map((r) => [r.code, r]));
     const keysByContinent = new Map<string, string[]>();
@@ -206,7 +256,7 @@ export function buildWorldLayout(entries: readonly RoleEntry[], bounds: Rect = W
         peaksByContinent.set(region.code, peaks);
         for (const p of peaks) peakByKey.set(p.key, { ...p, continent: region.code });
     }
-    return { regions, regionByCode, peaksByContinent, peakByKey };
+    return { families, regions, regionByCode, peaksByContinent, peakByKey };
 }
 
 /** Region whose rectangle contains the world point, or null. */

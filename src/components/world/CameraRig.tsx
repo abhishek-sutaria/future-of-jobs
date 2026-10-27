@@ -3,16 +3,11 @@ import { useFrame, useThree } from '@react-three/fiber';
 import { PerspectiveCamera, Vector3 } from 'three';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import { useWorldStore } from '../../worldStore';
-import { FIELD_PEAK_MAX, type WorldScene } from './worldScene';
-import { SCENE } from '../../config/constants';
+import type { WorldScene } from './worldScene';
 import { worldCamera } from './worldCamera';
-import { frameRect, worldFraming } from './framing';
+import { regionFraming, worldFraming } from './framing';
 
 const FLY_MS = 900;
-/** Camera elevation when framing a region, from the horizontal. */
-const REGION_ELEVATION_DEG = 58;
-/** Room left around a region so its edge peaks stay clear of the screen edges. */
-const REGION_MARGIN = 1.2;
 
 /**
  * The part of the viewport the terrain is not covered by chrome: from the
@@ -62,19 +57,7 @@ export const CameraRig: React.FC<{
         if (!controls) return;
         const aspect = size.width / Math.max(1, size.height);
         const region = focused ? scene.layout.regionByCode.get(focused) : undefined;
-        let framing;
-        if (region) {
-            // Leave room above for the tallest peak's label (its tip sits
-            // SCENE.LABEL.BASE_HEIGHT above the peak).
-            // Zoomed in, the field is drawn to its own scale, whose tallest peak is FIELD_PEAK_MAX.
-            const tallest = FIELD_PEAK_MAX;
-            const lift = (tallest + SCENE.LABEL.BASE_HEIGHT + 1) * Math.cos((REGION_ELEVATION_DEG * Math.PI) / 180);
-            framing = frameRect(region.rect, camera.fov, aspect, {
-                elevationDeg: REGION_ELEVATION_DEG, margin: REGION_MARGIN, lift, ...freeBand(),
-            });
-        } else {
-            framing = worldFraming(camera.fov, aspect);
-        }
+        const framing = region ? regionFraming(region.rect, camera.fov, aspect, freeBand()) : worldFraming(camera.fov, aspect);
         const toT = new Vector3(...framing.target);
         const toP = new Vector3(...framing.position);
         flight.current = { fromT: controls.target.clone(), fromP: camera.position.clone(), toT, toP, start: performance.now() };

@@ -17,6 +17,7 @@ import { SCENE, SHADER, YEAR_MAX, YEAR_MIN } from '../../config/constants';
 import {
     groundFragmentShader,
     groundVertexShader,
+    MAX_FAMILIES,
     MAX_REGIONS,
     peakFragmentShader,
     peakVertexShader,
@@ -73,12 +74,16 @@ export const WorldTerrain: React.FC<{ scene: WorldScene; isMobile: boolean }> = 
             const r = scene.layout.regions[i]?.rect;
             return r ? new Vector4(r.x0, r.z0, r.x1, r.z1) : new Vector4(1e6, 1e6, 1e6, 1e6);
         }) },
+        uFamilies: { value: Array.from({ length: MAX_FAMILIES }, (_, i) => {
+            const r = scene.layout.families[i]?.rect;
+            return r ? new Vector4(r.x0, r.z0, r.x1, r.z1) : new Vector4(1e6, 1e6, 1e6, 1e6);
+        }) },
         uHoverRegion: { value: -1 },
         uFocusRegion: { value: -1 },
         uFocusRect: { value: new Vector4(1e6, 1e6, 1e6, 1e6) },
         uBounds: { value: new Vector4(WORLD_BOUNDS.x0, WORLD_BOUNDS.z0, WORLD_BOUNDS.x1, WORLD_BOUNDS.z1) },
         uMouse: { value: new Vector2(1e6, 1e6) },
-    }), [scene.layout.regions]);
+    }), [scene.layout.regions, scene.layout.families]);
 
     // One instanced geometry + material per region. Built once per layout and
     // jobs array; per-frame work only rewrites heights when the year moves.

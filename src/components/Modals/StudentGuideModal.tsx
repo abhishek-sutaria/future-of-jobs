@@ -19,7 +19,7 @@ const FEATURES: Feature[] = [
         emoji: '🏔️',
         title: '3D Terrain Map',
         description:
-            'The map is one landscape split into 22 fields: the BLS major occupation groups, from Arts & Media to Healthcare and Construction. A field\'s area is its share of all U.S. workers in 2025 (BLS Employment Projections, self-employed included); where a field sits and its shape are only layout. Each peak is one occupation, and its height is its number of jobs from BLS Employment Projections. Zoomed into a field, heights are rescaled within that field (its largest occupation is full height), so compare them within the field.',
+            'The map is one landscape split into 22 fields: the BLS major occupation groups, from Arts & Media to Healthcare and Construction. A field\'s area is its share of all U.S. workers in 2025 (BLS Employment Projections, self-employed included). The fields are grouped by the five official BLS job families, outlined on the map: area is workers, while positions within a family follow BLS code order, so where a field sits and its shape are only layout. Each peak is one occupation, and its height is its number of jobs from BLS Employment Projections. Zoomed into a field, heights are rescaled within that field (its largest occupation is full height), so compare them within the field.',
         tip: 'Click a field, or pick it from the Fields list, to zoom in on its occupations. The largest are labelled; hover or tap any other peak for its name.',
         color: 'cyan',
     },

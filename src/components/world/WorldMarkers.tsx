@@ -5,24 +5,21 @@ import { Html } from '@react-three/drei';
 import { useStore } from '../../store';
 import { useWorldStore } from '../../worldStore';
 import { useIsMobile } from '../../hooks/useIsMobile';
-import { SCENE, YEAR_MIN, YEAR_MAX } from '../../config/constants';
+import { YEAR_MIN, YEAR_MAX } from '../../config/constants';
 import { CONTINENT_DISPLAY_NAMES } from '../../config/continents';
 import { INDEX_CONTINENT_BY_CODE } from '../../utils/occupationIndex';
 import { regionAt } from '../../utils/worldLayout';
 import { formatGrowth, formatWorkersShort, growthColor } from '../../utils/roleFormat';
 import { socPartnerTitles } from '../../utils/onet';
-import { HIDDEN_LABEL_POSITION, isHiddenLabelPosition, layoutLabelsByWeight, type LabelCandidate } from '../../utils/labelLayout';
+import { HIDDEN_LABEL_POSITION, isHiddenLabelPosition, layoutLabelsByWeight, type LabelBand, type LabelCandidate } from '../../utils/labelLayout';
+import type { FamilyLayout } from '../../utils/worldLayout';
 import { displayedPeakHeight, fieldMaxEmploymentAt, GROUND_Y, peakEmploymentAt, type ScenePeak, type WorldScene } from './worldScene';
+import { buildLabelCandidates, dropFamilyFallbacks, familyMarkers, labelWeights, peakMarker, regionMarker, sortMarkers, type MarkerItem } from './labelCandidates';
 import { worldPointer } from './worldPointer';
 
 /** Labelled peaks in a zoomed region: the largest by EP 2025 employment. */
 export const REGION_LABEL_CAP = { mobile: 12, desktop: 25 } as const;
 const PEAK_HIT_RADIUS_PX = 28;
-const REGION_LABEL_Y = 0.6;
-
-type MarkerItem =
-    | { kind: 'region'; id: string; code: string; x: number; z: number; tipY: number; baseY: number }
-    | { kind: 'peak'; id: string; peak: ScenePeak; x: number; z: number; tipY: number; baseY: number };
 
 const projected = new Vector3();
 const ndc = new Vector2();
@@ -34,7 +31,8 @@ const groundHit = new Vector3();
  * Every label on the world and all of its pointer input.
  *
  * World view: the 22 region labels (short names; the full BLS title is in the
- * hover card). Zoomed into a region: labels for its largest occupations only,
+ * hover card), and the five BLS job families as quiet names in the corner of
+ * their blocks. Zoomed into a region: labels for its largest occupations only,
  * capped at REGION_LABEL_CAP; any other peak gets its label on hover, or on a
  * first tap on touch screens. With the Kelley filter on, the labels are the 50
  * Kelley roles, as the map has always shown them.
@@ -68,10 +66,12 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
     const getThree = useThree((s) => s.get);
 
     const labelHalfSize = useRef<Map<string, { x: number; y: number }>>(new Map());
-    const safeBand = useRef({ top: 4, bottom: 4 });
+    const safeBand = useRef<LabelBand>({ top: 4, bottom: 4 });
     const placements = useRef<Map<string, [number, number]>>(new Map());
     const labelOffsets = useRef<Map<string, [number, number]>>(new Map());
     const candidates = useRef<LabelCandidate[]>([]);
+    // World height each peak's leader line ends at this frame (lowered under tall chrome).
+    const tipHeights = useRef<Map<string, number>>(new Map());
     const itemsRef = useRef<MarkerItem[]>([]);
     // Screen-space peak tips for every tappable peak, labelled or not.
     const peakAnchors = useRef<Map<string, { x: number; y: number }>>(new Map());
@@ -87,9 +87,12 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
             const search = box('[data-tour="tour-search"]');
             const bar = box('[data-world-bar]');
             const slider = box('[data-tour="tour-slider"]');
-            const top = Math.max(header?.bottom ?? 0, search?.bottom ?? 0, bar?.bottom ?? 0, 4);
+            // The header and search run the width of the screen; the fields
+            // bar (and the Kelley note under it) only covers its left side.
+            const top = Math.max(header?.bottom ?? 0, search?.bottom ?? 0, 4);
             const bottom = slider ? Math.max(window.innerHeight - slider.top, 4) : 4;
-            safeBand.current = { top: top + 6, bottom: bottom + 6 };
+            const blocks = bar && bar.bottom > top ? [{ left: bar.left - 6, right: bar.right + 6, bottom: bar.bottom + 6 }] : [];
+            safeBand.current = { top: top + 6, bottom: bottom + 6, blocks };
         };
         measure();
         // The chrome mounts after the canvas and re-wraps as buttons come and
@@ -161,29 +164,20 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
         for (const p of tappablePeaks) {
             const key = p.entry.key;
             if (!labelledPeakKeys.has(key) && !extra.has(key)) continue;
-            const top = GROUND_Y + displayedPeakHeight(p, year, focused, fieldMax);
-            out.push({ kind: 'peak', id: key, peak: p, x: p.x, z: p.z, baseY: top, tipY: top + SCENE.LABEL.BASE_HEIGHT });
+            out.push(peakMarker(p, year, focused, fieldMax));
         }
         if (showRegionLabels) {
-            for (const r of scene.layout.regions) {
-                out.push({ kind: 'region', id: `region:${r.code}`, code: r.code, x: r.cx, z: r.cz, baseY: GROUND_Y, tipY: GROUND_Y + REGION_LABEL_Y });
-            }
+            for (const r of scene.layout.regions) out.push(regionMarker(r.code, r.cx, r.cz));
+            for (const f of scene.layout.families) out.push(...familyMarkers(f));
         }
-        // Hovered / tapped first, then size: earlier items win collisions.
-        const size = (m: MarkerItem) => (m.kind === 'peak' ? m.peak.entry.ep2025 ?? 0 : INDEX_CONTINENT_BY_CODE.get(m.code)?.ep.employment2025 ?? 0);
-        const pri = (m: MarkerItem) => Number(m.id === hoveredId || m.id === tappedKey);
-        out.sort((a, b) => pri(b) - pri(a) || size(b) - size(a));
-        return out;
+        // Earlier items win collisions.
+        return sortMarkers(out, (m) => m.id === hoveredId || m.id === tappedKey);
     }, [mapView, tappablePeaks, labelledPeakKeys, hoveredId, tappedKey, showRegionLabels, scene, year, focused]);
 
     const regionWeights = useRef<Map<string, number>>(new Map());
 
     useLayoutEffect(() => {
-        regionWeights.current = new Map(
-            items
-                .filter((m) => m.kind === 'region' && m.id !== hoveredId)
-                .map((m) => [m.id, INDEX_CONTINENT_BY_CODE.get((m as { code: string }).code)?.ep.employment2025 ?? 0]),
-        );
+        regionWeights.current = labelWeights(items, hoveredId);
         viewKeyRef.current = viewKey;
         itemsRef.current = items;
         tappablePeaksRef.current = tappablePeaks;
@@ -347,23 +341,11 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
                 y: -((projected.y * size.height) / 2) + size.height / 2,
             });
         }
-        for (const item of itemsRef.current) {
-            projected.set(item.x, item.tipY, item.z).project(camera);
-            const half = labelHalfSize.current.get(item.id) ?? { x: 40, y: 10 };
-            list.push({
-                id: item.id,
-                anchorX: (projected.x * size.width) / 2 + size.width / 2,
-                anchorY: -((projected.y * size.height) / 2) + size.height / 2,
-                halfWidth: half.x,
-                halfHeight: half.y,
-                inFront: projected.z >= -1 && projected.z <= 1,
-                // A region name has no leader line, so it may sit a little further off its centre.
-                slack: item.kind === 'region' ? 2 : 1,
-            });
-        }
+        buildLabelCandidates(itemsRef.current, camera, size, safeBand.current, labelHalfSize.current, list, tipHeights.current);
         // Region labels compete by size: when two collide, the field with fewer
         // workers (EP 2025) is the one hidden. Hovered/tapped labels never yield.
         layoutLabelsByWeight(list, regionWeights.current, size.width, size.height, safeBand.current, placements.current, labelOffsets.current, 2, 4);
+        dropFamilyFallbacks(itemsRef.current, placements.current);
 
         const pos = leaderGeometry.getAttribute('position') as BufferAttribute;
         const arr = pos.array as Float32Array;
@@ -372,7 +354,10 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
             if (item.kind !== 'peak') continue;
             const placed = placements.current.get(item.id);
             if (!placed || isHiddenLabelPosition(placed)) continue;
-            arr.set([item.x, item.baseY, item.z, item.x, item.tipY, item.z], n * 6);
+            // A label lowered onto the peak itself has no stalk left to draw.
+            const tip = tipHeights.current.get(item.id) ?? item.tipY;
+            if (tip <= item.baseY) continue;
+            arr.set([item.x, item.baseY, item.z, item.x, tip, item.z], n * 6);
             n++;
         }
         leaderGeometry.setDrawRange(0, n * 2);
@@ -407,6 +392,8 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
                         >
                             {item.kind === 'region' ? (
                                 <RegionLabel code={item.code} expanded={isHovered} />
+                            ) : item.kind === 'family' ? (
+                                <FamilyLabel family={item.family} />
                             ) : (
                                 <PeakLabel peak={item.peak} expanded={isHovered} year={year} />
                             )}
@@ -446,21 +433,36 @@ const RegionLabel: React.FC<{ code: string; expanded: boolean }> = ({ code, expa
     );
 };
 
-const PeakLabel: React.FC<{ peak: ScenePeak; expanded: boolean; year: number }> = ({ peak, expanded, year }) => {
+/** A BLS job family: a quiet name in the corner of its block, under the field names. */
+const FamilyLabel: React.FC<{ family: FamilyLayout }> = ({ family }) => (
+    <div
+        className="w-max max-w-[11rem] max-md:max-w-[9.5rem] px-1 rounded-sm bg-[#0F172A]/60 select-none text-[9px] max-md:text-[7px] leading-tight max-md:leading-none font-semibold uppercase tracking-[0.12em] max-md:tracking-wider text-cyan-200/55"
+        title={family.family.title}
+    >
+        {family.family.shortName}
+    </div>
+);
+
+export const PeakLabel: React.FC<{ peak: ScenePeak; expanded: boolean; year: number }> = ({ peak, expanded, year }) => {
     const { entry } = peak;
     const partners = entry.kind === 'kelley' ? socPartnerTitles(entry.title) : [];
+    // The whole title, in at most two lines (three on phones): a long title
+    // widens its chip past the usual cap rather than being cut off.
+    const fit = (lines: number) => `${Math.ceil(entry.title.length / lines) + 6}ch`;
     return (
         <div
-            className={`flex flex-col max-w-[min(13rem,calc(100vw-2rem))] overflow-hidden rounded border shadow-sm select-none transition-all duration-200 ${
+            style={{ '--fit-2': fit(2), '--fit-3': fit(3) } as React.CSSProperties}
+            // Title font on the chip itself, so the ch widths above are the title's.
+            className={`flex flex-col w-max text-[10px] max-md:text-[9px] max-w-[min(max(13rem,var(--fit-2)),calc(100vw-2rem))] max-md:max-w-[min(max(9.5rem,var(--fit-3)),calc(100vw-2rem))] overflow-hidden rounded border shadow-sm select-none transition-all duration-200 ${
                 expanded ? 'bg-[#0F172A]/95 scale-105 ring-1 ring-white/25 border-cyan-400/60 shadow-xl shadow-black/50' : 'bg-[#0F172A]/90 border-slate-600/40'
             }`}
         >
-            <div className="flex items-center gap-1.5 px-1.5 py-0.5 max-md:gap-1 max-md:px-1 min-w-0">
+            <div className="flex items-start gap-1.5 px-1.5 py-0.5 max-md:gap-1 max-md:px-1 min-w-0">
                 <div
-                    className="w-1.5 h-1.5 rounded-full flex-shrink-0 ring-1 ring-black/30"
+                    className="w-1.5 h-1.5 mt-[3px] max-md:mt-[2.5px] rounded-full flex-shrink-0 ring-1 ring-black/30"
                     style={{ backgroundColor: peak.pipColor, boxShadow: entry.scored ? `0 0 4px ${peak.pipColor}` : undefined }}
                 />
-                <span className="text-white text-[10px] max-md:text-[9px] font-medium leading-tight tracking-wide font-sans truncate min-w-0" title={entry.title}>
+                <span className="text-white text-[10px] max-md:text-[9px] font-medium leading-tight tracking-wide font-sans min-w-0 break-words">
                     {entry.title}
                 </span>
             </div>

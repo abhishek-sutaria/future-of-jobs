@@ -15,8 +15,21 @@
  * (Ray, Samsung foldable, Chrome).
  */
 
-/** Vertical chrome the labels must stay clear of, in CSS pixels. */
-export type LabelBand = { top: number; bottom: number };
+/**
+ * Vertical chrome the labels must stay clear of, in CSS pixels. `top` and
+ * `bottom` run the full width (the header, the year slider); `blocks` are
+ * chrome that hangs lower over only part of the width (the fields bar and its
+ * note on the left), so a label beside them may sit higher than one under them.
+ */
+export type LabelBand = { top: number; bottom: number; blocks?: readonly ChromeBlock[] };
+export type ChromeBlock = { left: number; right: number; bottom: number };
+
+/** Top of the free band over the horizontal span [left, right]. */
+export function bandTopAt(band: LabelBand, left: number, right: number): number {
+    let top = band.top;
+    for (const b of band.blocks ?? []) if (right > b.left && left < b.right) top = Math.max(top, b.bottom);
+    return top;
+}
 
 /**
  * Parked far off-screen so drei's `<Html>` still mounts the node (we need its
@@ -45,7 +58,7 @@ export function resolveLabelPosition(
 ): [number, number] {
     const minX = margin;
     const maxX = viewportWidth - margin;
-    const minY = band.top;
+    const minY = bandTopAt(band, anchorX - halfWidth, anchorX + halfWidth);
     const maxY = viewportHeight - band.bottom;
 
     // Anchor itself must be in the usable band — otherwise any on-screen label
@@ -65,7 +78,7 @@ export function resolveLabelPosition(
     // there is no legal centre that keeps the whole box inside.
     const centreMinX = halfWidth + margin;
     const centreMaxX = viewportWidth - halfWidth - margin;
-    const centreMinY = halfHeight + band.top;
+    const centreMinY = halfHeight + minY;
     const centreMaxY = viewportHeight - halfHeight - band.bottom;
     if (centreMinX > centreMaxX || centreMinY > centreMaxY) {
         return HIDDEN_LABEL_POSITION;
@@ -112,9 +125,12 @@ export type LabelCandidate = {
     /**
      * How far the label may move off its anchor, in multiples of its own
      * half-size (default 1, which keeps a leader line's tip inside the box).
-     * A label with no leader line (a region name) can take 2.
+     * A label with no leader line (a region or family name) can take more;
+     * nudges then step out in rings half its size apart, nearest first.
      */
     slack?: number;
+    /** Screen box the whole label must stay inside (a family name stays in its block). */
+    keepIn?: { left: number; top: number; right: number; bottom: number };
 };
 
 type Placed = { id: string; x: number; y: number; halfW: number; halfH: number };
@@ -130,6 +146,22 @@ const NUDGE_ORDER: ReadonlyArray<readonly [number, number]> = (() => {
     raw.sort((a, b) => a[2] - b[2]);
     return raw.map(([sx, sy]) => [sx, sy] as const);
 })();
+
+const ringCache = new Map<number, ReadonlyArray<readonly [number, number]>>();
+/** Nudges for a label with slack: rings half a size apart, out to the slack. */
+function nudgeRings(slack: number): ReadonlyArray<readonly [number, number]> {
+    let rings = ringCache.get(slack);
+    if (!rings) {
+        const out: Array<readonly [number, number]> = [NUDGE_ORDER[0]];
+        for (let k = 1; k <= Math.ceil(slack * 2); k++) {
+            const m = Math.min(k / 2, slack);
+            for (const [x, y] of NUDGE_ORDER.slice(1)) out.push([x * m, y * m]);
+        }
+        rings = out;
+        ringCache.set(slack, rings);
+    }
+    return rings;
+}
 
 /**
  * One shared per-frame pass: project every label, place each as close to its
@@ -155,7 +187,6 @@ export function layoutLabels(
 
     const minX = margin;
     const maxX = viewportWidth - margin;
-    const minY = band.top;
     const maxY = viewportHeight - band.bottom;
 
     for (const item of items) {
@@ -170,7 +201,7 @@ export function layoutLabels(
             halfHeight <= 0 ||
             anchorX < minX ||
             anchorX > maxX ||
-            anchorY < minY ||
+            anchorY < bandTopAt(band, anchorX, anchorX) ||
             anchorY > maxY
         ) {
             out.set(id, HIDDEN_LABEL_POSITION);
@@ -197,9 +228,13 @@ export function layoutLabels(
             if (
                 cx - halfWidth < minX - 0.001 ||
                 cx + halfWidth > maxX + 0.001 ||
-                cy - halfHeight < minY - 0.001 ||
+                cy - halfHeight < bandTopAt(band, cx - halfWidth, cx + halfWidth) - 0.001 ||
                 cy + halfHeight > maxY + 0.001
             ) {
+                return false;
+            }
+            const k = item.keepIn;
+            if (k && (cx - halfWidth < k.left || cx + halfWidth > k.right || cy - halfHeight < k.top || cy + halfHeight > k.bottom)) {
                 return false;
             }
             for (const p of placed) {
@@ -219,7 +254,13 @@ export function layoutLabels(
             if (fits(hx, hy)) chosen = [hx, hy];
         }
 
-        const nudges = slack > 1 ? [...NUDGE_ORDER, ...NUDGE_ORDER.slice(1).map(([x, y]) => [x * slack, y * slack] as const)] : NUDGE_ORDER;
+        // Rings of nudges half a size apart, out to the slack, tried nearest
+        // first in pixels: a wide label moves up or down before it moves
+        // sideways into the next field.
+        const nudges: ReadonlyArray<readonly [number, number]> =
+            slack > 1
+                ? [...nudgeRings(slack)].sort((a, b) => (a[0] * halfWidth) ** 2 + (a[1] * halfHeight) ** 2 - ((b[0] * halfWidth) ** 2 + (b[1] * halfHeight) ** 2))
+                : NUDGE_ORDER;
         if (!chosen) {
             for (const [sx, sy] of nudges) {
                 const cx = anchorX + sx * halfWidth;
@@ -303,4 +344,37 @@ export function layoutLabelsByWeight(
         out.set(id, HIDDEN_LABEL_POSITION);
         offsets.delete(id);
     }
+}
+
+/**
+ * World height of a peak label's anchor (the leader line's tip), lowered when
+ * the full stalk would put the label under the top chrome. A tall peak near
+ * the far edge projects its tip into that reserved band, and the label was
+ * then hidden for being tall; instead the tip slides down the peak's vertical
+ * axis (a shorter stalk, then onto the peak itself) to the highest point whose
+ * screen y is at least `minScreenY`, and never below `floorY`: when even the
+ * foot is higher than that, the foot is returned and the label may hang
+ * below it (layoutLabels nudges it down by up to its own height).
+ *
+ * `screenYAt(y)` projects the point at world height y on that axis to screen
+ * y (CSS pixels, down is +); it only has to be monotonic (higher y, smaller
+ * screen y), which holds for any camera above the ground looking at it.
+ */
+export function anchorHeightInBand(
+    screenYAt: (y: number) => number,
+    floorY: number,
+    tipY: number,
+    minScreenY: number,
+    iterations = 14,
+): number {
+    if (!(screenYAt(tipY) < minScreenY)) return tipY;
+    if (screenYAt(floorY) < minScreenY) return floorY;
+    let lo = floorY;
+    let hi = tipY;
+    for (let i = 0; i < iterations; i++) {
+        const mid = (lo + hi) / 2;
+        if (screenYAt(mid) >= minScreenY) lo = mid;
+        else hi = mid;
+    }
+    return lo;
 }

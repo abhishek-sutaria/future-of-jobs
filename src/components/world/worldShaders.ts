@@ -2,6 +2,8 @@ import { SHADER_VISUAL, SHADER_COLORS, SCENE } from '../../config/constants';
 
 /** Region rectangles uploaded to the ground shader (one vec4 each). */
 export const MAX_REGIONS = 22;
+/** BLS job family blocks uploaded to the ground shader (config/socFamilies.ts). */
+export const MAX_FAMILIES = 5;
 
 const f = (n: number) => n.toFixed(4);
 
@@ -100,6 +102,7 @@ export const groundVertexShader = /* glsl */ `
 export const groundFragmentShader = /* glsl */ `
   ${SHARED}
   uniform vec4 uRegions[${MAX_REGIONS}];   // x0, z0, x1, z1
+  uniform vec4 uFamilies[${MAX_FAMILIES}]; // the five family blocks, x0, z0, x1, z1
   uniform float uHoverRegion;              // index or -1
   uniform float uFocusRegion;              // index or -1
   uniform vec4 uFocusRect;                 // the focused region's rectangle (far away when none)
@@ -142,6 +145,18 @@ export const groundFragmentShader = /* glsl */ `
       float border = 1.0 - smoothstep(0.04, 0.16, edge);
       vec3 borderColor = mix(vec3(0.16, 0.3, 0.42), vec3(0.35, 0.75, 0.9), max(isHover, isFocus));
       color = mix(color, borderColor, border * (0.55 + 0.45 * max(isHover, isFocus)) * (1.0 - 0.6 * dimmed));
+
+      // Family blocks: a wider, lighter line on the block boundary, also drawn
+      // inside the regions so no region loses area to a gap.
+      for (int i = 0; i < ${MAX_FAMILIES}; i++) {
+        vec4 r = uFamilies[i];
+        if (p.x >= r.x && p.x <= r.z && p.y >= r.y && p.y <= r.w) {
+          float fe = min(min(p.x - r.x, r.z - p.x), min(p.y - r.y, r.w - p.y));
+          float famBorder = 1.0 - smoothstep(0.12, 0.42, fe);
+          color = mix(color, vec3(0.42, 0.68, 0.8), famBorder * 0.6 * (1.0 - 0.6 * dimmed));
+          break;
+        }
+      }
     }
 
     float mouseDist = distance(p, uMouse);
