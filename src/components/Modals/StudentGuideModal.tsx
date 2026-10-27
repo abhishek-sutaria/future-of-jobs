@@ -19,31 +19,39 @@ const FEATURES: Feature[] = [
         emoji: '🏔️',
         title: '3D Terrain Map',
         description:
-            'Each glowing peak represents one job role. Peak colour = AI automation risk (red = high risk, green = safer). Peak height = number of jobs from BLS Employment Projections (2025–2035).',
-        tip: 'Peak height is BLS Employment Projections job counts. Drag 2025 → 2035 to see the official path for each role.',
+            'The map is one landscape split into 22 fields: the BLS major occupation groups, from Arts & Media to Healthcare and Construction. A field\'s area is its share of all U.S. workers in 2025 (BLS Employment Projections, self-employed included). The fields are grouped by the five official BLS job families, outlined on the map: area is workers, while positions within a family follow BLS code order, so where a field sits and its shape are only layout. Each peak is one occupation, and its height is its number of jobs from BLS Employment Projections. Zoomed into a field, heights are rescaled within that field (its largest occupation is full height), so compare them within the field.',
+        tip: 'Click a field, or pick it from the Fields list, to zoom in on its occupations. The largest are labelled; hover or tap any other peak for its name.',
         color: 'cyan',
     },
     {
         emoji: '⏱️',
         title: 'AI Timeline Slider',
         description:
-            'Drag the slider from 2025 → 2035 to watch each role\'s BLS Employment Projections job count year by year. Height moves in a straight line between the official 2025 and 2035 employment levels — no AI forecast on the landscape.',
-        tip: 'Compare a Marketing Manager to a Sales Manager at 2035. Notice which peak moves more, then open both roles to compare their task-level risk.',
+            'Drag the slider from 2025 → 2035 to watch each occupation\'s BLS Employment Projections job count year by year. Height moves in a straight line between the official 2025 and 2035 employment levels — no AI forecast on the landscape.',
+        tip: 'Compare Registered Nurses with Retail Salespersons at 2035. Notice which peak grows and which shrinks, then open both to compare.',
         color: 'purple',
+    },
+    {
+        emoji: '🎓',
+        title: 'Fields & Kelley Roles',
+        description:
+            'AI scores currently cover the 50 Kelley business roles. Turn on Kelley roles to highlight just those 50, with their risk colours, as the map showed them before. Every other occupation is drawn in slate: its AI scores are coming soon, and nothing is shown in their place.',
+        tip: 'Search any job title in the header: all 830 BLS occupations are there, from Actors to Electricians.',
+        color: 'orange',
     },
     {
         emoji: '📋',
         title: 'Job Detail Panel',
         description:
-            'Click any peak to open a role\'s full profile: its Automation Risk, the BLS 2025–35 growth outlook (with a straight-line path between those years), and its Human Resilience rank among all 50 roles. Below that, each of the role\'s O*NET tasks appears with its own risk score. Automation Risk is the plain average of those task scores, so you can check it yourself.',
-        tip: 'Scores measure GenAI capability, not guaranteed adoption. The Human Skills section shows tasks worth deepening.',
+            'Click any peak to open its panel: what the job involves (O*NET), how many people do it (BLS Employment Projections, 2025, self-employed included), median pay (BLS OEWS, payroll employees only), the BLS 2025–35 growth outlook, and its day-to-day O*NET tasks. For the 50 Kelley roles the panel also shows Automation Risk, Human Criticality and Human Resilience, with a risk score on every task. Automation Risk is the plain average of those task scores, so you can check it yourself.',
+        tip: 'Two worker counts are normal: pay comes from payroll employees only, while "workers" counts everyone, self-employed included. Scores measure GenAI capability, not guaranteed adoption.',
         color: 'blue',
     },
     {
         emoji: '🧩',
         title: 'Tasks View',
         description:
-            'Open Tasks in the header to see every role broken into AI-capable vs human-needed work. Roles are ordered by average GenAI capability today — not guaranteed adoption. Use “Same score, different jobs” pairs to make the contrast concrete.',
+            'Open Tasks in the header to see each Kelley role broken into AI-capable vs human-needed work (the other occupations join once their scores arrive). Roles are ordered by average GenAI capability today — not guaranteed adoption. Use “Same score, different jobs” pairs to make the contrast concrete.',
         tip: 'Capability labels are Claude judgments of what GenAI can handle, not a forecast that the work is already automated.',
         color: 'indigo',
     },
@@ -51,7 +59,7 @@ const FEATURES: Feature[] = [
         emoji: '🤖',
         title: 'AI Analysis',
         description:
-            'Open any role and Claude explains its published scores right in the panel: the reasoning under each task, a strategic insight for the role, and the likely replacements and human traits it calls for. The analysis adds the explanation; it never changes the numbers.',
+            'Open any of the 50 Kelley roles and Claude explains its published scores right in the panel: the reasoning under each task, a strategic insight for the role, and the likely replacements and human traits it calls for. The analysis adds the explanation; it never changes the numbers. Occupations without published scores have no analysis yet.',
         tip: 'Every student sees the same published scores for a role, dated in the header badge, so you can compare notes. The analysis is where you get the why behind them.',
         color: 'red',
     },
@@ -59,7 +67,7 @@ const FEATURES: Feature[] = [
         emoji: '🔮',
         title: 'Scenario Planning',
         description:
-            'The Scenario button asks "what if": what happens to this role if AI adoption accelerates, if regulation tightens, or if economic conditions shift? It generates a written strategic brief.',
+            'On a Kelley role, the Scenario button asks "what if": what happens to this role if AI adoption accelerates, if regulation tightens, or if economic conditions shift? It generates a written strategic brief.',
         tip: 'Use this to stress-test career choices. Ask the same role under two different scenarios and compare the outlooks.',
         color: 'violet',
     },
@@ -67,8 +75,8 @@ const FEATURES: Feature[] = [
         emoji: '🗺️',
         title: 'Career Roadmap',
         description:
-            'Identifies the highest-risk task in a role and builds a personalised 6-month plan to defend it — own the judgment and oversight around the automatable work — while deepening a human-critical task. Covers skills, tools, and learning resources.',
-        tip: 'Open it with View Roadmap at the bottom of the Job Detail Panel. Defend = supervise the high-risk task; Build = deepen the human-critical one.',
+            'On a Kelley role, identifies the highest-risk task and builds a personalised 6-month plan to defend it — own the judgment and oversight around the automatable work — while deepening a human-critical task. Covers skills, tools, and learning resources.',
+        tip: 'Open it with the Roadmap button on the role panel. Defend = supervise the high-risk task; Build = deepen the human-critical one.',
         color: 'orange',
     },
     {
@@ -83,7 +91,7 @@ const FEATURES: Feature[] = [
         emoji: '🗺️',
         title: 'US Map View',
         description:
-            'Switch from the 3D terrain to a flat 2D US map. State colour and circle size both encode BLS employment volume: darker and larger means more workers in that state for the selected roles. Hover a state to see the exact BLS OEWS May 2025 employment count and Location Quotient (LQ) per occupation.',
+            'Switch from the 3D terrain to a flat 2D US map of the 50 Kelley roles (state data for other occupations is not in the app yet). State colour and circle size both encode BLS employment volume: darker and larger means more workers in that state for the selected roles. Hover a state to see the exact BLS OEWS May 2025 employment count and Location Quotient (LQ) per occupation.',
         tip: 'Select specific roles using the role filter before opening the map to compare which states are most exposed for those jobs in particular.',
         color: 'teal',
     },
@@ -91,7 +99,7 @@ const FEATURES: Feature[] = [
         emoji: '📊',
         title: 'Job Security Index',
         description:
-            'The colour legend at the bottom right of the screen maps roles into three bands: High Automation Risk (red), Hybrid/Augmented (amber), and Safe Human-Centric (green). Bands are relative, graded on a curve across all 50 roles shown.',
+            'The colour legend at the bottom right of the screen maps the scored roles into three bands: High Automation Risk (red), Hybrid/Augmented (amber), and Safe Human-Centric (green). Bands are relative, graded on a curve across the 50 Kelley roles. Slate peaks are occupations with no AI scores yet.',
         tip: 'A "green" role here means it is safer than most others in this dataset, not that it is completely immune to automation.',
         color: 'green',
     },
@@ -99,8 +107,8 @@ const FEATURES: Feature[] = [
         emoji: '📚',
         title: 'Data Sources',
         description:
-            'Employment numbers come from the Bureau of Labor Statistics (BLS) Occupational Employment & Wage Statistics (OEWS, May 2025). Pay on each role comes from the same survey and year: the national median annual wage, with the mean shown beside it. Growth outlooks come from the BLS 2025–35 Employment Projections. Task descriptions are sourced from O*NET 30.1. AI risk scores are Claude\'s ratings of each O*NET task, published with the app as one dated set, so every student sees the same numbers.',
-        tip: 'Click "Methodology & Data" at the bottom of the screen to read the full sourcing and calculation methodology.',
+            'Workers in each occupation and each field come from the BLS Employment Projections 2025–35, which count everyone, self-employed included; growth outlooks come from the same projections. Pay comes from the BLS Occupational Employment & Wage Statistics (OEWS, May 2025), which covers payroll employees only. Task descriptions are from O*NET 30.1. AI risk scores are Claude\'s ratings of each O*NET task for the 50 Kelley roles, published with the app as one dated set, so every student sees the same numbers; scores for the other occupations are coming soon.',
+        tip: 'Click "Sources" at the bottom of the screen to read the full sourcing and calculation methodology.',
         color: 'gray',
     },
 ];
@@ -130,7 +138,7 @@ export const StudentGuideModal: React.FC<Props> = ({ isOpen, onClose }) => {
             footer={
                 <div className="flex items-center justify-between gap-4">
                     <p className="text-gray-500 text-[11px]">
-                        futureofjobs.vercel.app &nbsp;·&nbsp; BLS OES, O*NET 30.1, Anthropic Claude
+                        futureofjobs.vercel.app &nbsp;·&nbsp; BLS EP &amp; OEWS, O*NET 30.1, Anthropic Claude
                     </p>
                     <a
                         href="/student-guide.pdf"
@@ -147,7 +155,7 @@ export const StudentGuideModal: React.FC<Props> = ({ isOpen, onClose }) => {
             <div className="hidden print:block mb-6 pb-4 border-b border-gray-300">
                 <h1 className="text-2xl font-bold text-gray-900">AI & Future of Work: Feature Guide</h1>
                 <p className="text-gray-600 text-sm mt-1">
-                    futureofjobs.vercel.app &nbsp;·&nbsp; All data: BLS, O*NET 30.1, Anthropic Claude
+                    futureofjobs.vercel.app &nbsp;·&nbsp; All data: BLS EP &amp; OEWS, O*NET 30.1, Anthropic Claude
                 </p>
             </div>
 
@@ -155,7 +163,7 @@ export const StudentGuideModal: React.FC<Props> = ({ isOpen, onClose }) => {
             <div className="mb-5 p-4 rounded-xl bg-white/[0.03] border border-white/[0.07] print:bg-gray-50 print:border-gray-200">
                 <p className="text-gray-300 text-sm leading-relaxed print:text-gray-700">
                     This guide explains every feature of the <strong className="text-white print:text-gray-900">AI & Future of Work</strong> visualisation tool.
-                    Each feature is designed to help you analyse how artificial intelligence is reshaping specific job roles, so you can make strategic decisions about your career or studies.
+                    It covers all 830 BLS occupations, in every field, to help you analyse how artificial intelligence is reshaping work, so you can make strategic decisions about your career or studies.
                 </p>
             </div>
 

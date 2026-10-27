@@ -24,7 +24,7 @@ import { RISK_THRESHOLDS } from '../config/constants';
 //
 // No such index exists anywhere in the codebase today — every consumer does
 // an O(n) `jobs.find(j => j.id === id)` (AccountModal.tsx, UpskillModal.tsx,
-// store.ts, Terrain.tsx, JobMarkers.tsx). A dashboard doing N lookups per
+// store.ts). A dashboard doing N lookups per
 // render over ~50 jobs is trivial cost either way, but a Map is the honest
 // tool for repeated lookups and costs nothing to build.
 

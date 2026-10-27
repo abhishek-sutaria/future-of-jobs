@@ -1,5 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useStore } from '../store';
+import { useNonKelleyFocus } from '../hooks/useNonKelleyFocus';
+import { KelleyOnlyNote } from './KelleyOnlyNote';
 import { useIsMobile } from '../hooks/useIsMobile';
 import { RISK_THRESHOLDS, MAP_SIDEBAR } from '../config/constants';
 import { RISK_BAND_COLORS } from '../config/theme';
@@ -32,6 +34,7 @@ export const TaskSplitView: React.FC = () => {
     const selectedRoleIds = useStore((s) => s.selectedRoleIds);
     const setSelectedJob = useStore((s) => s.setSelectedJob);
     const isMobile = useIsMobile();
+    const nonKelleyFocus = useNonKelleyFocus();
 
     // The app header is a transparent overlay, so a scroll container running the
     // full height sends rows sliding under the AI Scores badge and the
@@ -70,6 +73,9 @@ export const TaskSplitView: React.FC = () => {
     const contrast = useMemo(() => findContrastPair(scored), [scored]);
 
     const pct = (n: number) => Math.round(n);
+
+    // Task splits come from published AI scores, which cover the 50 Kelley roles only.
+    if (nonKelleyFocus) return <KelleyOnlyNote continent={nonKelleyFocus} view="tasks" />;
 
     return (
         // Opaque ground, the same way MapView paints its own: without it the 3D

@@ -11,6 +11,7 @@ import {
 import type { Job } from '../types';
 import { CLUSTER_ORDER, getFunctionalCluster, type FunctionalCluster } from '../config/clusters';
 import { MAP_TITLE_TO_SOC } from './onet';
+import { EP_PATH_MAX } from './occupationIndex';
 
 // Landscape peak height: linear BLS Employment Projections levels
 // (epEmployment2025 → epEmployment2035). No AI yearlyForecast on the terrain.
@@ -48,8 +49,20 @@ export function epEmploymentAtYear(job: Job, year: number): number {
 /**
  * Linear (not log) visual height from an employment count.
  * 0 workers → MIN_HEIGHT; LINEAR_EMP_REF workers → MAX_HEIGHT.
+ *
+ * LINEAR_EMP_REF is the largest EP level any occupation reaches on the
+ * 2025→2035 path, so every peak is drawn to the same scale and none is capped.
+ * (It was a fixed 2,000,000 while only the 50 Kelley roles were shown, which
+ * capped General and Operations Managers.)
  */
-export const LINEAR_EMP_REF = 2_000_000;
+export const LINEAR_EMP_REF = EP_PATH_MAX;
+
+/** BLS EP employment at `year` on the straight line between two EP levels. */
+export function epLevelAtYear(employment2025: number, employment2035: number, year: number): number {
+    const t = Math.max(YEAR_MIN, Math.min(YEAR_MAX, year));
+    const f = YEAR_RANGE > 0 ? (t - YEAR_MIN) / YEAR_RANGE : 0;
+    return Math.max(1, employment2025 + (employment2035 - employment2025) * f);
+}
 
 export function getVisualHeightForEpEmployment(employment: number): number {
     const minH = SHADER.HEIGHT_CLAMP_MIN;
@@ -58,7 +71,7 @@ export function getVisualHeightForEpEmployment(employment: number): number {
     return minH + t * (maxH - minH);
 }
 
-/** Integer-year EP employment table for Terrain / JobMarkers GPU sync. */
+/** Integer-year EP employment table (kept for tests; the world view reads epLevelAtYear). */
 export function buildEpEmploymentFlatArray(filteredJobs: Job[]): Float32Array {
     const out = new Float32Array(SHADER.FORECAST_ARRAY_SIZE);
     filteredJobs.forEach((job, jobIdx) => {
@@ -249,7 +262,7 @@ export function aiShareAtYear(publishedRisk: number, year: number): number {
  *
  * Kept for unit tests / a future redesign. Live Peak Height was rolled back to
  * Growth/Workers (Ray, Oct 2026) until we agree on a credible replacement —
- * this helper is not wired into Terrain or JobMarkers.
+ * this helper is not wired into the 3D view.
  */
 export function getVisualHeightForHumanWorkAtYear(
     baselineEmployment: number,
@@ -331,7 +344,7 @@ export const getCurrentYearGrowth = (job: Job, year: number): { value: number; s
 };
 
 /**
- * Integer-year growth % table — same layout Terrain.tsx uploads before fractional
+ * Integer-year growth % table — the layout the old Terrain.tsx uploaded before fractional
  * interpolation in useFrame (must stay in lockstep with the GPU path).
  */
 export function buildGrowthForecastFlatArray(filteredJobs: Job[]): Float32Array {

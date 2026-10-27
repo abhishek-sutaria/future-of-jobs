@@ -143,7 +143,7 @@ export const SCENE = {
     FOG_NEAR: 20,
     FOG_FAR: 120,
     MIN_CAMERA_DISTANCE: 10,
-    MAX_CAMERA_DISTANCE: 100,
+    MAX_CAMERA_DISTANCE: 130,
     MAX_POLAR_ANGLE: Math.PI / 2.2,
     PLANE_SIZE: 70,
     /** OrbitControls' pan target has no built-in bound — a real two-finger

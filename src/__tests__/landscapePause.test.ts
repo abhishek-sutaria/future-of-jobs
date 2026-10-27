@@ -13,13 +13,14 @@ describe('Landscape GL pause hardening', () => {
         'utf8',
     );
 
-    it('pauses the frame loop while a role panel is open', () => {
+    it('pauses the frame loop while a role panel is open (Kelley or unscored)', () => {
         expect(src).toMatch(/selectedJob\s*!=\s*null/);
+        expect(src).toMatch(/selectedOccupationSoc\s*!=\s*null/);
         expect(src).toMatch(/frameloop=\{pauseLoop \? 'never' : 'always'\}/);
     });
 
-    it('wakes the mobile idle timer when selectedJob changes', () => {
-        expect(src).toMatch(/bumpInteraction,\s*year,\s*mapView,\s*selectedJob,\s*route,\s*canvasKey/);
+    it('wakes the mobile idle timer when a panel, region flight or the Kelley filter changes', () => {
+        expect(src).toMatch(/bumpInteraction,\s*year,\s*mapView,\s*selectedJob,\s*route,\s*canvasKey,\s*selectedOccupationSoc,\s*focusedContinent,\s*kelleyOnly/);
     });
 
     it('skips the second fill light on mobile', () => {

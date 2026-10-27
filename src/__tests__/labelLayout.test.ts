@@ -4,6 +4,7 @@ import {
     isHiddenLabelPosition,
     resolveLabelPosition,
     layoutLabels,
+    layoutLabelsByWeight,
     labelsCollide,
     type LabelCandidate,
     type LabelBand,
@@ -200,5 +201,44 @@ describe('layoutLabels', () => {
         // Same inputs again — b must stay put rather than picking another equally-valid nudge.
         layoutLabels([item('a', 200, 400), item('b', 250, 400)], 393, 852, BAND, placements, offs, 2);
         expect(placements.get('b')).toEqual(firstB);
+    });
+});
+
+describe('layoutLabelsByWeight', () => {
+    const band = { top: 0, bottom: 0 };
+    const box = (id: string, x: number, y: number) => ({ id, anchorX: x, anchorY: y, halfWidth: 20, halfHeight: 8, inFront: true });
+
+    it('hides the label with the smaller weight when two compete, whatever the draw order', () => {
+        // "small" is listed first, so plain layoutLabels would place it and hide "big".
+        const items = [box('small', 100, 100), box('big', 110, 100)];
+        const plain = new Map<string, [number, number]>();
+        layoutLabels(items, 400, 400, band, plain, new Map(), 2, 4);
+        const out = new Map<string, [number, number]>();
+        layoutLabelsByWeight(items, new Map([['small', 1], ['big', 9]]), 400, 400, band, out, new Map(), 2, 4);
+        expect(isHiddenLabelPosition(out.get('big')!)).toBe(false);
+        expect(out.get('big')).toEqual([110, 100]);
+    });
+
+    it('never moves a label that has no weight (e.g. the hovered one)', () => {
+        const items = [box('hovered', 100, 100), box('big', 110, 100)];
+        const out = new Map<string, [number, number]>();
+        layoutLabelsByWeight(items, new Map([['big', 9]]), 400, 400, band, out, new Map(), 2, 4);
+        expect(out.get('hovered')).toEqual([100, 100]);
+    });
+
+    it('lets a label with slack 2 move a full size off its anchor, and slack 1 only half', () => {
+        const blocker = box('blocker', 100, 100);
+        const tight = { ...box('tight', 100, 116), slack: 1 };
+        const loose = { ...box('loose', 100, 116), slack: 2 };
+        const run = (item: typeof tight) => {
+            const out = new Map<string, [number, number]>();
+            layoutLabels([blocker, item], 400, 400, band, out, new Map(), 2, 4);
+            return out.get(item.id)!;
+        };
+        // Directly below the blocker with 2px pad: half a box down is not enough...
+        expect(run(tight)[1]).toBeGreaterThanOrEqual(124);
+        const p = run(loose);
+        expect(isHiddenLabelPosition(p)).toBe(false);
+        expect(Math.abs(p[1] - 116)).toBeLessThanOrEqual(16);
     });
 });

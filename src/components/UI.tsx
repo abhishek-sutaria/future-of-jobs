@@ -17,6 +17,9 @@ import { Legend } from './Legend';
 import { Header } from './Header';
 import { YearSlider } from './YearSlider';
 import { JobDetailPanel } from './JobDetailPanel';
+import { OccupationPanel } from './OccupationPanel';
+import { WorldBar } from './WorldBar';
+import { useWorldStore } from '../worldStore';
 import { ErrorBoundary } from './ErrorBoundary';
 import { GuidedTour } from './GuidedTour';
 import { toast } from './ui/Toast';
@@ -36,6 +39,8 @@ export const UI: React.FC<UIProps> = ({ dashboardOpen }) => {
     const selectedJob = useStore((state) => state.selectedJob);
     const setSelectedJob = useStore((state) => state.setSelectedJob);
     const mapView = useStore((state) => state.mapView);
+    const selectedOccupationSoc = useWorldStore((state) => state.selectedOccupationSoc);
+    const closeOccupation = useWorldStore((state) => state.closeOccupation);
 
     const [showSkillsModal, setShowSkillsModal] = useState(false);
     const [showStartupIdeasModal, setShowStartupIdeasModal] = useState(false);
@@ -85,7 +90,10 @@ export const UI: React.FC<UIProps> = ({ dashboardOpen }) => {
     }, [selectedJob?.id]);
 
     // Auto-analyze selected job. Generation id + stale checks prevent a slow
-    // response for role A from writing onto role B.
+    // response for role A from writing onto role B. Only a Kelley role is ever
+    // a selectedJob: an occupation without published scores opens through
+    // selectedOccupationSoc and never reaches Claude (no scores to explain,
+    // and every call costs money).
     React.useEffect(() => {
         if (!selectedJob) return;
         const jobId = selectedJob.id;
@@ -229,6 +237,14 @@ export const UI: React.FC<UIProps> = ({ dashboardOpen }) => {
                     />
                 </ErrorBoundary>
             )}
+
+            {selectedOccupationSoc && (
+                <ErrorBoundary fallback={<div className="fixed inset-0 flex items-center justify-center pointer-events-auto" style={{ zIndex: Z.detailPanel }}><div className="bg-gray-900 border border-white/10 rounded-xl p-6 text-center"><p className="text-white mb-3">Panel encountered an error</p><button onClick={closeOccupation} className="px-4 py-2 bg-white/10 rounded-lg text-sm text-white">Close</button></div></div>}>
+                    <OccupationPanel soc={selectedOccupationSoc} onClose={closeOccupation} />
+                </ErrorBoundary>
+            )}
+
+            {mapView === 'globe' && <WorldBar />}
 
             {/* Both are 3D-terrain controls/keys — they do nothing over the 2D map, so
                 they are hidden there rather than floating inertly above it. */}
