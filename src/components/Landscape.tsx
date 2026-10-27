@@ -5,21 +5,20 @@ import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import { MOUSE, TOUCH } from 'three';
 import { WorldTerrain } from './world/WorldTerrain';
 import { WorldMarkers } from './world/WorldMarkers';
+import { GlobeTerrain } from './world/GlobeTerrain';
+import { GlobeMarkers } from './world/GlobeMarkers';
 import { CameraRig } from './world/CameraRig';
 import { useWorldScene } from './world/worldScene';
-import { worldCamera } from './world/worldCamera';
+import { useGlobeScene } from './world/globeScene';
+import { useWorldView, worldCamera } from './world/worldCamera';
+import { worldPointer } from './world/worldPointer';
 import { WebGLFallback } from './WebGLFallback';
 import { SCENE } from '../config/constants';
 import { useStore } from '../store';
 import { useWorldStore } from '../worldStore';
 import { WORLD_BOUNDS } from '../utils/worldLayout';
-import { worldFraming } from './world/framing';
-
-/** Matches MapView's own `isDefault = position.zoom === 1` — a single simple
- * check, not a multi-axis comparison. Pan target drifting from the origin is
- * the one thing that actually strands a user (see MAX_PAN_RADIUS above), so
- * that alone decides whether "Reset view" offers itself. */
-const DEFAULT_VIEW_EPSILON = 0.5;
+import { globeFraming } from './world/framing';
+import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion';
 
 /** How many times to silently remount the canvas on WebGL context loss
  * before giving up and showing WebGLFallback instead. Reported directly, on
@@ -35,6 +34,13 @@ const DEFAULT_VIEW_EPSILON = 0.5;
  * loop forever instead of ever settling on the fallback. */
 const MAX_CONTEXT_LOSS_RETRIES = 2;
 
+/** Phones pause the loop after this much quiet on a field (Ray's freeze path, see below). */
+const MOBILE_IDLE_MS = 2500;
+/** Before the first touch the globe may spin a while on phones; the first touch stops it for good. */
+const MOBILE_GLOBE_IDLE_MS = 20000;
+/** The globe counts as the default view while the camera is within this share of its default distance (rotation never strands anyone). */
+const DEFAULT_GLOBE_DISTANCE_TOLERANCE = 0.08;
+
 export const Landscape: React.FC = () => {
     const setIsOrbiting = useStore((s) => s.setIsOrbiting);
     const route = useStore((s) => s.route);
@@ -44,6 +50,10 @@ export const Landscape: React.FC = () => {
     const focusedContinent = useWorldStore((s) => s.focusedContinent);
     const kelleyOnly = useWorldStore((s) => s.kelleyOnly);
     const scene = useWorldScene();
+    const globe = useGlobeScene(scene);
+    const view = useWorldView((s) => s.view);
+    const reducedMotion = usePrefersReducedMotion();
+    const fadeRef = useRef<HTMLDivElement>(null);
     const setIsDefaultView = useStore((s) => s.setIsDefaultView);
     const resetViewRequestId = useStore((s) => s.resetViewRequestId);
     const controlsRef = useRef<OrbitControlsImpl>(null);
@@ -63,12 +73,13 @@ export const Landscape: React.FC = () => {
         () => typeof window !== 'undefined' && window.matchMedia('(max-width: 767px)').matches,
     );
     const [antialias] = useState(() => !isMobile);
-    // Whole-world framing for this viewport, read once like isPortrait: the
+    // The whole globe for this viewport, read once like isPortrait: the
     // "default view" (and Reset view) is this framing.
-    const [initialFraming] = useState(() => worldFraming(
+    const [initialFraming] = useState(() => globeFraming(
         isPortrait ? SCENE.CAMERA_PORTRAIT_FOV : SCENE.CAMERA_FOV,
         typeof window !== 'undefined' ? window.innerWidth / Math.max(1, window.innerHeight) : 16 / 9,
     ));
+    const [initialDistance] = useState(() => Math.hypot(...initialFraming.position));
     const isDefaultViewRef = useRef(true);
     const [canvasKey, setCanvasKey] = useState(0);
     const [contextLossGivenUp, setContextLossGivenUp] = useState(false);
@@ -87,8 +98,12 @@ export const Landscape: React.FC = () => {
         setMobileIdle(false);
         if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
         // 2.5s of no orbit/zoom → pause the loop; any new gesture resumes it.
-        idleTimerRef.current = setTimeout(() => setMobileIdle(true), 2500);
-    }, [isMobile]);
+        // The globe gets longer so its slow spin can run for a while first.
+        // Until the first touch, that is: then auto-rotation stops for good
+        // and the phase-2 2.5 s pause applies everywhere.
+        const spin = useWorldView.getState().view === 'globe' && !reducedMotion && !worldPointer.interacted;
+        idleTimerRef.current = setTimeout(() => setMobileIdle(true), spin ? MOBILE_GLOBE_IDLE_MS : MOBILE_IDLE_MS);
+    }, [isMobile, reducedMotion]);
 
     useEffect(() => {
         const onVisibility = () => {
@@ -164,6 +179,16 @@ export const Landscape: React.FC = () => {
     const clampPanTarget = useCallback(() => {
         const controls = controlsRef.current;
         if (!controls) return;
+        // The globe has no pan; only its zoom can leave the default view.
+        if (useWorldView.getState().view === 'globe') {
+            const home = worldCamera.globeDistance();
+            const isDefault = Math.abs(controls.object.position.length() / (home > 0 ? home : initialDistance) - 1) <= DEFAULT_GLOBE_DISTANCE_TOLERANCE;
+            if (isDefault !== isDefaultViewRef.current) {
+                isDefaultViewRef.current = isDefault;
+                setIsDefaultView(isDefault);
+            }
+            return;
+        }
         const target = controls.target;
         const cx = Math.min(WORLD_BOUNDS.x1, Math.max(WORLD_BOUNDS.x0, target.x));
         const cz = Math.min(WORLD_BOUNDS.z1, Math.max(WORLD_BOUNDS.z0, target.z));
@@ -178,16 +203,15 @@ export const Landscape: React.FC = () => {
 
         // Drives the header's "Reset view" button (mirrors MapView's own).
         // Compared via a plain ref, not the store value, so a drag that
-        // never actually crosses the threshold never touches Zustand.
-        const isDefault = Math.hypot(
-            controls.target.x - initialFraming.target[0],
-            controls.target.z - initialFraming.target[2],
-        ) <= DEFAULT_VIEW_EPSILON;
+        // never actually crosses the threshold never touches Zustand. A
+        // zoomed field is never the default view: Reset view goes back to
+        // the globe.
+        const isDefault = false;
         if (isDefault !== isDefaultViewRef.current) {
             isDefaultViewRef.current = isDefault;
             setIsDefaultView(isDefault);
         }
-    }, [setIsDefaultView, initialFraming]);
+    }, [setIsDefaultView, initialDistance]);
 
     // "Reset view" was clicked (resetViewRequestId incremented) — restore the
     // initial framing exactly, the same way returning from the dashboard
@@ -195,17 +219,12 @@ export const Landscape: React.FC = () => {
     // user left it in, by design, so this only fires on an explicit request).
     useEffect(() => {
         if (resetViewRequestId === 0) return; // skip the initial mount value
-        const controls = controlsRef.current;
-        if (!controls) return;
-        worldCamera.cancel();
-        // Back to the whole world: leave any zoomed region too.
-        if (useWorldStore.getState().focusedContinent) useWorldStore.setState({ focusedContinent: null });
-        controls.target.set(...initialFraming.target);
-        controls.object.position.set(...initialFraming.position);
-        controls.update();
+        if (!controlsRef.current) return;
+        // Back to the whole globe: leave any zoomed region too.
+        worldCamera.reset();
         isDefaultViewRef.current = true;
         setIsDefaultView(true);
-    }, [resetViewRequestId, setIsDefaultView, initialFraming]);
+    }, [resetViewRequestId, setIsDefaultView]);
 
     // Safe to bail out here (and only here): every hook above has already run
     // unconditionally on this render, so this doesn't change hook order/count
@@ -239,6 +258,7 @@ export const Landscape: React.FC = () => {
         || (isMobile && mobileIdle);
 
     return (
+        <>
         <Canvas
             // key: forces a full remount (fresh GL context, shaders, buffers)
             // on WebGL context loss — see MAX_CONTEXT_LOSS_RETRIES above.
@@ -265,35 +285,52 @@ export const Landscape: React.FC = () => {
             {/* Second fill light is desktop-only — on phones it is pure fill cost. */}
             {!isMobile && <pointLight position={[-10, 10, -10]} intensity={0.5} color="blue" />}
 
-            <WorldTerrain scene={scene} isMobile={isMobile} />
-            <WorldMarkers scene={scene} />
-            <CameraRig controlsRef={controlsRef} scene={scene} />
+            {/* The globe of 22 continents, and the flat phase-2 terrain for a
+                zoomed field. Both stay mounted; CameraRig switches between them. */}
+            <GlobeTerrain globe={globe} isMobile={isMobile} />
+            <WorldTerrain scene={scene} isMobile={isMobile} visible={view === 'field'} />
+            {view === 'globe' ? <GlobeMarkers globe={globe} /> : <WorldMarkers scene={scene} />}
+            <CameraRig controlsRef={controlsRef} scene={scene} globe={globe} reducedMotion={reducedMotion} spinUntilFirstTouch={isMobile} fadeRef={fadeRef} />
 
+            {/* Distance, pan and tilt limits differ between the globe and a
+                field; CameraRig's configureControls sets them at each cut. */}
             <OrbitControls
                 ref={controlsRef}
                 target={initialFraming.target}
-                enablePan={true}
                 enableZoom={true}
                 screenSpacePanning={false}
                 mouseButtons={{ LEFT: MOUSE.ROTATE, MIDDLE: MOUSE.DOLLY, RIGHT: MOUSE.PAN }}
                 touches={{ ONE: TOUCH.ROTATE, TWO: TOUCH.DOLLY_PAN }}
-                maxPolarAngle={SCENE.MAX_POLAR_ANGLE}
-                minDistance={SCENE.MIN_CAMERA_DISTANCE}
-                maxDistance={SCENE.MAX_CAMERA_DISTANCE}
                 onChange={() => {
                     clampPanTarget();
-                    bumpInteraction();
+                    // Only a gesture in progress or a camera move between globe and
+                    // field keeps a phone awake. The globe's slow spin and the
+                    // momentum glide after a drag are not the user doing anything
+                    // (on a slow phone the glide alone kept it rendering ~20 s);
+                    // onEnd re-arms the idle timer at release.
+                    if (useStore.getState().isOrbiting || useWorldView.getState().moving) bumpInteraction();
                 }}
                 onStart={() => {
+                    worldPointer.lastInteraction = performance.now();
+                    worldPointer.interacted = true;
                     worldCamera.cancel();
                     setIsOrbiting(true);
                     bumpInteraction();
                 }}
                 onEnd={() => {
+                    worldPointer.lastInteraction = performance.now();
                     setIsOrbiting(false);
                     bumpInteraction();
                 }}
             />
         </Canvas>
+        {/* The cut between the globe and a field hides behind a quick fade to the page background (CameraRig drives it). */}
+        <div
+            ref={fadeRef}
+            aria-hidden="true"
+            className="absolute inset-0 pointer-events-none"
+            style={{ opacity: 0, zIndex: 16777272, background: 'radial-gradient(circle at 50% 50%, #111b2b 0%, #0a0e17 100%)' }}
+        />
+        </>
     );
 };

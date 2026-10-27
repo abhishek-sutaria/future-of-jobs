@@ -1,5 +1,6 @@
 import { SCENE } from '../../config/constants';
 import { rectDepth, rectWidth, WORLD_BOUNDS, type Rect } from '../../utils/worldLayout';
+import { GLOBE_RADIUS, unitVector } from '../../utils/globeLayout';
 import { FIELD_PEAK_MAX, GROUND_Y } from './worldScene';
 
 export interface Framing {
@@ -59,17 +60,58 @@ export function worldFraming(fovDeg: number, aspect: number): Framing {
     return frameRect(WORLD_BOUNDS, fovDeg, aspect);
 }
 
+/** Where the canvas first points before CameraRig turns it to the Kelley side: a longitude and latitude, radians. Layout, not data. */
+export const GLOBE_FRONT = { lon: -0.5, lat: 0.32 } as const;
+/** Steepest the globe camera goes, so a turn toward a far-north field still reads as a globe. */
+export const GLOBE_MAX_TILT = 0.85;
+/** Room kept around the globe (its radius, plus peaks and atmosphere) in the default view. */
+const GLOBE_FIT = GLOBE_RADIUS * 1.2;
+
+/**
+ * Camera distance that fits the whole globe in the band the chrome leaves
+ * free (CameraRig shifts the projection so the globe sits in the middle of
+ * that band, see globeViewShift).
+ */
+export function globeDistance(fovDeg: number, aspect: number, opts: Pick<FrameOptions, 'usableHeight'> = {}): number {
+    const vHalf = ((fovDeg * Math.PI) / 180) / 2;
+    const usable = Math.max(0.3, Math.min(1, opts.usableHeight ?? USABLE_HEIGHT));
+    const vFit = Math.atan(Math.tan(vHalf) * usable);
+    const hFit = Math.atan(Math.tan(vHalf) * aspect) * 0.94;
+    return GLOBE_FIT / Math.sin(Math.min(vFit, hFit));
+}
+
+/** How far down (CSS px) to move the globe's centre so it sits mid-band rather than mid-screen. */
+export function globeViewShift(viewportHeight: number, opts: Pick<FrameOptions, 'bandCenter'> = {}): number {
+    return ((opts.bandCenter ?? 0) * viewportHeight) / 2;
+}
+
+/** Camera position `dist` from the globe's centre, looking at longitude/latitude (radians). */
+export function globeCameraPosition(lon: number, lat: number, dist: number): [number, number, number] {
+    const [x, y, z] = unitVector(lon, Math.sin(lat));
+    return [x * dist, y * dist, z * dist];
+}
+
+export function globeFraming(fovDeg: number, aspect: number, opts: Pick<FrameOptions, 'usableHeight'> = {}): Framing {
+    return { target: [0, 0, 0], position: globeCameraPosition(GLOBE_FRONT.lon, GLOBE_FRONT.lat, globeDistance(fovDeg, aspect, opts)) };
+}
+
 /** Camera elevation when framing a region, from the horizontal. */
-const REGION_ELEVATION_DEG = 58;
+export const REGION_ELEVATION_DEG = 58;
 /** Room left around a region so its edge peaks stay clear of the screen edges. */
-const REGION_MARGIN = 1.2;
+export const REGION_MARGIN = 1.2;
 
 /**
  * A zoomed field, framed in the free band. Leaves room above for the tallest
  * peak's label: zoomed in, the field is drawn to its own scale, whose tallest
  * peak is FIELD_PEAK_MAX, and its leader line ends SCENE.LABEL.BASE_HEIGHT above.
  */
-export function regionFraming(rect: Rect, fovDeg: number, aspect: number, band: Pick<FrameOptions, 'usableHeight' | 'bandCenter'> = {}): Framing {
-    const lift = (FIELD_PEAK_MAX + SCENE.LABEL.BASE_HEIGHT + 1) * Math.cos((REGION_ELEVATION_DEG * Math.PI) / 180);
-    return frameRect(rect, fovDeg, aspect, { elevationDeg: REGION_ELEVATION_DEG, margin: REGION_MARGIN, lift, ...band });
+export function regionFraming(
+    rect: Rect,
+    fovDeg: number,
+    aspect: number,
+    band: Pick<FrameOptions, 'usableHeight' | 'bandCenter'> = {},
+    { elevationDeg = REGION_ELEVATION_DEG, margin = REGION_MARGIN }: Pick<FrameOptions, 'elevationDeg' | 'margin'> = {},
+): Framing {
+    const lift = (FIELD_PEAK_MAX + SCENE.LABEL.BASE_HEIGHT + 1) * Math.cos((elevationDeg * Math.PI) / 180);
+    return frameRect(rect, fovDeg, aspect, { elevationDeg, margin, lift, ...band });
 }

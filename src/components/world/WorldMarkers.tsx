@@ -11,11 +11,13 @@ import { INDEX_CONTINENT_BY_CODE } from '../../utils/occupationIndex';
 import { regionAt } from '../../utils/worldLayout';
 import { formatGrowth, formatWorkersShort, growthColor } from '../../utils/roleFormat';
 import { socPartnerTitles } from '../../utils/onet';
-import { HIDDEN_LABEL_POSITION, isHiddenLabelPosition, layoutLabelsByWeight, type LabelBand, type LabelCandidate } from '../../utils/labelLayout';
+import { HIDDEN_LABEL_POSITION, isHiddenLabelPosition, layoutLabelsByWeight, type LabelCandidate } from '../../utils/labelLayout';
 import type { FamilyLayout } from '../../utils/worldLayout';
 import { displayedPeakHeight, fieldMaxEmploymentAt, GROUND_Y, peakEmploymentAt, type ScenePeak, type WorldScene } from './worldScene';
 import { buildLabelCandidates, dropFamilyFallbacks, familyMarkers, labelWeights, peakMarker, regionMarker, sortMarkers, type MarkerItem } from './labelCandidates';
 import { worldPointer } from './worldPointer';
+import { useLabelSafeBand } from './labelBand';
+import { useWorldView } from './worldCamera';
 
 /** Labelled peaks in a zoomed region: the largest by EP 2025 employment. */
 export const REGION_LABEL_CAP = { mobile: 12, desktop: 25 } as const;
@@ -28,7 +30,8 @@ const groundPlane = new Plane(new Vector3(0, 1, 0), -GROUND_Y);
 const groundHit = new Vector3();
 
 /**
- * Every label on the world and all of its pointer input.
+ * Every label on the flat map and all of its pointer input. Mounted for the
+ * zoomed field view; the globe has its own (GlobeMarkers).
  *
  * World view: the 22 region labels (short names; the full BLS title is in the
  * hover card), and the five BLS job families as quiet names in the corner of
@@ -47,6 +50,8 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
     const isOrbiting = useStore((s) => s.isOrbiting);
     const focused = useWorldStore((s) => s.focusedContinent);
     const kelleyOnly = useWorldStore((s) => s.kelleyOnly);
+    // On the way back up to the globe there is no field left to label.
+    const leaving = useWorldView((s) => s.moving) && !focused;
     const isMobile = useIsMobile();
 
     // Hover and tap belong to the view they happened in: zooming, leaving a
@@ -66,7 +71,7 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
     const getThree = useThree((s) => s.get);
 
     const labelHalfSize = useRef<Map<string, { x: number; y: number }>>(new Map());
-    const safeBand = useRef<LabelBand>({ top: 4, bottom: 4 });
+    const safeBand = useLabelSafeBand(viewKey);
     const placements = useRef<Map<string, [number, number]>>(new Map());
     const labelOffsets = useRef<Map<string, [number, number]>>(new Map());
     const candidates = useRef<LabelCandidate[]>([]);
@@ -81,39 +86,6 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
     const labelledKeysRef = useRef<Set<string>>(new Set());
 
     useEffect(() => {
-        const measure = () => {
-            const box = (sel: string) => document.querySelector(sel)?.getBoundingClientRect();
-            const header = box('header');
-            const search = box('[data-tour="tour-search"]');
-            const bar = box('[data-world-bar]');
-            const slider = box('[data-tour="tour-slider"]');
-            // The header and search run the width of the screen; the fields
-            // bar (and the Kelley note under it) only covers its left side.
-            const top = Math.max(header?.bottom ?? 0, search?.bottom ?? 0, 4);
-            const bottom = slider ? Math.max(window.innerHeight - slider.top, 4) : 4;
-            const blocks = bar && bar.bottom > top ? [{ left: bar.left - 6, right: bar.right + 6, bottom: bar.bottom + 6 }] : [];
-            safeBand.current = { top: top + 6, bottom: bottom + 6, blocks };
-        };
-        measure();
-        // The chrome mounts after the canvas and re-wraps as buttons come and
-        // go, so watch it rather than only the window.
-        const t = setTimeout(measure, 1200);
-        const observer = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(measure) : null;
-        for (const sel of ['header', '[data-world-bar]', '[data-tour="tour-slider"]']) {
-            const el = document.querySelector(sel);
-            if (el && observer) observer.observe(el);
-        }
-        window.addEventListener('resize', measure);
-        window.addEventListener('orientationchange', measure);
-        return () => {
-            clearTimeout(t);
-            observer?.disconnect();
-            window.removeEventListener('resize', measure);
-            window.removeEventListener('orientationchange', measure);
-        };
-    }, [focused, kelleyOnly]);
-
-    useEffect(() => {
         const clear = () => {
             setHoveredId(null);
             worldPointer.hoverRegion = null;
@@ -125,6 +97,8 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
         return () => {
             window.removeEventListener('blur', clear);
             document.removeEventListener('visibilitychange', clear);
+            // Leaving for the globe: nothing on the flat map is hovered any more.
+            clear();
         };
     }, []);
 
@@ -364,7 +338,7 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
         pos.needsUpdate = true;
     });
 
-    if (mapView !== 'globe') return null;
+    if (mapView !== 'globe' || leaving) return null;
 
     const anyHover = !!hoveredId;
     return (
@@ -405,7 +379,7 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
     );
 };
 
-const RegionLabel: React.FC<{ code: string; expanded: boolean }> = ({ code, expanded }) => {
+export const RegionLabel: React.FC<{ code: string; expanded: boolean; hint?: string }> = ({ code, expanded, hint = 'click to explore' }) => {
     const c = INDEX_CONTINENT_BY_CODE.get(code)!;
     return (
         <div
@@ -426,7 +400,7 @@ const RegionLabel: React.FC<{ code: string; expanded: boolean }> = ({ code, expa
                     <p className="text-[10px] font-mono" style={{ color: growthColor(c.ep.percentChange) }}>
                         {formatGrowth(c.ep.percentChange)} by {YEAR_MAX}
                     </p>
-                    <p className="text-[9px] text-slate-500">{c.occupationCount} occupations · click to explore</p>
+                    <p className="text-[9px] text-slate-500">{c.occupationCount} occupations · {hint}</p>
                 </div>
             )}
         </div>
@@ -434,7 +408,7 @@ const RegionLabel: React.FC<{ code: string; expanded: boolean }> = ({ code, expa
 };
 
 /** A BLS job family: a quiet name in the corner of its block, under the field names. */
-const FamilyLabel: React.FC<{ family: FamilyLayout }> = ({ family }) => (
+export const FamilyLabel: React.FC<{ family: FamilyLayout }> = ({ family }) => (
     <div
         className="w-max max-w-[11rem] max-md:max-w-[9.5rem] px-1 rounded-sm bg-[#0F172A]/60 select-none text-[9px] max-md:text-[7px] leading-tight max-md:leading-none font-semibold uppercase tracking-[0.12em] max-md:tracking-wider text-cyan-200/55"
         title={family.family.title}

@@ -246,7 +246,7 @@ const GROUP_BUTTON_CLASS = 'items-center justify-center gap-1.5 h-10 min-w-[44px
 type View = 'globe' | 'map' | 'tasks';
 
 const VIEWS: { id: View; label: string; title: string; icon: React.ReactNode; tour?: string }[] = [
-    { id: 'globe', label: '3D', title: '3D landscape of jobs', icon: <IconGlobe size={14} /> },
+    { id: 'globe', label: '3D', title: '3D globe of jobs', icon: <IconGlobe size={14} /> },
     { id: 'map', label: 'Map', title: '2D US map by state', icon: <IconMap size={14} /> },
     { id: 'tasks', label: 'Tasks', title: 'Every role split into its tasks', icon: <IconLayers size={14} />, tour: 'tour-tasks' },
 ];

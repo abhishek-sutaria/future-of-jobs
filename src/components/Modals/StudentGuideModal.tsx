@@ -16,18 +16,18 @@ interface Feature {
 
 const FEATURES: Feature[] = [
     {
-        emoji: '🏔️',
-        title: '3D Terrain Map',
+        emoji: '🌍',
+        title: '3D Globe',
         description:
-            'The map is one landscape split into 22 fields: the BLS major occupation groups, from Arts & Media to Healthcare and Construction. A field\'s area is its share of all U.S. workers in 2025 (BLS Employment Projections, self-employed included). The fields are grouped by the five official BLS job families, outlined on the map: area is workers, while positions within a family follow BLS code order, so where a field sits and its shape are only layout. Each peak is one occupation, and its height is its number of jobs from BLS Employment Projections. Zoomed into a field, heights are rescaled within that field (its largest occupation is full height), so compare them within the field.',
-        tip: 'Click a field, or pick it from the Fields list, to zoom in on its occupations. The largest are labelled; hover or tap any other peak for its name.',
+            'The 3D view is a globe of 22 continents, one per BLS major occupation group, from Arts & Media to Healthcare and Construction. A continent\'s area is its share of all U.S. workers in 2025 (BLS Employment Projections, self-employed included). The globe is equal-area, so continent sizes are true to the BLS counts: twice the workers, twice the surface. The continents are grouped by the five official BLS job families, outlined on the ocean: area is workers, while positions within a family follow BLS code order, so where a continent sits, its outline and the ocean around it are only layout. Each peak is one occupation, and its height is its number of jobs from BLS Employment Projections, on one national scale. Zoomed into a field, heights are rescaled within that field (its largest occupation is full height), so compare them within the field.',
+        tip: 'Drag to spin the globe; pinch or scroll to zoom. Tap a continent, or pick it from the Fields list, to fly into its occupations, and All fields to come back. The largest are labelled; hover or tap any other peak for its name.',
         color: 'cyan',
     },
     {
         emoji: '⏱️',
         title: 'AI Timeline Slider',
         description:
-            'Drag the slider from 2025 → 2035 to watch each occupation\'s BLS Employment Projections job count year by year. Height moves in a straight line between the official 2025 and 2035 employment levels — no AI forecast on the landscape.',
+            'Drag the slider from 2025 → 2035 to watch each occupation\'s BLS Employment Projections job count year by year. Height moves in a straight line between the official 2025 and 2035 employment levels — no AI forecast on the globe.',
         tip: 'Compare Registered Nurses with Retail Salespersons at 2035. Notice which peak grows and which shrinks, then open both to compare.',
         color: 'purple',
     },
@@ -91,7 +91,7 @@ const FEATURES: Feature[] = [
         emoji: '🗺️',
         title: 'US Map View',
         description:
-            'Switch from the 3D terrain to a flat 2D US map of the 50 Kelley roles (state data for other occupations is not in the app yet). State colour and circle size both encode BLS employment volume: darker and larger means more workers in that state for the selected roles. Hover a state to see the exact BLS OEWS May 2025 employment count and Location Quotient (LQ) per occupation.',
+            'Switch from the 3D globe to a flat 2D US map of the 50 Kelley roles (state data for other occupations is not in the app yet). State colour and circle size both encode BLS employment volume: darker and larger means more workers in that state for the selected roles. Hover a state to see the exact BLS OEWS May 2025 employment count and Location Quotient (LQ) per occupation.',
         tip: 'Select specific roles using the role filter before opening the map to compare which states are most exposed for those jobs in particular.',
         color: 'teal',
     },

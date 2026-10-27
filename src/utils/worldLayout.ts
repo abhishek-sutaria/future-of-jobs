@@ -44,20 +44,35 @@ const aspect = (w: number, h: number) => Math.max(w / h, h / w);
  * Every rectangle's area is exactly its share of the total weight: the layout
  * only decides where each region goes and what shape it has.
  *
- * `itemCost` scores item k drawn as a w × d rectangle; by default it is the
- * squared log aspect ratio. A family block passes the cost of laying its own
- * fields out inside that rectangle, so the blocks are shaped for what goes in
+ * `itemCost` (TreemapOptions) scores item k drawn as a cell; by default it is
+ * the squared log aspect ratio. A family block passes the cost of laying its
+ * own fields out inside that cell, so the blocks are shaped for what goes in
  * them.
  */
 const MAX_STACK = 3;
 
-const aspectCost = (w: number, d: number) => Math.log(aspect(w, d)) ** 2;
+export interface TreemapOptions {
+    /**
+     * How long one unit of x is, relative to one unit of z, at depth z
+     * (default 1). Only the aspect-ratio cost reads it, so it changes which
+     * cuts are chosen, never any area. The globe passes cos²(latitude): in
+     * equal-area coordinates a cell near a pole is narrower and taller on the
+     * sphere than it looks in the plane.
+     */
+    xScaleAt?: (z: number) => number;
+    /**
+     * Cost of item k drawn as `cell` (its x0 is not meaningful, only its size
+     * and depth). Default: the squared log aspect ratio, x scaled by xScaleAt.
+     */
+    itemCost?: (k: number, cell: Rect) => number;
+}
 
-export function orderedTreemap(
-    weights: readonly number[],
-    bounds: Rect,
-    itemCost: (k: number, w: number, d: number) => number = (_k, w, d) => aspectCost(w, d),
-): Rect[] {
+/** Squared log aspect ratio of a cell, with x scaled by xScaleAt at the cell's middle depth. */
+export function cellAspectCost(cell: Rect, xScaleAt: (z: number) => number = () => 1): number {
+    return Math.log(aspect(rectWidth(cell) * xScaleAt((cell.z0 + cell.z1) / 2), rectDepth(cell))) ** 2;
+}
+
+export function orderedTreemap(weights: readonly number[], bounds: Rect, opts: TreemapOptions = {}): Rect[] {
     const n = weights.length;
     const width = rectWidth(bounds);
     const total = weights.reduce((a, b) => a + b, 0);
@@ -66,24 +81,33 @@ export function orderedTreemap(
     const prefix = [0];
     for (const w of weights) prefix.push(prefix[prefix.length - 1] + w);
     const sum = (i: number, j: number) => prefix[j] - prefix[i];
+    const xScaleAt = opts.xScaleAt ?? (() => 1);
+    const itemCost = opts.itemCost ?? ((_k: number, cell: Rect) => cellAspectCost(cell, xScaleAt));
 
-    // Items i..j-1 stacked in one column of the given depth.
-    const columnCost = (i: number, j: number, depth: number) => {
+    // Items i..j-1 stacked in one column of the given depth, from z0 down.
+    const columnCost = (i: number, j: number, depth: number, z0: number) => {
         const colWidth = (sum(i, j) * areaPerUnit) / depth;
         let c = 0;
-        for (let k = i; k < j; k++) c += itemCost(k, colWidth, (weights[k] * areaPerUnit) / colWidth);
+        let z = z0;
+        for (let k = i; k < j; k++) {
+            const d = (weights[k] * areaPerUnit) / colWidth;
+            c += itemCost(k, { x0: 0, z0: z, x1: colWidth, z1: z + d });
+            z += d;
+        }
         return c;
     };
 
-    // Best split of items i..j-1 (one row) into columns.
+    // Best split of items i..j-1 (one row) into columns. Rows span the full
+    // width, so a row starting at item i always starts at the same depth.
     const rowPlan = (i: number, j: number) => {
         const depth = (sum(i, j) * areaPerUnit) / width;
+        const z0 = bounds.z0 + (sum(0, i) * areaPerUnit) / width;
         const m = j - i;
         const best = [0, ...new Array<number>(m).fill(Infinity)];
         const prev = new Array<number>(m + 1).fill(0);
         for (let b = 1; b <= m; b++) {
             for (let a = Math.max(0, b - MAX_STACK); a < b; a++) {
-                const c = best[a] + columnCost(i + a, i + b, depth);
+                const c = best[a] + columnCost(i + a, i + b, depth, z0);
                 if (c < best[b]) {
                     best[b] = c;
                     prev[b] = a;
@@ -151,39 +175,56 @@ export interface FamilyLayout {
     codes: string[];
 }
 
-/** The five family blocks, in family order, sized by their fields' EP 2025 summary rows. */
-export function layoutFamilies(bounds: Rect = WORLD_BOUNDS): FamilyLayout[] {
-    const families = SOC_FAMILIES.map((family) => ({ family, ep2025: 0, codes: [] as string[] }));
+/**
+ * Two-level ordered treemap: the five family blocks, sized by their fields'
+ * EP 2025 summary rows, then each block cut among its own fields in SOC
+ * order. A field's area is its share of the family times the family's share
+ * of the whole, which is its share of the whole. `xScaleAt` is the treemap's
+ * (the globe's latitude correction), applied at both levels.
+ *
+ * Returns the family blocks in family order and the field cells in SOC order
+ * (INDEX_CONTINENTS order).
+ */
+export function familyTreemap(bounds: Rect, xScaleAt?: (z: number) => number): { families: FamilyLayout[]; fields: Rect[] } {
+    const families = SOC_FAMILIES.map((family) => ({ family, ep2025: 0, codes: [] as string[], weights: [] as number[] }));
     for (const c of INDEX_CONTINENTS) {
         const f = families[familyOf(c.code).id - 1];
         f.ep2025 += c.ep.employment2025;
         f.codes.push(c.code);
+        f.weights.push(c.ep.employment2025);
     }
     const used = families.filter((f) => f.codes.length > 0);
-    const fieldWeights = used.map((f) => f.codes.map((code) => INDEX_CONTINENTS.find((c) => c.code === code)!.ep.employment2025));
     // A block is as good as the fields laid out inside it.
-    const blockCost = (k: number, w: number, d: number) =>
-        orderedTreemap(fieldWeights[k], { x0: 0, z0: 0, x1: w, z1: d }).reduce((c, r) => c + aspectCost(rectWidth(r), rectDepth(r)), 0);
-    return orderedTreemap(used.map((f) => f.ep2025), bounds, blockCost).map((rect, i) => ({ ...used[i], rect }));
+    const fieldsIn = (k: number, cell: Rect) => orderedTreemap(used[k].weights, cell, { xScaleAt });
+    const blockCost = (k: number, cell: Rect) => fieldsIn(k, cell).reduce((c, r) => c + cellAspectCost(r, xScaleAt), 0);
+    const blocks = orderedTreemap(used.map((f) => f.ep2025), bounds, { xScaleAt, itemCost: blockCost });
+    const byCode = new Map<string, Rect>();
+    blocks.forEach((rect, k) => fieldsIn(k, rect).forEach((cell, i) => byCode.set(used[k].codes[i], cell)));
+    return {
+        families: used.map(({ family, ep2025, codes }, k) => ({ family, ep2025, codes, rect: blocks[k] })),
+        fields: INDEX_CONTINENTS.map((c) => byCode.get(c.code)!),
+    };
 }
 
-/**
- * The 22 regions, in SOC order, sized by their EP 2025 summary rows: each
- * family block is cut, by the same ordered treemap, among its own fields.
- * A field's area is its share of the family times the family's share of the
- * world, which is its share of the world.
- */
+/** The five family blocks, in family order, sized by their fields' EP 2025 summary rows. */
+export function layoutFamilies(bounds: Rect = WORLD_BOUNDS): FamilyLayout[] {
+    return familyTreemap(bounds).families;
+}
+
+/** The 22 regions, in SOC order, sized by their EP 2025 summary rows, inside their family blocks (familyTreemap). */
 export function layoutRegions(bounds: Rect = WORLD_BOUNDS): RegionLayout[] {
-    const byCode = new Map(INDEX_CONTINENTS.map((c) => [c.code, c]));
-    const out = new Map<string, RegionLayout>();
-    for (const f of layoutFamilies(bounds)) {
-        const weights = f.codes.map((code) => byCode.get(code)!.ep.employment2025);
-        orderedTreemap(weights, f.rect).forEach((rect, i) => {
-            const code = f.codes[i];
-            out.set(code, { code, rect, cx: (rect.x0 + rect.x1) / 2, cz: (rect.z0 + rect.z1) / 2, ep2025: weights[i], family: f.family.id });
-        });
-    }
-    return INDEX_CONTINENTS.map((c) => out.get(c.code)!);
+    const { fields } = familyTreemap(bounds);
+    return INDEX_CONTINENTS.map((c, i) => {
+        const rect = fields[i];
+        return {
+            code: c.code,
+            rect,
+            cx: (rect.x0 + rect.x1) / 2,
+            cz: (rect.z0 + rect.z1) / 2,
+            ep2025: c.ep.employment2025,
+            family: familyOf(c.code).id,
+        };
+    });
 }
 
 export interface PeakPlacement {

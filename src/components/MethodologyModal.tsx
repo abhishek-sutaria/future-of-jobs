@@ -78,7 +78,7 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                                     <td className="px-3 py-2">3D peak height (jobs over time)</td>
                                     <td className="px-3 py-2 text-gray-400">
                                         <SourceLink href="https://www.bls.gov/emp/tables/occupational-projections-and-characteristics.htm">BLS Employment Projections 2025–2035</SourceLink>
-                                        {' '}(official employment levels in 2025 and 2035; landscape interpolates in a straight line between them).
+                                        {' '}(official employment levels in 2025 and 2035; peaks move in a straight line between them).
                                     </td>
                                 </tr>
                                 <tr className="border-t border-white/[0.06]">
@@ -123,7 +123,7 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                                 <tr className="border-t border-white/[0.06]">
                                     <td className="px-3 py-2">Growth outlook (role page)</td>
                                     <td className="px-3 py-2 text-gray-400">
-                                        BLS Employment Projections percent change 2025–35, with a straight-line path between those years (same vintage as landscape peak height)
+                                        BLS Employment Projections percent change 2025–35, with a straight-line path between those years (same vintage as the peak heights on the globe)
                                     </td>
                                 </tr>
                                 <tr className="border-t border-white/[0.06]">
@@ -137,7 +137,7 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                     </div>
 
                     <p className="text-[11px] text-gray-500 leading-relaxed mt-2 italic">
-                        Peak height on the 3D landscape and the Growth Outlook tile on each role page
+                        Peak height on the 3D globe and the Growth Outlook tile on each role page
                         both follow BLS Employment Projections only (2025→2035, straight-line path).
                         Neither uses Claude employment forecasts.
                     </p>
@@ -152,13 +152,15 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                         <h3 className="text-base font-semibold text-cyan-400">The 22 fields</h3>
                     </div>
                     <p className="text-sm text-gray-300 leading-relaxed">
-                        The 3D map holds all {COUNTS.occupations} detailed occupations BLS publishes, grouped into the
-                        {' '}{INDEX_CONTINENTS.length} major groups of the Standard Occupational Classification (SOC), one field per group.
+                        The 3D globe holds all {COUNTS.occupations} detailed occupations BLS publishes, grouped into the
+                        {' '}{INDEX_CONTINENTS.length} major groups of the Standard Occupational Classification (SOC), one field (continent) per group.
+                        Tap a continent to zoom into that field, drawn flat.
                     </p>
                     <ul className="list-disc list-inside text-xs text-gray-400 ml-1 space-y-1">
                         <li><strong>Size is data.</strong> A field&apos;s area is proportional to its 2025 employment in the BLS Employment Projections summary row for that group: all workers, self-employed included. The {INDEX_CONTINENTS.length} rows add up to the {formatCount(EP_TOTAL.employment2025)} workers BLS counts in total, from {smallest.title} ({formatCount(smallest.ep.employment2025)}) to {largest.title} ({formatCount(largest.ep.employment2025)}).</li>
-                        <li><strong>Position and shape are layout only.</strong> The fields are grouped by the five official BLS job families (the high-level aggregation in Table 6 of the BLS 2018 SOC User Guide), outlined on the map: area is workers, while positions within a family follow BLS code order. Each family block and each field is shaped to stay close to square, and inside a field peaks sit on an even grid in SOC order. Neither position nor shape carries any data.</li>
-                        <li><strong>Peak height is data.</strong> Each peak&apos;s height is that occupation&apos;s Employment Projections job count, on a linear scale. On the whole map, one national scale runs up to the largest value on the 2025–2035 path ({formatCount(EP_PATH_MAX)}, {TALLEST?.title}), so no peak is capped. When you zoom into a field, its peaks switch to that field&apos;s own scale: its largest occupation in the slider year is drawn full height and the rest in proportion, as the note under the field name says. Labels and panels always show the published numbers.</li>
+                        <li><strong>The globe is equal-area, so continent sizes are true to the BLS counts.</strong> The continents are laid out on a Lambert cylindrical equal-area projection (longitude across, the sine of latitude up), which keeps area exactly, and then wrapped onto the sphere: a field with twice the workers covers twice the surface. A test measures every continent on the sphere and checks its share against its BLS share to within 1%.</li>
+                        <li><strong>Position and shape are layout only.</strong> The continents are grouped by the five official BLS job families (the high-level aggregation in Table 6 of the BLS 2018 SOC User Guide), outlined on the ocean: area is workers, while positions within a family follow BLS code order (north to south, west to east). Each family and each continent is shaped to stay close to square. Their rounded, slightly uneven coastlines, the ocean between them and the empty polar caps are layout too: every continent gives the same share of its space to the ocean, and the coastlines are allowed only because the 1% area test still passes. Inside a field, peaks sit on an even grid in SOC order. None of this carries data.</li>
+                        <li><strong>Peak height is data.</strong> Each peak&apos;s height is that occupation&apos;s Employment Projections job count, on a linear scale. On the globe, one national scale runs up to the largest value on the 2025–2035 path ({formatCount(EP_PATH_MAX)}, {TALLEST?.title}), so no peak is capped; the whole scale is shrunk by one factor to fit the sphere, so heights still compare across continents. When you zoom into a field, its peaks switch to that field&apos;s own scale: its largest occupation in the slider year is drawn full height and the rest in proportion, as the note under the field name says. Labels and panels always show the published numbers.</li>
                         <li><strong>AI scores cover the 50 Kelley roles for now.</strong> Those peaks carry the Job Security colours. Every other occupation is drawn in slate and its panel says &ldquo;AI scores coming soon&rdquo;; no score is estimated in their place. Kelley titles that share one BLS code (Marketing / Brand Manager, BI Analyst / Data Scientist, Buyer / Purchasing Agent) keep their own peaks, each with an equal share of that code&apos;s jobs, as before.</li>
                         <li><strong>The state map and the task view</strong> cover the 50 Kelley roles for now.</li>
                     </ul>
@@ -238,7 +240,7 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                     <p className="text-sm text-gray-300 leading-relaxed">
                         Peak height is the number of jobs from BLS Employment Projections. Drag the year
                         slider from 2025 to 2035; each peak moves in a straight line between the official
-                        2025 and 2035 employment levels (linear visual scale, not log). The whole map uses one
+                        2025 and 2035 employment levels (linear visual scale, not log). The globe uses one
                         national scale up to {formatCount(EP_PATH_MAX)}; a zoomed-in field uses its own, so
                         compare heights within a field, not across zoomed fields.
                     </p>

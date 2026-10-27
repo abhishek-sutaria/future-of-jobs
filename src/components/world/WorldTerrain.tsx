@@ -56,9 +56,11 @@ interface RegionMesh {
 
 /**
  * The ground (22 regions drawn in its shader) and every peak: one instanced
- * draw call per region, 833 bells in all, no per-peak meshes.
+ * draw call per region, 833 bells in all, no per-peak meshes. Since the globe
+ * this is the zoomed field view; it stays mounted (hidden) while the globe
+ * shows, so entering a field never recompiles anything.
  */
-export const WorldTerrain: React.FC<{ scene: WorldScene; isMobile: boolean }> = ({ scene, isMobile }) => {
+export const WorldTerrain: React.FC<{ scene: WorldScene; isMobile: boolean; visible?: boolean }> = ({ scene, isMobile, visible = true }) => {
     const focused = useWorldStore((s) => s.focusedContinent);
     const kelleyOnly = useWorldStore((s) => s.kelleyOnly);
 
@@ -198,7 +200,7 @@ export const WorldTerrain: React.FC<{ scene: WorldScene; isMobile: boolean }> = 
     });
 
     return (
-        <group>
+        <group visible={visible}>
             {/* Flat ground: two triangles. The old terrain displaced ~37k vertices
                 through a 50-peak loop every frame; the peaks are now instanced. */}
             <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, GROUND_Y, 0]} renderOrder={-1}>

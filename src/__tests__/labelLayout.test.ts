@@ -219,6 +219,14 @@ describe('layoutLabelsByWeight', () => {
         expect(out.get('big')).toEqual([110, 100]);
     });
 
+    it('never lets a label that is not in front (the far side of the globe) hide one that is', () => {
+        const items = [box('front', 100, 100), { ...box('behind', 110, 100), inFront: false }];
+        const out = new Map<string, [number, number]>();
+        layoutLabelsByWeight(items, new Map([['front', 1], ['behind', 9]]), 400, 400, band, out, new Map(), 2, 4);
+        expect(out.get('front')).toEqual([100, 100]);
+        expect(isHiddenLabelPosition(out.get('behind')!)).toBe(true);
+    });
+
     it('never moves a label that has no weight (e.g. the hovered one)', () => {
         const items = [box('hovered', 100, 100), box('big', 110, 100)];
         const out = new Map<string, [number, number]>();
