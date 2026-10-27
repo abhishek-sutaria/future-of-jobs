@@ -3,12 +3,14 @@
  * reach under the top chrome: the anchor slides down toward the peak's foot
  * (globeLabels.layoutGlobeLabels with a `foot`), and the stalk is shortened
  * to match. Checked against a real camera looking at the globe, with a peak
- * placed so its full stalk ends above the free band.
+ * placed so its full stalk ends above the free band. Also where a family's
+ * name is pinned on the globe.
  */
 
 import { describe, it, expect } from 'vitest';
 import { PerspectiveCamera, Vector3 } from 'three';
-import { layoutGlobeLabels, type GlobeLabel } from '../components/world/globeLabels';
+import { familyAnchor, layoutGlobeLabels, type GlobeLabel } from '../components/world/globeLabels';
+import type { FamilyLayout } from '../utils/worldLayout';
 import { LAND_RADIUS, unitVector } from '../utils/globeLayout';
 import { bandTopAt, isHiddenLabelPosition, type LabelBand } from '../utils/labelLayout';
 
@@ -56,5 +58,26 @@ describe('tall peaks on the globe', () => {
         layoutGlobeLabels([{ ...label, foot: undefined }], new Map(), camera, W, H, band, out, new Map(), new Map());
         const pos = out.get('tall');
         expect(!pos || isHiddenLabelPosition(pos)).toBe(true);
+    });
+});
+
+describe('family names on the globe', () => {
+    const f = { rect: { x0: -1, z0: -0.5, x1: 1.2, z1: 0.2 } } as unknown as FamilyLayout;
+    const lonOf = (v: readonly number[]) => Math.atan2(v[0], v[2]);
+
+    it('sit on the cell\'s northern border, just inside it', () => {
+        const n = familyAnchor(f, 0.3);
+        expect(-n[1]).toBeGreaterThan(f.rect.z0);
+        expect(-n[1]).toBeLessThan(f.rect.z0 + 0.05);
+    });
+
+    it('follow the camera\'s longitude within the cell, and stop at its ends', () => {
+        expect(lonOf(familyAnchor(f, 0.3))).toBeCloseTo(0.3, 9);
+        expect(lonOf(familyAnchor(f, 2.5))).toBeLessThan(1.2);
+        expect(lonOf(familyAnchor(f, 2.5))).toBeGreaterThan(1.1);
+        expect(lonOf(familyAnchor(f, -2))).toBeGreaterThan(-1);
+        expect(lonOf(familyAnchor(f, -2))).toBeLessThan(-0.9);
+        // Across the ±180° seam, the nearer end of the cell.
+        expect(lonOf(familyAnchor(f, Math.PI - 0.1))).toBeGreaterThan(1.1);
     });
 });

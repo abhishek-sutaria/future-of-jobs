@@ -6,7 +6,7 @@ import { useStore } from '../../store';
 import { useWorldStore } from '../../worldStore';
 import { INDEX_CONTINENT_BY_CODE } from '../../utils/occupationIndex';
 import { HIDDEN_LABEL_POSITION, isHiddenLabelPosition } from '../../utils/labelLayout';
-import { continentAt, LAND_RADIUS, lonSinOf, unitVector } from '../../utils/globeLayout';
+import { continentAt, LAND_RADIUS, lonSinOf } from '../../utils/globeLayout';
 import type { FamilyLayout } from '../../utils/worldLayout';
 import { continentLabelPoint, GLOBE_PEAK_LABEL_LIFT, globePeakHeightAt, type GlobePeak, type GlobeScene } from './globeScene';
 import { worldPointer } from './worldPointer';
@@ -14,7 +14,7 @@ import { useWorldView } from './worldCamera';
 import { useLabelSafeBand } from './labelBand';
 import { FamilyLabel, PeakLabel } from './WorldMarkers';
 import { ContinentLabelButton } from './ContinentLabelButton';
-import { horizonAlpha, layoutGlobeLabels, type GlobeLabel } from './globeLabels';
+import { familyAnchor, horizonAlpha, layoutGlobeLabels, type GlobeLabel } from './globeLabels';
 
 const PEAK_HIT_RADIUS_PX = 28;
 
@@ -23,14 +23,8 @@ type GlobeItem =
     | { kind: 'family'; id: string; family: FamilyLayout; n: [number, number, number]; anchor: [number, number, number] }
     | { kind: 'peak'; id: string; g: GlobePeak };
 
-/** How far inside its cell's north-west corner a family name is pinned, in equal-area units (about 1.7° of arc). */
-const FAMILY_CORNER_INSET = 0.03;
-
-/** A family's name, hanging from just inside the north-west corner of its cell. */
 function familyItem(f: FamilyLayout): GlobeItem {
-    const sinLat = -(f.rect.z0 + FAMILY_CORNER_INSET);
-    const cosLat = Math.sqrt(1 - sinLat * sinLat);
-    const n = unitVector(f.rect.x0 + FAMILY_CORNER_INSET / cosLat, sinLat);
+    const n = familyAnchor(f, (f.rect.x0 + f.rect.x1) / 2);
     return { kind: 'family', id: `family:${f.family.id}`, family: f, n, anchor: [n[0] * LAND_RADIUS, n[1] * LAND_RADIUS, n[2] * LAND_RADIUS] };
 }
 
@@ -334,7 +328,16 @@ export const GlobeMarkers: React.FC<{ globe: GlobeScene }> = ({ globe }) => {
                 continue;
             }
             if (item.kind === 'family') {
-                list.push({ id: item.id, n: item.n, anchor: item.anchor, halfWidth: half.x, halfHeight: half.y, slack: 2, hang: true });
+                const n = familyAnchor(item.family, Math.atan2(cx, cz));
+                list.push({
+                    id: item.id,
+                    n,
+                    anchor: [n[0] * LAND_RADIUS, n[1] * LAND_RADIUS, n[2] * LAND_RADIUS],
+                    halfWidth: half.x,
+                    halfHeight: half.y,
+                    slack: 2,
+                    hang: true,
+                });
                 continue;
             }
             const [nx, ny, nz] = item.g.dir;

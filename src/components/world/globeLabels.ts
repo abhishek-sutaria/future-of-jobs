@@ -1,5 +1,6 @@
 import { Vector3, type Camera } from 'three';
-import { LAND_RADIUS } from '../../utils/globeLayout';
+import { LAND_RADIUS, unitVector } from '../../utils/globeLayout';
+import type { FamilyLayout } from '../../utils/worldLayout';
 import { anchorHeightInBand, bandTopAt, layoutLabelsByWeight, type LabelBand, type LabelCandidate } from '../../utils/labelLayout';
 
 /**
@@ -38,12 +39,31 @@ export interface GlobeLabel {
      * foot until it fits (anchorHeightInBand), so a tall peak keeps its label.
      */
     foot?: readonly [number, number, number];
-    /** Hang the label below and to the right of its anchor (a family name at its cell's north-west corner). */
+    /** Hang the label just below its anchor (a family name on its cell's northern border). */
     hang?: boolean;
 }
 
 /** Gap, in CSS pixels, between a hanging label and its anchor. */
 const HANG_GAP = 4;
+
+/** How far inside its cell's edges a family name is pinned, in equal-area units (about 1.7° of arc). */
+const FAMILY_EDGE_INSET = 0.03;
+
+/**
+ * Where a family's name goes: on its cell's northern border, at the longitude
+ * nearest the camera's (within the cell), so the name sits over the part of
+ * the family that is in view. The label hangs just below that point.
+ */
+export function familyAnchor(f: FamilyLayout, cameraLon: number): [number, number, number] {
+    const sinLat = -(f.rect.z0 + FAMILY_EDGE_INSET);
+    const cosLat = Math.sqrt(1 - sinLat * sinLat);
+    const lo = f.rect.x0 + FAMILY_EDGE_INSET / cosLat;
+    const hi = f.rect.x1 - FAMILY_EDGE_INSET / cosLat;
+    // Angular distance, so a camera just across the ±180° seam picks the near end.
+    const gap = (a: number) => Math.abs(Math.atan2(Math.sin(cameraLon - a), Math.cos(cameraLon - a)));
+    const lon = cameraLon >= lo && cameraLon <= hi ? cameraLon : gap(lo) <= gap(hi) ? lo : hi;
+    return unitVector(lon, sinLat);
+}
 
 const projected = new Vector3();
 
@@ -91,11 +111,10 @@ export function layoutGlobeLabels(
             tips?.set(label.id, t);
         }
         const s = toScreen(t);
-        const dx = label.hang ? label.halfWidth + HANG_GAP : 0;
         const dy = label.hang ? label.halfHeight + HANG_GAP : 0;
         list.push({
             id: label.id,
-            anchorX: s.x + dx,
+            anchorX: s.x,
             anchorY: s.y + dy,
             halfWidth: label.halfWidth,
             halfHeight: label.halfHeight,
