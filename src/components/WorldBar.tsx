@@ -13,9 +13,12 @@ import { IconChevronDown, IconLayers } from './ui/Icons';
  * Navigation for the 22-continent world, under the header on the 3D view:
  * the field picker (every region by name, so none depends on a tap target),
  * the "All fields" breadcrumb when zoomed in, and the Kelley roles toggle.
+ * The picker is on screen at every zoom, so it is also how keyboard and screen
+ * reader users reach all 22 fields: their names on the map come and go with zoom.
  */
 export const WorldBar: React.FC = () => {
     const focused = useWorldStore((s) => s.focusedContinent);
+    const showingFields = useWorldStore((s) => s.labels.fields);
     const focusContinent = useWorldStore((s) => s.focusContinent);
     const kelleyOnly = useWorldStore((s) => s.kelleyOnly);
     const setKelleyOnly = useWorldStore((s) => s.setKelleyOnly);
@@ -79,6 +82,9 @@ export const WorldBar: React.FC = () => {
             className="absolute left-4 md:left-8 right-4 md:right-auto flex flex-col gap-1.5 pointer-events-none md:max-w-[34rem]"
             style={{ top, zIndex: Z.base }}
         >
+            <p className="sr-only" aria-live="polite">
+                {showingFields ? 'Zoomed in: field names are showing. Pick any of the 22 fields from the fields menu.' : 'Zoomed out: the five job families are showing.'}
+            </p>
             <div className="flex flex-wrap items-center gap-1.5 pointer-events-auto">
                 {region && (
                     <button
@@ -92,6 +98,7 @@ export const WorldBar: React.FC = () => {
                 <div className="relative">
                     <button
                         type="button"
+                        data-field-picker
                         onClick={() => setOpen((o) => !o)}
                         aria-expanded={open}
                         aria-haspopup="listbox"

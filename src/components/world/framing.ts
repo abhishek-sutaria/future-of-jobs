@@ -19,6 +19,8 @@ export interface FrameOptions {
     usableHeight?: number;
     /** Where that free band's centre sits, from -1 (top) to 1 (bottom) of the viewport; 0 = centre. */
     bandCenter?: number;
+    /** Stop at least this close, even if the rectangle then overflows the free band. */
+    maxDistance?: number;
 }
 
 /**
@@ -39,7 +41,7 @@ export function frameRect(rect: Rect, fovDeg: number, aspect: number, opts: Fram
     const byWidth = (w / 2) / Math.tan(hHalf) + (d / 2) * Math.cos(elevation);
     const usable = Math.max(0.3, Math.min(1, opts.usableHeight ?? USABLE_HEIGHT));
     const byDepth = ((d / 2) * Math.sin(elevation) + (opts.lift ?? 2)) / (Math.tan(vHalf) * usable);
-    const dist = Math.min(SCENE.MAX_CAMERA_DISTANCE, Math.max(SCENE.MIN_CAMERA_DISTANCE + 4, byWidth, byDepth));
+    const dist = Math.min(SCENE.MAX_CAMERA_DISTANCE, opts.maxDistance ?? Infinity, Math.max(SCENE.MIN_CAMERA_DISTANCE + 4, byWidth, byDepth));
     const cx = (rect.x0 + rect.x1) / 2;
     const cz = (rect.z0 + rect.z1) / 2;
     // Aim a little below the centre: the year slider covers more of the
@@ -59,6 +61,8 @@ export function worldFraming(fovDeg: number, aspect: number): Framing {
     return frameRect(WORLD_BOUNDS, fovDeg, aspect);
 }
 
+export type FlightBand = Pick<FrameOptions, 'usableHeight' | 'bandCenter' | 'maxDistance'>;
+
 /** Camera elevation when framing a region, from the horizontal. */
 const REGION_ELEVATION_DEG = 58;
 /** Room left around a region so its edge peaks stay clear of the screen edges. */
@@ -69,7 +73,24 @@ const REGION_MARGIN = 1.2;
  * peak's label: zoomed in, the field is drawn to its own scale, whose tallest
  * peak is FIELD_PEAK_MAX, and its leader line ends SCENE.LABEL.BASE_HEIGHT above.
  */
-export function regionFraming(rect: Rect, fovDeg: number, aspect: number, band: Pick<FrameOptions, 'usableHeight' | 'bandCenter'> = {}): Framing {
+export function regionFraming(rect: Rect, fovDeg: number, aspect: number, band: FlightBand = {}): Framing {
     const lift = (FIELD_PEAK_MAX + SCENE.LABEL.BASE_HEIGHT + 1) * Math.cos((REGION_ELEVATION_DEG * Math.PI) / 180);
     return frameRect(rect, fovDeg, aspect, { elevationDeg: REGION_ELEVATION_DEG, margin: REGION_MARGIN, lift, ...band });
+}
+
+/** A BLS job family's block, framed in the free band. No peak is zoomed, so no room is needed above it. */
+export function familyFraming(rect: Rect, fovDeg: number, aspect: number, band: FlightBand = {}): Framing {
+    return frameRect(rect, fovDeg, aspect, { elevationDeg: REGION_ELEVATION_DEG, ...band });
+}
+
+/** `framing` moved along its own line of sight to `distance` from its target. */
+export function atDistance(framing: Framing, distance: number): Framing {
+    const k = distance / framingDistance(framing);
+    const [tx, ty, tz] = framing.target;
+    const [px, py, pz] = framing.position;
+    return { target: framing.target, position: [tx + (px - tx) * k, ty + (py - ty) * k, tz + (pz - tz) * k] };
+}
+
+export function framingDistance({ position: p, target: t }: Framing): number {
+    return Math.hypot(p[0] - t[0], p[1] - t[1], p[2] - t[2]);
 }

@@ -129,8 +129,6 @@ export type LabelCandidate = {
      * nudges then step out in rings half its size apart, nearest first.
      */
     slack?: number;
-    /** Screen box the whole label must stay inside (a family name stays in its block). */
-    keepIn?: { left: number; top: number; right: number; bottom: number };
 };
 
 type Placed = { id: string; x: number; y: number; halfW: number; halfH: number };
@@ -231,10 +229,6 @@ export function layoutLabels(
                 cy - halfHeight < bandTopAt(band, cx - halfWidth, cx + halfWidth) - 0.001 ||
                 cy + halfHeight > maxY + 0.001
             ) {
-                return false;
-            }
-            const k = item.keepIn;
-            if (k && (cx - halfWidth < k.left || cx + halfWidth > k.right || cy - halfHeight < k.top || cy + halfHeight > k.bottom)) {
                 return false;
             }
             for (const p of placed) {

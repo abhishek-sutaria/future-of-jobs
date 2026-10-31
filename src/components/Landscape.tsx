@@ -13,7 +13,7 @@ import { SCENE } from '../config/constants';
 import { useStore } from '../store';
 import { useWorldStore } from '../worldStore';
 import { WORLD_BOUNDS } from '../utils/worldLayout';
-import { worldFraming } from './world/framing';
+import { framingDistance, worldFraming } from './world/framing';
 
 /** Matches MapView's own `isDefault = position.zoom === 1` — a single simple
  * check, not a multi-axis comparison. Pan target drifting from the origin is
@@ -43,6 +43,7 @@ export const Landscape: React.FC = () => {
     const selectedOccupationSoc = useWorldStore((s) => s.selectedOccupationSoc);
     const focusedContinent = useWorldStore((s) => s.focusedContinent);
     const kelleyOnly = useWorldStore((s) => s.kelleyOnly);
+    const focusRequestId = useWorldStore((s) => s.focusRequestId);
     const scene = useWorldScene();
     const setIsDefaultView = useStore((s) => s.setIsDefaultView);
     const resetViewRequestId = useStore((s) => s.resetViewRequestId);
@@ -110,13 +111,14 @@ export const Landscape: React.FC = () => {
     // outside OrbitControls. Without route/canvasKey, a phone that idled then
     // opened Dashboard (or recovered from context loss) can return to a Canvas
     // still stuck on frameloop:'never'. A region flight or the Kelley filter
-    // must wake it too, or the camera would freeze mid-flight.
+    // must wake it too, or the camera would freeze mid-flight. A flight to a
+    // family changes neither of those, so the request id wakes it.
     useEffect(() => {
         bumpInteraction();
         return () => {
             if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
         };
-    }, [bumpInteraction, year, mapView, selectedJob, route, canvasKey, selectedOccupationSoc, focusedContinent, kelleyOnly]);
+    }, [bumpInteraction, year, mapView, selectedJob, route, canvasKey, selectedOccupationSoc, focusedContinent, kelleyOnly, focusRequestId]);
 
     const handleContextLost = useCallback((event: Event) => {
         // Without this, the browser assumes the page doesn't want to recover
@@ -267,7 +269,7 @@ export const Landscape: React.FC = () => {
 
             <WorldTerrain scene={scene} isMobile={isMobile} />
             <WorldMarkers scene={scene} />
-            <CameraRig controlsRef={controlsRef} scene={scene} />
+            <CameraRig controlsRef={controlsRef} scene={scene} homeDistance={framingDistance(initialFraming)} />
 
             <OrbitControls
                 ref={controlsRef}

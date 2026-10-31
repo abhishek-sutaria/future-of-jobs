@@ -32,6 +32,7 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
     const openRescoreModal = useStore((state) => state.openRescoreModal);
     const navigate = useStore((state) => state.navigate);
     const isDefaultView = useStore((state) => state.isDefaultView);
+    const zoomedToFields = useWorldStore((state) => state.labels.fields);
     const triggerResetView = useStore((state) => state.triggerResetView);
 
     // Account state. Deliberately read from the separate user store — identity
@@ -132,10 +133,12 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
                         distance and reports it here via the store — reported
                         directly: a two-finger touch gesture panned the camera
                         far enough to lose the terrain entirely with no way back
-                        short of reloading the page.
+                        short of reloading the page. Zoomed in with no pan
+                        (the Kelley toggle's zoom) it is also the way back to
+                        the five families for anyone without a scroll wheel.
                         First in a justify-end row, so appearing/disappearing
                         never shifts any other button. */}
-                    {mapView !== 'map' && !isDefaultView && (
+                    {mapView !== 'map' && (!isDefaultView || (mapView === 'globe' && zoomedToFields)) && (
                         <button
                             onClick={triggerResetView}
                             title="Return the 3D view to its starting position"

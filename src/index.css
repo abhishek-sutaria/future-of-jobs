@@ -254,8 +254,10 @@ canvas {
 
    pointer-events:none is load-bearing: a synthetic pointerdown forwarded from
    a label onto the canvas (the old approach) leaves three's OrbitControls with
-   a NaN camera on touch, and the whole terrain vanishes. Labels are visual
-   only; world/WorldMarkers hit-tests taps/hover on the canvas against their boxes.
+   a NaN camera on touch, and the whole terrain vanishes. To a pointer labels
+   are visual only (the family buttons included; only keyboards and screen
+   readers reach those directly); world/WorldMarkers hit-tests taps/hover on
+   the canvas against their boxes.
    
    transform centers the label on the calculated position, which layoutLabels
    returns as center coordinates (halfWidth, halfHeight). Without this, the
@@ -273,3 +275,22 @@ canvas {
   opacity: 0.28;
 }
 
+/* Family names, field names and job labels swap with zoom: the old set fades
+   out, then the new one mounts and fades in, so the two are never on screen
+   together. Timing matches LABEL_FADE_MS (utils/labelLevel). */
+.foj-label-fade {
+  transition: opacity 140ms ease-out;
+  animation: foj-label-in 140ms ease-out backwards;
+}
+.foj-label-fade--out {
+  opacity: 0;
+}
+@keyframes foj-label-in {
+  from { opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .foj-label-fade {
+    transition: none;
+    animation: none;
+  }
+}

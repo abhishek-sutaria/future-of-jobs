@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { useStore } from './store';
+import { BROAD_LABELS, type LabelDecision } from './utils/labelLevel';
 import { loadContinentFile, type ContinentFile } from './utils/occupationIndex';
 import type { RoleEntry } from './utils/roles';
 
@@ -16,6 +17,13 @@ interface WorldState {
     /** Bumped on every focus request, so asking for the same region again re-frames it. */
     focusRequestId: number;
     focusContinent: (code: string | null) => void;
+    /** Where the next flight goes when no region is zoomed; null is the whole world. */
+    flyTo: { kind: 'family'; id: number } | { kind: 'fields' } | null;
+    /** Fly to one BLS job family, which brings up its field names. Leaves no region zoomed. */
+    focusFamily: (id: number) => void;
+
+    /** Which labels the camera's zoom calls for. Written by world/CameraRig. */
+    labels: LabelDecision;
 
     /** Highlight only the 50 Kelley roles (their peaks, labels and colours). */
     kelleyOnly: boolean;
@@ -40,12 +48,23 @@ export const useWorldStore = create<WorldState>((set, get) => ({
     focusedContinent: null,
     focusRequestId: 0,
     focusContinent: (code) => {
-        set((s) => ({ focusedContinent: code, focusRequestId: s.focusRequestId + 1 }));
+        set((s) => ({ focusedContinent: code, flyTo: null, focusRequestId: s.focusRequestId + 1 }));
         if (code) void get().loadContinent(code);
     },
+    flyTo: null,
+    focusFamily: (id) => set((s) => ({ focusedContinent: null, flyTo: { kind: 'family', id }, focusRequestId: s.focusRequestId + 1 })),
+
+    labels: BROAD_LABELS,
 
     kelleyOnly: false,
-    setKelleyOnly: (on) => set((s) => ({ kelleyOnly: on, focusRequestId: s.focusRequestId + 1 })),
+    // Kelley labels are job labels, which the broad view never shows: turning
+    // the filter on there zooms in far enough for them. Otherwise it leaves the
+    // camera where the user put it.
+    setKelleyOnly: (on) => set((s) => (
+        on && !s.labels.fields
+            ? { kelleyOnly: on, flyTo: { kind: 'fields' }, focusRequestId: s.focusRequestId + 1 }
+            : { kelleyOnly: on }
+    )),
 
     selectedOccupationSoc: null,
     closeOccupation: () => set({ selectedOccupationSoc: null }),
