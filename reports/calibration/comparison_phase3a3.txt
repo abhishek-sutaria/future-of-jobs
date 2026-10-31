@@ -1,0 +1,25 @@
+PER-TASK (n=50; run2 − run1)
+metric          aiCapability  humanCriticality
+mean abs diff   0.068         0.077
+bias            -0.036        0.061
+Pearson r       0.915         0.934
+identical       13            9
+within 0.10     40            40
+
+ROLE  (automation risk = mean AI capability, %)
+role                        run1  run2  diff(pp)  published
+Marketing Manager             61    61       +0        53
+Financial Analyst             42    53      +11        30
+Software Developer            73    67       -6        55
+Operations Research Analyst   68    56      -12        47
+Risk Specialist               70    58      -12        51
+Insurance Underwriter         74    73       -1        72
+Loan Officer                  66    67       +1        64
+Statistician                  77    70       -7        56
+Web Developer                 85    75      -10        66
+HR Manager                    26    25       -1        26
+
+within ±5 pp of run 1: 4/10
+average shift (signed): -3.70 pp; mean abs shift: 6.10 pp
+role-level r (run1 vs run2): 0.919
+reference: published − run1 = -12.20 pp avg; published − run2 = -8.50 pp avg
