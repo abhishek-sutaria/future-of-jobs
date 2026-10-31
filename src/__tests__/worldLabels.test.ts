@@ -13,7 +13,7 @@ import { SCENE } from '../config/constants';
 import { CONTINENT_DISPLAY_NAMES } from '../config/continents';
 import { buildWorldScene } from '../components/world/worldScene';
 import { atDistance, familyFraming, framingDistance, regionFraming, worldFraming, type Framing } from '../components/world/framing';
-import { buildLabelCandidates, familyMarker, labelWeights, regionMarker, sortMarkers, type MarkerItem } from '../components/world/labelCandidates';
+import { buildLabelCandidates, familyMarker, focusedRegionMarker, labelWeights, peakMarker, regionMarker, sortMarkers, type MarkerItem } from '../components/world/labelCandidates';
 import { isHiddenLabelPosition, labelsCollide, layoutLabelsByWeight, type LabelBand, type LabelCandidate } from '../utils/labelLayout';
 import { BROAD_LABELS, decideLabels, FIELD_ARRIVAL_ZOOM } from '../utils/labelLevel';
 
@@ -153,5 +153,24 @@ describe.each([[1920, 1080], [1470, 801], [1280, 720], [1024, 768], [768, 1024],
 
     it('the whole-world framing is the broad view', () => {
         expect(landsOnFields(worldFraming(fov, aspect))).toBe(false);
+    });
+});
+
+describe('inside a zoomed field', () => {
+    const region = scene.layout.regions.find((r) => r.code === '43')!;
+    const own = focusedRegionMarker(region);
+
+    it('puts its own name inside its block, in front of the middle where the peaks crowd', () => {
+        expect(own.x).toBe(region.cx);
+        expect(own.z).toBeGreaterThan(region.cz);
+        expect(own.z).toBeLessThan(region.rect.z1);
+    });
+
+    it('lets job labels win, then its own name, then the other fields', () => {
+        const big = scene.layout.regions.find((r) => r.code === '29')!;
+        const peak = scene.peaksByContinent.get('43')![0];
+        const job = peakMarker(peak, 2025, '43', 1);
+        const order = sortMarkers([regionMarker(big.code, big.cx, big.cz), own, job], () => false, true, '43');
+        expect(order.map((m) => m.id)).toEqual([job.id, own.id, 'region:29']);
     });
 });

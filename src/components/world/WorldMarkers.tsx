@@ -15,7 +15,7 @@ import { HIDDEN_LABEL_POSITION, isHiddenLabelPosition, layoutLabelsByWeight, typ
 import type { FamilyLayout } from '../../utils/worldLayout';
 import { displayedPeakHeight, fieldMaxEmploymentAt, GROUND_Y, peakEmploymentAt, type ScenePeak, type WorldScene } from './worldScene';
 import { LABEL_FADE_MS, type LabelDecision } from '../../utils/labelLevel';
-import { buildLabelCandidates, familyMarker, labelWeights, peakMarker, regionMarker, sortMarkers, type MarkerItem } from './labelCandidates';
+import { buildLabelCandidates, familyMarker, focusedRegionMarker, labelWeights, peakMarker, regionMarker, sortMarkers, type MarkerItem } from './labelCandidates';
 import { prefersReducedMotion } from './worldCamera';
 import { worldPointer } from './worldPointer';
 
@@ -200,10 +200,10 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
             if (!labelledPeakKeys.has(key) && !extra.has(key)) continue;
             out.push(peakMarker(p, year, focused, fieldMax));
         }
-        if (shown.fields) for (const r of scene.layout.regions) out.push(regionMarker(r.code, r.cx, r.cz));
+        if (shown.fields) for (const r of scene.layout.regions) out.push(r.code === focused ? focusedRegionMarker(r) : regionMarker(r.code, r.cx, r.cz));
         if (shown.families) for (const f of scene.layout.families) out.push(familyMarker(f));
         // Earlier items win collisions.
-        return sortMarkers(out, (m) => m.id === hoveredId || m.id === tappedKey, !!focused || kelleyOnly);
+        return sortMarkers(out, (m) => m.id === hoveredId || m.id === tappedKey, !!focused || kelleyOnly, focused);
     }, [mapView, tappablePeaks, labelledPeakKeys, hoveredId, tappedKey, shown, scene, year, focused, kelleyOnly]);
 
     const regionWeights = useRef<Map<string, number>>(new Map());

@@ -2,11 +2,13 @@ import { Vector3, type Camera } from 'three';
 import { SCENE } from '../../config/constants';
 import { INDEX_CONTINENT_BY_CODE } from '../../utils/occupationIndex';
 import { anchorHeightInBand, bandTopAt, type LabelBand, type LabelCandidate } from '../../utils/labelLayout';
-import type { FamilyLayout } from '../../utils/worldLayout';
+import type { FamilyLayout, RegionLayout } from '../../utils/worldLayout';
 import { displayedPeakHeight, GROUND_Y, type ScenePeak } from './worldScene';
 
 /** World height of a region name above the ground. */
 export const REGION_LABEL_Y = 0.6;
+/** How far in from a zoomed field's near edge its name sits, as a share of its depth. */
+const FOCUSED_NAME_INSET = 0.1;
 
 export type MarkerItem =
     | { kind: 'region'; id: string; code: string; x: number; z: number; tipY: number; baseY: number }
@@ -21,6 +23,14 @@ export function peakMarker(p: ScenePeak, year: number, focused: string | null, f
 
 export function regionMarker(code: string, cx: number, cz: number): MarkerItem {
     return { kind: 'region', id: `region:${code}`, code, x: cx, z: cz, baseY: GROUND_Y, tipY: GROUND_Y + REGION_LABEL_Y };
+}
+
+/**
+ * The name of the zoomed field, near the front of its block: the middle is
+ * where its peaks and their job labels crowd, and a job label wins a collision.
+ */
+export function focusedRegionMarker(r: RegionLayout): MarkerItem {
+    return regionMarker(r.code, r.cx, r.rect.z1 - (r.rect.z1 - r.rect.z0) * FOCUSED_NAME_INSET);
 }
 
 /** A family's name, in the middle of its block. */
@@ -45,11 +55,13 @@ export function markerSize(m: MarkerItem): number {
 
 /**
  * Collision order: hovered / tapped first, then peaks and fields by size.
- * Inside a zoomed field (`peaksFirst`) the job labels are what the user came
- * for, so field names take whatever room they leave.
+ * Inside a zoomed field or under the Kelley filter (`peaksFirst`) the job labels
+ * are what the user came for, so field names take whatever room they leave,
+ * the zoomed field's own name first.
  */
-export function sortMarkers(items: MarkerItem[], isPriority: (m: MarkerItem) => boolean, peaksFirst = false): MarkerItem[] {
-    const tier = (m: MarkerItem) => (isPriority(m) ? 0 : peaksFirst && m.kind === 'region' ? 2 : 1);
+export function sortMarkers(items: MarkerItem[], isPriority: (m: MarkerItem) => boolean, peaksFirst = false, focused: string | null = null): MarkerItem[] {
+    const fieldTier = (m: MarkerItem) => (m.kind === 'region' && m.code === focused ? 2 : 3);
+    const tier = (m: MarkerItem) => (isPriority(m) ? 0 : peaksFirst && m.kind === 'region' ? fieldTier(m) : 1);
     return items.sort((a, b) => tier(a) - tier(b) || markerSize(b) - markerSize(a));
 }
 
