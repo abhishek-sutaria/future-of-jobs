@@ -4,7 +4,6 @@ import { BufferAttribute, BufferGeometry, Plane, Raycaster, Vector2, Vector3 } f
 import { Html } from '@react-three/drei';
 import { useStore } from '../../store';
 import { useWorldStore } from '../../worldStore';
-import { useIsMobile } from '../../hooks/useIsMobile';
 import { YEAR_MIN, YEAR_MAX } from '../../config/constants';
 import { CONTINENT_DISPLAY_NAMES } from '../../config/continents';
 import { INDEX_CONTINENT_BY_CODE } from '../../utils/occupationIndex';
@@ -24,8 +23,13 @@ import { prefersReducedMotion } from './worldCamera';
 import { worldPointer } from './worldPointer';
 import { worldStage } from './worldStage';
 
-/** Job labels in an open field: the largest by EP 2025 employment. Pins mark every job; any other label comes on hover. */
-export const REGION_LABEL_CAP = { mobile: 12, desktop: 25 } as const;
+/**
+ * Job labels offered to the declutter in an open field: the largest by EP 2025
+ * employment, up to the 50 the live view offers, on every device. The declutter
+ * then decides what fits, as it does there. Pins mark every job; any other label
+ * comes on hover.
+ */
+export const STAGE_LABEL_CAP = 50;
 const PEAK_HIT_RADIUS_PX = 28;
 /** A family name's tap target reaches at least this far above and below its centre (44px in all). */
 const FAMILY_HIT_HALF_HEIGHT_PX = 22;
@@ -44,7 +48,7 @@ const groundHit = new Vector3();
  * that open the family. World, zoomed in: the 22 field names (short names; the
  * full BLS title is in the hover card). A family: its field names over their
  * ranges, and a peak's name on hover. A field: labels for its largest
- * occupations, capped at REGION_LABEL_CAP, in the live view's style; any other
+ * occupations, capped at STAGE_LABEL_CAP, in the live view's style; any other
  * job gets its label on hover, or on a first tap on touch screens. With the
  * Kelley filter on, the job labels are the Kelley roles on stage, as the map has
  * always shown them.
@@ -95,7 +99,6 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
     const family = shown.focusedFamily;
     // The level's stage once it is on the mesh. Until then, nothing to label.
     const stage = shown.drawnStage?.key === stageKey(shown) ? shown.drawnStage : null;
-    const isMobile = useIsMobile();
 
     // Hover and tap belong to the view they happened in: zooming, changing
     // level or toggling the Kelley filter drops them, and orbiting hides the
@@ -210,17 +213,16 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
     // Which peaks carry a label without being hovered.
     const labelledPeakKeys = useMemo<Set<string>>(() => {
         if (stage?.kind === 'field' && !kelleyOnly) {
-            const cap = isMobile ? REGION_LABEL_CAP.mobile : REGION_LABEL_CAP.desktop;
             return new Set(
                 [...tappablePeaks]
                     .sort((a, b) => (b.entry.ep2025 ?? 0) - (a.entry.ep2025 ?? 0))
-                    .slice(0, cap)
+                    .slice(0, STAGE_LABEL_CAP)
                     .map((p) => p.entry.key),
             );
         }
         if (kelleyOnly) return new Set(tappablePeaks.filter((p) => p.entry.kind === 'kelley').map((p) => p.entry.key));
         return new Set();
-    }, [stage, kelleyOnly, isMobile, tappablePeaks]);
+    }, [stage, kelleyOnly, tappablePeaks]);
 
     const items = useMemo<MarkerItem[]>(() => {
         if (mapView !== 'globe') return [];

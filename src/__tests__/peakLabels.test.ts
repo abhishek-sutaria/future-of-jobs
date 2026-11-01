@@ -20,7 +20,7 @@ import { buildLabelCandidates, labelWeights, peakMarker, sortMarkers, stageMarke
 import { bakeStage, STAGE_BLEND, STAGE_BLEND_POWER, surfaceHeight } from '../utils/stageBake';
 import { buildStage } from '../utils/stageLayout';
 import { fieldLevel } from '../utils/worldLevel';
-import { REGION_LABEL_CAP } from '../components/world/WorldMarkers';
+import { STAGE_LABEL_CAP } from '../components/world/WorldMarkers';
 import { isHiddenLabelPosition, labelsCollide, layoutLabels, layoutLabelsByWeight, type LabelBand, type LabelCandidate } from '../utils/labelLayout';
 
 interface Viewport {
@@ -49,7 +49,7 @@ const VIEWPORTS: Viewport[] = [
         kelleyBand: { top: 144, bottom: 801 - 644 + 6, blocks: [{ left: 26, right: 623, bottom: 184 }] },
         fieldBand: { top: 144, bottom: 801 - 644 + 6, blocks: [{ left: 26, right: 794, bottom: 226 }] },
         chip: { lineH: 19, extraLineH: 12.5, charW: 6.3, pad: 18, capW: 208, lines: 2 },
-        cap: REGION_LABEL_CAP.desktop,
+        cap: STAGE_LABEL_CAP,
     },
     {
         name: 'phone 390x844',
@@ -59,7 +59,7 @@ const VIEWPORTS: Viewport[] = [
         kelleyBand: { top: 160, bottom: 844 - 642 + 6, blocks: [{ left: 10, right: 380, bottom: 239 }] },
         fieldBand: { top: 160, bottom: 844 - 642 + 6, blocks: [{ left: 10, right: 380, bottom: 312 }] },
         chip: { lineH: 16, extraLineH: 11.25, charW: 5.7, pad: 14, capW: 152, lines: 3 },
-        cap: REGION_LABEL_CAP.mobile,
+        cap: STAGE_LABEL_CAP,
     },
 ];
 
