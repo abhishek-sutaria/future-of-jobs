@@ -298,12 +298,16 @@ describe('info line', () => {
         expect(container.textContent).toContain('no Kelley roles in this field');
     });
 
-    it('shows the height note at a field only', async () => {
+    it('says whose scale the heights are on, at a field and at a family, and never at the world', async () => {
+        const familyScale = () => container.querySelector('[data-testid="family-scale-note"]');
         expect(scale()).toBeNull();
+        expect(familyScale()).toBeNull();
         await go(() => useWorldStore.getState().focusFamily(5));
         expect(scale()).toBeNull();
+        expect(familyScale()!.textContent).toBe('Peak heights scaled within this family.');
         await go(() => useWorldStore.getState().focusContinent('51'));
         expect(scale()!.textContent).toBe('Peak heights scaled within this field.');
+        expect(familyScale()).toBeNull();
         expect(info()).toBeNull();
     });
 });

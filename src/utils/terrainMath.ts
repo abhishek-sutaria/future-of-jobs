@@ -131,23 +131,77 @@ export interface PeakData {
 // sector of the disc (related clusters adjacent, see CLUSTER_ORDER), filled with
 // concentric arcs. Within a sector, jobs are ordered by SOC code so occupationally
 // similar roles sit next to each other.
+/** Radial gap between arcs in the live 50-job view; also the arc length each job gets there. */
+export const RING_SPACING = 5;
+
 const TERRITORY_LAYOUT = {
     /** Innermost arc radius */
     R_MIN: 7,
     /** Outermost usable radius — must stay inside the shader edge fade (~32 for the 70-unit plane) */
     R_MAX: 30,
-    /** Radial gap between arcs; also min arc length per job (≥ 2× PEAK_WIDTH so peaks stay legible) */
-    RING_SPACING: 5,
+    /** ≥ 2× PEAK_WIDTH so peaks stay legible */
+    RING_SPACING,
     /** Angular gap between adjacent sectors (radians) */
     GAP_RAD: 0.06,
     /** Smallest sector span before normalization (radians) */
     MIN_SPAN_RAD: 0.25,
 };
 
-export function computeClusterTerritoryLayout(jobs: Job[]): Map<string, { x: number; z: number }> {
-    const positions = new Map<string, { x: number; z: number }>();
-    if (jobs.length === 0) return positions;
+export interface TerritoryOptions {
+    /** Gap between arcs, and the arc length each job gets. Smaller packs more jobs into the same disc. */
+    ringSpacing?: number;
+    /** Angular gap between adjacent sectors (radians). */
+    gapRad?: number;
+    /** Where the first sector starts (radians). */
+    startAngle?: number;
+}
 
+/**
+ * The live disc layout: each group, in order, owns a contiguous angular sector
+ * sized by its share of the jobs, filled with concentric arcs from the inside
+ * out. `groups` holds item ids, already in the order they should sit.
+ */
+export function territoryLayout(groups: readonly (readonly string[])[], options: TerritoryOptions = {}): Map<string, { x: number; z: number }> {
+    const { ringSpacing = TERRITORY_LAYOUT.RING_SPACING, gapRad = TERRITORY_LAYOUT.GAP_RAD, startAngle = 0 } = options;
+    const positions = new Map<string, { x: number; z: number }>();
+    const filled = groups.filter((g) => g.length > 0);
+    const total = filled.reduce((n, g) => n + g.length, 0);
+    if (total === 0) return positions;
+
+    const usable = Math.PI * 2 - gapRad * filled.length;
+
+    // Sector spans proportional to job count, clamped to a minimum, then renormalized
+    let spans = filled.map((g) => Math.max(TERRITORY_LAYOUT.MIN_SPAN_RAD, (usable * g.length) / total));
+    const spanSum = spans.reduce((a, b) => a + b, 0);
+    spans = spans.map((s) => (s * usable) / spanSum);
+
+    let theta0 = startAngle;
+    filled.forEach((members, gi) => {
+        const span = spans[gi];
+        let placed = 0;
+        let r = TERRITORY_LAYOUT.R_MIN;
+        while (placed < members.length) {
+            const onOuterEdge = r >= TERRITORY_LAYOUT.R_MAX;
+            const capacity = Math.max(1, Math.floor((span * r) / ringSpacing));
+            const ringCount = onOuterEdge
+                ? members.length - placed // overflow safety: everything left goes on the outer arc
+                : Math.min(capacity, members.length - placed);
+
+            for (let k = 0; k < ringCount; k++) {
+                const theta = theta0 + span * ((k + 0.5) / ringCount);
+                positions.set(members[placed + k], { x: r * Math.cos(theta), z: r * Math.sin(theta) });
+            }
+            placed += ringCount;
+            r = Math.min(r + ringSpacing, TERRITORY_LAYOUT.R_MAX);
+        }
+
+        theta0 += span + gapRad;
+    });
+
+    return positions;
+}
+
+export function computeClusterTerritoryLayout(jobs: Job[]): Map<string, { x: number; z: number }> {
     const groups = new Map<FunctionalCluster, Job[]>();
     for (const job of jobs) {
         const cluster = getFunctionalCluster(job.title);
@@ -156,47 +210,17 @@ export function computeClusterTerritoryLayout(jobs: Job[]): Map<string, { x: num
         else groups.set(cluster, [job]);
     }
 
-    const ordered = CLUSTER_ORDER.filter((c) => groups.has(c));
-    const usable = Math.PI * 2 - TERRITORY_LAYOUT.GAP_RAD * ordered.length;
-
-    // Sector spans proportional to job count, clamped to a minimum, then renormalized
-    let spans = ordered.map((c) =>
-        Math.max(TERRITORY_LAYOUT.MIN_SPAN_RAD, (usable * groups.get(c)!.length) / jobs.length)
-    );
-    const spanSum = spans.reduce((a, b) => a + b, 0);
-    spans = spans.map((s) => (s * usable) / spanSum);
-
-    let theta0 = 0;
-    ordered.forEach((cluster, ci) => {
-        const span = spans[ci];
-        const members = [...groups.get(cluster)!].sort((a, b) => {
-            const socA = MAP_TITLE_TO_SOC[a.title] ?? a.title;
-            const socB = MAP_TITLE_TO_SOC[b.title] ?? b.title;
-            return socA === socB ? a.title.localeCompare(b.title) : socA.localeCompare(socB);
-        });
-
-        let placed = 0;
-        let r = TERRITORY_LAYOUT.R_MIN;
-        while (placed < members.length) {
-            const onOuterEdge = r >= TERRITORY_LAYOUT.R_MAX;
-            const capacity = Math.max(1, Math.floor((span * r) / TERRITORY_LAYOUT.RING_SPACING));
-            const ringCount = onOuterEdge
-                ? members.length - placed // overflow safety: everything left goes on the outer arc
-                : Math.min(capacity, members.length - placed);
-
-            for (let k = 0; k < ringCount; k++) {
-                const theta = theta0 + span * ((k + 0.5) / ringCount);
-                const job = members[placed + k];
-                positions.set(job.id, { x: r * Math.cos(theta), z: r * Math.sin(theta) });
-            }
-            placed += ringCount;
-            r = Math.min(r + TERRITORY_LAYOUT.RING_SPACING, TERRITORY_LAYOUT.R_MAX);
-        }
-
-        theta0 += span + TERRITORY_LAYOUT.GAP_RAD;
-    });
-
-    return positions;
+    // Related clusters adjacent (CLUSTER_ORDER); within one, SOC order, so
+    // occupationally similar roles sit next to each other.
+    return territoryLayout(CLUSTER_ORDER.filter((c) => groups.has(c)).map((c) => (
+        [...groups.get(c)!]
+            .sort((a, b) => {
+                const socA = MAP_TITLE_TO_SOC[a.title] ?? a.title;
+                const socB = MAP_TITLE_TO_SOC[b.title] ?? b.title;
+                return socA === socB ? a.title.localeCompare(b.title) : socA.localeCompare(socB);
+            })
+            .map((job) => job.id)
+    )));
 }
 
 // One layout per jobs array instance (store replaces the array on data updates;

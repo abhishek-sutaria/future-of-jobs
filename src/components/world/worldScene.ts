@@ -5,7 +5,7 @@ import { getRoleEntries, type RoleEntry } from '../../utils/roles';
 import { buildWorldLayout, type WorldLayout } from '../../utils/worldLayout';
 import { epLevelAtYear, getVisualHeightForEpEmployment, TERRAIN_CONFIG } from '../../utils/terrainMath';
 import { buildRiskScale, normalizeRisk, riskBandColor, riskColorRGB, RISK_UNSCORED_HEX, RISK_UNSCORED_RGB } from '../../config/theme';
-import { SHADER, YEAR_MAX, YEAR_MIN } from '../../config/constants';
+import { SHADER } from '../../config/constants';
 
 
 export interface ScenePeak {
@@ -89,42 +89,3 @@ export function peakHeightAt(entry: RoleEntry, year: number): number {
 }
 
 export const GROUND_Y = TERRAIN_CONFIG.TERRAIN_OFFSET_Y;
-
-/**
- * Inside a zoomed field, peaks are drawn to that field's own scale: its
- * largest occupation in the slider year is FIELD_PEAK_MAX world units tall and
- * every other peak is linear to it. Only heights change; every number on
- * labels and panels stays the published one. The world view keeps the single
- * national scale (peakHeightAt).
- */
-export const FIELD_PEAK_MAX = 3 * SHADER.HEIGHT_SCALE;
-
-/** The largest EP employment among a field's peaks in `year`. */
-export function fieldMaxEmploymentAt(peaks: readonly ScenePeak[], year: number): number {
-    let max = 0;
-    for (const p of peaks) max = Math.max(max, peakEmploymentAt(p.entry, year));
-    return max;
-}
-
-/** Peak height on the field scale, in world units above the ground. */
-export function fieldPeakHeightAt(entry: RoleEntry, year: number, fieldMax: number): number {
-    const min = SHADER.HEIGHT_CLAMP_MIN * SHADER.HEIGHT_SCALE;
-    if (!(fieldMax > 0)) return min;
-    return min + (peakEmploymentAt(entry, year) / fieldMax) * (FIELD_PEAK_MAX - min);
-}
-
-/** The height a peak is drawn at right now: field scale inside the zoomed field, national scale elsewhere. */
-export function displayedPeakHeight(peak: ScenePeak, year: number, focused: string | null, fieldMax: number): number {
-    return focused && peak.entry.continent === focused
-        ? fieldPeakHeightAt(peak.entry, year, fieldMax)
-        : peakHeightAt(peak.entry, year);
-}
-
-/** Where a block's peaks can reach as the slider moves: each tip at its taller end of 2025 to 2035, on the scale the level draws it. */
-export function peakTips(peaks: readonly ScenePeak[], fieldScale: boolean): [number, number, number][] {
-    const atYear = (p: ScenePeak, year: number, fieldMax: number) =>
-        fieldScale ? fieldPeakHeightAt(p.entry, year, fieldMax) : peakHeightAt(p.entry, year);
-    const fieldMaxStart = fieldMaxEmploymentAt(peaks, YEAR_MIN);
-    const fieldMaxEnd = fieldMaxEmploymentAt(peaks, YEAR_MAX);
-    return peaks.map((p) => [p.x, GROUND_Y + Math.max(atYear(p, YEAR_MIN, fieldMaxStart), atYear(p, YEAR_MAX, fieldMaxEnd)), p.z]);
-}

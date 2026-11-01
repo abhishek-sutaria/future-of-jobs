@@ -14,9 +14,12 @@ import { describe, it, expect } from 'vitest';
 import { PerspectiveCamera, Vector3 } from 'three';
 import { useStore } from '../store';
 import { SCENE } from '../config/constants';
-import { buildWorldScene, fieldMaxEmploymentAt, peakTips, type ScenePeak } from '../components/world/worldScene';
-import { regionFraming, worldFraming, type Framing } from '../components/world/framing';
-import { buildLabelCandidates, labelWeights, peakMarker, sortMarkers, type MarkerItem } from '../components/world/labelCandidates';
+import { buildWorldScene, type ScenePeak } from '../components/world/worldScene';
+import { stageFraming, worldFraming, type Framing } from '../components/world/framing';
+import { buildLabelCandidates, labelWeights, peakMarker, sortMarkers, stageMarkerHeights, stagePeakMarker, type MarkerItem } from '../components/world/labelCandidates';
+import { bakeStage, STAGE_BLEND, STAGE_BLEND_POWER, surfaceHeight } from '../utils/stageBake';
+import { buildStage } from '../utils/stageLayout';
+import { fieldLevel } from '../utils/worldLevel';
 import { REGION_LABEL_CAP } from '../components/world/WorldMarkers';
 import { isHiddenLabelPosition, labelsCollide, layoutLabels, layoutLabelsByWeight, type LabelBand, type LabelCandidate } from '../utils/labelLayout';
 
@@ -32,8 +35,6 @@ interface Viewport {
      */
     kelleyBand: LabelBand;
     fieldBand: LabelBand;
-    /** The free band the camera rig frames an open field into (CameraRig freeBand). */
-    fieldFrame: { top: number; bottom: number };
     /** Chip model fitted to the measured chips (see chipHalf). */
     chip: { lineH: number; extraLineH: number; charW: number; pad: number; capW: number; lines: number };
     cap: number;
@@ -47,7 +48,6 @@ const VIEWPORTS: Viewport[] = [
         fov: SCENE.CAMERA_FOV,
         kelleyBand: { top: 144, bottom: 801 - 644 + 6, blocks: [{ left: 26, right: 623, bottom: 184 }] },
         fieldBand: { top: 144, bottom: 801 - 644 + 6, blocks: [{ left: 26, right: 794, bottom: 226 }] },
-        fieldFrame: { top: 220, bottom: 644 },
         chip: { lineH: 19, extraLineH: 12.5, charW: 6.3, pad: 18, capW: 208, lines: 2 },
         cap: REGION_LABEL_CAP.desktop,
     },
@@ -58,7 +58,6 @@ const VIEWPORTS: Viewport[] = [
         fov: SCENE.CAMERA_PORTRAIT_FOV,
         kelleyBand: { top: 160, bottom: 844 - 642 + 6, blocks: [{ left: 10, right: 380, bottom: 239 }] },
         fieldBand: { top: 160, bottom: 844 - 642 + 6, blocks: [{ left: 10, right: 380, bottom: 312 }] },
-        fieldFrame: { top: 306, bottom: 642 },
         chip: { lineH: 16, extraLineH: 11.25, charW: 5.7, pad: 14, capW: 152, lines: 3 },
         cap: REGION_LABEL_CAP.mobile,
     },
@@ -87,13 +86,6 @@ function cameraFor(vp: Viewport, framing: Framing) {
     return cam;
 }
 
-/** The CameraRig's zoomed framing for a field, in the band it measures. */
-function fieldFraming(vp: Viewport, code: string): Framing {
-    const { top, bottom } = vp.fieldFrame;
-    const tips = peakTips(scene.peaksByContinent.get(code)!, true);
-    return regionFraming(scene.layout.regionByCode.get(code)!.rect, vp.fov, vp.width / vp.height, { top: top / vp.height, bottom: bottom / vp.height }, tips);
-}
-
 interface Outcome {
     title: string;
     size: number;
@@ -104,10 +96,18 @@ interface Outcome {
     blockers: string[];
 }
 
-function runPass(vp: Viewport, band: LabelBand, framing: Framing, peaks: ScenePeak[], focused: string | null): Outcome[] {
-    const year = 2025;
-    const fieldMax = focused ? fieldMaxEmploymentAt(scene.peaksByContinent.get(focused) ?? [], year) : 0;
-    const items: MarkerItem[] = sortMarkers(peaks.map((p) => peakMarker(p, year, focused, fieldMax)), () => false);
+/** World view, or a field's stage: each label on the baked surface, as WorldMarkers stands it. */
+function markersFor(peaks: ScenePeak[], field: string | null): MarkerItem[] {
+    if (!field) return peaks.map((p) => peakMarker(p, 2025));
+    const stage = buildStage(fieldLevel(field), scene.peaksByContinent)!;
+    const bake = bakeStage(stage, 128, STAGE_BLEND, STAGE_BLEND_POWER);
+    const items = peaks.map((p) => stagePeakMarker(p, stage.byKey.get(p.entry.key)!));
+    stageMarkerHeights(items, (x, z) => surfaceHeight(bake, x, z, 0));
+    return items;
+}
+
+function runPass(vp: Viewport, band: LabelBand, framing: Framing, peaks: ScenePeak[], field: string | null): Outcome[] {
+    const items = sortMarkers(markersFor(peaks, field), () => false);
     const half = new Map(items.map((m) => [m.id, chipHalf((m as Extract<MarkerItem, { kind: 'peak' }>).peak.entry.title, vp.chip)]));
     const camera = cameraFor(vp, framing);
     const size = { width: vp.width, height: vp.height };
@@ -162,12 +162,12 @@ describe.each(VIEWPORTS)('peak labels at $name', (vp) => {
         for (const t of PROFESSOR_LIST) expect(outcomes.find((o) => o.title === t), t).toBeTruthy();
     });
 
-    it('every zoomed field: its labelled peaks get a place unless a bigger job is in the way', () => {
+    it('every field on its stage: its labelled jobs get a place unless a bigger job is in the way', () => {
         for (const region of scene.layout.regions) {
             const peaks = [...(scene.peaksByContinent.get(region.code) ?? [])]
                 .sort((a, b) => (b.entry.ep2025 ?? 0) - (a.entry.ep2025 ?? 0))
                 .slice(0, vp.cap);
-            const outcomes = runPass(vp, vp.fieldBand, fieldFraming(vp, region.code), peaks, region.code);
+            const outcomes = runPass(vp, vp.fieldBand, stageFraming(vp.fov), peaks, region.code);
             expectNoHeightCulling(outcomes, `field ${region.code}`);
             // The field's biggest occupation always keeps its label.
             expect(outcomes[0].shown, `field ${region.code}: ${outcomes[0].title}`).toBe(true);

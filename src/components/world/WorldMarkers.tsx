@@ -10,18 +10,21 @@ import { CONTINENT_DISPLAY_NAMES } from '../../config/continents';
 import { INDEX_CONTINENT_BY_CODE } from '../../utils/occupationIndex';
 import { familyOf } from '../../config/socFamilies';
 import { regionAt } from '../../utils/worldLayout';
-import { clickAction, isOnStage, type StageHit, type WorldLevel } from '../../utils/worldLevel';
+import { clickAction, isOnStage, levelKind, type StageHit, type WorldLevel } from '../../utils/worldLevel';
+import { rayToSurface, surfaceHeight } from '../../utils/stageBake';
+import { stageFieldAt, stageKey, type Stage } from '../../utils/stageLayout';
 import { formatGrowth, formatWorkersShort, growthColor } from '../../utils/roleFormat';
 import { socPartnerTitles } from '../../utils/onet';
 import { HIDDEN_LABEL_POSITION, isHiddenLabelPosition, layoutLabelsByWeight, type LabelBand, type LabelCandidate } from '../../utils/labelLayout';
 import type { FamilyLayout } from '../../utils/worldLayout';
-import { displayedPeakHeight, fieldMaxEmploymentAt, GROUND_Y, peakEmploymentAt, type ScenePeak, type WorldScene } from './worldScene';
+import { GROUND_Y, peakEmploymentAt, peakHeightAt, type ScenePeak, type WorldScene } from './worldScene';
 import { LABEL_FADE_MS, type LabelDecision } from '../../utils/labelLevel';
-import { buildLabelCandidates, familyMarker, focusedRegionMarker, labelWeights, markerOnStage, peakMarker, regionMarker, sortMarkers, type MarkerItem } from './labelCandidates';
+import { buildLabelCandidates, familyMarker, labelWeights, markerOnStage, peakMarker, regionMarker, sortMarkers, stageMarkerHeights, stagePeakMarker, stageRangeMarker, type MarkerItem } from './labelCandidates';
 import { prefersReducedMotion } from './worldCamera';
 import { worldPointer } from './worldPointer';
+import { worldStage } from './worldStage';
 
-/** Labelled peaks in an open field: the largest by EP 2025 employment. */
+/** Job labels in an open field: the largest by EP 2025 employment. Pins mark every job; any other label comes on hover. */
 export const REGION_LABEL_CAP = { mobile: 12, desktop: 25 } as const;
 const PEAK_HIT_RADIUS_PX = 28;
 /** A family name's tap target reaches at least this far above and below its centre (44px in all). */
@@ -39,12 +42,15 @@ const groundHit = new Vector3();
  * Which set shows depends on the level, and at the world on the zoom (labelsAt,
  * utils/labelLevel). World, broad: the five BLS job families only, as buttons
  * that open the family. World, zoomed in: the 22 field names (short names; the
- * full BLS title is in the hover card). A family: its own field names, and a
- * peak's name on hover. A field: its own name and labels for its largest
- * occupations, capped at REGION_LABEL_CAP; any other peak gets its label on
- * hover, or on a first tap on touch screens. With the Kelley filter on, the job
- * labels are the Kelley roles on stage, as the map has always shown them.
+ * full BLS title is in the hover card). A family: its field names over their
+ * ranges, and a peak's name on hover. A field: labels for its largest
+ * occupations, capped at REGION_LABEL_CAP, in the live view's style; any other
+ * job gets its label on hover, or on a first tap on touch screens. With the
+ * Kelley filter on, the job labels are the Kelley roles on stage, as the map has
+ * always shown them.
  *
+ * A stage's labels stand on the baked surface and belong to the stage on the
+ * mesh, which trails the level by the moment the old hills take to flatten.
  * Nothing off stage is ever labelled, hovered or hit: the rules for what a click
  * does are in clickAction (utils/worldLevel).
  *
@@ -77,15 +83,18 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
     const focusedFamily = useWorldStore((s) => s.focusedFamily);
     const kelleyOnly = useWorldStore((s) => s.kelleyOnly);
     const labels = useWorldStore((s) => s.labels);
+    const drawnStage = useWorldStore((s) => s.drawnStage);
     // The level the labels on screen belong to: it changes with them, so the
     // old set fades out whole rather than losing its off-stage names at once.
-    const target = useMemo<{ labels: LabelDecision } & WorldLevel>(
-        () => ({ labels, focusedFamily, focusedContinent }),
-        [labels, focusedFamily, focusedContinent],
+    const target = useMemo<{ labels: LabelDecision; drawnStage: Stage | null } & WorldLevel>(
+        () => ({ labels, drawnStage, focusedFamily, focusedContinent }),
+        [labels, drawnStage, focusedFamily, focusedContinent],
     );
     const { shown, fading } = useLabelCrossfade(target);
     const focused = shown.focusedContinent;
     const family = shown.focusedFamily;
+    // The level's stage once it is on the mesh. Until then, nothing to label.
+    const stage = shown.drawnStage?.key === stageKey(shown) ? shown.drawnStage : null;
     const isMobile = useIsMobile();
 
     // Hover and tap belong to the view they happened in: zooming, changing
@@ -112,6 +121,7 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
     // World height each peak's leader line ends at this frame (lowered under tall chrome).
     const tipHeights = useRef<Map<string, number>>(new Map());
     const itemsRef = useRef<MarkerItem[]>([]);
+    const stageRef = useRef<Stage | null>(null);
     // Screen-space peak tips for every tappable peak, labelled or not.
     const peakAnchors = useRef<Map<string, { x: number; y: number }>>(new Map());
     const tappablePeaksRef = useRef<ScenePeak[]>([]);
@@ -192,15 +202,14 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
     // Peaks that can be hovered or tapped right now. In a family every peak
     // can name itself, though none carries a label of its own.
     const tappablePeaks = useMemo<ScenePeak[]>(() => {
-        if (focused) return scene.peaksByContinent.get(focused) ?? [];
-        if (family != null) return scene.peaks.filter((p) => familyOf(p.entry.continent).id === family);
-        if (shown.labels.jobs && kelleyOnly) return scene.peaks.filter((p) => p.entry.kind === 'kelley');
+        if (stage) return stage.jobs.map((j) => scene.peakByKey.get(j.key)!);
+        if (levelKind(shown) === 'world' && shown.labels.jobs && kelleyOnly) return scene.peaks.filter((p) => p.entry.kind === 'kelley');
         return [];
-    }, [scene, focused, family, kelleyOnly, shown.labels.jobs]);
+    }, [scene, stage, shown, kelleyOnly]);
 
     // Which peaks carry a label without being hovered.
     const labelledPeakKeys = useMemo<Set<string>>(() => {
-        if (focused && !kelleyOnly) {
+        if (stage?.kind === 'field' && !kelleyOnly) {
             const cap = isMobile ? REGION_LABEL_CAP.mobile : REGION_LABEL_CAP.desktop;
             return new Set(
                 [...tappablePeaks]
@@ -211,7 +220,7 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
         }
         if (kelleyOnly) return new Set(tappablePeaks.filter((p) => p.entry.kind === 'kelley').map((p) => p.entry.key));
         return new Set();
-    }, [focused, kelleyOnly, isMobile, tappablePeaks]);
+    }, [stage, kelleyOnly, isMobile, tappablePeaks]);
 
     const items = useMemo<MarkerItem[]>(() => {
         if (mapView !== 'globe') return [];
@@ -219,21 +228,22 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
         const extra = new Set<string>();
         if (hoveredId && !hoveredId.startsWith('region:')) extra.add(hoveredId);
         if (tappedKey) extra.add(tappedKey);
-        const fieldMax = focused ? fieldMaxEmploymentAt(scene.peaksByContinent.get(focused) ?? [], year) : 0;
         for (const p of tappablePeaks) {
             const key = p.entry.key;
             if (!labelledPeakKeys.has(key) && !extra.has(key)) continue;
-            out.push(peakMarker(p, year, focused, fieldMax));
+            out.push(stage ? stagePeakMarker(p, stage.byKey.get(key)!) : peakMarker(p, year));
         }
-        if (shown.labels.fields) {
-            for (const r of scene.layout.regions) {
-                if (isOnStage(shown, r.code)) out.push(r.code === focused ? focusedRegionMarker(r) : regionMarker(r.code, r.cx, r.cz));
-            }
+        if (stage) {
+            if (stage.kind === 'family') for (const r of stage.ranges) out.push(stageRangeMarker(r));
         }
-        if (shown.labels.families) for (const f of scene.layout.families) out.push(familyMarker(f));
+        // The world's own labels wait until the stage has fully gone.
+        else if (levelKind(shown) === 'world' && !shown.drawnStage) {
+            if (shown.labels.fields) for (const r of scene.layout.regions) out.push(regionMarker(r.code, r.cx, r.cz));
+            if (shown.labels.families) for (const f of scene.layout.families) out.push(familyMarker(f));
+        }
         // Earlier items win collisions.
-        return sortMarkers(out, (m) => m.id === hoveredId || m.id === tappedKey, !!focused || kelleyOnly, focused);
-    }, [mapView, tappablePeaks, labelledPeakKeys, hoveredId, tappedKey, shown, scene, year, focused, kelleyOnly]);
+        return sortMarkers(out, (m) => m.id === hoveredId || m.id === tappedKey, kelleyOnly);
+    }, [mapView, tappablePeaks, labelledPeakKeys, hoveredId, tappedKey, shown, stage, scene, year, kelleyOnly]);
 
     const regionWeights = useRef<Map<string, number>>(new Map());
 
@@ -244,7 +254,8 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
         tappablePeaksRef.current = tappablePeaks;
         tappedKeyRef.current = tappedKey;
         labelledKeysRef.current = labelledPeakKeys;
-    }, [items, tappablePeaks, tappedKey, labelledPeakKeys, viewKey, hoveredId]);
+        stageRef.current = stage;
+    }, [items, tappablePeaks, tappedKey, labelledPeakKeys, viewKey, hoveredId, stage]);
 
     // Canvas-level input: hover, tap and click.
     useEffect(() => {
@@ -262,8 +273,6 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
             const level = useWorldStore.getState();
             for (const item of itemsRef.current) {
                 if (!markerOnStage(item, level)) continue;
-                // The name of the field you are in is not a way in: peaks under it stay tappable.
-                if (item.kind === 'region' && item.code === level.focusedContinent) continue;
                 const pos = placements.current.get(item.id);
                 const half = labelHalfSize.current.get(item.id);
                 if (!pos || isHiddenLabelPosition(pos) || !half) continue;
@@ -296,6 +305,23 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
             return raycaster.ray.intersectPlane(groundPlane, groundHit) ? { x: groundHit.x, z: groundHit.z } : null;
         };
 
+        // On a stage the point under the pointer is on the hills, not the plane
+        // behind them: a tall hill stands well in front of its own foot.
+        const hitStage = (x: number, y: number, w: number, h: number, stage: Stage): string | null => {
+            const bake = worldStage.bake;
+            if (!bake) return null;
+            ndc.set((x / w) * 2 - 1, -(y / h) * 2 + 1);
+            raycaster.setFromCamera(ndc, getThree().camera);
+            const { origin, direction } = raycaster.ray;
+            const hit = rayToSurface(
+                [origin.x, origin.y, origin.z],
+                [direction.x, direction.y, direction.z],
+                GROUND_Y,
+                (px, pz) => surfaceHeight(bake, px, pz, worldStage.yearMix) * worldStage.rise,
+            );
+            return hit ? stageFieldAt(stage, hit.x, hit.z) : null;
+        };
+
         const onDown = (e: PointerEvent) => {
             if (e.button !== 0) return;
             downX = e.clientX;
@@ -310,7 +336,8 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
             const world = useWorldStore.getState();
             const label = hitLabel(x, y);
             const peak = label ? null : hitPeak(x, y);
-            const g = label || peak ? null : hitGround(x, y, w, h);
+            const stage = stageRef.current;
+            const g = label || peak || stage ? null : hitGround(x, y, w, h);
             const hit: StageHit = {
                 label: label?.kind === 'family'
                     ? { kind: 'family', id: label.family.family.id }
@@ -320,7 +347,7 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
                             ? { kind: 'peak', key: label.peak.entry.key, code: label.peak.entry.continent }
                             : null,
                 peak: peak && { key: peak.entry.key, code: peak.entry.continent },
-                ground: g ? regionAt(scene.layout.regions, g.x, g.z)?.code ?? null : null,
+                ground: stage && !label && !peak ? hitStage(x, y, w, h, stage) : g ? regionAt(scene.layout.regions, g.x, g.z)?.code ?? null : null,
             };
             const action = clickAction(world, hit, {
                 fieldNames: world.labels.fields,
@@ -352,7 +379,8 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
             const hoverPeak = label?.kind === 'peak' ? label.peak : peak;
             const world = useWorldStore.getState();
             const focusedNow = world.focusedContinent;
-            const under = g ? regionAt(scene.layout.regions, g.x, g.z)?.code ?? null : null;
+            const stage = stageRef.current;
+            const under = stage ? hitStage(x, y, w, h, stage) : levelKind(world) === 'world' && g ? regionAt(scene.layout.regions, g.x, g.z)?.code ?? null : null;
             const onStage = under && isOnStage(world, under) ? under : null;
             // At the broad view a click opens the whole family, so the whole family lights.
             const hoverFamily = label?.kind === 'family'
@@ -367,9 +395,10 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
                 : null;
             const id = hoverFamily != null ? `family:${hoverFamily}` : hoverPeak ? hoverPeak.entry.key : region && !focusedNow ? `region:${region}` : null;
             setHoveredId(id);
-            worldPointer.hoverPeakContinent = hoverPeak ? hoverPeak.entry.continent : null;
-            worldPointer.hoverPeakIndex = hoverPeak ? hoverPeak.index : -1;
-            worldPointer.hoverRegion = region && region !== focusedNow ? region : null;
+            // The glow on a treemap peak has nothing to light on a stage.
+            worldPointer.hoverPeakContinent = hoverPeak && !stage ? hoverPeak.entry.continent : null;
+            worldPointer.hoverPeakIndex = hoverPeak && !stage ? hoverPeak.index : -1;
+            worldPointer.hoverRegion = region && region !== focusedNow && !stage ? region : null;
             worldPointer.hoverFamily = label?.kind === 'family' ? null : hoverFamily;
             el.style.cursor = hoverFamily != null || hoverPeak || (region && region !== focusedNow) ? 'pointer' : '';
         };
@@ -411,10 +440,16 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
         const list = candidates.current;
         list.length = 0;
         const yearNow = useStore.getState().year;
-        const focusNow = useWorldStore.getState().focusedContinent;
-        const fieldMaxNow = focusNow ? fieldMaxEmploymentAt(scene.peaksByContinent.get(focusNow) ?? [], yearNow) : 0;
+        const stageNow = stageRef.current;
+        const bake = worldStage.bake;
+        // What a pin stands on right now: the baked surface as far as it has risen.
+        const surface = (x: number, z: number) => (bake ? surfaceHeight(bake, x, z, worldStage.yearMix) * worldStage.rise : 0);
+        if (stageNow) stageMarkerHeights(itemsRef.current, surface);
         for (const p of tappablePeaksRef.current) {
-            projected.set(p.x, GROUND_Y + displayedPeakHeight(p, yearNow, focusNow, fieldMaxNow), p.z).project(camera);
+            const job = stageNow?.byKey.get(p.entry.key);
+            if (job) projected.set(job.x, GROUND_Y + surface(job.x, job.z), job.z);
+            else projected.set(p.x, GROUND_Y + peakHeightAt(p.entry, yearNow), p.z);
+            projected.project(camera);
             if (projected.z < -1 || projected.z > 1) {
                 peakAnchors.current.delete(p.entry.key);
                 continue;
@@ -427,6 +462,7 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
         buildLabelCandidates(itemsRef.current, camera, size, safeBand.current, labelHalfSize.current, list, tipHeights.current);
         // Region labels compete by size: when two collide, the field with fewer
         // workers (EP 2025) is the one hidden. Hovered/tapped labels never yield.
+        // Job labels go through the live declutter, largest first.
         layoutLabelsByWeight(list, regionWeights.current, size.width, size.height, safeBand.current, placements.current, labelOffsets.current, 2, 4);
 
         // A family name panned off screen is parked, and must not take focus there.

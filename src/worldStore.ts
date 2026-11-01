@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { useStore } from './store';
 import { BROAD_LABELS, FIELD_LABELS, labelsAt, type LabelDecision } from './utils/labelLevel';
 import { loadContinentFile, type ContinentFile } from './utils/occupationIndex';
+import type { Stage } from './utils/stageLayout';
 import type { RoleEntry } from './utils/roles';
 import { familyLevel, fieldLevel, levelKind, levelUp, WORLD_LEVEL, type WorldLevel } from './utils/worldLevel';
 
@@ -27,6 +28,11 @@ interface WorldState extends WorldLevel {
     resetLevel: () => void;
     /** The next flight to the world stops at the zoom that shows job labels, not the broad view. */
     kelleyZoom: boolean;
+    /**
+     * The stage on the mesh right now. Trails the level: the old one flattens
+     * first, and labels and input follow what is drawn. Written by world/StageTerrain.
+     */
+    drawnStage: Stage | null;
 
     /** Which labels the level, and at the world the camera's zoom, call for. Kept current by world/CameraRig. */
     labels: LabelDecision;
@@ -75,6 +81,7 @@ export const useWorldStore = create<WorldState>((set, get) => ({
     },
     resetLevel: () => set({ ...WORLD_LEVEL, kelleyZoom: false, labels: BROAD_LABELS }),
     kelleyZoom: false,
+    drawnStage: null,
 
     labels: BROAD_LABELS,
 

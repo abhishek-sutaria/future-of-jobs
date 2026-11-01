@@ -9,7 +9,6 @@ import { RISK_BAND_COLORS, RISK_UNSCORED_HEX } from '../config/theme';
 export const Legend: React.FC = () => {
     return (
         <div
-            data-legend
             className="absolute bottom-6 right-6 flex flex-col justify-center gap-2 pointer-events-none select-none px-3 py-2 md:px-5 md:py-4 rounded-2xl border border-cyan-400/25 bg-gray-900/60 backdrop-blur-xl max-w-[160px] md:max-w-[210px]"
             style={{ zIndex: Z.base }}
             role="complementary"

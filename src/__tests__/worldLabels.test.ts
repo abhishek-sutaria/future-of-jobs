@@ -11,12 +11,14 @@ import { PerspectiveCamera, Vector3 } from 'three';
 import { useStore } from '../store';
 import { SCENE } from '../config/constants';
 import { CONTINENT_DISPLAY_NAMES } from '../config/continents';
-import { buildWorldScene, peakTips } from '../components/world/worldScene';
-import { atDistance, familyFraming, framingDistance, worldFraming, type Framing } from '../components/world/framing';
-import { buildLabelCandidates, familyMarker, focusedRegionMarker, labelWeights, peakMarker, regionMarker, sortMarkers, type MarkerItem } from '../components/world/labelCandidates';
+import { buildWorldScene } from '../components/world/worldScene';
+import { atDistance, framingDistance, stageFraming, worldFraming, type Framing } from '../components/world/framing';
+import { buildLabelCandidates, familyMarker, labelWeights, regionMarker, sortMarkers, stageMarkerHeights, stageRangeMarker, type MarkerItem } from '../components/world/labelCandidates';
 import { isHiddenLabelPosition, labelsCollide, layoutLabelsByWeight, type LabelBand, type LabelCandidate } from '../utils/labelLayout';
 import { BROAD_LABELS, decideLabels, FIELD_ARRIVAL_ZOOM } from '../utils/labelLevel';
-import chromeBands from './fixtures/chromeBands.json';
+import { bakeStage, STAGE_BLEND, STAGE_BLEND_POWER, surfaceHeight } from '../utils/stageBake';
+import { buildStage } from '../utils/stageLayout';
+import { familyLevel } from '../utils/worldLevel';
 
 type Sizes = Record<string, [number, number]>;
 
@@ -41,16 +43,18 @@ const PHONE_SIZES: Sizes = {
 };
 
 // `band` is the chrome at the broad view; `zoomedBand` adds "Reset view", which wraps the header on a phone at the world's zoom.
-const VIEWPORTS: { name: string; width: number; height: number; fov: number; band: LabelBand; zoomedBand: LabelBand; sizes: Sizes }[] = [
+const VIEWPORTS: { name: string; width: number; height: number; fov: number; band: LabelBand; zoomedBand: LabelBand; stageBand: LabelBand; sizes: Sizes }[] = [
     {
         name: 'desktop 1470x801', width: 1470, height: 801, fov: SCENE.CAMERA_FOV, sizes: DESKTOP_SIZES,
         band: { top: 144, bottom: 801 - 644 + 6, blocks: [{ left: 26, right: 289, bottom: 184 }] },
         zoomedBand: { top: 144, bottom: 801 - 644 + 6, blocks: [{ left: 26, right: 289, bottom: 184 }] },
+        stageBand: { top: 144, bottom: 801 - 644 + 6, blocks: [{ left: 26, right: 794, bottom: 226 }] },
     },
     {
         name: 'phone 390x844', width: 390, height: 844, fov: SCENE.CAMERA_PORTRAIT_FOV, sizes: PHONE_SIZES,
         band: { top: 160, bottom: 844 - 654 + 6, blocks: [{ left: 10, right: 380, bottom: 200 }] },
         zoomedBand: { top: 210, bottom: 844 - 654 + 6, blocks: [{ left: 10, right: 380, bottom: 250 }] },
+        stageBand: { top: 160, bottom: 844 - 642 + 6, blocks: [{ left: 10, right: 380, bottom: 312 }] },
     },
 ];
 
@@ -135,19 +139,16 @@ describe.each(VIEWPORTS)('labels at $name', (vp) => {
     });
 });
 
-// Inside a family the labels come from the level, not the zoom, so all of its
-// field names must fit however far out the block frames.
-describe.each(VIEWPORTS)('inside a family at $name', (vp) => {
-    const aspect = vp.width / vp.height;
-    const measured = (chromeBands as Record<string, Record<string, { top: number; bottom: number }>>)[`${vp.width}x${vp.height}`];
-
-    it.each(scene.layout.families.map((f) => [f.family.shortName, f] as const))('%s shows every one of its field names', (_name, f) => {
-        const { top, bottom } = measured[`family:${f.family.id}`];
-        const tips = peakTips(f.codes.flatMap((code) => scene.peaksByContinent.get(code) ?? []), false);
-        const framing = familyFraming(f.rect, vp.fov, aspect, { top: top / vp.height, bottom: bottom / vp.height }, tips);
-        const fields = scene.layout.regions.filter((r) => r.family === f.family.id).map((r) => regionMarker(r.code, r.cx, r.cz));
-        const layout = layOut(fields, framing, vp, { top: top + 6, bottom: vp.height - bottom + 6 });
-        for (const m of fields) expect(layout.shown(m.id), m.id).toBe(true);
+// On a family's stage every field's name must stand over its range, at the live
+// camera, whatever the job count.
+describe.each(VIEWPORTS)('field names on a family stage at $name', (vp) => {
+    it.each(scene.layout.families.map((f) => [f.family.shortName, f] as const))('%s shows every one of its field names, none overlapping', (_name, f) => {
+        const stage = buildStage(familyLevel(f.family.id), scene.peaksByContinent)!;
+        const bake = bakeStage(stage, 128, STAGE_BLEND, STAGE_BLEND_POWER);
+        const names = stage.ranges.map(stageRangeMarker);
+        stageMarkerHeights(names, (x, z) => surfaceHeight(bake, x, z, 0));
+        const layout = layOut(names, stageFraming(vp.fov), vp, vp.stageBand);
+        for (const m of names) expect(layout.shown(m.id), m.id).toBe(true);
         expectNoOverlap(layout);
     });
 });
@@ -166,23 +167,5 @@ describe.each([[1920, 1080], [1470, 801], [1280, 720], [1024, 768], [768, 1024],
 
     it('the whole-world framing is the broad view', () => {
         expect(landsOnFields(home)).toBe(false);
-    });
-});
-
-describe('inside an open field', () => {
-    const region = scene.layout.regions.find((r) => r.code === '43')!;
-    const own = focusedRegionMarker(region);
-
-    it('puts its own name inside its block, in front of the middle where the peaks crowd', () => {
-        expect(own.x).toBe(region.cx);
-        expect(own.z).toBeGreaterThan(region.cz);
-        expect(own.z).toBeLessThan(region.rect.z1);
-    });
-
-    it('lets job labels win over its own name', () => {
-        const peak = scene.peaksByContinent.get('43')![0];
-        const job = peakMarker(peak, 2025, '43', 1);
-        const order = sortMarkers([own, job], () => false, true, '43');
-        expect(order.map((m) => m.id)).toEqual([job.id, own.id]);
     });
 });

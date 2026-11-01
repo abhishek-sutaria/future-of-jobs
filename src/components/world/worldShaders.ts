@@ -4,13 +4,6 @@ import { SHADER_VISUAL, SHADER_COLORS, SCENE } from '../../config/constants';
 export const MAX_REGIONS = 22;
 /** BLS job family blocks uploaded to the ground shader (config/socFamilies.ts). */
 export const MAX_FAMILIES = 5;
-/**
- * How far past a block the ground takes to fade out, in world units. In step
- * with the block's size, so it is about the same few pixels on screen for a
- * small field framed close as for a family framed far away.
- */
-export const stageSoftEdge = (width: number, depth: number): number => Math.min(1.2, Math.max(0.15, 0.04 * Math.max(width, depth)));
-
 const f = (n: number) => n.toFixed(4);
 
 // Shared terrain styling, so the peaks and the ground read as the one surface
@@ -33,11 +26,9 @@ export const peakVertexShader = /* glsl */ `
   attribute vec3 aColor;    // Job Security colour, or the neutral "not scored yet" slate
   attribute float aEmph;    // 1 = full colour, lower = dimmed by the Kelley filter
   attribute float aIndex;   // instance index within this region, for the hover glow
-  attribute float aFieldH;  // height on this field's own scale (used while the field is zoomed)
 
   uniform float uGroundY;
-  uniform float uRegionLift; // 1 = true height; lower = flattened while it fades off stage
-  uniform float uFieldMix;   // 0 = national scale, 1 = this field's own scale
+  uniform float uRegionLift; // 1 = true height; lower = flattened while the world fades out
   uniform float uHover;     // hovered instance index, or -1
 
   varying vec3 vColor;
@@ -47,7 +38,7 @@ export const peakVertexShader = /* glsl */ `
   varying float vHover;
 
   void main() {
-    float h = mix(aPeak.w, aFieldH, uFieldMix) * uRegionLift;
+    float h = aPeak.w * uRegionLift;
     vec3 world = vec3(aPeak.x + position.x * aPeak.z, uGroundY + position.y * h, aPeak.y + position.z * aPeak.z);
     vWorld = world;
     vElev = position.y * h;
@@ -60,7 +51,7 @@ export const peakVertexShader = /* glsl */ `
 
 export const peakFragmentShader = /* glsl */ `
   ${SHARED}
-  uniform float uStage; // 1 = on stage; fades to 0 as the region leaves it
+  uniform float uFade; // 1 = the world is showing; 0 = gone
   varying vec3 vColor;
   varying vec3 vWorld;
   varying float vElev;
@@ -92,7 +83,7 @@ export const peakFragmentShader = /* glsl */ `
     color = mix(TERRAIN_BASE * 0.85, color, vEmph);
     color += vec3(0.16, 0.22, 0.28) * vHover;
 
-    gl_FragColor = vec4(color, uStage);
+    gl_FragColor = vec4(color, uFade);
   }
 `;
 
@@ -111,41 +102,19 @@ export const groundFragmentShader = /* glsl */ `
   uniform vec4 uFamilies[${MAX_FAMILIES}]; // the five family blocks, x0, z0, x1, z1
   uniform float uHoverRegion;              // index or -1
   uniform float uHoverFamily;              // family index or -1
-  uniform float uFocusRegion;              // index or -1
-  uniform vec4 uFocusRect;                 // the focused region's rectangle (far away when none)
   uniform vec4 uBounds;                    // world rectangle the regions fill
-  uniform vec4 uStageRect;                 // the block on stage (the whole plane at the world)
-  uniform vec4 uStagePrevRect;             // the block it replaced
-  uniform float uStageMix;                 // 0 = the previous block, 1 = the current one
-  uniform vec2 uStageSoft;                 // soft edge of the previous block, then the current one
+  uniform float uFade;                     // 1 = the world is showing; 0 = gone
   uniform vec2 uMouse;
   varying vec3 vWorld;
 
-  // 1 inside the rectangle, falling softly to 0 just past its edge. The rectangle itself keeps its full area.
-  float stageMask(vec4 r, float soft, vec2 p) {
-    vec2 past = max(vec2(0.0), max(r.xy - p, p - r.zw));
-    return 1.0 - smoothstep(0.0, soft, length(past));
-  }
-
   void main() {
     vec2 p = vWorld.xz;
-    // The canvas is transparent, so alpha 0 is the page's own background: past
-    // the stage nothing of the ground is left, not its grid and not its borders.
-    float stage = mix(stageMask(uStagePrevRect, uStageSoft.x, p), stageMask(uStageRect, uStageSoft.y, p), uStageMix);
-    if (stage <= 0.0) discard;
-
     vec3 color = TERRAIN_BASE;
     color = mix(color, GRID_COLOR, gridLine(p) * 0.3);
 
     float region = -1.0;
     float edge = 1e6;
-    // Zoomed in, most of the screen is the focused region: test it first.
-    if (p.x >= uFocusRect.x && p.x <= uFocusRect.z && p.y >= uFocusRect.y && p.y <= uFocusRect.w) {
-      region = uFocusRegion;
-      edge = min(min(p.x - uFocusRect.x, uFocusRect.z - p.x), min(p.y - uFocusRect.y, uFocusRect.w - p.y));
-    }
     for (int i = 0; i < ${MAX_REGIONS}; i++) {
-      if (region >= 0.0) break;
       vec4 r = uRegions[i];
       if (p.x >= r.x && p.x <= r.z && p.y >= r.y && p.y <= r.w) {
         region = float(i);
@@ -159,12 +128,11 @@ export const groundFragmentShader = /* glsl */ `
       float lift = mod(region, 2.0) < 0.5 ? 0.018 : 0.035;
       color += vec3(lift * 0.8, lift, lift * 1.4);
       float isHover = abs(region - uHoverRegion) < 0.5 ? 1.0 : 0.0;
-      float isFocus = abs(region - uFocusRegion) < 0.5 ? 1.0 : 0.0;
       color += vec3(0.03, 0.06, 0.09) * isHover;
       // Border drawn on the boundary itself, so every region keeps its full area.
       float border = 1.0 - smoothstep(0.04, 0.16, edge);
-      vec3 borderColor = mix(vec3(0.16, 0.3, 0.42), vec3(0.35, 0.75, 0.9), max(isHover, isFocus));
-      color = mix(color, borderColor, border * (0.55 + 0.45 * max(isHover, isFocus)));
+      vec3 borderColor = mix(vec3(0.16, 0.3, 0.42), vec3(0.35, 0.75, 0.9), isHover);
+      color = mix(color, borderColor, border * (0.55 + 0.45 * isHover));
 
       // Family blocks: a wider, lighter line on the block boundary, also drawn
       // inside the regions so no region loses area to a gap.
@@ -186,6 +154,6 @@ export const groundFragmentShader = /* glsl */ `
     // Fade out past the edge of the regions, as the old disc faded at its rim.
     vec2 outside = max(vec2(0.0), max(uBounds.xy - p, p - uBounds.zw));
     float alpha = 1.0 - smoothstep(0.5, 5.0, length(outside));
-    gl_FragColor = vec4(color, alpha * stage);
+    gl_FragColor = vec4(color, alpha * uFade);
   }
 `;
