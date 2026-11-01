@@ -28,9 +28,8 @@ export const StagePins: React.FC = () => {
     const dots = useRef<InstancedMesh>(null);
 
     const jobs = useMemo(() => {
-        if (!stage) return [];
-        if (kelleyOnly) return stage.jobs.filter((j) => j.kelley);
-        return stage.kind === 'field' ? stage.jobs : [];
+        if (stage?.kind !== 'field') return [];
+        return kelleyOnly ? stage.jobs.filter((j) => j.kelley) : stage.jobs;
     }, [stage, kelleyOnly]);
 
     const ringGeometry = useMemo(() => new RingGeometry(SCENE.ANCHOR.RING_INNER, SCENE.ANCHOR.RING_OUTER, SCENE.ANCHOR.RING_SEGMENTS), []);

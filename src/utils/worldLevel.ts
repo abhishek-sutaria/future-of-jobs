@@ -157,13 +157,11 @@ export function clickAction(l: WorldLevel, hit: StageHit, ctx: ClickContext): Cl
     if (label?.kind === 'family') return kind === 'world' ? { kind: 'family', id: label.id } : null;
     if (label?.kind === 'field') return isOnStage(l, label.code) ? { kind: 'field', code: label.code } : null;
     if (label?.kind === 'peak' && !isOnStage(l, label.code)) return null;
-    // A hovered peak has a label too, but it is only naming itself: in a family
-    // that is a click on the field, and only a Kelley label opens its job.
-    if (label?.kind === 'peak' && (kind !== 'family' || ctx.labelledKeys.has(label.key))) return { kind: 'role', key: label.key };
-    if (label?.kind === 'peak') return { kind: 'field', code: label.code };
+    // Jobs only open from inside a field. In a family everything leads to a field.
+    if (label?.kind === 'peak') return kind === 'family' ? { kind: 'field', code: label.code } : { kind: 'role', key: label.key };
 
     if (hit.peak && isOnStage(l, hit.peak.code)) {
-        // A family's unlabelled peaks only name themselves: a click there is a click on the field.
+        // A click on a family's hills is a click on the field.
         if (kind === 'family') return { kind: 'field', code: hit.peak.code };
         const { key } = hit.peak;
         return ctx.touch && ctx.tappedKey !== key && !ctx.labelledKeys.has(key) ? { kind: 'reveal', key } : { kind: 'role', key };

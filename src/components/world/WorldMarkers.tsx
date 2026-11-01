@@ -47,7 +47,8 @@ const groundHit = new Vector3();
  * utils/labelLevel). World, broad: the five BLS job families only, as buttons
  * that open the family. World, zoomed in: the 22 field names (short names; the
  * full BLS title is in the hover card). A family: its field names over their
- * ranges, and a peak's name on hover. A field: labels for its largest
+ * ranges and nothing else, with or without the Kelley filter, so a click can only
+ * mean a field. A field: labels for its largest
  * occupations, capped at STAGE_LABEL_CAP, in the live view's style; any other
  * job gets its label on hover, or on a first tap on touch screens. With the
  * Kelley filter on, the job labels are the Kelley roles on stage, as the map has
@@ -202,10 +203,10 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
         };
     }, []);
 
-    // Peaks that can be hovered or tapped right now. In a family every peak
-    // can name itself, though none carries a label of its own.
+    // Peaks that can be hovered or tapped right now. A family has none: it offers
+    // its fields, and job roles only appear once one is open.
     const tappablePeaks = useMemo<ScenePeak[]>(() => {
-        if (stage) return stage.jobs.map((j) => scene.peakByKey.get(j.key)!);
+        if (stage) return stage.kind === 'field' ? stage.jobs.map((j) => scene.peakByKey.get(j.key)!) : [];
         if (levelKind(shown) === 'world' && shown.labels.jobs && kelleyOnly) return scene.peaks.filter((p) => p.entry.kind === 'kelley');
         return [];
     }, [scene, stage, shown, kelleyOnly]);

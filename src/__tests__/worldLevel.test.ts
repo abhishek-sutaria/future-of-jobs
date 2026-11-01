@@ -224,7 +224,7 @@ describe('click rules', () => {
     });
 
     describe('family', () => {
-        it('a field name, its ground or one of its unlabelled peaks opens that field', () => {
+        it('a field name, its ground or one of its hills opens that field', () => {
             expect(clickAction(FAMILY, { ...MISS, label: { kind: 'field', code: '53' } }, CTX)).toEqual({ kind: 'field', code: '53' });
             expect(clickAction(FAMILY, { ...MISS, ground: '53' }, CTX)).toEqual({ kind: 'field', code: '53' });
             expect(clickAction(FAMILY, { ...MISS, peak: { key: 'p', code: '53' } }, CTX)).toEqual({ kind: 'field', code: '53' });
@@ -234,13 +234,10 @@ describe('click rules', () => {
             expect(clickAction(FAMILY, { ...MISS, peak: { key: 'p', code: '53' } }, { ...CTX, touch: true })).toEqual({ kind: 'field', code: '53' });
         });
 
-        it('a Kelley job label opens its role', () => {
+        it('never opens a job: anything job-shaped there leads to its field', () => {
             const kelley = { ...CTX, labelledKeys: new Set(['k']) };
-            expect(clickAction(FAMILY, { ...MISS, label: { kind: 'peak', key: 'k', code: '53' } }, kelley)).toEqual({ kind: 'role', key: 'k' });
-        });
-
-        it('a peak\'s hover name is not a way into its job: a click on it opens the field', () => {
-            expect(clickAction(FAMILY, { ...MISS, label: { kind: 'peak', key: 'hovered', code: '53' } }, CTX)).toEqual({ kind: 'field', code: '53' });
+            expect(clickAction(FAMILY, { ...MISS, label: { kind: 'peak', key: 'k', code: '53' } }, kelley)).toEqual({ kind: 'field', code: '53' });
+            expect(clickAction(FAMILY, { ...MISS, label: { kind: 'peak', key: 'h', code: '53' } }, CTX)).toEqual({ kind: 'field', code: '53' });
         });
 
         it('the empty area around the block does nothing', () => {
