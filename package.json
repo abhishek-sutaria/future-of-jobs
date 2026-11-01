@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "generate-scores": "tsx scripts/generate_ai_scores.ts"
+    "generate-scores": "tsx scripts/generate_ai_scores.ts",
+    "generate-bls-scores": "tsx scripts/generate_bls_scores.ts"
   },
   "dependencies": {
     "@google/generative-ai": "^0.24.1",

@@ -14,7 +14,7 @@ export const KelleyOnlyNote: React.FC<{ continent: string; view: 'map' | 'tasks'
     const what = view === 'map' ? 'The state map' : 'The task view';
     const why = view === 'map'
         ? 'It uses BLS state employment, which the app has for those roles only.'
-        : 'It splits each role by its published AI scores, which cover those roles only.';
+        : 'It splits each of those roles by its published AI scores.';
     return (
         <div className="absolute inset-0 flex items-center justify-center p-5" style={{ background: 'radial-gradient(circle at 50% 0%, #111b2b 0%, #0a0e17 70%)' }}>
             <div className="max-w-md w-full bg-gray-900/80 backdrop-blur-xl border border-cyan-400/25 rounded-2xl p-5 md:p-6 shadow-lg" role="status">

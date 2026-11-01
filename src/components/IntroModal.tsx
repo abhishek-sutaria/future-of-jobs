@@ -5,6 +5,7 @@ import { IconLayers, IconAlertTriangle, IconSearch } from './ui/Icons';
 import { useStore } from '../store';
 
 import { UI } from '../config/constants';
+import { SCORE_COVERAGE } from '../utils/blsScores';
 
 const STORAGE_KEY = UI.INTRO_STORAGE_KEY;
 
@@ -50,7 +51,7 @@ export const IntroModal: React.FC = () => {
                         <p className="text-gray-400 text-sm leading-relaxed">
                             <span className="text-red-400">High risk markers</span> are more exposed to automation than most roles here.
                             <span className="text-emerald-400"> Safer markers</span> rank lower on that same relative scale — not immune.
-                            AI scores cover the 50 Kelley business roles for now; <span className="text-slate-300">slate peaks</span> are scored soon.
+                            {SCORE_COVERAGE.sentence} <span className="text-slate-300">Slate peaks</span> are scored soon.
                         </p>
                     </div>
                 </div>

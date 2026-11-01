@@ -18,7 +18,7 @@ import {
     OOH_FRACTION_AT_YEAR_MAX,
     OOH_ENDPOINT_YEAR,
 } from '../config/constants';
-import { oohEnvelopeCap } from './terrainMath';
+import { oohEnvelopeCap } from './oohEnvelope';
 
 // ── Types ──────────────────────────────────────────────────────────────────
 

@@ -3,13 +3,14 @@
  * a published value from src/data/occupations/ (or the year/version labels
  * around them), and it must never show an AI score, real or placeholder.
  *
- * Rendered to static markup and read back with jsdom, for every one of the
- * 783 occupations outside the 50 Kelley roles.
+ * Rendered to static markup and read back with jsdom, for every occupation
+ * outside the 50 Kelley roles that has no published score (783 before the
+ * Business & Finance scores, 770 after; those 13 are tested in blsScores.test).
  */
 
 import { describe, it, expect, beforeAll } from 'vitest';
 
-// Each of these renders all 783 panels; allow for a slow CI runner.
+// Each of these renders every unscored panel; allow for a slow CI runner.
 const ALL_PANELS = { timeout: 60_000 };
 import { renderToStaticMarkup } from 'react-dom/server';
 import { JSDOM } from 'jsdom';
@@ -23,9 +24,10 @@ import { formatAnnualWage, formatHourlyWage, WAGES_META } from '../utils/wages';
 import { peakEmploymentAt } from '../components/world/worldScene';
 import { YEAR_MAX, YEAR_MIN } from '../config/constants';
 import nationalEmployment from '../data/national_employment.json';
+import { BLS_SCORES } from '../utils/blsScores';
 
 const byS = new Map<string, OccupationEntry>();
-const unscored = getRoleEntries(useStore.getState().jobs).filter((e) => e.kind === 'bls');
+const unscored = getRoleEntries(useStore.getState().jobs).filter((e) => e.kind === 'bls' && !e.scored);
 
 beforeAll(async () => {
     for (const c of INDEX_CONTINENTS) {
@@ -73,7 +75,7 @@ function allowedNumbers(o: OccupationEntry): Set<number> {
 
 describe('unscored occupation panel: numbers', () => {
     it('covers every occupation outside the Kelley roles', () => {
-        expect(unscored).toHaveLength(783);
+        expect(unscored).toHaveLength(783 - BLS_SCORES.size);
         for (const e of unscored) expect(byS.has(e.soc), e.soc).toBe(true);
     });
 
@@ -100,7 +102,7 @@ describe('unscored occupation panel: numbers', () => {
         expect(pay.textContent).not.toMatch(/annual/);
     });
 
-    it('shows only dataset numbers on every one of the 783 panels', ALL_PANELS, () => {
+    it('shows only dataset numbers on every unscored panel', ALL_PANELS, () => {
         for (const e of unscored) {
             const o = byS.get(e.soc)!;
             const doc = render(o);
