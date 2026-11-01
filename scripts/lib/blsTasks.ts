@@ -32,6 +32,15 @@ export const BF_TARGET_SOCS = [
  */
 export const CONTROL_JOB_IDS = ['job-4', 'job-46', 'job-6', 'job-28', 'job-23'] as const;
 
+/**
+ * Growth sensitivity (report only): the two Business & Finance Kelley roles
+ * whose published growth input (BLS OOH 2024–34, data.ts) is furthest from
+ * their BLS EP 2025–35 change: Personal Financial Advisor (10 vs 1.4) and
+ * Financial Risk Analyst (3 vs 7.4). Re-scored with the EP figure to show how
+ * much the vintage the 13 use can move a score. Never published.
+ */
+export const SENSITIVITY_JOB_IDS = ['job-22', 'job-51'] as const;
+
 export const TASKS_PER_ROLE = 5;
 
 /** O*NET codes that stand in for SOC 13-2020, which has none of its own. */

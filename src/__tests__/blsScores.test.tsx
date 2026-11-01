@@ -231,6 +231,24 @@ describe.runIf(!PRESENT)('before the scoring run (no ai_scores_bls.json yet)', (
     });
 });
 
+/** Buttons, links and headings that name a Claude feature (task text excluded). */
+function claudeControls(doc: Document): string[] {
+    const features = /analy[sz]e|strategic insight|roadmap|scenario|defend this task|build on this|likely replacements|ask claude|try again/i;
+    return [...doc.querySelectorAll('button, a, [role="button"], h2, h3, h4')]
+        .map((el) => `${el.getAttribute('aria-label') ?? ''} ${el.getAttribute('title') ?? ''} ${el.textContent ?? ''}`.trim())
+        .filter((label) => features.test(label));
+}
+
+describe('claudeControls', () => {
+    it('finds a Claude control but not O*NET task text that starts with "Analyze"', () => {
+        const doc = new JSDOM('<body><p data-testid="bls-task-name">Analyze information gathered by investigation.</p><button>Analyze</button><h3>Strategic Insight</h3></body>').window.document;
+        expect(claudeControls(doc)).toEqual(['Analyze', 'Strategic Insight']);
+        doc.querySelector('button')!.remove();
+        doc.querySelector('h3')!.remove();
+        expect(claudeControls(doc)).toEqual([]);
+    });
+});
+
 describe.runIf(PRESENT)('after the scoring run (ai_scores_bls.json)', () => {
     const file = PRESENT ? JSON.parse(fs.readFileSync(SCORES_PATH, 'utf-8')) : null;
     const isSonnet5 = (m: string) => m === 'claude-sonnet-5' || /^claude-sonnet-5-\d{8}$/.test(m);
@@ -322,10 +340,9 @@ describe.runIf(PRESENT)('after the scoring run (ai_scores_bls.json)', () => {
             expect(doc.querySelector('[data-testid="bls-provenance"]')!.textContent).toContain('claude-sonnet-5');
             expect([...doc.querySelectorAll('[data-testid="bls-task-name"]')].map((n) => n.textContent).sort())
                 .toEqual(planBySoc.get(soc)!.tasks.map((t) => t.name).sort());
-            const text = doc.body.textContent ?? '';
-            for (const word of ['Strategic Insight', 'Roadmap', 'Scenario', 'Analyze', 'Defend this task', 'Build on this']) {
-                expect(text, `${soc}: ${word}`).not.toContain(word);
-            }
+            // Controls only: O*NET task text can itself start with "Analyze"
+            // (13-1031), so the check is on buttons, links and headings.
+            expect(claudeControls(doc), soc).toEqual([]);
             const c = compareWithKelley(s)!;
             expect(c.total).toBe(50);
         }

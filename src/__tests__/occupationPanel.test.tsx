@@ -16,7 +16,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { JSDOM } from 'jsdom';
 import { OccupationBody } from '../components/OccupationPanel';
 import { RolePay } from '../components/RolePay';
-import { INDEX_CONTINENTS, loadContinentFile, type OccupationEntry } from '../utils/occupationIndex';
+import { INDEX_CONTINENTS, OCCUPATION_INDEX, loadContinentFile, type OccupationEntry } from '../utils/occupationIndex';
 import { getRoleEntries } from '../utils/roles';
 import { useStore } from '../store';
 import { formatCount, formatGrowth, NO_TASKS_NOTE, WORKERS_NOTE, AI_SOON_TITLE } from '../utils/roleFormat';
@@ -132,9 +132,18 @@ describe('unscored occupation panel: numbers', () => {
             }
             if (o.description) expect(doc.querySelector('[data-testid="description"]')!.textContent).toBe(o.description);
         }
-        // 59 occupations have no O*NET tasks; 13-1020 is one of them but is
-        // represented by its two Kelley titles, which keep their own tasks.
-        expect(withoutTasks).toBe(58);
+        // From the data, so it holds before and after the Business & Finance
+        // scores: 59 occupations have no O*NET tasks. 13-1020 is one of them but
+        // is represented by its two Kelley titles, which keep their own tasks;
+        // 13-2020 leaves this list once it is scored (its panel is tested in
+        // blsScores.test).
+        const counts = OCCUPATION_INDEX._meta.counts;
+        const noTaskSocs = OCCUPATION_INDEX.occupations.filter((occ) => occ.taskCount === 0).map((occ) => occ.soc);
+        expect(noTaskSocs).toHaveLength(counts.occupations - counts.withTasks);
+        const kelleySocs = new Set(getRoleEntries(useStore.getState().jobs).filter((e) => e.kind === 'kelley').map((e) => e.soc));
+        const elsewhere = noTaskSocs.filter((soc) => kelleySocs.has(soc) || BLS_SCORES.has(soc));
+        expect(elsewhere).toEqual(BLS_SCORES.has('13-2020') ? ['13-1020', '13-2020'] : ['13-1020']);
+        expect(withoutTasks).toBe(noTaskSocs.length - elsewhere.length);
         expect(byS.get('13-1020')!.tasks).toEqual([]);
     });
 });

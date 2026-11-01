@@ -16,7 +16,11 @@
  *      average aiCapabilityScore and humanCriticalityScore with ai_scores.json.
  *      Passes only if the mean absolute gap is ≤ 5 points (0–100) on BOTH.
  *      Control scores are never written to the app or adjusted in any way.
- *   3. Score the 13 and write src/data/ai_scores_bls.json — all 13 or nothing.
+ *   3. Growth sensitivity (report only): re-score 2 published Kelley roles with
+ *      their stored tasks and employment but their BLS EP 2025–35 growth, the
+ *      vintage the 13 use, and print them against published. Never published,
+ *      and nothing is changed because of them.
+ *   4. Score the 13 and write src/data/ai_scores_bls.json — all 13 or nothing.
  *
  * Only the proxy route is accepted (no local key). Any HTTP failure stops the
  * run at once. A response that fails parsing or the forecast rules gets one
@@ -51,6 +55,7 @@ import {
 import {
     BF_TARGET_SOCS,
     CONTROL_JOB_IDS,
+    SENSITIVITY_JOB_IDS,
     GROWTH_MISMATCH_NOTE,
     GROWTH_SOURCE,
     PROMPT_GROWTH_LABEL,
@@ -77,7 +82,7 @@ const CONTROL_PASS_POINTS = 5;
 const PRICE_PER_MTOK = { input: 2, output: 10 } as const;
 const REMAINING_JOBS = 770;
 
-type Kind = 'control' | 'score';
+type Kind = 'control' | 'sensitivity' | 'score';
 
 interface CallRecord {
     n: number;
@@ -102,6 +107,8 @@ interface RunLedger {
     version: number;
     calls: CallRecord[];
     control: Record<string, CachedResult>;
+    /** Report-only growth sensitivity results; never written to src/data. */
+    sensitivity?: Record<string, CachedResult>;
     scores: Record<string, CachedResult>;
 }
 
@@ -129,13 +136,13 @@ function getProxyAuth(): Auth {
 const isExpectedModel = (m: string | null) => m === CLAUDE_MODEL || (!!m && new RegExp(`^${CLAUDE_MODEL}-\\d{8}$`).test(m));
 
 function loadLedger(): RunLedger {
-    if (!fs.existsSync(RUN_FILE)) return { version: CACHE_VERSION, calls: [], control: {}, scores: {} };
+    if (!fs.existsSync(RUN_FILE)) return { version: CACHE_VERSION, calls: [], control: {}, sensitivity: {}, scores: {} };
     const parsed = JSON.parse(fs.readFileSync(RUN_FILE, 'utf-8')) as RunLedger;
     if (parsed.version !== CACHE_VERSION) {
         // Keep the call count (money already spent) but drop results scored under another schema.
-        return { version: CACHE_VERSION, calls: parsed.calls ?? [], control: {}, scores: {} };
+        return { version: CACHE_VERSION, calls: parsed.calls ?? [], control: {}, sensitivity: {}, scores: {} };
     }
-    return parsed;
+    return { ...parsed, sensitivity: parsed.sensitivity ?? {} };
 }
 
 function saveLedger(ledger: RunLedger): void {
@@ -266,9 +273,18 @@ async function main(): Promise<void> {
     });
 
     const ledger = loadLedger();
+    const sensitivityJobs = SENSITIVITY_JOB_IDS.map((id) => {
+        const job = initialJobs.find((j) => j.id === id);
+        if (!job || !published.scores[id]) fail(`Sensitivity role ${id} is missing from data.ts or ai_scores.json`);
+        const soc = MAP_TITLE_TO_SOC[job.title];
+        const epGrowth = inputs.occupations[soc]?.ep?.percentChange;
+        if (epGrowth == null) fail(`Sensitivity role ${job.title} (${soc}) has no BLS EP 2025–35 change in 13.json`);
+        return { job, soc, epGrowth };
+    });
     const pendingControl = controlJobs.filter((j) => !ledger.control[j.id]).length;
+    const pendingSensitivity = sensitivityJobs.filter((s) => !ledger.sensitivity![s.job.id]).length;
     const pendingScores = plans.filter((p) => !ledger.scores[p.soc]).length;
-    console.log(`📒  ${ledger.calls.length} of ${MAX_API_CALLS} API calls used so far · ${pendingControl} control + ${pendingScores} roles still to score.`);
+    console.log(`📒  ${ledger.calls.length} of ${MAX_API_CALLS} API calls used so far · ${pendingControl} control + ${pendingSensitivity} sensitivity + ${pendingScores} roles still to score.`);
 
     if (DRY_RUN) {
         for (const p of plans) {
@@ -276,10 +292,12 @@ async function main(): Promise<void> {
             for (const t of p.tasks) console.log(`    ${t.onetCode} #${t.taskId}  ${t.name}`);
         }
         console.log(`\nControl roles: ${controlJobs.map((j) => j.title).join(', ')}`);
+        console.log(`Sensitivity roles: ${sensitivityJobs.map((s) => `${s.job.title} (published growth ${s.job.projectedGrowth}%, EP 2025–35 ${s.epGrowth}%)`).join(', ')}`);
         return;
     }
-    if (ledger.calls.length + pendingControl + pendingScores > MAX_API_CALLS) {
-        fail(`Not enough calls left: ${MAX_API_CALLS - ledger.calls.length} remain but ${pendingControl + pendingScores} are needed even with no retries.`);
+    const needed = pendingControl + pendingSensitivity + pendingScores;
+    if (ledger.calls.length + needed > MAX_API_CALLS) {
+        fail(`Not enough calls left: ${MAX_API_CALLS - ledger.calls.length} remain but ${needed} are needed even with no retries.`);
     }
 
     const auth = getProxyAuth();
@@ -329,7 +347,32 @@ async function main(): Promise<void> {
         fail('Control run failed. The 13 roles were NOT scored. Nothing was written to src/data.', 2);
     }
 
-    // ── 3. The 13 ────────────────────────────────────────────────────────────
+    // ── 3. Growth sensitivity (report only) ──────────────────────────────────
+    console.log('\nGrowth sensitivity (report only, never published, changes nothing):');
+    for (const { job, epGrowth } of sensitivityJobs) {
+        if (ledger.sensitivity![job.id]) {
+            console.log(`·  cached   ${job.title}`);
+            continue;
+        }
+        ledger.sensitivity![job.id] = await scoreOnce(ledger, 'sensitivity', job.id, `sensitivity: ${job.title} @ EP ${epGrowth}%`, {
+            title: job.title,
+            taskNames: job.tasks.map((t) => t.name),
+            employment: job.employment,
+            projectedGrowth: epGrowth,
+        }, auth);
+        saveLedger(ledger);
+        await sleep(RATE_LIMIT_MS);
+    }
+    console.log('\n| Role | Growth published → EP 2025–35 | Risk published | Risk @ EP | Gap | Human published | Human @ EP | Gap |');
+    console.log('|---|---|---:|---:|---:|---:|---:|---:|');
+    for (const { job, epGrowth } of sensitivityJobs) {
+        const pub = published.scores[job.id];
+        const now = ledger.sensitivity![job.id].analysis;
+        const [pa, na, ph, nh] = [avgAi(pub), avgAi(now), avgHuman(pub), avgHuman(now)].map((v) => v * 100);
+        console.log(`| ${job.title} | ${job.projectedGrowth}% → ${epGrowth}% | ${pa.toFixed(1)} | ${na.toFixed(1)} | ${(na - pa).toFixed(1)} | ${ph.toFixed(1)} | ${nh.toFixed(1)} | ${(nh - ph).toFixed(1)} |`);
+    }
+
+    // ── 4. The 13 ────────────────────────────────────────────────────────────
     console.log('\nBusiness & Finance occupations:');
     for (const plan of plans) {
         if (ledger.scores[plan.soc]) {
