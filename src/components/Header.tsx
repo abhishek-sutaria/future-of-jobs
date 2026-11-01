@@ -133,18 +133,21 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
                         distance and reports it here via the store — reported
                         directly: a two-finger touch gesture panned the camera
                         far enough to lose the terrain entirely with no way back
-                        short of reloading the page. Zoomed in with no pan
-                        (the Kelley toggle's zoom) it is also the way back to
-                        the five families for anyone without a scroll wheel.
+                        short of reloading the page. It also always shows
+                        inside a family or field, and zoomed in with no pan
+                        (the Kelley toggle's zoom), as the way straight back
+                        to the five families.
                         First in a justify-end row, so appearing/disappearing
                         never shifts any other button. */}
                     {mapView !== 'map' && (!isDefaultView || (mapView === 'globe' && zoomedToFields)) && (
                         <button
                             onClick={triggerResetView}
                             title="Return the 3D view to its starting position"
+                            aria-label="Reset view"
                             className="shrink-0 px-3 py-2.5 rounded-lg border border-white/[0.08] bg-white/[0.03] hover:bg-white/[0.08] text-gray-300 hover:text-white text-xs font-semibold uppercase tracking-wider transition-colors min-h-[44px] max-md:min-w-[44px] max-md:justify-center"
                         >
-                            Reset view
+                            {/* One word on a phone, or this row wraps and takes room from the map. */}
+                            Reset<span className="max-md:hidden"> view</span>
                         </button>
                     )}
 

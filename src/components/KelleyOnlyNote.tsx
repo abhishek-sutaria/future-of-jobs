@@ -5,7 +5,7 @@ import { CONTINENT_DISPLAY_NAMES } from '../config/continents';
 import { IconInfo } from './ui/Icons';
 
 /**
- * Shown instead of the state map or the task split when the zoomed region
+ * Shown instead of the state map or the task split when the open field
  * holds no Kelley role (see useNonKelleyFocus).
  */
 export const KelleyOnlyNote: React.FC<{ continent: string; view: 'map' | 'tasks' }> = ({ continent, view }) => {

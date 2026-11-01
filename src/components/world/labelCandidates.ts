@@ -3,6 +3,7 @@ import { SCENE } from '../../config/constants';
 import { INDEX_CONTINENT_BY_CODE } from '../../utils/occupationIndex';
 import { anchorHeightInBand, bandTopAt, type LabelBand, type LabelCandidate } from '../../utils/labelLayout';
 import type { FamilyLayout, RegionLayout } from '../../utils/worldLayout';
+import { isOnStage, levelKind, type WorldLevel } from '../../utils/worldLevel';
 import { displayedPeakHeight, GROUND_Y, type ScenePeak } from './worldScene';
 
 /** World height of a region name above the ground. */
@@ -44,6 +45,12 @@ export function familyMarker(f: FamilyLayout): MarkerItem {
         baseY: GROUND_Y,
         tipY: GROUND_Y + REGION_LABEL_Y,
     };
+}
+
+/** Whether a label belongs to the level. One that is on its way out still shows for a moment, and must not take input. */
+export function markerOnStage(m: MarkerItem, level: WorldLevel): boolean {
+    if (m.kind === 'family') return levelKind(level) === 'world';
+    return isOnStage(level, m.kind === 'region' ? m.code : m.peak.entry.continent);
 }
 
 /** Workers (EP 2025) behind a label; bigger wins a collision. */

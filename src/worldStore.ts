@@ -1,28 +1,34 @@
 import { create } from 'zustand';
 import { useStore } from './store';
-import { BROAD_LABELS, type LabelDecision } from './utils/labelLevel';
+import { BROAD_LABELS, FIELD_LABELS, labelsAt, type LabelDecision } from './utils/labelLevel';
 import { loadContinentFile, type ContinentFile } from './utils/occupationIndex';
 import type { RoleEntry } from './utils/roles';
+import { familyLevel, fieldLevel, levelKind, levelUp, WORLD_LEVEL, type WorldLevel } from './utils/worldLevel';
 
 /**
- * Navigation state for the 22-continent world: which region is zoomed, the
- * Kelley-roles highlight, and the open unscored occupation. Kept apart from
- * the main store so the 50 Kelley roles' state (jobs, scores, selectedJob) is
- * untouched: a Kelley role still opens through useStore.setSelectedJob, and
- * its panel is the one it has always been.
+ * Navigation state for the 22-continent world: which level is on stage (the
+ * whole world, one family or one field), the Kelley-roles highlight, and the
+ * open unscored occupation. Kept apart from the main store so the 50 Kelley
+ * roles' state (jobs, scores, selectedJob) is untouched: a Kelley role still
+ * opens through useStore.setSelectedJob, and its panel is the one it has
+ * always been.
  */
-interface WorldState {
-    /** Two-digit SOC major code of the zoomed region, or null for the whole world. */
-    focusedContinent: string | null;
-    /** Bumped on every focus request, so asking for the same region again re-frames it. */
+interface WorldState extends WorldLevel {
+    /** Bumped on every level request, so asking for the same level again re-frames it. */
     focusRequestId: number;
+    /** Go straight to a level. The rest of these are shorthand for it. */
+    goToLevel: (level: WorldLevel) => void;
+    /** Open a field, or the whole world for null. Its family comes along. */
     focusContinent: (code: string | null) => void;
-    /** Where the next flight goes when no region is zoomed; null is the whole world. */
-    flyTo: { kind: 'family'; id: number } | { kind: 'fields' } | null;
-    /** Fly to one BLS job family, which brings up its field names. Leaves no region zoomed. */
     focusFamily: (id: number) => void;
+    /** One level up: a field to its family, a family to the world. */
+    goUp: () => void;
+    /** Back to the world with no flight, for Reset view, which moves the camera itself. */
+    resetLevel: () => void;
+    /** The next flight to the world stops at the zoom that shows job labels, not the broad view. */
+    kelleyZoom: boolean;
 
-    /** Which labels the camera's zoom calls for. Written by world/CameraRig. */
+    /** Which labels the level, and at the world the camera's zoom, call for. Kept current by world/CameraRig. */
     labels: LabelDecision;
 
     /** Highlight only the 50 Kelley roles (their peaks, labels and colours). */
@@ -45,24 +51,41 @@ interface WorldState {
 const inFlight = new Map<string, Promise<ContinentFile | null>>();
 
 export const useWorldStore = create<WorldState>((set, get) => ({
-    focusedContinent: null,
+    ...WORLD_LEVEL,
     focusRequestId: 0,
-    focusContinent: (code) => {
-        set((s) => ({ focusedContinent: code, flyTo: null, focusRequestId: s.focusRequestId + 1 }));
-        if (code) void get().loadContinent(code);
+    goToLevel: (level) => {
+        set((s) => {
+            const kind = levelKind(level);
+            // Job labels are what the Kelley filter is for, and the broad view has none.
+            const arrival = s.kelleyOnly ? FIELD_LABELS : BROAD_LABELS;
+            return {
+                ...level,
+                kelleyZoom: kind === 'world' && s.kelleyOnly,
+                labels: kind === 'world' ? arrival : labelsAt(kind, NaN, s.labels),
+                focusRequestId: s.focusRequestId + 1,
+            };
+        });
+        if (level.focusedContinent) void get().loadContinent(level.focusedContinent);
     },
-    flyTo: null,
-    focusFamily: (id) => set((s) => ({ focusedContinent: null, flyTo: { kind: 'family', id }, focusRequestId: s.focusRequestId + 1 })),
+    focusContinent: (code) => get().goToLevel(code ? fieldLevel(code) : WORLD_LEVEL),
+    focusFamily: (id) => get().goToLevel(familyLevel(id)),
+    goUp: () => {
+        const s = get();
+        if (levelKind(s) !== 'world') s.goToLevel(levelUp(s));
+    },
+    resetLevel: () => set({ ...WORLD_LEVEL, kelleyZoom: false, labels: BROAD_LABELS }),
+    kelleyZoom: false,
 
     labels: BROAD_LABELS,
 
     kelleyOnly: false,
     // Kelley labels are job labels, which the broad view never shows: turning
     // the filter on there zooms in far enough for them. Otherwise it leaves the
-    // camera where the user put it.
+    // camera where the user put it, and inside a family or field it only
+    // changes what is on stage.
     setKelleyOnly: (on) => set((s) => (
-        on && !s.labels.fields
-            ? { kelleyOnly: on, flyTo: { kind: 'fields' }, focusRequestId: s.focusRequestId + 1 }
+        on && levelKind(s) === 'world' && !s.labels.fields
+            ? { kelleyOnly: on, kelleyZoom: true, focusRequestId: s.focusRequestId + 1 }
             : { kelleyOnly: on }
     )),
 

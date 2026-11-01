@@ -11,11 +11,12 @@ import { PerspectiveCamera, Vector3 } from 'three';
 import { useStore } from '../store';
 import { SCENE } from '../config/constants';
 import { CONTINENT_DISPLAY_NAMES } from '../config/continents';
-import { buildWorldScene } from '../components/world/worldScene';
-import { atDistance, familyFraming, framingDistance, regionFraming, worldFraming, type Framing } from '../components/world/framing';
+import { buildWorldScene, peakTips } from '../components/world/worldScene';
+import { atDistance, familyFraming, framingDistance, worldFraming, type Framing } from '../components/world/framing';
 import { buildLabelCandidates, familyMarker, focusedRegionMarker, labelWeights, peakMarker, regionMarker, sortMarkers, type MarkerItem } from '../components/world/labelCandidates';
 import { isHiddenLabelPosition, labelsCollide, layoutLabelsByWeight, type LabelBand, type LabelCandidate } from '../utils/labelLayout';
 import { BROAD_LABELS, decideLabels, FIELD_ARRIVAL_ZOOM } from '../utils/labelLevel';
+import chromeBands from './fixtures/chromeBands.json';
 
 type Sizes = Record<string, [number, number]>;
 
@@ -39,7 +40,7 @@ const PHONE_SIZES: Sizes = {
     'Natural Resources, Construction & Maintenance': [152, 38], 'Production, Transportation & Moving': [152, 38],
 };
 
-// `band` is the chrome at the broad view; `zoomedBand` adds "Reset view", which wraps the header on a phone.
+// `band` is the chrome at the broad view; `zoomedBand` adds "Reset view", which wraps the header on a phone at the world's zoom.
 const VIEWPORTS: { name: string; width: number; height: number; fov: number; band: LabelBand; zoomedBand: LabelBand; sizes: Sizes }[] = [
     {
         name: 'desktop 1470x801', width: 1470, height: 801, fov: SCENE.CAMERA_FOV, sizes: DESKTOP_SIZES,
@@ -134,29 +135,41 @@ describe.each(VIEWPORTS)('labels at $name', (vp) => {
     });
 });
 
-// Every window shape a user could plausibly be on, not only the two review sizes:
-// on a wide screen the tallest field and family frame further out than the world does.
-describe.each([[1920, 1080], [1470, 801], [1280, 720], [1024, 768], [768, 1024], [390, 844], [360, 640], [844, 390]])('flights at %ix%i', (width, height) => {
-    const aspect = width / height;
-    const fov = aspect < 1 ? SCENE.CAMERA_PORTRAIT_FOV : SCENE.CAMERA_FOV;
-    const base = framingDistance(worldFraming(fov, aspect));
-    const band = { usableHeight: 0.55, bandCenter: 0.05, maxDistance: base / FIELD_ARRIVAL_ZOOM };
-    const landsOnFields = (f: Framing) => decideLabels(base / framingDistance(f), BROAD_LABELS).fields;
+// Inside a family the labels come from the level, not the zoom, so all of its
+// field names must fit however far out the block frames.
+describe.each(VIEWPORTS)('inside a family at $name', (vp) => {
+    const aspect = vp.width / vp.height;
+    const measured = (chromeBands as Record<string, Record<string, { top: number; bottom: number }>>)[`${vp.width}x${vp.height}`];
 
-    it('every field lands past the threshold', () => {
-        for (const r of scene.layout.regions) expect(landsOnFields(regionFraming(r.rect, fov, aspect, band)), r.code).toBe(true);
-    });
-
-    it('every family lands past the threshold', () => {
-        for (const f of scene.layout.families) expect(landsOnFields(familyFraming(f.rect, fov, aspect, band)), f.family.shortName).toBe(true);
-    });
-
-    it('the whole-world framing is the broad view', () => {
-        expect(landsOnFields(worldFraming(fov, aspect))).toBe(false);
+    it.each(scene.layout.families.map((f) => [f.family.shortName, f] as const))('%s shows every one of its field names', (_name, f) => {
+        const { top, bottom } = measured[`family:${f.family.id}`];
+        const tips = peakTips(f.codes.flatMap((code) => scene.peaksByContinent.get(code) ?? []), false);
+        const framing = familyFraming(f.rect, vp.fov, aspect, { top: top / vp.height, bottom: bottom / vp.height }, tips);
+        const fields = scene.layout.regions.filter((r) => r.family === f.family.id).map((r) => regionMarker(r.code, r.cx, r.cz));
+        const layout = layOut(fields, framing, vp, { top: top + 6, bottom: vp.height - bottom + 6 });
+        for (const m of fields) expect(layout.shown(m.id), m.id).toBe(true);
+        expectNoOverlap(layout);
     });
 });
 
-describe('inside a zoomed field', () => {
+// Every window shape a user could plausibly be on, not only the two review sizes.
+describe.each([[1920, 1080], [1470, 801], [1280, 720], [1024, 768], [768, 1024], [390, 844], [360, 640], [844, 390]])('whole-world zoom at %ix%i', (width, height) => {
+    const aspect = width / height;
+    const fov = aspect < 1 ? SCENE.CAMERA_PORTRAIT_FOV : SCENE.CAMERA_FOV;
+    const home = worldFraming(fov, aspect);
+    const base = framingDistance(home);
+    const landsOnFields = (f: Framing) => decideLabels(base / framingDistance(f), BROAD_LABELS).fields;
+
+    it('the Kelley flight lands past the threshold', () => {
+        expect(landsOnFields(atDistance(home, base / FIELD_ARRIVAL_ZOOM))).toBe(true);
+    });
+
+    it('the whole-world framing is the broad view', () => {
+        expect(landsOnFields(home)).toBe(false);
+    });
+});
+
+describe('inside an open field', () => {
     const region = scene.layout.regions.find((r) => r.code === '43')!;
     const own = focusedRegionMarker(region);
 
@@ -166,11 +179,10 @@ describe('inside a zoomed field', () => {
         expect(own.z).toBeLessThan(region.rect.z1);
     });
 
-    it('lets job labels win, then its own name, then the other fields', () => {
-        const big = scene.layout.regions.find((r) => r.code === '29')!;
+    it('lets job labels win over its own name', () => {
         const peak = scene.peaksByContinent.get('43')![0];
         const job = peakMarker(peak, 2025, '43', 1);
-        const order = sortMarkers([regionMarker(big.code, big.cx, big.cz), own, job], () => false, true, '43');
-        expect(order.map((m) => m.id)).toEqual([job.id, own.id, 'region:29']);
+        const order = sortMarkers([own, job], () => false, true, '43');
+        expect(order.map((m) => m.id)).toEqual([job.id, own.id]);
     });
 });

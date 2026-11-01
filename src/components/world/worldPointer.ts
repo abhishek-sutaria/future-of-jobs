@@ -7,6 +7,8 @@
 export const worldPointer = {
     /** Continent code of the region under the pointer, or null. */
     hoverRegion: null as string | null,
+    /** SocFamily.id of the family a click would open at the broad view, or null. */
+    hoverFamily: null as number | null,
     hoverPeakContinent: null as string | null,
     hoverPeakIndex: -1,
     /** Pointer position on the ground plane, for the cursor glow. */

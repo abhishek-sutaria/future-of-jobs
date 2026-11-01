@@ -18,7 +18,7 @@ const ALL_STEPS: Step[] = [
     {
         target: 'tour-fields',
         title: 'Fields & Kelley roles',
-        description: 'Pick a field to zoom in on its occupations, or click one on the map. A field’s size is its number of workers. Kelley roles highlights the 50 business roles that have AI scores today.',
+        description: 'Click a job family on the map to see it on its own, then a field to see its occupations, or pick any field from this list. Back, Esc or the trail above the list takes you back up. A field’s size is its number of workers. Kelley roles highlights the 50 business roles that have AI scores today.',
         padding: 8,
     },
     {

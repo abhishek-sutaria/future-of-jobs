@@ -5,7 +5,7 @@ import { getRoleEntries, type RoleEntry } from '../../utils/roles';
 import { buildWorldLayout, type WorldLayout } from '../../utils/worldLayout';
 import { epLevelAtYear, getVisualHeightForEpEmployment, TERRAIN_CONFIG } from '../../utils/terrainMath';
 import { buildRiskScale, normalizeRisk, riskBandColor, riskColorRGB, RISK_UNSCORED_HEX, RISK_UNSCORED_RGB } from '../../config/theme';
-import { SHADER } from '../../config/constants';
+import { SHADER, YEAR_MAX, YEAR_MIN } from '../../config/constants';
 
 
 export interface ScenePeak {
@@ -118,4 +118,13 @@ export function displayedPeakHeight(peak: ScenePeak, year: number, focused: stri
     return focused && peak.entry.continent === focused
         ? fieldPeakHeightAt(peak.entry, year, fieldMax)
         : peakHeightAt(peak.entry, year);
+}
+
+/** Where a block's peaks can reach as the slider moves: each tip at its taller end of 2025 to 2035, on the scale the level draws it. */
+export function peakTips(peaks: readonly ScenePeak[], fieldScale: boolean): [number, number, number][] {
+    const atYear = (p: ScenePeak, year: number, fieldMax: number) =>
+        fieldScale ? fieldPeakHeightAt(p.entry, year, fieldMax) : peakHeightAt(p.entry, year);
+    const fieldMaxStart = fieldMaxEmploymentAt(peaks, YEAR_MIN);
+    const fieldMaxEnd = fieldMaxEmploymentAt(peaks, YEAR_MAX);
+    return peaks.map((p) => [p.x, GROUND_Y + Math.max(atYear(p, YEAR_MIN, fieldMaxStart), atYear(p, YEAR_MAX, fieldMaxEnd)), p.z]);
 }

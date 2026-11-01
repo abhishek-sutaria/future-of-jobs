@@ -7,7 +7,7 @@ import { WorldTerrain } from './world/WorldTerrain';
 import { WorldMarkers } from './world/WorldMarkers';
 import { CameraRig } from './world/CameraRig';
 import { useWorldScene } from './world/worldScene';
-import { worldCamera } from './world/worldCamera';
+import { stopInertia, worldCamera } from './world/worldCamera';
 import { WebGLFallback } from './WebGLFallback';
 import { SCENE } from '../config/constants';
 import { useStore } from '../store';
@@ -42,6 +42,7 @@ export const Landscape: React.FC = () => {
     const selectedJob = useStore((s) => s.selectedJob);
     const selectedOccupationSoc = useWorldStore((s) => s.selectedOccupationSoc);
     const focusedContinent = useWorldStore((s) => s.focusedContinent);
+    const focusedFamily = useWorldStore((s) => s.focusedFamily);
     const kelleyOnly = useWorldStore((s) => s.kelleyOnly);
     const focusRequestId = useWorldStore((s) => s.focusRequestId);
     const scene = useWorldScene();
@@ -110,15 +111,16 @@ export const Landscape: React.FC = () => {
     // map view, selected job, route, or canvas remount changes — those live
     // outside OrbitControls. Without route/canvasKey, a phone that idled then
     // opened Dashboard (or recovered from context loss) can return to a Canvas
-    // still stuck on frameloop:'never'. A region flight or the Kelley filter
-    // must wake it too, or the camera would freeze mid-flight. A flight to a
-    // family changes neither of those, so the request id wakes it.
+    // still stuck on frameloop:'never'. A level change or the Kelley filter
+    // must wake it too, or the camera and the fades would freeze partway. A
+    // repeat request for the same level changes neither, so the request id
+    // wakes it.
     useEffect(() => {
         bumpInteraction();
         return () => {
             if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
         };
-    }, [bumpInteraction, year, mapView, selectedJob, route, canvasKey, selectedOccupationSoc, focusedContinent, kelleyOnly, focusRequestId]);
+    }, [bumpInteraction, year, mapView, selectedJob, route, canvasKey, selectedOccupationSoc, focusedContinent, focusedFamily, kelleyOnly, focusRequestId]);
 
     const handleContextLost = useCallback((event: Event) => {
         // Without this, the browser assumes the page doesn't want to recover
@@ -157,25 +159,30 @@ export const Landscape: React.FC = () => {
     // screen entirely, leaving only floating labels behind (drei's Html
     // isn't frustum-culled the same way a mesh is). Confirmed live: panning
     // the target 80 units from origin makes the terrain fully vanish.
-    // Clamp the target to the regions' rectangle every change (it was a
-    // 25-unit radius when the terrain was a disc; corner regions now sit
-    // further out than that). Mutating target + camera position directly
-    // (not via a method that re-dispatches 'change' in a way that could loop)
-    // and only when actually out of bounds, so this is a no-op on every
-    // normal in-bounds interaction.
+    // Clamp the target to the rectangle on stage every change: the block in a
+    // family or field, so it cannot be dragged away, and otherwise all the
+    // regions (it was a 25-unit radius when the terrain was a disc; corner
+    // regions now sit further out than that). A flight owns the target while
+    // it runs, so there is no rectangle then. Mutating target + camera position
+    // directly (not via a method that re-dispatches 'change' in a way that
+    // could loop) and only when actually out of bounds, so this is a no-op on
+    // every normal in-bounds interaction.
     const clampPanTarget = useCallback(() => {
         const controls = controlsRef.current;
         if (!controls) return;
         const target = controls.target;
-        const cx = Math.min(WORLD_BOUNDS.x1, Math.max(WORLD_BOUNDS.x0, target.x));
-        const cz = Math.min(WORLD_BOUNDS.z1, Math.max(WORLD_BOUNDS.z0, target.z));
-        if (cx !== target.x || cz !== target.z) {
-            const dx = target.x - cx;
-            const dz = target.z - cz;
-            target.x = cx;
-            target.z = cz;
-            controls.object.position.x -= dx;
-            controls.object.position.z -= dz;
+        const bounds = worldCamera.panBounds;
+        if (bounds) {
+            const cx = Math.min(bounds.x1, Math.max(bounds.x0, target.x));
+            const cz = Math.min(bounds.z1, Math.max(bounds.z0, target.z));
+            if (cx !== target.x || cz !== target.z) {
+                const dx = target.x - cx;
+                const dz = target.z - cz;
+                target.x = cx;
+                target.z = cz;
+                controls.object.position.x -= dx;
+                controls.object.position.z -= dz;
+            }
         }
 
         // Drives the header's "Reset view" button (mirrors MapView's own).
@@ -199,9 +206,12 @@ export const Landscape: React.FC = () => {
         if (resetViewRequestId === 0) return; // skip the initial mount value
         const controls = controlsRef.current;
         if (!controls) return;
-        worldCamera.cancel();
-        // Back to the whole world: leave any zoomed region too.
-        if (useWorldStore.getState().focusedContinent) useWorldStore.setState({ focusedContinent: null });
+        worldCamera.cancel(true);
+        // Back to the whole world, from any level.
+        useWorldStore.getState().resetLevel();
+        worldCamera.panBounds = WORLD_BOUNDS;
+        controls.maxDistance = SCENE.MAX_CAMERA_DISTANCE;
+        stopInertia(controls);
         controls.target.set(...initialFraming.target);
         controls.object.position.set(...initialFraming.position);
         controls.update();

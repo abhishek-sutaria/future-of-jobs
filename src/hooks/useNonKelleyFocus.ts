@@ -4,7 +4,7 @@ import { useWorldStore } from '../worldStore';
 import { kelleyCountByContinent } from '../utils/roles';
 
 /**
- * The zoomed region, when it holds no Kelley role. The state map and the task
+ * The open field, when it holds no Kelley role. The state map and the task
  * split only have data for the 50 Kelley roles, so opening either from such a
  * region shows KelleyOnlyNote (components/KelleyOnlyNote) instead of a view with nothing of that region in it.
  */

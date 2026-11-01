@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { BROAD_LABELS, decideLabels, FIELD_ARRIVAL_ZOOM, FIELD_LABELS, FIELD_LABEL_ZOOM, FIELD_LABEL_ZOOM_BUFFER } from '../utils/labelLevel';
+import { BROAD_LABELS, decideLabels, FAMILY_LEVEL_LABELS, FIELD_ARRIVAL_ZOOM, FIELD_LABELS, FIELD_LABEL_ZOOM, FIELD_LABEL_ZOOM_BUFFER, FIELD_LEVEL_LABELS, labelsAt } from '../utils/labelLevel';
 
 const IN = FIELD_LABEL_ZOOM + FIELD_LABEL_ZOOM_BUFFER;
 const OUT = FIELD_LABEL_ZOOM - FIELD_LABEL_ZOOM_BUFFER;
@@ -64,5 +64,30 @@ describe('decideLabels', () => {
 
     it('lands flights clear of the buffer', () => {
         expect(FIELD_ARRIVAL_ZOOM).toBeGreaterThan(IN);
+    });
+});
+
+describe('labelsAt', () => {
+    it('follows the zoom at the world, exactly as decideLabels does', () => {
+        for (const z of [0.5, 1, OUT, FIELD_LABEL_ZOOM, IN, 2, 4]) {
+            for (const from of [BROAD_LABELS, FIELD_LABELS]) expect(labelsAt('world', z, from)).toBe(decideLabels(z, from));
+        }
+    });
+
+    it('never looks at the zoom inside a family or a field, at any zoom', () => {
+        for (let z = 0.2; z < 6; z += 0.05) {
+            expect(labelsAt('family', z, BROAD_LABELS)).toBe(FAMILY_LEVEL_LABELS);
+            expect(labelsAt('field', z, FIELD_LABELS)).toBe(FIELD_LEVEL_LABELS);
+        }
+    });
+
+    it('shows field names and no job labels in a family, and both in a field', () => {
+        expect(FAMILY_LEVEL_LABELS).toMatchObject({ families: false, fields: true, jobs: false });
+        expect(FIELD_LEVEL_LABELS).toMatchObject({ families: false, fields: true, jobs: true });
+    });
+
+    it('does not carry a family or field set back to the world: inside the buffer it falls back to the broad set', () => {
+        expect(labelsAt('world', FIELD_LABEL_ZOOM, FAMILY_LEVEL_LABELS)).toBe(BROAD_LABELS);
+        expect(labelsAt('world', FIELD_LABEL_ZOOM, FIELD_LEVEL_LABELS)).toBe(BROAD_LABELS);
     });
 });

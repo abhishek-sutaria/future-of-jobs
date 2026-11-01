@@ -14,7 +14,7 @@ import { describe, it, expect } from 'vitest';
 import { PerspectiveCamera, Vector3 } from 'three';
 import { useStore } from '../store';
 import { SCENE } from '../config/constants';
-import { buildWorldScene, fieldMaxEmploymentAt, type ScenePeak } from '../components/world/worldScene';
+import { buildWorldScene, fieldMaxEmploymentAt, peakTips, type ScenePeak } from '../components/world/worldScene';
 import { regionFraming, worldFraming, type Framing } from '../components/world/framing';
 import { buildLabelCandidates, labelWeights, peakMarker, sortMarkers, type MarkerItem } from '../components/world/labelCandidates';
 import { REGION_LABEL_CAP } from '../components/world/WorldMarkers';
@@ -32,7 +32,7 @@ interface Viewport {
      */
     kelleyBand: LabelBand;
     fieldBand: LabelBand;
-    /** The free band the camera rig frames a zoomed field into (CameraRig freeBand). */
+    /** The free band the camera rig frames an open field into (CameraRig freeBand). */
     fieldFrame: { top: number; bottom: number };
     /** Chip model fitted to the measured chips (see chipHalf). */
     chip: { lineH: number; extraLineH: number; charW: number; pad: number; capW: number; lines: number };
@@ -45,9 +45,9 @@ const VIEWPORTS: Viewport[] = [
         width: 1470,
         height: 801,
         fov: SCENE.CAMERA_FOV,
-        kelleyBand: { top: 144, bottom: 801 - 644 + 6, blocks: [{ left: 26, right: 366, bottom: 215 }] },
-        fieldBand: { top: 144, bottom: 801 - 644 + 6, blocks: [{ left: 26, right: 431, bottom: 234 }] },
-        fieldFrame: { top: 228, bottom: 644 },
+        kelleyBand: { top: 144, bottom: 801 - 644 + 6, blocks: [{ left: 26, right: 623, bottom: 184 }] },
+        fieldBand: { top: 144, bottom: 801 - 644 + 6, blocks: [{ left: 26, right: 794, bottom: 226 }] },
+        fieldFrame: { top: 220, bottom: 644 },
         chip: { lineH: 19, extraLineH: 12.5, charW: 6.3, pad: 18, capW: 208, lines: 2 },
         cap: REGION_LABEL_CAP.desktop,
     },
@@ -56,9 +56,9 @@ const VIEWPORTS: Viewport[] = [
         width: 390,
         height: 844,
         fov: SCENE.CAMERA_PORTRAIT_FOV,
-        kelleyBand: { top: 160, bottom: 844 - 654 + 6, blocks: [{ left: 10, right: 380, bottom: 231 }] },
-        fieldBand: { top: 210, bottom: 844 - 654 + 6, blocks: [{ left: 10, right: 380, bottom: 342 }] },
-        fieldFrame: { top: 336, bottom: 654 },
+        kelleyBand: { top: 160, bottom: 844 - 642 + 6, blocks: [{ left: 10, right: 380, bottom: 239 }] },
+        fieldBand: { top: 160, bottom: 844 - 642 + 6, blocks: [{ left: 10, right: 380, bottom: 312 }] },
+        fieldFrame: { top: 306, bottom: 642 },
         chip: { lineH: 16, extraLineH: 11.25, charW: 5.7, pad: 14, capW: 152, lines: 3 },
         cap: REGION_LABEL_CAP.mobile,
     },
@@ -90,11 +90,8 @@ function cameraFor(vp: Viewport, framing: Framing) {
 /** The CameraRig's zoomed framing for a field, in the band it measures. */
 function fieldFraming(vp: Viewport, code: string): Framing {
     const { top, bottom } = vp.fieldFrame;
-    const h = vp.height;
-    return regionFraming(scene.layout.regionByCode.get(code)!.rect, vp.fov, vp.width / vp.height, {
-        usableHeight: (bottom - top) / h,
-        bandCenter: ((top + bottom) / 2 - h / 2) / (h / 2),
-    });
+    const tips = peakTips(scene.peaksByContinent.get(code)!, true);
+    return regionFraming(scene.layout.regionByCode.get(code)!.rect, vp.fov, vp.width / vp.height, { top: top / vp.height, bottom: bottom / vp.height }, tips);
 }
 
 interface Outcome {

@@ -5,6 +5,7 @@ import {
     InstancedBufferAttribute,
     InstancedBufferGeometry,
     LatheGeometry,
+    type Mesh,
     ShaderMaterial,
     Sphere,
     Vector2,
@@ -21,15 +22,30 @@ import {
     MAX_REGIONS,
     peakFragmentShader,
     peakVertexShader,
+    stageSoftEdge,
 } from './worldShaders';
 import { FIELD_PEAK_MAX, fieldMaxEmploymentAt, fieldPeakHeightAt, GROUND_Y, peakHeightAt, type ScenePeak, type WorldScene } from './worldScene';
+import { prefersReducedMotion } from './worldCamera';
 import { worldPointer } from './worldPointer';
-import { rectDepth, rectWidth, WORLD_BOUNDS } from '../../utils/worldLayout';
+import { rectDepth, rectWidth, WORLD_BOUNDS, type Rect } from '../../utils/worldLayout';
+import { isOnStage } from '../../utils/worldLevel';
 
 /** How far a peak outside the highlight fades toward the ground colour. */
 const DIM_EMPHASIS = 0.22;
-/** Height kept by peaks outside the zoomed region. */
+/** Height kept by peaks as they fade off stage, so they sink out of the camera's way as they go. */
 const FLATTENED_LIFT = 0.12;
+/** How fast regions and the ground ease on and off stage, per second: about 90% in a quarter of a second. */
+const STAGE_FADE_RATE = 9;
+/** Close enough to the end of a fade to call it finished, so a fade really does end. */
+const STAGE_FADE_SNAP = 0.004;
+/** The ground's stage at the world: a rectangle far past anything drawn. */
+const WHOLE_PLANE: Rect = { x0: -1e4, z0: -1e4, x1: 1e4, z1: 1e4 };
+
+/** `value` moved `k` of the way to `goal`, landing on it once close. */
+function easeTo(value: number, goal: number, k: number): number {
+    const next = value + (goal - value) * k;
+    return Math.abs(goal - next) < STAGE_FADE_SNAP ? goal : next;
+}
 
 /** Unit bell (radius 1, height 1), the same Gaussian profile the old terrain summed. */
 function makeBellGeometry(radial: number, rings: number): BufferGeometry {
@@ -52,14 +68,18 @@ interface RegionMesh {
     aEmph: InstancedBufferAttribute;
     aColor: InstancedBufferAttribute;
     aFieldH: InstancedBufferAttribute;
+    mesh: Mesh | null;
 }
 
 /**
  * The ground (22 regions drawn in its shader) and every peak: one instanced
  * draw call per region, 833 bells in all, no per-peak meshes.
+ *
+ * Only what is on stage stays. Off-stage regions fade out and stop being drawn
+ * at all, and the ground fades away past the stage rectangle, softly and over
+ * the same time.
  */
 export const WorldTerrain: React.FC<{ scene: WorldScene; isMobile: boolean }> = ({ scene, isMobile }) => {
-    const focused = useWorldStore((s) => s.focusedContinent);
     const kelleyOnly = useWorldStore((s) => s.kelleyOnly);
 
     const bell = useMemo(() => (isMobile ? makeBellGeometry(12, 6) : makeBellGeometry(20, 10)), [isMobile]);
@@ -79,9 +99,14 @@ export const WorldTerrain: React.FC<{ scene: WorldScene; isMobile: boolean }> = 
             return r ? new Vector4(r.x0, r.z0, r.x1, r.z1) : new Vector4(1e6, 1e6, 1e6, 1e6);
         }) },
         uHoverRegion: { value: -1 },
+        uHoverFamily: { value: -1 },
         uFocusRegion: { value: -1 },
         uFocusRect: { value: new Vector4(1e6, 1e6, 1e6, 1e6) },
         uBounds: { value: new Vector4(WORLD_BOUNDS.x0, WORLD_BOUNDS.z0, WORLD_BOUNDS.x1, WORLD_BOUNDS.z1) },
+        uStageRect: { value: new Vector4(WHOLE_PLANE.x0, WHOLE_PLANE.z0, WHOLE_PLANE.x1, WHOLE_PLANE.z1) },
+        uStagePrevRect: { value: new Vector4(WHOLE_PLANE.x0, WHOLE_PLANE.z0, WHOLE_PLANE.x1, WHOLE_PLANE.z1) },
+        uStageMix: { value: 1 },
+        uStageSoft: { value: new Vector2(1, 1) },
         uMouse: { value: new Vector2(1e6, 1e6) },
     }), [scene.layout.regions, scene.layout.families]);
 
@@ -128,13 +153,13 @@ export const WorldTerrain: React.FC<{ scene: WorldScene; isMobile: boolean }> = 
                 fragmentShader: peakFragmentShader,
                 uniforms: {
                     uGroundY: { value: GROUND_Y },
-                    uRegionDim: { value: 1 },
+                    uStage: { value: 1 },
                     uRegionLift: { value: 1 },
                     uFieldMix: { value: 0 },
                     uHover: { value: -1 },
                 },
             });
-            return { code: region.code, peaks, geometry, material, aPeak, aEmph, aColor, aFieldH };
+            return { code: region.code, peaks, geometry, material, aPeak, aEmph, aColor, aFieldH, mesh: null };
         });
     }, [scene, bell]);
 
@@ -158,7 +183,8 @@ export const WorldTerrain: React.FC<{ scene: WorldScene; isMobile: boolean }> = 
     }, [regionMeshes, kelleyOnly]);
 
     const lastYear = useRef<number | null>(null);
-    useFrame(() => {
+    const stageRect = useRef<Rect>(WHOLE_PLANE);
+    useFrame((_, delta) => {
         const year = useStore.getState().year;
         if (year !== lastYear.current) {
             lastYear.current = year;
@@ -174,26 +200,51 @@ export const WorldTerrain: React.FC<{ scene: WorldScene; isMobile: boolean }> = 
                 m.aFieldH.needsUpdate = true;
             }
         }
-        // Ease regions in and out of focus rather than snapping. Regions out
-        // of focus also flatten, so their tall peaks never stand between the
-        // camera and the region being explored.
+        const level = useWorldStore.getState();
+        const focused = level.focusedContinent;
+        // By time, not by frame, so a fade takes as long on a slow phone as on a
+        // fast laptop; a long gap (the loop was paused) just finishes it.
+        const k = prefersReducedMotion() ? 1 : 1 - Math.exp(-delta * STAGE_FADE_RATE);
+        // Off stage, a region eases to nothing and then leaves the draw list.
+        // Opaque again once it is fully back.
         for (const m of regionMeshes) {
-            const away = !!focused && m.code !== focused;
-            const dim = m.material.uniforms.uRegionDim;
-            dim.value += ((away ? 0.35 : 1) - dim.value) * 0.15;
+            const on = isOnStage(level, m.code);
+            const stage = m.material.uniforms.uStage;
+            stage.value = easeTo(stage.value, on ? 1 : 0, k);
+            m.material.transparent = stage.value < 1;
+            if (m.mesh) m.mesh.visible = stage.value > 0;
             const lift = m.material.uniforms.uRegionLift;
-            lift.value += ((away ? FLATTENED_LIFT : 1) - lift.value) * 0.15;
-            // The zoomed field switches to its own height scale (see fieldPeakHeightAt).
+            lift.value = easeTo(lift.value, on ? 1 : FLATTENED_LIFT, k);
+            // The open field switches to its own height scale (see fieldPeakHeightAt).
             const mix = m.material.uniforms.uFieldMix;
-            mix.value += ((focused === m.code ? 1 : 0) - mix.value) * 0.15;
+            mix.value = easeTo(mix.value, focused === m.code ? 1 : 0, k);
             m.material.uniforms.uHover.value = worldPointer.hoverPeakContinent === m.code ? worldPointer.hoverPeakIndex : -1;
         }
+
+        // The ground crossfades from the old stage to the new, so any two levels
+        // go smoothly: the world's stage is the whole plane.
+        const family = scene.layout.families.find((f) => f.family.id === level.focusedFamily);
         const focusIndex = focused ? regionIndex.get(focused) ?? -1 : -1;
-        groundUniforms.uFocusRegion.value = focusIndex;
         const fr = focusIndex >= 0 ? scene.layout.regions[focusIndex].rect : null;
+        const nextStage = fr ?? family?.rect ?? WHOLE_PLANE;
+        if (nextStage !== stageRect.current) {
+            // Mid-fade, whichever block is showing more is the one to leave from.
+            if (groundUniforms.uStageMix.value >= 0.5) {
+                groundUniforms.uStagePrevRect.value.copy(groundUniforms.uStageRect.value);
+                groundUniforms.uStageSoft.value.x = groundUniforms.uStageSoft.value.y;
+            }
+            groundUniforms.uStageRect.value.set(nextStage.x0, nextStage.z0, nextStage.x1, nextStage.z1);
+            groundUniforms.uStageSoft.value.y = stageSoftEdge(rectWidth(nextStage), rectDepth(nextStage));
+            groundUniforms.uStageMix.value = 0;
+            stageRect.current = nextStage;
+        }
+        groundUniforms.uStageMix.value = easeTo(groundUniforms.uStageMix.value, 1, k);
+
+        groundUniforms.uFocusRegion.value = focusIndex;
         if (fr) groundUniforms.uFocusRect.value.set(fr.x0, fr.z0, fr.x1, fr.z1);
         else groundUniforms.uFocusRect.value.set(1e6, 1e6, 1e6, 1e6);
         groundUniforms.uHoverRegion.value = worldPointer.hoverRegion ? regionIndex.get(worldPointer.hoverRegion) ?? -1 : -1;
+        groundUniforms.uHoverFamily.value = scene.layout.families.findIndex((f) => f.family.id === worldPointer.hoverFamily);
         groundUniforms.uMouse.value.set(worldPointer.mouseX, worldPointer.mouseZ);
     });
 
@@ -212,7 +263,7 @@ export const WorldTerrain: React.FC<{ scene: WorldScene; isMobile: boolean }> = 
                 />
             </mesh>
             {regionMeshes.map((m) => (
-                <mesh key={m.code} geometry={m.geometry} material={m.material} />
+                <mesh key={m.code} ref={(mesh) => { m.mesh = mesh; }} geometry={m.geometry} material={m.material} />
             ))}
         </group>
     );
