@@ -8,7 +8,7 @@
 
 import { familyOf } from '../config/socFamilies';
 import { INDEX_CONTINENT_BY_CODE } from './occupationIndex';
-import { RING_SPACING, territoryLayout, type TerritoryOptions } from './terrainMath';
+import { RING_MIN_RADIUS, RING_SPACING, territoryLayout, type TerritoryOptions } from './terrainMath';
 import type { WorldLevel } from './worldLevel';
 
 /** What the stage needs to know about a job. Structurally a ScenePeak. */
@@ -50,8 +50,14 @@ export interface Stage {
 const LIVE_JOBS = 50;
 /** The live hill's spread (SHADER.SIGMA_SQ2 = 2 * 2.0^2). */
 const LIVE_SIGMA = 2;
+/**
+ * Just inside the live view's outermost ring of 22. Every stage's rings are drawn
+ * out or in to end here, so all 27 reach as far as the live view, and a job on the
+ * near rim stays clear of the year slider, where its label could not show.
+ */
+export const STAGE_OUTER_RING = 21.5;
 /** Narrower than this and the mesh can no longer draw a hill as a hill. */
-export const STAGE_SIGMA_MIN = 1.1;
+export const STAGE_SIGMA_MIN = 0.9;
 /** Wider than this and a few hills melt into one dome. */
 export const STAGE_SIGMA_MAX = 5;
 /** A little more air between a family's fields than between a field's groups, so each reads as its own range. */
@@ -122,15 +128,27 @@ export function buildStage(level: WorldLevel, peaksByContinent: ReadonlyMap<stri
     const groups = field
         ? minorGroupsOf(field, sources)
         : codes.map((c) => [...(peaksByContinent.get(c) ?? [])].sort(bySoc));
-    const positions = territoryLayout(groups.map((g) => g.map((p) => p.entry.key)), options);
+    const ids = groups.map((g) => g.map((p) => p.entry.key));
+    // The whole disc turns so the largest job stands at its side. At the far
+    // side the tallest hill stands up under the header, at the near side behind
+    // the year slider. By the published 2025 figure, so the turn never moves
+    // with the slider.
+    const largest = sources.reduce((a, b) => ((b.entry.ep2025 ?? 0) > (a.entry.ep2025 ?? 0) ? b : a));
+    const unturned = territoryLayout(ids, options).get(largest.entry.key)!;
+    const startAngle = (unturned.x >= 0 ? 0 : Math.PI) - Math.atan2(unturned.z, unturned.x);
+    const positions = territoryLayout(ids, { ...options, startAngle });
+    const reach = Math.max(...[...positions.values()].map((p) => Math.hypot(p.x, p.z)));
+    const toOuterRing = reach > RING_MIN_RADIUS ? (STAGE_OUTER_RING - RING_MIN_RADIUS) / (reach - RING_MIN_RADIUS) : 1;
 
     const jobs = groups.flat().map((p): StageJob => {
         const { x, z } = positions.get(p.entry.key)!;
+        const radius = Math.hypot(x, z);
+        const scale = (RING_MIN_RADIUS + (radius - RING_MIN_RADIUS) * toOuterRing) / radius;
         return {
             key: p.entry.key,
             code: p.entry.continent,
-            x,
-            z,
+            x: x * scale,
+            z: z * scale,
             ep2025: p.entry.ep2025 ?? 1,
             ep2035: p.entry.ep2035 ?? 1,
             color: p.color,

@@ -133,10 +133,12 @@ export interface PeakData {
 // similar roles sit next to each other.
 /** Radial gap between arcs in the live 50-job view; also the arc length each job gets there. */
 export const RING_SPACING = 5;
+/** The innermost arc's radius. */
+export const RING_MIN_RADIUS = 7;
 
 const TERRITORY_LAYOUT = {
     /** Innermost arc radius */
-    R_MIN: 7,
+    R_MIN: RING_MIN_RADIUS,
     /** Outermost usable radius — must stay inside the shader edge fade (~32 for the 70-unit plane) */
     R_MAX: 30,
     /** ≥ 2× PEAK_WIDTH so peaks stay legible */

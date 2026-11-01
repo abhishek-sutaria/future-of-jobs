@@ -34,11 +34,11 @@ export type StageBlend = 'sum' | 'smoothmax';
 /**
  * How overlapping hills combine. The live shader adds them, which is fine at 50
  * jobs. On the densest stage (Management family, 378 peaks) adding inflates the
- * median job to 2.09 times its height, and clearly smaller jobs stand taller than
- * larger neighbours in 139 of 882 neighbouring pairs. Smooth max at power 2
- * brings those to 1.13 and 71, and keeps the valleys soft: a higher power is
- * truer still (1.00 and 49 at 4) but cuts every hill apart, and small hills read
- * as a field of dots rather than a landscape. A lone hill is the same either way.
+ * median job to 2.75 times its height, and clearly smaller jobs stand taller than
+ * larger neighbours in 266 of 1,333 neighbouring pairs. Smooth max at power 2
+ * brings those to 1.28 and 169, and keeps every stage's top at the live 12.5. A
+ * higher power is truer still but cuts every hill apart, so small hills read as
+ * a field of dots rather than a landscape. A lone hill is the same either way.
  */
 export const STAGE_BLEND: StageBlend = 'smoothmax';
 export const STAGE_BLEND_POWER = 2;

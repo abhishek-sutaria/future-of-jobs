@@ -22,7 +22,7 @@ import {
     stageJobHeight, surfaceHeight, yearMix,
 } from '../utils/stageBake';
 import {
-    buildStage, minorGroupsOf, STAGE_INPUT_RADIUS, STAGE_SIGMA_MAX, STAGE_SIGMA_MIN, stageFieldAt, stageKey, stageRingSpacing, stageSigma, type Stage, type StageJob,
+    buildStage, minorGroupsOf, STAGE_INPUT_RADIUS, STAGE_OUTER_RING, STAGE_SIGMA_MAX, STAGE_SIGMA_MIN, stageFieldAt, stageKey, stageRingSpacing, stageSigma, type Stage, type StageJob,
 } from '../utils/stageLayout';
 import { computeClusterTerritoryLayout, territoryLayout } from '../utils/terrainMath';
 import { familyLevel, fieldLevel, WORLD_LEVEL, ZOOM_OUT_RATIO, type WorldLevel } from '../utils/worldLevel';
@@ -113,12 +113,19 @@ describe('stage layout', () => {
         expect(buildStage.length).toBe(2); // takes no year
     });
 
-    it('fills the same footprint whatever the count: Legal reaches as far as Production', () => {
-        const reach = (s: Stage) => Math.max(...s.jobs.map((j) => Math.hypot(j.x, j.z))) + 2 * s.sigma;
-        const reaches = STAGES.map(reach);
-        expect(Math.min(...reaches)).toBeGreaterThan(21);
-        expect(Math.max(...reaches)).toBeLessThan(33);
-        expect(Math.abs(reach(stageOf(fieldLevel('23'))) - reach(stageOf(fieldLevel('51'))))).toBeLessThan(4);
+    it('fills the same footprint whatever the count: all 27 end on the live outermost ring', () => {
+        for (const stage of STAGES) {
+            const radii = stage.jobs.map((j) => Math.hypot(j.x, j.z));
+            expect(Math.max(...radii), stage.key).toBeCloseTo(STAGE_OUTER_RING, 6);
+            expect(Math.min(...radii), stage.key).toBeGreaterThanOrEqual(7 - 1e-6);
+        }
+    });
+
+    it('turns every stage so its largest job stands at the side, clear of the header and the slider', () => {
+        for (const stage of STAGES) {
+            const largest = stage.jobs.reduce((a, b) => (b.ep2025 > a.ep2025 ? b : a));
+            expect(Math.abs(largest.z), stage.key).toBeLessThan(1e-9);
+        }
     });
 
     it('starts from the live hill at the live count, and stays inside its limits at any size', () => {
@@ -255,8 +262,8 @@ describe('the surface', () => {
             const r = dense.jobs.map((j) => surfaceHeight(bake, j.x, j.z, 0) / stageJobHeight(j, 0, max)).sort((a, b) => a - b);
             return r[r.length >> 1];
         };
-        expect(inflation('sum', 1)).toBeGreaterThan(1.5);
-        expect(inflation(STAGE_BLEND, STAGE_BLEND_POWER)).toBeLessThan(1.25);
+        expect(inflation('sum', 1)).toBeGreaterThan(2);
+        expect(inflation(STAGE_BLEND, STAGE_BLEND_POWER)).toBeLessThan(1.35);
     });
 
     it('moves with the year on one number alone: the two layers just mix', () => {
