@@ -9,7 +9,7 @@
  *
  *   npm run generate-bls-scores -- --proxy https://futureofjobs.vercel.app/api/claude/messages
  *
- * Steps, each stopping the run on failure:
+ * Steps, each stopping the run on failure except step 3:
  *   1. Confirm from the data that exactly these 13 SOCs lack a Kelley role, and
  *      that the task plan matches the committed data/bls_scoring_plan.json.
  *   2. Control: re-score 5 published Kelley roles and compare each role's
@@ -19,12 +19,14 @@
  *   3. Growth sensitivity (report only): re-score 2 published Kelley roles with
  *      their stored tasks and employment but their BLS EP 2025–35 growth, the
  *      vintage the 13 use, and print them against published. Never published,
- *      and nothing is changed because of them.
+ *      and nothing is changed because of them. A role rejected twice shows as
+ *      failed in the table and the run goes on; a proxy failure still stops it.
  *   4. Score the 13 and write src/data/ai_scores_bls.json — all 13 or nothing.
  *
  * Only the proxy route is accepted (no local key). Any HTTP failure stops the
  * run at once. A response that fails parsing or the forecast rules gets one
- * retry, as in generate_ai_scores.ts. Hard limit: 30 API calls in total across
+ * retry, as in generate_ai_scores.ts. Every stop prints calls, tokens and cost.
+ * Hard limit: 30 API calls in total across
  * every run, retries included, counted in data/ai_scores_bls_run.json, which
  * also caches each success so a rerun never pays twice. Never delete that file
  * to "reset" the limit.
@@ -118,7 +120,14 @@ const mean = (xs: number[]) => xs.reduce((s, x) => s + x, 0) / xs.length;
 const avgAi = (a: JobAnalysisResult) => mean(a.tasks.map((t) => t.aiCapabilityScore));
 const avgHuman = (a: JobAnalysisResult) => mean(a.tasks.map((t) => t.humanCriticalityScore));
 
+/** Thrown when a role's responses are rejected on every attempt. Stops the run unless a step catches it. */
+class RejectedTwice extends Error {}
+
+/** Set as soon as the ledger loads, so every stop can print what was spent. */
+let runLedger: RunLedger | null = null;
+
 function fail(message: string, code = 1): never {
+    if (runLedger) reportUsage(runLedger);
     console.error(`\n❌  ${message}\n`);
     process.exit(code);
 }
@@ -206,7 +215,7 @@ async function scoreOnce(ledger: RunLedger, kind: Kind, key: string, label: stri
             if (attempt < ATTEMPTS_PER_ROLE) await sleep(RATE_LIMIT_MS);
         }
     }
-    fail(`${label}: ${ATTEMPTS_PER_ROLE} responses in a row failed validation (last: ${lastError}). Stopped.`);
+    throw new RejectedTwice(`${label}: ${ATTEMPTS_PER_ROLE} responses in a row failed validation (last: ${lastError}).`);
 }
 
 function checkPlan(plans: RolePlan[]): void {
@@ -243,6 +252,8 @@ function writePlan(plans: RolePlan[]): void {
 async function main(): Promise<void> {
     const PLAN_ONLY = process.argv.includes('--plan');
     const DRY_RUN = process.argv.includes('--dry-run');
+    const ledger = loadLedger();
+    runLedger = ledger;
 
     // ── 1. Confirm the 13 from the data ──────────────────────────────────────
     const inputs = loadPlanInputs(ROOT);
@@ -272,7 +283,6 @@ async function main(): Promise<void> {
         return job;
     });
 
-    const ledger = loadLedger();
     const sensitivityJobs = SENSITIVITY_JOB_IDS.map((id) => {
         const job = initialJobs.find((j) => j.id === id);
         if (!job || !published.scores[id]) fail(`Sensitivity role ${id} is missing from data.ts or ai_scores.json`);
@@ -343,7 +353,6 @@ async function main(): Promise<void> {
     console.log(`| **Mean absolute gap** | | | **${gapAi.toFixed(2)}** | | | **${gapHuman.toFixed(2)}** |`);
     console.log(`\nControl ${passed ? 'PASSED' : 'FAILED'} (limit ${CONTROL_PASS_POINTS} points on both measures).`);
     if (!passed) {
-        reportUsage(ledger);
         fail('Control run failed. The 13 roles were NOT scored. Nothing was written to src/data.', 2);
     }
 
@@ -354,12 +363,17 @@ async function main(): Promise<void> {
             console.log(`·  cached   ${job.title}`);
             continue;
         }
-        ledger.sensitivity![job.id] = await scoreOnce(ledger, 'sensitivity', job.id, `sensitivity: ${job.title} @ EP ${epGrowth}%`, {
-            title: job.title,
-            taskNames: job.tasks.map((t) => t.name),
-            employment: job.employment,
-            projectedGrowth: epGrowth,
-        }, auth);
+        try {
+            ledger.sensitivity![job.id] = await scoreOnce(ledger, 'sensitivity', job.id, `sensitivity: ${job.title} @ EP ${epGrowth}%`, {
+                title: job.title,
+                taskNames: job.tasks.map((t) => t.name),
+                employment: job.employment,
+                projectedGrowth: epGrowth,
+            }, auth);
+        } catch (err) {
+            if (!(err instanceof RejectedTwice)) throw err;
+            console.log(`✗  ${err.message} Report-only, so the run goes on.`);
+        }
         saveLedger(ledger);
         await sleep(RATE_LIMIT_MS);
     }
@@ -367,7 +381,11 @@ async function main(): Promise<void> {
     console.log('|---|---|---:|---:|---:|---:|---:|---:|');
     for (const { job, epGrowth } of sensitivityJobs) {
         const pub = published.scores[job.id];
-        const now = ledger.sensitivity![job.id].analysis;
+        const now = ledger.sensitivity![job.id]?.analysis;
+        if (!now) {
+            console.log(`| ${job.title} | ${job.projectedGrowth}% → ${epGrowth}% | ${(avgAi(pub) * 100).toFixed(1)} | failed | n/a | ${(avgHuman(pub) * 100).toFixed(1)} | failed | n/a |`);
+            continue;
+        }
         const [pa, na, ph, nh] = [avgAi(pub), avgAi(now), avgHuman(pub), avgHuman(now)].map((v) => v * 100);
         console.log(`| ${job.title} | ${job.projectedGrowth}% → ${epGrowth}% | ${pa.toFixed(1)} | ${na.toFixed(1)} | ${(na - pa).toFixed(1)} | ${ph.toFixed(1)} | ${nh.toFixed(1)} | ${(nh - ph).toFixed(1)} |`);
     }
@@ -464,6 +482,5 @@ function reportUsage(ledger: RunLedger): void {
 }
 
 main().catch((err) => {
-    console.error('\nFatal:', err instanceof Error ? err.message : err);
-    process.exit(1);
+    fail(err instanceof RejectedTwice ? `${err.message} Stopped.` : `Fatal: ${err instanceof Error ? err.message : err}`);
 });

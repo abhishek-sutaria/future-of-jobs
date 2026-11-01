@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { initialJobs } from '../data';
-import { parseJobAnalysis } from '../utils/taskScoring';
+import { buildJobAnalysisPrompt, parseJobAnalysis } from '../utils/taskScoring';
 import scoresFile from '../data/ai_scores.json';
 
 // Guards against the class of bug found in the 2026-08-20 data audit: baked
@@ -49,5 +49,63 @@ describe('baked forecasts respect the BLS envelope', () => {
             }
         }
         expect(stale).toEqual([]);
+    });
+});
+
+describe('the forecast check uses the cap the prompt states', () => {
+    const YEARS = [2025, 2026, 2027, 2028, 2029, 2030];
+    const check = (projectedGrowth: number, end: number) =>
+        parseJobAnalysis(
+            {
+                tasks: [{ aiCapabilityScore: 0.5, humanCriticalityScore: 0.5 }],
+                yearlyForecast: YEARS.map((year, i) => ({ year, growthImpact: Number(((end * i) / 5).toFixed(2)) })),
+            },
+            ['A task'],
+            projectedGrowth,
+        );
+
+    it('growth 1.4 accepts 0.78 and rejects 0.79', () => {
+        expect(() => check(1.4, 0.78)).not.toThrow();
+        expect(() => check(1.4, 0.79)).toThrow(/outside the BLS envelope/);
+    });
+
+    it('growth -1 accepts -0.56 and rejects -0.57', () => {
+        expect(() => check(-1, -0.56)).not.toThrow();
+        expect(() => check(-1, -0.57)).toThrow(/outside the BLS envelope/);
+    });
+
+    it('still rejects a forecast on the wrong side of zero', () => {
+        expect(() => check(1.4, -0.1)).toThrow(/outside the BLS envelope/);
+        expect(() => check(-1, 0.1)).toThrow(/outside the BLS envelope/);
+    });
+
+    it('leaves the near-zero rule as it was', () => {
+        expect(() => check(0, 0.8)).not.toThrow();
+        expect(() => check(0, -0.8)).not.toThrow();
+        expect(() => check(0, 0.81)).toThrow(/must stay within/);
+        // Rounds to a 0.00 cap but is not flat, so it does not get the near-zero allowance.
+        expect(() => check(0.001, 0.5)).toThrow(/outside the BLS envelope/);
+    });
+
+    it('accepts the exact cap written in the prompt, at every growth from -20% to +20%', () => {
+        for (let tenths = -200; tenths <= 200; tenths++) {
+            const growth = tenths / 10;
+            if (growth === 0) continue;
+            const stated = buildJobAnalysisPrompt('A role', ['A task'], 1000, growth).match(/\(cap = (-?\d+\.\d\d)\)/);
+            expect(stated, String(growth)).not.toBeNull();
+            expect(() => check(growth, Number(stated![1])), String(growth)).not.toThrow();
+        }
+    });
+
+    it('all 50 published roles still pass', () => {
+        expect(initialJobs).toHaveLength(50);
+        for (const job of initialJobs) {
+            const entry = scores[job.id];
+            expect(entry?.yearlyForecast, job.title).toBeDefined();
+            expect(
+                () => parseJobAnalysis({ tasks: entry.tasks, yearlyForecast: entry.yearlyForecast! }, job.tasks.map((t) => t.name), job.projectedGrowth),
+                job.title,
+            ).not.toThrow();
+        }
     });
 });

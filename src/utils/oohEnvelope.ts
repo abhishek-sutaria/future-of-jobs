@@ -11,3 +11,11 @@ import { OOH_FRACTION_AT_YEAR_MAX } from '../config/constants';
 export function oohEnvelopeCap(projectedGrowth: number): number {
     return projectedGrowth * OOH_FRACTION_AT_YEAR_MAX;
 }
+
+/**
+ * The cap as the scoring prompt states it, at two decimals. The forecast check
+ * reads this same value, so a forecast on the cap the prompt gave Claude passes.
+ */
+export function oohEnvelopeCapLabel(projectedGrowth: number): string {
+    return oohEnvelopeCap(projectedGrowth).toFixed(2);
+}
