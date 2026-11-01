@@ -167,10 +167,13 @@ export function compareWithKelley(score: Pick<BlsRoleScore, 'automationCostIndex
     const rows = Object.values(published.scores).filter((a) => a.tasks.length > 0);
     if (rows.length === 0) return null;
     const risks = rows.map((a) => parseFloat(mean(a.tasks.map((t) => t.aiCapabilityScore)).toFixed(2)));
-    const humans = rows.map((a) => mean(a.tasks.map((t) => t.humanCriticalityScore)));
+    // Three decimals on both sides: exact for five two-decimal task scores, so a
+    // tie stays a tie and two decimals' false ties (0.564 and 0.56) never appear.
+    const roundHuman = (v: number) => parseFloat(v.toFixed(3));
+    const humans = rows.map((a) => roundHuman(mean(a.tasks.map((t) => t.humanCriticalityScore))));
     const sorted = [...humans].sort((a, b) => a - b);
     const pct = (p: number) => sorted[Math.min(Math.floor(p * sorted.length), sorted.length - 1)];
-    const h = score.humanCriticality;
+    const h = roundHuman(score.humanCriticality);
     return {
         total: rows.length,
         riskHigherThan: risks.filter((r) => r < score.automationCostIndex).length,

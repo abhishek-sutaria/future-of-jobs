@@ -345,7 +345,43 @@ describe.runIf(PRESENT)('after the scoring run (ai_scores_bls.json)', () => {
             expect(claudeControls(doc), soc).toEqual([]);
             const c = compareWithKelley(s)!;
             expect(c.total).toBe(50);
+            expect(doc.querySelector('[data-testid="bls-rank"]')!.textContent).toContain(`human judgment is higher than ${c.humanHigherThan} of them`);
         }
+    });
+
+    it('places all 13 among the 50, with human scores compared at a fixed precision', () => {
+        const expected: Record<string, [risk: number, human: number, label: string]> = {
+            '13-1011': [10, 9, 'At Risk'],
+            '13-1031': [44, 3, 'At Risk'],
+            '13-1032': [30, 12, 'At Risk'],
+            '13-1041': [26, 30, 'High'],
+            '13-1074': [1, 38, 'Future-Proof'],
+            '13-1075': [3, 47, 'Future-Proof'],
+            '13-1131': [11, 30, 'High'],
+            '13-1199': [4, 45, 'Future-Proof'],
+            '13-2020': [26, 12, 'High'],
+            '13-2061': [3, 47, 'Future-Proof'],
+            '13-2071': [45, 6, 'At Risk'],
+            '13-2081': [48, 0, 'At Risk'],
+            '13-2082': [47, 6, 'At Risk'],
+        };
+        for (const soc of BF_TARGET_SOCS) {
+            const c = compareWithKelley(BLS_SCORES.get(soc)!)!;
+            expect([c.riskHigherThan, c.humanHigherThan, c.resilienceLabel], soc).toEqual(expected[soc]);
+        }
+    });
+
+    it('13-1199 ties one published role at 0.77, and the tie is not counted as lower', () => {
+        const published = JSON.parse(fs.readFileSync(path.join(ROOT, 'src/data/ai_scores.json'), 'utf-8')) as {
+            scores: Record<string, { tasks: { humanCriticalityScore: number }[] }>;
+        };
+        // Whole hundredths summed as integers, so this count has no float error of its own.
+        const totals = Object.values(published.scores).map((a) => a.tasks.reduce((sum, t) => sum + Math.round(t.humanCriticalityScore * 100), 0));
+        const target = BLS_SCORES.get('13-1199')!.tasks.reduce((sum, t) => sum + Math.round(t.humanCriticalityScore * 100), 0);
+        expect(target).toBe(385);
+        expect(totals.filter((t) => t === target)).toHaveLength(1);
+        expect(totals.filter((t) => t < target)).toHaveLength(45);
+        expect(compareWithKelley(BLS_SCORES.get('13-1199')!)!.humanHigherThan).toBe(45);
     });
 
     it('wording says scores cover the 50 Kelley roles plus all of Business & Finance', () => {
