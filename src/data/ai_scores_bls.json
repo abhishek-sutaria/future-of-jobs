@@ -1,0 +1,1089 @@
+{
+  "version": 5,
+  "promptVersion": "src/utils/taskScoring.ts buildJobAnalysisPrompt + parseJobAnalysis, schema v5 (same as src/data/ai_scores.json)",
+  "model": "claude-sonnet-5",
+  "thinking": "disabled",
+  "maxTokens": 4096,
+  "tasksPerRole": 5,
+  "route": "app proxy /api/claude/messages",
+  "generatedAt": "2026-11-01T18:16:27.413Z",
+  "inputs": {
+    "employment": "BLS OEWS May 2025 national employment (src/data/occupations/13.json)",
+    "growth": "BLS Employment Projections 2025–35, Table 1.2, percent change (src/data/occupations/13.json ep.percentChange)",
+    "promptGrowthLabel": "BLS Occupational Outlook 2024-2034 projected employment change for this occupation group (10-year total)",
+    "growthNote": "Vintage mismatch: the shared prompt calls this figure the BLS Occupational Outlook 2024-2034 change; the value passed is the BLS Employment Projections 2025-2035 change, the only projection the repository holds for these occupations. Both are 10-year totals in percent from the same BLS programme. The prompt text was not changed, so the method matches the published set."
+  },
+  "taskSource": "O*NET 30.1 task statements (data/db_30_1_text/Task Statements.txt); plan in data/bls_scoring_plan.json",
+  "controlRun": {
+    "roles": [
+      "Financial Analyst",
+      "Project Management Specialist",
+      "Management Consultant",
+      "Loan Officer",
+      "Credit Analyst"
+    ],
+    "meanAbsGapRiskPoints": 1.08,
+    "meanAbsGapHumanPoints": 1.4,
+    "limitPoints": 5,
+    "passed": true
+  },
+  "scores": {
+    "13-1011": {
+      "title": "Agents and Business Managers of Artists, Performers, and Athletes",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "13-1011.00"
+      ],
+      "employment": 12620,
+      "projectedGrowth": 9.7,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-01T18:14:52.586Z",
+      "promptSha256": "3c0114f1a29a3662ad4f5c2543667827fdc844de0237ad77866068d663fad9c5",
+      "tasks": [
+        {
+          "taskName": "Collect fees, commissions, or other payments, according to contract terms.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.25,
+          "onetCode": "13-1011.00",
+          "taskId": 12865
+        },
+        {
+          "taskName": "Send samples of clients' work and other promotional material to potential employers to obtain auditions, sponsorships, or endorsement deals.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.45,
+          "onetCode": "13-1011.00",
+          "taskId": 21163
+        },
+        {
+          "taskName": "Keep informed of industry trends and deals.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.35,
+          "onetCode": "13-1011.00",
+          "taskId": 12870
+        },
+        {
+          "taskName": "Conduct auditions or interviews to evaluate potential clients.",
+          "aiCapabilityScore": 0.2,
+          "humanCriticalityScore": 0.85,
+          "onetCode": "13-1011.00",
+          "taskId": 12872
+        },
+        {
+          "taskName": "Negotiate with managers, promoters, union officials, and other persons regarding clients' contractual rights and obligations.",
+          "aiCapabilityScore": 0.15,
+          "humanCriticalityScore": 0.92,
+          "onetCode": "13-1011.00",
+          "taskId": 12869
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.85,
+          "reasoning": "Steady demand for personalized representation supports modest growth."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 1.95,
+          "reasoning": "Growing entertainment and sports markets slightly offset AI efficiency gains."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 3.05,
+          "reasoning": "Continued industry growth outweighs incremental automation of admin tasks."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 4.2,
+          "reasoning": "Negotiation and relationship work remain human-centric, sustaining employment growth."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 5.39,
+          "reasoning": "Reaches capped midpoint of BLS decade projection as AI handles routine tasks only."
+        }
+      ]
+    },
+    "13-1031": {
+      "title": "Claims Adjusters, Examiners, and Investigators",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "13-1031.00"
+      ],
+      "employment": 324230,
+      "projectedGrowth": -5.5,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-01T18:14:59.556Z",
+      "promptSha256": "793df9a619aab8364d4983f7d330597bfc142f8d9a5dd4c12c20e4a69355350b",
+      "tasks": [
+        {
+          "taskName": "Examine claims forms and other records to determine insurance coverage.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.3,
+          "onetCode": "13-1031.00",
+          "taskId": 21417
+        },
+        {
+          "taskName": "Analyze information gathered by investigation and report findings and recommendations.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.5,
+          "onetCode": "13-1031.00",
+          "taskId": 21418
+        },
+        {
+          "taskName": "Pay and process claims within designated authority level.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.35,
+          "onetCode": "13-1031.00",
+          "taskId": 21426
+        },
+        {
+          "taskName": "Investigate, evaluate, and settle claims, applying technical knowledge and human relations skills to effect fair and prompt disposal of cases and to contribute to a reduced loss ratio.",
+          "aiCapabilityScore": 0.4,
+          "humanCriticalityScore": 0.75,
+          "onetCode": "13-1031.00",
+          "taskId": 21423
+        },
+        {
+          "taskName": "Verify and analyze data used in settling claims to ensure that claims are valid and that settlements are made according to company practices and procedures.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.4,
+          "onetCode": "13-1031.00",
+          "taskId": 21428
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -0.45,
+          "reasoning": "Early GenAI adoption begins streamlining claims documentation and data verification."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -1.05,
+          "reasoning": "Broader automation of routine claims processing reduces headcount growth."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -1.75,
+          "reasoning": "AI tools increasingly handle claims analysis, displacing more administrative roles."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -2.4,
+          "reasoning": "Continued efficiency gains from AI-driven investigation support slow hiring further."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -3.06,
+          "reasoning": "Cumulative automation reaches about 56% of the decade-long projected decline."
+        }
+      ]
+    },
+    "13-1032": {
+      "title": "Insurance Appraisers, Auto Damage",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "13-1032.00"
+      ],
+      "employment": 11560,
+      "projectedGrowth": -8.7,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-01T18:15:06.530Z",
+      "promptSha256": "4bc68d7269749b0964a603d4b4f2e5046ac582a7f323690bfb4995cdd441b71b",
+      "tasks": [
+        {
+          "taskName": "Evaluate practicality of repair as opposed to payment of market value of vehicle before accident.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.6,
+          "onetCode": "13-1032.00",
+          "taskId": 7249
+        },
+        {
+          "taskName": "Review repair cost estimates with automobile repair shop to secure agreement on cost of repairs.",
+          "aiCapabilityScore": 0.4,
+          "humanCriticalityScore": 0.7,
+          "onetCode": "13-1032.00",
+          "taskId": 7247
+        },
+        {
+          "taskName": "Examine damaged vehicle to determine extent of structural, body, mechanical, electrical, or interior damage.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.8,
+          "onetCode": "13-1032.00",
+          "taskId": 7248
+        },
+        {
+          "taskName": "Prepare insurance forms to indicate repair cost estimates and recommendations.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.35,
+          "onetCode": "13-1032.00",
+          "taskId": 7251
+        },
+        {
+          "taskName": "Estimate parts and labor to repair damage, using standard automotive labor and parts cost manuals and knowledge of automotive repair.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.5,
+          "onetCode": "13-1032.00",
+          "taskId": 7246
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -0.65,
+          "reasoning": "Early AI-assisted estimating tools begin trimming headcount growth."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -1.55,
+          "reasoning": "Broader adoption of automated damage assessment software reduces demand."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -2.6,
+          "reasoning": "Mobile imaging and AI estimation tools displace routine appraisal tasks."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -3.7,
+          "reasoning": "Continued automation of estimate generation and claims workflows."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -4.83,
+          "reasoning": "Reaches capped midpoint of decade-long projected decline."
+        }
+      ]
+    },
+    "13-1041": {
+      "title": "Compliance Officers",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "13-1041.00"
+      ],
+      "employment": 417070,
+      "projectedGrowth": 3.8,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-01T18:15:13.770Z",
+      "promptSha256": "b4a2be3af407f1f494b53da82cd2229c956570bf8c67f00b28512da12e8795e5",
+      "tasks": [
+        {
+          "taskName": "Warn violators of infractions or penalties.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.75,
+          "onetCode": "13-1041.00",
+          "taskId": 21446
+        },
+        {
+          "taskName": "Evaluate applications, records, or documents to gather information about eligibility or liability issues.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.6,
+          "onetCode": "13-1041.00",
+          "taskId": 21447
+        },
+        {
+          "taskName": "Advise licensees or other individuals or groups concerning licensing, permit, or passport regulations.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.65,
+          "onetCode": "13-1041.00",
+          "taskId": 21448
+        },
+        {
+          "taskName": "Prepare reports of activities, evaluations, recommendations, or decisions.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.55,
+          "onetCode": "13-1041.00",
+          "taskId": 21449
+        },
+        {
+          "taskName": "Report law or regulation violations to appropriate boards or agencies.",
+          "aiCapabilityScore": 0.4,
+          "humanCriticalityScore": 0.8,
+          "onetCode": "13-1041.00",
+          "taskId": 21450
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.35,
+          "reasoning": "Gradual demand growth from regulatory complexity outpaces modest AI task offsets."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 0.75,
+          "reasoning": "Continued compliance burden growth with AI assisting but not replacing core judgment roles."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 1.15,
+          "reasoning": "Steady hiring to meet expanding regulatory requirements despite AI efficiency gains."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 1.65,
+          "reasoning": "Employment growth continues as human oversight remains essential for enforcement decisions."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 2.11,
+          "reasoning": "Reaches capped midpoint of decade projection reflecting sustained but tempered growth."
+        }
+      ]
+    },
+    "13-1074": {
+      "title": "Farm Labor Contractors",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "13-1074.00"
+      ],
+      "employment": 310,
+      "projectedGrowth": 7.4,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-01T18:15:20.871Z",
+      "promptSha256": "57444878049e16fd17fd5bd80bfac0f6fb89b37e0cd2c76f10226f33dc976e48",
+      "tasks": [
+        {
+          "taskName": "Pay wages of contracted farm laborers.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.3,
+          "onetCode": "13-1074.00",
+          "taskId": 14838
+        },
+        {
+          "taskName": "Provide food, drinking water, and field sanitation facilities to contracted workers.",
+          "aiCapabilityScore": 0.05,
+          "humanCriticalityScore": 0.9,
+          "onetCode": "13-1074.00",
+          "taskId": 14839
+        },
+        {
+          "taskName": "Recruit and hire agricultural workers.",
+          "aiCapabilityScore": 0.35,
+          "humanCriticalityScore": 0.75,
+          "onetCode": "13-1074.00",
+          "taskId": 14840
+        },
+        {
+          "taskName": "Employ foremen to deal directly with workers when recruiting, hiring, instructing, assigning tasks, and enforcing work rules.",
+          "aiCapabilityScore": 0.15,
+          "humanCriticalityScore": 0.85,
+          "onetCode": "13-1074.00",
+          "taskId": 14841
+        },
+        {
+          "taskName": "Supervise the work of contracted employees.",
+          "aiCapabilityScore": 0.2,
+          "humanCriticalityScore": 0.8,
+          "onetCode": "13-1074.00",
+          "taskId": 14842
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year for cumulative growth tracking."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.7,
+          "reasoning": "Modest demand growth from stable agricultural labor needs."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 1.5,
+          "reasoning": "Gradual employment increase tracking farm labor demand."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 2.3,
+          "reasoning": "Continued steady growth with minimal AI displacement risk."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 3.2,
+          "reasoning": "Physical and interpersonal tasks keep demand on upward path."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 4.11,
+          "reasoning": "Reaches capped midpoint of BLS decade projection by 2030."
+        }
+      ]
+    },
+    "13-1075": {
+      "title": "Labor Relations Specialists",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "13-1075.00"
+      ],
+      "employment": 64810,
+      "projectedGrowth": 2.1,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-01T18:15:27.818Z",
+      "promptSha256": "44ebaf8d0ef078101912532aecfff4ac60bce229c9c2b55ff76a49de870705cd",
+      "tasks": [
+        {
+          "taskName": "Negotiate collective bargaining agreements.",
+          "aiCapabilityScore": 0.15,
+          "humanCriticalityScore": 0.97,
+          "onetCode": "13-1075.00",
+          "taskId": 18886
+        },
+        {
+          "taskName": "Investigate and evaluate union complaints or arguments to determine viability.",
+          "aiCapabilityScore": 0.35,
+          "humanCriticalityScore": 0.85,
+          "onetCode": "13-1075.00",
+          "taskId": 18883
+        },
+        {
+          "taskName": "Propose resolutions for collective bargaining or other labor or contract negotiations.",
+          "aiCapabilityScore": 0.3,
+          "humanCriticalityScore": 0.88,
+          "onetCode": "13-1075.00",
+          "taskId": 18890
+        },
+        {
+          "taskName": "Draft contract proposals or counter-proposals for collective bargaining or other labor negotiations.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.65,
+          "onetCode": "13-1075.00",
+          "taskId": 18879
+        },
+        {
+          "taskName": "Interpret contractual agreements for employers and employees engaged in collective bargaining or other labor relations processes.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.75,
+          "onetCode": "13-1075.00",
+          "taskId": 18882
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.18,
+          "reasoning": "Slow employment growth consistent with stable demand for negotiators."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 0.38,
+          "reasoning": "Gradual hiring growth as labor relations needs persist despite AI drafting aids."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 0.58,
+          "reasoning": "Continued modest growth as human-centric negotiation tasks remain largely unautomated."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 0.75,
+          "reasoning": "Steady incremental growth approaching the capped decade trajectory."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 0.9,
+          "reasoning": "Reaches about 56% of the decade's projected growth, reflecting limited AI displacement in high-judgment roles."
+        }
+      ]
+    },
+    "13-1131": {
+      "title": "Fundraisers",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "13-1131.00"
+      ],
+      "employment": 111040,
+      "projectedGrowth": 5.5,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-01T18:15:35.054Z",
+      "promptSha256": "50465a5cf494c838db6b52d90b33345ecccaa917c1d4c33a31c635b69b8470de",
+      "tasks": [
+        {
+          "taskName": "Identify and build relationships with potential donors.",
+          "aiCapabilityScore": 0.3,
+          "humanCriticalityScore": 0.9,
+          "onetCode": "13-1131.00",
+          "taskId": 18917
+        },
+        {
+          "taskName": "Secure commitments of participation or donation from individuals or corporate donors.",
+          "aiCapabilityScore": 0.2,
+          "humanCriticalityScore": 0.95,
+          "onetCode": "13-1131.00",
+          "taskId": 18922
+        },
+        {
+          "taskName": "Write and send letters of thanks to donors.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.35,
+          "onetCode": "13-1131.00",
+          "taskId": 18931
+        },
+        {
+          "taskName": "Solicit cash or in-kind donations or sponsorships from individual, business, or government donors.",
+          "aiCapabilityScore": 0.25,
+          "humanCriticalityScore": 0.9,
+          "onetCode": "13-1131.00",
+          "taskId": 18923
+        },
+        {
+          "taskName": "Create or update donor databases.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.25,
+          "onetCode": "13-1131.00",
+          "taskId": 18907
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year for cumulative forecast."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.55,
+          "reasoning": "Modest growth as demand for fundraising persists despite AI aiding admin tasks."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 1.15,
+          "reasoning": "Steady nonprofit sector growth continues to drive hiring."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 1.75,
+          "reasoning": "AI tools improve efficiency but relationship-driven roles still expand."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 2.4,
+          "reasoning": "Continued philanthropic growth supports gradual employment increase."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 3.06,
+          "reasoning": "Reaches capped midpoint of 10-year BLS projected growth trajectory."
+        }
+      ]
+    },
+    "13-1199": {
+      "title": "Business Operations Specialists, All Other",
+      "rule": "round-robin-sub-codes",
+      "onetCodes": [
+        "13-1199.04",
+        "13-1199.05",
+        "13-1199.06",
+        "13-1199.07"
+      ],
+      "employment": 1087090,
+      "projectedGrowth": 3.9,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-01T18:15:41.849Z",
+      "promptSha256": "505f0625edb07003c81fb956d2c474633ae9a1b03d9f493a4f5f87862abfdb45",
+      "tasks": [
+        {
+          "taskName": "Develop emergency management plans for recovery decision making and communications, continuity of critical departmental processes, or temporary shut-down of non-critical departments to ensure continuity of operation and governance.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.85,
+          "onetCode": "13-1199.04",
+          "taskId": 15965
+        },
+        {
+          "taskName": "Develop sustainability project goals, objectives, initiatives, or strategies in collaboration with other sustainability professionals.",
+          "aiCapabilityScore": 0.4,
+          "humanCriticalityScore": 0.8,
+          "onetCode": "13-1199.05",
+          "taskId": 15981
+        },
+        {
+          "taskName": "Fill customer orders by packaging sold items and documentation for direct shipping or by transferring orders to manufacturers or third-party distributors.",
+          "aiCapabilityScore": 0.3,
+          "humanCriticalityScore": 0.6,
+          "onetCode": "13-1199.06",
+          "taskId": 15718
+        },
+        {
+          "taskName": "Assess the nature and level of physical security threats so that the scope of the problem can be determined.",
+          "aiCapabilityScore": 0.35,
+          "humanCriticalityScore": 0.85,
+          "onetCode": "13-1199.07",
+          "taskId": 21482
+        },
+        {
+          "taskName": "Test documented disaster recovery strategies and plans.",
+          "aiCapabilityScore": 0.5,
+          "humanCriticalityScore": 0.75,
+          "onetCode": "13-1199.04",
+          "taskId": 15956
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.45,
+          "reasoning": "Modest hiring growth as demand for operations specialists continues steadily."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 0.9,
+          "reasoning": "Gradual employment growth consistent with long-term BLS projections."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 1.35,
+          "reasoning": "Continued incremental growth as AI augments rather than replaces complex tasks."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 1.8,
+          "reasoning": "Steady upward trajectory nearing mid-decade projection targets."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 2.17,
+          "reasoning": "Reaches capped 56% of decade-long BLS growth projection by 2030."
+        }
+      ]
+    },
+    "13-2020": {
+      "title": "Property Appraisers and Assessors",
+      "rule": "round-robin-onet-codes",
+      "onetCodes": [
+        "13-2022.00",
+        "13-2023.00"
+      ],
+      "employment": 57070,
+      "projectedGrowth": 3.5,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-01T18:15:49.117Z",
+      "promptSha256": "b742d8624981adf10397f22ad4a5106d081db5ec41f2f00d25e81d7cffb5ee15",
+      "tasks": [
+        {
+          "taskName": "Write descriptions of the property being appraised.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.3,
+          "onetCode": "13-2022.00",
+          "taskId": 21548
+        },
+        {
+          "taskName": "Compute final estimation of property values, taking into account such factors as depreciation, replacement costs, value comparisons of similar properties, and income potential.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.65,
+          "onetCode": "13-2023.00",
+          "taskId": 21549
+        },
+        {
+          "taskName": "Determine the appropriate type of valuation to make, such as fair market, replacement, or liquidation, based on the needs of the property owner.",
+          "aiCapabilityScore": 0.35,
+          "humanCriticalityScore": 0.8,
+          "onetCode": "13-2022.00",
+          "taskId": 21537
+        },
+        {
+          "taskName": "Prepare written reports that estimate property values, outline methods by which the estimations were made, and meet appraisal standards.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.55,
+          "onetCode": "13-2023.00",
+          "taskId": 21550
+        },
+        {
+          "taskName": "Document physical characteristics of property such as measurements, quality, and design.",
+          "aiCapabilityScore": 0.4,
+          "humanCriticalityScore": 0.7,
+          "onetCode": "13-2022.00",
+          "taskId": 21538
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.3,
+          "reasoning": "Slow early adoption of AI tools alongside steady appraisal demand."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 0.65,
+          "reasoning": "Gradual employment growth as housing and lending markets expand."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 1,
+          "reasoning": "Continued modest job growth despite AI efficiency gains in drafting reports."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 1.4,
+          "reasoning": "Demand for human judgment in valuations sustains employment growth."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 1.75,
+          "reasoning": "Approaching 56% of decade-long BLS projected growth by 2030."
+        }
+      ]
+    },
+    "13-2061": {
+      "title": "Financial Examiners",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "13-2061.00"
+      ],
+      "employment": 67830,
+      "projectedGrowth": 9.3,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-01T18:15:56.483Z",
+      "promptSha256": "8ea9787eba73b72851823d8d45d1d403895281f51f52d9112946ebf1a4159ece",
+      "tasks": [
+        {
+          "taskName": "Direct and participate in formal and informal meetings with bank directors, trustees, senior management, counsels, outside accountants, and consultants to gather information and discuss findings.",
+          "aiCapabilityScore": 0.2,
+          "humanCriticalityScore": 0.9,
+          "onetCode": "13-2061.00",
+          "taskId": 7324
+        },
+        {
+          "taskName": "Recommend actions to ensure compliance with laws and regulations, or to protect solvency of institutions.",
+          "aiCapabilityScore": 0.4,
+          "humanCriticalityScore": 0.85,
+          "onetCode": "13-2061.00",
+          "taskId": 7317
+        },
+        {
+          "taskName": "Prepare reports, exhibits, and other supporting schedules that detail an institution's safety and soundness, compliance with laws and regulations, and recommended solutions to questionable financial conditions.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.65,
+          "onetCode": "13-2061.00",
+          "taskId": 7319
+        },
+        {
+          "taskName": "Resolve problems concerning the overall financial integrity of banking institutions including loan investment portfolios, capital, earnings, and specific or large troubled accounts.",
+          "aiCapabilityScore": 0.3,
+          "humanCriticalityScore": 0.88,
+          "onetCode": "13-2061.00",
+          "taskId": 7327
+        },
+        {
+          "taskName": "Investigate activities of institutions to enforce laws and regulations and to ensure legality of transactions and operations or financial solvency.",
+          "aiCapabilityScore": 0.35,
+          "humanCriticalityScore": 0.85,
+          "onetCode": "13-2061.00",
+          "taskId": 7314
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change assumed."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.95,
+          "reasoning": "Steady regulatory demand supports modest early job growth."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 1.95,
+          "reasoning": "Continued financial sector growth sustains hiring pace."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 3,
+          "reasoning": "Growing compliance complexity offsets partial AI task assistance."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 4.1,
+          "reasoning": "Demand for oversight keeps pace with gradual automation adoption."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 5.17,
+          "reasoning": "Reaches capped midpoint of 10-year BLS projected growth path."
+        }
+      ]
+    },
+    "13-2071": {
+      "title": "Credit Counselors",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "13-2071.00"
+      ],
+      "employment": 27770,
+      "projectedGrowth": 3.3,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-01T18:16:04.270Z",
+      "promptSha256": "f062a87de2db3b7562e7af9f5e1113e9d5de8da10167ee0438c9e33add080cec",
+      "tasks": [
+        {
+          "taskName": "Calculate clients' available monthly income to meet debt obligations.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.3,
+          "onetCode": "13-2071.00",
+          "taskId": 18935
+        },
+        {
+          "taskName": "Explain services or policies to clients, such as debt management program rules, advantages and disadvantages of using services, or creditor concession policies.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.55,
+          "onetCode": "13-2071.00",
+          "taskId": 18938
+        },
+        {
+          "taskName": "Create debt management plans, spending plans, or budgets to assist clients to meet financial goals.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.5,
+          "onetCode": "13-2071.00",
+          "taskId": 18936
+        },
+        {
+          "taskName": "Prioritize client debt repayment to avoid dire consequences, such as bankruptcy or foreclosure or to reduce overall costs, such as by paying high-interest or short-term loans first.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.6,
+          "onetCode": "13-2071.00",
+          "taskId": 18943
+        },
+        {
+          "taskName": "Assess clients' overall financial situations by reviewing income, assets, debts, expenses, credit reports, or other financial information.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.65,
+          "onetCode": "13-2071.00",
+          "taskId": 18934
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no change."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.3,
+          "reasoning": "Slow initial adoption of AI tools begins to modestly affect hiring growth."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 0.65,
+          "reasoning": "Gradual AI-assisted efficiency gains slightly temper job growth."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 1,
+          "reasoning": "Wider AI tool integration continues to shape counselor workflows and growth pace."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 1.4,
+          "reasoning": "Role growth continues but tempered by automation of routine financial tasks."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 1.83,
+          "reasoning": "Growth reaches the capped 56% of decade-long BLS projection amid continued AI augmentation."
+        }
+      ]
+    },
+    "13-2081": {
+      "title": "Tax Examiners and Collectors, and Revenue Agents",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "13-2081.00"
+      ],
+      "employment": 56610,
+      "projectedGrowth": -1,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-01T18:16:12.260Z",
+      "promptSha256": "06167dfaf0540e58e26c85c7e3b979e72bc493ad498f02a797aeedb2275c81b4",
+      "tasks": [
+        {
+          "taskName": "Send notices to taxpayers when accounts are delinquent.",
+          "aiCapabilityScore": 0.9,
+          "humanCriticalityScore": 0.15,
+          "onetCode": "13-2081.00",
+          "taskId": 5293
+        },
+        {
+          "taskName": "Confer with taxpayers or their representatives to discuss the issues, laws, and regulations involved in returns, and to resolve problems with returns.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.8,
+          "onetCode": "13-2081.00",
+          "taskId": 5291
+        },
+        {
+          "taskName": "Notify taxpayers of any overpayment or underpayment, and either issue a refund or request further payment.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.35,
+          "onetCode": "13-2081.00",
+          "taskId": 5294
+        },
+        {
+          "taskName": "Maintain records for each case, including contacts, telephone numbers, and actions taken.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.2,
+          "onetCode": "13-2081.00",
+          "taskId": 5290
+        },
+        {
+          "taskName": "Contact taxpayers by mail or telephone to address discrepancies and to request supporting documentation.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.4,
+          "onetCode": "13-2081.00",
+          "taskId": 5292
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -0.08,
+          "reasoning": "Early GenAI adoption begins automating notices and recordkeeping."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -0.19,
+          "reasoning": "Broader use of AI for correspondence and discrepancy resolution reduces staffing needs."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -0.32,
+          "reasoning": "Agencies scale automated case management, slowing hiring further."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -0.46,
+          "reasoning": "Continued efficiency gains from AI-driven taxpayer communication tools."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -0.56,
+          "reasoning": "Cumulative automation reaches the capped share of the decade-long projected decline."
+        }
+      ]
+    },
+    "13-2082": {
+      "title": "Tax Preparers",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "13-2082.00"
+      ],
+      "employment": 76480,
+      "projectedGrowth": 4.7,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-01T18:16:19.429Z",
+      "promptSha256": "8d864310d07c2673af9427cbb9dab160dbc34f0e528866b012628df963fa31e5",
+      "tasks": [
+        {
+          "taskName": "Compute taxes owed or overpaid, using adding machines or personal computers, and complete entries on forms, following tax form instructions and tax tables.",
+          "aiCapabilityScore": 0.93,
+          "humanCriticalityScore": 0.2,
+          "onetCode": "13-2082.00",
+          "taskId": 7358
+        },
+        {
+          "taskName": "Use all appropriate adjustments, deductions, and credits to keep clients' taxes to a minimum.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.45,
+          "onetCode": "13-2082.00",
+          "taskId": 7360
+        },
+        {
+          "taskName": "Furnish taxpayers with sufficient information and advice to ensure correct tax form completion.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.55,
+          "onetCode": "13-2082.00",
+          "taskId": 7363
+        },
+        {
+          "taskName": "Interview clients to obtain additional information on taxable income and deductible expenses and allowances.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.75,
+          "onetCode": "13-2082.00",
+          "taskId": 7361
+        },
+        {
+          "taskName": "Prepare or assist in preparing simple to complex tax returns for individuals or small businesses.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.6,
+          "onetCode": "13-2082.00",
+          "taskId": 7359
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.35,
+          "reasoning": "Slow initial AI adoption in basic computation tasks allows modest hiring growth."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 0.85,
+          "reasoning": "Continued demand for complex return preparation and advisory work supports growth."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 1.4,
+          "reasoning": "AI handles routine filing while demand for client-facing expertise sustains employment."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 2,
+          "reasoning": "Growth moderates as automation absorbs more routine tasks but advisory roles expand."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 2.55,
+          "reasoning": "Cumulative growth approaches the capped trajectory consistent with BLS decade outlook."
+        }
+      ]
+    }
+  }
+}
