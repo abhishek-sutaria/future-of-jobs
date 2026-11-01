@@ -10,6 +10,7 @@ import { formatCount, formatGrowth, formatWorkersShort, growthColor } from '../u
 import { kelleyCountByContinent } from '../utils/roles';
 import { breadcrumbs, escapeGoesUp, familySummary, levelAnnouncement, levelKind, type Crumb, type WorldLevel } from '../utils/worldLevel';
 import { IconChevronDown, IconLayers } from './ui/Icons';
+import { BUSINESS_FINANCE_FULLY_SCORED } from '../utils/blsScores';
 
 const CHROME_BUTTON = 'h-9 [@media(pointer:coarse)]:h-11 rounded-lg border bg-gray-900/70 backdrop-blur-sm text-xs font-semibold transition-colors';
 
@@ -260,7 +261,9 @@ export const WorldBar: React.FC = () => {
                     type="button"
                     onClick={() => setKelleyOnly(!kelleyOnly)}
                     aria-pressed={kelleyOnly}
-                    title="Highlight only the 50 Kelley business roles, the ones with published AI scores"
+                    title={BUSINESS_FINANCE_FULLY_SCORED
+                        ? 'Highlight only the 50 Kelley business roles. The other Business & Finance occupations have AI scores too, but are not Kelley roles.'
+                        : 'Highlight only the 50 Kelley business roles, the ones with published AI scores'}
                     className={`h-9 [@media(pointer:coarse)]:h-11 px-3 rounded-lg border text-xs font-semibold transition-colors flex items-center gap-2 backdrop-blur-sm ${
                         kelleyOnly
                             ? 'border-amber-400/50 bg-amber-500/15 text-amber-100'

@@ -1,10 +1,11 @@
 // @vitest-environment jsdom
 /**
- * Opening an occupation without published AI scores must never call Claude:
- * there are no scores for the prose to explain, and every call costs money.
- * Mounts the real UI (which owns the auto-analyze effect), opens every one of
- * the 783 unscored occupations through the same path search and the 3D view
- * use, and counts calls at both the Claude client and the network.
+ * Opening an occupation outside the 50 Kelley roles must never call Claude,
+ * whether or not it has published scores (ai_scores_bls.json): every call
+ * costs money, and those panels show published figures only. Mounts the real
+ * UI (which owns the auto-analyze effect), opens every one of the 783 BLS
+ * occupations through the same path search and the 3D view use, and counts
+ * calls at both the Claude client and the network.
  *
  * The last test is the control: opening a Kelley role still auto-analyzes, so
  * a zero above means "not called", not "mock not wired".
@@ -36,6 +37,7 @@ import { UI } from '../components/UI';
 import { useStore } from '../store';
 import { useWorldStore } from '../worldStore';
 import { getRoleEntries } from '../utils/roles';
+import { BLS_SCORES } from '../utils/blsScores';
 
 const fetchCalls: string[] = [];
 let root: Root;
@@ -67,10 +69,11 @@ afterAll(() => {
 
 const settle = () => act(async () => { await new Promise((r) => setTimeout(r, 0)); });
 
-describe('unscored occupations never reach Claude', () => {
-    it('opens all 783 with zero Claude calls', { timeout: 120_000 }, async () => {
+describe('non-Kelley occupations never reach Claude', () => {
+    it('opens all 783, scored or not, with zero Claude calls', { timeout: 120_000 }, async () => {
         const unscored = getRoleEntries(useStore.getState().jobs).filter((e) => e.kind === 'bls');
         expect(unscored).toHaveLength(783);
+        expect(unscored.filter((e) => e.scored)).toHaveLength(BLS_SCORES.size);
         for (const code of new Set(unscored.map((e) => e.continent))) {
             await act(async () => { await useWorldStore.getState().loadContinent(code); });
         }
@@ -82,7 +85,12 @@ describe('unscored occupations never reach Claude', () => {
             await settle();
             const dialog = document.querySelector('[role="dialog"]');
             expect(dialog?.getAttribute('aria-label'), entry.title).toBe(entry.title);
-            expect(dialog?.textContent).toContain('AI scores coming soon');
+            if (entry.scored) {
+                expect(dialog?.textContent).toContain('Automation Risk');
+                expect(dialog?.textContent).not.toContain('AI scores coming soon');
+            } else {
+                expect(dialog?.textContent).toContain('AI scores coming soon');
+            }
             expect(useStore.getState().selectedJob).toBeNull();
         }
         await act(async () => useWorldStore.getState().closeOccupation());

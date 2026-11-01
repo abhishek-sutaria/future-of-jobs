@@ -11,12 +11,15 @@ import { PayLine } from './RolePay';
 import { ProvenanceBadge } from './ProvenanceBadge';
 import { CloseButton } from './ui/CloseButton';
 import { IconInfo, IconSparkles } from './ui/Icons';
+import { blsScoreFor, SCORE_COVERAGE } from '../utils/blsScores';
+import { HumanTile, KelleyComparisonLine, RatedTasks, RiskTile, ScoreProvenanceLine } from './BlsScoreSections';
 
 /**
- * Role panel for a BLS occupation that has no AI scores yet (every occupation
- * outside the 50 Kelley roles). Same shell as JobDetailPanel, but only
- * published BLS / O*NET values: no score tiles, no Analyze, no Roadmap or
- * Scenario, and no Claude call of any kind.
+ * Role panel for a BLS occupation outside the 50 Kelley roles. Same shell as
+ * JobDetailPanel, with published BLS / O*NET values, plus the published AI
+ * scores when ai_scores_bls.json has them (all of Business & Finance). Never
+ * an Analyze, Strategic Insight, Roadmap or Scenario, and no Claude call of
+ * any kind, scored or not.
  */
 export const OccupationPanel: React.FC<{ soc: string; onClose: () => void }> = ({ soc, onClose }) => {
     const code = continentOf(soc);
@@ -79,6 +82,7 @@ export const OccupationBody: React.FC<{ occupation: OccupationEntry; onClose: ()
     const continent = INDEX_CONTINENT_BY_CODE.get(continentOf(o.soc));
     const ep = o.ep;
     const baseNote = payBaseNote(o.employment);
+    const score = blsScoreFor(o.soc);
 
     return (
         <>
@@ -112,13 +116,18 @@ export const OccupationBody: React.FC<{ occupation: OccupationEntry; onClose: ()
                         {ep && <ProvenanceBadge label="EP" provenance="BLS_EP" />}
                         <ProvenanceBadge label="Pay" provenance="BLS_OES_WAGES" />
                         {o.description && <ProvenanceBadge label="O*NET" provenance="ONET" />}
+                        {score && <ProvenanceBadge label="Claude tasks" provenance="CLAUDE_TASK_SCORE" />}
                     </div>
                 </div>
                 <CloseButton onClick={onClose} label="Close panel" />
             </div>
 
             <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar">
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-3 px-4 md:px-6 py-3 border-b border-white/[0.04]">
+                <div className={`grid grid-cols-2 ${score ? 'md:grid-cols-4' : 'md:grid-cols-3'} gap-2 md:gap-3 px-4 md:px-6 py-3 border-b border-white/[0.04]`}>
+                    {/* Published AI scores (ai_scores_bls.json), the same tiles as a Kelley role */}
+                    {score && <RiskTile score={score} />}
+                    {score && <HumanTile score={score} />}
+
                     {/* Workers: BLS EP 2025, all workers including self-employed */}
                     <div className="bg-white/[0.03] rounded-xl px-3 py-2 border border-white/[0.06] min-w-0">
                         {ep ? (
@@ -150,18 +159,31 @@ export const OccupationBody: React.FC<{ occupation: OccupationEntry; onClose: ()
                         )}
                     </div>
 
-                    {/* No AI scores yet: an honest state, never a placeholder number */}
-                    <div className="col-span-2 md:col-span-1 rounded-xl px-3 py-2 border border-dashed border-slate-500/40 bg-slate-500/[0.05] min-w-0" data-testid="ai-soon">
-                        <div className="flex items-center gap-1.5 text-slate-200 text-sm font-semibold">
-                            <IconSparkles size={13} className="text-slate-400" /> {AI_SOON_TITLE}
+                    {score ? (
+                        <>
+                            <KelleyComparisonLine score={score} />
+                            <p className="col-span-2 md:col-span-4 text-[11px] text-gray-400 leading-snug flex items-start gap-1.5">
+                                <IconInfo size={12} className="text-cyan-400 mt-0.5 shrink-0" />
+                                <span>Automation Risk and Human Criticality are independent ratings, on the role and on each task, so they are not meant to add up to 100%.</span>
+                            </p>
+                            <ScoreProvenanceLine score={score} />
+                        </>
+                    ) : (
+                        /* No AI scores yet: an honest state, never a placeholder number */
+                        <div className="col-span-2 md:col-span-1 rounded-xl px-3 py-2 border border-dashed border-slate-500/40 bg-slate-500/[0.05] min-w-0" data-testid="ai-soon">
+                            <div className="flex items-center gap-1.5 text-slate-200 text-sm font-semibold">
+                                <IconSparkles size={13} className="text-slate-400" /> {AI_SOON_TITLE}
+                            </div>
+                            <p className="text-[11px] text-gray-400 leading-snug mt-0.5">
+                                {SCORE_COVERAGE.sentence} This occupation&rsquo;s tasks are not rated yet.
+                            </p>
                         </div>
-                        <p className="text-[11px] text-gray-400 leading-snug mt-0.5">
-                            AI ratings cover the 50 Kelley business roles for now. This occupation&rsquo;s tasks are not rated yet.
-                        </p>
-                    </div>
+                    )}
                 </div>
 
                 <div className="px-4 py-4 md:px-6 space-y-4">
+                    {score && <RatedTasks score={score} />}
+
                     {o.description && (
                         <section>
                             <h3 className="text-[10px] uppercase tracking-widest text-gray-500 font-semibold mb-1">What they do</h3>
@@ -199,7 +221,7 @@ export const OccupationBody: React.FC<{ occupation: OccupationEntry; onClose: ()
                 style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))' }}
             >
                 <span>
-                    Sources: {[ep && DATA_SOURCES.BLS_EP, DATA_SOURCES.BLS_OES_WAGES, o.description && DATA_SOURCES.ONET].filter(Boolean).join(', ')}
+                    Sources: {[ep && DATA_SOURCES.BLS_EP, DATA_SOURCES.BLS_OES_WAGES, o.description && DATA_SOURCES.ONET, score && `Claude (${score.model}) task scores`].filter(Boolean).join(', ')}
                 </span>
             </div>
         </>

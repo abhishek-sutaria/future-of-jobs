@@ -1,5 +1,6 @@
 import React from 'react';
 import { Modal } from '../ui/Modal';
+import { BUSINESS_FINANCE_FULLY_SCORED as BF_SCORED } from '../../utils/blsScores';
 
 interface Props {
     isOpen: boolean;
@@ -35,7 +36,9 @@ const FEATURES: Feature[] = [
         emoji: '🎓',
         title: 'Fields & Kelley Roles',
         description:
-            'AI scores currently cover the 50 Kelley business roles. Turn on Kelley roles to highlight just those 50, with their risk colours, as the map showed them before. Every other occupation is drawn in slate: its AI scores are coming soon, and nothing is shown in their place.',
+            BF_SCORED
+                ? 'AI scores cover the 50 Kelley business roles plus every Business & Finance occupation, so that whole field is in colour. Turn on Kelley roles to highlight just the 50 Kelley roles, with their risk colours, as the map showed them before; the other Business & Finance occupations are scored but are not Kelley roles. Every other occupation is drawn in slate: its AI scores are coming soon, and nothing is shown in their place.'
+                : 'AI scores currently cover the 50 Kelley business roles. Turn on Kelley roles to highlight just those 50, with their risk colours, as the map showed them before. Every other occupation is drawn in slate: its AI scores are coming soon, and nothing is shown in their place.',
         tip: 'Search any job title in the header: all 830 BLS occupations are there, from Actors to Electricians.',
         color: 'orange',
     },
@@ -43,7 +46,8 @@ const FEATURES: Feature[] = [
         emoji: '📋',
         title: 'Job Detail Panel',
         description:
-            'Inside a field, click any peak to open its panel: what the job involves (O*NET), how many people do it (BLS Employment Projections, 2025, self-employed included), median pay (BLS OEWS, payroll employees only), the BLS 2025–35 growth outlook, and its day-to-day O*NET tasks. For the 50 Kelley roles the panel also shows Automation Risk, Human Criticality and Human Resilience, with a risk score on every task. Automation Risk is the plain average of those task scores, so you can check it yourself.',
+            'Inside a field, click any peak to open its panel: what the job involves (O*NET), how many people do it (BLS Employment Projections, 2025, self-employed included), median pay (BLS OEWS, payroll employees only), the BLS 2025–35 growth outlook, and its day-to-day O*NET tasks. For the 50 Kelley roles the panel also shows Automation Risk, Human Criticality and Human Resilience, with a risk score on every task. Automation Risk is the plain average of those task scores, so you can check it yourself.' +
+            (BF_SCORED ? ' Every other Business & Finance occupation shows the same scores on its five rated tasks, and says where it would sit among the 50 Kelley roles.' : ''),
         tip: 'Two worker counts are normal: pay comes from payroll employees only, while "workers" counts everyone, self-employed included. Scores measure GenAI capability, not guaranteed adoption.',
         color: 'blue',
     },
@@ -51,7 +55,7 @@ const FEATURES: Feature[] = [
         emoji: '🧩',
         title: 'Tasks View',
         description:
-            'Open Tasks in the header to see each Kelley role broken into AI-capable vs human-needed work (the other occupations join once their scores arrive). Roles are ordered by average GenAI capability today — not guaranteed adoption. Use “Same score, different jobs” pairs to make the contrast concrete.',
+            'Open Tasks in the header to see each Kelley role broken into AI-capable vs human-needed work (other occupations are not in it yet). Roles are ordered by average GenAI capability today — not guaranteed adoption. Use “Same score, different jobs” pairs to make the contrast concrete.',
         tip: 'Capability labels are Claude judgments of what GenAI can handle, not a forecast that the work is already automated.',
         color: 'indigo',
     },
@@ -59,7 +63,10 @@ const FEATURES: Feature[] = [
         emoji: '🤖',
         title: 'AI Analysis',
         description:
-            'Open any of the 50 Kelley roles and Claude explains its published scores right in the panel: the reasoning under each task, a strategic insight for the role, and the likely replacements and human traits it calls for. The analysis adds the explanation; it never changes the numbers. Occupations without published scores have no analysis yet.',
+            'Open any of the 50 Kelley roles and Claude explains its published scores right in the panel: the reasoning under each task, a strategic insight for the role, and the likely replacements and human traits it calls for. The analysis adds the explanation; it never changes the numbers. ' +
+            (BF_SCORED
+                ? 'The Business & Finance occupations outside the 50 show their published scores with no live analysis, and occupations without published scores have no analysis yet.'
+                : 'Occupations without published scores have no analysis yet.'),
         tip: 'Every student sees the same published scores for a role, dated in the header badge, so you can compare notes. The analysis is where you get the why behind them.',
         color: 'red',
     },
@@ -99,7 +106,7 @@ const FEATURES: Feature[] = [
         emoji: '📊',
         title: 'Job Security Index',
         description:
-            'The colour legend at the bottom right of the screen maps the scored roles into three bands: High Automation Risk (red), Hybrid/Augmented (amber), and Safe Human-Centric (green). Bands are relative, graded on a curve across the 50 Kelley roles. Slate peaks are occupations with no AI scores yet.',
+            'The colour legend at the bottom right of the screen maps the scored roles into three bands: High Automation Risk (red), Hybrid/Augmented (amber), and Safe Human-Centric (green). Bands are relative, graded on a curve across the 50 Kelley roles' + (BF_SCORED ? '; the other Business & Finance occupations are placed on that same curve.' : '.') + ' Slate peaks are occupations with no AI scores yet.',
         tip: 'A "green" role here means it is safer than most others in this dataset, not that it is completely immune to automation.',
         color: 'green',
     },
@@ -107,7 +114,7 @@ const FEATURES: Feature[] = [
         emoji: '📚',
         title: 'Data Sources',
         description:
-            'Workers in each occupation and each field come from the BLS Employment Projections 2025–35, which count everyone, self-employed included; growth outlooks come from the same projections. Pay comes from the BLS Occupational Employment & Wage Statistics (OEWS, May 2025), which covers payroll employees only. Task descriptions are from O*NET 30.1. AI risk scores are Claude\'s ratings of each O*NET task for the 50 Kelley roles, published with the app as one dated set, so every student sees the same numbers; scores for the other occupations are coming soon.',
+            'Workers in each occupation and each field come from the BLS Employment Projections 2025–35, which count everyone, self-employed included; growth outlooks come from the same projections. Pay comes from the BLS Occupational Employment & Wage Statistics (OEWS, May 2025), which covers payroll employees only. Task descriptions are from O*NET 30.1. AI risk scores are Claude\'s ratings of each O*NET task for the 50 Kelley roles' + (BF_SCORED ? ' and every other Business & Finance occupation' : '') + ', published with the app, so every student sees the same numbers; scores for the other occupations are coming soon.',
         tip: 'Click "Sources" at the bottom of the screen to read the full sourcing and calculation methodology.',
         color: 'gray',
     },

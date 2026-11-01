@@ -6,7 +6,6 @@ import {
     YEAR_COUNT,
     AI_FORECAST_YEAR_MAX,
     OOH_ENDPOINT_YEAR,
-    OOH_FRACTION_AT_YEAR_MAX,
 } from '../config/constants';
 import type { Job } from '../types';
 import { CLUSTER_ORDER, getFunctionalCluster, type FunctionalCluster } from '../config/clusters';
@@ -20,9 +19,7 @@ import { EP_PATH_MAX } from './occupationIndex';
 // (AI path capped at AI_FORECAST_YEAR_MAX = 2030 vs the 2024–34 OOH decade).
 
 /** Max cumulative % a baked AI forecast may reach by 2030 for a given OOH figure. */
-export function oohEnvelopeCap(projectedGrowth: number): number {
-    return projectedGrowth * OOH_FRACTION_AT_YEAR_MAX;
-}
+export { oohEnvelopeCap } from './oohEnvelope';
 
 /** Linear fraction of the 2024–34 OOH change represented at `year` (2025 = 0). */
 export function oohFractionAtYear(year: number): number {

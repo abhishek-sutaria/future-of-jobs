@@ -1,7 +1,8 @@
 /**
  * One list of "roles" for the whole app: the 50 Kelley roles (with their
  * published AI scores, from src/data.ts + ai_scores.json) and every other BLS
- * detailed occupation (no AI scores yet), from src/data/occupations/.
+ * detailed occupation, from src/data/occupations/. A BLS occupation has AI
+ * scores only if src/data/ai_scores_bls.json holds them (utils/blsScores).
  *
  * An adapter, not a merge: Kelley jobs stay the store's Job objects, untouched.
  * A SOC that a Kelley title maps to is represented by that title only, so a
@@ -13,6 +14,7 @@
 import type { Job } from '../types';
 import { MAP_TITLE_TO_SOC } from './onet';
 import { OCCUPATION_INDEX, continentOf, type IndexOccupation } from './occupationIndex';
+import { blsScoreFor } from './blsScores';
 
 export type RoleKind = 'kelley' | 'bls';
 
@@ -35,8 +37,13 @@ export interface RoleEntry {
     ep2035: number | null;
     /** BLS EP percent change 2025–35. */
     epPercentChange: number | null;
-    /** True only for a Kelley role whose published task scores are loaded. */
+    /**
+     * True for a Kelley role whose published task scores are loaded, and for a
+     * BLS occupation with a published score in ai_scores_bls.json.
+     */
     scored: boolean;
+    /** Automation Risk of a scored BLS occupation (Kelley roles read theirs from the Job). */
+    blsRisk?: number;
     jobId?: string;
 }
 
@@ -89,6 +96,7 @@ export function buildRoleEntries(jobs: readonly Job[]): RoleEntry[] {
 }
 
 function blsEntry(occ: IndexOccupation): RoleEntry {
+    const score = blsScoreFor(occ.soc);
     return {
         key: blsRoleKey(occ.soc),
         kind: 'bls',
@@ -99,7 +107,8 @@ function blsEntry(occ: IndexOccupation): RoleEntry {
         ep2025: occ.epEmployment2025,
         ep2035: occ.epEmployment2035,
         epPercentChange: occ.epPercentChange,
-        scored: false,
+        scored: !!score,
+        ...(score ? { blsRisk: score.automationCostIndex } : {}),
     };
 }
 

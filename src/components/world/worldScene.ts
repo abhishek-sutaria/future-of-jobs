@@ -47,7 +47,8 @@ export function buildWorldScene(jobs: readonly Job[]): WorldScene {
     const layout = layoutFor(entries);
     const jobById = new Map(jobs.map((j) => [j.id, j]));
     const entryByKey = new Map(entries.map((e) => [e.key, e]));
-    // Same basis as the old terrain: graded across all 50 Kelley roles.
+    // Same basis as the old terrain: graded across all 50 Kelley roles only, so
+    // adding scored BLS occupations never moves a Kelley colour.
     const riskScale = buildRiskScale(jobs.map((j) => j.automationCostIndex));
     const peaks: ScenePeak[] = [];
     const peaksByContinent = new Map<string, ScenePeak[]>();
@@ -57,15 +58,17 @@ export function buildWorldScene(jobs: readonly Job[]): WorldScene {
         placements.forEach((p, index) => {
             const entry = entryByKey.get(p.key)!;
             const job = entry.jobId ? jobById.get(entry.jobId) ?? null : null;
-            const scored = !!job && entry.scored;
+            // Kelley roles read the store's index; a scored BLS occupation its own
+            // published one. Both go through the same scale, set by the 50 alone.
+            const risk = job && entry.scored ? job.automationCostIndex : entry.scored ? entry.blsRisk ?? null : null;
             const peak: ScenePeak = {
                 entry,
                 index,
                 x: p.x,
                 z: p.z,
                 radius: p.radius,
-                color: scored ? riskColorRGB(normalizeRisk(job!.automationCostIndex, riskScale)) : RISK_UNSCORED_RGB,
-                pipColor: scored ? riskBandColor(job!.automationCostIndex, riskScale) : RISK_UNSCORED_HEX,
+                color: risk != null ? riskColorRGB(normalizeRisk(risk, riskScale)) : RISK_UNSCORED_RGB,
+                pipColor: risk != null ? riskBandColor(risk, riskScale) : RISK_UNSCORED_HEX,
                 job,
             };
             list.push(peak);

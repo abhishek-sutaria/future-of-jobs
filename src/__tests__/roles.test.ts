@@ -10,6 +10,7 @@ import { MAP_TITLE_TO_SOC } from '../utils/onet';
 import { OCCUPATION_INDEX } from '../utils/occupationIndex';
 import { buildRoleEntries, searchRoles, type RoleEntry } from '../utils/roles';
 import scoresJson from '../data/ai_scores.json';
+import { BLS_SCORES } from '../utils/blsScores';
 
 const jobs = useStore.getState().jobs;
 const entries = buildRoleEntries(jobs);
@@ -53,10 +54,11 @@ describe('role adapter', () => {
         }
     });
 
-    it('marks every other occupation as not scored, with its EP numbers from the index', () => {
+    it('marks another occupation scored only if ai_scores_bls.json has it, with its EP numbers from the index', () => {
         for (const e of bls) {
             const row = OCCUPATION_INDEX.occupations.find((o) => o.soc === e.soc)!;
-            expect(e.scored).toBe(false);
+            expect(e.scored).toBe(BLS_SCORES.has(e.soc));
+            expect(e.blsRisk).toBe(BLS_SCORES.get(e.soc)?.automationCostIndex);
             expect(e.title).toBe(row.title);
             expect(e.ep2025).toBe(row.epEmployment2025);
             expect(e.ep2035).toBe(row.epEmployment2035);
