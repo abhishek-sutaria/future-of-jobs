@@ -286,6 +286,15 @@ describe('info line', () => {
         expect(info()!.textContent).not.toMatch(/%|by 20/);
     });
 
+    it('hides the family name on a phone, where the breadcrumb right above carries it', async () => {
+        await go(() => useWorldStore.getState().focusFamily(4));
+        const name = [...info()!.querySelectorAll('span')].find((s) => s.textContent?.startsWith('Natural Resources'))!;
+        expect(name.className).toContain('max-md:hidden');
+        const rest = [...info()!.querySelectorAll('span')].filter((s) => s !== name);
+        expect(rest.every((s) => !s.className.includes('max-md:hidden'))).toBe(true);
+        expect(rest[0].textContent!.startsWith(' ·')).toBe(false);
+    });
+
     it('says when a family has no Kelley roles, as a field does', async () => {
         await go(() => useWorldStore.getState().focusFamily(4));
         await go(() => useWorldStore.getState().setKelleyOnly(true));

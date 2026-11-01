@@ -288,7 +288,7 @@ export const WorldBar: React.FC = () => {
                 {region && (
                     <p
                         className="text-[10px] text-gray-500 bg-gray-900/60 backdrop-blur-sm rounded-md px-2 py-0.5"
-                        title="Inside a field, its largest occupation in the slider year is drawn full height and every other hill is in proportion to it. The whole-map view uses one national scale."
+                        title="Inside a field, the largest job count any of its occupations reaches from 2025 to 2035 is drawn full height and every hill is in proportion to that one scale, so each rises or falls with its own BLS number as the slider moves. The whole-map view uses one national scale."
                         data-testid="field-scale-note"
                     >
                         Peak heights scaled within this field.
@@ -296,8 +296,9 @@ export const WorldBar: React.FC = () => {
                 )}
                 {family && familyInfo && (
                     <p data-testid="family-info" className="text-[11px] text-gray-400 bg-gray-900/60 backdrop-blur-sm rounded-md px-2 py-1 leading-snug max-w-full">
-                        <span className="text-gray-200 font-medium" title={family.title}>{family.shortName}</span>
-                        <span className="text-gray-200 font-medium tabular-nums" title={`All workers in ${YEAR_MIN}, including self-employed. BLS Employment Projections.`}> · {formatCount(familyInfo.workers)} workers</span>
+                        {/* On a phone the family's name is right above, in the breadcrumb. */}
+                        <span className="max-md:hidden text-gray-200 font-medium" title={family.title}>{family.shortName} · </span>
+                        <span className="text-gray-200 font-medium tabular-nums" title={`All workers in ${YEAR_MIN}, including self-employed. BLS Employment Projections.`}>{formatCount(familyInfo.workers)} workers</span>
                         <span> · {familyInfo.fields} fields · {familyInfo.occupations} occupations</span>
                         {kelleyOnly && kelleyHere === 0 && <span className="text-amber-300/90"> · no Kelley roles in this family</span>}
                     </p>
@@ -305,7 +306,7 @@ export const WorldBar: React.FC = () => {
                 {family && (
                     <p
                         className="text-[10px] text-gray-500 bg-gray-900/60 backdrop-blur-sm rounded-md px-2 py-0.5"
-                        title="Inside a family, its largest occupation in the slider year is drawn full height and every other hill is in proportion to it. The whole-map view uses one national scale."
+                        title="Inside a family, the largest job count any of its occupations reaches from 2025 to 2035 is drawn full height and every hill is in proportion to that one scale, so each rises or falls with its own BLS number as the slider moves. The whole-map view uses one national scale."
                         data-testid="family-scale-note"
                     >
                         Peak heights scaled within this family.

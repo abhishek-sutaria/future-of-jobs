@@ -8,18 +8,19 @@
 import { describe, it, expect } from 'vitest';
 import { readFileSync } from 'fs';
 import { join } from 'path';
+import { PerspectiveCamera, Plane, Raycaster, Vector2, Vector3 } from 'three';
 import { useStore } from '../store';
 import { SCENE, SHADER, SHADER_VISUAL, YEAR_MAX, YEAR_MIN } from '../config/constants';
 import { RISK_UNSCORED_RGB } from '../config/theme';
 import { SOC_FAMILIES } from '../config/socFamilies';
 import { initialJobs } from '../data';
-import { buildWorldScene, peakEmploymentAt } from '../components/world/worldScene';
-import { framingDistance, stageFraming } from '../components/world/framing';
+import { buildWorldScene, GROUND_Y, peakEmploymentAt } from '../components/world/worldScene';
+import { framingDistance, stageDiscY, stageFraming, stageViewOffset } from '../components/world/framing';
 import { STAGE_SEGMENTS, stageFragmentShader, stageVertexShader } from '../components/world/stageShaders';
 import { INDEX_CONTINENTS, INDEX_CONTINENT_BY_CODE } from '../utils/occupationIndex';
 import {
     bakeStage, packHeights, rayToSurface, STAGE_BLEND, STAGE_BLEND_POWER, STAGE_HEIGHT_RANGE, STAGE_MIN_HEIGHT, STAGE_PEAK_HEIGHT,
-    stageJobHeight, surfaceHeight, yearMix,
+    stageJobHeight, stageMaxEmployment, surfaceHeight, yearMix,
 } from '../utils/stageBake';
 import {
     buildStage, minorGroupsOf, STAGE_INPUT_RADIUS, STAGE_OUTER_RING, STAGE_SIGMA_MAX, STAGE_SIGMA_MIN, stageFieldAt, stageKey, stageRingSpacing, stageSigma, type Stage, type StageJob,
@@ -60,6 +61,51 @@ describe('the camera', () => {
 
     it('leaves the hand zoom-out threshold inside the orbit limit, on both', () => {
         for (const fov of [45, 70]) expect(framingDistance(stageFraming(fov)) * ZOOM_OUT_RATIO).toBeLessThan(SCENE.MAX_CAMERA_DISTANCE);
+    });
+});
+
+describe('the phone view offset', () => {
+    const cameraAt = (offset: number) => {
+        const camera = new PerspectiveCamera(SCENE.CAMERA_PORTRAIT_FOV, 390 / 844, 0.1, 2000);
+        const { position, target } = stageFraming(SCENE.CAMERA_PORTRAIT_FOV);
+        camera.position.set(...position);
+        camera.lookAt(new Vector3(...target));
+        camera.updateMatrixWorld();
+        if (offset) camera.setViewOffset(390, 844, 0, offset, 390, 844);
+        else camera.updateProjectionMatrix();
+        return camera;
+    };
+    const screenY = (camera: PerspectiveCamera, point: Vector3) => ((1 - point.clone().project(camera).y) / 2) * 844;
+    const disc = new Vector3(0, GROUND_Y, 0);
+
+    it('knows where the disc lands from the home camera', () => {
+        expect(stageDiscY(SCENE.CAMERA_PORTRAIT_FOV, 844)).toBeCloseTo(screenY(cameraAt(0), disc), 6);
+    });
+
+    it('lands the middle of the disc on the middle of the band, with the camera unmoved', () => {
+        const offset = stageViewOffset(SCENE.CAMERA_PORTRAIT_FOV, 844, 300, 642);
+        const camera = cameraAt(offset);
+        expect(screenY(camera, disc)).toBeCloseTo(471, 6);
+        expect(camera.position.toArray()).toEqual([0, 74, 58]);
+        expect(camera.fov).toBe(70);
+    });
+
+    it('slides everything the same distance, so labels and pins follow it exactly', () => {
+        const offset = stageViewOffset(SCENE.CAMERA_PORTRAIT_FOV, 844, 300, 642);
+        for (const point of [new Vector3(10, 5, -20), new Vector3(-20, -3, 8), disc]) {
+            expect(screenY(cameraAt(offset), point) - screenY(cameraAt(0), point)).toBeCloseTo(-offset, 6);
+        }
+    });
+
+    it('keeps hit testing true: a ray through a point on screen lands back on that point', () => {
+        const camera = cameraAt(stageViewOffset(SCENE.CAMERA_PORTRAIT_FOV, 844, 300, 642));
+        const point = new Vector3(12, GROUND_Y, -9);
+        const ndc = point.clone().project(camera);
+        const raycaster = new Raycaster();
+        raycaster.setFromCamera(new Vector2(ndc.x, ndc.y), camera);
+        const hit = raycaster.ray.intersectPlane(new Plane(new Vector3(0, 1, 0), -GROUND_Y), new Vector3())!;
+        expect(hit.x).toBeCloseTo(point.x, 4);
+        expect(hit.z).toBeCloseTo(point.z, 4);
     });
 });
 
@@ -184,19 +230,67 @@ describe('stage layout', () => {
 });
 
 describe('heights', () => {
-    it("draws a stage's largest job at the live view's tallest height in every year, the rest in proportion", () => {
+    it('uses one fixed scale per stage: the largest employment on the path, as the whole map does', () => {
         for (const stage of STAGES) {
+            const peak = Math.max(...stage.jobs.flatMap((j) => [j.ep2025, j.ep2035]));
+            expect(stageMaxEmployment(stage.jobs), stage.key).toBe(peak);
+            const scale = stageMaxEmployment(stage.jobs);
+            const tallest = Math.max(...stage.jobs.flatMap((j) => [stageJobHeight(j, 0, scale), stageJobHeight(j, 1, scale)]));
+            expect(tallest, stage.key).toBeCloseTo(STAGE_PEAK_HEIGHT, 6);
             for (const f of [0, 0.45, 1]) {
-                const year = YEAR_MIN + (YEAR_MAX - YEAR_MIN) * f;
-                const employment = stage.jobs.map((j) => peakEmploymentAt(scene.peakByKey.get(j.key)!.entry, year));
-                const max = Math.max(...employment);
-                const heights = stage.jobs.map((j) => stageJobHeight(j, f, max));
-                expect(Math.max(...heights), stage.key).toBeCloseTo(STAGE_PEAK_HEIGHT, 6);
-                heights.forEach((h, i) => {
-                    expect((h - STAGE_MIN_HEIGHT) / (STAGE_PEAK_HEIGHT - STAGE_MIN_HEIGHT)).toBeCloseTo(employment[i] / max, 6);
-                });
+                for (const j of stage.jobs) {
+                    const employment = peakEmploymentAt(scene.peakByKey.get(j.key)!.entry, YEAR_MIN + (YEAR_MAX - YEAR_MIN) * f);
+                    expect((stageJobHeight(j, f, scale) - STAGE_MIN_HEIGHT) / (STAGE_PEAK_HEIGHT - STAGE_MIN_HEIGHT)).toBeCloseTo(employment / scale, 6);
+                }
             }
         }
+    });
+
+    it('moves every job\'s own height the way its BLS number moves: 0 contradictions on all 27 stages', () => {
+        let contradictions = 0;
+        let checked = 0;
+        for (const stage of STAGES) {
+            const scale = stageMaxEmployment(stage.jobs);
+            for (const j of stage.jobs) {
+                const bls = Math.sign(j.ep2035 - j.ep2025);
+                const drawn = Math.sign(stageJobHeight(j, 1, scale) - stageJobHeight(j, 0, scale));
+                checked++;
+                if (drawn !== bls) contradictions++;
+            }
+        }
+        expect(checked).toBe(1666);
+        expect(contradictions).toBe(0);
+    });
+
+    // Own heights are clean; the blended surface at a job's spot can still follow
+    // a neighbour's flank. This records exactly how often, on the desktop mesh, so
+    // the number can only change on purpose.
+    it('keeps the surface honest: only these jobs still move against BLS, each on a neighbour\'s flank', () => {
+        const opposite = new Map<string, number>();
+        let largest = 0;
+        for (const stage of STAGES) {
+            const bake = bakeOf(stage, STAGE_SEGMENTS.desktop);
+            for (const j of stage.jobs) {
+                const bls = Math.sign(j.ep2035 - j.ep2025);
+                const moved = surfaceHeight(bake, j.x, j.z, 1) - surfaceHeight(bake, j.x, j.z, 0);
+                if (bls === 0 || Math.sign(moved) === bls) continue;
+                opposite.set(stage.key, (opposite.get(stage.key) ?? 0) + 1);
+                largest = Math.max(largest, Math.abs(moved));
+            }
+        }
+        expect(Object.fromEntries(opposite)).toEqual({
+            'family:1': 30, 'family:2': 8, 'family:3': 6, 'family:4': 11, 'family:5': 7,
+            'field:11': 1, 'field:39': 3, 'field:47': 6, 'field:49': 2, 'field:51': 8, 'field:53': 2,
+        });
+        // Under 2% of a full-height hill.
+        expect(largest).toBeLessThan(0.2);
+    });
+
+    it('holds Waiters and Waitresses to their 2.0% growth, the case that showed the bug', () => {
+        const stage = stageOf(fieldLevel('35'));
+        const scale = stageMaxEmployment(stage.jobs);
+        const waiters = stage.jobs.find((j) => scene.peakByKey.get(j.key)!.entry.title.startsWith('Waiters'))!;
+        expect(stageJobHeight(waiters, 1, scale)).toBeGreaterThan(stageJobHeight(waiters, 0, scale));
     });
 
     it('reads the live view\'s height range', () => {
@@ -223,11 +317,10 @@ describe.each(named)('the bake of %s', (_key, stage) => {
         }
     });
 
-    it('tops out at the live view\'s tallest hill, both years', () => {
-        for (const layer of [0, 1] as const) {
-            expect(top(bake.heights, layer)).toBeGreaterThan(STAGE_PEAK_HEIGHT * 0.97);
-            expect(top(bake.heights, layer)).toBeLessThan(STAGE_PEAK_HEIGHT * 1.1);
-        }
+    it('tops out at the live view\'s tallest hill in whichever year its largest job peaks', () => {
+        const tallest = Math.max(top(bake.heights, 0), top(bake.heights, 1));
+        expect(tallest).toBeGreaterThan(STAGE_PEAK_HEIGHT * 0.97);
+        expect(tallest).toBeLessThan(STAGE_PEAK_HEIGHT * 1.1);
     });
 
     it('is flat ground past the hills, so the soft edge fades bare land', () => {
@@ -241,8 +334,8 @@ describe('the surface', () => {
 
     it('is one Gaussian hill for one job, with the live width, at the right spot', () => {
         const bake = bakeStage(stage, 280, 'sum', 1);
-        expect(surfaceHeight(bake, 4, -6, 0)).toBeCloseTo(STAGE_PEAK_HEIGHT, 1);
-        const away = surfaceHeight(bake, 4 + 2, -6, 0);
+        expect(surfaceHeight(bake, 4, -6, 1)).toBeCloseTo(STAGE_PEAK_HEIGHT, 1);
+        const away = surfaceHeight(bake, 4 + 2, -6, 1);
         expect(away).toBeCloseTo(STAGE_PEAK_HEIGHT * Math.exp(-(2 * 2) / SHADER.SIGMA_SQ2), 1);
     });
 
@@ -256,7 +349,7 @@ describe('the surface', () => {
 
     it('holds a job near its true height on the densest stage, which adding does not', () => {
         const dense = stageOf(familyLevel(1));
-        const max = Math.max(...dense.jobs.map((j) => j.ep2025));
+        const max = stageMaxEmployment(dense.jobs);
         const inflation = (blend: 'sum' | 'smoothmax', power: number) => {
             const bake = bakeStage(dense, 256, blend, power);
             const r = dense.jobs.map((j) => surfaceHeight(bake, j.x, j.z, 0) / stageJobHeight(j, 0, max)).sort((a, b) => a - b);

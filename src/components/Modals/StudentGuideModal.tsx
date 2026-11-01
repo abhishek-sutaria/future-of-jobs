@@ -19,7 +19,7 @@ const FEATURES: Feature[] = [
         emoji: '🏔️',
         title: '3D Terrain Map',
         description:
-            'The map is one landscape split into 22 fields: the BLS major occupation groups, from Arts & Media to Healthcare and Construction. A field\'s area is its share of all U.S. workers in 2025 (BLS Employment Projections, self-employed included). The fields are grouped by the five official BLS job families, outlined on the map: area is workers, while positions within a family follow BLS code order, so where a field sits and its shape are only layout. Each peak is one occupation, and its height is its number of jobs from BLS Employment Projections. Open a family or a field and it gets a landscape of its own, with heights rescaled within it (its largest occupation is full height), so compare them within what you have open.',
+            'The map is one landscape split into 22 fields: the BLS major occupation groups, from Arts & Media to Healthcare and Construction. A field\'s area is its share of all U.S. workers in 2025 (BLS Employment Projections, self-employed included). The fields are grouped by the five official BLS job families, outlined on the map: area is workers, while positions within a family follow BLS code order, so where a field sits and its shape are only layout. Each peak is one occupation, and its height is its number of jobs from BLS Employment Projections. Open a family or a field and it gets a landscape of its own, on one fixed scale: the largest job count any of its occupations reaches from 2025 to 2035 is full height. Each hill rises or falls with its own BLS number as you move the slider, though a small hill on a larger neighbour\'s slope can move with that neighbour. Compare heights within what you have open.',
         tip: 'Click a job family to see it on its own, then a field to see its occupations, or pick any field from the Fields list. The largest are labelled; hover or tap any other peak for its name. Back, Esc or the trail at the top takes you back up.',
         color: 'cyan',
     },
@@ -43,7 +43,7 @@ const FEATURES: Feature[] = [
         emoji: '📋',
         title: 'Job Detail Panel',
         description:
-            'Click any peak to open its panel: what the job involves (O*NET), how many people do it (BLS Employment Projections, 2025, self-employed included), median pay (BLS OEWS, payroll employees only), the BLS 2025–35 growth outlook, and its day-to-day O*NET tasks. For the 50 Kelley roles the panel also shows Automation Risk, Human Criticality and Human Resilience, with a risk score on every task. Automation Risk is the plain average of those task scores, so you can check it yourself.',
+            'Inside a field, click any peak to open its panel: what the job involves (O*NET), how many people do it (BLS Employment Projections, 2025, self-employed included), median pay (BLS OEWS, payroll employees only), the BLS 2025–35 growth outlook, and its day-to-day O*NET tasks. For the 50 Kelley roles the panel also shows Automation Risk, Human Criticality and Human Resilience, with a risk score on every task. Automation Risk is the plain average of those task scores, so you can check it yourself.',
         tip: 'Two worker counts are normal: pay comes from payroll employees only, while "workers" counts everyone, self-employed included. Scores measure GenAI capability, not guaranteed adoption.',
         color: 'blue',
     },

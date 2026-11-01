@@ -7,6 +7,7 @@ import { useUserStore } from '../userStore';
 import { Z } from '../config/layers';
 import { YEAR_MIN, YEAR_MAX, UI, MAP_SIDEBAR } from '../config/constants';
 import { useWorldStore } from '../worldStore';
+import { resetViewVisible } from '../utils/resetView';
 import { getRoleEntries, searchRoles, type RoleEntry } from '../utils/roles';
 import { CONTINENT_DISPLAY_NAMES } from '../config/continents';
 
@@ -33,6 +34,7 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
     const navigate = useStore((state) => state.navigate);
     const isDefaultView = useStore((state) => state.isDefaultView);
     const zoomedToFields = useWorldStore((state) => state.labels.fields);
+    const onStage = useWorldStore((state) => state.focusedFamily != null);
     const triggerResetView = useStore((state) => state.triggerResetView);
 
     // Account state. Deliberately read from the separate user store — identity
@@ -136,10 +138,12 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
                         short of reloading the page. It also always shows
                         inside a family or field, and zoomed in with no pan
                         (the Kelley toggle's zoom), as the way straight back
-                        to the five families.
+                        to the five families. Not on a phone inside a family or
+                        field, though: it would wrap this header onto a second
+                        row, and Back, the breadcrumb and Esc are right there.
                         First in a justify-end row, so appearing/disappearing
                         never shifts any other button. */}
-                    {mapView !== 'map' && (!isDefaultView || (mapView === 'globe' && zoomedToFields)) && (
+                    {resetViewVisible({ mapView, isDefaultView, zoomedToFields, onStage, isMobile }) && (
                         <button
                             onClick={triggerResetView}
                             title="Return the 3D view to its starting position"

@@ -3,10 +3,12 @@
  * Terrain.tsx surface, minus its 50-peak uniform limit, so a stage of 8 jobs and
  * one of 375 go down the same pipeline.
  *
- * Two height layers, 2025 and 2035, each already scaled so that year's largest
- * job reaches the live view's tallest hill. Moving the slider only mixes the two
- * in the shader, so it costs one uniform at any job count. Colour does not
- * depend on the year and is baked once.
+ * Two height layers, 2025 and 2035, on one fixed scale for the stage: the largest
+ * employment on the path across its jobs reaches the live view's tallest hill, the
+ * same rule the whole map uses. So every hill rises or falls with its own BLS
+ * number, and one in 2025 may sit a little under full height. Moving the slider
+ * only mixes the two layers in the shader, so it costs one uniform at any job
+ * count. Colour does not depend on the year and is baked once.
  *
  * Pure: arrays in, arrays out. Gaussians are separable, so each job costs one
  * exp per row and column of its window, not one per texel.
@@ -34,9 +36,9 @@ export type StageBlend = 'sum' | 'smoothmax';
 /**
  * How overlapping hills combine. The live shader adds them, which is fine at 50
  * jobs. On the densest stage (Management family, 378 peaks) adding inflates the
- * median job to 2.75 times its height, and clearly smaller jobs stand taller than
- * larger neighbours in 266 of 1,333 neighbouring pairs. Smooth max at power 2
- * brings those to 1.28 and 169, and keeps every stage's top at the live 12.5. A
+ * median job to 2.77 times its height, and clearly smaller jobs stand taller than
+ * larger neighbours in 262 of 1,329 neighbouring pairs. Smooth max at power 2
+ * brings those to 1.29 and 178, and keeps every stage's top at the live 12.5. A
  * higher power is truer still but cuts every hill apart, so small hills read as
  * a field of dots rather than a landscape. A lone hill is the same either way.
  */
@@ -54,7 +56,16 @@ export interface StageBake {
     colors: Uint8Array;
 }
 
-/** A job's hill height in `year`: the live linear formula, with the stage's largest job as its reference. */
+/**
+ * The stage's fixed height scale: the largest employment any of its jobs reaches
+ * on the 2025 to 2035 path. Each job's path is a straight line, so that is at one
+ * end of it. One value for both baked layers, and so for pins and labels too.
+ */
+export function stageMaxEmployment(jobs: readonly StageJob[]): number {
+    return jobs.reduce((max, j) => Math.max(max, j.ep2025, j.ep2035), 0);
+}
+
+/** A job's hill height along the path (0 = 2025, 1 = 2035): the live linear formula, on the stage's fixed scale. */
 export function stageJobHeight(job: StageJob, atYear: number, maxEmployment: number): number {
     const employment = job.ep2025 + (job.ep2035 - job.ep2025) * atYear;
     const share = maxEmployment > 0 ? Math.max(0, employment) / maxEmployment : 0;
@@ -87,7 +98,7 @@ function window1D(center: number, reach: number, size: number): [number, number]
  * heights to the power `power` and taking the root.
  */
 function bakeLayer(jobs: readonly StageJob[], sigma: number, size: number, atYear: number, blend: StageBlend, power: number, out: Float32Array, offset: number): void {
-    const maxEmployment = jobs.reduce((max, j) => Math.max(max, j.ep2025 + (j.ep2035 - j.ep2025) * atYear), 0);
+    const maxEmployment = stageMaxEmployment(jobs);
     const reach = sigma * HEIGHT_REACH;
     const twoVariance = (2 * sigma * sigma) / (blend === 'sum' ? 1 : power);
     const across = new Float32Array(size);

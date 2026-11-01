@@ -52,6 +52,30 @@ export function stageFraming(fovDeg: number): Framing {
     return { target: [0, 0, 0], position: [position[0], position[1], position[2]] };
 }
 
+/** How far down the viewport the middle of the disc lands from the stage's home camera, in pixels. */
+export function stageDiscY(fovDeg: number, viewportHeight: number): number {
+    const { position } = stageFraming(fovDeg);
+    const [, py, pz] = position;
+    const length = Math.hypot(py, pz);
+    // Looking at the origin from (0, py, pz): the camera's forward and up in the y-z plane.
+    const [fy, fz] = [-py / length, -pz / length];
+    const [uy, uz] = [-fz, fy];
+    const [dy, dz] = [GROUND_Y - py, -pz];
+    const ndcY = (dy * uy + dz * uz) / ((dy * fy + dz * fz) * Math.tan((fovDeg * Math.PI) / 360));
+    return ((1 - ndcY) / 2) * viewportHeight;
+}
+
+/**
+ * The y offset for camera.setViewOffset that lands the middle of the disc in the
+ * middle of the free band on a phone, without moving the camera: the position,
+ * the angle and the fov all stay the live view's, and only the picture slides.
+ * Negative slides it down. It goes through the projection matrix, so anything
+ * that projects or raycasts with the camera follows it exactly.
+ */
+export function stageViewOffset(fovDeg: number, viewportHeight: number, bandTop: number, bandBottom: number): number {
+    return stageDiscY(fovDeg, viewportHeight) - (bandTop + bandBottom) / 2;
+}
+
 /** `framing` moved along its own line of sight to `distance` from its target. */
 export function atDistance(framing: Framing, distance: number): Framing {
     const k = distance / framingDistance(framing);
