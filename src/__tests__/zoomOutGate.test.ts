@@ -1,19 +1,21 @@
 /**
- * The hand zoom-out rule must only fire on a zoom-out the user made on
- * purpose. Review of PR #88: on a 1470x723 window, one click on Food Service
- * in the Service family sent the view to the world, zoomed far out.
+ * The hand zoom-out rule must only fire on a zoom-out the user made on purpose,
+ * from the level's own landing distance.
  *
- * What moved the camera: nothing in a click, a flight or a resize changes its
- * distance (checked here on the real OrbitControls), but OrbitControls zooms
- * 5% for every wheel event however small, and a trackpad or Magic Mouse sends
- * a run of small ones, with a momentum tail, from a finger brushing it during
- * a click. The old rule armed 350 ms after any landing whatever was still
- * moving: the click's field flight was cut short by the first wheel event (any
- * orbit input cancels a flight), so 350 ms later the run had passed 1.25 and
- * climbed to the family, and its tail outlasted that flight too, so it climbed
- * again to the world and went on zooming out there. utils/zoomOutGate counts
- * only zoom made after the camera has been still since it landed, and none
- * during a click.
+ * Every scenario runs on the real OrbitControls (three-stdlib) in jsdom, with
+ * real wheel and pointer events, driven the way CameraRig drives it: flights,
+ * a cancel on OrbitControls' 'start', and the rule checked every frame. Three
+ * versions of the rule run the same input:
+ * - original (95890f2): measured from the landing, armed 350 ms after it.
+ *   One click with a brush of the trackpad behind it climbed to the world.
+ * - carry (9629bab): zoom made before the gate armed was carried into the base
+ *   in proportion. Review found it (a) could push the base to the distance
+ *   limit, so the camera was left far out and no wheel-out could ever climb,
+ *   and (b) lowered the base on a zoom-in, so a level was left while still
+ *   zoomed in.
+ * - gate (now, utils/zoomOutGate): the base is the landing distance, fixed;
+ *   wheel-outs are swallowed until the camera has been still a moment after
+ *   landing, and during a click; zoom-in always goes through.
  */
 
 import { describe, it, expect } from 'vitest';
@@ -22,283 +24,447 @@ import { PerspectiveCamera } from 'three';
 import { OrbitControls } from 'three-stdlib';
 import { SCENE } from '../config/constants';
 import { framingDistance, stageFraming, worldFraming } from '../components/world/framing';
-import { familyLevel, fieldLevel, levelKind, levelUp, ZOOM_OUT_RATIO, ZOOM_OUT_SETTLE_MS, zoomedOutOfLevel, type WorldLevel } from '../utils/worldLevel';
-import { landedGate, pressGate, releaseGate, stepGate, UNLANDED_GATE, type ZoomOutGate } from '../utils/zoomOutGate';
+import { familyLevel, fieldLevel, levelKind, levelUp, WORLD_LEVEL, ZOOM_OUT_RATIO, ZOOM_OUT_SETTLE_MS, zoomedOutOfLevel, type WorldLevel } from '../utils/worldLevel';
+import {
+    attachWheelGate, flyingGate, landedGate, MAX_GATE_BASE, pressGate, releaseGate, stepGate, UNLANDED_GATE, type ZoomOutGate,
+} from '../utils/zoomOutGate';
 
 const STAGE = framingDistance(stageFraming(SCENE.CAMERA_FOV));
-const WORLD = framingDistance(worldFraming(SCENE.CAMERA_FOV, 1470 / 723));
+const WORLD = framingDistance(worldFraming(SCENE.CAMERA_FOV, 1470 / 746));
 const PHONE_STAGE = framingDistance(stageFraming(SCENE.CAMERA_PORTRAIT_FOV));
-/** OrbitControls' zoom per wheel event at zoomSpeed 1, whatever the event's size. */
-const WHEEL = 1 / 0.95;
+const THRESHOLD = STAGE * ZOOM_OUT_RATIO;
 const FRAME_MS = 1000 / 60;
 const FLY_MS = 900;
+const SERVICE = familyLevel(2);
+const FOOD_SERVICE = fieldLevel('35');
 
 // ---------------------------------------------------------------------------
-// The real OrbitControls, in jsdom: what can change the camera's distance.
+// The three rules, as CameraRig feeds them.
 
-function liveControls() {
-    const dom = new JSDOM('<div><canvas></canvas></div>');
-    const win = dom.window;
-    const container = win.document.querySelector('div')!;
-    const canvas = win.document.querySelector('canvas')!;
-    // jsdom has no pointer capture (OrbitControls releases it on pointerup) and no layout (it turns by drag / height).
-    Object.assign(container, { releasePointerCapture: () => {} });
-    Object.defineProperty(container, 'clientHeight', { value: 723 });
-    const camera = new PerspectiveCamera(SCENE.CAMERA_FOV, 1470 / 723, 0.1, 2000);
-    camera.position.set(...SCENE.CAMERA_INITIAL_POSITION);
-    const controls = new OrbitControls(camera);
-    // As Landscape sets it up (drei turns damping on).
-    Object.assign(controls, {
-        enableDamping: true, minDistance: SCENE.MIN_CAMERA_DISTANCE, maxDistance: SCENE.MAX_CAMERA_DISTANCE, maxPolarAngle: SCENE.MAX_POLAR_ANGLE,
-    });
-    controls.connect(container as unknown as HTMLElement);
-    controls.target.set(0, 0, 0);
-    controls.update();
-    // jsdom has no PointerEvent either: a MouseEvent carrying the pointer fields.
-    const pointer = (type: string, x: number, y: number) => {
-        const e = new win.MouseEvent(type, { bubbles: true, cancelable: true, clientX: x, clientY: y, button: 0, buttons: type === 'pointerup' ? 0 : 1 });
-        Object.defineProperties(e, { pointerId: { value: 1 }, pointerType: { value: 'mouse' } });
-        canvas.dispatchEvent(e);
-    };
-    const wheel = (deltaY: number) => canvas.dispatchEvent(new win.WheelEvent('wheel', { bubbles: true, cancelable: true, deltaY }));
-    // Damping carries a gesture on for many frames after it ends.
-    const frames = (n = 120) => {
-        for (let i = 0; i < n; i++) controls.update();
-    };
-    return { camera, controls, pointer, wheel, frames };
-}
-
-describe('what changes the camera\'s distance at rest', () => {
-    it('a click does not, even one that wobbles a few pixels and so also orbits a little', () => {
-        const { camera, controls, pointer, frames } = liveControls();
-        pointer('pointerdown', 700, 500);
-        pointer('pointerup', 700, 500);
-        frames();
-        expect(controls.getDistance()).toBeCloseTo(STAGE, 9);
-        // Still a click to WorldMarkers (under 10 px), but OrbitControls turns the view with it.
-        const before = camera.position.clone();
-        pointer('pointerdown', 700, 500);
-        pointer('pointermove', 704, 505);
-        pointer('pointerup', 704, 505);
-        frames();
-        expect(camera.position.distanceTo(before)).toBeGreaterThan(0.1);
-        expect(controls.getDistance()).toBeCloseTo(STAGE, 9);
-    });
-
-    it('a resize does not: the camera stays where it is', () => {
-        const { camera, controls, frames } = liveControls();
-        camera.aspect = 1470 / 779;
-        camera.updateProjectionMatrix();
-        frames(10);
-        camera.aspect = 1470 / 723;
-        camera.updateProjectionMatrix();
-        frames(10);
-        expect(controls.getDistance()).toBeCloseTo(STAGE, 9);
-    });
-
-    it('five wheel events of one pixel each do, past the zoom-out ratio: a brush of a finger looks like a zoom-out', () => {
-        const { controls, wheel, frames } = liveControls();
-        for (let i = 0; i < 5; i++) wheel(1);
-        frames(1);
-        expect(controls.getDistance() / STAGE).toBeCloseTo(WHEEL ** 5, 9);
-        expect(WHEEL ** 5).toBeGreaterThan(ZOOM_OUT_RATIO);
-    });
-});
-
-// ---------------------------------------------------------------------------
-// CameraRig's loop, reduced to what decides the level: the camera's distance,
-// the flight, and the rule. The old rule and the gate run the same input.
-
-type Input = { at: number } & (
-    | { kind: 'wheel'; dy: number }
-    | { kind: 'press' }
-    | { kind: 'release' }
-    /** A click's pointerup, which clickAction turned into this level. */
-    | { kind: 'click'; level: WorldLevel }
-);
-
-interface Flight { from: number; to: number; start: number; sticky: boolean }
+type Variant = 'original' | 'carry' | 'gate';
 
 interface Rule {
     land(base: number, distance: number, now: number): void;
+    fly(now: number): void;
     press(now: number): void;
     release(now: number): void;
-    /** Whether the rule fires this frame. */
     frame(kind: ReturnType<typeof levelKind>, distance: number, flying: boolean, now: number): boolean;
 }
 
-/** The rule before the gate: measured from the landing, armed a fixed time after it. */
-function oldRule(): Rule {
+function originalRule(): Rule {
     let levelDistance = 0;
     let settledAt = 0;
     return {
-        land: (base, _distance, now) => {
+        land: (base, _d, now) => {
             levelDistance = base;
             settledAt = now;
         },
+        fly: () => {},
         press: () => {},
         release: () => {},
         frame: (kind, distance, flying, now) => zoomedOutOfLevel(kind, distance, levelDistance, flying, now - settledAt >= ZOOM_OUT_SETTLE_MS),
     };
 }
 
-/** CameraRig now. */
-function gatedRule(): Rule & { gate: () => ZoomOutGate } {
-    let gate: ZoomOutGate = UNLANDED_GATE;
+/** 9629bab: the same gate, but zoom before it armed scaled the base, and nothing was swallowed. */
+function carryRule(): Rule {
+    let g = { base: Infinity, last: NaN, quietSince: -Infinity, pressed: false, armed: false };
     return {
-        gate: () => gate,
         land: (base, distance, now) => {
-            gate = landedGate(base, distance, now, gate.pressed);
+            g = { base, last: distance, quietSince: now, pressed: g.pressed, armed: false };
         },
+        fly: () => {},
         press: (now) => {
-            gate = pressGate(gate, now);
+            g = { ...g, pressed: true, armed: false, quietSince: now };
         },
         release: (now) => {
-            gate = releaseGate(gate, now);
+            if (g.pressed) g = { ...g, pressed: false, quietSince: now };
         },
         frame: (kind, distance, flying, now) => {
-            if (!flying) gate = stepGate(gate, distance, now);
-            return zoomedOutOfLevel(kind, distance, gate.base, flying, gate.armed);
+            if (!flying) {
+                const moved = Number.isFinite(g.last) && Math.abs(distance - g.last) > 1e-6 * g.last;
+                const base = !g.armed && moved ? g.base * (distance / g.last) : g.base;
+                const quietSince = moved ? now : g.quietSince;
+                g = { base, last: distance, quietSince, pressed: g.pressed, armed: g.armed || (!g.pressed && now - quietSince >= ZOOM_OUT_SETTLE_MS) };
+            }
+            return zoomedOutOfLevel(kind, distance, g.base, flying, g.armed);
         },
     };
 }
 
-const landingOf = (level: WorldLevel, phone = false) => (levelKind(level) === 'world' ? WORLD : phone ? PHONE_STAGE : STAGE);
-
-/**
- * Runs `inputs` from rest at `start` (landed at t = 0) for `ms`, one frame at a
- * time, and returns every level the view was at, in order.
- */
-function run(rule: Rule, start: WorldLevel, inputs: Input[], ms: number, phone = false) {
-    let level = start;
-    let distance = landingOf(level, phone);
-    let flight: Flight | null = null;
-    const visited = [level];
-    const fly = (to: WorldLevel, now: number, sticky: boolean) => {
-        level = to;
-        visited.push(level);
-        flight = { from: distance, to: landingOf(level, phone), start: now, sticky };
+function gateRule(holder: { gate: ZoomOutGate }): Rule {
+    return {
+        land: (base, distance, now) => {
+            holder.gate = landedGate(base, distance, now, holder.gate.pressed);
+        },
+        fly: (now) => {
+            holder.gate = flyingGate(holder.gate, now);
+        },
+        press: (now) => {
+            holder.gate = pressGate(holder.gate, now);
+        },
+        release: (now) => {
+            holder.gate = releaseGate(holder.gate, now);
+        },
+        frame: (kind, distance, flying, now) => {
+            if (!flying) holder.gate = stepGate(holder.gate, distance, now);
+            return zoomedOutOfLevel(kind, distance, holder.gate.base, flying, holder.gate.armed);
+        },
     };
-    rule.land(distance, distance, 0);
-    const queue = [...inputs].sort((a, b) => a.at - b.at);
-    for (let now = 0; now <= ms; now += FRAME_MS) {
-        while (queue.length && queue[0].at <= now) {
-            const input = queue.shift()!;
-            if (input.kind === 'press') rule.press(input.at);
-            if (input.kind === 'release') rule.release(input.at);
-            if (input.kind === 'click') fly(input.level, input.at, false);
-            if (input.kind === 'wheel') {
-                // OrbitControls says it has started, which stops any flight but a zoom-out's own, then zooms.
-                const f = flight as Flight | null;
-                if (f && !f.sticky) {
-                    rule.land(Math.max(f.to, distance), distance, input.at);
-                    flight = null;
-                }
-                distance = Math.min(SCENE.MAX_CAMERA_DISTANCE, distance * (input.dy > 0 ? WHEEL : 1 / WHEEL));
-            }
-        }
-        const f = flight as Flight | null;
-        if (f) {
-            const k = Math.min(1, (now - f.start) / FLY_MS);
-            distance = f.from + (f.to - f.from) * k;
-            if (k >= 1) {
-                flight = null;
-                rule.land(f.to, distance, now);
-            }
-        }
-        const flying = flight != null;
-        if (rule.frame(levelKind(level), flying ? (flight as Flight | null)!.to : distance, flying, now)) fly(levelUp(level), now, true);
-    }
-    return { visited, level, distance };
 }
 
-const SERVICE = familyLevel(2);
-const FOOD_SERVICE = fieldLevel('35');
-const wheels = (from: number, count: number, every: number, dy = 1): Input[] =>
-    Array.from({ length: count }, (_, i) => ({ at: from + i * every, kind: 'wheel' as const, dy }));
+// ---------------------------------------------------------------------------
+// CameraRig around the real OrbitControls.
 
-describe('one click on Food Service in the Service family, with a brush of the trackpad behind it', () => {
-    // The click lands a second after the family did; the finger's momentum
-    // tail is 40 small events over 1.6 s, each one 5% to OrbitControls.
-    const reported: Input[] = [
-        { at: 1000, kind: 'press' },
-        { at: 1080, kind: 'release' },
-        { at: 1080, kind: 'click', level: FOOD_SERVICE },
-        ...wheels(1100, 40, 40),
-    ];
+interface Flight { from: number; to: number; start: number; sticky: boolean }
 
-    it('climbed to the world under the old rule: the bug', () => {
-        const { visited, level } = run(oldRule(), SERVICE, reported, 6000);
-        expect(visited).toEqual([SERVICE, FOOD_SERVICE, SERVICE, { focusedFamily: null, focusedContinent: null }]);
-        expect(levelKind(level)).toBe('world');
+class Rig {
+    now = 0;
+    level: WorldLevel;
+    visited: WorldLevel[];
+    /** The camera's distance each time the rule fired. */
+    firedAt: number[] = [];
+    readonly holder = { gate: UNLANDED_GATE as ZoomOutGate };
+    private flight: Flight | null = null;
+    private readonly rule: Rule;
+    private readonly win: JSDOM['window'];
+    private readonly canvas: HTMLCanvasElement;
+    private readonly camera: PerspectiveCamera;
+    readonly controls: OrbitControls;
+
+    constructor(variant: Variant, start: WorldLevel, private readonly phone = false) {
+        const dom = new JSDOM('<div id="connected"><div><canvas></canvas></div></div>');
+        this.win = dom.window;
+        const container = this.win.document.getElementById('connected')!;
+        this.canvas = this.win.document.querySelector('canvas')!;
+        // jsdom has no pointer capture (released on pointerup) and no layout (orbit turns by drag / height).
+        Object.assign(container, { releasePointerCapture: () => {} });
+        Object.defineProperty(container, 'clientHeight', { value: 746 });
+        this.camera = new PerspectiveCamera(phone ? SCENE.CAMERA_PORTRAIT_FOV : SCENE.CAMERA_FOV, 1470 / 746, 0.1, 2000);
+        this.camera.position.set(...(phone ? SCENE.CAMERA_PORTRAIT_POSITION : SCENE.CAMERA_INITIAL_POSITION));
+        this.controls = new OrbitControls(this.camera);
+        Object.assign(this.controls, {
+            enableDamping: true, minDistance: SCENE.MIN_CAMERA_DISTANCE, maxDistance: SCENE.MAX_CAMERA_DISTANCE, maxPolarAngle: SCENE.MAX_POLAR_ANGLE,
+        });
+        this.controls.connect(container as unknown as HTMLElement);
+        this.controls.target.set(0, 0, 0);
+        this.controls.update();
+        // Landscape: any orbit input stops a flight, unless it is a zoom-out's own.
+        this.controls.addEventListener('start', () => {
+            const f = this.flight;
+            if (!f || f.sticky) return;
+            this.flight = null;
+            this.rule.land(Math.max(f.to, this.distance), this.distance, this.now);
+        });
+        this.rule = variant === 'original' ? originalRule() : variant === 'carry' ? carryRule() : gateRule(this.holder);
+        if (variant === 'gate') {
+            attachWheelGate(this.win as unknown as Window, () => container as unknown as Node, {
+                get: () => this.holder.gate, set: (g) => { this.holder.gate = g; },
+            }, () => this.now);
+        }
+        this.level = start;
+        this.visited = [start];
+        this.setDistance(this.landingOf(start));
+        this.rule.land(this.distance, this.distance, 0);
+    }
+
+    get distance(): number {
+        return this.controls.getDistance();
+    }
+
+    private landingOf(level: WorldLevel): number {
+        return levelKind(level) === 'world' ? WORLD : this.phone ? PHONE_STAGE : STAGE;
+    }
+
+    private setDistance(d: number) {
+        const dir = this.camera.position.clone().sub(this.controls.target).normalize();
+        this.camera.position.copy(this.controls.target.clone().add(dir.multiplyScalar(d)));
+        this.controls.update();
+    }
+
+    private fly(to: WorldLevel, sticky: boolean) {
+        this.level = to;
+        this.visited.push(to);
+        this.rule.fly(this.now);
+        this.flight = { from: this.distance, to: this.landingOf(to), start: this.now, sticky };
+    }
+
+    /** Runs frames for `ms`. */
+    wait(ms: number) {
+        const end = this.now + ms;
+        while (this.now < end) {
+            this.now = Math.min(end, this.now + FRAME_MS);
+            const f = this.flight;
+            if (f) {
+                const k = Math.min(1, (this.now - f.start) / FLY_MS);
+                this.setDistance(f.from + (f.to - f.from) * k);
+                if (k >= 1) {
+                    this.flight = null;
+                    this.rule.land(f.to, this.distance, this.now);
+                }
+            } else {
+                this.controls.update();
+            }
+            const flying = this.flight != null;
+            const distance = flying ? this.flight!.to : this.distance;
+            if (this.rule.frame(levelKind(this.level), distance, flying, this.now)) {
+                this.firedAt.push(this.distance);
+                this.fly(levelUp(this.level), true);
+            }
+        }
+    }
+
+    private pointer(type: string, id: number, x: number, y: number, pointerType: 'mouse' | 'touch') {
+        const e = new this.win.MouseEvent(type, { bubbles: true, cancelable: true, clientX: x, clientY: y, button: 0, buttons: type === 'pointerup' ? 0 : 1 });
+        Object.defineProperties(e, { pointerId: { value: id }, pointerType: { value: pointerType }, pageX: { value: x }, pageY: { value: y } });
+        this.canvas.dispatchEvent(e);
+    }
+
+    press() {
+        this.rule.press(this.now);
+        this.pointer('pointerdown', 1, 700, 500, 'mouse');
+    }
+
+    release() {
+        this.pointer('pointerup', 1, 700, 500, 'mouse');
+        this.rule.release(this.now);
+    }
+
+    /** A click's pointerup that clickAction turned into this level. */
+    clickTo(level: WorldLevel) {
+        this.release();
+        this.fly(level, false);
+    }
+
+    /** Wheel events `every` ms apart. */
+    wheels(deltaY: number, count: number, every: number) {
+        for (let i = 0; i < count; i++) {
+            this.canvas.dispatchEvent(new this.win.WheelEvent('wheel', { bubbles: true, cancelable: true, deltaY }));
+            this.wait(every);
+        }
+    }
+
+    /** A two-finger pinch on a touch screen, fingers closing from `from` px apart to `to`. */
+    pinch(from: number, to: number, steps: number, every: number) {
+        this.pointer('pointerdown', 11, 195 - from / 2, 420, 'touch');
+        this.pointer('pointerdown', 12, 195 + from / 2, 420, 'touch');
+        for (let i = 1; i <= steps; i++) {
+            const gap = from + ((to - from) * i) / steps;
+            this.pointer('pointermove', 12, 195 - from / 2 + gap, 420, 'touch');
+            this.wait(every);
+        }
+        this.pointer('pointerup', 12, 195 - from / 2 + to, 420, 'touch');
+        this.pointer('pointerup', 11, 195 - from / 2, 420, 'touch');
+    }
+}
+
+const run = (variant: Variant, start: WorldLevel, script: (rig: Rig) => void, phone = false) => {
+    const rig = new Rig(variant, start, phone);
+    script(rig);
+    return rig;
+};
+const kinds = (rig: Rig) => rig.visited.map(levelKind);
+
+// ---------------------------------------------------------------------------
+
+describe('what changes the camera\'s distance at rest, on the real OrbitControls', () => {
+    it('not a click, even one that wobbles a few pixels and so also orbits a little', () => {
+        const rig = new Rig('original', FOOD_SERVICE);
+        rig.press();
+        rig.release();
+        rig.wait(1000);
+        expect(rig.distance).toBeCloseTo(STAGE, 9);
+        const before = rig.controls.object.position.clone();
+        rig.press();
+        rig['pointer']('pointermove', 1, 704, 505, 'mouse');
+        rig.release();
+        rig.wait(2000);
+        expect(rig.controls.object.position.distanceTo(before)).toBeGreaterThan(0.1);
+        expect(rig.distance).toBeCloseTo(STAGE, 9);
     });
 
-    it('stays in Food Service now: the click opens the field and nothing else changes level', () => {
-        const rule = gatedRule();
-        const { visited, level } = run(rule, SERVICE, reported, 6000);
-        expect(visited).toEqual([SERVICE, FOOD_SERVICE]);
-        expect(level).toEqual(FOOD_SERVICE);
-        // The run zoomed the camera out, but before the gate armed, so it moved the base with it.
-        expect(rule.gate().armed).toBe(true);
-        expect(rule.gate().base).toBeCloseTo(rule.gate().last, 9);
+    it('five wheel events of one pixel each, past the zoom-out ratio: a brush of a finger looks like a zoom-out', () => {
+        const rig = new Rig('original', FOOD_SERVICE);
+        rig.wheels(1, 5, 0);
+        expect(rig.distance / STAGE).toBeCloseTo((1 / 0.95) ** 5, 9);
+        expect((1 / 0.95) ** 5).toBeGreaterThan(ZOOM_OUT_RATIO);
+    });
+});
+
+// Review of 9629bab, scenario a: at the Service family, a click on Food Service
+// with a brush, 3 wheel events of deltaY 2 during the press and 22 after, 16 to
+// 40 ms apart; then 24 deliberate wheel-outs.
+const scenarioA = (rig: Rig) => {
+    rig.wait(1000);
+    rig.press();
+    rig.wheels(2, 3, 16);
+    rig.clickTo(FOOD_SERVICE);
+    for (let i = 0; i < 22; i++) rig.wheels(2, 1, [16, 40, 27, 33][i % 4]);
+    rig.wait(2500);
+};
+const afterBrush = new Map<Variant, { level: WorldLevel; distance: number }>();
+
+describe('(a) a click with a brush leaves the camera where the field landed, and a zoom-out can still climb', () => {
+    it('gate: stays in Food Service at its own distance, then 24 wheel-outs go up to Service', () => {
+        const rig = run('gate', SERVICE, scenarioA);
+        expect(rig.level).toEqual(FOOD_SERVICE);
+        expect(rig.distance).toBeCloseTo(STAGE, 6);
+        rig.wheels(100, 24, 60);
+        rig.wait(2500);
+        expect(rig.visited).toEqual([SERVICE, FOOD_SERVICE, SERVICE]);
+        expect(rig.firedAt[0]).toBeGreaterThan(THRESHOLD);
+        expect(rig.firedAt[0]).toBeLessThan(THRESHOLD * (1 / 0.95) + 1e-6);
     });
 
-    it('stays in the family when the brush comes during the press itself, and the click then opens the field', () => {
-        const inputs: Input[] = [
-            { at: 1000, kind: 'press' },
-            ...wheels(1010, 6, 16),
-            { at: 1120, kind: 'release' },
-            { at: 1120, kind: 'click', level: FOOD_SERVICE },
-        ];
-        expect(run(oldRule(), SERVICE, inputs, 4000).visited[1]).toEqual({ focusedFamily: null, focusedContinent: null });
-        expect(run(gatedRule(), SERVICE, inputs, 4000).visited).toEqual([SERVICE, FOOD_SERVICE]);
+    it('carry (9629bab): stayed in Food Service but ended at the distance limit, and 24 wheel-outs never climbed', () => {
+        const rig = run('carry', SERVICE, scenarioA);
+        expect(rig.level).toEqual(FOOD_SERVICE);
+        expect(rig.distance).toBeCloseTo(SCENE.MAX_CAMERA_DISTANCE, 6);
+        rig.wheels(100, 24, 60);
+        rig.wait(2500);
+        expect(rig.visited).toEqual([SERVICE, FOOD_SERVICE]);
+        afterBrush.set('carry', { level: rig.level, distance: rig.distance });
+    });
+
+    it('original (95890f2): the brush climbed out of the field it had just opened', () => {
+        const rig = run('original', SERVICE, scenarioA);
+        expect(kinds(rig).slice(0, 3)).toEqual(['family', 'field', 'family']);
+    });
+});
+
+// Scenario b: click into Food Service, zoom in with 10 wheel events as soon as
+// it lands, wait 1.5 s, then 6 wheel-outs.
+const scenarioB = (rig: Rig) => {
+    rig.wait(1000);
+    rig.press();
+    rig.clickTo(FOOD_SERVICE);
+    rig.wait(FLY_MS + FRAME_MS);
+    rig.wheels(-100, 10, 30);
+    rig.wait(1500);
+    rig.wheels(100, 6, 60);
+    rig.wait(1500);
+};
+
+describe('(b) zooming in never lowers the threshold', () => {
+    it('gate: six wheel-outs after zooming in stay in Food Service; it climbs only past the landing distance x 1.25', () => {
+        const rig = run('gate', SERVICE, scenarioB);
+        expect(rig.visited).toEqual([SERVICE, FOOD_SERVICE]);
+        expect(rig.distance / STAGE).toBeCloseTo(0.95 ** 10 / 0.95 ** 6, 6);
+        rig.wheels(100, 20, 60);
+        rig.wait(2000);
+        expect(rig.visited).toEqual([SERVICE, FOOD_SERVICE, SERVICE]);
+        expect(rig.firedAt[0]).toBeGreaterThan(THRESHOLD);
+    });
+
+    it('carry (9629bab): went up to Service at about 0.8 of Food Service\'s home distance', () => {
+        const rig = run('carry', SERVICE, scenarioB);
+        expect(rig.visited).toEqual([SERVICE, FOOD_SERVICE, SERVICE]);
+        expect(rig.firedAt[0] / STAGE).toBeLessThan(0.85);
+    });
+
+    it('original (95890f2): stayed, as it measured from the landing too', () => {
+        expect(run('original', SERVICE, scenarioB).visited).toEqual([SERVICE, FOOD_SERVICE]);
+    });
+});
+
+describe('what 9629bab fixed still holds', () => {
+    // A: one click opens Food Service; a brush with a momentum tail follows it (40 events over 1.6 s).
+    const brushTail = (rig: Rig) => {
+        rig.wait(1000);
+        rig.press();
+        rig.clickTo(FOOD_SERVICE);
+        for (let i = 0; i < 40; i++) rig.wheels(Math.max(1, 6 - i / 8), 1, 40);
+        rig.wait(3000);
+    };
+
+    it('A: a click with a trailing brush stays in the field, at the field\'s distance', () => {
+        const gate = run('gate', SERVICE, brushTail);
+        expect(gate.visited).toEqual([SERVICE, FOOD_SERVICE]);
+        expect(gate.distance).toBeCloseTo(STAGE, 6);
+        expect(kinds(run('original', SERVICE, brushTail)).length).toBeGreaterThan(2);
+    });
+
+    it('B: a brush during the press itself, and the click still opens the field', () => {
+        const script = (rig: Rig) => {
+            rig.wait(1000);
+            rig.press();
+            rig.wheels(2, 6, 16);
+            rig.clickTo(FOOD_SERVICE);
+            rig.wait(3000);
+        };
+        const gate = run('gate', SERVICE, script);
+        expect(gate.visited).toEqual([SERVICE, FOOD_SERVICE]);
+        expect(gate.distance).toBeCloseTo(STAGE, 6);
+        // The original rule climbed to the world before the click landed.
+        expect(run('original', SERVICE, script).visited[1]).toEqual(WORLD_LEVEL);
+    });
+
+    it('C: a deliberate zoom-out climbs one level per gesture', () => {
+        const rig = run('gate', FOOD_SERVICE, (r) => {
+            r.wait(1000);
+            r.wheels(100, 6, 80);
+            r.wait(2500);
+            r.wheels(100, 6, 80);
+            r.wait(2500);
+        });
+        expect(kinds(rig)).toEqual(['field', 'family', 'world']);
+    });
+
+    it('D: one long scroll climbs one level, not two, and does not carry on out once it lands', () => {
+        const flick = (r: Rig) => {
+            r.wait(1000);
+            r.wheels(100, 40, 50);
+            r.wait(3000);
+        };
+        const gate = run('gate', FOOD_SERVICE, flick);
+        expect(kinds(gate)).toEqual(['field', 'family']);
+        expect(gate.distance).toBeCloseTo(STAGE, 6);
+        expect(kinds(run('original', FOOD_SERVICE, flick))).toEqual(['field', 'family', 'world']);
+    });
+
+    it('a pinch still zooms out of a field on a phone: touch is never held off', () => {
+        const rig = run('gate', FOOD_SERVICE, (r) => {
+            r.wait(1000);
+            r.pinch(300, 150, 20, 20);
+            r.wait(2000);
+        }, true);
+        expect(kinds(rig)).toEqual(['field', 'family']);
     });
 
     it('never changes level for a click alone, however the press and release are timed', () => {
         for (const hold of [0, 50, 200, 499]) {
             for (const at of [0, 100, 349, 351, 2000]) {
-                const inputs: Input[] = [{ at, kind: 'press' }, { at: at + hold, kind: 'release' }];
-                expect(run(gatedRule(), SERVICE, inputs, at + hold + 2000).visited, `${at}+${hold}`).toEqual([SERVICE]);
+                const rig = run('gate', SERVICE, (r) => {
+                    r.wait(at);
+                    r.press();
+                    r.wait(hold);
+                    r.release();
+                    r.wait(2000);
+                });
+                expect(rig.visited, `${at}+${hold}`).toEqual([SERVICE]);
             }
         }
     });
-});
 
-describe('a zoom-out made on purpose', () => {
-    it('still goes up one level once the stage is at rest: five mouse-wheel notches from a field', () => {
-        const { visited } = run(gatedRule(), FOOD_SERVICE, wheels(1000, 5, 80, 100), 4000);
-        expect(visited).toEqual([FOOD_SERVICE, SERVICE]);
-    });
-
-    it('goes up a level per gesture: a second one after a pause reaches the world', () => {
-        const { visited } = run(gatedRule(), FOOD_SERVICE, [...wheels(1000, 5, 80, 100), ...wheels(3500, 5, 80, 100)], 6000);
-        expect(visited.map(levelKind)).toEqual(['field', 'family', 'world']);
-    });
-
-    it('climbs one level, not two, for one long flick that coasts on past the landing', () => {
-        const flick = wheels(1000, 40, 50, 100);
-        expect(run(oldRule(), FOOD_SERVICE, flick, 6000).visited.map(levelKind)).toEqual(['field', 'family', 'world']);
-        expect(run(gatedRule(), FOOD_SERVICE, flick, 6000).visited.map(levelKind)).toEqual(['field', 'family']);
-    });
-
-    it('counts a partway zoom made before a click: the click does not move the base', () => {
-        const inputs: Input[] = [...wheels(1000, 3, 80, 100), { at: 2000, kind: 'press' }, { at: 2060, kind: 'release' }, ...wheels(3000, 2, 80, 100)];
-        // 3 notches, a click, 2 more: 1.05^5 is past 1.25 from where the field landed.
-        expect(run(gatedRule(), FOOD_SERVICE, inputs, 5000).visited).toEqual([FOOD_SERVICE, SERVICE]);
-    });
-
-    it('still works by pinch on a phone: touch never holds the rule off', () => {
-        // A pinch reaches OrbitControls as dolly steps; CameraRig only presses the gate for a mouse or pen.
-        const { visited } = run(gatedRule(), FOOD_SERVICE, wheels(1000, 6, 30), 4000, true);
-        expect(visited).toEqual([FOOD_SERVICE, SERVICE]);
+    it('lets zoom-out through at the world before anything has landed', () => {
+        const rig = new Rig('gate', WORLD_LEVEL);
+        rig.holder.gate = UNLANDED_GATE;
+        rig.wheels(100, 3, 60);
+        expect(rig.distance).toBeGreaterThan(WORLD * 1.1);
     });
 });
 
 describe('the gate', () => {
-    it('fires nothing before anything has landed', () => {
-        let g: ZoomOutGate = UNLANDED_GATE;
-        for (let t = 0; t < 2000; t += FRAME_MS) g = stepGate(g, SCENE.MAX_CAMERA_DISTANCE, t);
-        expect(zoomedOutOfLevel('field', SCENE.MAX_CAMERA_DISTANCE, g.base, false, g.armed)).toBe(false);
+    it('keeps the threshold reachable even for a flight stopped short far out', () => {
+        expect(MAX_GATE_BASE * ZOOM_OUT_RATIO).toBeLessThan(SCENE.MAX_CAMERA_DISTANCE);
+        expect(landedGate(SCENE.MAX_CAMERA_DISTANCE, SCENE.MAX_CAMERA_DISTANCE, 0).base).toBe(MAX_GATE_BASE);
+        expect(landedGate(STAGE, 40, 0).base).toBe(STAGE);
+    });
+
+    it('never moves the base, whatever the camera does before or after arming', () => {
+        let g = landedGate(STAGE, STAGE, 0);
+        for (const [d, t] of [[40, 100], [120, 200], [30, 600], [90, 1200]] as const) g = stepGate(g, d, t);
+        expect(g.base).toBe(STAGE);
     });
 
     it('arms after ZOOM_OUT_SETTLE_MS of stillness, and not while a press is down', () => {
@@ -313,10 +479,34 @@ describe('the gate', () => {
         g = releaseGate(g, 5000);
         g = stepGate(g, STAGE, 5000 + ZOOM_OUT_SETTLE_MS);
         expect(g.armed).toBe(true);
+        expect(flyingGate(g, 6000).armed).toBe(false);
     });
 
     it('keeps a press that is still down across a landing', () => {
-        const g = landedGate(STAGE, STAGE, 0, true);
-        expect(stepGate(g, STAGE, 10_000).armed).toBe(false);
+        expect(stepGate(landedGate(STAGE, STAGE, 0, true), STAGE, 10_000).armed).toBe(false);
+    });
+
+    it('swallows only wheel-outs over the 3D view, cancelling them, and only while not armed', () => {
+        const dom = new JSDOM('<div id="view"><canvas></canvas></div><div id="panel"></div>');
+        const win = dom.window;
+        const holder = { gate: landedGate(STAGE, STAGE, 0) };
+        attachWheelGate(win as unknown as Window, () => win.document.getElementById('view'), {
+            get: () => holder.gate, set: (g) => { holder.gate = g; },
+        }, () => 123);
+        const reached: number[] = [];
+        win.document.getElementById('view')!.addEventListener('wheel', (e) => reached.push((e as WheelEvent).deltaY));
+        win.document.getElementById('panel')!.addEventListener('wheel', (e) => reached.push((e as WheelEvent).deltaY));
+        const send = (id: string, deltaY: number) => {
+            const e = new win.WheelEvent('wheel', { bubbles: true, cancelable: true, deltaY });
+            (id === 'view' ? win.document.querySelector('canvas')! : win.document.getElementById(id)!).dispatchEvent(e);
+            return e.defaultPrevented;
+        };
+        expect(send('view', 2)).toBe(true);
+        expect(holder.gate.quietSince).toBe(123);
+        expect(send('view', -100)).toBe(false);
+        expect(send('panel', 100)).toBe(false);
+        holder.gate = { ...holder.gate, armed: true };
+        expect(send('view', 100)).toBe(false);
+        expect(reached).toEqual([-100, 100, 100]);
     });
 });

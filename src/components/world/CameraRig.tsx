@@ -10,7 +10,7 @@ import { mapRect } from '../../utils/stageMap';
 import { beginTransition, levelViewOf, viewAt, worldLevelView } from '../../utils/stageTransition';
 import type { Rect } from '../../utils/worldLayout';
 import { levelKind, zoomedOutOfLevel } from '../../utils/worldLevel';
-import { landedGate, pressGate, releaseGate, stepGate, UNLANDED_GATE, type ZoomOutGate } from '../../utils/zoomOutGate';
+import { attachWheelGate, flyingGate, landedGate, pressGate, releaseGate, stepGate, UNLANDED_GATE, type ZoomOutGate } from '../../utils/zoomOutGate';
 import { useIsMobile } from '../../hooks/useIsMobile';
 import { prefersReducedMotion, stopInertia, worldCamera } from './worldCamera';
 import {
@@ -67,9 +67,11 @@ interface Flight {
  *
  * Every frame it also decides the labels, from the zoom at the world and from
  * the level otherwise, and applies the zoom-out rule (utils/worldLevel) through
- * utils/zoomOutGate: only zoom made after the stage has come to rest, and not
- * during a click, counts. During a flight the zoom it reads is the landing's,
- * so a flight home never flashes the field names on its way past them.
+ * utils/zoomOutGate: it counts from the level's landing distance, and until the
+ * camera has been still a moment after landing (and during a click) wheel-outs
+ * are swallowed before OrbitControls sees them. During a flight the zoom it
+ * reads is the landing's, so a flight home never flashes the field names on its
+ * way past them.
  *
  * At a family or field the picture also slides with a view offset, so the
  * stage's whole rectangle sits in the band the chrome leaves free: on a phone
@@ -97,6 +99,7 @@ export const CameraRig: React.FC<{
     // What the zoom-out rule measures from, and whether it may fire yet.
     const gate = useRef<ZoomOutGate>(UNLANDED_GATE);
     const gl = useThree((s) => s.gl);
+    const getThree = useThree((s) => s.get);
     const isMobile = useIsMobile();
     // The picture's slide now, where it is heading, and until when to re-measure
     // the chrome. Measured only then: at rest a Kelley note must not move the view.
@@ -135,6 +138,7 @@ export const CameraRig: React.FC<{
         worldView.level = to;
         viewClock.current = { start: now, ms };
         worldCamera.panBounds = null;
+        gate.current = flyingGate(gate.current, now);
         stopInertia(controls);
         flight.current = {
             fromT: controls.target.clone(),
@@ -173,6 +177,16 @@ export const CameraRig: React.FC<{
     }, [size.width, size.height]);
 
     useEffect(() => () => camera.clearViewOffset(), [camera]);
+
+    // Wheel-outs wait for the gate: a brush or a coasting scroll never zooms out
+    // or cuts a flight short. Zoom-in always goes through.
+    useEffect(() => attachWheelGate(
+        window,
+        // Where R3F listens, which holds the canvas and the labels: OrbitControls listens there too.
+        () => (getThree().events.connected as Node | null | undefined) || gl.domElement.parentNode,
+        { get: () => gate.current, set: (g) => { gate.current = g; } },
+        () => performance.now(),
+    ), [gl, getThree]);
 
     // A click with the main mouse or pen button holds the zoom-out rule off
     // until it has let go and the camera has been still a moment (zoomOutGate).
