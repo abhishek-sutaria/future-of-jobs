@@ -461,6 +461,25 @@ describe('the gate', () => {
         expect(landedGate(STAGE, 40, 0).base).toBe(STAGE);
     });
 
+    it('never fires on arming after a flight stopped short past the threshold: it waits for the camera to come back inside', () => {
+        const far = SCENE.MAX_CAMERA_DISTANCE;
+        let g = landedGate(far, far, 0);
+        expect(far).toBeGreaterThan(g.base * ZOOM_OUT_RATIO);
+        // Held still long past the quiet time: still not armed, so the rule cannot fire on its own.
+        for (let t = FRAME_MS; t <= 5000; t += FRAME_MS) {
+            g = stepGate(g, far, t);
+            expect(zoomedOutOfLevel('field', far, g.base, false, g.armed), `${t}`).toBe(false);
+        }
+        expect(g.armed).toBe(false);
+        // Zoomed back inside (zoom-in always goes through): it arms after the quiet time, and the threshold is reachable.
+        const inside = g.base * ZOOM_OUT_RATIO * 0.9;
+        g = stepGate(g, inside, 5100);
+        g = stepGate(g, inside, 5100 + ZOOM_OUT_SETTLE_MS);
+        expect(g.armed).toBe(true);
+        expect(zoomedOutOfLevel('field', inside, g.base, false, g.armed)).toBe(false);
+        expect(zoomedOutOfLevel('field', g.base * ZOOM_OUT_RATIO * 1.01, g.base, false, g.armed)).toBe(true);
+    });
+
     it('never moves the base, whatever the camera does before or after arming', () => {
         let g = landedGate(STAGE, STAGE, 0);
         for (const [d, t] of [[40, 100], [120, 200], [30, 600], [90, 1200]] as const) g = stepGate(g, d, t);

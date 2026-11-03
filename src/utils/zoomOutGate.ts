@@ -18,7 +18,8 @@
  *   camera out nor cut a flight short, and each one restarts the quiet time.
  *   Zoom-in always goes through.
  * - The gate arms once nothing has zoomed and no swallowed wheel-out has come
- *   for ZOOM_OUT_SETTLE_MS after the level landed. A flight disarms it, and so
+ *   for ZOOM_OUT_SETTLE_MS after the level landed, and only with the camera
+ *   inside the threshold, so arming alone never fires the rule. A flight disarms it, and so
  *   does a click with the main mouse or pen button, from press until that quiet
  *   time after release. So a brush during a click or before the level settles
  *   never moves the camera out, a click never changes level except through
@@ -55,7 +56,9 @@ export const ZOOM_EPSILON = 1e-6;
 /**
  * The largest base the rule may measure from: past it, base x ZOOM_OUT_RATIO
  * would be at or beyond the orbit limit and could never be reached. Only a
- * flight stopped short far out (counted from where it stopped) comes near it.
+ * flight stopped short far out (counted from where it stopped) comes near it;
+ * if that leaves the camera past the threshold, the gate waits for it to come
+ * back inside before it arms (stepGate).
  */
 export const MAX_GATE_BASE = SCENE.MAX_CAMERA_DISTANCE / (ZOOM_OUT_RATIO * 1.05);
 
@@ -89,7 +92,10 @@ export const swallowedGate = (g: ZoomOutGate, now: number): ZoomOutGate => ({ ..
 export function stepGate(g: ZoomOutGate, distance: number, now: number): ZoomOutGate {
     const moved = Number.isFinite(g.last) && Math.abs(distance - g.last) > ZOOM_EPSILON * g.last;
     const quietSince = moved && !g.armed ? now : g.quietSince;
-    const armed = g.armed || (!g.pressed && now - quietSince >= ZOOM_OUT_SETTLE_MS);
+    // Never arm with the camera already past the threshold (a flight stopped short far out, beyond
+    // what MAX_GATE_BASE allows): it would fire with no zoom from the user. It arms once back inside.
+    const inside = distance <= g.base * ZOOM_OUT_RATIO;
+    const armed = g.armed || (!g.pressed && inside && now - quietSince >= ZOOM_OUT_SETTLE_MS);
     return { base: g.base, last: distance, quietSince, pressed: g.pressed, armed };
 }
 
