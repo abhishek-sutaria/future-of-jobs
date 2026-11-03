@@ -8,8 +8,6 @@ import {
     OOH_ENDPOINT_YEAR,
 } from '../config/constants';
 import type { Job } from '../types';
-import { CLUSTER_ORDER, getFunctionalCluster, type FunctionalCluster } from '../config/clusters';
-import { MAP_TITLE_TO_SOC } from './onet';
 import { EP_PATH_MAX } from './occupationIndex';
 
 // Landscape peak height: linear BLS Employment Projections levels
@@ -123,118 +121,6 @@ export interface PeakData {
     z: number;
     height: number; // 0 to 1 normalized
 }
-
-// Cluster-territory layout: each functional cluster owns a contiguous angular
-// sector of the disc (related clusters adjacent, see CLUSTER_ORDER), filled with
-// concentric arcs. Within a sector, jobs are ordered by SOC code so occupationally
-// similar roles sit next to each other.
-/** Radial gap between arcs in the live 50-job view; also the arc length each job gets there. */
-export const RING_SPACING = 5;
-/** The innermost arc's radius. */
-export const RING_MIN_RADIUS = 7;
-
-const TERRITORY_LAYOUT = {
-    /** Innermost arc radius */
-    R_MIN: RING_MIN_RADIUS,
-    /** Outermost usable radius — must stay inside the shader edge fade (~32 for the 70-unit plane) */
-    R_MAX: 30,
-    /** ≥ 2× PEAK_WIDTH so peaks stay legible */
-    RING_SPACING,
-    /** Angular gap between adjacent sectors (radians) */
-    GAP_RAD: 0.06,
-    /** Smallest sector span before normalization (radians) */
-    MIN_SPAN_RAD: 0.25,
-};
-
-export interface TerritoryOptions {
-    /** Gap between arcs, and the arc length each job gets. Smaller packs more jobs into the same disc. */
-    ringSpacing?: number;
-    /** Angular gap between adjacent sectors (radians). */
-    gapRad?: number;
-    /** Where the first sector starts (radians). */
-    startAngle?: number;
-}
-
-/**
- * The live disc layout: each group, in order, owns a contiguous angular sector
- * sized by its share of the jobs, filled with concentric arcs from the inside
- * out. `groups` holds item ids, already in the order they should sit.
- */
-export function territoryLayout(groups: readonly (readonly string[])[], options: TerritoryOptions = {}): Map<string, { x: number; z: number }> {
-    const { ringSpacing = TERRITORY_LAYOUT.RING_SPACING, gapRad = TERRITORY_LAYOUT.GAP_RAD, startAngle = 0 } = options;
-    const positions = new Map<string, { x: number; z: number }>();
-    const filled = groups.filter((g) => g.length > 0);
-    const total = filled.reduce((n, g) => n + g.length, 0);
-    if (total === 0) return positions;
-
-    const usable = Math.PI * 2 - gapRad * filled.length;
-
-    // Sector spans proportional to job count, clamped to a minimum, then renormalized
-    let spans = filled.map((g) => Math.max(TERRITORY_LAYOUT.MIN_SPAN_RAD, (usable * g.length) / total));
-    const spanSum = spans.reduce((a, b) => a + b, 0);
-    spans = spans.map((s) => (s * usable) / spanSum);
-
-    let theta0 = startAngle;
-    filled.forEach((members, gi) => {
-        const span = spans[gi];
-        let placed = 0;
-        let r = TERRITORY_LAYOUT.R_MIN;
-        while (placed < members.length) {
-            const onOuterEdge = r >= TERRITORY_LAYOUT.R_MAX;
-            const capacity = Math.max(1, Math.floor((span * r) / ringSpacing));
-            const ringCount = onOuterEdge
-                ? members.length - placed // overflow safety: everything left goes on the outer arc
-                : Math.min(capacity, members.length - placed);
-
-            for (let k = 0; k < ringCount; k++) {
-                const theta = theta0 + span * ((k + 0.5) / ringCount);
-                positions.set(members[placed + k], { x: r * Math.cos(theta), z: r * Math.sin(theta) });
-            }
-            placed += ringCount;
-            r = Math.min(r + ringSpacing, TERRITORY_LAYOUT.R_MAX);
-        }
-
-        theta0 += span + gapRad;
-    });
-
-    return positions;
-}
-
-export function computeClusterTerritoryLayout(jobs: Job[]): Map<string, { x: number; z: number }> {
-    const groups = new Map<FunctionalCluster, Job[]>();
-    for (const job of jobs) {
-        const cluster = getFunctionalCluster(job.title);
-        const members = groups.get(cluster);
-        if (members) members.push(job);
-        else groups.set(cluster, [job]);
-    }
-
-    // Related clusters adjacent (CLUSTER_ORDER); within one, SOC order, so
-    // occupationally similar roles sit next to each other.
-    return territoryLayout(CLUSTER_ORDER.filter((c) => groups.has(c)).map((c) => (
-        [...groups.get(c)!]
-            .sort((a, b) => {
-                const socA = MAP_TITLE_TO_SOC[a.title] ?? a.title;
-                const socB = MAP_TITLE_TO_SOC[b.title] ?? b.title;
-                return socA === socB ? a.title.localeCompare(b.title) : socA.localeCompare(socB);
-            })
-            .map((job) => job.id)
-    )));
-}
-
-// One layout per jobs array instance (store replaces the array on data updates;
-// ids/titles never change at runtime, so positions are stable across filtering).
-const layoutCache = new WeakMap<readonly Job[], Map<string, { x: number; z: number }>>();
-
-export const getTerrainPosition = (index: number, jobs: Job[]): { x: number, z: number } => {
-    let layout = layoutCache.get(jobs);
-    if (!layout) {
-        layout = computeClusterTerritoryLayout(jobs);
-        layoutCache.set(jobs, layout);
-    }
-    const job = jobs[index];
-    return (job && layout.get(job.id)) || { x: 0, z: 0 };
-};
 
 // Gaussian function: A * exp( -dist^2 / (2*sigma^2) )
 export const calculateGaussianHeight = (x: number, z: number, peaks: PeakData[]): number => {

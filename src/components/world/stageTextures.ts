@@ -70,11 +70,11 @@ export interface StageTextures {
  * needs interpolating, and float textures are not filterable on most phones.
  */
 export function createStageTextures(bake: StageBake, format: StageTextureFormat): StageTextures {
-    const { size } = bake;
+    const { cols, rows } = bake;
     const heights = format === 'float'
-        ? new DataTexture(bake.heights, size, size, RGFormat, FloatType)
-        : new DataTexture(packHeights(bake.heights), size, size, RGBAFormat, UnsignedByteType);
-    const colors = new DataTexture(bake.colors, size, size, RGBAFormat, UnsignedByteType);
+        ? new DataTexture(bake.heights, cols, rows, RGFormat, FloatType)
+        : new DataTexture(packHeights(bake.heights), cols, rows, RGBAFormat, UnsignedByteType);
+    const colors = new DataTexture(bake.colors, cols, rows, RGBAFormat, UnsignedByteType);
     for (const texture of [heights, colors]) {
         texture.minFilter = NearestFilter;
         texture.magFilter = NearestFilter;

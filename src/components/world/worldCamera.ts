@@ -5,14 +5,11 @@ import { WORLD_BOUNDS, type Rect } from '../../utils/worldLayout';
 export const worldCamera: {
     /** Lets OrbitControls cancel a flight the moment the user grabs the view. `force` also stops a zoom-out's own flight. */
     cancel: (force?: boolean) => void;
-    /** Where the orbit target may go at the world, or null on a stage and while a flight is moving it. */
+    /** Where the orbit target may go: the level's rectangle on screen, or null while a flight is moving it. */
     panBounds: Readonly<Rect> | null;
-    /** How far from the middle the orbit target may go on a stage, as in the live view, or null otherwise. */
-    panRadius: number | null;
 } = {
     cancel: () => {},
     panBounds: WORLD_BOUNDS,
-    panRadius: null,
 };
 
 /**

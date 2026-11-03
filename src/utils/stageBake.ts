@@ -1,7 +1,8 @@
 /**
  * Bakes a stage into textures the terrain mesh displaces itself from: the live
  * Terrain.tsx surface, minus its 50-peak uniform limit, so a stage of 8 jobs and
- * one of 375 go down the same pipeline.
+ * one of 378 go down the same pipeline. The textures cover the stage's own
+ * rectangle, texel for vertex, so the mesh ends exactly on its edge.
  *
  * Two height layers, 2025 and 2035, on one fixed scale for the stage: the largest
  * employment on the path across its jobs reaches the live view's tallest hill, the
@@ -14,8 +15,9 @@
  * exp per row and column of its window, not one per texel.
  */
 
-import { SCENE, SHADER, YEAR_MAX, YEAR_MIN } from '../config/constants';
+import { SHADER, YEAR_MAX, YEAR_MIN } from '../config/constants';
 import type { Stage, StageJob } from './stageLayout';
+import { rectDepth, rectWidth, type Rect } from './worldLayout';
 
 /** Live Terrain.tsx: height clamp at the top of the range, times its height scale. */
 export const STAGE_MIN_HEIGHT = SHADER.HEIGHT_CLAMP_MIN * SHADER.HEIGHT_SCALE;
@@ -35,12 +37,12 @@ export type StageBlend = 'sum' | 'smoothmax';
 
 /**
  * How overlapping hills combine. The live shader adds them, which is fine at 50
- * jobs. On the densest stage (Management family, 378 peaks) adding inflates the
- * median job to 2.77 times its height, and clearly smaller jobs stand taller than
- * larger neighbours in 262 of 1,329 neighbouring pairs. Smooth max at power 2
- * brings those to 1.29 and 178, and keeps every stage's top at the live 12.5. A
- * higher power is truer still but cuts every hill apart, so small hills read as
- * a field of dots rather than a landscape. A lone hill is the same either way.
+ * jobs. On the densest stage (Management, Business, Science & Arts, 378 peaks)
+ * adding inflates the median job to more than twice its height, and clearly
+ * smaller jobs stand taller than larger neighbours. Smooth max at power 2 keeps
+ * jobs near their own height and every stage's top at the live 12.5. A higher
+ * power is truer still but cuts every hill apart, so small hills read as a
+ * field of dots rather than a landscape. A lone hill is the same either way.
  */
 export const STAGE_BLEND: StageBlend = 'smoothmax';
 export const STAGE_BLEND_POWER = 2;
@@ -48,9 +50,12 @@ export const STAGE_BLEND_POWER = 2;
 export const STAGE_HEIGHT_RANGE = 16;
 
 export interface StageBake {
-    /** Vertices along one side of the mesh, and texels along one side of each texture. */
-    size: number;
-    /** Height at 2025 then 2035, in world units, for each texel. */
+    /** The stage rectangle the textures cover, in stage units. */
+    rect: Rect;
+    /** Vertices along x (columns) and along z (rows), and texels along each side of each texture. */
+    cols: number;
+    rows: number;
+    /** Height at 2025 then 2035, in world units, for each texel. Row 0 is the near (+z) edge, as the mesh's v = 0. */
     heights: Float32Array;
     /** Blended colour (RGB) and Kelley emphasis (A), 0 to 255, for each texel. */
     colors: Uint8Array;
@@ -72,24 +77,34 @@ export function stageJobHeight(job: StageJob, atYear: number, maxEmployment: num
     return STAGE_MIN_HEIGHT + share * (STAGE_PEAK_HEIGHT - STAGE_MIN_HEIGHT);
 }
 
-const texel = (index: number, size: number) => (index / (size - 1) - 0.5) * SCENE.PLANE_SIZE;
+/**
+ * Mesh segments along each side of a stage: the long side gets `longSide` and
+ * the short side its share, so texels are square and a hill is round.
+ */
+export function stageSegments(rect: Rect, longSide: number): { x: number; z: number } {
+    const w = rectWidth(rect);
+    const d = rectDepth(rect);
+    const long = Math.max(w, d);
+    return { x: Math.max(8, Math.round((longSide * w) / long)), z: Math.max(8, Math.round((longSide * d) / long)) };
+}
 
-/** World z of texel row `row`: the mesh lies rotated, so its v axis runs along -z, as the live one does. */
-const rowOfZ = (z: number, size: number) => (0.5 - z / SCENE.PLANE_SIZE) * (size - 1);
-const columnOfX = (x: number, size: number) => (0.5 + x / SCENE.PLANE_SIZE) * (size - 1);
+/** Stage x of column `col`, and stage z of row `row` (row 0 at the near edge, z1). */
+const columnX = (rect: Rect, cols: number, col: number) => rect.x0 + (col / (cols - 1)) * rectWidth(rect);
+const rowZ = (rect: Rect, rows: number, row: number) => rect.z1 - (row / (rows - 1)) * rectDepth(rect);
 
 /** Gaussian falloff along one axis of a job's window, written into `out`. */
-function falloff(center: number, first: number, last: number, size: number, twoVariance: number, out: Float32Array): void {
+function falloff(center: number, first: number, last: number, at: (i: number) => number, twoVariance: number, out: Float32Array): void {
     for (let i = first; i <= last; i++) {
-        const d = texel(i, size) - center;
+        const d = at(i) - center;
         out[i] = Math.exp(-(d * d) / twoVariance);
     }
 }
 
-function window1D(center: number, reach: number, size: number): [number, number] {
-    const step = SCENE.PLANE_SIZE / (size - 1);
-    const middle = (center / SCENE.PLANE_SIZE + 0.5) * (size - 1);
-    return [Math.max(0, Math.ceil(middle - reach / step)), Math.min(size - 1, Math.floor(middle + reach / step))];
+/** First and last index within `reach` of `center` on an axis from `start` with `step` per index (step may be negative). */
+function window1D(center: number, reach: number, start: number, step: number, count: number): [number, number] {
+    const a = (center - reach - start) / step;
+    const b = (center + reach - start) / step;
+    return [Math.max(0, Math.ceil(Math.min(a, b))), Math.min(count - 1, Math.floor(Math.max(a, b)))];
 }
 
 /**
@@ -97,22 +112,27 @@ function window1D(center: number, reach: number, size: number): [number, number]
  * does; `smoothmax` lets the taller hill win where they overlap, by summing
  * heights to the power `power` and taking the root.
  */
-function bakeLayer(jobs: readonly StageJob[], sigma: number, size: number, atYear: number, blend: StageBlend, power: number, out: Float32Array, offset: number): void {
+function bakeLayer(jobs: readonly StageJob[], bake: Omit<StageBake, 'heights' | 'colors'>, atYear: number, blend: StageBlend, power: number, out: Float32Array, offset: number): void {
+    const { rect, cols, rows } = bake;
     const maxEmployment = stageMaxEmployment(jobs);
-    const reach = sigma * HEIGHT_REACH;
-    const twoVariance = (2 * sigma * sigma) / (blend === 'sum' ? 1 : power);
-    const across = new Float32Array(size);
-    const along = new Float32Array(size);
-    const sum = new Float32Array(size * size);
+    const stepX = rectWidth(rect) / (cols - 1);
+    const stepZ = -rectDepth(rect) / (rows - 1);
+    const across = new Float32Array(cols);
+    const along = new Float32Array(rows);
+    const sum = new Float32Array(cols * rows);
+    const atX = (i: number) => columnX(rect, cols, i);
+    const atZ = (i: number) => rowZ(rect, rows, i);
     for (const job of jobs) {
+        const reach = job.sigma * HEIGHT_REACH;
+        const twoVariance = (2 * job.sigma * job.sigma) / (blend === 'sum' ? 1 : power);
         const height = stageJobHeight(job, atYear, maxEmployment);
         const amount = blend === 'sum' ? height : height ** power;
-        const [x0, x1] = window1D(job.x, reach, size);
-        const [y0, y1] = window1D(-job.z, reach, size);
-        falloff(job.x, x0, x1, size, twoVariance, across);
-        falloff(-job.z, y0, y1, size, twoVariance, along);
+        const [x0, x1] = window1D(job.x, reach, rect.x0, stepX, cols);
+        const [y0, y1] = window1D(job.z, reach, rect.z1, stepZ, rows);
+        falloff(job.x, x0, x1, atX, twoVariance, across);
+        falloff(job.z, y0, y1, atZ, twoVariance, along);
         for (let y = y0; y <= y1; y++) {
-            const row = y * size;
+            const row = y * cols;
             const inRow = amount * along[y];
             for (let x = x0; x <= x1; x++) sum[row + x] += inRow * across[x];
         }
@@ -120,26 +140,31 @@ function bakeLayer(jobs: readonly StageJob[], sigma: number, size: number, atYea
     for (let i = 0; i < sum.length; i++) out[i * 2 + offset] = blend === 'sum' ? sum[i] : sum[i] ** (1 / power);
 }
 
-function bakeColors(jobs: readonly StageJob[], sigma: number, size: number, out: Uint8Array): void {
-    const count = size * size;
+function bakeColors(jobs: readonly StageJob[], bake: Omit<StageBake, 'heights' | 'colors'>, out: Uint8Array): void {
+    const { rect, cols, rows } = bake;
+    const count = cols * rows;
     const r = new Float32Array(count);
     const g = new Float32Array(count);
     const b = new Float32Array(count);
     const emphasis = new Float32Array(count);
     const total = new Float32Array(count);
-    const reach = sigma * COLOR_REACH;
-    const twoVariance = 4 * sigma * sigma;
-    const across = new Float32Array(size);
-    const along = new Float32Array(size);
+    const stepX = rectWidth(rect) / (cols - 1);
+    const stepZ = -rectDepth(rect) / (rows - 1);
+    const across = new Float32Array(cols);
+    const along = new Float32Array(rows);
+    const atX = (i: number) => columnX(rect, cols, i);
+    const atZ = (i: number) => rowZ(rect, rows, i);
     for (const job of jobs) {
-        const [x0, x1] = window1D(job.x, reach, size);
-        const [y0, y1] = window1D(-job.z, reach, size);
-        falloff(job.x, x0, x1, size, twoVariance, across);
-        falloff(-job.z, y0, y1, size, twoVariance, along);
+        const reach = job.sigma * COLOR_REACH;
+        const twoVariance = 4 * job.sigma * job.sigma;
+        const [x0, x1] = window1D(job.x, reach, rect.x0, stepX, cols);
+        const [y0, y1] = window1D(job.z, reach, rect.z1, stepZ, rows);
+        falloff(job.x, x0, x1, atX, twoVariance, across);
+        falloff(job.z, y0, y1, atZ, twoVariance, along);
         const [cr, cg, cb] = job.color;
         const shine = job.kelley ? 1 : STAGE_DIM_EMPHASIS;
         for (let y = y0; y <= y1; y++) {
-            const row = y * size;
+            const row = y * cols;
             for (let x = x0; x <= x1; x++) {
                 const w = along[y] * across[x];
                 const i = row + x;
@@ -161,14 +186,48 @@ function bakeColors(jobs: readonly StageJob[], sigma: number, size: number, out:
     }
 }
 
-export function bakeStage(stage: Pick<Stage, 'jobs' | 'sigma'>, segments: number, blend: StageBlend, power: number): StageBake {
-    const size = segments + 1;
-    const heights = new Float32Array(size * size * 2);
-    const colors = new Uint8Array(size * size * 4);
-    bakeLayer(stage.jobs, stage.sigma, size, 0, blend, power, heights, 0);
-    bakeLayer(stage.jobs, stage.sigma, size, 1, blend, power, heights, 1);
-    bakeColors(stage.jobs, stage.sigma, size, colors);
-    return { size, heights, colors };
+const smoothstep = (a: number, b: number, x: number) => {
+    const t = Math.max(0, Math.min(1, (x - a) / (b - a)));
+    return t * t * (3 - 2 * t);
+};
+
+/**
+ * How much of the surface stands at a point: 0 on the stage's edge, 1 from
+ * `band` inside it. The band is the strip REGION_INSET leaves empty round every
+ * field, magnified, so the hills come down to the ground at a clean edge and no
+ * job's own height is touched.
+ */
+export function stageEdgeTaper(rect: Rect, band: number, x: number, z: number): number {
+    const edge = Math.min(x - rect.x0, rect.x1 - x, z - rect.z0, rect.z1 - z);
+    return band > 0 ? smoothstep(0, band, edge) : 1;
+}
+
+export function bakeStage(
+    stage: Pick<Stage, 'jobs' | 'outline'>,
+    segments: { x: number; z: number },
+    blend: StageBlend,
+    power: number,
+    edgeBand = 0,
+): StageBake {
+    const shape = { rect: stage.outline, cols: segments.x + 1, rows: segments.z + 1 };
+    const heights = new Float32Array(shape.cols * shape.rows * 2);
+    const colors = new Uint8Array(shape.cols * shape.rows * 4);
+    bakeLayer(stage.jobs, shape, 0, blend, power, heights, 0);
+    bakeLayer(stage.jobs, shape, 1, blend, power, heights, 1);
+    if (edgeBand > 0) {
+        for (let row = 0; row < shape.rows; row++) {
+            const z = rowZ(shape.rect, shape.rows, row);
+            for (let col = 0; col < shape.cols; col++) {
+                const k = stageEdgeTaper(shape.rect, edgeBand, columnX(shape.rect, shape.cols, col), z);
+                if (k >= 1) continue;
+                const i = (row * shape.cols + col) * 2;
+                heights[i] *= k;
+                heights[i + 1] *= k;
+            }
+        }
+    }
+    bakeColors(stage.jobs, shape, colors);
+    return { ...shape, heights, colors };
 }
 
 /** Two 16-bit heights in the four 8-bit channels of each texel, for a GPU that cannot read float textures in a vertex shader. */
@@ -214,17 +273,17 @@ export function rayToSurface(
 /** How far through the 2025 to 2035 path a slider year is. */
 export const yearMix = (year: number): number => Math.max(0, Math.min(1, (year - YEAR_MIN) / (YEAR_MAX - YEAR_MIN)));
 
-/** The drawn surface at a world point, in world units above the ground. What pins stand on. */
+/** The drawn surface at a stage point, in world units above the ground. What pins stand on. */
 export function surfaceHeight(bake: StageBake, x: number, z: number, mix: number): number {
-    const { size, heights } = bake;
-    const cx = Math.max(0, Math.min(size - 1.001, columnOfX(x, size)));
-    const cy = Math.max(0, Math.min(size - 1.001, rowOfZ(z, size)));
+    const { rect, cols, rows, heights } = bake;
+    const cx = Math.max(0, Math.min(cols - 1.001, ((x - rect.x0) / rectWidth(rect)) * (cols - 1)));
+    const cy = Math.max(0, Math.min(rows - 1.001, ((rect.z1 - z) / rectDepth(rect)) * (rows - 1)));
     const x0 = Math.floor(cx);
     const y0 = Math.floor(cy);
     const fx = cx - x0;
     const fy = cy - y0;
     const at = (col: number, row: number) => {
-        const i = (row * size + col) * 2;
+        const i = (row * cols + col) * 2;
         return heights[i] + (heights[i + 1] - heights[i]) * mix;
     };
     const near = at(x0, y0) + (at(x0 + 1, y0) - at(x0, y0)) * fx;

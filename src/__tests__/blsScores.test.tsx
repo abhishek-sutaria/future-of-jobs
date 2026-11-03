@@ -303,8 +303,8 @@ describe.runIf(PRESENT)('after the scoring run (ai_scores_bls.json)', () => {
             expect(p.entry.scored, p.entry.title).toBe(true);
             expect(sameColor(p.color, RISK_UNSCORED_RGB), p.entry.title).toBe(false);
         }
-        const field = buildStage({ focusedFamily: familyOf('13').id, focusedContinent: '13' }, scene.peaksByContinent)!;
-        const family = buildStage({ focusedFamily: familyOf('13').id, focusedContinent: null }, scene.peaksByContinent)!;
+        const field = buildStage({ focusedFamily: familyOf('13').id, focusedContinent: '13' }, scene)!;
+        const family = buildStage({ focusedFamily: familyOf('13').id, focusedContinent: null }, scene)!;
         for (const stage of [field, family]) {
             const jobsHere = stage.jobs.filter((j) => j.code === '13');
             expect(jobsHere).toHaveLength(33);

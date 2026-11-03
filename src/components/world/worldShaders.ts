@@ -20,7 +20,20 @@ const SHARED = /* glsl */ `
   }
 `;
 
+/**
+ * World ground to screen ground (sx, sz, tx, tz): identity at the world, and the
+ * magnification a flight into a family or field has reached on the way there,
+ * so the treemap zooms with the stage it hands over to (utils/stageMap).
+ */
+const VIEW = /* glsl */ `
+  uniform vec4 uView;
+  vec3 toScreen(vec3 world) {
+    return vec3(uView.x * world.x + uView.z, world.y, uView.y * world.z + uView.w);
+  }
+`;
+
 export const peakVertexShader = /* glsl */ `
+  ${VIEW}
   // Unit bell: x/z in [-1, 1], y in [0, 1]. One instance per role.
   attribute vec4 aPeak;     // world x, world z, footprint radius, height (world units)
   attribute vec3 aColor;    // Job Security colour, or the neutral "not scored yet" slate
@@ -33,13 +46,16 @@ export const peakVertexShader = /* glsl */ `
 
   varying vec3 vColor;
   varying vec3 vWorld;
+  varying vec2 vMap;
   varying float vElev;
   varying float vEmph;
   varying float vHover;
 
   void main() {
     float h = aPeak.w * uRegionLift;
-    vec3 world = vec3(aPeak.x + position.x * aPeak.z, uGroundY + position.y * h, aPeak.y + position.z * aPeak.z);
+    vec3 map = vec3(aPeak.x + position.x * aPeak.z, uGroundY + position.y * h, aPeak.y + position.z * aPeak.z);
+    vec3 world = toScreen(map);
+    vMap = map.xz;
     vWorld = world;
     vElev = position.y * h;
     vColor = aColor;
@@ -54,6 +70,7 @@ export const peakFragmentShader = /* glsl */ `
   uniform float uFade; // 1 = the world is showing; 0 = gone
   varying vec3 vColor;
   varying vec3 vWorld;
+  varying vec2 vMap;
   varying float vElev;
   varying float vEmph;
   varying float vHover;
@@ -72,7 +89,7 @@ export const peakFragmentShader = /* glsl */ `
     );
     vec3 color = mix(TERRAIN_BASE, vColor, heightMix * 0.92);
 
-    color = mix(color, GRID_COLOR, gridLine(vWorld.xz) * 0.3);
+    color = mix(color, GRID_COLOR, gridLine(vMap) * 0.3);
     float isoline = step(${f(SHADER_VISUAL.ISOLINE_THRESHOLD)}, fract(vElev * ${f(SHADER_VISUAL.ISOLINE_FREQUENCY)}));
     vec3 isolineColor = mix(${SHADER_COLORS.ISOLINE_DARK}, ${SHADER_COLORS.ISOLINE_BRIGHT}, heightMix);
     color = mix(color, isolineColor, isoline * 0.2);
@@ -88,11 +105,13 @@ export const peakFragmentShader = /* glsl */ `
 `;
 
 export const groundVertexShader = /* glsl */ `
+  ${VIEW}
   varying vec3 vWorld;
   void main() {
     vec4 world = modelMatrix * vec4(position, 1.0);
+    // vWorld stays on the world map's ground: regions, borders and the grid are drawn there.
     vWorld = world.xyz;
-    gl_Position = projectionMatrix * viewMatrix * world;
+    gl_Position = projectionMatrix * viewMatrix * vec4(toScreen(world.xyz), 1.0);
   }
 `;
 

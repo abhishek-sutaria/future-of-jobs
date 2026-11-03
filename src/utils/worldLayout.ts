@@ -7,13 +7,16 @@
  * ordered treemap of the five BLS job families (config/socFamilies.ts, SOC
  * User Guide Table 6), each sized by the sum of its fields' rows, then each
  * family's fields inside its block, in SOC order. So neighbours share a
- * family, and every rectangle stays close to square. Inside a region, peaks
- * sit on an even grid in SOC order; only their height carries data.
+ * family, and every rectangle stays close to square. Inside a region, each
+ * SOC minor group gets its own block by the same treemap, sized by its number
+ * of jobs, and its peaks sit on an even grid in SOC order; only their height
+ * carries data. Families and fields are drawn from these same positions,
+ * magnified (utils/stageMap), so this is the one layout for all three levels.
  *
  * Pure (no three.js, no DOM) so it can be unit-tested.
  */
 
-import { INDEX_CONTINENTS } from './occupationIndex';
+import { INDEX_CONTINENTS, INDEX_OCCUPATION_BY_SOC } from './occupationIndex';
 import { familyOf, SOC_FAMILIES, type SocFamily } from '../config/socFamilies';
 import type { RoleEntry } from './roles';
 
@@ -194,69 +197,139 @@ export interface PeakPlacement {
     radius: number;
 }
 
-const REGION_INSET = 0.5;
+/** A SOC minor group's block inside its field: its own rectangle, its jobs in SOC order. */
+export interface MinorGroupLayout {
+    /** Two-digit SOC major code of the field. */
+    code: string;
+    /** SOC minor group code, e.g. "51-4000". */
+    minor: string;
+    /** Official BLS title of the minor group. */
+    title: string;
+    rect: Rect;
+    keys: string[];
+}
+
+/** Jobs stand at least this far inside their field's edge, so neighbouring fields' peaks never touch. */
+export const REGION_INSET = 0.5;
 /** Neighbouring peaks overlap a little so a region reads as one landscape, not a pin board. */
 const PEAK_OVERLAP = 1.3;
 const PEAK_RADIUS_MAX = 3;
 
-/** Even grid inside the region, row by row in SOC order; the last row is centred. */
-export function layoutRegionPeaks(region: Rect, keys: readonly string[]): PeakPlacement[] {
-    const n = keys.length;
-    if (n === 0) return [];
-    const w = Math.max(0.1, rectWidth(region) - 2 * REGION_INSET);
-    const d = Math.max(0.1, rectDepth(region) - 2 * REGION_INSET);
-
+/** The even grid for n jobs in a w x d rectangle: closest to square cells, with as few empty ones as possible. */
+function bestGrid(n: number, w: number, d: number): { cols: number; rows: number; score: number } {
     let best = { cols: 1, rows: n, score: Infinity };
     for (let cols = 1; cols <= n; cols++) {
         const rows = Math.ceil(n / cols);
         const score = aspect(w / cols, d / rows) + (rows * cols - n) / n;
         if (score < best.score) best = { cols, rows, score };
     }
-    const cw = w / best.cols;
-    const cd = d / best.rows;
+    return best;
+}
+
+/** Even grid inside the rectangle, row by row in the given order; the last row is centred. */
+function gridPeaks(rect: Rect, keys: readonly string[]): PeakPlacement[] {
+    const n = keys.length;
+    if (n === 0) return [];
+    const w = Math.max(0.1, rectWidth(rect));
+    const d = Math.max(0.1, rectDepth(rect));
+    const grid = bestGrid(n, w, d);
+    const cw = w / grid.cols;
+    const cd = d / grid.rows;
     const radius = Math.min(PEAK_RADIUS_MAX, 0.5 * Math.min(cw, cd) * PEAK_OVERLAP);
 
     return keys.map((key, i) => {
-        const row = Math.floor(i / best.cols);
-        const inRow = row === best.rows - 1 ? n - row * best.cols : best.cols;
-        const col = i - row * best.cols;
-        const rowOffset = ((best.cols - inRow) * cw) / 2;
+        const row = Math.floor(i / grid.cols);
+        const inRow = row === grid.rows - 1 ? n - row * grid.cols : grid.cols;
+        const col = i - row * grid.cols;
+        const rowOffset = ((grid.cols - inRow) * cw) / 2;
         return {
             key,
-            x: region.x0 + REGION_INSET + rowOffset + (col + 0.5) * cw,
-            z: region.z0 + REGION_INSET + (row + 0.5) * cd,
+            x: rect.x0 + rowOffset + (col + 0.5) * cw,
+            z: rect.z0 + (row + 0.5) * cd,
             radius,
         };
     });
+}
+
+/**
+ * A field's jobs, grouped so related jobs sit together: each SOC minor group
+ * gets its own block, cut from the field (inset by REGION_INSET) by the same
+ * ordered treemap as the families and fields, sized by its number of jobs.
+ * Inside a block its jobs stand on an even grid in SOC order. Each block is
+ * shaped for the grid it holds, so cells stay close to square.
+ *
+ * `groups` are the field's minor groups in SOC order, each with its jobs'
+ * keys in SOC order; empty groups are left out.
+ */
+export function layoutRegionPeaks(
+    region: Rect,
+    groups: readonly { minor: string; title: string; keys: readonly string[] }[],
+    code = '',
+): { groups: MinorGroupLayout[]; peaks: PeakPlacement[] } {
+    const filled = groups.filter((g) => g.keys.length > 0);
+    if (filled.length === 0) return { groups: [], peaks: [] };
+    const inner: Rect = {
+        x0: region.x0 + REGION_INSET,
+        z0: region.z0 + REGION_INSET,
+        x1: Math.max(region.x0 + REGION_INSET + 0.1, region.x1 - REGION_INSET),
+        z1: Math.max(region.z0 + REGION_INSET + 0.1, region.z1 - REGION_INSET),
+    };
+    const counts = filled.map((g) => g.keys.length);
+    const gridCost = (k: number, w: number, d: number) => {
+        const grid = bestGrid(counts[k], w, d);
+        return Math.log(aspect(w / grid.cols, d / grid.rows)) ** 2 + (grid.rows * grid.cols - counts[k]) / counts[k];
+    };
+    const rects = orderedTreemap(counts, inner, gridCost);
+    const out = filled.map((g, i): MinorGroupLayout => ({ code, minor: g.minor, title: g.title, rect: rects[i], keys: [...g.keys] }));
+    return { groups: out, peaks: out.flatMap((g) => gridPeaks(g.rect, g.keys)) };
+}
+
+/** A field's entries as its minor groups, in SOC order. Entries arrive in SOC order (buildRoleEntries). */
+export function minorGroupsOf(code: string, entries: readonly Pick<RoleEntry, 'key' | 'soc'>[]): { minor: string; title: string; keys: string[] }[] {
+    const minors = INDEX_CONTINENTS.find((c) => c.code === code)?.minorGroups ?? [];
+    const groups = minors.map((m) => ({ minor: m.soc, title: m.title, keys: [] as string[] })).sort((a, b) => a.minor.localeCompare(b.minor));
+    const byMinor = new Map(groups.map((g) => [g.minor, g]));
+    for (const e of entries) {
+        const minor = INDEX_OCCUPATION_BY_SOC.get(e.soc)?.minor;
+        const group = minor ? byMinor.get(minor) : undefined;
+        if (!group) throw new Error(`${e.soc} is in none of field ${code}'s minor groups`);
+        group.keys.push(e.key);
+    }
+    return groups.filter((g) => g.keys.length > 0);
 }
 
 export interface WorldLayout {
     families: FamilyLayout[];
     regions: RegionLayout[];
     regionByCode: Map<string, RegionLayout>;
+    /** Each field's minor-group blocks, in SOC order. */
+    minorGroupsByContinent: Map<string, MinorGroupLayout[]>;
     /** Peaks per continent code, in SOC order. */
     peaksByContinent: Map<string, PeakPlacement[]>;
-    peakByKey: Map<string, PeakPlacement & { continent: string }>;
+    peakByKey: Map<string, PeakPlacement & { continent: string; minor: string }>;
 }
 
 export function buildWorldLayout(entries: readonly RoleEntry[], bounds: Rect = WORLD_BOUNDS): WorldLayout {
     const families = layoutFamilies(bounds);
     const regions = layoutRegions(bounds);
     const regionByCode = new Map(regions.map((r) => [r.code, r]));
-    const keysByContinent = new Map<string, string[]>();
+    const entriesByContinent = new Map<string, RoleEntry[]>();
     for (const e of entries) {
-        const list = keysByContinent.get(e.continent);
-        if (list) list.push(e.key);
-        else keysByContinent.set(e.continent, [e.key]);
+        const list = entriesByContinent.get(e.continent);
+        if (list) list.push(e);
+        else entriesByContinent.set(e.continent, [e]);
     }
+    const minorGroupsByContinent = new Map<string, MinorGroupLayout[]>();
     const peaksByContinent = new Map<string, PeakPlacement[]>();
-    const peakByKey = new Map<string, PeakPlacement & { continent: string }>();
+    const peakByKey = new Map<string, PeakPlacement & { continent: string; minor: string }>();
     for (const region of regions) {
-        const peaks = layoutRegionPeaks(region.rect, keysByContinent.get(region.code) ?? []);
+        const { groups, peaks } = layoutRegionPeaks(region.rect, minorGroupsOf(region.code, entriesByContinent.get(region.code) ?? []), region.code);
+        minorGroupsByContinent.set(region.code, groups);
         peaksByContinent.set(region.code, peaks);
-        for (const p of peaks) peakByKey.set(p.key, { ...p, continent: region.code });
+        const minorOf = new Map(groups.flatMap((g) => g.keys.map((k) => [k, g.minor] as const)));
+        for (const p of peaks) peakByKey.set(p.key, { ...p, continent: region.code, minor: minorOf.get(p.key)! });
     }
-    return { families, regions, regionByCode, peaksByContinent, peakByKey };
+    return { families, regions, regionByCode, minorGroupsByContinent, peaksByContinent, peakByKey };
 }
 
 /** Region whose rectangle contains the world point, or null. */
