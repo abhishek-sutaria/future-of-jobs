@@ -24,20 +24,19 @@ import {
     peakVertexShader,
 } from './worldShaders';
 import { GROUND_Y, peakHeightAt, type ScenePeak, type WorldScene } from './worldScene';
-import { prefersReducedMotion } from './worldCamera';
 import { worldPointer } from './worldPointer';
-import { worldStage } from './worldStage';
+import { displayToWorld, layerOf, worldView } from './worldView';
 import { rectDepth, rectWidth, WORLD_BOUNDS } from '../../utils/worldLayout';
-import { levelKind } from '../../utils/worldLevel';
+import { isIdentityMap } from '../../utils/stageMap';
+import { WORLD_LAYER } from '../../utils/stageTransition';
 
 /** How far a peak outside the highlight fades toward the ground colour. */
 const DIM_EMPHASIS = 0.22;
-/** Height kept by peaks as the world fades out, so they sink out of the camera's way as they go. */
-const FLATTENED_LIFT = 0.12;
-/** How fast the world eases in and out, per second. */
-const WORLD_FADE_RATE = 14;
-/** Close enough to the end of a fade to call it finished, so a fade really does end. */
-const FADE_SNAP = 0.004;
+/** Opaque, the peaks draw first and write depth; fading, after a stage that is taking over. */
+const PEAK_ORDER = { opaque: 1, fading: 2 } as const;
+
+/** The view map every treemap material reads (sx, sz, tx, tz), written once a frame. */
+const viewUniform = new Vector4(1, 1, 0, 0);
 
 /** Unit bell (radius 1, height 1), the same Gaussian profile the old terrain summed. */
 function makeBellGeometry(radial: number, rings: number): BufferGeometry {
@@ -66,9 +65,11 @@ interface RegionMesh {
  * The ground (22 regions drawn in its shader) and every peak: one instanced
  * draw call per region, 833 bells in all, no per-peak meshes.
  *
- * This is the world level only. A family or field stands on StageTerrain, so
- * all of this fades out and leaves the draw list, and comes back once the
- * stage's hills have flattened.
+ * This is the world level only. A family or field stands on StageTerrain: on
+ * the way in, all of this is drawn through the flight's map, so the block being
+ * opened magnifies in place as its stage takes over on top and the rest fades;
+ * on the way out the same steps run backwards. Once it has faded it leaves the
+ * draw list.
  */
 export const WorldTerrain: React.FC<{ scene: WorldScene; isMobile: boolean }> = ({ scene, isMobile }) => {
     const kelleyOnly = useWorldStore((s) => s.kelleyOnly);
@@ -94,6 +95,7 @@ export const WorldTerrain: React.FC<{ scene: WorldScene; isMobile: boolean }> = 
         uBounds: { value: new Vector4(WORLD_BOUNDS.x0, WORLD_BOUNDS.z0, WORLD_BOUNDS.x1, WORLD_BOUNDS.z1) },
         uFade: { value: 1 },
         uMouse: { value: new Vector2(1e6, 1e6) },
+        uView: { value: viewUniform },
     }), [scene.layout.regions, scene.layout.families]);
 
     // One instanced geometry + material per region. Built once per layout and
@@ -139,6 +141,7 @@ export const WorldTerrain: React.FC<{ scene: WorldScene; isMobile: boolean }> = 
                     uFade: { value: 1 },
                     uRegionLift: { value: 1 },
                     uHover: { value: -1 },
+                    uView: { value: viewUniform },
                 },
             });
             return { code: region.code, peaks, geometry, material, aPeak, aEmph, aColor, mesh: null };
@@ -166,10 +169,11 @@ export const WorldTerrain: React.FC<{ scene: WorldScene; isMobile: boolean }> = 
 
     const lastYear = useRef<number | null>(null);
     const groundRef = useRef<Mesh>(null);
-    useFrame((_, delta) => {
+    useFrame(() => {
         const year = useStore.getState().year;
+        const { alpha: fade, mult: lift } = layerOf(WORLD_LAYER);
         // Nothing to rewrite while the treemap is out of the draw list: it catches up on its way back.
-        if (year !== lastYear.current && worldStage.worldFade > 0) {
+        if (year !== lastYear.current && fade > 0) {
             lastYear.current = year;
             for (const m of regionMeshes) {
                 const arr = m.aPeak.array as Float32Array;
@@ -179,21 +183,20 @@ export const WorldTerrain: React.FC<{ scene: WorldScene; isMobile: boolean }> = 
                 m.aPeak.needsUpdate = true;
             }
         }
-        // The world only comes back once the stage has gone. By time, not by
-        // frame, so a fade takes as long on a slow phone as on a fast laptop; a
-        // long gap (the loop was paused) just finishes it.
-        const level = useWorldStore.getState();
-        const show = levelKind(level) === 'world' && !level.drawnStage;
-        const k = prefersReducedMotion() ? 1 : 1 - Math.exp(-delta * WORLD_FADE_RATE);
-        const next = worldStage.worldFade + ((show ? 1 : 0) - worldStage.worldFade) * k;
-        const fade = Math.abs((show ? 1 : 0) - next) < FADE_SNAP ? (show ? 1 : 0) : next;
-        worldStage.worldFade = fade;
-        const lift = FLATTENED_LIFT + (1 - FLATTENED_LIFT) * fade;
+        // How much of the world shows, and through which map, is the flight's (utils/stageTransition).
+        const { map } = worldView;
+        viewUniform.set(map.sx, map.sz, map.tx, map.tz);
+        const atRest = isIdentityMap(map);
         for (const m of regionMeshes) {
             m.material.uniforms.uFade.value = fade;
             m.material.uniforms.uRegionLift.value = lift;
             m.material.transparent = fade < 1;
-            if (m.mesh) m.mesh.visible = fade > 0;
+            if (m.mesh) {
+                m.mesh.visible = fade > 0;
+                // Bounds are in world units, so they only hold while the map is the world's own.
+                m.mesh.frustumCulled = atRest;
+                m.mesh.renderOrder = fade < 1 ? PEAK_ORDER.fading : PEAK_ORDER.opaque;
+            }
             m.material.uniforms.uHover.value = worldPointer.hoverPeakContinent === m.code ? worldPointer.hoverPeakIndex : -1;
         }
         groundUniforms.uFade.value = fade;
@@ -201,7 +204,8 @@ export const WorldTerrain: React.FC<{ scene: WorldScene; isMobile: boolean }> = 
 
         groundUniforms.uHoverRegion.value = worldPointer.hoverRegion ? regionIndex.get(worldPointer.hoverRegion) ?? -1 : -1;
         groundUniforms.uHoverFamily.value = scene.layout.families.findIndex((f) => f.family.id === worldPointer.hoverFamily);
-        groundUniforms.uMouse.value.set(worldPointer.mouseX, worldPointer.mouseZ);
+        const mouse = worldPointer.mouseX < 1e5 ? displayToWorld(worldPointer.mouseX, worldPointer.mouseZ) : { x: 1e6, z: 1e6 };
+        groundUniforms.uMouse.value.set(mouse.x, mouse.z);
     });
 
     return (

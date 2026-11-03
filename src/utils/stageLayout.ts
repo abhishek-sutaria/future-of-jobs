@@ -1,69 +1,91 @@
 /**
- * Where a family's or field's jobs stand on the stage: the live app's disc,
- * whatever the job count. Position is layout only, so it never depends on the
- * year or on any score: the same job lands in the same place every time.
+ * A family's or field's stage: its rectangle on the world map, magnified by the
+ * one map stageMapFor gives it. Every job stands where that map sends its world
+ * position, and the field tiles (on a family) or minor-group blocks (on a field)
+ * are the images of their world rectangles. So a stage is never a new layout:
+ * it keeps the world map's borders, proportions and neighbours, and position
+ * never depends on the year or on any score.
  *
  * Pure, like worldLayout, so it can be tested without a camera.
  */
 
 import { familyOf } from '../config/socFamilies';
 import { INDEX_CONTINENT_BY_CODE } from './occupationIndex';
-import { RING_MIN_RADIUS, RING_SPACING, territoryLayout, type TerritoryOptions } from './terrainMath';
+import { mapRect, mapScale, mapX, mapZ, stageMapFor, type PlaneMap } from './stageMap';
+import { REGION_INSET, type FamilyLayout, type MinorGroupLayout, type Rect, type RegionLayout } from './worldLayout';
 import type { WorldLevel } from './worldLevel';
 
 /** What the stage needs to know about a job. Structurally a ScenePeak. */
 export interface StageSource {
     entry: { key: string; title: string; soc: string; continent: string; kind: string; ep2025: number | null; ep2035: number | null };
     color: readonly [number, number, number];
+    /** World position and footprint, from worldLayout. */
+    x: number;
+    z: number;
+    radius: number;
+}
+
+/** What the stage needs to know about the world map. Structurally a WorldScene. */
+export interface StageWorld {
+    layout: {
+        families: readonly Pick<FamilyLayout, 'family' | 'rect'>[];
+        regions: readonly Pick<RegionLayout, 'code' | 'rect'>[];
+        minorGroupsByContinent: ReadonlyMap<string, readonly MinorGroupLayout[]>;
+    };
+    peaksByContinent: ReadonlyMap<string, readonly StageSource[]>;
 }
 
 export interface StageJob {
     key: string;
     /** The field the job is in. */
     code: string;
+    /** Stage position: the stage map applied to the job's world position. */
     x: number;
     z: number;
+    /** Gaussian spread of its hill, in stage units. */
+    sigma: number;
     ep2025: number;
     ep2035: number;
     color: readonly [number, number, number];
     kelley: boolean;
 }
 
-/** A field's own range of hills on a family's stage, for its name and its clicks. */
-export interface StageRange {
+/** A field's tile on a family's stage, or a minor group's block on a field's. */
+export interface StageTile {
+    /** The field. */
     code: string;
-    x: number;
-    z: number;
+    /** SOC minor group code on a field's stage; null for a field tile. */
+    minor: string | null;
+    title: string;
+    /** The tile's world rectangle, and its image on the stage. */
+    worldRect: Rect;
+    rect: Rect;
 }
 
 export interface Stage {
     key: string;
     kind: 'family' | 'field';
+    /** World ground to stage ground. */
+    map: PlaneMap;
+    /** The family's or field's rectangle on the world map, and its image: the stage's edge. */
+    worldOutline: Rect;
+    outline: Rect;
+    /** Field tiles on a family, minor-group blocks on a field, in SOC order. */
+    tiles: StageTile[];
     jobs: StageJob[];
     byKey: Map<string, StageJob>;
-    /** Gaussian spread of each hill, in world units. */
-    sigma: number;
-    ranges: StageRange[];
 }
 
-/** Job count of the live view, whose spacing and hill width everything else scales from. */
-const LIVE_JOBS = 50;
-/** The live hill's spread (SHADER.SIGMA_SQ2 = 2 * 2.0^2). */
-const LIVE_SIGMA = 2;
 /**
- * Just inside the live view's outermost ring of 22. Every stage's rings are drawn
- * out or in to end here, so all 27 reach as far as the live view, and a job on the
- * near rim stays clear of the year slider, where its label could not show.
+ * A stage hill's spread, as a share of its world peak's footprint radius. The
+ * bell itself is about 0.38 of it; a little wider lets neighbours run together
+ * as the live landscape's hills do (sigma 2 at spacing 5).
  */
-export const STAGE_OUTER_RING = 21.5;
+export const STAGE_HILL_SPREAD = 0.6;
 /** Narrower than this and the mesh can no longer draw a hill as a hill. */
 export const STAGE_SIGMA_MIN = 0.9;
 /** Wider than this and a few hills melt into one dome. */
 export const STAGE_SIGMA_MAX = 5;
-/** A little more air between a family's fields than between a field's groups, so each reads as its own range. */
-const FAMILY_GAP_RAD = 0.14;
-/** Disc radius past which a pointer is off the stage: where the live edge fade ends. */
-export const STAGE_INPUT_RADIUS = 36;
 
 /** The stage a level puts up, by key; null at the world. */
 export function stageKey(level: WorldLevel): string | null {
@@ -71,104 +93,49 @@ export function stageKey(level: WorldLevel): string | null {
     return level.focusedFamily != null ? `family:${level.focusedFamily}` : null;
 }
 
-/** Each job's share of the disc scales with the count, so 8 jobs and 375 jobs fill the same footprint. */
-export const stageRingSpacing = (jobCount: number): number => RING_SPACING * Math.sqrt(LIVE_JOBS / Math.max(1, jobCount));
+/** A job's hill spread on a stage: its world footprint, magnified with everything else. */
+export const stageSigma = (worldRadius: number, map: PlaneMap): number =>
+    Math.min(STAGE_SIGMA_MAX, Math.max(STAGE_SIGMA_MIN, STAGE_HILL_SPREAD * worldRadius * mapScale(map)));
 
 /**
- * Hills narrow as jobs crowd in, a little slower than the spacing does (a square
- * root would be 0.5): most occupations are small next to their field's largest,
- * and low hills only run together into one landscape with some extra width.
+ * The strip round a stage's edge where no job stands: REGION_INSET, magnified.
+ * The baked surface comes down to the ground across it, so the stage ends in a
+ * clean edge and every job keeps its own height.
  */
-const SIGMA_DENSITY_EXPONENT = 0.35;
-
-export const stageSigma = (jobCount: number): number =>
-    Math.min(STAGE_SIGMA_MAX, Math.max(STAGE_SIGMA_MIN, LIVE_SIGMA * (LIVE_JOBS / Math.max(1, jobCount)) ** SIGMA_DENSITY_EXPONENT));
-
-const bySoc = (a: StageSource, b: StageSource) =>
-    a.entry.soc === b.entry.soc ? a.entry.title.localeCompare(b.entry.title) : a.entry.soc.localeCompare(b.entry.soc);
-
-/** A field's jobs by SOC minor group, in SOC order, so related jobs sit together. */
-export function minorGroupsOf(code: string, peaks: readonly StageSource[]): StageSource[][] {
-    const minors = (INDEX_CONTINENT_BY_CODE.get(code)?.minorGroups ?? []).map((g) => g.soc).sort();
-    const groups = minors.map((): StageSource[] => []);
-    for (const peak of [...peaks].sort(bySoc)) {
-        // The group a SOC is in is the last one that starts at or before it.
-        let at = 0;
-        for (let i = 0; i < minors.length; i++) if (minors[i] <= peak.entry.soc) at = i;
-        (groups[at] ??= []).push(peak);
-    }
-    return groups.filter((g) => g.length > 0);
-}
-
-/** The field a point on the stage belongs to: its nearest job's, if the point is on the disc at all. */
-export function stageFieldAt(stage: Pick<Stage, 'jobs'>, x: number, z: number): string | null {
-    if (Math.hypot(x, z) > STAGE_INPUT_RADIUS) return null;
-    let best: string | null = null;
-    let bestDistance = Infinity;
-    for (const job of stage.jobs) {
-        const d = (job.x - x) ** 2 + (job.z - z) ** 2;
-        if (d < bestDistance) {
-            bestDistance = d;
-            best = job.code;
-        }
-    }
-    return best;
-}
+export const stageEdgeBand = (stage: Pick<Stage, 'map'>): number => REGION_INSET * Math.min(stage.map.sx, stage.map.sz);
 
 /** A level's stage, or null at the world. */
-export function buildStage(level: WorldLevel, peaksByContinent: ReadonlyMap<string, readonly StageSource[]>): Stage | null {
+export function buildStage(level: WorldLevel, world: StageWorld): Stage | null {
     const { focusedContinent: field, focusedFamily: family } = level;
     if (!field && family == null) return null;
-    const codes = field ? [field] : [...peaksByContinent.keys()].filter((c) => familyOf(c).id === family).sort();
-    const sources = codes.flatMap((c) => peaksByContinent.get(c) ?? []);
-    const options: TerritoryOptions = { ringSpacing: stageRingSpacing(sources.length) };
-    if (!field) options.gapRad = FAMILY_GAP_RAD;
+    const { layout } = world;
+    const regions = field ? layout.regions.filter((r) => r.code === field) : layout.regions.filter((r) => familyOf(r.code).id === family);
+    const worldOutline = field ? regions[0].rect : layout.families.find((f) => f.family.id === family)!.rect;
+    const map = stageMapFor(worldOutline, field ? 'field' : 'family');
 
-    // A field's territories are its minor groups; a family's are its fields.
-    const groups = field
-        ? minorGroupsOf(field, sources)
-        : codes.map((c) => [...(peaksByContinent.get(c) ?? [])].sort(bySoc));
-    const ids = groups.map((g) => g.map((p) => p.entry.key));
-    // The whole disc turns so the largest job stands at its side. At the far
-    // side the tallest hill stands up under the header, at the near side behind
-    // the year slider. By the published 2025 figure, so the turn never moves
-    // with the slider.
-    const largest = sources.reduce((a, b) => ((b.entry.ep2025 ?? 0) > (a.entry.ep2025 ?? 0) ? b : a));
-    const unturned = territoryLayout(ids, options).get(largest.entry.key)!;
-    const startAngle = (unturned.x >= 0 ? 0 : Math.PI) - Math.atan2(unturned.z, unturned.x);
-    const positions = territoryLayout(ids, { ...options, startAngle });
-    const reach = Math.max(...[...positions.values()].map((p) => Math.hypot(p.x, p.z)));
-    const toOuterRing = reach > RING_MIN_RADIUS ? (STAGE_OUTER_RING - RING_MIN_RADIUS) / (reach - RING_MIN_RADIUS) : 1;
+    const tiles: StageTile[] = field
+        ? (layout.minorGroupsByContinent.get(field) ?? []).map((g) => ({ code: field, minor: g.minor, title: g.title, worldRect: g.rect, rect: mapRect(map, g.rect) }))
+        : regions.map((r) => ({ code: r.code, minor: null, title: INDEX_CONTINENT_BY_CODE.get(r.code)?.title ?? r.code, worldRect: r.rect, rect: mapRect(map, r.rect) }));
 
-    const jobs = groups.flat().map((p): StageJob => {
-        const { x, z } = positions.get(p.entry.key)!;
-        const radius = Math.hypot(x, z);
-        const scale = (RING_MIN_RADIUS + (radius - RING_MIN_RADIUS) * toOuterRing) / radius;
-        return {
-            key: p.entry.key,
-            code: p.entry.continent,
-            x: x * scale,
-            z: z * scale,
-            ep2025: p.entry.ep2025 ?? 1,
-            ep2035: p.entry.ep2035 ?? 1,
-            color: p.color,
-            kelley: p.entry.kind === 'kelley',
-        };
-    });
-    const ranges = codes.map((code): StageRange => {
-        const members = jobs.filter((j) => j.code === code);
-        return {
-            code,
-            x: members.reduce((sum, j) => sum + j.x, 0) / Math.max(1, members.length),
-            z: members.reduce((sum, j) => sum + j.z, 0) / Math.max(1, members.length),
-        };
-    });
+    const jobs = regions.flatMap((r) => world.peaksByContinent.get(r.code) ?? []).map((p): StageJob => ({
+        key: p.entry.key,
+        code: p.entry.continent,
+        x: mapX(map, p.x),
+        z: mapZ(map, p.z),
+        sigma: stageSigma(p.radius, map),
+        ep2025: p.entry.ep2025 ?? 1,
+        ep2035: p.entry.ep2035 ?? 1,
+        color: p.color,
+        kelley: p.entry.kind === 'kelley',
+    }));
     return {
         key: stageKey(level)!,
         kind: field ? 'field' : 'family',
+        map,
+        worldOutline,
+        outline: mapRect(map, worldOutline),
+        tiles,
         jobs,
         byKey: new Map(jobs.map((j) => [j.key, j])),
-        sigma: stageSigma(jobs.length),
-        ranges,
     };
 }

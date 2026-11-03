@@ -13,11 +13,12 @@ import { SCENE } from '../config/constants';
 import { CONTINENT_DISPLAY_NAMES } from '../config/continents';
 import { buildWorldScene } from '../components/world/worldScene';
 import { atDistance, framingDistance, stageFraming, worldFraming, type Framing } from '../components/world/framing';
-import { buildLabelCandidates, familyMarker, labelWeights, regionMarker, sortMarkers, stageMarkerHeights, stageRangeMarker, type MarkerItem } from '../components/world/labelCandidates';
+import { buildLabelCandidates, familyMarker, labelWeights, regionMarker, sortMarkers, stageMarkerHeights, type GroundMap, type MarkerItem } from '../components/world/labelCandidates';
 import { isHiddenLabelPosition, labelsCollide, layoutLabelsByWeight, type LabelBand, type LabelCandidate } from '../utils/labelLayout';
 import { BROAD_LABELS, decideLabels, FIELD_ARRIVAL_ZOOM } from '../utils/labelLevel';
-import { bakeStage, STAGE_BLEND, STAGE_BLEND_POWER, surfaceHeight } from '../utils/stageBake';
-import { buildStage } from '../utils/stageLayout';
+import { bakeStage, STAGE_BLEND, STAGE_BLEND_POWER, stageSegments, surfaceHeight } from '../utils/stageBake';
+import { buildStage, stageEdgeBand } from '../utils/stageLayout';
+import { mapPoint, mapX, mapZ } from '../utils/stageMap';
 import { familyLevel } from '../utils/worldLevel';
 
 type Sizes = Record<string, [number, number]>;
@@ -62,7 +63,7 @@ const scene = buildWorldScene(useStore.getState().jobs);
 const nameOf = (m: MarkerItem) => (m.kind === 'region' ? CONTINENT_DISPLAY_NAMES[m.code] : m.kind === 'family' ? m.family.family.shortName : m.peak.entry.title);
 
 /** The declutter pass for `markers` seen from `framing`: which ids show, and where. */
-function layOut(markers: MarkerItem[], framing: Framing, vp: (typeof VIEWPORTS)[number], band: LabelBand) {
+function layOut(markers: MarkerItem[], framing: Framing, vp: (typeof VIEWPORTS)[number], band: LabelBand, ground?: GroundMap) {
     const items = sortMarkers(markers, () => false);
     const half = new Map(items.map((m) => {
         const s = vp.sizes[nameOf(m)];
@@ -74,7 +75,7 @@ function layOut(markers: MarkerItem[], framing: Framing, vp: (typeof VIEWPORTS)[
     camera.lookAt(new Vector3(...framing.target));
     camera.updateMatrixWorld();
     const list: LabelCandidate[] = [];
-    buildLabelCandidates(items, camera, { width: vp.width, height: vp.height }, band, half, list, new Map());
+    buildLabelCandidates(items, camera, { width: vp.width, height: vp.height }, band, half, list, new Map(), ground);
     const out = new Map<string, [number, number]>();
     layoutLabelsByWeight(list, labelWeights(items, null), vp.width, vp.height, band, out, new Map());
     return { list, out, shown: (id: string) => !isHiddenLabelPosition(out.get(id) ?? [-1e5, -1e5]) };
@@ -139,15 +140,18 @@ describe.each(VIEWPORTS)('labels at $name', (vp) => {
     });
 });
 
-// On a family's stage every field's name must stand over its range, at the live
+// On a family's stage every field's name must stand on its tile, at the live
 // camera, whatever the job count.
 describe.each(VIEWPORTS)('field names on a family stage at $name', (vp) => {
     it.each(scene.layout.families.map((f) => [f.family.shortName, f] as const))('%s shows every one of its field names, none overlapping', (_name, f) => {
-        const stage = buildStage(familyLevel(f.family.id), scene.peaksByContinent)!;
-        const bake = bakeStage(stage, 128, STAGE_BLEND, STAGE_BLEND_POWER);
-        const names = stage.ranges.map(stageRangeMarker);
-        stageMarkerHeights(names, (x, z) => surfaceHeight(bake, x, z, 0));
-        const layout = layOut(names, stageFraming(vp.fov), vp, vp.stageBand);
+        const stage = buildStage(familyLevel(f.family.id), scene)!;
+        const bake = bakeStage(stage, stageSegments(stage.outline, 128), STAGE_BLEND, STAGE_BLEND_POWER, stageEdgeBand(stage));
+        const names = stage.tiles.map((t) => {
+            const r = scene.layout.regionByCode.get(t.code)!;
+            return regionMarker(r.code, r.cx, r.cz);
+        });
+        stageMarkerHeights(names, (x, z) => surfaceHeight(bake, mapX(stage.map, x), mapZ(stage.map, z), 0));
+        const layout = layOut(names, stageFraming(vp.fov), vp, vp.stageBand, (x, z) => mapPoint(stage.map, x, z));
         for (const m of names) expect(layout.shown(m.id), m.id).toBe(true);
         expectNoOverlap(layout);
     });

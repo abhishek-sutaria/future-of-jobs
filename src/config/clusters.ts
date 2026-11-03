@@ -1,15 +1,14 @@
 /**
- * Functional career clusters for the 3D terrain layout.
+ * Functional career clusters of the 50 Kelley roles, for the dashboard.
  *
- * The Job.cluster field in data.ts is uniformly "Business", so territory
- * grouping uses this explicit title → cluster map instead (derived from the
- * SOC groups in utils/onet.ts, with manual overrides such as Actuary → Finance
- * despite its 15-2011 SOC code).
- *
- * Leaf module: must not import from utils/terrainMath (it imports from here).
+ * The Job.cluster field in data.ts is uniformly "Business", so grouping uses
+ * this explicit title → cluster map instead (derived from the SOC groups in
+ * utils/onet.ts, with manual overrides such as Actuary → Finance despite its
+ * 15-2011 SOC code). The 3D view groups jobs by their BLS SOC minor groups
+ * instead (utils/worldLayout).
  */
 
-/** Territory order around the disc — adjacent entries are related fields, and the list wraps. */
+/** Cluster order: adjacent entries are related fields. */
 export const CLUSTER_ORDER = [
     'Finance',
     'Business Ops',

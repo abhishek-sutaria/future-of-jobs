@@ -2,14 +2,19 @@ import React, { useCallback, useEffect, useRef } from 'react';
 import { useFrame, useThree } from '@react-three/fiber';
 import { PerspectiveCamera, Vector3 } from 'three';
 import type { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
-import { SCENE } from '../../config/constants';
 import { useWorldStore } from '../../worldStore';
 import { FIELD_ARRIVAL_ZOOM, labelsAt } from '../../utils/labelLevel';
-import { WORLD_BOUNDS } from '../../utils/worldLayout';
+import { EP_PATH_MAX } from '../../utils/occupationIndex';
+import { stageKey } from '../../utils/stageLayout';
+import { mapRect } from '../../utils/stageMap';
+import { beginTransition, levelViewOf, viewAt, worldLevelView } from '../../utils/stageTransition';
+import type { Rect } from '../../utils/worldLayout';
 import { levelKind, ZOOM_OUT_SETTLE_MS, zoomedOutOfLevel } from '../../utils/worldLevel';
 import { useIsMobile } from '../../hooks/useIsMobile';
 import { prefersReducedMotion, stopInertia, worldCamera } from './worldCamera';
 import { atDistance, framingDistance, stageFraming, stageViewOffset, worldFraming, type Framing } from './framing';
+import type { WorldScene } from './worldScene';
+import { worldView } from './worldView';
 
 const FLY_MS = 900;
 /** How fast the picture slides to its phone offset, per second: about as long as a flight. */
@@ -37,8 +42,8 @@ interface Flight {
     ms: number;
     /** Where it lands, for the labels and for the distance a hand zoom is measured from. */
     distance: number;
-    /** A flight to a stage, which pans by radius rather than by the world's rectangle. */
-    toStage: boolean;
+    /** Where the orbit target may pan once it lands: the level's rectangle on screen. */
+    panBounds: Rect;
     /** A zoom-out's own flight: the scroll that started it is usually still coasting and must not stop it. */
     sticky: boolean;
 }
@@ -46,9 +51,16 @@ interface Flight {
 /**
  * Flies the camera between the whole world and a stage whenever the world store
  * asks (each bumps focusRequestId). Every family and field lands on the live
- * view's camera. Any orbit gesture cancels a flight in progress
- * (worldCamera.cancel, called from Landscape's OrbitControls onStart), except
- * the one a hand zoom-out started.
+ * view's camera, looking at the middle of its rectangle. Any orbit gesture
+ * cancels a flight in progress (worldCamera.cancel, called from Landscape's
+ * OrbitControls onStart), except the one a hand zoom-out started.
+ *
+ * Each flight also moves worldView, on the same clock and easing as the camera:
+ * the map from the world's ground to the screen's blends from the old level's
+ * to the new one's, so the block being opened magnifies in place while
+ * everything else fades (utils/stageTransition). A cancelled camera flight
+ * leaves the view to finish on its own. Mounted before everything that draws,
+ * so they all read this frame's view.
  *
  * Every frame it also decides the labels, from the zoom at the world and from
  * the level otherwise, and applies the zoom-out rule (utils/worldLevel) against
@@ -56,7 +68,7 @@ interface Flight {
  * so a flight home never flashes the field names on its way past them.
  *
  * On a phone a family or field also slides the picture down with a view offset,
- * so the disc sits in the middle of the band the taller controls leave free. The
+ * so the stage's rectangle sits in the middle of the band the taller controls leave free. The
  * camera itself stays on the live numbers, and the desktop has no offset at all.
  * `homeDistance` is the distance of the default view (and Reset view), read once
  * like the rest of that framing; zoom counts from it or the current whole-world
@@ -65,11 +77,14 @@ interface Flight {
 export const CameraRig: React.FC<{
     controlsRef: React.RefObject<OrbitControlsImpl | null>;
     homeDistance: number;
-}> = ({ controlsRef, homeDistance }) => {
+    scene: WorldScene;
+}> = ({ controlsRef, homeDistance, scene }) => {
     const requestId = useWorldStore((s) => s.focusRequestId);
     const camera = useThree((s) => s.camera) as PerspectiveCamera;
     const size = useThree((s) => s.size);
     const flight = useRef<Flight | null>(null);
+    // The view's own clock: a cancelled camera flight does not stop it.
+    const viewClock = useRef({ start: 0, ms: 1 });
     const handledRequestId = useRef(0);
     // The next flight is the zoom-out rule's own.
     const nextSticky = useRef(false);
@@ -90,40 +105,44 @@ export const CameraRig: React.FC<{
     }, [baseDistance]);
 
     // Where the current level lands.
-    const landing = useCallback((): { framing: Framing; toStage: boolean } => {
+    const landing = useCallback((): Framing => {
         const world = useWorldStore.getState();
-        if (levelKind(world) !== 'world') return { framing: stageFraming(camera.fov), toStage: true };
+        if (levelKind(world) !== 'world') return stageFraming(camera.fov);
         const home = worldFraming(camera.fov, aspect);
         // The Kelley filter needs job labels, which the broad view does not have.
-        return { framing: world.kelleyZoom ? atDistance(home, baseDistance / FIELD_ARRIVAL_ZOOM) : home, toStage: false };
+        return world.kelleyZoom ? atDistance(home, baseDistance / FIELD_ARRIVAL_ZOOM) : home;
     }, [camera, aspect, baseDistance]);
 
     const land = useCallback((f: Flight) => {
         levelDistance.current = f.distance;
         settledAt.current = performance.now();
-        worldCamera.panBounds = f.toStage ? null : WORLD_BOUNDS;
-        worldCamera.panRadius = f.toStage ? SCENE.MAX_PAN_RADIUS : null;
+        worldCamera.panBounds = f.panBounds;
     }, []);
 
     const fly = useCallback((sticky: boolean) => {
         const controls = controlsRef.current;
         if (!controls) return;
-        const { framing, toStage } = landing();
+        const framing = landing();
+        const to = levelViewOf(useWorldStore.getState(), scene);
+        const now = performance.now();
+        const ms = prefersReducedMotion() ? 1 : FLY_MS;
+        worldView.transition = beginTransition(worldView.level ?? worldLevelView(EP_PATH_MAX), to, worldView);
+        worldView.level = to;
+        viewClock.current = { start: now, ms };
         worldCamera.panBounds = null;
-        worldCamera.panRadius = null;
         stopInertia(controls);
         flight.current = {
             fromT: controls.target.clone(),
             fromP: camera.position.clone(),
             toT: new Vector3(...framing.target),
             toP: new Vector3(...framing.position),
-            start: performance.now(),
-            ms: prefersReducedMotion() ? 1 : FLY_MS,
+            start: now,
+            ms,
             distance: framingDistance(framing),
-            toStage,
+            panBounds: mapRect(to.map, to.rect),
             sticky,
         };
-    }, [camera, controlsRef, landing]);
+    }, [camera, controlsRef, landing, scene]);
 
     useEffect(() => {
         worldCamera.cancel = (force = false) => {
@@ -160,11 +179,22 @@ export const CameraRig: React.FC<{
     }, [requestId, fly]);
 
     useFrame((_, delta) => {
+        const now = performance.now();
+        const transition = worldView.transition;
+        if (transition) {
+            const t = Math.min(1, (now - viewClock.current.start) / viewClock.current.ms);
+            const view = viewAt(transition, ease(t));
+            worldView.map = view.map;
+            worldView.heightRef = view.heightRef;
+            worldView.layers = view.layers;
+            if (t >= 1) worldView.transition = null;
+        }
+
         const f = flight.current;
         const controls = controlsRef.current;
         if (!controls) return;
         if (f) {
-            const t = Math.min(1, (performance.now() - f.start) / f.ms);
+            const t = Math.min(1, (now - f.start) / f.ms);
             const k = ease(t);
             controls.target.lerpVectors(f.fromT, f.toT, k);
             camera.position.lerpVectors(f.fromP, f.toP, k);
@@ -182,9 +212,11 @@ export const CameraRig: React.FC<{
         if (labels !== world.labels) useWorldStore.setState({ labels });
 
         if (kind === 'world' || !isMobile) viewOffsetGoal.current = 0;
-        else if (flight.current || performance.now() < measureUntil.current) {
+        else if (flight.current || now < measureUntil.current) {
             const band = freeBand();
-            viewOffsetGoal.current = band ? stageViewOffset(camera.fov, size.height, band.top, band.bottom) : 0;
+            const level = worldView.level;
+            const outline = level && stageKey(world) === level.key ? mapRect(level.map, level.rect) : null;
+            viewOffsetGoal.current = band && outline ? stageViewOffset(camera.fov, size.height, band.top, band.bottom, outline) : 0;
         }
         const goal = viewOffsetGoal.current;
         const step = prefersReducedMotion() ? 1 : 1 - Math.exp(-delta * VIEW_OFFSET_RATE);

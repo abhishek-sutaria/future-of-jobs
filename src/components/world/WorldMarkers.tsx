@@ -10,18 +10,22 @@ import { INDEX_CONTINENT_BY_CODE } from '../../utils/occupationIndex';
 import { familyOf } from '../../config/socFamilies';
 import { regionAt } from '../../utils/worldLayout';
 import { clickAction, isOnStage, levelKind, type StageHit, type WorldLevel } from '../../utils/worldLevel';
-import { rayToSurface, surfaceHeight } from '../../utils/stageBake';
-import { stageFieldAt, stageKey, type Stage } from '../../utils/stageLayout';
+import { rayToSurface } from '../../utils/stageBake';
+import { stageKey, type Stage } from '../../utils/stageLayout';
 import { formatGrowth, formatWorkersShort, growthColor } from '../../utils/roleFormat';
 import { socPartnerTitles } from '../../utils/onet';
 import { HIDDEN_LABEL_POSITION, isHiddenLabelPosition, layoutLabelsByWeight, type LabelBand, type LabelCandidate } from '../../utils/labelLayout';
-import type { FamilyLayout } from '../../utils/worldLayout';
+import type { FamilyLayout, MinorGroupLayout } from '../../utils/worldLayout';
 import { GROUND_Y, peakEmploymentAt, peakHeightAt, type ScenePeak, type WorldScene } from './worldScene';
 import { LABEL_FADE_MS, type LabelDecision } from '../../utils/labelLevel';
-import { buildLabelCandidates, familyMarker, labelWeights, markerOnStage, peakMarker, regionMarker, sortMarkers, stageMarkerHeights, stagePeakMarker, stageRangeMarker, type MarkerItem } from './labelCandidates';
+import { buildLabelCandidates, familyMarker, groupMarker, labelWeights, markerOnStage, peakMarker, regionMarker, sortMarkers, stageMarkerHeights, stagePeakMarker, type GroundMap, type MarkerItem } from './labelCandidates';
 import { prefersReducedMotion } from './worldCamera';
 import { worldPointer } from './worldPointer';
-import { worldStage } from './worldStage';
+import { displayToWorld, layerOf, stageSurfaceAt, toDisplayX, toDisplayZ, worldView } from './worldView';
+import { WORLD_LAYER } from '../../utils/stageTransition';
+
+/** Labels follow the view's map from the world's ground to the screen's. */
+const toScreenGround: GroundMap = (x, z) => ({ x: toDisplayX(x), z: toDisplayZ(z) });
 
 /**
  * Job labels offered to the declutter in an open field: the largest by EP 2025
@@ -46,16 +50,19 @@ const groundHit = new Vector3();
  * Which set shows depends on the level, and at the world on the zoom (labelsAt,
  * utils/labelLevel). World, broad: the five BLS job families only, as buttons
  * that open the family. World, zoomed in: the 22 field names (short names; the
- * full BLS title is in the hover card). A family: its field names over their
- * ranges and nothing else, with or without the Kelley filter, so a click can only
+ * full BLS title is in the hover card). A family: its field names on their
+ * tiles and nothing else, with or without the Kelley filter, so a click can only
  * mean a field. A field: labels for its largest
  * occupations, capped at STAGE_LABEL_CAP, in the live view's style; any other
- * job gets its label on hover, or on a first tap on touch screens. With the
+ * job gets its label on hover, or on a first tap on touch screens; and its
+ * minor groups' names, faintly, wherever the job labels leave room. With the
  * Kelley filter on, the job labels are the Kelley roles on stage, as the map has
  * always shown them.
  *
- * A stage's labels stand on the baked surface and belong to the stage on the
- * mesh, which trails the level by the moment the old hills take to flatten.
+ * Every label keeps its world map position at every level and is drawn through
+ * the view's map, so it rides along with its job or tile through a flight. A
+ * stage's labels stand on its baked surface and belong to the stage that is
+ * fully drawn, which trails the level by the moment a flight takes to hand over.
  * Nothing off stage is ever labelled, hovered or hit: the rules for what a click
  * does are in clickAction (utils/worldLevel).
  *
@@ -234,10 +241,17 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
         for (const p of tappablePeaks) {
             const key = p.entry.key;
             if (!labelledPeakKeys.has(key) && !extra.has(key)) continue;
-            out.push(stage ? stagePeakMarker(p, stage.byKey.get(key)!) : peakMarker(p, year));
+            out.push(stage ? stagePeakMarker(p) : peakMarker(p, year));
         }
         if (stage) {
-            if (stage.kind === 'family') for (const r of stage.ranges) out.push(stageRangeMarker(r));
+            // A family's field names on their tiles; a field's minor groups, which take what room is left.
+            if (stage.kind === 'family') {
+                for (const tile of stage.tiles) {
+                    const r = scene.layout.regionByCode.get(tile.code)!;
+                    out.push(regionMarker(r.code, r.cx, r.cz));
+                }
+            }
+            else for (const g of scene.layout.minorGroupsByContinent.get(stage.jobs[0]?.code ?? '') ?? []) out.push(groupMarker(g));
         }
         // The world's own labels wait until the stage has fully gone.
         else if (levelKind(shown) === 'world' && !shown.drawnStage) {
@@ -275,7 +289,8 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
         const hitLabel = (x: number, y: number): MarkerItem | null => {
             const level = useWorldStore.getState();
             for (const item of itemsRef.current) {
-                if (!markerOnStage(item, level)) continue;
+                // Minor-group names only name their block: a click goes through to the jobs.
+                if (item.kind === 'group' || !markerOnStage(item, level)) continue;
                 const pos = placements.current.get(item.id);
                 const half = labelHalfSize.current.get(item.id);
                 if (!pos || isHiddenLabelPosition(pos) || !half) continue;
@@ -302,17 +317,25 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
             return best;
         };
 
-        const hitGround = (x: number, y: number, w: number, h: number): { x: number; z: number } | null => {
+        // Where the pointer meets the ground plane, on screen (for the cursor glow).
+        const hitScreenGround = (x: number, y: number, w: number, h: number): { x: number; z: number } | null => {
             ndc.set((x / w) * 2 - 1, -(y / h) * 2 + 1);
             raycaster.setFromCamera(ndc, getThree().camera);
             return raycaster.ray.intersectPlane(groundPlane, groundHit) ? { x: groundHit.x, z: groundHit.z } : null;
         };
+        // The same point on the world map's ground.
+        const hitGround = (x: number, y: number, w: number, h: number): { x: number; z: number } | null => {
+            const g = hitScreenGround(x, y, w, h);
+            return g ? displayToWorld(g.x, g.z) : null;
+        };
 
         // On a stage the point under the pointer is on the hills, not the plane
-        // behind them: a tall hill stands well in front of its own foot.
+        // behind them: a tall hill stands well in front of its own foot. A
+        // family's tiles are its world fields, magnified, so the field under the
+        // point is the world region there.
         const hitStage = (x: number, y: number, w: number, h: number, stage: Stage): string | null => {
-            const bake = worldStage.bake;
-            if (!bake) return null;
+            const surface = worldView.surfaces.get(stage.key);
+            if (!surface) return null;
             ndc.set((x / w) * 2 - 1, -(y / h) * 2 + 1);
             raycaster.setFromCamera(ndc, getThree().camera);
             const { origin, direction } = raycaster.ray;
@@ -320,9 +343,15 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
                 [origin.x, origin.y, origin.z],
                 [direction.x, direction.y, direction.z],
                 GROUND_Y,
-                (px, pz) => surfaceHeight(bake, px, pz, worldStage.yearMix) * worldStage.rise,
+                (px, pz) => {
+                    const p = displayToWorld(px, pz);
+                    return stageSurfaceAt(surface, p.x, p.z);
+                },
             );
-            return hit ? stageFieldAt(stage, hit.x, hit.z) : null;
+            if (!hit) return null;
+            const p = displayToWorld(hit.x, hit.z);
+            const code = regionAt(scene.layout.regions, p.x, p.z)?.code ?? null;
+            return code && stage.tiles.some((t) => t.code === code) ? code : null;
         };
 
         const onDown = (e: PointerEvent) => {
@@ -346,7 +375,7 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
                     ? { kind: 'family', id: label.family.family.id }
                     : label?.kind === 'region'
                         ? { kind: 'field', code: label.code }
-                        : label
+                        : label?.kind === 'peak'
                             ? { kind: 'peak', key: label.peak.entry.key, code: label.peak.entry.continent }
                             : null,
                 peak: peak && { key: peak.entry.key, code: peak.entry.continent },
@@ -370,9 +399,10 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
 
         const onMove = (e: PointerEvent) => {
             const { x, y, w, h } = local(e.clientX, e.clientY);
-            const g = hitGround(x, y, w, h);
-            worldPointer.mouseX = g?.x ?? 1e6;
-            worldPointer.mouseZ = g?.z ?? 1e6;
+            const screen = hitScreenGround(x, y, w, h);
+            const g = screen ? displayToWorld(screen.x, screen.z) : null;
+            worldPointer.mouseX = screen?.x ?? 1e6;
+            worldPointer.mouseZ = screen?.z ?? 1e6;
             if (e.pointerType === 'touch' || useStore.getState().isOrbiting) {
                 el.style.cursor = '';
                 return;
@@ -444,14 +474,15 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
         list.length = 0;
         const yearNow = useStore.getState().year;
         const stageNow = stageRef.current;
-        const bake = worldStage.bake;
-        // What a pin stands on right now: the baked surface as far as it has risen.
-        const surface = (x: number, z: number) => (bake ? surfaceHeight(bake, x, z, worldStage.yearMix) * worldStage.rise : 0);
+        const drawn = stageNow ? worldView.surfaces.get(stageNow.key) : undefined;
+        // What a pin stands on right now, at a world point: the baked surface as far as the flight has grown it.
+        const surface = (x: number, z: number) => (drawn ? stageSurfaceAt(drawn, x, z) : 0);
+        const worldLift = layerOf(WORLD_LAYER).mult;
         if (stageNow) stageMarkerHeights(itemsRef.current, surface);
         for (const p of tappablePeaksRef.current) {
-            const job = stageNow?.byKey.get(p.entry.key);
-            if (job) projected.set(job.x, GROUND_Y + surface(job.x, job.z), job.z);
-            else projected.set(p.x, GROUND_Y + peakHeightAt(p.entry, yearNow), p.z);
+            const onStage = !!stageNow?.byKey.get(p.entry.key);
+            const top = onStage ? surface(p.x, p.z) : peakHeightAt(p.entry, yearNow) * worldLift;
+            projected.set(toDisplayX(p.x), GROUND_Y + top, toDisplayZ(p.z));
             projected.project(camera);
             if (projected.z < -1 || projected.z > 1) {
                 peakAnchors.current.delete(p.entry.key);
@@ -462,7 +493,7 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
                 y: -((projected.y * size.height) / 2) + size.height / 2,
             });
         }
-        buildLabelCandidates(itemsRef.current, camera, size, safeBand.current, labelHalfSize.current, list, tipHeights.current);
+        buildLabelCandidates(itemsRef.current, camera, size, safeBand.current, labelHalfSize.current, list, tipHeights.current, toScreenGround);
         // Region labels compete by size: when two collide, the field with fewer
         // workers (EP 2025) is the one hidden. Hovered/tapped labels never yield.
         // Job labels go through the live declutter, largest first.
@@ -484,7 +515,9 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
             // A label lowered onto the peak itself has no stalk left to draw.
             const tip = tipHeights.current.get(item.id) ?? item.tipY;
             if (tip <= item.baseY) continue;
-            arr.set([item.x, item.baseY, item.z, item.x, tip, item.z], n * 6);
+            const x = toDisplayX(item.x);
+            const z = toDisplayZ(item.z);
+            arr.set([x, item.baseY, z, x, tip, z], n * 6);
             n++;
         }
         leaderGeometry.setDrawRange(0, n * 2);
@@ -524,6 +557,8 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
                         >
                             {item.kind === 'region' ? (
                                 <RegionLabel code={item.code} expanded={isHovered} />
+                            ) : item.kind === 'group' ? (
+                                <GroupLabel group={item.group} />
                             ) : item.kind === 'family' ? (
                                 <FamilyLabel family={item.family} highlighted={isHovered} leaving={fading} />
                             ) : (
@@ -564,6 +599,16 @@ const RegionLabel: React.FC<{ code: string; expanded: boolean }> = ({ code, expa
         </div>
     );
 };
+
+/** A SOC minor group's name on its block in an open field: faint, so the job labels lead. */
+const GroupLabel: React.FC<{ group: MinorGroupLayout }> = ({ group }) => (
+    <div
+        title={group.title}
+        className="w-max max-w-[11rem] max-md:max-w-[7.5rem] px-1 select-none text-[9px] max-md:text-[8px] leading-tight font-medium uppercase tracking-wider text-cyan-100/45 text-center"
+    >
+        {group.title}
+    </div>
+);
 
 /** A BLS job family: its name, and the way in from the broad view. */
 export const FamilyLabel: React.FC<{ family: FamilyLayout; highlighted: boolean; leaving: boolean }> = ({ family, highlighted, leaving }) => (

@@ -10,6 +10,7 @@ import { StageTerrain } from './world/StageTerrain';
 import { CameraRig } from './world/CameraRig';
 import { useWorldScene } from './world/worldScene';
 import { stopInertia, worldCamera } from './world/worldCamera';
+import { resetWorldView } from './world/worldView';
 import { WebGLFallback } from './WebGLFallback';
 import { SCENE } from '../config/constants';
 import { useStore } from '../store';
@@ -19,7 +20,7 @@ import { framingDistance, worldFraming } from './world/framing';
 
 /** Matches MapView's own `isDefault = position.zoom === 1` — a single simple
  * check, not a multi-axis comparison. Pan target drifting from the origin is
- * the one thing that actually strands a user (see MAX_PAN_RADIUS above), so
+ * the one thing that actually strands a user (see clampPanTarget below), so
  * that alone decides whether "Reset view" offers itself. */
 const DEFAULT_VIEW_EPSILON = 0.5;
 
@@ -163,10 +164,9 @@ export const Landscape: React.FC = () => {
     // screen entirely, leaving only floating labels behind (drei's Html
     // isn't frustum-culled the same way a mesh is). Confirmed live: panning
     // the target 80 units from origin makes the terrain fully vanish.
-    // Clamp the target every change: to the regions' rectangle at the world
-    // (corner regions sit further out than a disc's radius), and on a stage, a
-    // disc again, to the live view's SCENE.MAX_PAN_RADIUS. A flight owns the
-    // target while it runs, so neither applies then. Mutating target + camera
+    // Clamp the target every change to the level's rectangle on screen: the
+    // regions' at the world, the stage's on a family or field. A flight owns
+    // the target while it runs, so the clamp waits for it. Mutating target + camera
     // position directly (not via a method that re-dispatches 'change' in a way
     // that could loop) and only when actually out of bounds, so this is a no-op
     // on every normal in-bounds interaction.
@@ -175,17 +175,11 @@ export const Landscape: React.FC = () => {
         if (!controls) return;
         const target = controls.target;
         const bounds = worldCamera.panBounds;
-        const radius = worldCamera.panRadius;
         let cx = target.x;
         let cz = target.z;
         if (bounds) {
             cx = Math.min(bounds.x1, Math.max(bounds.x0, cx));
             cz = Math.min(bounds.z1, Math.max(bounds.z0, cz));
-        }
-        else if (radius != null && Math.hypot(cx, cz) > radius) {
-            const scale = radius / Math.hypot(cx, cz);
-            cx *= scale;
-            cz *= scale;
         }
         if (cx !== target.x || cz !== target.z) {
             const dx = target.x - cx;
@@ -218,10 +212,10 @@ export const Landscape: React.FC = () => {
         const controls = controlsRef.current;
         if (!controls) return;
         worldCamera.cancel(true);
-        // Back to the whole world, from any level.
+        // Back to the whole world, from any level, with no flight.
         useWorldStore.getState().resetLevel();
+        resetWorldView();
         worldCamera.panBounds = WORLD_BOUNDS;
-        worldCamera.panRadius = null;
         stopInertia(controls);
         controls.target.set(...initialFraming.target);
         controls.object.position.set(...initialFraming.position);
@@ -288,11 +282,12 @@ export const Landscape: React.FC = () => {
             {/* Second fill light is desktop-only — on phones it is pure fill cost. */}
             {!isMobile && <pointLight position={[-10, 10, -10]} intensity={0.5} color="blue" />}
 
+            {/* First, so everything after it draws this frame's camera and view. */}
+            <CameraRig controlsRef={controlsRef} homeDistance={framingDistance(initialFraming)} scene={scene} />
             <WorldTerrain scene={scene} isMobile={isMobile} />
             <StageTerrain scene={scene} isMobile={isMobile} />
             <StagePins />
             <WorldMarkers scene={scene} />
-            <CameraRig controlsRef={controlsRef} homeDistance={framingDistance(initialFraming)} />
 
             <OrbitControls
                 ref={controlsRef}

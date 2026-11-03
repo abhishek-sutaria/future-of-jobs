@@ -16,9 +16,10 @@ import { useStore } from '../store';
 import { SCENE } from '../config/constants';
 import { buildWorldScene, type ScenePeak } from '../components/world/worldScene';
 import { stageFraming, worldFraming, type Framing } from '../components/world/framing';
-import { buildLabelCandidates, labelWeights, peakMarker, sortMarkers, stageMarkerHeights, stagePeakMarker, type MarkerItem } from '../components/world/labelCandidates';
-import { bakeStage, STAGE_BLEND, STAGE_BLEND_POWER, surfaceHeight } from '../utils/stageBake';
-import { buildStage } from '../utils/stageLayout';
+import { buildLabelCandidates, labelWeights, peakMarker, sortMarkers, stageMarkerHeights, stagePeakMarker, type GroundMap, type MarkerItem } from '../components/world/labelCandidates';
+import { bakeStage, STAGE_BLEND, STAGE_BLEND_POWER, stageSegments, surfaceHeight } from '../utils/stageBake';
+import { buildStage, stageEdgeBand } from '../utils/stageLayout';
+import { mapPoint, mapX, mapZ } from '../utils/stageMap';
 import { fieldLevel } from '../utils/worldLevel';
 import { STAGE_LABEL_CAP } from '../components/world/WorldMarkers';
 import { isHiddenLabelPosition, labelsCollide, layoutLabels, layoutLabelsByWeight, type LabelBand, type LabelCandidate } from '../utils/labelLayout';
@@ -96,23 +97,27 @@ interface Outcome {
     blockers: string[];
 }
 
-/** World view, or a field's stage: each label on the baked surface, as WorldMarkers stands it. */
-function markersFor(peaks: ScenePeak[], field: string | null): MarkerItem[] {
-    if (!field) return peaks.map((p) => peakMarker(p, 2025));
-    const stage = buildStage(fieldLevel(field), scene.peaksByContinent)!;
-    const bake = bakeStage(stage, 128, STAGE_BLEND, STAGE_BLEND_POWER);
-    const items = peaks.map((p) => stagePeakMarker(p, stage.byKey.get(p.entry.key)!));
-    stageMarkerHeights(items, (x, z) => surfaceHeight(bake, x, z, 0));
-    return items;
+/**
+ * World view, or a field's stage: each label on the baked surface, as WorldMarkers
+ * stands it, and the map that carries its world position onto the screen's ground.
+ */
+function markersFor(peaks: ScenePeak[], field: string | null): { items: MarkerItem[]; ground?: GroundMap } {
+    if (!field) return { items: peaks.map((p) => peakMarker(p, 2025)) };
+    const stage = buildStage(fieldLevel(field), scene)!;
+    const bake = bakeStage(stage, stageSegments(stage.outline, 128), STAGE_BLEND, STAGE_BLEND_POWER, stageEdgeBand(stage));
+    const items = peaks.map((p) => stagePeakMarker(p));
+    stageMarkerHeights(items, (x, z) => surfaceHeight(bake, mapX(stage.map, x), mapZ(stage.map, z), 0));
+    return { items, ground: (x, z) => mapPoint(stage.map, x, z) };
 }
 
 function runPass(vp: Viewport, band: LabelBand, framing: Framing, peaks: ScenePeak[], field: string | null): Outcome[] {
-    const items = sortMarkers(markersFor(peaks, field), () => false);
+    const marked = markersFor(peaks, field);
+    const items = sortMarkers(marked.items, () => false);
     const half = new Map(items.map((m) => [m.id, chipHalf((m as Extract<MarkerItem, { kind: 'peak' }>).peak.entry.title, vp.chip)]));
     const camera = cameraFor(vp, framing);
     const size = { width: vp.width, height: vp.height };
     const list: LabelCandidate[] = [];
-    buildLabelCandidates(items, camera, size, band, half, list, new Map());
+    buildLabelCandidates(items, camera, size, band, half, list, new Map(), marked.ground);
     const out = new Map<string, [number, number]>();
     layoutLabelsByWeight(list, labelWeights(items, null), vp.width, vp.height, band, out, new Map());
 
