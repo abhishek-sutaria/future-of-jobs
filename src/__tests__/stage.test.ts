@@ -13,7 +13,7 @@ import { SCENE, SHADER, YEAR_MAX, YEAR_MIN } from '../config/constants';
 import { RISK_UNSCORED_RGB } from '../config/theme';
 import { SOC_FAMILIES } from '../config/socFamilies';
 import { buildWorldScene, GROUND_Y, peakEmploymentAt } from '../components/world/worldScene';
-import { framingDistance, stageFraming, stageGroundY, stageViewOffset } from '../components/world/framing';
+import { applyStageView, framingDistance, stageFitView, stageFraming, stageGroundY, stageViewOffset, type StageView } from '../components/world/framing';
 import { MAX_STAGE_TILES, STAGE_SEGMENTS, stageFragmentShader, stageVertexShader } from '../components/world/stageShaders';
 import { INDEX_CONTINENTS, INDEX_OCCUPATION_BY_SOC } from '../utils/occupationIndex';
 import {
@@ -105,8 +105,10 @@ describe('one map per stage', () => {
             if (s.x !== 1 || s.z !== 1) stretched.push(r.code);
             else expect(Math.abs(stage.map.sx / stage.map.sz - 1), r.code).toBeLessThan(1e-12);
         }
-        // The deep ones (Farming, Fishing & Forestry is 1:4) and the two widest (Construction 1.83, Installation 1.59).
-        expect(stretched).toEqual(['13', '15', '21', '27', '35', '41', '45', '47', '49']);
+        // At 1.2 every field but the two already near square (Personal Care 1.05, Production 0.92):
+        // the deep ones (Business & Finance 1:1.77, Farming, Fishing & Forestry 1:4) and the wide ones (Construction 1.83).
+        expect(stretched).toEqual(['11', '13', '15', '17', '19', '21', '23', '25', '27', '29', '31', '33', '35', '37', '41', '43', '45', '47', '49', '53']);
+        expect(FIELD_MAX_ASPECT).toBe(1.2);
     });
 
     it('fills the fit box: every stage touches it on one side and stays inside it', () => {
@@ -334,7 +336,81 @@ describe('what the camera sees', () => {
         expect(hit.z).toBeCloseTo(point.z, 4);
     });
 
-    // Desktop chrome at a stage, measured in Chrome: header to 144px, the fields bar to 226px on the left, the slider from 801px.
+    // Desktop chrome at a stage, measured in Chrome on this branch: the fields bar and its info line end at 220px
+    // at every width; the year slider starts 156.75px above the bottom of the window.
+    const DESKTOP_BAND_TOP = 220;
+    const sliderTop = (height: number) => height - 156.75;
+    const DESKTOPS = [[1280, 680], [1470, 723], [1470, 746], [1920, 958]] as const;
+    const cameraWith = (width: number, height: number, view: StageView) => {
+        const camera = cameraAt(width, height, 45);
+        applyStageView(camera, width, height, view);
+        return camera;
+    };
+
+    it('used to hide the near edge of deep stages under the slider on a short laptop window', () => {
+        const hidden = STAGES.filter((stage) => screen(cameraAt(1470, 723, 45), 1470, 723, new Vector3(0, GROUND_Y, stage.outline.z1)).y > sliderTop(723));
+        expect(hidden.map((s) => s.key)).toContain('family:2');
+        expect(hidden.map((s) => s.key)).toContain('field:35');
+    });
+
+    it('shows every stage\'s whole rectangle between the chrome and the slider on desktops down to 1280x680, by a slide alone', () => {
+        for (const [width, height] of DESKTOPS) {
+            for (const stage of STAGES) {
+                const view = stageFitView(45, height, DESKTOP_BAND_TOP, sliderTop(height), stage.outline);
+                expect(view.scale, `${stage.key} ${width}x${height}`).toBe(1);
+                const camera = cameraWith(width, height, view);
+                expect(camera.position.toArray()).toEqual([0, 35, 55]);
+                for (const c of corners(stage.outline)) {
+                    const s = screen(camera, width, height, c);
+                    const what = `${stage.key} ${width}x${height}`;
+                    expect(s.x, what).toBeGreaterThanOrEqual(8);
+                    expect(s.x, what).toBeLessThanOrEqual(width - 8);
+                    expect(s.y, what).toBeGreaterThanOrEqual(DESKTOP_BAND_TOP);
+                    expect(s.y, what).toBeLessThanOrEqual(sliderTop(height));
+                }
+            }
+        }
+    });
+
+    it('slides only as far as it must: nothing on 1920x958, about 30px on 1280x680', () => {
+        const deepest = (height: number) => Math.max(...STAGES.map((stage) => stageFitView(45, height, DESKTOP_BAND_TOP, sliderTop(height), stage.outline).offsetY));
+        expect(deepest(958)).toBe(0);
+        expect(deepest(680)).toBeGreaterThan(25);
+        expect(deepest(680)).toBeLessThan(35);
+    });
+
+    it('shows a little more of the scene, centred, only on a window too short for a slide, and still fits', () => {
+        const [width, height] = [1280, 600];
+        for (const stage of STAGES) {
+            const view = stageFitView(45, height, DESKTOP_BAND_TOP, sliderTop(height), stage.outline);
+            const camera = cameraWith(width, height, view);
+            if (rectDepth(stage.outline) > 37) expect(view.scale, stage.key).toBeGreaterThan(1);
+            expect(camera.position.toArray()).toEqual([0, 35, 55]);
+            for (const c of corners(stage.outline)) {
+                const s = screen(camera, width, height, c);
+                expect(s.x, stage.key).toBeGreaterThanOrEqual(8);
+                expect(s.x, stage.key).toBeLessThanOrEqual(width - 8);
+                expect(s.y, stage.key).toBeGreaterThanOrEqual(DESKTOP_BAND_TOP - 1e-6);
+                expect(s.y, stage.key).toBeLessThanOrEqual(sliderTop(height) + 1e-6);
+            }
+        }
+    });
+
+    it('keeps hit testing true through a desktop slide and zoom-out alike', () => {
+        for (const [width, height] of [[1280, 680], [1280, 600]] as const) {
+            const view = stageFitView(45, height, DESKTOP_BAND_TOP, sliderTop(height), stageOf(fieldLevel('35')).outline);
+            const camera = cameraWith(width, height, view);
+            const point = new Vector3(7, GROUND_Y, 16);
+            const ndc = point.clone().project(camera);
+            const raycaster = new Raycaster();
+            raycaster.setFromCamera(new Vector2(ndc.x, ndc.y), camera);
+            const hit = raycaster.ray.intersectPlane(new Plane(new Vector3(0, 1, 0), -GROUND_Y), new Vector3())!;
+            expect(hit.x).toBeCloseTo(point.x, 4);
+            expect(hit.z).toBeCloseTo(point.z, 4);
+        }
+    });
+
+    // With no view at all, as a 1920x958 window keeps it: header to 144px, slider from 801px.
     it('shows every stage\'s rectangle whole on a 1920x958 desktop, clear of the header and the slider', () => {
         const camera = cameraAt(1920, 958, 45);
         for (const stage of STAGES) {
@@ -426,7 +502,9 @@ describe('heights', () => {
 /** Recorded by the test above: stage key → jobs whose blended surface moves against their own BLS number. */
 const RECORDED_SURFACE_OPPOSITE: Record<string, number> = {
     'family:1': 20, 'family:2': 4, 'family:3': 2, 'family:4': 12, 'family:5': 5,
-    'field:11': 2, 'field:27': 1, 'field:33': 1, 'field:39': 1, 'field:41': 1, 'field:43': 1, 'field:47': 5, 'field:49': 1, 'field:51': 1,
+    // Fields at FIELD_MAX_ASPECT 1.2: more of them stretch toward a square, which moves hills relative to their neighbours
+    // (at 1.5 it was 11: 2, 27: 1, 33: 1, 47: 5 and nothing on 53; 14 field jobs then, 18 now, all under the bound above).
+    'field:11': 1, 'field:27': 2, 'field:33': 2, 'field:39': 1, 'field:41': 1, 'field:43': 1, 'field:47': 7, 'field:49': 1, 'field:51': 1, 'field:53': 1,
 };
 
 describe.each(named)('the bake of %s', (_key, stage) => {

@@ -51,22 +51,29 @@ export const isIdentityMap = (m: PlaneMap): boolean => m.sx === 1 && m.sz === 1 
 /**
  * The box every stage is fitted into, in stage units, around the middle of the
  * live 3D view. 50 across is what a 390px phone shows with room at both edges
- * from its portrait camera, and the live disc's reach on a desktop; 38 deep keeps
- * the near edge clear of the year slider on a laptop.
+ * from its portrait camera, and the live disc's reach on a desktop; 38 deep
+ * keeps the near edge clear of the year slider on a 1920x958 desktop. Shorter
+ * laptop windows slide the picture up to clear it (stageFitView).
  */
 export const STAGE_FIT = { width: 50, depth: 38 } as const;
 
 /**
- * No field's stage is more than one and a half times as long one way as the
- * other. Past that a field is too thin to read: seen from the live camera's
- * 32.5 degrees, a deep field (Business & Finance is 1:1.75) shows as a narrow
- * column with its labels piled up, and on a phone it would use a third of the
- * screen's width. So its short side is stretched to 1.5, toward a square; the
- * other fields keep their world shape. The stretch is one positive scale per
- * axis, so every job keeps its neighbours. Families never stretch: a family is
- * its world block, magnified.
+ * No field's stage is more than 1.2 times as long one way as the other. A deep
+ * field (Business & Finance is 1:1.77) is otherwise too thin to read: seen from
+ * the live camera's 32.5 degrees it shows as a narrow column with its labels
+ * piled up, and depth is foreshortened to about half while width is not. At
+ * 1.2 it is 31.7 of the 50 fit units wide instead of 25.3 at the earlier 1.5:
+ * on a 1920x958 desktop its labels spread out, and on a 390px phone they stop
+ * hanging off the stage's sides. Measured over all 22 fields, the declutter
+ * shows more job labels at 1.2 on both (477 against 473 on the desktop, 219
+ * against 212 on the phone); the widest fields give a little back, as they are
+ * now 45.6 across and 38 deep instead of 50 by 33.3. So every field's short
+ * side is stretched to 1.2, toward a square, unless it is already within it
+ * (Production and Personal Care); the stretch is one positive scale per axis
+ * about the centre, so every job keeps its neighbours. Families never stretch:
+ * a family is its world block, magnified.
  */
-export const FIELD_MAX_ASPECT = 1.5;
+export const FIELD_MAX_ASPECT = 1.2;
 
 /** How much a field's short side is stretched, per axis: 1 for every field already within FIELD_MAX_ASPECT. */
 export function fieldStretch(rect: Rect): { x: number; z: number } {

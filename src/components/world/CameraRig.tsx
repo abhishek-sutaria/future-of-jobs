@@ -9,20 +9,23 @@ import { stageKey } from '../../utils/stageLayout';
 import { mapRect } from '../../utils/stageMap';
 import { beginTransition, levelViewOf, viewAt, worldLevelView } from '../../utils/stageTransition';
 import type { Rect } from '../../utils/worldLayout';
-import { levelKind, ZOOM_OUT_SETTLE_MS, zoomedOutOfLevel } from '../../utils/worldLevel';
+import { levelKind, zoomedOutOfLevel } from '../../utils/worldLevel';
+import { landedGate, pressGate, releaseGate, stepGate, UNLANDED_GATE, type ZoomOutGate } from '../../utils/zoomOutGate';
 import { useIsMobile } from '../../hooks/useIsMobile';
 import { prefersReducedMotion, stopInertia, worldCamera } from './worldCamera';
-import { atDistance, framingDistance, stageFraming, stageViewOffset, worldFraming, type Framing } from './framing';
+import {
+    applyStageView, atDistance, framingDistance, NO_STAGE_VIEW, stageFitView, stageFraming, stageViewOffset, worldFraming, type Framing, type StageView,
+} from './framing';
 import type { WorldScene } from './worldScene';
 import { worldView } from './worldView';
 
 const FLY_MS = 900;
-/** How fast the picture slides to its phone offset, per second: about as long as a flight. */
+/** How fast the picture slides to its offset at a stage, per second: about as long as a flight. */
 const VIEW_OFFSET_RATE = 7;
 /** The chrome settles this long after a resize, as it does during a flight. */
 const CHROME_SETTLE_MS = 600;
 
-/** The band of a phone screen the chrome leaves free, from the bottom of the controls to the top of the year slider, in pixels. */
+/** The band of the screen the chrome leaves free, from the bottom of the controls to the top of the year slider, in pixels. */
 function freeBand(): { top: number; bottom: number } | null {
     if (typeof document === 'undefined') return null;
     const box = (sel: string) => document.querySelector(sel)?.getBoundingClientRect();
@@ -63,13 +66,16 @@ interface Flight {
  * so they all read this frame's view.
  *
  * Every frame it also decides the labels, from the zoom at the world and from
- * the level otherwise, and applies the zoom-out rule (utils/worldLevel) against
- * the stage's home distance. During a flight the zoom it reads is the landing's,
+ * the level otherwise, and applies the zoom-out rule (utils/worldLevel) through
+ * utils/zoomOutGate: only zoom made after the stage has come to rest, and not
+ * during a click, counts. During a flight the zoom it reads is the landing's,
  * so a flight home never flashes the field names on its way past them.
  *
- * On a phone a family or field also slides the picture down with a view offset,
- * so the stage's rectangle sits in the middle of the band the taller controls leave free. The
- * camera itself stays on the live numbers, and the desktop has no offset at all.
+ * At a family or field the picture also slides with a view offset, so the
+ * stage's whole rectangle sits in the band the chrome leaves free: on a phone
+ * in the middle of it (stageViewOffset), on a desktop only as far as it must to
+ * clear the year slider (stageFitView), which a tall window does not need. The
+ * camera itself stays on the live numbers.
  * `homeDistance` is the distance of the default view (and Reset view), read once
  * like the rest of that framing; zoom counts from it or the current whole-world
  * framing, whichever is closer, so after a rotate both still read as zoomed out.
@@ -88,14 +94,14 @@ export const CameraRig: React.FC<{
     const handledRequestId = useRef(0);
     // The next flight is the zoom-out rule's own.
     const nextSticky = useRef(false);
-    // The home distance the zoom-out rule measures from, and when the camera last came to rest there.
-    const levelDistance = useRef(0);
-    const settledAt = useRef(0);
+    // What the zoom-out rule measures from, and whether it may fire yet.
+    const gate = useRef<ZoomOutGate>(UNLANDED_GATE);
+    const gl = useThree((s) => s.gl);
     const isMobile = useIsMobile();
     // The picture's slide now, where it is heading, and until when to re-measure
     // the chrome. Measured only then: at rest a Kelley note must not move the view.
-    const viewOffset = useRef(0);
-    const viewOffsetGoal = useRef(0);
+    const picture = useRef<StageView>(NO_STAGE_VIEW);
+    const pictureGoal = useRef<StageView>(NO_STAGE_VIEW);
     const measureUntil = useRef(0);
     const aspect = size.width / Math.max(1, size.height);
     const baseDistance = Math.min(homeDistance, framingDistance(worldFraming(camera.fov, aspect)));
@@ -113,9 +119,8 @@ export const CameraRig: React.FC<{
         return world.kelleyZoom ? atDistance(home, baseDistance / FIELD_ARRIVAL_ZOOM) : home;
     }, [camera, aspect, baseDistance]);
 
-    const land = useCallback((f: Flight) => {
-        levelDistance.current = f.distance;
-        settledAt.current = performance.now();
+    const land = useCallback((f: Flight, distance: number) => {
+        gate.current = landedGate(f.distance, distance, performance.now(), gate.current.pressed);
         worldCamera.panBounds = f.panBounds;
     }, []);
 
@@ -153,7 +158,7 @@ export const CameraRig: React.FC<{
             if (!controls) return;
             // Stopped short: the rule counts from here.
             f.distance = Math.max(f.distance, controls.getDistance());
-            land(f);
+            land(f, controls.getDistance());
         };
         return () => {
             worldCamera.cancel = () => {};
@@ -168,6 +173,37 @@ export const CameraRig: React.FC<{
     }, [size.width, size.height]);
 
     useEffect(() => () => camera.clearViewOffset(), [camera]);
+
+    // A click with the main mouse or pen button holds the zoom-out rule off
+    // until it has let go and the camera has been still a moment (zoomOutGate).
+    useEffect(() => {
+        const el = gl.domElement;
+        let pointer: number | null = null;
+        const onDown = (e: PointerEvent) => {
+            if (e.pointerType === 'touch' || e.button !== 0) return;
+            pointer = e.pointerId;
+            gate.current = pressGate(gate.current, performance.now());
+        };
+        const release = () => {
+            pointer = null;
+            gate.current = releaseGate(gate.current, performance.now());
+        };
+        const onUp = (e: PointerEvent) => {
+            if (e.pointerId === pointer) release();
+        };
+        el.addEventListener('pointerdown', onDown, true);
+        window.addEventListener('pointerup', onUp, true);
+        window.addEventListener('pointercancel', onUp, true);
+        // A press let go outside the window may never report back.
+        window.addEventListener('blur', release);
+        return () => {
+            el.removeEventListener('pointerdown', onDown, true);
+            window.removeEventListener('pointerup', onUp, true);
+            window.removeEventListener('pointercancel', onUp, true);
+            window.removeEventListener('blur', release);
+            release();
+        };
+    }, [gl]);
 
     // `fly` changes with the viewport and the scene, neither of which is a
     // request: only a new id flies.
@@ -201,7 +237,7 @@ export const CameraRig: React.FC<{
             controls.update();
             if (t >= 1) {
                 flight.current = null;
-                land(f);
+                land(f, controls.getDistance());
             }
         }
 
@@ -211,29 +247,35 @@ export const CameraRig: React.FC<{
         const labels = labelsAt(kind, baseDistanceRef.current / distance, world.labels);
         if (labels !== world.labels) useWorldStore.setState({ labels });
 
-        if (kind === 'world' || !isMobile) viewOffsetGoal.current = 0;
+        if (kind === 'world') pictureGoal.current = NO_STAGE_VIEW;
         else if (flight.current || now < measureUntil.current) {
             const band = freeBand();
             const level = worldView.level;
             const outline = level && stageKey(world) === level.key ? mapRect(level.map, level.rect) : null;
-            viewOffsetGoal.current = band && outline ? stageViewOffset(camera.fov, size.height, band.top, band.bottom, outline) : 0;
+            pictureGoal.current = !band || !outline
+                ? NO_STAGE_VIEW
+                : isMobile
+                    ? { offsetY: stageViewOffset(camera.fov, size.height, band.top, band.bottom, outline), scale: 1 }
+                    : stageFitView(camera.fov, size.height, band.top, band.bottom, outline);
         }
-        const goal = viewOffsetGoal.current;
+        const goal = pictureGoal.current;
         const step = prefersReducedMotion() ? 1 : 1 - Math.exp(-delta * VIEW_OFFSET_RATE);
-        const next = viewOffset.current + (goal - viewOffset.current) * step;
-        const slid = Math.abs(goal - next) < 0.25 ? goal : next;
+        const was = picture.current;
+        const nextY = was.offsetY + (goal.offsetY - was.offsetY) * step;
+        const nextScale = was.scale + (goal.scale - was.scale) * step;
+        const arrived = Math.abs(goal.offsetY - nextY) < 0.25 && Math.abs(goal.scale - nextScale) < 1e-4;
+        const slid = arrived ? goal : { offsetY: nextY, scale: nextScale };
         const sizeKey = `${size.width}x${size.height}`;
-        if (slid !== viewOffset.current || appliedSize.current !== sizeKey) {
-            viewOffset.current = slid;
+        if (slid.offsetY !== was.offsetY || slid.scale !== was.scale || appliedSize.current !== sizeKey) {
+            picture.current = slid;
             appliedSize.current = sizeKey;
-            if (slid === 0) camera.clearViewOffset();
-            else camera.setViewOffset(size.width, size.height, 0, slid, size.width, size.height);
+            applyStageView(camera, size.width, size.height, slid);
         }
 
         // The request id check holds the rule off between asking for a flight and it starting.
         const flying = !!flight.current || handledRequestId.current !== world.focusRequestId;
-        const settled = performance.now() - settledAt.current >= ZOOM_OUT_SETTLE_MS;
-        if (zoomedOutOfLevel(kind, distance, levelDistance.current, flying, settled)) {
+        if (!flying) gate.current = stepGate(gate.current, distance, now);
+        if (zoomedOutOfLevel(kind, distance, gate.current.base, flying, gate.current.armed)) {
             nextSticky.current = true;
             world.goUp();
         }
