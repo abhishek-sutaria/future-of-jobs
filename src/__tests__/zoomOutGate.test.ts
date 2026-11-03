@@ -26,7 +26,7 @@ import { SCENE } from '../config/constants';
 import { framingDistance, stageFraming, worldFraming } from '../components/world/framing';
 import { familyLevel, fieldLevel, levelKind, levelUp, WORLD_LEVEL, ZOOM_OUT_RATIO, ZOOM_OUT_SETTLE_MS, zoomedOutOfLevel, type WorldLevel } from '../utils/worldLevel';
 import {
-    attachWheelGate, flyingGate, landedGate, MAX_GATE_BASE, pressGate, releaseGate, stepGate, UNLANDED_GATE, type ZoomOutGate,
+    attachWheelGate, flyingGate, landedGate, MAX_GATE_BASE, pressGate, releaseGate, stepGate, UNLANDED_GATE, WORLD_BASE, type ZoomOutGate,
 } from '../utils/zoomOutGate';
 
 const STAGE = framingDistance(stageFraming(SCENE.CAMERA_FOV));
@@ -154,7 +154,7 @@ class Rig {
             const f = this.flight;
             if (!f || f.sticky) return;
             this.flight = null;
-            this.rule.land(Math.max(f.to, this.distance), this.distance, this.now);
+            this.rule.land(this.baseAt(this.level, Math.max(f.to, this.distance)), this.distance, this.now);
         });
         this.rule = variant === 'original' ? originalRule() : variant === 'carry' ? carryRule() : gateRule(this.holder);
         if (variant === 'gate') {
@@ -165,11 +165,21 @@ class Rig {
         this.level = start;
         this.visited = [start];
         this.setDistance(this.landingOf(start));
-        this.rule.land(this.distance, this.distance, 0);
+        this.rule.land(this.baseAt(start, this.distance), this.distance, 0);
     }
 
     get distance(): number {
         return this.controls.getDistance();
+    }
+
+    /** As CameraRig: the world has no level to leave. */
+    private baseAt(level: WorldLevel, distance: number): number {
+        return levelKind(level) === 'world' ? WORLD_BASE : distance;
+    }
+
+    /** Back, or the breadcrumb: one level up, a flight any orbit input may stop. */
+    back() {
+        this.fly(levelUp(this.level), false);
     }
 
     private landingOf(level: WorldLevel): number {
@@ -200,7 +210,7 @@ class Rig {
                 this.setDistance(f.from + (f.to - f.from) * k);
                 if (k >= 1) {
                     this.flight = null;
-                    this.rule.land(f.to, this.distance, this.now);
+                    this.rule.land(this.baseAt(this.level, f.to), this.distance, this.now);
                 }
             } else {
                 this.controls.update();
@@ -444,6 +454,29 @@ describe('what 9629bab fixed still holds', () => {
                 expect(rig.visited, `${at}+${hold}`).toEqual([SERVICE]);
             }
         }
+    });
+
+    it('at the world, re-arms after a press however far out the camera is: wheel-outs reach OrbitControls again after the quiet time', () => {
+        const rig = run('gate', SERVICE, (r) => {
+            r.wait(1000);
+            r.back();
+            r.wait(FLY_MS + 1000);
+            // Past 1.25 x the world's landing distance, where 55077b2 got stuck.
+            r.wheels(100, 5, 60);
+            r.wait(1000);
+        });
+        expect(rig.level).toEqual(WORLD_LEVEL);
+        const zoomedOut = rig.distance;
+        expect(zoomedOut).toBeGreaterThan(WORLD * ZOOM_OUT_RATIO);
+        // A left-button drag to turn the view: the press disarms the gate.
+        rig.press();
+        rig['pointer']('pointermove', 1, 760, 505, 'mouse');
+        rig.release();
+        rig.wait(ZOOM_OUT_SETTLE_MS + 200);
+        expect(rig.holder.gate.armed).toBe(true);
+        rig.wheels(100, 3, 60);
+        expect(rig.distance).toBeGreaterThan(zoomedOut * 1.1);
+        expect(rig.visited).toEqual([SERVICE, WORLD_LEVEL]);
     });
 
     it('lets zoom-out through at the world before anything has landed', () => {

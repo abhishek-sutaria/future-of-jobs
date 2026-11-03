@@ -62,15 +62,23 @@ export const ZOOM_EPSILON = 1e-6;
  */
 export const MAX_GATE_BASE = SCENE.MAX_CAMERA_DISTANCE / (ZOOM_OUT_RATIO * 1.05);
 
+/**
+ * The base at the world, where there is no level to leave: the rule never fires
+ * there, and the camera is always inside the threshold, so after a flight or a
+ * press the gate re-arms on the quiet time alone, however far out it is.
+ */
+export const WORLD_BASE = Infinity;
+
 /** Before anything has landed (the world at load): no level to leave, and wheel-outs go through. */
-export const UNLANDED_GATE: Readonly<ZoomOutGate> = { base: Infinity, last: NaN, quietSince: -Infinity, pressed: false, armed: true };
+export const UNLANDED_GATE: Readonly<ZoomOutGate> = { base: WORLD_BASE, last: NaN, quietSince: -Infinity, pressed: false, armed: true };
 
 /**
  * A flight has landed, or was stopped short, at a level whose rule counts from
- * `base`, with the camera now at `distance`. A press that is still down stays down.
+ * `base` (WORLD_BASE at the world), with the camera now at `distance`. A press
+ * that is still down stays down.
  */
 export function landedGate(base: number, distance: number, now: number, pressed = false): ZoomOutGate {
-    return { base: Math.min(base, MAX_GATE_BASE), last: distance, quietSince: now, pressed, armed: false };
+    return { base: base === WORLD_BASE ? WORLD_BASE : Math.min(base, MAX_GATE_BASE), last: distance, quietSince: now, pressed, armed: false };
 }
 
 /** A flight has started: nothing is let out until it lands and the camera has been still. */
@@ -92,8 +100,9 @@ export const swallowedGate = (g: ZoomOutGate, now: number): ZoomOutGate => ({ ..
 export function stepGate(g: ZoomOutGate, distance: number, now: number): ZoomOutGate {
     const moved = Number.isFinite(g.last) && Math.abs(distance - g.last) > ZOOM_EPSILON * g.last;
     const quietSince = moved && !g.armed ? now : g.quietSince;
-    // Never arm with the camera already past the threshold (a flight stopped short far out, beyond
-    // what MAX_GATE_BASE allows): it would fire with no zoom from the user. It arms once back inside.
+    // At a family or field, never arm with the camera already past the threshold (a flight stopped
+    // short far out, beyond what MAX_GATE_BASE allows): it would fire with no zoom from the user. It
+    // arms once back inside. At the world the base is WORLD_BASE, so this always holds.
     const inside = distance <= g.base * ZOOM_OUT_RATIO;
     const armed = g.armed || (!g.pressed && inside && now - quietSince >= ZOOM_OUT_SETTLE_MS);
     return { base: g.base, last: distance, quietSince, pressed: g.pressed, armed };

@@ -7,10 +7,10 @@ import { FIELD_ARRIVAL_ZOOM, labelsAt } from '../../utils/labelLevel';
 import { EP_PATH_MAX } from '../../utils/occupationIndex';
 import { stageKey } from '../../utils/stageLayout';
 import { mapRect } from '../../utils/stageMap';
-import { beginTransition, levelViewOf, viewAt, worldLevelView } from '../../utils/stageTransition';
+import { beginTransition, levelViewOf, viewAt, WORLD_LAYER, worldLevelView } from '../../utils/stageTransition';
 import type { Rect } from '../../utils/worldLayout';
 import { levelKind, zoomedOutOfLevel } from '../../utils/worldLevel';
-import { attachWheelGate, flyingGate, landedGate, pressGate, releaseGate, stepGate, UNLANDED_GATE, type ZoomOutGate } from '../../utils/zoomOutGate';
+import { attachWheelGate, flyingGate, landedGate, pressGate, releaseGate, stepGate, UNLANDED_GATE, WORLD_BASE, type ZoomOutGate } from '../../utils/zoomOutGate';
 import { useIsMobile } from '../../hooks/useIsMobile';
 import { prefersReducedMotion, stopInertia, worldCamera } from './worldCamera';
 import {
@@ -49,6 +49,8 @@ interface Flight {
     panBounds: Rect;
     /** A zoom-out's own flight: the scroll that started it is usually still coasting and must not stop it. */
     sticky: boolean;
+    /** It lands on the world, which has no level to leave. */
+    toWorld: boolean;
 }
 
 /**
@@ -123,7 +125,7 @@ export const CameraRig: React.FC<{
     }, [camera, aspect, baseDistance]);
 
     const land = useCallback((f: Flight, distance: number) => {
-        gate.current = landedGate(f.distance, distance, performance.now(), gate.current.pressed);
+        gate.current = landedGate(f.toWorld ? WORLD_BASE : f.distance, distance, performance.now(), gate.current.pressed);
         worldCamera.panBounds = f.panBounds;
     }, []);
 
@@ -150,6 +152,7 @@ export const CameraRig: React.FC<{
             distance: framingDistance(framing),
             panBounds: mapRect(to.map, to.rect),
             sticky,
+            toWorld: to.key === WORLD_LAYER,
         };
     }, [camera, controlsRef, landing, scene]);
 
