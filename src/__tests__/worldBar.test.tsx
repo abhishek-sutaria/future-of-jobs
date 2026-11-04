@@ -1,8 +1,9 @@
 // @vitest-environment jsdom
 /**
- * The way back up: the breadcrumb, Back, Esc, what the level's info line says
- * and where keyboard focus goes when a button disappears. Mounts the real
- * WorldBar. Level rules themselves are in worldLevel.test.ts.
+ * The way back up: the breadcrumb, Back, Esc, the bar's two rows (picker, Back
+ * and trail; then the info line), what the info line says and where keyboard
+ * focus goes when a button disappears. Mounts the real WorldBar. Level rules
+ * themselves are in worldLevel.test.ts.
  */
 
 import { describe, it, expect, vi, beforeAll, afterAll, afterEach, beforeEach } from 'vitest';
@@ -98,6 +99,112 @@ describe('breadcrumb', () => {
         expect(level()).toEqual(familyLevel(5));
         await act(async () => buttonNamed('← Back')!.click());
         expect(level()).toEqual(WORLD_LEVEL);
+    });
+});
+
+describe('layout', () => {
+    const navRow = () => container.querySelector('[data-testid="world-bar-nav"]')!;
+    const infoRow = () => container.querySelector('[data-testid="world-bar-info"]');
+    const picker = () => container.querySelector<HTMLElement>('[data-field-picker]')!;
+    const back = () => container.querySelector<HTMLElement>('[data-world-back]')!;
+    const follows = (a: Node, b: Node) => !!(a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING);
+
+    it('at the world, the first row is just the picker and there is no second row', async () => {
+        expect(navRow().contains(picker())).toBe(true);
+        expect(navRow().querySelectorAll('button')).toHaveLength(1);
+        expect(crumbs()).toBeNull();
+        expect(infoRow()).toBeNull();
+    });
+
+    it('at a field, the first row is the picker, then Back, then the trail', async () => {
+        await go(() => useWorldStore.getState().focusContinent('51'));
+        const row = [...navRow().querySelectorAll('button')].map((b) => b.textContent?.trim());
+        expect(row).toEqual(['All 22 fields', '← Back', 'All families', 'Production, Transportation & Moving']);
+        expect(follows(picker(), back())).toBe(true);
+        expect(follows(back(), crumbs()!.querySelector('[aria-current="location"]')!)).toBe(true);
+    });
+
+    it('at a family, the same order with the family as the current name', async () => {
+        await go(() => useWorldStore.getState().focusFamily(4));
+        const row = [...navRow().querySelectorAll('button')].map((b) => b.textContent?.trim());
+        expect(row).toEqual(['All 22 fields', '← Back', 'All families']);
+        expect(navRow().querySelector('[aria-current="location"]')!.textContent).toBe('Natural Resources, Construction & Maintenance');
+    });
+
+    it('the info line and scale note have their own row, below the picker', async () => {
+        await go(() => useWorldStore.getState().focusContinent('51'));
+        const fieldNote = container.querySelector('[data-testid="field-scale-note"]')!;
+        expect(infoRow()!.contains(fieldNote)).toBe(true);
+        expect(infoRow()!.textContent).toMatch(/workers · .* by 2035 · \d+ occupations/);
+        expect(navRow().contains(infoRow())).toBe(false);
+        expect(infoRow()!.querySelector('button')).toBeNull();
+        expect(follows(navRow(), infoRow()!)).toBe(true);
+
+        await go(() => useWorldStore.getState().focusFamily(4));
+        expect(infoRow()!.contains(container.querySelector('[data-testid="family-info"]'))).toBe(true);
+        expect(infoRow()!.contains(container.querySelector('[data-testid="family-scale-note"]'))).toBe(true);
+        expect(navRow().textContent).not.toContain('workers');
+    });
+
+    it('has no Kelley roles button, dot or note at any level, even with the filter on in the store', async () => {
+        const noKelley = () => {
+            expect(container.querySelector('[aria-pressed]')).toBeNull();
+            expect(container.textContent).not.toContain('Kelley');
+        };
+        expect(useWorldStore.getState().kelleyOnly).toBe(false);
+        noKelley();
+        await go(() => useWorldStore.getState().setKelleyOnly(true));
+        noKelley();
+        await go(() => useWorldStore.getState().focusFamily(4));
+        noKelley();
+        await go(() => useWorldStore.getState().focusContinent('47'));
+        noKelley();
+        await act(async () => picker().click());
+        expect(container.querySelectorAll('[role="option"]')).toHaveLength(23);
+        expect(container.querySelector('[role="listbox"] [title*="Kelley"]')).toBeNull();
+        noKelley();
+    });
+});
+
+describe('fit after the picker', () => {
+    afterEach(() => vi.restoreAllMocks());
+
+    // The frame ends at 358px; the trail starts after a 140px picker.
+    const layout = (trailWidth: number, frameRight: number) => {
+        vi.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockImplementation(function (this: HTMLElement) {
+            return this.hasAttribute('aria-hidden') ? trailWidth : 70;
+        });
+        // The trail's own box is no guide: it is only as wide as what it shows.
+        vi.spyOn(Element.prototype, 'clientWidth', 'get').mockReturnValue(2000);
+        vi.spyOn(Element.prototype, 'getBoundingClientRect').mockImplementation(function (this: Element) {
+            const left = this.hasAttribute('data-breadcrumb') ? 146 : 0;
+            const right = this.hasAttribute('data-breadcrumb') ? 400 : frameRight;
+            return { left, right, top: 0, bottom: 44, width: right - left, height: 44, x: left, y: 0, toJSON: () => ({}) } as DOMRect;
+        });
+    };
+
+    it('shows the whole trail when it fits in the room left after the picker', async () => {
+        layout(120, 358);
+        await go(() => useWorldStore.getState().focusContinent('51'));
+        expect(buttonNamed('All families')).toBeDefined();
+    });
+
+    it('falls back to Back and the current name when it does not, however wide the trail itself is', async () => {
+        layout(200, 358);
+        await go(() => useWorldStore.getState().focusContinent('51'));
+        expect(buttonNamed('All families')).toBeUndefined();
+        expect(buttonNamed('← Back')).toBeDefined();
+        expect(crumbs()!.querySelector('[aria-current="location"]')!.textContent).toBe('Production');
+    });
+
+    it('decides again from the frame at the next level', async () => {
+        layout(200, 358);
+        await go(() => useWorldStore.getState().focusContinent('51'));
+        expect(buttonNamed('All families')).toBeUndefined();
+        layout(200, 1100);
+        await go(() => useWorldStore.getState().focusFamily(5));
+        await go(() => useWorldStore.getState().focusContinent('51'));
+        expect(buttonNamed('All families')).toBeDefined();
     });
 });
 
@@ -293,18 +400,6 @@ describe('info line', () => {
         const rest = [...info()!.querySelectorAll('span')].filter((s) => s !== name);
         expect(rest.every((s) => !s.className.includes('max-md:hidden'))).toBe(true);
         expect(rest[0].textContent!.startsWith(' ·')).toBe(false);
-    });
-
-    it('says when a family has no Kelley roles, as a field does', async () => {
-        await go(() => useWorldStore.getState().focusFamily(4));
-        await go(() => useWorldStore.getState().setKelleyOnly(true));
-        expect(info()!.textContent).toContain('no Kelley roles in this family');
-    });
-
-    it('keeps "no Kelley roles in this field" at a field', async () => {
-        await go(() => useWorldStore.getState().focusContinent('47'));
-        await go(() => useWorldStore.getState().setKelleyOnly(true));
-        expect(container.textContent).toContain('no Kelley roles in this field');
     });
 
     it('says whose scale the heights are on, at a field and at a family, and never at the world', async () => {
