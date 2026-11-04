@@ -14,6 +14,9 @@ export const Legend: React.FC = () => {
             style={{ zIndex: Z.base }}
             role="complementary"
             aria-label="Job Security Index legend"
+            // On a short landscape phone it reaches up beside the fields bar,
+            // whose breadcrumb stops short of it.
+            data-bar-obstacle
         >
             <h3 className="text-[9px] md:text-[10px] uppercase text-gray-400 font-semibold tracking-wider text-right">
                 Job Security Index

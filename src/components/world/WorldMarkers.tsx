@@ -148,7 +148,7 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
         if (labels.families) return;
         if (!document.activeElement?.closest('[data-family-label]')) return;
         const raf = requestAnimationFrame(() => {
-            document.querySelector<HTMLElement>('[data-world-back], [data-field-picker]')?.focus();
+            (document.querySelector<HTMLElement>('[data-world-back]') ?? document.querySelector<HTMLElement>('[data-field-picker]'))?.focus();
         });
         return () => cancelAnimationFrame(raf);
     }, [labels.families]);
@@ -161,7 +161,7 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
             const bar = box('[data-world-bar]');
             const slider = box('[data-tour="tour-slider"]');
             // The header and search run the width of the screen; the fields
-            // bar (and the Kelley note under it) only covers its left side.
+            // bar (picker and trail, info line under them) only covers its left side.
             const top = Math.max(header?.bottom ?? 0, search?.bottom ?? 0, 4);
             const bottom = slider ? Math.max(window.innerHeight - slider.top, 4) : 4;
             const blocks = bar && bar.bottom > top ? [{ left: bar.left - 6, right: bar.right + 6, bottom: bar.bottom + 6 }] : [];

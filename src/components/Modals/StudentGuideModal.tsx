@@ -21,7 +21,7 @@ const FEATURES: Feature[] = [
         title: '3D Terrain Map',
         description:
             'The map is one landscape split into 22 fields: the BLS major occupation groups, from Arts & Media to Healthcare and Construction. A field\'s area is its share of all U.S. workers in 2025 (BLS Employment Projections, self-employed included). The fields are grouped by the five official BLS job families, outlined on the map: area is workers, while positions within a family follow BLS code order, so where a field sits and its shape are only layout. Inside each field, related occupations sit together: each BLS minor group has its own block, in code order. Each peak is one occupation, and its height is its number of jobs from BLS Employment Projections. Open a family or a field and the map zooms into it: the same block, magnified, with every occupation next to the same neighbours (inside a field it is also drawn closer to a square so its labels can be read). What you have open is drawn on one fixed scale: the largest job count any of its occupations reaches from 2025 to 2035 is full height. Each hill rises or falls with its own BLS number as you move the slider, though a small hill on a larger neighbour\'s slope can move with that neighbour. Compare heights within what you have open.',
-        tip: 'Click a job family to zoom into it, then a field to see its occupations, or pick any field from the Fields list. The largest are labelled; hover or tap any other peak for its name. Back, Esc or the trail at the top takes you back up.',
+        tip: 'Click a job family to zoom into it, then a field to see its occupations, or pick any field from the All 22 fields button. The largest are labelled; hover or tap any other peak for its name. Back, Esc or the trail next to that button takes you back up, and the line under it gives the numbers for what you have open.',
         color: 'cyan',
     },
     {
@@ -37,8 +37,8 @@ const FEATURES: Feature[] = [
         title: 'Fields & Kelley Roles',
         description:
             BF_SCORED
-                ? 'AI scores cover the 50 Kelley business roles plus every Business & Finance occupation, so that whole field is in colour. Turn on Kelley roles to highlight just the 50 Kelley roles, with their risk colours, as the map showed them before; the other Business & Finance occupations are scored but are not Kelley roles. Every other occupation is drawn in slate: its AI scores are coming soon, and nothing is shown in their place.'
-                : 'AI scores currently cover the 50 Kelley business roles. Turn on Kelley roles to highlight just those 50, with their risk colours, as the map showed them before. Every other occupation is drawn in slate: its AI scores are coming soon, and nothing is shown in their place.',
+                ? 'AI scores cover the 50 Kelley business roles plus every Business & Finance occupation, so that whole field is in colour. The other Business & Finance occupations are scored the same way but are not Kelley roles. Every other occupation is drawn in slate: its AI scores are coming soon, and nothing is shown in their place.'
+                : 'AI scores currently cover the 50 Kelley business roles, drawn in their risk colours. Every other occupation is drawn in slate: its AI scores are coming soon, and nothing is shown in their place.',
         tip: 'Search any job title in the header: all 830 BLS occupations are there, from Actors to Electricians.',
         color: 'orange',
     },
