@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Build the all-occupations dataset (phase 1: data only, nothing imported by
-the app yet) from three official files committed in the repo:
+Build the all-occupations dataset from three official files committed in the
+repo:
 
   OEWS May 2025   data/national_M2025_dl.xlsx          (employment, pay, hierarchy)
   EP 2025-35      data/bls_ep_occupation_2025_35.xlsx  (Table 1.2 projections)
@@ -9,6 +9,8 @@ the app yet) from three official files committed in the repo:
 
 Writes src/data/occupations/index.json (small, for the map) and one
 src/data/occupations/<major>.json per BLS SOC major group ("continent").
+The app bundles index.json and loads a continent file only when its region
+is opened.
 
 Dev-only tool (openpyxl); nothing here ships in the app bundle. OEWS cells are
 parsed with the same code as scripts/extract_oews_wages.py (imported, not
@@ -16,6 +18,8 @@ copied), so the symbol rules cannot drift apart.
 
 HARD RULES
   - Every source's SHA-256 must match the constant below, or nothing is read.
+  - Region totals are the EP "Summary" rows (major and minor groups), copied
+    from the workbook, never a sum computed here.
   - Values are copied exactly. The only transformation is EP employment, which
     BLS publishes in thousands and src/data/bls_ep_2025_2035.json already
     stores in persons: it is multiplied by 1000 in exact decimal arithmetic
@@ -65,7 +69,7 @@ from openpyxl.utils import get_column_letter  # noqa: E402
 
 EXTRACTED = "2026-10-24"
 OUT_DIR = os.path.join(ROOT, "src", "data", "occupations")
-INDEX_BUDGET_BYTES = 250_000
+INDEX_BUDGET_BYTES = 350_000
 AI_STATUS = "not yet scored"
 
 EP_FILE = os.path.join(ROOT, "data", "bls_ep_occupation_2025_35.xlsx")
@@ -205,16 +209,15 @@ def read_ep():
         col[name] = header.index(name)
     code_c, type_c, title_c = col["2025 National Employment Matrix code"], col["Occupation type"], col["2025 National Employment Matrix title"]
 
-    lines, summaries = {}, set()
+    lines, summaries = {}, {}
     for excel_row, r in enumerate(rows[2:], start=3):
         kind = r[type_c]
-        if kind == "Summary":
-            summaries.add(r[code_c])
-        if kind != "Line item":
+        if kind not in ("Line item", "Summary"):
             continue
         soc = r[code_c]
-        if soc in lines:
-            die(f"EP line item {soc} appears twice")
+        target = lines if kind == "Line item" else summaries
+        if soc in target:
+            die(f"EP {kind.lower()} {soc} appears twice")
         entry = {"title": r[title_c].strip()}
         sources = {"title": f"ep:{EP_SHEET}!{get_column_letter(title_c + 1)}{excel_row}"}
         for field, name in EP_COLUMNS.items():
@@ -223,8 +226,19 @@ def read_ep():
                 die(f"EP {soc} {name} (row {excel_row}): non-numeric {v!r}")
             entry[field] = thousands_to_persons(v, f"EP {soc} {name}") if field in EP_THOUSANDS else v
             sources[field] = f"ep:{EP_SHEET}!{get_column_letter(col[name] + 1)}{excel_row}"
-        lines[soc] = (entry, sources)
-    return {"title": title, "lines": lines, "summaries": summaries}
+        target[soc] = (entry, sources)
+    notes = [r[0].strip() for r in rows if isinstance(r[0], str) and r[0].strip().startswith("Employment subcategories")]
+    if len(notes) != 1:
+        die(f'EP sheet has {len(notes)} "Employment subcategories" notes, expected 1')
+    return {"title": title, "lines": lines, "summaries": summaries, "subcategoryNote": notes[0]}
+
+
+def ep_summary(ep, soc):
+    """The EP "Summary" row for a major or minor group: (values, sources keyed ep.<field>). Never computed."""
+    if soc not in ep["summaries"]:
+        die(f'No "Summary" row for {soc} in BLS EP {EP_SHEET}')
+    vals, src = ep["summaries"][soc]
+    return dict(vals), {f"ep.{k}": v for k, v in src.items()}
 
 
 # ── O*NET ─────────────────────────────────────────────────────────────────
@@ -413,8 +427,10 @@ def build():
         for nrow, nr in minors:
             if code(nr)[:2] != mm:
                 continue
-            minor_groups.append({"soc": code(nr), "title": title(nr), "employment": nr[col["TOT_EMP"]],
-                                 "sources": {"employment": emp_cell(nrow), "title": title_cell(nrow)}, "socs": []})
+            minor_ep, minor_ep_src = ep_summary(ep, code(nr))
+            minor_groups.append({"soc": code(nr), "title": title(nr), "employment": nr[col["TOT_EMP"]], "ep": minor_ep,
+                                 "sources": {"employment": emp_cell(nrow), "title": title_cell(nrow), **minor_ep_src},
+                                 "socs": []})
         for b in sorted(broads):
             if b[:2] == mm:
                 brow, br = broads[b][0]
@@ -471,6 +487,8 @@ def build():
                 "minor": minor,
                 "employment": values["employment"],
                 "annualMedian": values["annualMedian"],
+                "epEmployment2025": ep_block["employment2025"] if ep_block else None,
+                "epEmployment2035": ep_block["employment2035"] if ep_block else None,
                 "epPercentChange": ep_block["percentChange"] if ep_block else None,
                 "taskCount": len(onet_vals["tasks"]),
             }
@@ -478,12 +496,14 @@ def build():
                 row["kelleyTracks"] = lens[soc]["tracks"]
             index_occs.append(row)
 
+        major_ep, major_ep_src = ep_summary(ep, major)
         continent = {
             "soc": major,
             "code": mm,
             "title": title(mr),
             "employment": mr[col["TOT_EMP"]],
-            "sources": {"employment": emp_cell(mrow), "title": title_cell(mrow)},
+            "ep": major_ep,
+            "sources": {"employment": emp_cell(mrow), "title": title_cell(mrow), **major_ep_src},
             "file": f"{mm}.json",
             "occupationCount": len(entries),
             "minorGroups": minor_groups,
@@ -502,8 +522,16 @@ def build():
         }
 
     total_row, total_r = o["by_group"]["total"][0]
+    ep_total, ep_total_src = ep_summary(ep, "00-0000")
+    oews_groups = {c["soc"] for c in continents} | {g["soc"] for c in continents for g in c["minorGroups"]}
+    # Major/minor EP summary rows (code ends in 00) with no OEWS group of the same code.
+    unmatched["epSummaryWithoutOews"] = [
+        {"soc": s, "title": ep["summaries"][s][0]["title"]}
+        for s in sorted(ep["summaries"]) if s.endswith("00") and s != "00-0000" and s not in oews_groups
+    ]
     meta = {
-        "description": "Every BLS detailed occupation, grouped by the 22 SOC major groups. Phase 1: data only, not imported by the app.",
+        "description": "Every BLS detailed occupation, grouped by the 22 SOC major groups. The app bundles this index; "
+                       "each continent file is loaded only when its region is opened.",
         "extracted": EXTRACTED,
         "generator": "python3 scripts/build_occupations.py",
         "aiStatus": f'All occupations "{AI_STATUS}". The 50 Kelley roles keep their published scores in src/data/ai_scores.json, which this dataset does not copy.',
@@ -534,8 +562,10 @@ def build():
                 "sha256": ep_hash,
                 "sheet": EP_SHEET,
                 "sheetTitle": ep["title"],
-                "rows": 'Occupation type = "Line item" only',
+                "rows": 'Occupation type = "Line item" for occupations; "Summary" for continents[].ep and minorGroups[].ep',
                 "columns": EP_COLUMNS,
+                "allOccupations": {**ep_total, "sources": ep_total_src},
+                "summaryNote": ep["subcategoryNote"],
                 "units": "employment2025, employment2035 and numericChange are persons: BLS thousands × 1000 in exact decimal "
                          "arithmetic, the same units as src/data/bls_ep_2025_2035.json. percentChange is copied as published.",
             },

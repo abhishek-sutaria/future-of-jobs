@@ -1,0 +1,512 @@
+{
+  "_meta": {
+    "purpose": "The 50 Kelley roles as published at 0c1918d (before the Business & Finance scores). Must never change.",
+    "source": "useStore initial jobs at commit 0c1918d"
+  },
+  "roles": [
+    {
+      "id": "job-15",
+      "title": "Marketing Manager",
+      "automationCostIndex": 0.53,
+      "humanCriticality": 0.712,
+      "humanResilienceLabel": "Future-Proof",
+      "salaryVolatilityLabel": "Stable"
+    },
+    {
+      "id": "job-2",
+      "title": "Market Research Analyst",
+      "automationCostIndex": 0.61,
+      "humanCriticality": 0.48,
+      "humanResilienceLabel": "At Risk",
+      "salaryVolatilityLabel": "High"
+    },
+    {
+      "id": "job-3",
+      "title": "Business Intelligence Analyst",
+      "automationCostIndex": 0.58,
+      "humanCriticality": 0.61,
+      "humanResilienceLabel": "High",
+      "salaryVolatilityLabel": "High"
+    },
+    {
+      "id": "job-4",
+      "title": "Financial Analyst",
+      "automationCostIndex": 0.3,
+      "humanCriticality": 0.836,
+      "humanResilienceLabel": "Future-Proof",
+      "salaryVolatilityLabel": "Stable"
+    },
+    {
+      "id": "job-5",
+      "title": "Financial Manager",
+      "automationCostIndex": 0.44,
+      "humanCriticality": 0.75,
+      "humanResilienceLabel": "Future-Proof",
+      "salaryVolatilityLabel": "Stable"
+    },
+    {
+      "id": "job-6",
+      "title": "Management Consultant",
+      "automationCostIndex": 0.56,
+      "humanCriticality": 0.58,
+      "humanResilienceLabel": "At Risk",
+      "salaryVolatilityLabel": "Moderate"
+    },
+    {
+      "id": "job-7",
+      "title": "Supply Chain Manager",
+      "automationCostIndex": 0.33,
+      "humanCriticality": 0.75,
+      "humanResilienceLabel": "Future-Proof",
+      "salaryVolatilityLabel": "Stable"
+    },
+    {
+      "id": "job-8",
+      "title": "Logistics Analyst",
+      "automationCostIndex": 0.4,
+      "humanCriticality": 0.7,
+      "humanResilienceLabel": "High",
+      "salaryVolatilityLabel": "Stable"
+    },
+    {
+      "id": "job-9",
+      "title": "Software Developer",
+      "automationCostIndex": 0.55,
+      "humanCriticality": 0.63,
+      "humanResilienceLabel": "High",
+      "salaryVolatilityLabel": "Moderate"
+    },
+    {
+      "id": "job-10",
+      "title": "Operations Research Analyst",
+      "automationCostIndex": 0.47,
+      "humanCriticality": 0.76,
+      "humanResilienceLabel": "Future-Proof",
+      "salaryVolatilityLabel": "Stable"
+    },
+    {
+      "id": "job-11",
+      "title": "Securities & Sales Agent",
+      "automationCostIndex": 0.74,
+      "humanCriticality": 0.45,
+      "humanResilienceLabel": "At Risk",
+      "salaryVolatilityLabel": "High"
+    },
+    {
+      "id": "job-12",
+      "title": "Sales Manager",
+      "automationCostIndex": 0.47,
+      "humanCriticality": 0.66,
+      "humanResilienceLabel": "High",
+      "salaryVolatilityLabel": "Stable"
+    },
+    {
+      "id": "job-13",
+      "title": "Accountant & Auditor",
+      "automationCostIndex": 0.6,
+      "humanCriticality": 0.63,
+      "humanResilienceLabel": "High",
+      "salaryVolatilityLabel": "High"
+    },
+    {
+      "id": "job-14",
+      "title": "Brand Manager",
+      "automationCostIndex": 0.49,
+      "humanCriticality": 0.66,
+      "humanResilienceLabel": "High",
+      "salaryVolatilityLabel": "Stable"
+    },
+    {
+      "id": "job-16",
+      "title": "Public Relations Manager",
+      "automationCostIndex": 0.37,
+      "humanCriticality": 0.79,
+      "humanResilienceLabel": "Future-Proof",
+      "salaryVolatilityLabel": "Stable"
+    },
+    {
+      "id": "job-17",
+      "title": "Advertising Sales Agent",
+      "automationCostIndex": 0.55,
+      "humanCriticality": 0.61,
+      "humanResilienceLabel": "High",
+      "salaryVolatilityLabel": "Moderate"
+    },
+    {
+      "id": "job-18",
+      "title": "Event Coordinator",
+      "automationCostIndex": 0.45,
+      "humanCriticality": 0.69,
+      "humanResilienceLabel": "High",
+      "salaryVolatilityLabel": "Stable"
+    },
+    {
+      "id": "job-19",
+      "title": "Account Executive",
+      "automationCostIndex": 0.59,
+      "humanCriticality": 0.5,
+      "humanResilienceLabel": "At Risk",
+      "salaryVolatilityLabel": "High"
+    },
+    {
+      "id": "job-20",
+      "title": "Sales Representative",
+      "automationCostIndex": 0.54,
+      "humanCriticality": 0.55,
+      "humanResilienceLabel": "At Risk",
+      "salaryVolatilityLabel": "Moderate"
+    },
+    {
+      "id": "job-21",
+      "title": "Insurance Sales Agent",
+      "automationCostIndex": 0.57,
+      "humanCriticality": 0.58,
+      "humanResilienceLabel": "At Risk",
+      "salaryVolatilityLabel": "High"
+    },
+    {
+      "id": "job-22",
+      "title": "Personal Financial Advisor",
+      "automationCostIndex": 0.5,
+      "humanCriticality": 0.67,
+      "humanResilienceLabel": "High",
+      "salaryVolatilityLabel": "Stable"
+    },
+    {
+      "id": "job-23",
+      "title": "Credit Analyst",
+      "automationCostIndex": 0.73,
+      "humanCriticality": 0.48,
+      "humanResilienceLabel": "At Risk",
+      "salaryVolatilityLabel": "Critical"
+    },
+    {
+      "id": "job-24",
+      "title": "Budget Analyst",
+      "automationCostIndex": 0.67,
+      "humanCriticality": 0.56,
+      "humanResilienceLabel": "At Risk",
+      "salaryVolatilityLabel": "High"
+    },
+    {
+      "id": "job-25",
+      "title": "Risk Specialist",
+      "automationCostIndex": 0.51,
+      "humanCriticality": 0.75,
+      "humanResilienceLabel": "Future-Proof",
+      "salaryVolatilityLabel": "Stable"
+    },
+    {
+      "id": "job-26",
+      "title": "Insurance Underwriter",
+      "automationCostIndex": 0.72,
+      "humanCriticality": 0.41,
+      "humanResilienceLabel": "At Risk",
+      "salaryVolatilityLabel": "Critical"
+    },
+    {
+      "id": "job-27",
+      "title": "Actuary",
+      "automationCostIndex": 0.5,
+      "humanCriticality": 0.7,
+      "humanResilienceLabel": "High",
+      "salaryVolatilityLabel": "Stable"
+    },
+    {
+      "id": "job-28",
+      "title": "Loan Officer",
+      "automationCostIndex": 0.64,
+      "humanCriticality": 0.57,
+      "humanResilienceLabel": "At Risk",
+      "salaryVolatilityLabel": "High"
+    },
+    {
+      "id": "job-29",
+      "title": "Data Scientist",
+      "automationCostIndex": 0.7,
+      "humanCriticality": 0.556,
+      "humanResilienceLabel": "At Risk",
+      "salaryVolatilityLabel": "High"
+    },
+    {
+      "id": "job-30",
+      "title": "Statistician",
+      "automationCostIndex": 0.56,
+      "humanCriticality": 0.66,
+      "humanResilienceLabel": "High",
+      "salaryVolatilityLabel": "Moderate"
+    },
+    {
+      "id": "job-31",
+      "title": "Computer Systems Analyst",
+      "automationCostIndex": 0.54,
+      "humanCriticality": 0.63,
+      "humanResilienceLabel": "High",
+      "salaryVolatilityLabel": "Moderate"
+    },
+    {
+      "id": "job-32",
+      "title": "Cost Estimator",
+      "automationCostIndex": 0.52,
+      "humanCriticality": 0.624,
+      "humanResilienceLabel": "High",
+      "salaryVolatilityLabel": "Stable"
+    },
+    {
+      "id": "job-33",
+      "title": "Compensation Analyst",
+      "automationCostIndex": 0.55,
+      "humanCriticality": 0.62,
+      "humanResilienceLabel": "High",
+      "salaryVolatilityLabel": "Moderate"
+    },
+    {
+      "id": "job-34",
+      "title": "Purchasing Manager",
+      "automationCostIndex": 0.51,
+      "humanCriticality": 0.73,
+      "humanResilienceLabel": "Future-Proof",
+      "salaryVolatilityLabel": "Stable"
+    },
+    {
+      "id": "job-35",
+      "title": "Wholesale & Retail Buyer",
+      "automationCostIndex": 0.52,
+      "humanCriticality": 0.62,
+      "humanResilienceLabel": "High",
+      "salaryVolatilityLabel": "Stable"
+    },
+    {
+      "id": "job-36",
+      "title": "Purchasing Agent",
+      "automationCostIndex": 0.57,
+      "humanCriticality": 0.67,
+      "humanResilienceLabel": "High",
+      "salaryVolatilityLabel": "High"
+    },
+    {
+      "id": "job-37",
+      "title": "Industrial Production Manager",
+      "automationCostIndex": 0.4,
+      "humanCriticality": 0.74,
+      "humanResilienceLabel": "Future-Proof",
+      "salaryVolatilityLabel": "Stable"
+    },
+    {
+      "id": "job-38",
+      "title": "UX Designer",
+      "automationCostIndex": 0.47,
+      "humanCriticality": 0.69,
+      "humanResilienceLabel": "High",
+      "salaryVolatilityLabel": "Stable"
+    },
+    {
+      "id": "job-39",
+      "title": "IT Manager",
+      "automationCostIndex": 0.4,
+      "humanCriticality": 0.77,
+      "humanResilienceLabel": "Future-Proof",
+      "salaryVolatilityLabel": "Stable"
+    },
+    {
+      "id": "job-40",
+      "title": "Cybersecurity Analyst",
+      "automationCostIndex": 0.57,
+      "humanCriticality": 0.62,
+      "humanResilienceLabel": "High",
+      "salaryVolatilityLabel": "High"
+    },
+    {
+      "id": "job-41",
+      "title": "Web Developer",
+      "automationCostIndex": 0.66,
+      "humanCriticality": 0.41,
+      "humanResilienceLabel": "At Risk",
+      "salaryVolatilityLabel": "High"
+    },
+    {
+      "id": "job-42",
+      "title": "Database Administrator",
+      "automationCostIndex": 0.57,
+      "humanCriticality": 0.61,
+      "humanResilienceLabel": "High",
+      "salaryVolatilityLabel": "Critical"
+    },
+    {
+      "id": "job-43",
+      "title": "IT Project Manager",
+      "automationCostIndex": 0.43,
+      "humanCriticality": 0.84,
+      "humanResilienceLabel": "Future-Proof",
+      "salaryVolatilityLabel": "Stable"
+    },
+    {
+      "id": "job-44",
+      "title": "General Manager",
+      "automationCostIndex": 0.54,
+      "humanCriticality": 0.62,
+      "humanResilienceLabel": "High",
+      "salaryVolatilityLabel": "Moderate"
+    },
+    {
+      "id": "job-45",
+      "title": "HR Manager",
+      "automationCostIndex": 0.26,
+      "humanCriticality": 0.91,
+      "humanResilienceLabel": "Future-Proof",
+      "salaryVolatilityLabel": "Stable"
+    },
+    {
+      "id": "job-46",
+      "title": "Project Management Specialist",
+      "automationCostIndex": 0.43,
+      "humanCriticality": 0.7,
+      "humanResilienceLabel": "High",
+      "salaryVolatilityLabel": "Stable"
+    },
+    {
+      "id": "job-47",
+      "title": "Training & Development Specialist",
+      "automationCostIndex": 0.56,
+      "humanCriticality": 0.6,
+      "humanResilienceLabel": "High",
+      "salaryVolatilityLabel": "Moderate"
+    },
+    {
+      "id": "job-48",
+      "title": "HR Specialist",
+      "automationCostIndex": 0.58,
+      "humanCriticality": 0.61,
+      "humanResilienceLabel": "High",
+      "salaryVolatilityLabel": "High"
+    },
+    {
+      "id": "job-49",
+      "title": "Training & Development Manager",
+      "automationCostIndex": 0.53,
+      "humanCriticality": 0.65,
+      "humanResilienceLabel": "High",
+      "salaryVolatilityLabel": "Stable"
+    },
+    {
+      "id": "job-50",
+      "title": "Compensation & Benefits Manager",
+      "automationCostIndex": 0.55,
+      "humanCriticality": 0.634,
+      "humanResilienceLabel": "High",
+      "salaryVolatilityLabel": "Moderate"
+    },
+    {
+      "id": "job-51",
+      "title": "Financial Risk Analyst",
+      "automationCostIndex": 0.56,
+      "humanCriticality": 0.72,
+      "humanResilienceLabel": "Future-Proof",
+      "salaryVolatilityLabel": "Moderate"
+    }
+  ],
+  "riskOrder": [
+    "job-11",
+    "job-23",
+    "job-26",
+    "job-29",
+    "job-24",
+    "job-41",
+    "job-28",
+    "job-2",
+    "job-13",
+    "job-19",
+    "job-3",
+    "job-48",
+    "job-21",
+    "job-36",
+    "job-40",
+    "job-42",
+    "job-30",
+    "job-47",
+    "job-51",
+    "job-6",
+    "job-17",
+    "job-33",
+    "job-50",
+    "job-9",
+    "job-20",
+    "job-31",
+    "job-44",
+    "job-15",
+    "job-49",
+    "job-32",
+    "job-35",
+    "job-25",
+    "job-34",
+    "job-22",
+    "job-27",
+    "job-14",
+    "job-10",
+    "job-12",
+    "job-38",
+    "job-18",
+    "job-5",
+    "job-43",
+    "job-46",
+    "job-37",
+    "job-39",
+    "job-8",
+    "job-16",
+    "job-7",
+    "job-4",
+    "job-45"
+  ],
+  "humanOrder": [
+    "job-45",
+    "job-43",
+    "job-4",
+    "job-16",
+    "job-39",
+    "job-10",
+    "job-25",
+    "job-5",
+    "job-7",
+    "job-37",
+    "job-34",
+    "job-51",
+    "job-15",
+    "job-27",
+    "job-46",
+    "job-8",
+    "job-18",
+    "job-38",
+    "job-22",
+    "job-36",
+    "job-12",
+    "job-14",
+    "job-30",
+    "job-49",
+    "job-50",
+    "job-13",
+    "job-31",
+    "job-9",
+    "job-32",
+    "job-33",
+    "job-35",
+    "job-40",
+    "job-44",
+    "job-17",
+    "job-3",
+    "job-42",
+    "job-48",
+    "job-47",
+    "job-21",
+    "job-6",
+    "job-28",
+    "job-24",
+    "job-29",
+    "job-20",
+    "job-19",
+    "job-2",
+    "job-23",
+    "job-11",
+    "job-26",
+    "job-41"
+  ]
+}

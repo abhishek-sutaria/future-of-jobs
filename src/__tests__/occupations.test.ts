@@ -1,8 +1,8 @@
 /**
  * Guards src/data/occupations/, the all-occupations dataset built by
  * scripts/build_occupations.py from the OEWS May 2025 workbook, the EP
- * 2025–35 Table 1.2 workbook and O*NET 30.1. Phase 1 is data only: the app
- * must not import these files yet.
+ * 2025–35 Table 1.2 workbook and O*NET 30.1. The app bundles index.json and
+ * loads each continent file lazily (src/utils/occupationIndex.ts).
  *
  * Every value must trace to a cell or line, every null must say why, and the
  * 47 SOCs the site already shows must match the site's own extracts exactly.
@@ -20,7 +20,7 @@ import { CONTINENT_DISPLAY_NAMES } from '../config/continents';
 
 const ROOT = resolve(__dirname, '../..');
 const DIR = resolve(ROOT, 'src/data/occupations');
-const INDEX_BUDGET_BYTES = 250_000;
+const INDEX_BUDGET_BYTES = 350_000;
 
 type Sources = Record<string, string>;
 interface Task { id: number; text: string; type: string; onetCode: string; line: number; alsoIn?: string[] }
@@ -40,8 +40,11 @@ interface Entry {
     sources: Sources; nullReasons: Record<string, string>;
 }
 interface Group { soc: string; title: string; employment: number; sources: Sources }
-interface Continent extends Group { code: string; file: string; occupationCount: number; minorGroups: (Group & { socs: string[] })[] }
-interface IndexRow { soc: string; title: string; minor: string; employment: number | null; annualMedian: number | null; epPercentChange: number | null; taskCount: number; kelleyTracks?: string[] }
+interface Continent extends Group { code: string; file: string; occupationCount: number; ep: Ep; minorGroups: (Group & { socs: string[]; ep: Ep })[] }
+interface IndexRow {
+    soc: string; title: string; minor: string; employment: number | null; annualMedian: number | null;
+    epEmployment2025: number | null; epEmployment2035: number | null; epPercentChange: number | null; taskCount: number; kelleyTracks?: string[];
+}
 interface ContinentFile { _meta: { continent: string }; broadGroups: (Group & { minor: string })[]; occupations: Record<string, Entry> }
 
 const indexText = readFileSync(join(DIR, 'index.json'), 'utf8');
@@ -119,6 +122,8 @@ describe('occupations: structure', () => {
                 minor: e.minor,
                 employment: e.employment,
                 annualMedian: e.annualMedian,
+                epEmployment2025: e.ep ? e.ep.employment2025 : null,
+                epEmployment2035: e.ep ? e.ep.employment2035 : null,
                 epPercentChange: e.ep ? e.ep.percentChange : null,
                 taskCount: e.tasks.length,
                 ...(e.kelleyTracks ? { kelleyTracks: e.kelleyTracks } : {}),
@@ -257,22 +262,28 @@ describe('occupations: provenance', () => {
         }
     });
 
-    it('is not imported by the app (phase 1 is data only)', () => {
-        const offenders: string[] = [];
+    it('reaches the app only through utils/occupationIndex: index.json bundled, continent files lazy', () => {
+        const importers: string[] = [];
+        const staticContinent: string[] = [];
         const walk = (dir: string) => {
             for (const name of readdirSync(dir)) {
                 const p = join(dir, name);
                 if (statSync(p).isDirectory()) {
                     if (name !== '__tests__') walk(p);
-                } else if (
-                    /\.(ts|tsx|js|jsx)$/.test(name) &&
-                    /(from\s*|import\s*\(\s*|import\s+)['"][^'"]*(data\/occupations|config\/continents)/.test(readFileSync(p, 'utf8'))
-                ) {
-                    offenders.push(p);
+                    continue;
                 }
+                if (!/\.(ts|tsx|js|jsx)$/.test(name)) continue;
+                const text = readFileSync(p, 'utf8');
+                if (/data\/occupations/.test(text.replace(/\/\/.*$|\/\*[\s\S]*?\*\//gm, ''))) importers.push(p.slice(ROOT.length + 1));
+                if (/(from\s*|import\s*\(\s*)['"][^'"]*data\/occupations\/\d{2}\.json['"]/.test(text)) staticContinent.push(p);
             }
         };
         walk(resolve(ROOT, 'src'));
-        expect(offenders).toEqual([]);
+        expect(importers).toEqual(['src/utils/occupationIndex.ts']);
+        expect(staticContinent).toEqual([]);
+        const loader = readFileSync(resolve(ROOT, 'src/utils/occupationIndex.ts'), 'utf8');
+        expect(loader).toMatch(/import indexJson from '\.\.\/data\/occupations\/index\.json'/);
+        expect(loader).toMatch(/import\.meta\.glob<ContinentFile>\('\.\.\/data\/occupations\/\[0-9\]\[0-9\]\.json'/);
+        expect(loader).not.toMatch(/eager:\s*true/);
     });
 });

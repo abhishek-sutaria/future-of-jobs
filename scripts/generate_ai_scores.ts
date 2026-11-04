@@ -29,12 +29,11 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { initialJobs } from '../src/data';
 import {
-    buildJobAnalysisPrompt,
     parseJobAnalysis,
     CACHE_VERSION,
     type JobAnalysisResult,
 } from '../src/utils/taskScoring';
-import { JobTaskScoringSchema } from '../src/utils/claude';
+import { CLAUDE_MODEL, scoreWithClaude, type Auth } from './lib/claudeScoring';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.join(__dirname, '..');
@@ -42,25 +41,11 @@ const OUT_FILE = path.join(ROOT, 'src', 'data', 'ai_scores.json');
 const CACHE_FILE = path.join(ROOT, 'data', 'ai_scores_cache.json');
 const ENV_FILE = path.join(ROOT, '.env');
 
-// Must mirror src/utils/claude.ts. `thinking: disabled` and max_tokens 4096 are
-// deliberate fixes for Sonnet 5 spending the token budget on hidden reasoning
-// and truncating the JSON mid-array — do not "simplify" these away.
-const ANTHROPIC_URL = 'https://api.anthropic.com/v1/messages';
-const ANTHROPIC_VERSION = '2023-06-01';
-const CLAUDE_MODEL = 'claude-sonnet-5';
-const MAX_TOKENS = 4096;
+// Model, max_tokens and thinking: see scripts/lib/claudeScoring.ts (shared with
+// scripts/generate_bls_scores.ts).
 
 const RATE_LIMIT_MS = 1200;
 const ATTEMPTS_PER_JOB = 2; // forecast-cap validation can legitimately fail once
-
-/**
- * Two ways to authenticate, so this is runnable without copying the production
- * secret onto disk:
- *   direct — ANTHROPIC_API_KEY in env/.env, calls api.anthropic.com
- *   proxy  — --proxy <url> (or CLAUDE_PROXY_URL), routes through the app's own
- *            /api/claude/messages endpoint, which holds the key server-side
- */
-type Auth = { mode: 'direct'; key: string } | { mode: 'proxy'; url: string };
 
 function getAuth(): Auth {
     const proxyFlagIdx = process.argv.indexOf('--proxy');
@@ -142,60 +127,15 @@ function saveCache(scores: Record<string, JobAnalysisResult>): void {
 
 const sleep = (ms: number) => new Promise(r => setTimeout(r, ms));
 
-/** Extracts the JSON object/array from a possibly fenced Claude response. */
-function extractJsonBlock(text: string): string {
-    const cleaned = text.trim().replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/```$/i, '').trim();
-    const objectStart = cleaned.indexOf('{');
-    const arrayStart = cleaned.indexOf('[');
-    const start = objectStart === -1 ? arrayStart : arrayStart === -1 ? objectStart : Math.min(objectStart, arrayStart);
-    if (start === -1) return cleaned;
-    const end = Math.max(cleaned.lastIndexOf('}'), cleaned.lastIndexOf(']'));
-    if (end === -1 || end < start) return cleaned.slice(start);
-    return cleaned.slice(start, end + 1);
-}
-
 async function scoreJob(
     job: (typeof initialJobs)[number],
     auth: Auth,
 ): Promise<JobAnalysisResult> {
-    const taskNames = job.tasks.map(t => t.name);
-    const prompt = buildJobAnalysisPrompt(job.title, taskNames, job.employment, job.projectedGrowth);
-
-    const response = await fetch(auth.mode === 'direct' ? ANTHROPIC_URL : auth.url, {
-        method: 'POST',
-        headers:
-            auth.mode === 'direct'
-                ? {
-                      'x-api-key': auth.key,
-                      'anthropic-version': ANTHROPIC_VERSION,
-                      'content-type': 'application/json',
-                  }
-                : { 'content-type': 'application/json' },
-        body: JSON.stringify({
-            model: CLAUDE_MODEL,
-            max_tokens: MAX_TOKENS,
-            thinking: { type: 'disabled' },
-            messages: [{ role: 'user', content: prompt }],
-        }),
-    });
-
-    if (!response.ok) {
-        const body = await response.text();
-        throw new Error(`Claude ${response.status}: ${body.slice(0, 300)}`);
-    }
-
-    const body = await response.json();
-    if (body?.stop_reason === 'max_tokens') {
-        throw new Error(`response truncated (hit max_tokens=${MAX_TOKENS})`);
-    }
-    const text: string = (body?.content ?? [])
-        .map((part: { text?: string }) => part?.text ?? '')
-        .join('\n')
-        .trim();
-    if (!text) throw new Error('empty response from Claude');
-
-    const parsed = JobTaskScoringSchema.parse(JSON.parse(extractJsonBlock(text)));
-    return parseJobAnalysis(parsed, taskNames, job.projectedGrowth);
+    const { analysis } = await scoreWithClaude(
+        { title: job.title, taskNames: job.tasks.map(t => t.name), employment: job.employment, projectedGrowth: job.projectedGrowth },
+        auth,
+    );
+    return analysis;
 }
 
 async function main(): Promise<void> {

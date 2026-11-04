@@ -18,7 +18,7 @@ export type DataProvenance =
 
 const PROVENANCE_LABEL: Record<DataProvenance, string> = {
     BLS_OES: 'How many people in the U.S. have this job today. Comes from the government’s main employment survey (BLS OES).',
-    BLS_OES_WAGES: `What this job pays across the U.S., from the government’s wage survey (BLS ${WAGES_META.bls_release}), the same survey as the job counts. The median is the middle wage: half of workers earn more, half earn less. The mean is the average, which a few very high earners can pull up.`,
+    BLS_OES_WAGES: `What this job pays across the U.S., from the government’s wage survey (BLS ${WAGES_META.bls_release}), which counts payroll employees only. The median is the middle wage: half of workers earn more, half earn less. The mean is the average, which a few very high earners can pull up.`,
     BLS_OOH: 'How much this job is expected to grow or shrink over the next 10 years (2024–2034). Comes from the government’s job outlook handbook (BLS OOH).',
     BLS_EP: 'How many people BLS projects will have this job in 2025 and in 2035. Comes from the Employment Projections program. The 3D map height follows this path.',
     BLS_CPS: 'Live U.S. unemployment rate from the government’s household survey (BLS CPS). This is the national rate — not a count of people in this specific job.',

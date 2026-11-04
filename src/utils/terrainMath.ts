@@ -6,11 +6,9 @@ import {
     YEAR_COUNT,
     AI_FORECAST_YEAR_MAX,
     OOH_ENDPOINT_YEAR,
-    OOH_FRACTION_AT_YEAR_MAX,
 } from '../config/constants';
 import type { Job } from '../types';
-import { CLUSTER_ORDER, getFunctionalCluster, type FunctionalCluster } from '../config/clusters';
-import { MAP_TITLE_TO_SOC } from './onet';
+import { EP_PATH_MAX } from './occupationIndex';
 
 // Landscape peak height: linear BLS Employment Projections levels
 // (epEmployment2025 → epEmployment2035). No AI yearlyForecast on the terrain.
@@ -19,9 +17,7 @@ import { MAP_TITLE_TO_SOC } from './onet';
 // (AI path capped at AI_FORECAST_YEAR_MAX = 2030 vs the 2024–34 OOH decade).
 
 /** Max cumulative % a baked AI forecast may reach by 2030 for a given OOH figure. */
-export function oohEnvelopeCap(projectedGrowth: number): number {
-    return projectedGrowth * OOH_FRACTION_AT_YEAR_MAX;
-}
+export { oohEnvelopeCap } from './oohEnvelope';
 
 /** Linear fraction of the 2024–34 OOH change represented at `year` (2025 = 0). */
 export function oohFractionAtYear(year: number): number {
@@ -48,8 +44,20 @@ export function epEmploymentAtYear(job: Job, year: number): number {
 /**
  * Linear (not log) visual height from an employment count.
  * 0 workers → MIN_HEIGHT; LINEAR_EMP_REF workers → MAX_HEIGHT.
+ *
+ * LINEAR_EMP_REF is the largest EP level any occupation reaches on the
+ * 2025→2035 path, so every peak is drawn to the same scale and none is capped.
+ * (It was a fixed 2,000,000 while only the 50 Kelley roles were shown, which
+ * capped General and Operations Managers.)
  */
-export const LINEAR_EMP_REF = 2_000_000;
+export const LINEAR_EMP_REF = EP_PATH_MAX;
+
+/** BLS EP employment at `year` on the straight line between two EP levels. */
+export function epLevelAtYear(employment2025: number, employment2035: number, year: number): number {
+    const t = Math.max(YEAR_MIN, Math.min(YEAR_MAX, year));
+    const f = YEAR_RANGE > 0 ? (t - YEAR_MIN) / YEAR_RANGE : 0;
+    return Math.max(1, employment2025 + (employment2035 - employment2025) * f);
+}
 
 export function getVisualHeightForEpEmployment(employment: number): number {
     const minH = SHADER.HEIGHT_CLAMP_MIN;
@@ -58,7 +66,7 @@ export function getVisualHeightForEpEmployment(employment: number): number {
     return minH + t * (maxH - minH);
 }
 
-/** Integer-year EP employment table for Terrain / JobMarkers GPU sync. */
+/** Integer-year EP employment table (kept for tests; the world view reads epLevelAtYear). */
 export function buildEpEmploymentFlatArray(filteredJobs: Job[]): Float32Array {
     const out = new Float32Array(SHADER.FORECAST_ARRAY_SIZE);
     filteredJobs.forEach((job, jobIdx) => {
@@ -114,92 +122,6 @@ export interface PeakData {
     height: number; // 0 to 1 normalized
 }
 
-// Cluster-territory layout: each functional cluster owns a contiguous angular
-// sector of the disc (related clusters adjacent, see CLUSTER_ORDER), filled with
-// concentric arcs. Within a sector, jobs are ordered by SOC code so occupationally
-// similar roles sit next to each other.
-const TERRITORY_LAYOUT = {
-    /** Innermost arc radius */
-    R_MIN: 7,
-    /** Outermost usable radius — must stay inside the shader edge fade (~32 for the 70-unit plane) */
-    R_MAX: 30,
-    /** Radial gap between arcs; also min arc length per job (≥ 2× PEAK_WIDTH so peaks stay legible) */
-    RING_SPACING: 5,
-    /** Angular gap between adjacent sectors (radians) */
-    GAP_RAD: 0.06,
-    /** Smallest sector span before normalization (radians) */
-    MIN_SPAN_RAD: 0.25,
-};
-
-export function computeClusterTerritoryLayout(jobs: Job[]): Map<string, { x: number; z: number }> {
-    const positions = new Map<string, { x: number; z: number }>();
-    if (jobs.length === 0) return positions;
-
-    const groups = new Map<FunctionalCluster, Job[]>();
-    for (const job of jobs) {
-        const cluster = getFunctionalCluster(job.title);
-        const members = groups.get(cluster);
-        if (members) members.push(job);
-        else groups.set(cluster, [job]);
-    }
-
-    const ordered = CLUSTER_ORDER.filter((c) => groups.has(c));
-    const usable = Math.PI * 2 - TERRITORY_LAYOUT.GAP_RAD * ordered.length;
-
-    // Sector spans proportional to job count, clamped to a minimum, then renormalized
-    let spans = ordered.map((c) =>
-        Math.max(TERRITORY_LAYOUT.MIN_SPAN_RAD, (usable * groups.get(c)!.length) / jobs.length)
-    );
-    const spanSum = spans.reduce((a, b) => a + b, 0);
-    spans = spans.map((s) => (s * usable) / spanSum);
-
-    let theta0 = 0;
-    ordered.forEach((cluster, ci) => {
-        const span = spans[ci];
-        const members = [...groups.get(cluster)!].sort((a, b) => {
-            const socA = MAP_TITLE_TO_SOC[a.title] ?? a.title;
-            const socB = MAP_TITLE_TO_SOC[b.title] ?? b.title;
-            return socA === socB ? a.title.localeCompare(b.title) : socA.localeCompare(socB);
-        });
-
-        let placed = 0;
-        let r = TERRITORY_LAYOUT.R_MIN;
-        while (placed < members.length) {
-            const onOuterEdge = r >= TERRITORY_LAYOUT.R_MAX;
-            const capacity = Math.max(1, Math.floor((span * r) / TERRITORY_LAYOUT.RING_SPACING));
-            const ringCount = onOuterEdge
-                ? members.length - placed // overflow safety: everything left goes on the outer arc
-                : Math.min(capacity, members.length - placed);
-
-            for (let k = 0; k < ringCount; k++) {
-                const theta = theta0 + span * ((k + 0.5) / ringCount);
-                const job = members[placed + k];
-                positions.set(job.id, { x: r * Math.cos(theta), z: r * Math.sin(theta) });
-            }
-            placed += ringCount;
-            r = Math.min(r + TERRITORY_LAYOUT.RING_SPACING, TERRITORY_LAYOUT.R_MAX);
-        }
-
-        theta0 += span + TERRITORY_LAYOUT.GAP_RAD;
-    });
-
-    return positions;
-}
-
-// One layout per jobs array instance (store replaces the array on data updates;
-// ids/titles never change at runtime, so positions are stable across filtering).
-const layoutCache = new WeakMap<readonly Job[], Map<string, { x: number; z: number }>>();
-
-export const getTerrainPosition = (index: number, jobs: Job[]): { x: number, z: number } => {
-    let layout = layoutCache.get(jobs);
-    if (!layout) {
-        layout = computeClusterTerritoryLayout(jobs);
-        layoutCache.set(jobs, layout);
-    }
-    const job = jobs[index];
-    return (job && layout.get(job.id)) || { x: 0, z: 0 };
-};
-
 // Gaussian function: A * exp( -dist^2 / (2*sigma^2) )
 export const calculateGaussianHeight = (x: number, z: number, peaks: PeakData[]): number => {
     let totalHeight = 0;
@@ -249,7 +171,7 @@ export function aiShareAtYear(publishedRisk: number, year: number): number {
  *
  * Kept for unit tests / a future redesign. Live Peak Height was rolled back to
  * Growth/Workers (Ray, Oct 2026) until we agree on a credible replacement —
- * this helper is not wired into Terrain or JobMarkers.
+ * this helper is not wired into the 3D view.
  */
 export function getVisualHeightForHumanWorkAtYear(
     baselineEmployment: number,
@@ -331,7 +253,7 @@ export const getCurrentYearGrowth = (job: Job, year: number): { value: number; s
 };
 
 /**
- * Integer-year growth % table — same layout Terrain.tsx uploads before fractional
+ * Integer-year growth % table — the layout the old Terrain.tsx uploaded before fractional
  * interpolation in useFrame (must stay in lockstep with the GPU path).
  */
 export function buildGrowthForecastFlatArray(filteredJobs: Job[]): Float32Array {

@@ -1,6 +1,20 @@
 import React from 'react';
 import { Modal } from './ui/Modal';
-import { IconBrain, IconActivity, IconTrendingUp } from './ui/Icons';
+import { IconBrain, IconActivity, IconTrendingUp, IconLayers } from './ui/Icons';
+import { EP_PATH_MAX, INDEX_CONTINENTS, OCCUPATION_INDEX } from '../utils/occupationIndex';
+import { formatCount } from '../utils/roleFormat';
+import { BLS_SCORES, BLS_SCORES_META, BUSINESS_FINANCE_FULLY_SCORED, scoredOnLabel } from '../utils/blsScores';
+
+// Every figure quoted below is read from the dataset, never typed in.
+const COUNTS = OCCUPATION_INDEX._meta.counts;
+const EP_TOTAL = OCCUPATION_INDEX._meta.sources.ep.allOccupations;
+const TALLEST = OCCUPATION_INDEX.occupations.find(
+    (o) => o.epEmployment2025 === EP_PATH_MAX || o.epEmployment2035 === EP_PATH_MAX,
+);
+const NO_TASK_COUNT = COUNTS.occupations - COUNTS.withTasks;
+const smallest = [...INDEX_CONTINENTS].sort((a, b) => a.ep.employment2025 - b.ep.employment2025)[0];
+const largest = [...INDEX_CONTINENTS].sort((a, b) => b.ep.employment2025 - a.ep.employment2025)[0];
+const BF_SCORED_ON = BLS_SCORES_META?.generatedAt ? scoredOnLabel(BLS_SCORES_META.generatedAt) : null;
 
 interface MethodologyModalProps {
     isOpen: boolean;
@@ -42,17 +56,24 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                             </thead>
                             <tbody className="text-gray-300">
                                 <tr className="border-t border-white/[0.06]">
-                                    <td className="px-3 py-2">Employment headcount (role panel / OES badge)</td>
+                                    <td className="px-3 py-2">Workers (role panel) and the size of each field</td>
+                                    <td className="px-3 py-2 text-gray-400">
+                                        <SourceLink href="https://www.bls.gov/emp/tables/occupational-projections-and-characteristics.htm">BLS Employment Projections 2025–2035</SourceLink>
+                                        {' '}2025 employment: every worker, self-employed included. A field&apos;s size is the BLS summary row for its whole group, as published (not a sum of its occupations).
+                                    </td>
+                                </tr>
+                                <tr className="border-t border-white/[0.06]">
+                                    <td className="px-3 py-2">Payroll employment (OES badge, and the base of the pay figures)</td>
                                     <td className="px-3 py-2 text-gray-400">
                                         <SourceLink href="https://www.bls.gov/oes/">BLS OEWS May 2025</SourceLink>
-                                        {' '}(bundled national extract for the role panel).
+                                        {' '}national extract: payroll employees only, so it is smaller than the Employment Projections count.
                                     </td>
                                 </tr>
                                 <tr className="border-t border-white/[0.06]">
                                     <td className="px-3 py-2">Pay (role panel / Pay badge)</td>
                                     <td className="px-3 py-2 text-gray-400">
                                         <SourceLink href="https://www.bls.gov/oes/">BLS OEWS May 2025</SourceLink>
-                                        {' '}national annual median wage, with the annual mean beside it. Same survey and year as employment, copied exactly as BLS publishes it. Wages BLS caps show as &ldquo;&ge;&rdquo; the cap. Roles that share one BLS code show the same pay.
+                                        {' '}national annual median wage, with the annual mean beside it. Same survey and year as the payroll employment above (payroll employees only, so not the Employment Projections worker count), copied exactly as BLS publishes it. Wages BLS caps show as &ldquo;&ge;&rdquo; the cap. Roles that share one BLS code show the same pay.
                                     </td>
                                 </tr>
                                 <tr className="border-t border-white/[0.06]">
@@ -66,7 +87,7 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                                     <td className="px-3 py-2">10-year growth % (role panel)</td>
                                     <td className="px-3 py-2 text-gray-400">
                                         <SourceLink href="https://www.bls.gov/emp/tables/occupational-projections-and-characteristics.htm">BLS Employment Projections 2025–2035</SourceLink>
-                                        {' '}(official percent change by occupation; rounded to the nearest integer in-app).
+                                        {' '}(official percent change by occupation, shown to one decimal as BLS publishes it).
                                     </td>
                                 </tr>
                                 <tr className="border-t border-white/[0.06]">
@@ -86,12 +107,13 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                                     <td className="px-3 py-2">Day-to-day task descriptions</td>
                                     <td className="px-3 py-2 text-gray-400">
                                         <SourceLink href="https://www.onetcenter.org/database.html">O*NET 30.1</SourceLink>
+                                        {' '}({NO_TASK_COUNT} of the {COUNTS.occupations} BLS occupations have no O*NET task list; their panel says so)
                                     </td>
                                 </tr>
                                 <tr className="border-t border-white/[0.06]">
                                     <td className="px-3 py-2">AI capability score per task</td>
                                     <td className="px-3 py-2 text-gray-400">
-                                        <SourceLink href="https://www.anthropic.com/claude">Claude</SourceLink> analyzing the O*NET task above
+                                        <SourceLink href="https://www.anthropic.com/claude">Claude</SourceLink> analyzing the O*NET task above ({BUSINESS_FINANCE_FULLY_SCORED ? 'the 50 Kelley roles plus every Business & Finance occupation; other occupations: coming soon' : 'the 50 Kelley roles; other occupations: coming soon'})
                                     </td>
                                 </tr>
                                 <tr className="border-t border-white/[0.06]">
@@ -125,6 +147,32 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
 
                 <div className="h-px bg-white/[0.06]" />
 
+                {/* The 22 fields */}
+                <div className="space-y-2">
+                    <div className="flex items-center gap-2.5">
+                        <IconLayers size={18} className="text-cyan-400" />
+                        <h3 className="text-base font-semibold text-cyan-400">The 22 fields</h3>
+                    </div>
+                    <p className="text-sm text-gray-300 leading-relaxed">
+                        The 3D map holds all {COUNTS.occupations} detailed occupations BLS publishes, grouped into the
+                        {' '}{INDEX_CONTINENTS.length} major groups of the Standard Occupational Classification (SOC), one field per group.
+                    </p>
+                    <ul className="list-disc list-inside text-xs text-gray-400 ml-1 space-y-1">
+                        <li><strong>Size is data.</strong> A field&apos;s area is proportional to its 2025 employment in the BLS Employment Projections summary row for that group: all workers, self-employed included. The {INDEX_CONTINENTS.length} rows add up to the {formatCount(EP_TOTAL.employment2025)} workers BLS counts in total, from {smallest.title} ({formatCount(smallest.ep.employment2025)}) to {largest.title} ({formatCount(largest.ep.employment2025)}).</li>
+                        <li><strong>Position and shape are layout only.</strong> The fields are grouped by the five official BLS job families (the high-level aggregation in Table 6 of the BLS 2018 SOC User Guide), outlined on the map: area is workers, while positions within a family follow BLS code order. Each family block and each field is shaped to stay close to square, and inside a field peaks sit on an even grid in SOC order. Neither position nor shape carries any data.</li>
+                        <li><strong>Peak height is data.</strong> Each peak&apos;s height is that occupation&apos;s Employment Projections job count, on a linear scale. On the whole map, one national scale runs up to the largest value on the 2025–2035 path ({formatCount(EP_PATH_MAX)}, {TALLEST?.title}), so no peak is capped. Open a family or a field and the map zooms into it: the same block, magnified, with every occupation next to the same neighbours (inside a field it is also drawn closer to a square so its labels can be read). Its hills are drawn to one fixed scale of its own, as the note beside its figures says: the largest job count any of its occupations reaches from 2025 to 2035 is full height and the rest are in proportion. So each hill rises or falls with its own BLS number as the slider moves, and the largest may sit a little under full height in 2025. Hills blend where they overlap, so a small hill on a larger neighbour&apos;s slope can move with that neighbour. Where a hill stands is layout only: related jobs sit together, one block per BLS minor group. Labels and panels always show the published numbers.</li>
+                        {BUSINESS_FINANCE_FULLY_SCORED ? (
+                            <li><strong>AI scores cover the 50 Kelley roles plus all of Business &amp; Finance.</strong> The {BLS_SCORES.size} Business &amp; Finance occupations that no Kelley role covers were scored{BF_SCORED_ON ? ` on ${BF_SCORED_ON}` : ''} by the same method (same model, prompt and five O*NET tasks each), so every peak in that field carries the Job Security colours, worked out from its own Automation Risk on the same scale as the Kelley roles. They are not Kelley roles: they stay out of the 50-role ranks, which do not change, and their panels make no live Claude call. Every other occupation is drawn in slate and its panel says &ldquo;AI scores coming soon&rdquo;; no score is estimated in their place.</li>
+                        ) : (
+                            <li><strong>AI scores cover the 50 Kelley roles for now.</strong> Those peaks carry the Job Security colours. Every other occupation is drawn in slate and its panel says &ldquo;AI scores coming soon&rdquo;; no score is estimated in their place.</li>
+                        )}
+                        <li>Kelley titles that share one BLS code (Marketing / Brand Manager, BI Analyst / Data Scientist, Buyer / Purchasing Agent) keep their own peaks, each with an equal share of that code&apos;s jobs, as before.</li>
+                        <li><strong>The state map and the task view</strong> cover the 50 Kelley roles for now.</li>
+                    </ul>
+                </div>
+
+                <div className="h-px bg-white/[0.06]" />
+
                 <div className="space-y-2">
                     <div className="flex items-center gap-2.5">
                         <IconBrain size={18} className="text-cyan-400" />
@@ -139,8 +187,8 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                         score — the role-level number is just the average.
                     </p>
                     <ul className="list-disc list-inside text-xs text-gray-400 ml-1 space-y-1">
-                        <li><strong>Relative labels</strong> grade each role against the other 49 rather than against absolute thresholds. Human Resilience ranks a role&apos;s average human-criticality score (top quarter Future-Proof, middle half High, bottom quarter At Risk), and peak colours grade its Automation Risk against the full range of roles.</li>
-                        <li>The scores for all 50 roles are published with the app as one dated set, so every visitor sees the same figures; the &ldquo;AI Scores&rdquo; badge in the header shows the month they were produced. Clicking <strong>Analyze</strong> on a role adds Claude&apos;s reasoning without changing any score. Re-scoring from that badge uses your own Claude key and changes the figures only in your browser, until a newer published set arrives or 30 days pass.</li>
+                        <li><strong>Relative labels</strong> grade each role against the other 49 rather than against absolute thresholds. Human Resilience ranks a role&apos;s average human-criticality score (top quarter Future-Proof, middle half High, bottom quarter At Risk), and peak colours grade its Automation Risk against the full range of the 50 roles.{BUSINESS_FINANCE_FULLY_SCORED && ' A scored Business & Finance occupation is placed on those same scales and its panel says where it would sit among the 50, without joining them.'}</li>
+                        <li>The scores for all 50 roles are published with the app as one dated set{BUSINESS_FINANCE_FULLY_SCORED && ' (the Business & Finance scores as a second, separately dated set)'}, so every visitor sees the same figures; the &ldquo;AI Scores&rdquo; badge in the header shows the month they were produced. Clicking <strong>Analyze</strong> on a role adds Claude&apos;s reasoning without changing any score. Re-scoring from that badge uses your own Claude key and changes the figures only in your browser, until a newer published set arrives or 30 days pass.</li>
                     </ul>
                 </div>
 
@@ -197,7 +245,9 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                     <p className="text-sm text-gray-300 leading-relaxed">
                         Peak height is the number of jobs from BLS Employment Projections. Drag the year
                         slider from 2025 to 2035; each peak moves in a straight line between the official
-                        2025 and 2035 employment levels (linear visual scale, not log).
+                        2025 and 2035 employment levels (linear visual scale, not log). The whole map uses one
+                        national scale up to {formatCount(EP_PATH_MAX)}; an open family or field uses its own, so
+                        compare heights within one, not across them.
                     </p>
                 </div>
             </div>

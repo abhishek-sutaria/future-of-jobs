@@ -1,9 +1,11 @@
 import React from 'react';
 import { Modal } from './ui/Modal';
+import { INDEX_CONTINENTS, OCCUPATION_INDEX } from '../utils/occupationIndex';
 import { IconLayers, IconAlertTriangle, IconSearch } from './ui/Icons';
 import { useStore } from '../store';
 
 import { UI } from '../config/constants';
+import { SCORE_COVERAGE } from '../utils/blsScores';
 
 const STORAGE_KEY = UI.INTRO_STORAGE_KEY;
 
@@ -25,7 +27,7 @@ export const IntroModal: React.FC = () => {
 
     return (
         <Modal isOpen={isOpen} onClose={handleClose} title="AI & Future of Work" size="md" layer="overlay">
-            <p className="text-gray-400 text-sm mb-6">50 marketing &amp; business roles · 2025–2035</p>
+            <p className="text-gray-400 text-sm mb-6">All {OCCUPATION_INDEX._meta.counts.occupations} BLS occupations in {INDEX_CONTINENTS.length} fields · 2025–2035</p>
 
             <div className="space-y-5 mb-8">
                 <div className="flex gap-4">
@@ -49,6 +51,7 @@ export const IntroModal: React.FC = () => {
                         <p className="text-gray-400 text-sm leading-relaxed">
                             <span className="text-red-400">High risk markers</span> are more exposed to automation than most roles here.
                             <span className="text-emerald-400"> Safer markers</span> rank lower on that same relative scale — not immune.
+                            {SCORE_COVERAGE.sentence} <span className="text-slate-300">Slate peaks</span> are scored soon.
                         </p>
                     </div>
                 </div>
