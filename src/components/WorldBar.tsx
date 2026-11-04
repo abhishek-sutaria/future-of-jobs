@@ -10,6 +10,20 @@ import { formatCount, formatGrowth, formatWorkersShort, growthColor } from '../u
 import { breadcrumbs, escapeGoesUp, familySummary, levelAnnouncement, levelKind, type Crumb, type WorldLevel } from '../utils/worldLevel';
 import { IconChevronDown, IconLayers } from './ui/Icons';
 
+/**
+ * The right edge the bar may run to across a band of rows: the frame's own,
+ * or 8px short of anything marked `data-bar-obstacle` that sits beside those
+ * rows (the legend reaches up there on a short landscape phone).
+ */
+function barRight(frameRight: number, left: number, top: number, bottom: number): number {
+    let right = frameRight;
+    for (const el of document.querySelectorAll('[data-bar-obstacle]')) {
+        const box = el.getBoundingClientRect();
+        if (box.width > 0 && box.left > left && box.top < bottom && box.bottom > top) right = Math.min(right, box.left - 8);
+    }
+    return right;
+}
+
 const CHROME_BUTTON = 'h-9 [@media(pointer:coarse)]:h-11 rounded-lg border bg-gray-900/70 backdrop-blur-sm text-xs font-semibold transition-colors';
 
 /**
@@ -21,8 +35,9 @@ const CHROME_BUTTON = 'h-9 [@media(pointer:coarse)]:h-11 rounded-lg border bg-gr
  * `fitWithin` is the box the trail may run to the right edge of. In the bar the
  * trail sits after the field picker in a row that is only as wide as what it
  * holds, so the trail's own width says nothing about the room: the room is from
- * where the trail starts to that box's right edge. Without it, the trail's own
- * width is the room.
+ * where the trail starts to that box's right edge, or to the left edge of
+ * anything marked `data-bar-obstacle` beside it (the legend reaches up there on
+ * a short landscape phone). Without it, the trail's own width is the room.
  */
 export const Breadcrumb: React.FC<{
     crumbs: Crumb[];
@@ -41,7 +56,11 @@ export const Breadcrumb: React.FC<{
         if (!nav) return;
         const measure = () => {
             const frame = fitWithin?.current;
-            const width = frame ? frame.getBoundingClientRect().right - nav.getBoundingClientRect().left : nav.clientWidth;
+            let width = nav.clientWidth;
+            if (frame) {
+                const row = nav.getBoundingClientRect();
+                width = barRight(frame.getBoundingClientRect().right, row.left, row.top, row.bottom) - row.left;
+            }
             const room = width - (backRef.current?.offsetWidth ?? 0) - 8;
             // No width at all means it is not laid out, which says nothing about the fit.
             setCompact(width > 0 && (fullRef.current?.offsetWidth ?? 0) > room);
@@ -50,6 +69,7 @@ export const Breadcrumb: React.FC<{
         const observer = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(measure) : null;
         observer?.observe(nav);
         if (fitWithin?.current) observer?.observe(fitWithin.current);
+        document.querySelectorAll('[data-bar-obstacle]').forEach((el) => observer?.observe(el));
         return () => observer?.disconnect();
     }, [trail, fitWithin]);
 
@@ -65,8 +85,14 @@ export const Breadcrumb: React.FC<{
             >
                 ← Back
             </button>
-            <span ref={fullRef} aria-hidden="true" className="absolute invisible whitespace-nowrap text-xs px-1">
-                {crumbs.map((c) => c.label).join(' › ')}
+            {/* Laid out like the trail below, padding and bold included, so its width is the trail's. */}
+            <span ref={fullRef} aria-hidden="true" className="absolute invisible flex whitespace-nowrap text-xs">
+                {crumbs.map((c, i) => (
+                    <span key={c.key} className="flex">
+                        {i > 0 && <span className="px-0.5">›</span>}
+                        <span className={`px-1 ${c.current ? 'font-semibold' : ''}`}>{c.label}</span>
+                    </span>
+                ))}
             </span>
             {compact ? (
                 <span aria-current="location" className="min-w-0 text-xs font-semibold leading-tight text-cyan-100">{current.label}</span>
@@ -119,6 +145,8 @@ export const WorldBar: React.FC = () => {
     // as what it shows, so the map's labels can use the rest.
     const frameRef = useRef<HTMLDivElement>(null);
     const rootRef = useRef<HTMLDivElement>(null);
+    // Narrower than the frame only when something stands beside the bar.
+    const [maxWidth, setMaxWidth] = useState<number | undefined>(undefined);
 
     // Sit just under the header, measured rather than hard-coded: it wraps to
     // different heights across widths.
@@ -194,6 +222,24 @@ export const WorldBar: React.FC = () => {
         (root?.querySelector<HTMLElement>('[data-world-back]') ?? root?.querySelector<HTMLElement>('[data-field-picker]'))?.focus();
     }, [focused, focusedFamily]);
 
+    useLayoutEffect(() => {
+        const frame = frameRef.current;
+        const bar = rootRef.current;
+        if (!frame || !bar) return;
+        const measure = () => {
+            const f = frame.getBoundingClientRect();
+            const b = bar.getBoundingClientRect();
+            const right = barRight(f.right, b.left, b.top, b.bottom);
+            setMaxWidth(right < f.right ? Math.max(0, Math.floor(right - f.left)) : undefined);
+        };
+        measure();
+        const observer = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(measure) : null;
+        observer?.observe(frame);
+        observer?.observe(bar);
+        document.querySelectorAll('[data-bar-obstacle]').forEach((el) => observer?.observe(el));
+        return () => observer?.disconnect();
+    }, [focused, focusedFamily]);
+
     const level: WorldLevel = { focusedFamily, focusedContinent: focused };
     const kind = levelKind(level);
     const region = focused ? INDEX_CONTINENT_BY_CODE.get(focused) : undefined;
@@ -212,7 +258,7 @@ export const WorldBar: React.FC = () => {
             // Open, the list must lie over the year slider, which outranks the bar.
             style={{ top, zIndex: open ? Z.sidebar : Z.base }}
         >
-            <div ref={rootRef} data-world-bar data-tour="tour-fields" className="w-fit max-w-full flex flex-col gap-1.5">
+            <div ref={rootRef} data-world-bar data-tour="tour-fields" className="w-fit max-w-full flex flex-col gap-1.5" style={{ maxWidth }}>
                 <p className="sr-only" aria-live="polite">{levelAnnouncement(level, showingFields)}</p>
                 <div data-testid="world-bar-nav" className="flex items-center gap-1.5 min-w-0">
                     <div className="relative shrink-0 pointer-events-auto">
@@ -288,8 +334,8 @@ export const WorldBar: React.FC = () => {
                         )}
                         {family && familyInfo && (
                             <p data-testid="family-info" className="pointer-events-auto text-[11px] text-gray-400 bg-gray-900/60 backdrop-blur-sm rounded-md px-2 py-1 leading-snug max-w-full">
-                                {/* On a phone the family's name is right above, in the breadcrumb. */}
-                                <span className="max-md:hidden text-gray-200 font-medium" title={family.title}>{family.shortName} · </span>
+                                {/* On a phone, upright or on its side, the family's name is right above, in the breadcrumb. */}
+                                <span className="max-md:hidden [@media(max-height:500px)]:hidden text-gray-200 font-medium" title={family.title}>{family.shortName} · </span>
                                 <span className="text-gray-200 font-medium tabular-nums" title={`All workers in ${YEAR_MIN}, including self-employed. BLS Employment Projections.`}>{formatCount(familyInfo.workers)} workers</span>
                                 <span> · {familyInfo.fields} fields · {familyInfo.occupations} occupations</span>
                             </p>

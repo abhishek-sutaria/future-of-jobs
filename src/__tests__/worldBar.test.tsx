@@ -170,13 +170,17 @@ describe('fit after the picker', () => {
     afterEach(() => vi.restoreAllMocks());
 
     // The frame ends at 358px; the trail starts after a 140px picker.
-    const layout = (trailWidth: number, frameRight: number) => {
+    const layout = (trailWidth: number, frameRight: number, obstacle?: { left: number; top: number }) => {
         vi.spyOn(HTMLElement.prototype, 'offsetWidth', 'get').mockImplementation(function (this: HTMLElement) {
             return this.hasAttribute('aria-hidden') ? trailWidth : 70;
         });
         // The trail's own box is no guide: it is only as wide as what it shows.
         vi.spyOn(Element.prototype, 'clientWidth', 'get').mockReturnValue(2000);
         vi.spyOn(Element.prototype, 'getBoundingClientRect').mockImplementation(function (this: Element) {
+            if (obstacle && this.hasAttribute('data-bar-obstacle')) {
+                const { left, top } = obstacle;
+                return { left, right: left + 200, top, bottom: top + 300, width: 200, height: 300, x: left, y: top, toJSON: () => ({}) } as DOMRect;
+            }
             const left = this.hasAttribute('data-breadcrumb') ? 146 : 0;
             const right = this.hasAttribute('data-breadcrumb') ? 400 : frameRight;
             return { left, right, top: 0, bottom: 44, width: right - left, height: 44, x: left, y: 0, toJSON: () => ({}) } as DOMRect;
@@ -195,6 +199,24 @@ describe('fit after the picker', () => {
         expect(buttonNamed('All families')).toBeUndefined();
         expect(buttonNamed('← Back')).toBeDefined();
         expect(crumbs()!.querySelector('[aria-current="location"]')!.textContent).toBe('Production');
+    });
+
+    it('stops at the legend when it reaches up beside the row (a short landscape phone)', async () => {
+        const legend = document.body.appendChild(document.createElement('div'));
+        legend.setAttribute('data-bar-obstacle', '');
+        layout(200, 1100, { left: 300, top: -20 });
+        await go(() => useWorldStore.getState().focusContinent('51'));
+        expect(buttonNamed('All families')).toBeUndefined();
+        legend.remove();
+    });
+
+    it('ignores the legend when it is lower down the screen', async () => {
+        const legend = document.body.appendChild(document.createElement('div'));
+        legend.setAttribute('data-bar-obstacle', '');
+        layout(200, 1100, { left: 300, top: 500 });
+        await go(() => useWorldStore.getState().focusContinent('51'));
+        expect(buttonNamed('All families')).toBeDefined();
+        legend.remove();
     });
 
     it('decides again from the frame at the next level', async () => {
@@ -393,10 +415,11 @@ describe('info line', () => {
         expect(info()!.textContent).not.toMatch(/%|by 20/);
     });
 
-    it('hides the family name on a phone, where the breadcrumb right above carries it', async () => {
+    it('hides the family name on a phone, upright or landscape, where the breadcrumb right above carries it', async () => {
         await go(() => useWorldStore.getState().focusFamily(4));
         const name = [...info()!.querySelectorAll('span')].find((s) => s.textContent?.startsWith('Natural Resources'))!;
         expect(name.className).toContain('max-md:hidden');
+        expect(name.className).toContain('[@media(max-height:500px)]:hidden');
         const rest = [...info()!.querySelectorAll('span')].filter((s) => s !== name);
         expect(rest.every((s) => !s.className.includes('max-md:hidden'))).toBe(true);
         expect(rest[0].textContent!.startsWith(' ·')).toBe(false);
