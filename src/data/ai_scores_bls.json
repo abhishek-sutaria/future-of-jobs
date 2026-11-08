@@ -25497,6 +25497,5352 @@
           "reasoning": "Reaches capped midpoint of projected 10-year growth trajectory."
         }
       ]
+    },
+    "41-1011": {
+      "title": "First-Line Supervisors of Retail Sales Workers",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "41-1011.00"
+      ],
+      "employment": 1121800,
+      "projectedGrowth": -3.7,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:06:34.041Z",
+      "promptSha256": "166dc0bf4dc7869ea542c7a170ba36ab6693c6f42ce6b7907051c722174e619b",
+      "tasks": [
+        {
+          "taskName": "Provide customer service by greeting and assisting customers and responding to customer inquiries and complaints.",
+          "aiCapabilityScore": 0.35,
+          "humanCriticalityScore": 0.75,
+          "onetCode": "41-1011.00",
+          "taskId": 657
+        },
+        {
+          "taskName": "Direct and supervise employees engaged in sales, inventory-taking, reconciling cash receipts, or in performing services for customers.",
+          "aiCapabilityScore": 0.3,
+          "humanCriticalityScore": 0.8,
+          "onetCode": "41-1011.00",
+          "taskId": 660
+        },
+        {
+          "taskName": "Examine merchandise to ensure that it is correctly priced and displayed and that it functions as advertised.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.55,
+          "onetCode": "41-1011.00",
+          "taskId": 671
+        },
+        {
+          "taskName": "Monitor sales activities to ensure that customers receive satisfactory service and quality goods.",
+          "aiCapabilityScore": 0.4,
+          "humanCriticalityScore": 0.65,
+          "onetCode": "41-1011.00",
+          "taskId": 658
+        },
+        {
+          "taskName": "Instruct staff on how to handle difficult and complicated sales.",
+          "aiCapabilityScore": 0.3,
+          "humanCriticalityScore": 0.8,
+          "onetCode": "41-1011.00",
+          "taskId": 668
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -0.3,
+          "reasoning": "Early adoption of AI tools begins to slightly reduce supervisory headcount needs."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -0.72,
+          "reasoning": "Retail automation and self-checkout expansion gradually reduce staffing requirements."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -1.15,
+          "reasoning": "Continued integration of AI-driven scheduling and inventory tools reduces supervisory roles."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -1.6,
+          "reasoning": "Broader retail consolidation and automation accelerate role reduction."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -2.06,
+          "reasoning": "Reaches 56% of the decade-long BLS projected decline as AI adoption matures."
+        }
+      ]
+    },
+    "41-1012": {
+      "title": "First-Line Supervisors of Non-Retail Sales Workers",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "41-1012.00"
+      ],
+      "employment": 214390,
+      "projectedGrowth": 0.5,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:06:41.313Z",
+      "promptSha256": "f7c829d120423eff0fd44f2f1f6a07267c256922167a3a655582a2c7b30be826",
+      "tasks": [
+        {
+          "taskName": "Monitor sales staff performance to ensure that goals are met.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.6,
+          "onetCode": "41-1012.00",
+          "taskId": 9661
+        },
+        {
+          "taskName": "Provide staff with assistance in performing difficult or complicated duties.",
+          "aiCapabilityScore": 0.3,
+          "humanCriticalityScore": 0.8,
+          "onetCode": "41-1012.00",
+          "taskId": 9665
+        },
+        {
+          "taskName": "Direct and supervise employees engaged in sales, inventory-taking, reconciling cash receipts, or performing specific services.",
+          "aiCapabilityScore": 0.35,
+          "humanCriticalityScore": 0.75,
+          "onetCode": "41-1012.00",
+          "taskId": 20266
+        },
+        {
+          "taskName": "Listen to and resolve customer complaints regarding services, products, or personnel.",
+          "aiCapabilityScore": 0.4,
+          "humanCriticalityScore": 0.8,
+          "onetCode": "41-1012.00",
+          "taskId": 9660
+        },
+        {
+          "taskName": "Keep records pertaining to purchases, sales, and requisitions.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.25,
+          "onetCode": "41-1012.00",
+          "taskId": 9673
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.05,
+          "reasoning": "Slow initial growth as automation adoption begins gradually."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 0.11,
+          "reasoning": "Modest employment growth continues alongside stable demand for supervisors."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 0.17,
+          "reasoning": "Growth continues steadily as sales sectors expand moderately."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 0.23,
+          "reasoning": "Employment edges closer to decade-long projected growth path."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 0.28,
+          "reasoning": "Reaches capped midpoint of 10-year BLS outlook by 2030."
+        }
+      ]
+    },
+    "41-2011": {
+      "title": "Cashiers",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "41-2011.00"
+      ],
+      "employment": 3089410,
+      "projectedGrowth": -6.5,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:06:48.002Z",
+      "promptSha256": "18ad72acef9898de657e079b9bf489ce093ada87e23ad965892a4879073af174",
+      "tasks": [
+        {
+          "taskName": "Receive payment by cash, check, credit cards, vouchers, or automatic debits.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.2,
+          "onetCode": "41-2011.00",
+          "taskId": 2400
+        },
+        {
+          "taskName": "Greet customers entering establishments.",
+          "aiCapabilityScore": 0.4,
+          "humanCriticalityScore": 0.55,
+          "onetCode": "41-2011.00",
+          "taskId": 2403
+        },
+        {
+          "taskName": "Issue receipts, refunds, credits, or change due to customers.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.3,
+          "onetCode": "41-2011.00",
+          "taskId": 2401
+        },
+        {
+          "taskName": "Assist customers by providing information and resolving their complaints.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.7,
+          "onetCode": "41-2011.00",
+          "taskId": 18765
+        },
+        {
+          "taskName": "Monitor checkout stations to ensure they have adequate cash available and are staffed appropriately.",
+          "aiCapabilityScore": 0.35,
+          "humanCriticalityScore": 0.65,
+          "onetCode": "41-2011.00",
+          "taskId": 2422
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year for cumulative forecast."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -0.55,
+          "reasoning": "Self-checkout and automation adoption slowly reduce cashier headcount."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -1.25,
+          "reasoning": "Continued retail automation accelerates attrition in cashier roles."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -2.05,
+          "reasoning": "Broader deployment of AI-enabled checkout systems reduces demand further."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -2.85,
+          "reasoning": "Retailers increasingly shift to hybrid self-service models."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -3.61,
+          "reasoning": "Cumulative decline reaches the capped share of the 10-year BLS outlook."
+        }
+      ]
+    },
+    "41-2012": {
+      "title": "Gambling Change Persons and Booth Cashiers",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "41-2012.00"
+      ],
+      "employment": 21530,
+      "projectedGrowth": -1.9,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:07:01.790Z",
+      "promptSha256": "e1639133715462a5159cc3e7e9ecfa1224948bdd0060b8d7cf2865173e546075",
+      "tasks": [
+        {
+          "taskName": "Keep accurate records of monetary exchanges, authorization forms, and transaction reconciliations.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.4,
+          "onetCode": "41-2012.00",
+          "taskId": 6999
+        },
+        {
+          "taskName": "Exchange money, credit, tickets, or casino chips and make change for customers.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.6,
+          "onetCode": "41-2012.00",
+          "taskId": 21152
+        },
+        {
+          "taskName": "Count money and audit money drawers.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.55,
+          "onetCode": "41-2012.00",
+          "taskId": 6998
+        },
+        {
+          "taskName": "Check identifications to verify age of players.",
+          "aiCapabilityScore": 0.4,
+          "humanCriticalityScore": 0.75,
+          "onetCode": "41-2012.00",
+          "taskId": 21153
+        },
+        {
+          "taskName": "Maintain cage security according to rules.",
+          "aiCapabilityScore": 0.3,
+          "humanCriticalityScore": 0.85,
+          "onetCode": "41-2012.00",
+          "taskId": 7003
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -0.18,
+          "reasoning": "Early automation of record-keeping begins to slowly reduce headcount needs."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -0.38,
+          "reasoning": "Growing use of self-service kiosks and digital payment systems trims cashier roles."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -0.6,
+          "reasoning": "Casinos increasingly adopt cashless gaming and automated cage systems."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -0.84,
+          "reasoning": "Continued consolidation of cage operations with AI-assisted auditing tools."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -1.06,
+          "reasoning": "Reaches capped midpoint of decade-long decline as automation matures."
+        }
+      ]
+    },
+    "41-2021": {
+      "title": "Counter and Rental Clerks",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "41-2021.00"
+      ],
+      "employment": 400810,
+      "projectedGrowth": 3,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:07:08.656Z",
+      "promptSha256": "ea49fe3b628266bc71c7b3f66ecacff926f100d53a8c74b0afa12ab34c68627c",
+      "tasks": [
+        {
+          "taskName": "Compute charges for merchandise or services and receive payments.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.2,
+          "onetCode": "41-2021.00",
+          "taskId": 678
+        },
+        {
+          "taskName": "Receive orders for services, such as rentals, repairs, dry cleaning, and storage.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.35,
+          "onetCode": "41-2021.00",
+          "taskId": 689
+        },
+        {
+          "taskName": "Explain rental fees, policies, and procedures.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.4,
+          "onetCode": "41-2021.00",
+          "taskId": 687
+        },
+        {
+          "taskName": "Provide information about rental items, such as availability, operation, or description.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.4,
+          "onetCode": "41-2021.00",
+          "taskId": 691
+        },
+        {
+          "taskName": "Advise customers on use and care of merchandise.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.6,
+          "onetCode": "41-2021.00",
+          "taskId": 692
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.28,
+          "reasoning": "Early self-service kiosks and AI chat tools begin trimming routine clerk tasks."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 0.55,
+          "reasoning": "Continued automation of transactions and inquiries slows hiring growth."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 0.9,
+          "reasoning": "Wider adoption of AI-driven rental platforms offsets some demand growth."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 1.25,
+          "reasoning": "Industry consolidation and automation moderate overall employment gains."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 1.6,
+          "reasoning": "Cumulative growth approaches the capped share of the decade's projected increase."
+        }
+      ]
+    },
+    "41-2022": {
+      "title": "Parts Salespersons",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "41-2022.00"
+      ],
+      "employment": 270070,
+      "projectedGrowth": 3,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:07:15.620Z",
+      "promptSha256": "712920833d8a3ef2d7f9f6cf64b30f1d4ab18f1deacbc91a5d2ed53c23365bf5",
+      "tasks": [
+        {
+          "taskName": "Receive payment or obtain credit authorization.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.25,
+          "onetCode": "41-2022.00",
+          "taskId": 2430
+        },
+        {
+          "taskName": "Assist customers, such as responding to customer complaints and updating them about back-ordered parts.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.55,
+          "onetCode": "41-2022.00",
+          "taskId": 20776
+        },
+        {
+          "taskName": "Fill customer orders from stock, and place orders when requested items are out of stock.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.5,
+          "onetCode": "41-2022.00",
+          "taskId": 20775
+        },
+        {
+          "taskName": "Receive and fill telephone orders for parts.",
+          "aiCapabilityScore": 0.5,
+          "humanCriticalityScore": 0.45,
+          "onetCode": "41-2022.00",
+          "taskId": 2427
+        },
+        {
+          "taskName": "Locate and label parts, and maintain inventory of stock.",
+          "aiCapabilityScore": 0.35,
+          "humanCriticalityScore": 0.6,
+          "onetCode": "41-2022.00",
+          "taskId": 20777
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.25,
+          "reasoning": "Slow initial adoption of AI tools in parts retail begins."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 0.55,
+          "reasoning": "Gradual automation of ordering and customer service tasks."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 0.9,
+          "reasoning": "Growing use of AI chatbots and inventory systems slows hiring growth."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 1.2,
+          "reasoning": "Continued incremental employment growth tempered by efficiency gains."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 1.5,
+          "reasoning": "Employment growth nears mid-decade cap consistent with BLS outlook."
+        }
+      ]
+    },
+    "41-2031": {
+      "title": "Retail Salespersons",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "41-2031.00"
+      ],
+      "employment": 3897860,
+      "projectedGrowth": -0.3,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:07:22.161Z",
+      "promptSha256": "4f6df12966a320cc26ee4c8c24b46ad743ce5ab15b3a8ff43005c1c52093b6b9",
+      "tasks": [
+        {
+          "taskName": "Greet customers and ascertain what each customer wants or needs.",
+          "aiCapabilityScore": 0.35,
+          "humanCriticalityScore": 0.7,
+          "onetCode": "41-2031.00",
+          "taskId": 694
+        },
+        {
+          "taskName": "Recommend, select, and help locate or obtain merchandise based on customer needs and desires.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.65,
+          "onetCode": "41-2031.00",
+          "taskId": 700
+        },
+        {
+          "taskName": "Compute sales prices, total purchases, and receive and process cash or credit payment.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.3,
+          "onetCode": "41-2031.00",
+          "taskId": 697
+        },
+        {
+          "taskName": "Prepare merchandise for purchase or rental.",
+          "aiCapabilityScore": 0.4,
+          "humanCriticalityScore": 0.55,
+          "onetCode": "41-2031.00",
+          "taskId": 712
+        },
+        {
+          "taskName": "Answer questions regarding the store and its merchandise.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.45,
+          "onetCode": "41-2031.00",
+          "taskId": 701
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -0.03,
+          "reasoning": "Early self-checkout and AI assistant adoption trims some roles."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -0.07,
+          "reasoning": "Continued automation of transactions and inquiries reduces headcount slightly."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -0.11,
+          "reasoning": "Broader retail AI tools accelerate incremental workforce reduction."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -0.14,
+          "reasoning": "Slower pace as remaining tasks rely more on human interaction."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -0.17,
+          "reasoning": "Reaches capped midpoint consistent with 10-year BLS outlook."
+        }
+      ]
+    },
+    "41-3041": {
+      "title": "Travel Agents",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "41-3041.00"
+      ],
+      "employment": 55110,
+      "projectedGrowth": 0.2,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:07:29.018Z",
+      "promptSha256": "a0b3d435ca9da4b2984df4d1315d4940c3d36aa747f706f01de336de91b23735",
+      "tasks": [
+        {
+          "taskName": "Collect payment for transportation and accommodations from customer.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.15,
+          "onetCode": "41-3041.00",
+          "taskId": 737
+        },
+        {
+          "taskName": "Plan, describe, arrange, and sell itinerary tour packages and promotional travel incentives offered by various travel carriers.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.55,
+          "onetCode": "41-3041.00",
+          "taskId": 741
+        },
+        {
+          "taskName": "Converse with customer to determine destination, mode of transportation, travel dates, financial considerations, and accommodations required.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.65,
+          "onetCode": "41-3041.00",
+          "taskId": 738
+        },
+        {
+          "taskName": "Compute cost of travel and accommodations, using calculator, computer, carrier tariff books, and hotel rate books, or quote package tour's costs.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.25,
+          "onetCode": "41-3041.00",
+          "taskId": 739
+        },
+        {
+          "taskName": "Record and maintain information on clients, vendors, and travel packages.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.2,
+          "onetCode": "41-3041.00",
+          "taskId": 20900
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year per methodology."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.02,
+          "reasoning": "Slow initial demand uptick despite AI-driven efficiency gains."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 0.04,
+          "reasoning": "Niche and complex travel planning sustains modest employment growth."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 0.06,
+          "reasoning": "Continued demand for personalized service offsets automation of routine tasks."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 0.09,
+          "reasoning": "Gradual employment recovery as agents focus on high-value advisory roles."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 0.11,
+          "reasoning": "Reaches capped midpoint of BLS decade outlook by 2030."
+        }
+      ]
+    },
+    "41-4011": {
+      "title": "Sales Representatives, Wholesale and Manufacturing, Technical and Scientific Products",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "41-4011.00"
+      ],
+      "employment": 284800,
+      "projectedGrowth": 1.2,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:07:36.300Z",
+      "promptSha256": "2bffc1a608b92f9b37dbafa4035c6f1fd28955c7e47cda9baa1f6eb5f4119739",
+      "tasks": [
+        {
+          "taskName": "Negotiate prices or terms of sales or service agreements.",
+          "aiCapabilityScore": 0.25,
+          "humanCriticalityScore": 0.9,
+          "onetCode": "41-4011.00",
+          "taskId": 11240
+        },
+        {
+          "taskName": "Prepare and submit sales contracts for orders.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.35,
+          "onetCode": "41-4011.00",
+          "taskId": 20608
+        },
+        {
+          "taskName": "Visit establishments to evaluate needs or to promote product or service sales.",
+          "aiCapabilityScore": 0.15,
+          "humanCriticalityScore": 0.92,
+          "onetCode": "41-4011.00",
+          "taskId": 11251
+        },
+        {
+          "taskName": "Maintain customer records, using automated systems.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.2,
+          "onetCode": "41-4011.00",
+          "taskId": 11241
+        },
+        {
+          "taskName": "Answer customers' questions about products, prices, availability, or credit terms.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.45,
+          "onetCode": "41-4011.00",
+          "taskId": 11237
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.1,
+          "reasoning": "Early AI tools assist admin tasks but employment stays near flat."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 0.22,
+          "reasoning": "Gradual productivity gains slightly raise headcount demand for specialized technical sales."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 0.38,
+          "reasoning": "Continued modest growth as technical product complexity sustains need for human reps."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 0.52,
+          "reasoning": "Growth approaches BLS decade trend with AI handling routine support tasks."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 0.67,
+          "reasoning": "Reaches capped midpoint of projected decade growth, consistent with BLS outlook."
+        }
+      ]
+    },
+    "41-9011": {
+      "title": "Demonstrators and Product Promoters",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "41-9011.00"
+      ],
+      "employment": 64520,
+      "projectedGrowth": 0.2,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:07:43.556Z",
+      "promptSha256": "d8f7ce62164953cefa169d55aa0e3c0bd451c8514540365646757f77f3ad6013",
+      "tasks": [
+        {
+          "taskName": "Provide product samples, coupons, informational brochures, or other incentives to persuade people to buy products.",
+          "aiCapabilityScore": 0.15,
+          "humanCriticalityScore": 0.8,
+          "onetCode": "41-9011.00",
+          "taskId": 13191
+        },
+        {
+          "taskName": "Sell products being promoted and keep records of sales.",
+          "aiCapabilityScore": 0.35,
+          "humanCriticalityScore": 0.65,
+          "onetCode": "41-9011.00",
+          "taskId": 13194
+        },
+        {
+          "taskName": "Keep areas neat while working and return items to correct locations following demonstrations.",
+          "aiCapabilityScore": 0.05,
+          "humanCriticalityScore": 0.9,
+          "onetCode": "41-9011.00",
+          "taskId": 13192
+        },
+        {
+          "taskName": "Demonstrate or explain products, methods, or services to persuade customers to purchase products or use services.",
+          "aiCapabilityScore": 0.2,
+          "humanCriticalityScore": 0.85,
+          "onetCode": "41-9011.00",
+          "taskId": 13190
+        },
+        {
+          "taskName": "Record and report demonstration-related information, such as the number of questions asked by the audience or the number of coupons distributed.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.4,
+          "onetCode": "41-9011.00",
+          "taskId": 13193
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.02,
+          "reasoning": "Slow, steady demand keeps in-person promotion roles stable."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 0.04,
+          "reasoning": "Marginal growth as retail and experiential marketing persist."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 0.06,
+          "reasoning": "Gradual employment uptick aligned with modest BLS projections."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 0.09,
+          "reasoning": "Continued slow growth as human interaction remains valued in sales."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 0.11,
+          "reasoning": "Reaches capped midpoint of the decade-long BLS outlook."
+        }
+      ]
+    },
+    "41-9012": {
+      "title": "Models",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "41-9012.00"
+      ],
+      "employment": 3780,
+      "projectedGrowth": -2.1,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:07:50.435Z",
+      "promptSha256": "14925e044bcbe2cea3324ea17439d66ae7198e2dc04642f5d4bc01dfe8ae6ad3",
+      "tasks": [
+        {
+          "taskName": "Pose for artists and photographers.",
+          "aiCapabilityScore": 0.15,
+          "humanCriticalityScore": 0.95,
+          "onetCode": "41-9012.00",
+          "taskId": 23931
+        },
+        {
+          "taskName": "Record rates of pay and durations of jobs on vouchers.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.2,
+          "onetCode": "41-9012.00",
+          "taskId": 13217
+        },
+        {
+          "taskName": "Gather information from agents concerning the pay, dates, times, provisions, and lengths of jobs.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.4,
+          "onetCode": "41-9012.00",
+          "taskId": 13215
+        },
+        {
+          "taskName": "Report job completions to agencies and obtain information about future appointments.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.35,
+          "onetCode": "41-9012.00",
+          "taskId": 13218
+        },
+        {
+          "taskName": "Assemble and maintain portfolios, print composite cards, and travel to go-sees to obtain jobs.",
+          "aiCapabilityScore": 0.4,
+          "humanCriticalityScore": 0.75,
+          "onetCode": "41-9012.00",
+          "taskId": 13219
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -0.18,
+          "reasoning": "Early AI adoption in admin/booking tasks begins slight displacement."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -0.42,
+          "reasoning": "Growing use of AI tools for scheduling and portfolio management reduces support roles."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -0.68,
+          "reasoning": "AI-generated imagery and virtual models start marginally competing with human bookings."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -0.93,
+          "reasoning": "Continued automation of administrative tasks and rise of synthetic media pressures demand."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -1.17,
+          "reasoning": "Cumulative decline reaches the capped midpoint of the decade-long projected contraction."
+        }
+      ]
+    },
+    "41-9021": {
+      "title": "Real Estate Brokers",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "41-9021.00"
+      ],
+      "employment": 46100,
+      "projectedGrowth": 0.8,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:07:57.478Z",
+      "promptSha256": "9ca506155cb3dc85288b329f72f87e39c5450a87779bb13416cec6ca596f1c74",
+      "tasks": [
+        {
+          "taskName": "Sell, for a fee, real estate owned by others.",
+          "aiCapabilityScore": 0.2,
+          "humanCriticalityScore": 0.9,
+          "onetCode": "41-9021.00",
+          "taskId": 4599
+        },
+        {
+          "taskName": "Obtain agreements from property owners to place properties for sale with real estate firms.",
+          "aiCapabilityScore": 0.15,
+          "humanCriticalityScore": 0.92,
+          "onetCode": "41-9021.00",
+          "taskId": 4600
+        },
+        {
+          "taskName": "Act as an intermediary in negotiations between buyers and sellers over property prices and settlement details and during the closing of sales.",
+          "aiCapabilityScore": 0.25,
+          "humanCriticalityScore": 0.9,
+          "onetCode": "41-9021.00",
+          "taskId": 4603
+        },
+        {
+          "taskName": "Generate lists of properties for sale, their locations, descriptions, and available financing options, using computers.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.3,
+          "onetCode": "41-9021.00",
+          "taskId": 4604
+        },
+        {
+          "taskName": "Manage or operate real estate offices, handling associated business details.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.6,
+          "onetCode": "41-9021.00",
+          "taskId": 4610
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.07,
+          "reasoning": "Slow early adoption of AI tools in listings and admin tasks."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 0.15,
+          "reasoning": "Gradual employment growth as housing demand persists despite efficiency gains."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 0.24,
+          "reasoning": "Continued modest growth as brokers retain negotiation and relationship roles."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 0.34,
+          "reasoning": "Steady incremental growth approaching BLS decade trajectory."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 0.44,
+          "reasoning": "Reaches capped midpoint of projected 10-year growth path."
+        }
+      ]
+    },
+    "41-9022": {
+      "title": "Real Estate Sales Agents",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "41-9022.00"
+      ],
+      "employment": 193370,
+      "projectedGrowth": 1.7,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:08:04.533Z",
+      "promptSha256": "e58fc1b2df426ce5e8b5ce8157503efe4a609386f9ce5bc34cedc7034266dd5b",
+      "tasks": [
+        {
+          "taskName": "Prepare documents such as representation contracts, purchase agreements, closing statements, deeds, and leases.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.45,
+          "onetCode": "41-9022.00",
+          "taskId": 2443
+        },
+        {
+          "taskName": "Present purchase offers to sellers for consideration.",
+          "aiCapabilityScore": 0.35,
+          "humanCriticalityScore": 0.7,
+          "onetCode": "41-9022.00",
+          "taskId": 2440
+        },
+        {
+          "taskName": "Act as an intermediary in negotiations between buyers and sellers, generally representing one or the other.",
+          "aiCapabilityScore": 0.25,
+          "humanCriticalityScore": 0.9,
+          "onetCode": "41-9022.00",
+          "taskId": 2445
+        },
+        {
+          "taskName": "Generate lists of properties that are compatible with buyers' needs and financial resources.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.3,
+          "onetCode": "41-9022.00",
+          "taskId": 2449
+        },
+        {
+          "taskName": "Confer with escrow companies, lenders, home inspectors, and pest control operators to ensure that terms and conditions of purchase agreements are met before closing dates.",
+          "aiCapabilityScore": 0.4,
+          "humanCriticalityScore": 0.65,
+          "onetCode": "41-9022.00",
+          "taskId": 2441
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.12,
+          "reasoning": "Modest hiring growth as housing demand slowly expands."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 0.28,
+          "reasoning": "Gradual employment gains continue amid steady real estate activity."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 0.45,
+          "reasoning": "AI tools automate routine tasks but core sales roles persist."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 0.65,
+          "reasoning": "Continued modest growth tracking long-term BLS trajectory."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 0.9,
+          "reasoning": "Reaches near the capped midpoint of the decade-long projected growth."
+        }
+      ]
+    },
+    "41-9031": {
+      "title": "Sales Engineers",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "41-9031.00"
+      ],
+      "employment": 51790,
+      "projectedGrowth": 2.8,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:08:11.700Z",
+      "promptSha256": "2f65344f5c13b1cba54e92e61aea1ded89906ca37b8a5e677d67ae7bab6a678d",
+      "tasks": [
+        {
+          "taskName": "Develop, present, or respond to proposals for specific customer requirements, including request for proposal responses and industry-specific solutions.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.55,
+          "onetCode": "41-9031.00",
+          "taskId": 9682
+        },
+        {
+          "taskName": "Collaborate with sales teams to understand customer requirements, to promote the sale of company products, and to provide sales support.",
+          "aiCapabilityScore": 0.3,
+          "humanCriticalityScore": 0.8,
+          "onetCode": "41-9031.00",
+          "taskId": 9680
+        },
+        {
+          "taskName": "Create sales or service contracts for products or services.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.4,
+          "onetCode": "41-9031.00",
+          "taskId": 9690
+        },
+        {
+          "taskName": "Visit prospective buyers at commercial, industrial, or other establishments to show samples or catalogs, and to inform them about product pricing, availability, and advantages.",
+          "aiCapabilityScore": 0.15,
+          "humanCriticalityScore": 0.9,
+          "onetCode": "41-9031.00",
+          "taskId": 9689
+        },
+        {
+          "taskName": "Keep informed on industry news and trends, products, services, competitors, relevant information about legacy, existing, and emerging technologies, and the latest product-line developments.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.45,
+          "onetCode": "41-9031.00",
+          "taskId": 9692
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year for cumulative forecast."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.25,
+          "reasoning": "Gradual demand growth as technical sales roles remain resilient to automation."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 0.55,
+          "reasoning": "Slow employment growth continues alongside AI-assisted proposal tools."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 0.9,
+          "reasoning": "Steady hiring as human relationship-building remains central to sales engineering."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 1.2,
+          "reasoning": "Continued modest expansion in line with technology sector demand."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 1.45,
+          "reasoning": "Reaches near the capped midpoint of the decade-long BLS projection."
+        }
+      ]
+    },
+    "41-9041": {
+      "title": "Telemarketers",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "41-9041.00"
+      ],
+      "employment": 58430,
+      "projectedGrowth": -21.4,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:08:19.411Z",
+      "promptSha256": "4d9a2d2a819376c8aedb61367665951965acd26b1811fd9ea434db28dbc1cbb3",
+      "tasks": [
+        {
+          "taskName": "Contact businesses or private individuals by telephone to solicit sales for goods or services, or to request donations for charitable causes.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.25,
+          "onetCode": "41-9041.00",
+          "taskId": 4619
+        },
+        {
+          "taskName": "Obtain customer information such as name, address, and payment method, and enter orders into computers.",
+          "aiCapabilityScore": 0.9,
+          "humanCriticalityScore": 0.15,
+          "onetCode": "41-9041.00",
+          "taskId": 4621
+        },
+        {
+          "taskName": "Explain products or services and prices, and answer questions from customers.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.3,
+          "onetCode": "41-9041.00",
+          "taskId": 4620
+        },
+        {
+          "taskName": "Record names, addresses, purchases, and reactions of prospects contacted.",
+          "aiCapabilityScore": 0.88,
+          "humanCriticalityScore": 0.15,
+          "onetCode": "41-9041.00",
+          "taskId": 4622
+        },
+        {
+          "taskName": "Maintain records of contacts, accounts, and orders.",
+          "aiCapabilityScore": 0.9,
+          "humanCriticalityScore": 0.1,
+          "onetCode": "41-9041.00",
+          "taskId": 4627
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -2.1,
+          "reasoning": "Early adoption of AI voice bots begins displacing routine calls."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -4.7,
+          "reasoning": "Wider deployment of conversational AI accelerates job losses."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -7.2,
+          "reasoning": "Automation of sales scripts and CRM entry reduces headcount needs."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -9.6,
+          "reasoning": "Continued consolidation of telemarketing functions into AI platforms."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -11.89,
+          "reasoning": "Reaches capped midpoint of decade-long decline per BLS outlook."
+        }
+      ]
+    },
+    "41-9091": {
+      "title": "Door-to-Door Sales Workers, News and Street Vendors, and Related Workers",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "41-9091.00"
+      ],
+      "employment": 2760,
+      "projectedGrowth": -10.4,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:08:26.173Z",
+      "promptSha256": "00d2ea1433c8fbda47c83e3a326ec7a82646d7650b1f71f33d0c520aba2763e0",
+      "tasks": [
+        {
+          "taskName": "Explain products or services and prices and demonstrate use of products.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.7,
+          "onetCode": "41-9091.00",
+          "taskId": 13233
+        },
+        {
+          "taskName": "Develop prospect lists.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.35,
+          "onetCode": "41-9091.00",
+          "taskId": 13238
+        },
+        {
+          "taskName": "Deliver merchandise and collect payment.",
+          "aiCapabilityScore": 0.15,
+          "humanCriticalityScore": 0.85,
+          "onetCode": "41-9091.00",
+          "taskId": 13231
+        },
+        {
+          "taskName": "Write and record orders for merchandise or enter orders into computers.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.25,
+          "onetCode": "41-9091.00",
+          "taskId": 13232
+        },
+        {
+          "taskName": "Arrange buying parties and solicit sponsorship of such parties to sell merchandise.",
+          "aiCapabilityScore": 0.3,
+          "humanCriticalityScore": 0.75,
+          "onetCode": "41-9091.00",
+          "taskId": 13235
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no change yet."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -0.85,
+          "reasoning": "Early adoption of AI-driven lead generation and order tools begins reducing demand."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -1.95,
+          "reasoning": "Continued automation of prospecting and order entry accelerates decline."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -3.15,
+          "reasoning": "Broader e-commerce and AI sales tools displace door-to-door roles further."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -4.55,
+          "reasoning": "Structural decline continues as digital sales channels dominate."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -5.78,
+          "reasoning": "Reaches capped midpoint of the decade-long projected decline."
+        }
+      ]
+    },
+    "43-1011": {
+      "title": "First-Line Supervisors of Office and Administrative Support Workers",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "43-1011.00"
+      ],
+      "employment": 1436680,
+      "projectedGrowth": 0.1,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:08:32.929Z",
+      "promptSha256": "02217b5d2b8fae7d1b071bebe11d5de16a145a717396960ca520eb669c75fdeb",
+      "tasks": [
+        {
+          "taskName": "Supervise the work of office, administrative, or customer service employees to ensure adherence to quality standards, deadlines, and proper procedures, correcting errors or problems.",
+          "aiCapabilityScore": 0.35,
+          "humanCriticalityScore": 0.8,
+          "onetCode": "43-1011.00",
+          "taskId": 9704
+        },
+        {
+          "taskName": "Resolve customer complaints or answer customers' questions regarding policies and procedures.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.65,
+          "onetCode": "43-1011.00",
+          "taskId": 9703
+        },
+        {
+          "taskName": "Provide employees with guidance in handling difficult or complex problems or in resolving escalated complaints or disputes.",
+          "aiCapabilityScore": 0.3,
+          "humanCriticalityScore": 0.85,
+          "onetCode": "43-1011.00",
+          "taskId": 9705
+        },
+        {
+          "taskName": "Review records or reports pertaining to activities such as production, payroll, or shipping to verify details, monitor work activities, or evaluate performance.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.45,
+          "onetCode": "43-1011.00",
+          "taskId": 9710
+        },
+        {
+          "taskName": "Discuss job performance problems with employees to identify causes and issues and to work on resolving problems.",
+          "aiCapabilityScore": 0.2,
+          "humanCriticalityScore": 0.9,
+          "onetCode": "43-1011.00",
+          "taskId": 9707
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no change assumed."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.01,
+          "reasoning": "Slight uptick as demand remains stable despite partial AI task support."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 0.02,
+          "reasoning": "Gradual employment growth as administrative oversight needs persist."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 0.03,
+          "reasoning": "Continued modest growth consistent with long-term flat outlook."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 0.045,
+          "reasoning": "Growth approaches cap as supervisory roles remain largely human-dependent."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 0.06,
+          "reasoning": "Reaches capped midpoint of 10-year BLS projection trajectory."
+        }
+      ]
+    },
+    "43-2011": {
+      "title": "Switchboard Operators, Including Answering Service",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "43-2011.00"
+      ],
+      "employment": 34280,
+      "projectedGrowth": -26,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:08:40.155Z",
+      "promptSha256": "11ab43b02c3bfa157334e2a10581ad55a05333ee5d6af80c88dcff1d6f94ec26",
+      "tasks": [
+        {
+          "taskName": "Operate communication systems, such as telephone, switchboard, intercom, two-way radio, or public address.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.2,
+          "onetCode": "43-2011.00",
+          "taskId": 4630
+        },
+        {
+          "taskName": "Answer incoming calls, greeting callers, providing information, transferring calls or taking messages as necessary.",
+          "aiCapabilityScore": 0.9,
+          "humanCriticalityScore": 0.25,
+          "onetCode": "43-2011.00",
+          "taskId": 4631
+        },
+        {
+          "taskName": "Greet visitors, log them in and out of the facility, assign them security badges, and contact employee escorts.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.65,
+          "onetCode": "43-2011.00",
+          "taskId": 20431
+        },
+        {
+          "taskName": "Monitor emergency and code alarms, make emergency announcements, or route emergency calls to the appropriate location.",
+          "aiCapabilityScore": 0.3,
+          "humanCriticalityScore": 0.9,
+          "onetCode": "43-2011.00",
+          "taskId": 20430
+        },
+        {
+          "taskName": "Record messages, suggesting rewording for clarity or conciseness.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.2,
+          "onetCode": "43-2011.00",
+          "taskId": 4640
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year for forecast."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -2.1,
+          "reasoning": "Early AI call-routing adoption begins displacing routine tasks."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -5,
+          "reasoning": "Wider deployment of virtual assistants reduces headcount needs."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -8.2,
+          "reasoning": "Automated systems increasingly handle call transfers and messaging."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -11.3,
+          "reasoning": "Continued consolidation of switchboard roles into automated platforms."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -14.44,
+          "reasoning": "Reaches capped midpoint of 10-year BLS decline trajectory."
+        }
+      ]
+    },
+    "43-2021": {
+      "title": "Telephone Operators",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "43-2021.00"
+      ],
+      "employment": 3430,
+      "projectedGrowth": -27.6,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:08:47.122Z",
+      "promptSha256": "a1ae9251801faf2a8a19a0e3e9d9caf9d7433d913082b5b22d17c6309f9988fa",
+      "tasks": [
+        {
+          "taskName": "Observe signal lights on switchboards, and dial or press buttons to make connections.",
+          "aiCapabilityScore": 0.9,
+          "humanCriticalityScore": 0.1,
+          "onetCode": "43-2021.00",
+          "taskId": 13246
+        },
+        {
+          "taskName": "Operate telephone switchboards and systems to advance and complete connections, including those for local, long distance, pay telephone, mobile, person-to-person, and emergency calls.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.25,
+          "onetCode": "43-2021.00",
+          "taskId": 13247
+        },
+        {
+          "taskName": "Listen to customer requests, referring to alphabetical or geographical directories to answer questions and provide telephone information.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.2,
+          "onetCode": "43-2021.00",
+          "taskId": 13243
+        },
+        {
+          "taskName": "Update directory information.",
+          "aiCapabilityScore": 0.88,
+          "humanCriticalityScore": 0.1,
+          "onetCode": "43-2021.00",
+          "taskId": 13257
+        },
+        {
+          "taskName": "Suggest and check alternate spellings, locations, or listing formats to customers lacking details or complete information.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.2,
+          "onetCode": "43-2021.00",
+          "taskId": 13244
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change assumed."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -2.8,
+          "reasoning": "Early adoption of automated directory and routing systems begins displacing roles."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -5.9,
+          "reasoning": "Continued AI-driven call routing and virtual assistants accelerate decline."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -9.2,
+          "reasoning": "Broader deployment of conversational AI reduces need for human operators."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -12.4,
+          "reasoning": "Legacy switchboard roles continue shrinking as automation matures."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -15.33,
+          "reasoning": "Reaches capped midpoint of decade-long decline per BLS outlook trajectory."
+        }
+      ]
+    },
+    "43-3011": {
+      "title": "Bill and Account Collectors",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "43-3011.00"
+      ],
+      "employment": 158830,
+      "projectedGrowth": -10.4,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:08:54.065Z",
+      "promptSha256": "04d0313ea1df0f804800f5775fd40aaffd1a5ecfbfff2860acb40ac66f0d434b",
+      "tasks": [
+        {
+          "taskName": "Record information about financial status of customers and status of collection efforts.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.2,
+          "onetCode": "43-3011.00",
+          "taskId": 2474
+        },
+        {
+          "taskName": "Locate and notify customers of delinquent accounts by mail, telephone, or personal visits to solicit payment.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.4,
+          "onetCode": "43-3011.00",
+          "taskId": 2475
+        },
+        {
+          "taskName": "Locate and monitor overdue accounts, using computers and a variety of automated systems.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.25,
+          "onetCode": "43-3011.00",
+          "taskId": 2473
+        },
+        {
+          "taskName": "Arrange for debt repayment or establish repayment schedules, based on customers' financial situations.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.6,
+          "onetCode": "43-3011.00",
+          "taskId": 2481
+        },
+        {
+          "taskName": "Advise customers of necessary actions and strategies for debt repayment.",
+          "aiCapabilityScore": 0.5,
+          "humanCriticalityScore": 0.65,
+          "onetCode": "43-3011.00",
+          "taskId": 2477
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -0.95,
+          "reasoning": "Early adoption of AI-driven collection and reminder systems begins reducing headcount needs."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -2.05,
+          "reasoning": "Wider deployment of automated outreach and account monitoring tools accelerates role consolidation."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -3.2,
+          "reasoning": "Increasing use of AI chatbots for negotiation and repayment scheduling reduces staffing needs further."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -4.55,
+          "reasoning": "Continued automation maturity shifts more routine collection tasks to AI systems."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -5.78,
+          "reasoning": "Reaches the capped midpoint of the decade-long projected decline as automation becomes standard."
+        }
+      ]
+    },
+    "43-3021": {
+      "title": "Billing and Posting Clerks",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "43-3021.00"
+      ],
+      "employment": 404060,
+      "projectedGrowth": -0.1,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:09:01.496Z",
+      "promptSha256": "79064434da1ddf50a09457578bda2b19b7b4cfe933064f378c43111d08b96518",
+      "tasks": [
+        {
+          "taskName": "Verify accuracy of billing data and revise any errors.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.3,
+          "onetCode": "43-3021.00",
+          "taskId": 23238
+        },
+        {
+          "taskName": "Resolve discrepancies in accounting records.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.55,
+          "onetCode": "43-3021.00",
+          "taskId": 23243
+        },
+        {
+          "taskName": "Prepare itemized statements, bills, or invoices and record amounts due for items purchased or services rendered.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.25,
+          "onetCode": "43-3021.00",
+          "taskId": 23240
+        },
+        {
+          "taskName": "Operate typing, adding, calculating, or billing machines.",
+          "aiCapabilityScore": 0.9,
+          "humanCriticalityScore": 0.15,
+          "onetCode": "43-3021.00",
+          "taskId": 23242
+        },
+        {
+          "taskName": "Post stop-payment notices to prevent payment of protested checks.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.45,
+          "onetCode": "43-3021.00",
+          "taskId": 23237
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no change assumed."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -0.01,
+          "reasoning": "Early AI adoption begins trimming routine billing tasks slightly."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -0.02,
+          "reasoning": "Gradual automation of invoicing and data verification reduces headcount needs."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -0.03,
+          "reasoning": "Wider GenAI integration in accounting software continues to displace routine clerk tasks."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -0.05,
+          "reasoning": "Automation maturity reduces demand further, approaching long-term decline trajectory."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -0.06,
+          "reasoning": "Cumulative decline reaches 56% of the decade-long BLS projected contraction."
+        }
+      ]
+    },
+    "43-3031": {
+      "title": "Bookkeeping, Accounting, and Auditing Clerks",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "43-3031.00"
+      ],
+      "employment": 1373680,
+      "projectedGrowth": -5.6,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:09:08.674Z",
+      "promptSha256": "8dd1d61f0bd14832bfdd7dfdf8b8ce7fd7a495307d71ed400a5d57fd6f43667c",
+      "tasks": [
+        {
+          "taskName": "Operate computers programmed with accounting software to record, store, and analyze information.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.25,
+          "onetCode": "43-3031.00",
+          "taskId": 2487
+        },
+        {
+          "taskName": "Check figures, postings, and documents for correct entry, mathematical accuracy, and proper codes.",
+          "aiCapabilityScore": 0.9,
+          "humanCriticalityScore": 0.2,
+          "onetCode": "43-3031.00",
+          "taskId": 2486
+        },
+        {
+          "taskName": "Comply with federal, state, and company policies, procedures, and regulations.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.7,
+          "onetCode": "43-3031.00",
+          "taskId": 2488
+        },
+        {
+          "taskName": "Operate 10-key calculators, typewriters, and copy machines to perform calculations and produce documents.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.15,
+          "onetCode": "43-3031.00",
+          "taskId": 2495
+        },
+        {
+          "taskName": "Receive, record, and bank cash, checks, and vouchers.",
+          "aiCapabilityScore": 0.4,
+          "humanCriticalityScore": 0.6,
+          "onetCode": "43-3031.00",
+          "taskId": 2500
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -0.55,
+          "reasoning": "Early adoption of AI-assisted bookkeeping tools begins reducing headcount growth."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -1.15,
+          "reasoning": "Wider deployment of automated reconciliation and data-entry tools accelerates decline."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -1.8,
+          "reasoning": "Increasing integration of GenAI into accounting software reduces routine clerical demand."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -2.45,
+          "reasoning": "Continued automation of data verification and reporting tasks compounds job losses."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -3.11,
+          "reasoning": "Cumulative AI-driven efficiency gains reach the capped midpoint of the decade-long decline."
+        }
+      ]
+    },
+    "43-3041": {
+      "title": "Gambling Cage Workers",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "43-3041.00"
+      ],
+      "employment": 14430,
+      "projectedGrowth": -3.1,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:09:15.973Z",
+      "promptSha256": "4dfdaacc1af512e779932de68d16fa75d4839680f54b1a7180dd2ba875c53f7e",
+      "tasks": [
+        {
+          "taskName": "Maintain confidentiality of customers' transactions.",
+          "aiCapabilityScore": 0.25,
+          "humanCriticalityScore": 0.75,
+          "onetCode": "43-3041.00",
+          "taskId": 4662
+        },
+        {
+          "taskName": "Follow all gaming regulations.",
+          "aiCapabilityScore": 0.3,
+          "humanCriticalityScore": 0.85,
+          "onetCode": "43-3041.00",
+          "taskId": 4661
+        },
+        {
+          "taskName": "Maintain cage security.",
+          "aiCapabilityScore": 0.2,
+          "humanCriticalityScore": 0.9,
+          "onetCode": "43-3041.00",
+          "taskId": 4665
+        },
+        {
+          "taskName": "Cash checks and process credit card advances for patrons.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.6,
+          "onetCode": "43-3041.00",
+          "taskId": 4668
+        },
+        {
+          "taskName": "Supply currency, coins, chips, or gaming checks to other departments as needed.",
+          "aiCapabilityScore": 0.35,
+          "humanCriticalityScore": 0.7,
+          "onetCode": "43-3041.00",
+          "taskId": 4671
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -0.25,
+          "reasoning": "Slow early adoption of automation in cash-handling processes."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -0.6,
+          "reasoning": "Gradual integration of self-service kiosks and digital payment systems."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -1,
+          "reasoning": "Increased automation of routine cash and credit transactions."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -1.4,
+          "reasoning": "Continued decline as casinos adopt more automated cage systems."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -1.72,
+          "reasoning": "Reaches capped midpoint of projected decade-long decline."
+        }
+      ]
+    },
+    "43-3051": {
+      "title": "Payroll and Timekeeping Clerks",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "43-3051.00"
+      ],
+      "employment": 153140,
+      "projectedGrowth": -15.9,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:09:22.593Z",
+      "promptSha256": "7062cd0a0f13b41339e525cfca7a4e320d8c55783903d862b107a0cd8816417c",
+      "tasks": [
+        {
+          "taskName": "Verify attendance, hours worked, and pay adjustments, and post information onto designated records.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.25,
+          "onetCode": "43-3051.00",
+          "taskId": 2519
+        },
+        {
+          "taskName": "Process and issue employee paychecks and statements of earnings and deductions.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.25,
+          "onetCode": "43-3051.00",
+          "taskId": 2515
+        },
+        {
+          "taskName": "Compute wages and deductions, and enter data into computers.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.2,
+          "onetCode": "43-3051.00",
+          "taskId": 2516
+        },
+        {
+          "taskName": "Process paperwork for new employees and enter employee information into the payroll system.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.3,
+          "onetCode": "43-3051.00",
+          "taskId": 18562
+        },
+        {
+          "taskName": "Prepare and balance period-end reports, and reconcile issued payrolls to bank statements.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.4,
+          "onetCode": "43-3051.00",
+          "taskId": 2528
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change yet."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -1.4,
+          "reasoning": "Early AI adoption begins automating routine payroll data entry."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -3.1,
+          "reasoning": "Growing use of automated payroll systems reduces clerical headcount needs."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -5,
+          "reasoning": "Wider integration of AI-driven payroll software accelerates job displacement."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -7,
+          "reasoning": "Most routine computation and reconciliation tasks are largely automated."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -8.83,
+          "reasoning": "Cumulative decline reaches the capped midpoint of the decade-long projected decline."
+        }
+      ]
+    },
+    "43-3061": {
+      "title": "Procurement Clerks",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "43-3061.00"
+      ],
+      "employment": 55810,
+      "projectedGrowth": -8.1,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:09:29.597Z",
+      "promptSha256": "f2e79cb8b076376f6cb25d6418d22ecc681c6e7617d27cf259e1a0eca3f6993e",
+      "tasks": [
+        {
+          "taskName": "Track the status of requisitions, contracts, and orders.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.2,
+          "onetCode": "43-3061.00",
+          "taskId": 2539
+        },
+        {
+          "taskName": "Perform buying duties when necessary.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.6,
+          "onetCode": "43-3061.00",
+          "taskId": 2534
+        },
+        {
+          "taskName": "Prepare purchase orders and send copies to suppliers and to departments originating requests.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.25,
+          "onetCode": "43-3061.00",
+          "taskId": 2531
+        },
+        {
+          "taskName": "Calculate costs of orders, and charge or forward invoices to appropriate accounts.",
+          "aiCapabilityScore": 0.82,
+          "humanCriticalityScore": 0.2,
+          "onetCode": "43-3061.00",
+          "taskId": 2540
+        },
+        {
+          "taskName": "Compare prices, specifications, and delivery dates to determine the best bid among potential suppliers.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.55,
+          "onetCode": "43-3061.00",
+          "taskId": 2538
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year for cumulative forecast."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -0.7,
+          "reasoning": "Early adoption of AI tools for order tracking and documentation begins."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -1.6,
+          "reasoning": "Growing automation of purchase order and invoice processing reduces headcount needs."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -2.6,
+          "reasoning": "Wider integration of AI-driven procurement platforms accelerates task consolidation."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -3.6,
+          "reasoning": "Continued attrition and automation of clerical procurement tasks."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -4.5,
+          "reasoning": "Cumulative decline reaches 56% of the decade-long projected contraction."
+        }
+      ]
+    },
+    "43-3071": {
+      "title": "Tellers",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "43-3071.00"
+      ],
+      "employment": 329480,
+      "projectedGrowth": -13.2,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:09:36.520Z",
+      "promptSha256": "a06d84b55e2597177d186e43c6ea550d83045181dca08252d47037a54ab28143",
+      "tasks": [
+        {
+          "taskName": "Balance currency, coin, and checks in cash drawers at ends of shifts and calculate daily transactions, using computers, calculators, or adding machines.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.3,
+          "onetCode": "43-3071.00",
+          "taskId": 2549
+        },
+        {
+          "taskName": "Receive checks and cash for deposit, verify amounts, and check accuracy of deposit slips.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.45,
+          "onetCode": "43-3071.00",
+          "taskId": 2551
+        },
+        {
+          "taskName": "Monitor bank vaults to ensure cash balances are correct.",
+          "aiCapabilityScore": 0.4,
+          "humanCriticalityScore": 0.6,
+          "onetCode": "43-3071.00",
+          "taskId": 2563
+        },
+        {
+          "taskName": "Cash checks and pay out money after verifying that signatures are correct, that written and numerical amounts agree, and that accounts have sufficient funds.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.65,
+          "onetCode": "43-3071.00",
+          "taskId": 2550
+        },
+        {
+          "taskName": "Count currency, coins, and checks received, by hand or using currency-counting machine, to prepare them for deposit or shipment to branch banks or the Federal Reserve Bank.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.4,
+          "onetCode": "43-3071.00",
+          "taskId": 2554
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change yet."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -1.3,
+          "reasoning": "Early branch automation and digital banking trim some teller hours."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -2.8,
+          "reasoning": "Continued adoption of self-service kiosks and mobile deposit reduces headcount needs."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -4.4,
+          "reasoning": "Branch consolidation accelerates alongside AI-assisted transaction processing."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -6,
+          "reasoning": "Declining branch foot traffic and automation push employment lower."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -7.33,
+          "reasoning": "Cumulative decline reaches the capped midpoint of the decade-long BLS projected decline."
+        }
+      ]
+    },
+    "43-4011": {
+      "title": "Brokerage Clerks",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "43-4011.00"
+      ],
+      "employment": 35940,
+      "projectedGrowth": -7.6,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:09:43.954Z",
+      "promptSha256": "e8b8b02f25cc9ee70edd8d913a6716bfba807fccc9c066f719733c785e8eae92",
+      "tasks": [
+        {
+          "taskName": "Correspond with customers and confer with coworkers to answer inquiries, discuss market fluctuations, or resolve account problems.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.55,
+          "onetCode": "43-4011.00",
+          "taskId": 8145
+        },
+        {
+          "taskName": "Document security transactions, such as purchases, sales, conversions, redemptions, or payments, using computers, accounting ledgers, or certificate records.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.25,
+          "onetCode": "43-4011.00",
+          "taskId": 20622
+        },
+        {
+          "taskName": "File, type, or operate standard office machines.",
+          "aiCapabilityScore": 0.9,
+          "humanCriticalityScore": 0.1,
+          "onetCode": "43-4011.00",
+          "taskId": 8149
+        },
+        {
+          "taskName": "Perform clerical tasks, such as answering phones or distributing mail.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.2,
+          "onetCode": "43-4011.00",
+          "taskId": 20623
+        },
+        {
+          "taskName": "Prepare forms, such as receipts, withdrawal orders, transmittal papers, or transfer confirmations, based on transaction requests from stockholders.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.2,
+          "onetCode": "43-4011.00",
+          "taskId": 8148
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change yet."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -0.65,
+          "reasoning": "Early GenAI adoption begins automating documentation and clerical tasks."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -1.55,
+          "reasoning": "Broader deployment of AI tools reduces demand for routine transaction processing."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -2.5,
+          "reasoning": "Continued automation of forms and recordkeeping accelerates headcount declines."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -3.45,
+          "reasoning": "AI-driven workflow consolidation further shrinks clerical brokerage roles."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -4.22,
+          "reasoning": "Cumulative automation reaches the capped midpoint of the decade-long projected decline."
+        }
+      ]
+    },
+    "43-4021": {
+      "title": "Correspondence Clerks",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "43-4021.00"
+      ],
+      "employment": 4290,
+      "projectedGrowth": -5.6,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:09:51.225Z",
+      "promptSha256": "8c26a69fa2903c5f0d2edcd6283a488fdae76e57508768288d6d55cacd70a7a3",
+      "tasks": [
+        {
+          "taskName": "Maintain files and control records to show correspondence activities.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.25,
+          "onetCode": "43-4021.00",
+          "taskId": 11276
+        },
+        {
+          "taskName": "Read incoming correspondence to ascertain nature of writers' concerns and to determine disposition of correspondence.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.35,
+          "onetCode": "43-4021.00",
+          "taskId": 11273
+        },
+        {
+          "taskName": "Gather records pertinent to specific problems, review them for completeness and accuracy, and attach records to correspondence as necessary.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.4,
+          "onetCode": "43-4021.00",
+          "taskId": 11277
+        },
+        {
+          "taskName": "Prepare documents and correspondence, such as damage claims, credit and billing inquiries, invoices, and service complaints.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.3,
+          "onetCode": "43-4021.00",
+          "taskId": 11270
+        },
+        {
+          "taskName": "Compile data from records to prepare periodic reports.",
+          "aiCapabilityScore": 0.78,
+          "humanCriticalityScore": 0.25,
+          "onetCode": "43-4021.00",
+          "taskId": 11271
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -0.55,
+          "reasoning": "Early adoption of AI tools for correspondence drafting and filing begins reducing headcount needs."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -1.15,
+          "reasoning": "Broader automation of routine correspondence tasks accelerates attrition-driven decline."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -1.8,
+          "reasoning": "AI-driven document processing and reporting further reduce demand for clerks."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -2.45,
+          "reasoning": "Continued integration of generative AI in correspondence workflows deepens employment decline."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -3.11,
+          "reasoning": "Cumulative decline reaches 56% of the decade-long projected contraction."
+        }
+      ]
+    },
+    "43-4031": {
+      "title": "Court, Municipal, and License Clerks",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "43-4031.00"
+      ],
+      "employment": 179750,
+      "projectedGrowth": 3.4,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:09:58.536Z",
+      "promptSha256": "e9e11caf52eead00d60c9fe6c7a533810171a289050e3a98f24a9265099d3214",
+      "tasks": [
+        {
+          "taskName": "Evaluate information on applications to verify completeness and accuracy and to determine whether applicants are qualified to obtain desired licenses.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.45,
+          "onetCode": "43-4031.00",
+          "taskId": 23267
+        },
+        {
+          "taskName": "Perform administrative tasks, such as answering telephone calls, filing court documents, or maintaining office supplies or equipment.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.35,
+          "onetCode": "43-4031.00",
+          "taskId": 23284
+        },
+        {
+          "taskName": "Verify the authenticity of documents, such as foreign identification or immigration documents.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.7,
+          "onetCode": "43-4031.00",
+          "taskId": 23268
+        },
+        {
+          "taskName": "Record and edit the minutes of meetings and distribute to appropriate officials or staff members.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.3,
+          "onetCode": "43-4031.00",
+          "taskId": 23269
+        },
+        {
+          "taskName": "Question applicants to obtain required information, such as name, address, or age, and record data on prescribed forms.",
+          "aiCapabilityScore": 0.5,
+          "humanCriticalityScore": 0.55,
+          "onetCode": "43-4031.00",
+          "taskId": 23270
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.28,
+          "reasoning": "Gradual administrative automation begins offsetting slight demand growth."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 0.6,
+          "reasoning": "Continued modest hiring growth as AI adoption remains partial in clerical workflows."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 0.95,
+          "reasoning": "Steady employment growth continues despite increasing automation of routine tasks."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 1.4,
+          "reasoning": "Growth approaches long-term trend as remaining tasks require human judgment."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 1.89,
+          "reasoning": "Reaches the capped midpoint of the decade-long BLS projected growth."
+        }
+      ]
+    },
+    "43-4041": {
+      "title": "Credit Authorizers, Checkers, and Clerks",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "43-4041.00"
+      ],
+      "employment": 12030,
+      "projectedGrowth": -7.4,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:10:06.010Z",
+      "promptSha256": "9bb01846517b3990c4a2d1107212179e4e27b30a6169cfd41325a7ebf32e96f9",
+      "tasks": [
+        {
+          "taskName": "Keep records of customers' charges and payments.",
+          "aiCapabilityScore": 0.9,
+          "humanCriticalityScore": 0.15,
+          "onetCode": "43-4041.00",
+          "taskId": 23297
+        },
+        {
+          "taskName": "Compile and analyze credit information gathered by investigation.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.3,
+          "onetCode": "43-4041.00",
+          "taskId": 23298
+        },
+        {
+          "taskName": "Obtain information about potential creditors from banks, credit bureaus, and other credit services, and provide reciprocal information if requested.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.25,
+          "onetCode": "43-4041.00",
+          "taskId": 23299
+        },
+        {
+          "taskName": "Interview credit applicants by telephone or in person to obtain personal and financial data needed to complete credit report.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.55,
+          "onetCode": "43-4041.00",
+          "taskId": 23300
+        },
+        {
+          "taskName": "Evaluate customers' computerized credit records and payment histories to decide whether to approve new credit, based on predetermined standards.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.45,
+          "onetCode": "43-4041.00",
+          "taskId": 23301
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change yet."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -0.65,
+          "reasoning": "Early AI adoption begins automating record-keeping tasks."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -1.45,
+          "reasoning": "Growing use of automated credit evaluation tools reduces clerical headcount."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -2.35,
+          "reasoning": "Continued consolidation of credit processing roles via AI-driven systems."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -3.25,
+          "reasoning": "Broader industry adoption of AI credit decisioning accelerates role reduction."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -4.11,
+          "reasoning": "Cumulative decline reaches the capped midpoint of the decade-long outlook."
+        }
+      ]
+    },
+    "43-4051": {
+      "title": "Customer Service Representatives",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "43-4051.00"
+      ],
+      "employment": 2595750,
+      "projectedGrowth": -5.3,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:10:13.282Z",
+      "promptSha256": "3b46c8dcda312296c838b8612651062122094ecbffb5fda97a7e1501a6e48073",
+      "tasks": [
+        {
+          "taskName": "Confer with customers by telephone or in person to provide information about products or services, take or enter orders, cancel accounts, or obtain details of complaints.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.45,
+          "onetCode": "43-4051.00",
+          "taskId": 18565
+        },
+        {
+          "taskName": "Keep records of customer interactions or transactions, recording details of inquiries, complaints, or comments, as well as actions taken.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.2,
+          "onetCode": "43-4051.00",
+          "taskId": 2578
+        },
+        {
+          "taskName": "Check to ensure that appropriate changes were made to resolve customers' problems.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.5,
+          "onetCode": "43-4051.00",
+          "taskId": 2580
+        },
+        {
+          "taskName": "Contact customers to respond to inquiries or to notify them of claim investigation results or any planned adjustments.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.4,
+          "onetCode": "43-4051.00",
+          "taskId": 2581
+        },
+        {
+          "taskName": "Determine charges for services requested, collect deposits or payments, or arrange for billing.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.35,
+          "onetCode": "43-4051.00",
+          "taskId": 2583
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change yet."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -0.45,
+          "reasoning": "Early GenAI adoption in chat and call routing begins displacing routine tasks."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -0.95,
+          "reasoning": "Wider deployment of AI chatbots and automated transaction handling accelerates decline."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -1.55,
+          "reasoning": "Continued automation of record-keeping and inquiry responses reduces headcount needs."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -2.2,
+          "reasoning": "AI handles majority of routine interactions, leaving fewer human-staffed roles."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -2.94,
+          "reasoning": "Cumulative decline reaches the capped trajectory consistent with BLS 10-year outlook."
+        }
+      ]
+    },
+    "43-4061": {
+      "title": "Eligibility Interviewers, Government Programs",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "43-4061.00"
+      ],
+      "employment": 154800,
+      "projectedGrowth": 1.6,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:10:20.758Z",
+      "promptSha256": "f00e18b86308628b5be03cc6c7ca08d79bd50bb456fcaba8ae1668bb39eef012",
+      "tasks": [
+        {
+          "taskName": "Compute and authorize amounts of assistance for programs, such as grants, monetary payments, and food stamps.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.35,
+          "onetCode": "43-4061.00",
+          "taskId": 9744
+        },
+        {
+          "taskName": "Keep records of assigned cases, and prepare required reports.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.25,
+          "onetCode": "43-4061.00",
+          "taskId": 9739
+        },
+        {
+          "taskName": "Compile, record, and evaluate personal and financial data to verify completeness and accuracy, and to determine eligibility status.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.45,
+          "onetCode": "43-4061.00",
+          "taskId": 9736
+        },
+        {
+          "taskName": "Interview and investigate applicants for public assistance to gather information pertinent to their applications.",
+          "aiCapabilityScore": 0.4,
+          "humanCriticalityScore": 0.75,
+          "onetCode": "43-4061.00",
+          "taskId": 9737
+        },
+        {
+          "taskName": "Interview benefits recipients at specified intervals to certify their eligibility for continuing benefits.",
+          "aiCapabilityScore": 0.42,
+          "humanCriticalityScore": 0.72,
+          "onetCode": "43-4061.00",
+          "taskId": 9733
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year for forecast."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.12,
+          "reasoning": "Early GenAI adoption begins streamlining data verification tasks."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 0.28,
+          "reasoning": "Increased automation of recordkeeping slows headcount growth slightly."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 0.45,
+          "reasoning": "Agencies integrate AI tools for eligibility checks, tempering job growth."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 0.65,
+          "reasoning": "Continued automation offsets most demand growth from caseload increases."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 0.8,
+          "reasoning": "Employment nears modest growth cap as AI handles routine verification tasks."
+        }
+      ]
+    },
+    "43-4071": {
+      "title": "File Clerks",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "43-4071.00"
+      ],
+      "employment": 73440,
+      "projectedGrowth": -15.8,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:10:27.924Z",
+      "promptSha256": "fce8deabb4f98d64f17a6cfbcbe51515e80c360a1de1b7da703ee9eeb8a011af",
+      "tasks": [
+        {
+          "taskName": "Perform general office activities, such as typing, answering telephones, operating office machines, processing mail, or securing confidential materials.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.45,
+          "onetCode": "43-4071.00",
+          "taskId": 20628
+        },
+        {
+          "taskName": "Keep records of materials filed or removed, using logbooks or computers and generate computerized reports.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.25,
+          "onetCode": "43-4071.00",
+          "taskId": 20629
+        },
+        {
+          "taskName": "Gather materials to be filed from departments or employees.",
+          "aiCapabilityScore": 0.25,
+          "humanCriticalityScore": 0.65,
+          "onetCode": "43-4071.00",
+          "taskId": 2596
+        },
+        {
+          "taskName": "Find, retrieve, and make copies of information from files in response to requests and deliver information to authorized users.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.45,
+          "onetCode": "43-4071.00",
+          "taskId": 20630
+        },
+        {
+          "taskName": "Add new material to file records or create new records as necessary.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.3,
+          "onetCode": "43-4071.00",
+          "taskId": 2593
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change assumed."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -1.4,
+          "reasoning": "Early adoption of document management AI begins reducing clerical headcount."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -3.05,
+          "reasoning": "Broader GenAI integration into records systems accelerates attrition-driven declines."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -4.95,
+          "reasoning": "Automated retrieval and filing tools displace more routine clerk tasks."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -6.8,
+          "reasoning": "Continued digitization and workflow automation further shrink role demand."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -8.78,
+          "reasoning": "Cumulative impact reaches the capped midpoint of the decade-long projected decline."
+        }
+      ]
+    },
+    "43-4081": {
+      "title": "Hotel, Motel, and Resort Desk Clerks",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "43-4081.00"
+      ],
+      "employment": 261420,
+      "projectedGrowth": 1.8,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:10:34.872Z",
+      "promptSha256": "d44b42609b4416cd499e2bde4c398adc77ee701e5cda79b9b99d4e5d6ba1ad9e",
+      "tasks": [
+        {
+          "taskName": "Greet, register, and assign rooms to guests of hotels or motels.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.55,
+          "onetCode": "43-4081.00",
+          "taskId": 2610
+        },
+        {
+          "taskName": "Contact housekeeping or maintenance staff when guests report problems.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.45,
+          "onetCode": "43-4081.00",
+          "taskId": 2619
+        },
+        {
+          "taskName": "Issue room keys and escort instructions to bellhops.",
+          "aiCapabilityScore": 0.35,
+          "humanCriticalityScore": 0.6,
+          "onetCode": "43-4081.00",
+          "taskId": 2615
+        },
+        {
+          "taskName": "Make and confirm reservations.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.25,
+          "onetCode": "43-4081.00",
+          "taskId": 2620
+        },
+        {
+          "taskName": "Verify customers' credit, and establish how the customer will pay for the accommodation.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.35,
+          "onetCode": "43-4081.00",
+          "taskId": 2611
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change assumed."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.15,
+          "reasoning": "Early AI-driven booking and check-in automation begins reducing staffing needs slightly."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 0.3,
+          "reasoning": "Wider adoption of self-service kiosks and chatbots slows desk clerk hiring growth."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 0.5,
+          "reasoning": "AI-powered reservation and guest service systems further offset net job growth."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 0.7,
+          "reasoning": "Continued automation balances modest demand growth from hospitality expansion."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 0.9,
+          "reasoning": "Cumulative employment approaches the capped mid-decade point of BLS decade-long outlook."
+        }
+      ]
+    },
+    "43-4111": {
+      "title": "Interviewers, Except Eligibility and Loan",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "43-4111.00"
+      ],
+      "employment": 148060,
+      "projectedGrowth": -10.4,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:10:42.261Z",
+      "promptSha256": "f9df80454802d4f61f26754466623fd09b0fef03db9078981e7cdcc3ca969bd7",
+      "tasks": [
+        {
+          "taskName": "Ask questions in accordance with instructions to obtain various specified information, such as person's name, address, age, religious preference, or state of residency.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.3,
+          "onetCode": "43-4111.00",
+          "taskId": 2627
+        },
+        {
+          "taskName": "Identify and report problems in obtaining valid data.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.55,
+          "onetCode": "43-4111.00",
+          "taskId": 2634
+        },
+        {
+          "taskName": "Ensure payment for services by verifying benefits with the person's insurance provider or working out financing options.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.45,
+          "onetCode": "43-4111.00",
+          "taskId": 2633
+        },
+        {
+          "taskName": "Perform office duties, such as telemarketing or customer service inquiries, maintaining staff records, billing patients, or receiving payments.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.35,
+          "onetCode": "43-4111.00",
+          "taskId": 20435
+        },
+        {
+          "taskName": "Review data obtained from interview for completeness and accuracy.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.35,
+          "onetCode": "43-4111.00",
+          "taskId": 2630
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change yet."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -0.85,
+          "reasoning": "Early adoption of AI chatbots and automated surveys begins displacing routine interview tasks."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -1.95,
+          "reasoning": "Growing use of conversational AI for data collection accelerates role reduction."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -3.1,
+          "reasoning": "Wider enterprise adoption of automated verification and interview systems continues decline."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -4.5,
+          "reasoning": "Most routine interviewing tasks increasingly automated, slowing hiring demand."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -5.78,
+          "reasoning": "Cumulative decline reaches the capped trajectory consistent with long-term BLS outlook."
+        }
+      ]
+    },
+    "43-4121": {
+      "title": "Library Assistants, Clerical",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "43-4121.00"
+      ],
+      "employment": 85520,
+      "projectedGrowth": -6.4,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:10:49.475Z",
+      "promptSha256": "ebabb37f1a282617802e6fd8b8b47b8e04e3a58dedcbfb1a4416b00bf88993c7",
+      "tasks": [
+        {
+          "taskName": "Sort books, publications, and other items according to established procedure and return them to shelves, files, or other designated storage areas.",
+          "aiCapabilityScore": 0.15,
+          "humanCriticalityScore": 0.6,
+          "onetCode": "43-4121.00",
+          "taskId": 2645
+        },
+        {
+          "taskName": "Open and close library during specified hours and secure library equipment, such as computers and audio-visual equipment.",
+          "aiCapabilityScore": 0.05,
+          "humanCriticalityScore": 0.8,
+          "onetCode": "43-4121.00",
+          "taskId": 18769
+        },
+        {
+          "taskName": "Locate library materials for patrons, including books, periodicals, tape cassettes, Braille volumes, and pictures.",
+          "aiCapabilityScore": 0.3,
+          "humanCriticalityScore": 0.55,
+          "onetCode": "43-4121.00",
+          "taskId": 2646
+        },
+        {
+          "taskName": "Enter and update patrons' records on computers.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.35,
+          "onetCode": "43-4121.00",
+          "taskId": 2643
+        },
+        {
+          "taskName": "Answer routine inquiries and refer patrons in need of professional assistance to librarians.",
+          "aiCapabilityScore": 0.5,
+          "humanCriticalityScore": 0.5,
+          "onetCode": "43-4121.00",
+          "taskId": 2649
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change yet."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -0.55,
+          "reasoning": "Early, limited adoption of AI tools for records and inquiries begins slow attrition."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -1.2,
+          "reasoning": "Gradual automation of routine inquiries and record updates reduces staffing needs modestly."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -1.95,
+          "reasoning": "Continued library budget pressures and AI-assisted search tools accelerate decline."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -2.75,
+          "reasoning": "Broader integration of AI in cataloging and patron services further reduces clerical demand."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -3.56,
+          "reasoning": "Cumulative decline reaches the capped midpoint consistent with the 10-year BLS outlook."
+        }
+      ]
+    },
+    "43-4131": {
+      "title": "Loan Interviewers and Clerks",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "43-4131.00"
+      ],
+      "employment": 164790,
+      "projectedGrowth": -2.4,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:10:56.913Z",
+      "promptSha256": "4805f098acf6747729578136b24f29940f77e5f7ac2ae9fcb1b5fa9079ecf917",
+      "tasks": [
+        {
+          "taskName": "Verify and examine information and accuracy of loan application and closing documents.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.35,
+          "onetCode": "43-4131.00",
+          "taskId": 11291
+        },
+        {
+          "taskName": "Assemble and compile documents for loan closings, such as title abstracts, insurance forms, loan forms, and tax receipts.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.3,
+          "onetCode": "43-4131.00",
+          "taskId": 11293
+        },
+        {
+          "taskName": "Record applications for loan and credit, loan information, and disbursements of funds, using computers.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.25,
+          "onetCode": "43-4131.00",
+          "taskId": 11296
+        },
+        {
+          "taskName": "Submit loan applications with recommendation for underwriting approval.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.55,
+          "onetCode": "43-4131.00",
+          "taskId": 11305
+        },
+        {
+          "taskName": "Contact customers by mail, telephone, or in person concerning acceptance or rejection of applications.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.7,
+          "onetCode": "43-4131.00",
+          "taskId": 11295
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year for cumulative forecast."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -0.2,
+          "reasoning": "Early AI document-processing adoption begins trimming clerical roles."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -0.48,
+          "reasoning": "Wider use of automated verification tools slows hiring further."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -0.78,
+          "reasoning": "Loan processing automation matures, reducing clerical demand."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -1.08,
+          "reasoning": "Continued consolidation of loan interview and clerk duties via AI systems."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -1.33,
+          "reasoning": "Reaches capped 56% of decade-long projected decline."
+        }
+      ]
+    },
+    "43-4141": {
+      "title": "New Accounts Clerks",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "43-4141.00"
+      ],
+      "employment": 36860,
+      "projectedGrowth": -6.5,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:11:03.708Z",
+      "promptSha256": "66f80332f28cda6355267edc33956b88d4ebebb26dc4340b7e47fc9b849c8598",
+      "tasks": [
+        {
+          "taskName": "Perform teller duties as required.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.45,
+          "onetCode": "43-4141.00",
+          "taskId": 4730
+        },
+        {
+          "taskName": "Compile information about new accounts, enter account information into computers, and file related forms or other documents.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.25,
+          "onetCode": "43-4141.00",
+          "taskId": 4723
+        },
+        {
+          "taskName": "Collect and record customer deposits and fees and issue receipts, using computers.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.25,
+          "onetCode": "43-4141.00",
+          "taskId": 4728
+        },
+        {
+          "taskName": "Inform customers of procedures for applying for services, such as ATM cards, direct deposit of checks, and certificates of deposit.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.35,
+          "onetCode": "43-4141.00",
+          "taskId": 4726
+        },
+        {
+          "taskName": "Answer customers' questions and explain available services, such as deposit accounts, bonds, and securities.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.45,
+          "onetCode": "43-4141.00",
+          "taskId": 4722
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -0.55,
+          "reasoning": "Early AI-driven automation of data entry and account setup begins reducing headcount."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -1.25,
+          "reasoning": "Increasing chatbot and self-service adoption for routine customer inquiries."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -2,
+          "reasoning": "Broader bank digitization accelerates displacement of clerical account tasks."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -2.85,
+          "reasoning": "Continued consolidation of branch operations and automated account processing."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -3.61,
+          "reasoning": "Reaches capped midpoint of 10-year BLS projected decline."
+        }
+      ]
+    },
+    "43-4151": {
+      "title": "Order Clerks",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "43-4151.00"
+      ],
+      "employment": 75200,
+      "projectedGrowth": -17.5,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:11:10.625Z",
+      "promptSha256": "877e15e5a81c2cd4b66000d5a618405639ba47f0a51f2999dee23f971ceede9a",
+      "tasks": [
+        {
+          "taskName": "Review orders for completeness according to reporting procedures and forward incomplete orders for further processing.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.2,
+          "onetCode": "43-4151.00",
+          "taskId": 2675
+        },
+        {
+          "taskName": "Obtain customers' names, addresses, and billing information, product numbers, and specifications of items to be purchased, and enter this information on order forms.",
+          "aiCapabilityScore": 0.9,
+          "humanCriticalityScore": 0.15,
+          "onetCode": "43-4151.00",
+          "taskId": 2668
+        },
+        {
+          "taskName": "Recommend merchandise or services that will meet customers' needs.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.45,
+          "onetCode": "43-4151.00",
+          "taskId": 2680
+        },
+        {
+          "taskName": "Inspect outgoing work for compliance with customers' specifications.",
+          "aiCapabilityScore": 0.4,
+          "humanCriticalityScore": 0.55,
+          "onetCode": "43-4151.00",
+          "taskId": 2683
+        },
+        {
+          "taskName": "Receive and respond to customer complaints.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.6,
+          "onetCode": "43-4151.00",
+          "taskId": 2671
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -1.6,
+          "reasoning": "Early AI adoption begins automating order entry tasks."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -3.5,
+          "reasoning": "Expanding use of automated order systems reduces headcount needs."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -5.6,
+          "reasoning": "Broader AI integration accelerates displacement of routine clerical work."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -7.7,
+          "reasoning": "Continued automation of data entry and complaint handling reduces demand."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -9.72,
+          "reasoning": "Reaches capped midpoint of decade-long decline per BLS outlook."
+        }
+      ]
+    },
+    "43-4161": {
+      "title": "Human Resources Assistants, Except Payroll and Timekeeping",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "43-4161.00"
+      ],
+      "employment": 90220,
+      "projectedGrowth": -6.2,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:11:17.459Z",
+      "promptSha256": "b055071c4c6d0c91ead2e49808e92ece89a93aa14dab0949b2d749214a1a42f8",
+      "tasks": [
+        {
+          "taskName": "Process, verify, and maintain personnel related documentation, including staffing, recruitment, training, grievances, performance evaluations, classifications, and employee leaves of absence.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.4,
+          "onetCode": "43-4161.00",
+          "taskId": 18572
+        },
+        {
+          "taskName": "Record data for each employee, including such information as addresses, weekly earnings, absences, amount of sales or production, supervisory reports on performance, and dates of and reasons for terminations.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.25,
+          "onetCode": "43-4161.00",
+          "taskId": 2689
+        },
+        {
+          "taskName": "Explain company personnel policies, benefits, and procedures to employees or job applicants.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.55,
+          "onetCode": "43-4161.00",
+          "taskId": 2687
+        },
+        {
+          "taskName": "Provide assistance in administering employee benefit programs and worker's compensation plans.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.6,
+          "onetCode": "43-4161.00",
+          "taskId": 2702
+        },
+        {
+          "taskName": "Answer questions regarding examinations, eligibility, salaries, benefits, and other pertinent information.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.45,
+          "onetCode": "43-4161.00",
+          "taskId": 2691
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change yet."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -0.55,
+          "reasoning": "Early GenAI adoption begins automating routine documentation and data entry tasks."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -1.25,
+          "reasoning": "Wider deployment of AI tools for employee record-keeping and FAQs accelerates headcount pressure."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -2.05,
+          "reasoning": "HR software increasingly integrates AI chatbots for benefits and policy inquiries, reducing assistant workload."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -2.8,
+          "reasoning": "Continued automation of transactional HR support tasks slows new hiring in this role."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -3.44,
+          "reasoning": "Cumulative displacement reaches the capped midpoint of the decade-long projected decline."
+        }
+      ]
+    },
+    "43-4171": {
+      "title": "Receptionists and Information Clerks",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "43-4171.00"
+      ],
+      "employment": 910180,
+      "projectedGrowth": -1.7,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:11:25.589Z",
+      "promptSha256": "351e7d2b1b73e13ddc5ae46dc00af5ebe28ad49a3b87e20005fc131039c26633",
+      "tasks": [
+        {
+          "taskName": "Operate telephone switchboard to answer, screen, or forward calls, providing information, taking messages, or scheduling appointments.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.3,
+          "onetCode": "43-4171.00",
+          "taskId": 744
+        },
+        {
+          "taskName": "Greet persons entering establishment, determine nature and purpose of visit, and direct or escort them to specific destinations.",
+          "aiCapabilityScore": 0.35,
+          "humanCriticalityScore": 0.75,
+          "onetCode": "43-4171.00",
+          "taskId": 747
+        },
+        {
+          "taskName": "Receive payment and record receipts for services.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.4,
+          "onetCode": "43-4171.00",
+          "taskId": 745
+        },
+        {
+          "taskName": "Schedule appointments and maintain and update appointment calendars.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.25,
+          "onetCode": "43-4171.00",
+          "taskId": 751
+        },
+        {
+          "taskName": "Transmit information or documents to customers, using computer, mail, or facsimile machine.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.2,
+          "onetCode": "43-4171.00",
+          "taskId": 750
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change yet."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -0.12,
+          "reasoning": "Early adoption of AI answering and scheduling tools begins to trim hiring needs."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -0.3,
+          "reasoning": "Wider deployment of virtual receptionist and chatbot systems slows role growth."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -0.52,
+          "reasoning": "Continued automation of routine calls and payments reduces headcount gradually."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -0.74,
+          "reasoning": "Greater integration of AI into front-desk workflows further displaces routine tasks."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -0.94,
+          "reasoning": "Reaches the capped midpoint of the decade-long decline consistent with BLS outlook."
+        }
+      ]
+    },
+    "43-4181": {
+      "title": "Reservation and Transportation Ticket Agents and Travel Clerks",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "43-4181.00"
+      ],
+      "employment": 118710,
+      "projectedGrowth": 2.5,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:11:32.810Z",
+      "promptSha256": "3618230d1a7793b52f47ad30bd85789b3212963b6e38b08976d4871ad3c892af",
+      "tasks": [
+        {
+          "taskName": "Examine passenger documentation to determine destinations and to assign boarding passes.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.25,
+          "onetCode": "43-4181.00",
+          "taskId": 9758
+        },
+        {
+          "taskName": "Trace lost, delayed, or misdirected baggage for customers.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.45,
+          "onetCode": "43-4181.00",
+          "taskId": 9762
+        },
+        {
+          "taskName": "Check baggage and cargo and direct passengers to designated locations for loading.",
+          "aiCapabilityScore": 0.35,
+          "humanCriticalityScore": 0.6,
+          "onetCode": "43-4181.00",
+          "taskId": 9760
+        },
+        {
+          "taskName": "Provide boarding or disembarking assistance to passengers needing special assistance.",
+          "aiCapabilityScore": 0.1,
+          "humanCriticalityScore": 0.95,
+          "onetCode": "43-4181.00",
+          "taskId": 9759
+        },
+        {
+          "taskName": "Confer with customers to determine their service requirements and travel preferences.",
+          "aiCapabilityScore": 0.5,
+          "humanCriticalityScore": 0.65,
+          "onetCode": "43-4181.00",
+          "taskId": 9757
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year for cumulative forecast."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.2,
+          "reasoning": "Early automation of booking/check-in tasks slightly offsets modest demand growth."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 0.45,
+          "reasoning": "Continued self-service kiosk and AI adoption tempers net employment gains."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 0.7,
+          "reasoning": "Travel demand growth balances against further automation of routine tasks."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 0.95,
+          "reasoning": "Job growth continues modestly as human-assistance tasks remain resistant to automation."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 1.2,
+          "reasoning": "Cumulative growth nears the capped trajectory consistent with BLS decade outlook."
+        }
+      ]
+    },
+    "43-5011": {
+      "title": "Cargo and Freight Agents",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "43-5011.00"
+      ],
+      "employment": 97670,
+      "projectedGrowth": 6.2,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:11:40.010Z",
+      "promptSha256": "f06f3dc4b0e0ec0b7ed0c851c37fe68d4ee6e09c3307374dd0aa0baed39c4387",
+      "tasks": [
+        {
+          "taskName": "Negotiate and arrange transport of goods with shipping or freight companies.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.7,
+          "onetCode": "43-5011.00",
+          "taskId": 8188
+        },
+        {
+          "taskName": "Determine method of shipment and prepare bills of lading, invoices, and other shipping documents.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.35,
+          "onetCode": "43-5011.00",
+          "taskId": 8192
+        },
+        {
+          "taskName": "Track delivery progress of shipments.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.25,
+          "onetCode": "43-5011.00",
+          "taskId": 20271
+        },
+        {
+          "taskName": "Advise clients on transportation and payment methods.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.6,
+          "onetCode": "43-5011.00",
+          "taskId": 8190
+        },
+        {
+          "taskName": "Estimate freight or postal rates and record shipment costs and weights.",
+          "aiCapabilityScore": 0.78,
+          "humanCriticalityScore": 0.3,
+          "onetCode": "43-5011.00",
+          "taskId": 8194
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.55,
+          "reasoning": "Modest hiring growth as demand for logistics persists despite early automation adoption."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 1.25,
+          "reasoning": "Continued moderate growth as AI tools assist rather than replace agents."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 2,
+          "reasoning": "Steady employment growth as e-commerce and freight volumes expand."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 2.75,
+          "reasoning": "Growth continues to approach the capped trajectory as automation handles routine tasks."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 3.44,
+          "reasoning": "Reaches the capped midpoint of the 10-year BLS projected growth."
+        }
+      ]
+    },
+    "43-5021": {
+      "title": "Couriers and Messengers",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "43-5021.00"
+      ],
+      "employment": 68640,
+      "projectedGrowth": 8,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:11:47.071Z",
+      "promptSha256": "b314f32fc190d06302b65f73a8c575d3d37389952aff2484fc39e06a8043654d",
+      "tasks": [
+        {
+          "taskName": "Deliver and pick up medical records, lab specimens, and medications to and from hospitals and other medical facilities.",
+          "aiCapabilityScore": 0.05,
+          "humanCriticalityScore": 0.95,
+          "onetCode": "43-5021.00",
+          "taskId": 20903
+        },
+        {
+          "taskName": "Obtain signatures and payments, or arrange for recipients to make payments.",
+          "aiCapabilityScore": 0.15,
+          "humanCriticalityScore": 0.8,
+          "onetCode": "43-5021.00",
+          "taskId": 7017
+        },
+        {
+          "taskName": "Record information, such as items received and delivered and recipients' responses to messages.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.45,
+          "onetCode": "43-5021.00",
+          "taskId": 7018
+        },
+        {
+          "taskName": "Receive messages or materials to be delivered, and information on recipients, such as names, addresses, telephone numbers, and delivery instructions, communicated via telephone, two-way radio, or in person.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.55,
+          "onetCode": "43-5021.00",
+          "taskId": 7013
+        },
+        {
+          "taskName": "Load vehicles with listed goods, ensuring goods are loaded correctly and taking precautions with hazardous goods.",
+          "aiCapabilityScore": 0.1,
+          "humanCriticalityScore": 0.9,
+          "onetCode": "43-5021.00",
+          "taskId": 7011
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.7,
+          "reasoning": "Modest demand growth from e-commerce offsets slow automation uptake."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 1.55,
+          "reasoning": "Gradual employment growth continues alongside limited task automation."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 2.45,
+          "reasoning": "Steady delivery demand growth maintains positive employment trajectory."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 3.4,
+          "reasoning": "Continued physical-task dominance limits AI displacement effects."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 4.44,
+          "reasoning": "Reaches capped midpoint of BLS decade projection by 2030."
+        }
+      ]
+    },
+    "43-5031": {
+      "title": "Public Safety Telecommunicators",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "43-5031.00"
+      ],
+      "employment": 102500,
+      "projectedGrowth": 3.7,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:11:54.901Z",
+      "promptSha256": "7e10cfa6a5efddb98ec3abc8be2c2827f19524009986abed1b47590b97ccf92c",
+      "tasks": [
+        {
+          "taskName": "Provide emergency medical instructions to callers.",
+          "aiCapabilityScore": 0.35,
+          "humanCriticalityScore": 0.95,
+          "onetCode": "43-5031.00",
+          "taskId": 2719
+        },
+        {
+          "taskName": "Question callers to determine their locations and the nature of their problems to determine type of response needed.",
+          "aiCapabilityScore": 0.4,
+          "humanCriticalityScore": 0.9,
+          "onetCode": "43-5031.00",
+          "taskId": 2707
+        },
+        {
+          "taskName": "Determine response requirements and relative priorities of situations, and dispatch units in accordance with established procedures.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.88,
+          "onetCode": "43-5031.00",
+          "taskId": 2705
+        },
+        {
+          "taskName": "Receive incoming telephone or alarm system calls regarding emergency and non-emergency police and fire service, emergency ambulance service, information, and after-hours calls for departments within a city.",
+          "aiCapabilityScore": 0.5,
+          "humanCriticalityScore": 0.75,
+          "onetCode": "43-5031.00",
+          "taskId": 2711
+        },
+        {
+          "taskName": "Relay information and messages to and from emergency sites, to law enforcement agencies, and to all other individuals or groups requiring notification.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.7,
+          "onetCode": "43-5031.00",
+          "taskId": 2710
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no change."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.35,
+          "reasoning": "Slight hiring growth as call volumes and staffing needs rise gradually."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 0.75,
+          "reasoning": "Continued modest workforce expansion despite partial AI-assisted triage tools."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 1.15,
+          "reasoning": "Steady demand growth as population and emergency call volumes increase."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 1.6,
+          "reasoning": "Gradual employment growth continues, tempered by efficiency gains from AI call support."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 2.06,
+          "reasoning": "Reaches capped midpoint of BLS decade outlook reflecting steady but AI-tempered growth."
+        }
+      ]
+    },
+    "43-5032": {
+      "title": "Dispatchers, Except Police, Fire, and Ambulance",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "43-5032.00"
+      ],
+      "employment": 202810,
+      "projectedGrowth": -0.7,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:12:02.503Z",
+      "promptSha256": "fcfef9ca3174f778cb0ff4f5f3c67cc5039923a8d2f1f4cfad52b94ee2ad5626",
+      "tasks": [
+        {
+          "taskName": "Schedule or dispatch workers, work crews, equipment, or service vehicles to appropriate locations, according to customer requests, specifications, or needs, using radios or telephones.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.55,
+          "onetCode": "43-5032.00",
+          "taskId": 2723
+        },
+        {
+          "taskName": "Prepare daily work and run schedules.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.35,
+          "onetCode": "43-5032.00",
+          "taskId": 2727
+        },
+        {
+          "taskName": "Confer with customers or supervising personnel to address questions, problems, or requests for service or equipment.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.7,
+          "onetCode": "43-5032.00",
+          "taskId": 2726
+        },
+        {
+          "taskName": "Relay work orders, messages, or information to or from work crews, supervisors, or field inspectors, using telephones or two-way radios.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.55,
+          "onetCode": "43-5032.00",
+          "taskId": 2725
+        },
+        {
+          "taskName": "Receive or prepare work orders.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.35,
+          "onetCode": "43-5032.00",
+          "taskId": 2728
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -0.07,
+          "reasoning": "Early GenAI adoption begins automating scheduling tasks slightly."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -0.15,
+          "reasoning": "Growing use of AI dispatch tools reduces demand modestly."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -0.23,
+          "reasoning": "Wider integration of automated scheduling and routing systems."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -0.31,
+          "reasoning": "Continued efficiency gains from AI-driven logistics software."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -0.39,
+          "reasoning": "Reaches capped midpoint of 10-year BLS decline trajectory."
+        }
+      ]
+    },
+    "43-5041": {
+      "title": "Meter Readers, Utilities",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "43-5041.00"
+      ],
+      "employment": 19430,
+      "projectedGrowth": -10.5,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:12:09.469Z",
+      "promptSha256": "531629aaf6c1300268928957a4c450cb1823ddcc689017a9be835266ccf54f16",
+      "tasks": [
+        {
+          "taskName": "Read electric, gas, water, or steam consumption meters and enter data in route books or hand-held computers.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.2,
+          "onetCode": "43-5041.00",
+          "taskId": 11309
+        },
+        {
+          "taskName": "Upload into office computers all information collected on hand-held computers during meter rounds, or return route books or hand-held computers to business offices so that data can be compiled.",
+          "aiCapabilityScore": 0.9,
+          "humanCriticalityScore": 0.15,
+          "onetCode": "43-5041.00",
+          "taskId": 11311
+        },
+        {
+          "taskName": "Walk or drive vehicles along established routes to take readings of meter dials.",
+          "aiCapabilityScore": 0.3,
+          "humanCriticalityScore": 0.6,
+          "onetCode": "43-5041.00",
+          "taskId": 11310
+        },
+        {
+          "taskName": "Inspect meters for unauthorized connections, defects, and damage, such as broken seals.",
+          "aiCapabilityScore": 0.25,
+          "humanCriticalityScore": 0.75,
+          "onetCode": "43-5041.00",
+          "taskId": 11313
+        },
+        {
+          "taskName": "Verify readings in cases where consumption appears to be abnormal, and record possible reasons for fluctuations.",
+          "aiCapabilityScore": 0.4,
+          "humanCriticalityScore": 0.65,
+          "onetCode": "43-5041.00",
+          "taskId": 11312
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -0.85,
+          "reasoning": "Smart meter adoption and automation begin trimming routes."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -2,
+          "reasoning": "Expanding AMI infrastructure reduces manual reading needs further."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -3.2,
+          "reasoning": "Continued utility investment in automated metering accelerates decline."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -4.6,
+          "reasoning": "Residual manual reading roles shrink as remote sensing scales."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -5.83,
+          "reasoning": "Reaches capped midpoint of decade-long decline per BLS outlook."
+        }
+      ]
+    },
+    "43-5051": {
+      "title": "Postal Service Clerks",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "43-5051.00"
+      ],
+      "employment": 73720,
+      "projectedGrowth": -0.3,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:12:16.368Z",
+      "promptSha256": "5bae65d4bf8b0505f7c33d5e71d7b48b5f2677aa82e056372a73f662a26bbc16",
+      "tasks": [
+        {
+          "taskName": "Weigh letters and parcels, compute mailing costs based on type, weight, and destination, and affix correct postage.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.3,
+          "onetCode": "43-5051.00",
+          "taskId": 11322
+        },
+        {
+          "taskName": "Check mail to ensure correct postage and that packages and letters are in proper condition for mailing.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.45,
+          "onetCode": "43-5051.00",
+          "taskId": 11326
+        },
+        {
+          "taskName": "Sort incoming and outgoing mail, according to type and destination, by hand or by operating electronic mail-sorting and scanning devices.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.35,
+          "onetCode": "43-5051.00",
+          "taskId": 11330
+        },
+        {
+          "taskName": "Obtain signatures from recipients of registered or special delivery mail.",
+          "aiCapabilityScore": 0.15,
+          "humanCriticalityScore": 0.8,
+          "onetCode": "43-5051.00",
+          "taskId": 11323
+        },
+        {
+          "taskName": "Answer questions regarding mail regulations and procedures, postage rates, and post office boxes.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.4,
+          "onetCode": "43-5051.00",
+          "taskId": 11327
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -0.03,
+          "reasoning": "Slow early adoption of automation and self-service kiosks reduces clerk hours slightly."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -0.06,
+          "reasoning": "Continued automation of sorting and routine transactions accelerates modest declines."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -0.1,
+          "reasoning": "Expanded self-service and AI-driven customer support further erodes task volume."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -0.14,
+          "reasoning": "Broader digital mail substitution and automation reduce clerk staffing needs."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -0.17,
+          "reasoning": "Cumulative automation effects reach the capped midpoint of the 10-year outlook."
+        }
+      ]
+    },
+    "43-5052": {
+      "title": "Postal Service Mail Carriers",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "43-5052.00"
+      ],
+      "employment": 328820,
+      "projectedGrowth": -0.3,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:12:24.081Z",
+      "promptSha256": "c8d52ec7bc966ee00fb756287540aab5868cd4e16f5e8bec6ccd90fb5e96e070",
+      "tasks": [
+        {
+          "taskName": "Scan labels on letters or parcels to confirm receipt.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.2,
+          "onetCode": "43-5052.00",
+          "taskId": 20906
+        },
+        {
+          "taskName": "Obtain signed receipts for registered, certified, and insured mail, collect associated charges, and complete any necessary paperwork.",
+          "aiCapabilityScore": 0.35,
+          "humanCriticalityScore": 0.6,
+          "onetCode": "43-5052.00",
+          "taskId": 11341
+        },
+        {
+          "taskName": "Return to the post office with mail collected from homes, businesses, and public mailboxes.",
+          "aiCapabilityScore": 0.1,
+          "humanCriticalityScore": 0.85,
+          "onetCode": "43-5052.00",
+          "taskId": 11344
+        },
+        {
+          "taskName": "Sort mail for delivery, arranging it in delivery sequence.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.4,
+          "onetCode": "43-5052.00",
+          "taskId": 11342
+        },
+        {
+          "taskName": "Deliver mail to residences and business establishments along specified routes by walking or driving, using a combination of satchels, carts, cars, and small trucks.",
+          "aiCapabilityScore": 0.05,
+          "humanCriticalityScore": 0.95,
+          "onetCode": "43-5052.00",
+          "taskId": 11343
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -0.03,
+          "reasoning": "Slow early declines from automated sorting and volume shifts."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -0.07,
+          "reasoning": "Continued mail volume decline and route consolidation."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -0.11,
+          "reasoning": "Gradual efficiency gains reduce headcount needs."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -0.14,
+          "reasoning": "Further automation in sorting facilities trims demand."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -0.17,
+          "reasoning": "Reaches capped midpoint of the 10-year BLS outlook decline."
+        }
+      ]
+    },
+    "43-5053": {
+      "title": "Postal Service Mail Sorters, Processors, and Processing Machine Operators",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "43-5053.00"
+      ],
+      "employment": 105200,
+      "projectedGrowth": -5.3,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:12:31.013Z",
+      "promptSha256": "ff0f5a3c6a209f7656c96d51df2e96d6e53d2dc14b187fa727a9007570ffb8ff",
+      "tasks": [
+        {
+          "taskName": "Clear jams in sorting equipment.",
+          "aiCapabilityScore": 0.05,
+          "humanCriticalityScore": 0.9,
+          "onetCode": "43-5053.00",
+          "taskId": 8221
+        },
+        {
+          "taskName": "Operate various types of equipment, such as computer scanning equipment, addressographs, mimeographs, optical character readers, and bar-code sorters.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.55,
+          "onetCode": "43-5053.00",
+          "taskId": 8219
+        },
+        {
+          "taskName": "Sort odd-sized mail by hand, sort mail that other workers have been unable to sort, and segregate items requiring special handling.",
+          "aiCapabilityScore": 0.15,
+          "humanCriticalityScore": 0.85,
+          "onetCode": "43-5053.00",
+          "taskId": 8227
+        },
+        {
+          "taskName": "Direct items according to established routing schemes, using computer-controlled keyboards or voice-recognition equipment.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.45,
+          "onetCode": "43-5053.00",
+          "taskId": 8213
+        },
+        {
+          "taskName": "Check items to ensure that addresses are legible and correct, that sufficient postage has been paid or the appropriate documentation is attached, and that items are in a suitable condition for processing.",
+          "aiCapabilityScore": 0.5,
+          "humanCriticalityScore": 0.55,
+          "onetCode": "43-5053.00",
+          "taskId": 8222
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -0.45,
+          "reasoning": "Early automation of scanning and sorting slightly reduces headcount needs."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -0.95,
+          "reasoning": "Continued mail volume decline and equipment automation accelerate attrition-based reductions."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -1.55,
+          "reasoning": "Broader adoption of AI-assisted routing and OCR reduces manual sorting roles."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -2.2,
+          "reasoning": "Further consolidation of processing facilities continues gradual employment decline."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -2.94,
+          "reasoning": "Reaches capped midpoint of BLS decade-long projected decline by 2030."
+        }
+      ]
+    },
+    "43-5061": {
+      "title": "Production, Planning, and Expediting Clerks",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "43-5061.00"
+      ],
+      "employment": 390160,
+      "projectedGrowth": -1.3,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:12:38.393Z",
+      "promptSha256": "8118627543b194d05c46408955970f2705c4a0a1fd7644501e9f78111d6da790",
+      "tasks": [
+        {
+          "taskName": "Distribute production schedules or work orders to departments.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.2,
+          "onetCode": "43-5061.00",
+          "taskId": 11370
+        },
+        {
+          "taskName": "Revise production schedules when required due to design changes, labor or material shortages, backlogs, or other interruptions, collaborating with management, marketing, sales, production, or engineering.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.55,
+          "onetCode": "43-5061.00",
+          "taskId": 11365
+        },
+        {
+          "taskName": "Review documents, such as production schedules, work orders, or staffing tables, to determine personnel or materials requirements or material priorities.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.4,
+          "onetCode": "43-5061.00",
+          "taskId": 11363
+        },
+        {
+          "taskName": "Arrange for delivery, assembly, or distribution of supplies or parts to expedite flow of materials and meet production schedules.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.5,
+          "onetCode": "43-5061.00",
+          "taskId": 11372
+        },
+        {
+          "taskName": "Confer with establishment personnel, vendors, or customers to coordinate production or shipping activities and to resolve complaints or eliminate delays.",
+          "aiCapabilityScore": 0.35,
+          "humanCriticalityScore": 0.75,
+          "onetCode": "43-5061.00",
+          "taskId": 11366
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -0.1,
+          "reasoning": "Early GenAI adoption begins trimming scheduling and coordination tasks."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -0.24,
+          "reasoning": "Wider deployment of AI scheduling tools gradually reduces headcount needs."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -0.4,
+          "reasoning": "Continued automation of documentation and task distribution accelerates decline."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -0.58,
+          "reasoning": "Maturing AI coordination systems further erode routine clerk roles."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -0.72,
+          "reasoning": "Cumulative decline approaches the capped portion of the decade-long BLS outlook."
+        }
+      ]
+    },
+    "43-5071": {
+      "title": "Shipping, Receiving, and Inventory Clerks",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "43-5071.00"
+      ],
+      "employment": 816870,
+      "projectedGrowth": -7.6,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:12:45.807Z",
+      "promptSha256": "87675a11fa473707da4c9b2c9d4a9a71985e8d61612957717b59af965ca91e7e",
+      "tasks": [
+        {
+          "taskName": "Examine shipment contents and compare with records, such as manifests, invoices, or orders, to verify accuracy.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.55,
+          "onetCode": "43-5071.00",
+          "taskId": 20276
+        },
+        {
+          "taskName": "Requisition and store shipping materials and supplies to maintain inventory of stock.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.5,
+          "onetCode": "43-5071.00",
+          "taskId": 4742
+        },
+        {
+          "taskName": "Prepare documents, such as work orders, bills of lading, or shipping orders, to route materials.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.35,
+          "onetCode": "43-5071.00",
+          "taskId": 4737
+        },
+        {
+          "taskName": "Pack, seal, label, or affix postage to prepare materials for shipping, using hand tools, power tools, or postage meter.",
+          "aiCapabilityScore": 0.2,
+          "humanCriticalityScore": 0.8,
+          "onetCode": "43-5071.00",
+          "taskId": 20277
+        },
+        {
+          "taskName": "Record shipment data, such as weight, charges, space availability, damages, or discrepancies, for reporting, accounting, or recordkeeping purposes.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.4,
+          "onetCode": "43-5071.00",
+          "taskId": 4739
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -0.55,
+          "reasoning": "Early AI-assisted documentation and inventory tools begin reducing clerical workload."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -1.3,
+          "reasoning": "Broader adoption of automated inventory and shipment tracking systems accelerates reductions."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -2.15,
+          "reasoning": "Continued warehouse automation and AI-driven documentation reduce headcount needs."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -3.2,
+          "reasoning": "Maturing automation technologies further consolidate clerical and tracking tasks."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -4.22,
+          "reasoning": "Cumulative decline reaches the capped midpoint of the decade-long BLS projected decline."
+        }
+      ]
+    },
+    "43-5111": {
+      "title": "Weighers, Measurers, Checkers, and Samplers, Recordkeeping",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "43-5111.00"
+      ],
+      "employment": 53300,
+      "projectedGrowth": -4.8,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:12:53.374Z",
+      "promptSha256": "31618cb61c4b71f9ad0eb3d57365547ad408501cba8340db2cf4d5cb6c21db1d",
+      "tasks": [
+        {
+          "taskName": "Document quantity, quality, type, weight, test result data, and value of materials or products to maintain shipping, receiving, and production records and files.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.3,
+          "onetCode": "43-5111.00",
+          "taskId": 11380
+        },
+        {
+          "taskName": "Weigh or measure materials, equipment, or products to maintain relevant records, using volume meters, scales, rules, or calipers.",
+          "aiCapabilityScore": 0.35,
+          "humanCriticalityScore": 0.6,
+          "onetCode": "43-5111.00",
+          "taskId": 11383
+        },
+        {
+          "taskName": "Collect or prepare measurement, weight, or identification labels and attach them to products.",
+          "aiCapabilityScore": 0.3,
+          "humanCriticalityScore": 0.6,
+          "onetCode": "43-5111.00",
+          "taskId": 11379
+        },
+        {
+          "taskName": "Examine products or materials, parts, subassemblies, and packaging for damage, defects, or shortages, using specification sheets, gauges, and standards charts.",
+          "aiCapabilityScore": 0.4,
+          "humanCriticalityScore": 0.65,
+          "onetCode": "43-5111.00",
+          "taskId": 11397
+        },
+        {
+          "taskName": "Signal or instruct other workers to weigh, move, or check products.",
+          "aiCapabilityScore": 0.2,
+          "humanCriticalityScore": 0.7,
+          "onetCode": "43-5111.00",
+          "taskId": 11391
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -0.45,
+          "reasoning": "Early AI adoption in recordkeeping begins reducing clerical headcount needs."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -0.95,
+          "reasoning": "Automated data capture and digital logging continue to erode demand."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -1.55,
+          "reasoning": "Wider integration of AI-driven inventory and QA systems accelerates decline."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -2.15,
+          "reasoning": "Most documentation tasks increasingly automated, slowing hiring further."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -2.67,
+          "reasoning": "Role reaches capped decline consistent with long-term BLS trajectory."
+        }
+      ]
+    },
+    "43-6011": {
+      "title": "Executive Secretaries and Executive Administrative Assistants",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "43-6011.00"
+      ],
+      "employment": 459910,
+      "projectedGrowth": 0,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:13:00.748Z",
+      "promptSha256": "8240840f3e93b6b8e1a02d51852a8a41cc7610180604e6cbcd7221f405b23eb5",
+      "tasks": [
+        {
+          "taskName": "Manage and maintain executives' schedules.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.4,
+          "onetCode": "43-6011.00",
+          "taskId": 2770
+        },
+        {
+          "taskName": "Make travel arrangements for executives.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.3,
+          "onetCode": "43-6011.00",
+          "taskId": 2779
+        },
+        {
+          "taskName": "Prepare invoices, reports, memos, letters, financial statements, and other documents, using word processing, spreadsheet, database, or presentation software.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.25,
+          "onetCode": "43-6011.00",
+          "taskId": 2771
+        },
+        {
+          "taskName": "Coordinate and direct office services, such as records, departmental finances, budget preparation, personnel issues, and housekeeping, to aid executives.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.65,
+          "onetCode": "43-6011.00",
+          "taskId": 18576
+        },
+        {
+          "taskName": "Answer phone calls and direct calls to appropriate parties or take messages.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.35,
+          "onetCode": "43-6011.00",
+          "taskId": 18573
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -0.1,
+          "reasoning": "Early AI adoption begins trimming administrative task volume."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -0.2,
+          "reasoning": "Growing use of AI scheduling and document tools reduces headcount needs slightly."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -0.28,
+          "reasoning": "Continued automation of routine clerical tasks slows hiring growth."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -0.33,
+          "reasoning": "AI tools increasingly handle correspondence and coordination tasks."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -0.36,
+          "reasoning": "Cumulative effect approaches the capped flat decade-long outlook."
+        }
+      ]
+    },
+    "43-6012": {
+      "title": "Legal Secretaries and Administrative Assistants",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "43-6012.00"
+      ],
+      "employment": 156280,
+      "projectedGrowth": -5.2,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:13:07.873Z",
+      "promptSha256": "a8a692073137901d2ff049f0e499f77afc01e7eebf4f2a66b663da4de9b369c0",
+      "tasks": [
+        {
+          "taskName": "Organize and maintain law libraries, documents, and case files.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.35,
+          "onetCode": "43-6012.00",
+          "taskId": 768
+        },
+        {
+          "taskName": "Mail, fax, or arrange for delivery of legal correspondence to clients, witnesses, and court officials.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.3,
+          "onetCode": "43-6012.00",
+          "taskId": 764
+        },
+        {
+          "taskName": "Prepare and distribute invoices to bill clients or pay account expenses.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.25,
+          "onetCode": "43-6012.00",
+          "taskId": 18780
+        },
+        {
+          "taskName": "Prepare, proofread, or process legal documents, such as summonses, subpoenas, complaints, appeals, motions, or pretrial agreements.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.55,
+          "onetCode": "43-6012.00",
+          "taskId": 21078
+        },
+        {
+          "taskName": "Make photocopies of correspondence, documents, and other printed matter.",
+          "aiCapabilityScore": 0.3,
+          "humanCriticalityScore": 0.1,
+          "onetCode": "43-6012.00",
+          "taskId": 767
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -0.45,
+          "reasoning": "Early GenAI adoption begins trimming document-prep and clerical hours."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -1.05,
+          "reasoning": "Wider use of AI drafting and invoicing tools reduces support staff needs."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -1.7,
+          "reasoning": "Continued automation of correspondence and filing tasks accelerates decline."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -2.35,
+          "reasoning": "Legal offices consolidate administrative roles as AI tools mature."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -2.89,
+          "reasoning": "Cumulative decline reaches the capped midpoint of the 10-year BLS outlook."
+        }
+      ]
+    },
+    "43-6013": {
+      "title": "Medical Secretaries and Administrative Assistants",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "43-6013.00"
+      ],
+      "employment": 961610,
+      "projectedGrowth": 4.8,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:13:15.064Z",
+      "promptSha256": "194159bb6b26654a2285a5d274f99aa8ccba43a526cea626e4203a9b347099ad",
+      "tasks": [
+        {
+          "taskName": "Answer telephones and direct calls to appropriate staff.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.35,
+          "onetCode": "43-6013.00",
+          "taskId": 777
+        },
+        {
+          "taskName": "Schedule and confirm patient diagnostic appointments, surgeries, or medical consultations.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.45,
+          "onetCode": "43-6013.00",
+          "taskId": 775
+        },
+        {
+          "taskName": "Complete insurance or other claim forms.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.3,
+          "onetCode": "43-6013.00",
+          "taskId": 788
+        },
+        {
+          "taskName": "Greet visitors, ascertain purpose of visit, and direct them to appropriate staff.",
+          "aiCapabilityScore": 0.35,
+          "humanCriticalityScore": 0.7,
+          "onetCode": "43-6013.00",
+          "taskId": 779
+        },
+        {
+          "taskName": "Transmit correspondence or medical records by mail, e-mail, or fax.",
+          "aiCapabilityScore": 0.78,
+          "humanCriticalityScore": 0.25,
+          "onetCode": "43-6013.00",
+          "taskId": 783
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year for cumulative forecast."
+        },
+        {
+          "year": 2026,
+          "growthImpact": 0.45,
+          "reasoning": "Early AI adoption in scheduling and claims slightly offsets steady demand growth."
+        },
+        {
+          "year": 2027,
+          "growthImpact": 0.95,
+          "reasoning": "Healthcare administrative demand continues outpacing automation-driven efficiency gains."
+        },
+        {
+          "year": 2028,
+          "growthImpact": 1.5,
+          "reasoning": "Aging population sustains hiring despite growing use of AI for routine tasks."
+        },
+        {
+          "year": 2029,
+          "growthImpact": 2.05,
+          "reasoning": "Continued healthcare expansion supports moderate employment growth."
+        },
+        {
+          "year": 2030,
+          "growthImpact": 2.55,
+          "reasoning": "Growth approaches the capped midpoint of the decade-long BLS projection."
+        }
+      ]
+    },
+    "43-6014": {
+      "title": "Secretaries and Administrative Assistants, Except Legal, Medical, and Executive",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "43-6014.00"
+      ],
+      "employment": 1706790,
+      "projectedGrowth": -6,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:13:22.053Z",
+      "promptSha256": "a5801284600298624150cf56118cec3c5592da41e4354ae7c2394ce6077ecfb4",
+      "tasks": [
+        {
+          "taskName": "Answer telephones and give information to callers, take messages, or transfer calls to appropriate individuals.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.35,
+          "onetCode": "43-6014.00",
+          "taskId": 2790
+        },
+        {
+          "taskName": "Greet visitors or callers and handle their inquiries or direct them to the appropriate persons according to their needs.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.55,
+          "onetCode": "43-6014.00",
+          "taskId": 2791
+        },
+        {
+          "taskName": "Create, maintain, and enter information into databases.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.25,
+          "onetCode": "43-6014.00",
+          "taskId": 20281
+        },
+        {
+          "taskName": "Use computers for various applications, such as database management or word processing.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.3,
+          "onetCode": "43-6014.00",
+          "taskId": 20280
+        },
+        {
+          "taskName": "Operate office equipment, such as fax machines, copiers, or phone systems and arrange for repairs when equipment malfunctions.",
+          "aiCapabilityScore": 0.2,
+          "humanCriticalityScore": 0.75,
+          "onetCode": "43-6014.00",
+          "taskId": 20283
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -0.55,
+          "reasoning": "Early adoption of AI tools begins trimming routine administrative demand."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -1.2,
+          "reasoning": "Broader deployment of AI scheduling and data-entry tools accelerates task automation."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -1.9,
+          "reasoning": "Continued consolidation of administrative roles as AI handles more communication tasks."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -2.6,
+          "reasoning": "Further workforce reductions as offices integrate AI receptionist and database systems."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -3.33,
+          "reasoning": "Cumulative decline reaches 56% of the decade-long BLS projected contraction."
+        }
+      ]
+    },
+    "43-9021": {
+      "title": "Data Entry Keyers",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "43-9021.00"
+      ],
+      "employment": 127080,
+      "projectedGrowth": -25.5,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:13:29.429Z",
+      "promptSha256": "a45673056b7d3fbec742fe95312ceb0eac1c5507b1b473cb8e4afe4e464b848d",
+      "tasks": [
+        {
+          "taskName": "Locate and correct data entry errors, or report them to supervisors.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.3,
+          "onetCode": "43-9021.00",
+          "taskId": 11405
+        },
+        {
+          "taskName": "Compile, sort, and verify the accuracy of data before it is entered.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.3,
+          "onetCode": "43-9021.00",
+          "taskId": 11402
+        },
+        {
+          "taskName": "Compare data with source documents, or re-enter data in verification format to detect errors.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.25,
+          "onetCode": "43-9021.00",
+          "taskId": 11403
+        },
+        {
+          "taskName": "Store completed documents in appropriate locations.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.15,
+          "onetCode": "43-9021.00",
+          "taskId": 11404
+        },
+        {
+          "taskName": "Select materials needed to complete work assignments.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.35,
+          "onetCode": "43-9021.00",
+          "taskId": 11407
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -2.3,
+          "reasoning": "Early adoption of automated data capture and OCR tools begins reducing demand."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -5.1,
+          "reasoning": "Broader GenAI integration into document processing accelerates displacement."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -8.2,
+          "reasoning": "Intelligent document processing and validation tools become standard in many firms."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -11.3,
+          "reasoning": "Continued automation of verification and correction tasks shrinks remaining roles."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -14.17,
+          "reasoning": "Cumulative decline approaches the capped midpoint of the decade-long BLS projection."
+        }
+      ]
+    },
+    "43-9022": {
+      "title": "Word Processors and Typists",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "43-9022.00"
+      ],
+      "employment": 35010,
+      "projectedGrowth": -34.4,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:13:36.339Z",
+      "promptSha256": "526ad5cc9555333f526e314ccecbc812ceccfe7d610bb4b8f696a02344e7aacc",
+      "tasks": [
+        {
+          "taskName": "Perform other clerical duties, such as answering telephone, sorting and distributing mail, running errands or sending faxes.",
+          "aiCapabilityScore": 0.35,
+          "humanCriticalityScore": 0.55,
+          "onetCode": "43-9022.00",
+          "taskId": 791
+        },
+        {
+          "taskName": "Check completed work for spelling, grammar, punctuation, and format.",
+          "aiCapabilityScore": 0.92,
+          "humanCriticalityScore": 0.2,
+          "onetCode": "43-9022.00",
+          "taskId": 790
+        },
+        {
+          "taskName": "File and store completed documents on computer hard drive or disk, or maintain a computer filing system to store, retrieve, update, and delete documents.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.25,
+          "onetCode": "43-9022.00",
+          "taskId": 794
+        },
+        {
+          "taskName": "Print and make copies of work.",
+          "aiCapabilityScore": 0.4,
+          "humanCriticalityScore": 0.3,
+          "onetCode": "43-9022.00",
+          "taskId": 795
+        },
+        {
+          "taskName": "Transmit work electronically to other locations.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.15,
+          "onetCode": "43-9022.00",
+          "taskId": 805
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change yet."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -3.4,
+          "reasoning": "Early adoption of AI document tools begins reducing demand."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -7.6,
+          "reasoning": "Broader integration of automated editing and filing systems accelerates decline."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -11.9,
+          "reasoning": "Continued displacement as AI handles formatting and transmission tasks."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -15.8,
+          "reasoning": "Most clerical text-processing functions increasingly automated."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -19.11,
+          "reasoning": "Reaches capped midpoint of decade-long projected decline."
+        }
+      ]
+    },
+    "43-9031": {
+      "title": "Desktop Publishers",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "43-9031.00"
+      ],
+      "employment": 3350,
+      "projectedGrowth": -14.5,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:13:43.041Z",
+      "promptSha256": "5c0f91b253cf20d703290fcfef2bbf27e3998d1946b23119cd026ad3220f79d5",
+      "tasks": [
+        {
+          "taskName": "Operate desktop publishing software and equipment to design, lay out, and produce camera-ready copy.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.25,
+          "onetCode": "43-9031.00",
+          "taskId": 2816
+        },
+        {
+          "taskName": "Position text and art elements from a variety of databases in a visually appealing way to design print or web pages, using knowledge of type styles and size and layout patterns.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.3,
+          "onetCode": "43-9031.00",
+          "taskId": 2820
+        },
+        {
+          "taskName": "Check preliminary and final proofs for errors and make necessary corrections.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.55,
+          "onetCode": "43-9031.00",
+          "taskId": 2815
+        },
+        {
+          "taskName": "View monitors for visual representation of work in progress and for instructions and feedback throughout process, making modifications as necessary.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.5,
+          "onetCode": "43-9031.00",
+          "taskId": 2817
+        },
+        {
+          "taskName": "Enter text into computer keyboard and select the size and style of type, column width, and appropriate spacing for printed materials.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.25,
+          "onetCode": "43-9031.00",
+          "taskId": 2818
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change assumed."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -1.4,
+          "reasoning": "Early adoption of GenAI layout tools begins reducing demand slightly."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -3,
+          "reasoning": "Wider integration of AI design tools accelerates task automation and job consolidation."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -4.7,
+          "reasoning": "Continued productivity gains from AI-assisted publishing reduce headcount needs."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -6.4,
+          "reasoning": "Automation of layout and proofing tasks further shrinks occupational demand."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -8.06,
+          "reasoning": "Cumulative decline reaches the capped midpoint of the decade-long BLS projected decline."
+        }
+      ]
+    },
+    "43-9041": {
+      "title": "Insurance Claims and Policy Processing Clerks",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "43-9041.00"
+      ],
+      "employment": 214260,
+      "projectedGrowth": -1.9,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:13:50.679Z",
+      "promptSha256": "89b1b86d5db26f06a34d793b3ac3448ff1343b9f689f69dddca1f349c845671e",
+      "tasks": [
+        {
+          "taskName": "Prepare insurance claim forms or related documents, and review them for completeness.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.25,
+          "onetCode": "43-9041.00",
+          "taskId": 23313
+        },
+        {
+          "taskName": "Calculate amount of claim.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.3,
+          "onetCode": "43-9041.00",
+          "taskId": 23314
+        },
+        {
+          "taskName": "Post or attach information to claim file.",
+          "aiCapabilityScore": 0.9,
+          "humanCriticalityScore": 0.15,
+          "onetCode": "43-9041.00",
+          "taskId": 23315
+        },
+        {
+          "taskName": "Transmit claims for payment or further investigation.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.3,
+          "onetCode": "43-9041.00",
+          "taskId": 23316
+        },
+        {
+          "taskName": "Contact insured or other involved persons to obtain missing information.",
+          "aiCapabilityScore": 0.45,
+          "humanCriticalityScore": 0.7,
+          "onetCode": "43-9041.00",
+          "taskId": 23317
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -0.18,
+          "reasoning": "Early GenAI adoption begins automating document and data entry tasks."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -0.42,
+          "reasoning": "Wider deployment of AI claims processing tools reduces clerical headcount needs."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -0.68,
+          "reasoning": "Continued automation of claim calculation and filing shrinks staffing levels."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -0.9,
+          "reasoning": "Mature AI systems handle most routine processing, slowing hiring further."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -1.06,
+          "reasoning": "Cumulative decline reaches the capped share of the 10-year BLS outlook."
+        }
+      ]
+    },
+    "43-9051": {
+      "title": "Mail Clerks and Mail Machine Operators, Except Postal Service",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "43-9051.00"
+      ],
+      "employment": 55230,
+      "projectedGrowth": -7.2,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:13:57.332Z",
+      "promptSha256": "656a99b78af86584a7956ec3034d528fb493bd55a2cf69ba6292666f2dc7be95",
+      "tasks": [
+        {
+          "taskName": "Wrap packages or bundles by hand, or by using tying machines.",
+          "aiCapabilityScore": 0.1,
+          "humanCriticalityScore": 0.85,
+          "onetCode": "43-9051.00",
+          "taskId": 13268
+        },
+        {
+          "taskName": "Verify that items are addressed correctly, marked with the proper postage, and in suitable condition for processing.",
+          "aiCapabilityScore": 0.35,
+          "humanCriticalityScore": 0.6,
+          "onetCode": "43-9051.00",
+          "taskId": 13261
+        },
+        {
+          "taskName": "Remove containers of sorted mail or parcels and transfer them to designated areas according to established procedures.",
+          "aiCapabilityScore": 0.05,
+          "humanCriticalityScore": 0.9,
+          "onetCode": "43-9051.00",
+          "taskId": 13276
+        },
+        {
+          "taskName": "Sort and route incoming mail, and collect outgoing mail, using carts as necessary.",
+          "aiCapabilityScore": 0.2,
+          "humanCriticalityScore": 0.75,
+          "onetCode": "43-9051.00",
+          "taskId": 13264
+        },
+        {
+          "taskName": "Affix postage to packages or letters by hand, or stamp materials, using postage meters.",
+          "aiCapabilityScore": 0.15,
+          "humanCriticalityScore": 0.7,
+          "onetCode": "43-9051.00",
+          "taskId": 13260
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -0.55,
+          "reasoning": "Gradual automation of sorting and mailroom software begins reducing headcount."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -1.3,
+          "reasoning": "Continued adoption of automated mail handling and e-communication reduces demand."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -2.15,
+          "reasoning": "Broader logistics automation and declining physical mail volumes accelerate decline."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -3.1,
+          "reasoning": "Further consolidation of mailroom functions with AI-assisted routing systems."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -4,
+          "reasoning": "Cumulative decline reaches capped midpoint of the 10-year BLS projected contraction."
+        }
+      ]
+    },
+    "43-9061": {
+      "title": "Office Clerks, General",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "43-9061.00"
+      ],
+      "employment": 2464940,
+      "projectedGrowth": -6,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:14:04.910Z",
+      "promptSha256": "8b52cf7fdd2a692d19710c568f37c50f9a718a8c65985783d745fe092abe27ff",
+      "tasks": [
+        {
+          "taskName": "Operate office machines, such as photocopiers and scanners, facsimile machines, voice mail systems, and personal computers.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.25,
+          "onetCode": "43-9061.00",
+          "taskId": 830
+        },
+        {
+          "taskName": "Answer telephones, direct calls, and take messages.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.3,
+          "onetCode": "43-9061.00",
+          "taskId": 827
+        },
+        {
+          "taskName": "Communicate with customers, employees, and other individuals to answer questions, disseminate or explain information, take orders, and address complaints.",
+          "aiCapabilityScore": 0.6,
+          "humanCriticalityScore": 0.55,
+          "onetCode": "43-9061.00",
+          "taskId": 826
+        },
+        {
+          "taskName": "Maintain and update filing, inventory, mailing, and database systems, either manually or using a computer.",
+          "aiCapabilityScore": 0.7,
+          "humanCriticalityScore": 0.25,
+          "onetCode": "43-9061.00",
+          "taskId": 832
+        },
+        {
+          "taskName": "Compile, copy, sort, and file records of office activities, business transactions, and other activities.",
+          "aiCapabilityScore": 0.72,
+          "humanCriticalityScore": 0.2,
+          "onetCode": "43-9061.00",
+          "taskId": 828
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -0.55,
+          "reasoning": "Early GenAI adoption begins trimming routine clerical workloads."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -1.25,
+          "reasoning": "Wider automation of scheduling, filing, and communication tasks reduces headcount needs."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -1.95,
+          "reasoning": "Continued integration of AI assistants accelerates task consolidation."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -2.65,
+          "reasoning": "Most routine clerical functions increasingly handled by AI-driven systems."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -3.33,
+          "reasoning": "Reaches 56% of projected decade decline as automation matures in office support roles."
+        }
+      ]
+    },
+    "43-9071": {
+      "title": "Office Machine Operators, Except Computer",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "43-9071.00"
+      ],
+      "employment": 25130,
+      "projectedGrowth": -14.9,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:14:12.181Z",
+      "promptSha256": "789a93042653360fa752fabe42733de0ffc7111dcbace4a15528f8373de629fe",
+      "tasks": [
+        {
+          "taskName": "Read job orders to determine the type of work to be done, the quantities to be produced, and the materials needed.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.45,
+          "onetCode": "43-9071.00",
+          "taskId": 13288
+        },
+        {
+          "taskName": "Deliver completed work.",
+          "aiCapabilityScore": 0.1,
+          "humanCriticalityScore": 0.75,
+          "onetCode": "43-9071.00",
+          "taskId": 13301
+        },
+        {
+          "taskName": "Place original copies in feed trays, feed originals into feed rolls, or position originals on tables beneath camera lenses.",
+          "aiCapabilityScore": 0.15,
+          "humanCriticalityScore": 0.8,
+          "onetCode": "43-9071.00",
+          "taskId": 13290
+        },
+        {
+          "taskName": "Sort, assemble, and proof completed work.",
+          "aiCapabilityScore": 0.4,
+          "humanCriticalityScore": 0.55,
+          "onetCode": "43-9071.00",
+          "taskId": 13292
+        },
+        {
+          "taskName": "Operate office machines such as high speed business photocopiers, readers, scanners, addressing machines, stencil-cutting machines, microfilm readers or printers, folding and inserting machines, bursters, and binder machines.",
+          "aiCapabilityScore": 0.2,
+          "humanCriticalityScore": 0.75,
+          "onetCode": "43-9071.00",
+          "taskId": 13289
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change yet."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -1.4,
+          "reasoning": "Early automation of document workflows begins to reduce headcount slightly."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -3,
+          "reasoning": "Continued decline as digital document management reduces manual machine operation needs."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -4.7,
+          "reasoning": "Accelerating adoption of AI-driven scanning and routing tools displaces more tasks."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -6.5,
+          "reasoning": "Office automation and reduced print/physical document volumes compound job losses."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -8.28,
+          "reasoning": "Reaches capped midpoint of decade-long decline consistent with BLS outlook."
+        }
+      ]
+    },
+    "43-9081": {
+      "title": "Proofreaders and Copy Markers",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "43-9081.00"
+      ],
+      "employment": 4580,
+      "projectedGrowth": -0.9,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:14:19.553Z",
+      "promptSha256": "638c7b271e73df76bba309fffa0bd948c957ba1da50a833dc5a057c6aaa7802d",
+      "tasks": [
+        {
+          "taskName": "Mark copy to indicate and correct errors in type, arrangement, grammar, punctuation, or spelling, using standard printers' marks.",
+          "aiCapabilityScore": 0.9,
+          "humanCriticalityScore": 0.25,
+          "onetCode": "43-9081.00",
+          "taskId": 5159
+        },
+        {
+          "taskName": "Read corrected copies or proofs to ensure that all corrections have been made.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.3,
+          "onetCode": "43-9081.00",
+          "taskId": 5160
+        },
+        {
+          "taskName": "Correct or record omissions, errors, or inconsistencies found.",
+          "aiCapabilityScore": 0.78,
+          "humanCriticalityScore": 0.3,
+          "onetCode": "43-9081.00",
+          "taskId": 5158
+        },
+        {
+          "taskName": "Compare information or figures on one record against same data on other records, or with original copy, to detect errors.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.35,
+          "onetCode": "43-9081.00",
+          "taskId": 5161
+        },
+        {
+          "taskName": "Route proofs with marked corrections to authors, editors, typists, or typesetters for correction or reprinting.",
+          "aiCapabilityScore": 0.55,
+          "humanCriticalityScore": 0.45,
+          "onetCode": "43-9081.00",
+          "taskId": 5163
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year for cumulative forecast."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -0.08,
+          "reasoning": "Early GenAI adoption in editing tools begins displacing minor proofing tasks."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -0.18,
+          "reasoning": "Wider integration of AI proofreading in publishing workflows reduces demand."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -0.3,
+          "reasoning": "Continued automation of grammar/error detection shrinks role scope."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -0.42,
+          "reasoning": "Most routine proofing automated, leaving only oversight tasks for humans."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -0.5,
+          "reasoning": "Reaches capped decline consistent with BLS 10-year outlook trajectory."
+        }
+      ]
+    },
+    "43-9111": {
+      "title": "Statistical Assistants",
+      "rule": "first-5-onet-order",
+      "onetCodes": [
+        "43-9111.00"
+      ],
+      "employment": 4710,
+      "projectedGrowth": -1.8,
+      "responseModel": "claude-sonnet-5",
+      "scoredAt": "2026-11-08T04:14:27.023Z",
+      "promptSha256": "9e8682df6ff036b628734c1772d2ac3f3f7c5c9a1296a4abb0afab135ec9423e",
+      "tasks": [
+        {
+          "taskName": "Compute and analyze data, using statistical formulas and computers or calculators.",
+          "aiCapabilityScore": 0.85,
+          "humanCriticalityScore": 0.35,
+          "onetCode": "43-9111.00",
+          "taskId": 9788
+        },
+        {
+          "taskName": "Check source data to verify completeness and accuracy.",
+          "aiCapabilityScore": 0.75,
+          "humanCriticalityScore": 0.45,
+          "onetCode": "43-9111.00",
+          "taskId": 9792
+        },
+        {
+          "taskName": "Enter data into computers for use in analyses or reports.",
+          "aiCapabilityScore": 0.9,
+          "humanCriticalityScore": 0.2,
+          "onetCode": "43-9111.00",
+          "taskId": 9789
+        },
+        {
+          "taskName": "Compile reports, charts, or graphs that describe and interpret findings of analyses.",
+          "aiCapabilityScore": 0.8,
+          "humanCriticalityScore": 0.4,
+          "onetCode": "43-9111.00",
+          "taskId": 9791
+        },
+        {
+          "taskName": "Participate in the publication of data or information.",
+          "aiCapabilityScore": 0.65,
+          "humanCriticalityScore": 0.5,
+          "onetCode": "43-9111.00",
+          "taskId": 9793
+        }
+      ],
+      "yearlyForecast": [
+        {
+          "year": 2025,
+          "growthImpact": 0,
+          "reasoning": "Baseline year with no cumulative change."
+        },
+        {
+          "year": 2026,
+          "growthImpact": -0.15,
+          "reasoning": "Early GenAI adoption begins automating routine data entry and basic analysis."
+        },
+        {
+          "year": 2027,
+          "growthImpact": -0.35,
+          "reasoning": "Broader use of AI tools for data verification and report compilation reduces headcount needs."
+        },
+        {
+          "year": 2028,
+          "growthImpact": -0.6,
+          "reasoning": "Continued integration of automated analytics pipelines displaces more routine tasks."
+        },
+        {
+          "year": 2029,
+          "growthImpact": -0.82,
+          "reasoning": "Market saturation of AI-driven statistical tools accelerates role consolidation."
+        },
+        {
+          "year": 2030,
+          "growthImpact": -1,
+          "reasoning": "Cumulative decline reaches the capped trajectory consistent with long-term BLS outlook."
+        }
+      ]
     }
   },
   "controlRuns": {
@@ -25510,6 +30856,21 @@
       ],
       "meanAbsGapRiskPoints": 3.52,
       "meanAbsGapHumanPoints": 2.4,
+      "limitPoints": 5,
+      "passed": true,
+      "route": "api.anthropic.com/v1/messages (direct)",
+      "plan": "data/bls_score_plan_all.json"
+    },
+    "family-2": {
+      "roles": [
+        "Financial Analyst",
+        "Project Management Specialist",
+        "Management Consultant",
+        "Loan Officer",
+        "Credit Analyst"
+      ],
+      "meanAbsGapRiskPoints": 2.72,
+      "meanAbsGapHumanPoints": 1.6,
       "limitPoints": 5,
       "passed": true,
       "route": "api.anthropic.com/v1/messages (direct)",
