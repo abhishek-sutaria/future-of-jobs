@@ -6,6 +6,33 @@ export type { SharedAnswerMeta } from '../shared/aiFeatures';
 const CLAUDE_PROXY_ENDPOINT = '/api/claude/messages';
 const CLAUDE_MODEL = AI_MODEL;
 
+/**
+ * A failed request is retried quietly before the panel shows anything, so a
+ * brief hiccup reads as a slightly longer "loading", never as an error.
+ * Waits between tries; none in tests so they stay fast.
+ */
+const RETRY_DELAYS_MS: readonly number[] = import.meta.env?.MODE === 'test' ? [0, 0] : [1500, 4000];
+
+/** Worth another try: a server or gateway fault, or Vercel's edge challenge (an HTML 403, never our JSON). */
+function isRetryable(response: Response): boolean {
+    if (response.status === 408 || response.status >= 500) return true;
+    return response.status === 403 && !(response.headers.get('content-type') || '').includes('application/json');
+}
+
+/** POST to the proxy, retrying network errors and retryable statuses. Never retries a limit (429) or a refused request (400). */
+async function postToProxy(init: RequestInit): Promise<Response> {
+    for (let attempt = 0; ; attempt++) {
+        const last = attempt >= RETRY_DELAYS_MS.length;
+        try {
+            const response = await fetch(CLAUDE_PROXY_ENDPOINT, init);
+            if (response.ok || last || !isRetryable(response)) return response;
+        } catch (err) {
+            if (last) throw err;
+        }
+        await new Promise((resolve) => setTimeout(resolve, RETRY_DELAYS_MS[attempt]));
+    }
+}
+
 const AI_MODE_STORAGE_KEY = 'foj_ai_mode';
 const AI_USER_KEY_STORAGE_KEY = 'foj_user_claude_key';
 
@@ -296,7 +323,7 @@ export async function callClaudeFeature<T>(
     input: unknown,
     opts?: { schema?: z.ZodType<T>; stream?: boolean; onProgress?: (accumulatedText: string) => void },
 ): Promise<{ result: T; shared?: SharedAnswerMeta }> {
-    const response = await fetch(CLAUDE_PROXY_ENDPOINT, {
+    const response = await postToProxy({
         method: 'POST',
         headers: keyHeaders(),
         body: JSON.stringify({ feature, input }),
@@ -321,7 +348,7 @@ export async function callClaudeJSON<T>(prompt: string, schema?: z.ZodType<T>, o
     const stream = opts?.stream ?? false;
     const headers = { ...keyHeaders(), 'x-foj-feature': opts?.feature ?? 'rescore' };
 
-    const response = await fetch(CLAUDE_PROXY_ENDPOINT, {
+    const response = await postToProxy({
         method: 'POST',
         headers,
         body: JSON.stringify({
@@ -377,5 +404,5 @@ export function getClaudeUserFriendlyMessage(err: unknown): string {
     if (msg.includes('truncated')) {
         return "Claude's response was cut off before finishing. Try again — usually succeeds on retry.";
     }
-    return 'Analysis unavailable. Using baseline data.';
+    return "Couldn't reach the AI right now. Please try again in a minute.";
 }
