@@ -22,11 +22,30 @@ export const MAX_TOKENS = 4096;
 /**
  * Two ways to authenticate, so this is runnable without copying the production
  * secret onto disk:
- *   direct — ANTHROPIC_API_KEY in env/.env, calls api.anthropic.com
+ *   direct — a key of your own, calls api.anthropic.com (generate_ai_scores.ts
+ *            reads ANTHROPIC_API_KEY; generate_bls_scores.ts --direct reads
+ *            FOJ_SCORING_API_KEY or ~/.foj_scoring_key, see scoringAuth.ts).
+ *            `workspace`, when set, is sent as anthropic-workspace-id (needed
+ *            for a user key with no workspace scope).
  *   proxy  — --proxy <url> (or CLAUDE_PROXY_URL), routes through the app's own
  *            /api/claude/messages endpoint, which holds the key server-side
+ * The body is requestBody(job) either way, byte for byte.
  */
-export type Auth = { mode: 'direct'; key: string } | { mode: 'proxy'; url: string };
+export type Auth = { mode: 'direct'; key: string; workspace?: string } | { mode: 'proxy'; url: string };
+
+/** URL and headers for one call. The key only ever goes into the x-api-key header. */
+export function requestTarget(auth: Auth): { url: string; headers: Record<string, string> } {
+    if (auth.mode === 'proxy') return { url: auth.url, headers: { 'content-type': 'application/json' } };
+    return {
+        url: ANTHROPIC_URL,
+        headers: {
+            'x-api-key': auth.key,
+            ...(auth.workspace ? { 'anthropic-workspace-id': auth.workspace } : {}),
+            'anthropic-version': ANTHROPIC_VERSION,
+            'content-type': 'application/json',
+        },
+    };
+}
 
 export interface JobInput {
     title: string;
@@ -90,18 +109,8 @@ export function requestBody(job: JobInput): string {
 export async function scoreWithClaude(job: JobInput, auth: Auth): Promise<ScoredResponse> {
     let response: Response;
     try {
-        response = await fetch(auth.mode === 'direct' ? ANTHROPIC_URL : auth.url, {
-            method: 'POST',
-            headers:
-                auth.mode === 'direct'
-                    ? {
-                          'x-api-key': auth.key,
-                          'anthropic-version': ANTHROPIC_VERSION,
-                          'content-type': 'application/json',
-                      }
-                    : { 'content-type': 'application/json' },
-            body: requestBody(job),
-        });
+        const { url, headers } = requestTarget(auth);
+        response = await fetch(url, { method: 'POST', headers, body: requestBody(job) });
     } catch (err) {
         throw new TransportError(`request failed: ${err instanceof Error ? err.message : String(err)}`);
     }

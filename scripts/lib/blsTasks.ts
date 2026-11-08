@@ -43,9 +43,38 @@ export const SENSITIVITY_JOB_IDS = ['job-22', 'job-51'] as const;
 
 export const TASKS_PER_ROLE = 5;
 
-/** O*NET codes that stand in for SOC 13-2020, which has none of its own. */
+/**
+ * The combine rule: a BLS occupation with no O*NET code of its own, which O*NET
+ * splits into smaller codes, is scored on those codes' real task rows, taken in
+ * turn (round-robin-onet-codes). 13-2020 was the first; the rest were found by
+ * listing every O*NET 30.1 code whose six-digit SOC is not one of the 830 BLS
+ * occupations (see docs/scoring-decisions.md and scorePlanAll.test.ts).
+ *
+ * Each list holds only codes with task rows. A split code with a .00 task list
+ * is used as .00 (its sub-codes are left out, as the .00-first rule does
+ * everywhere); 47-4099 has no .00 tasks, so its one sub-code with tasks stands
+ * in for it, as the sub-code rule does everywhere.
+ */
 export const ONET_CODES_FOR_SOC: Readonly<Record<string, readonly string[]>> = {
     '13-2020': ['13-2022.00', '13-2023.00'],
+    '21-1018': ['21-1011.00', '21-1014.00'],
+    '25-2052': ['25-2055.00', '25-2056.00'],
+    '25-9045': ['25-9042.00', '25-9043.00'],
+    '29-2010': ['29-2011.00', '29-2012.00'],
+    '31-1120': ['31-1121.00', '31-1122.00'],
+    '39-7010': ['39-7011.00', '39-7012.00'],
+    '47-4090': ['47-4091.00', '47-4099.03'],
+    '51-2028': ['51-2022.00', '51-2023.00'],
+    '51-2090': ['51-2092.00'],
+    '53-1047': ['53-1042.00', '53-1043.00', '53-1044.00'],
+};
+
+/** Split O*NET codes of a combined occupation that have no task rows, so add nothing. */
+export const ONET_SPLIT_CODES_WITHOUT_TASKS: Readonly<Record<string, readonly string[]>> = {
+    '25-9045': ['25-9049.00'],
+    '47-4090': ['47-4099.00'],
+    '51-2090': ['51-2099.00'],
+    '53-1047': ['53-1049.00'],
 };
 
 export const TASK_STATEMENTS_PATH = 'data/db_30_1_text/Task Statements.txt';
