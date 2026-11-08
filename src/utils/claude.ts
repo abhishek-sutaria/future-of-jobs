@@ -1,23 +1,13 @@
 import { z } from 'zod';
+import { AI_MODEL, extractJsonBlock, type AiFeatureName, type FeatureResponse, type GatewayErrorBody, type RawFeatureName, type SharedAnswerMeta } from '../shared/aiFeatures';
+
+export type { SharedAnswerMeta } from '../shared/aiFeatures';
 
 const CLAUDE_PROXY_ENDPOINT = '/api/claude/messages';
-const CLAUDE_MODEL = 'claude-sonnet-5';
+const CLAUDE_MODEL = AI_MODEL;
 
 const AI_MODE_STORAGE_KEY = 'foj_ai_mode';
 const AI_USER_KEY_STORAGE_KEY = 'foj_user_claude_key';
-
-function extractJsonBlock(text: string): string {
-    const cleaned = text.trim().replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/```$/i, '').trim();
-    const objectStart = cleaned.indexOf('{');
-    const arrayStart = cleaned.indexOf('[');
-    const start = objectStart === -1 ? arrayStart : arrayStart === -1 ? objectStart : Math.min(objectStart, arrayStart);
-    if (start === -1) return cleaned;
-    const objectEnd = cleaned.lastIndexOf('}');
-    const arrayEnd = cleaned.lastIndexOf(']');
-    const end = Math.max(objectEnd, arrayEnd);
-    if (end === -1 || end < start) return cleaned.slice(start);
-    return cleaned.slice(start, end + 1);
-}
 
 function getUserKeyFromStorage(): string | null {
     const mode = localStorage.getItem(AI_MODE_STORAGE_KEY);
@@ -173,6 +163,19 @@ interface CallClaudeOptions {
     onProgress?: (accumulatedText: string) => void;
 }
 
+/**
+ * The visitor reached the server's limit on new AI answers (api/_lib/rateLimit).
+ * Its message is the server's own friendly sentence, shown as-is.
+ */
+export class AiLimitError extends Error {
+    readonly retryAfterSeconds: number;
+    constructor(message: string, retryAfterSeconds: number) {
+        super(message);
+        this.name = 'AiLimitError';
+        this.retryAfterSeconds = retryAfterSeconds;
+    }
+}
+
 function friendlyHttpError(status: number, message: string): Error {
     const lower = String(message).toLowerCase();
     const missingProxyKey =
@@ -185,6 +188,31 @@ function friendlyHttpError(status: number, message: string): Error {
         );
     }
     return new Error(`Claude ${status}: ${message}`);
+}
+
+async function errorFrom(response: Response): Promise<Error> {
+    let message = response.statusText;
+    let body: GatewayErrorBody | null = null;
+    try {
+        body = await response.json();
+        message = body?.error?.message || (body as unknown as { message?: string })?.message || message;
+    } catch {
+        // no-op
+    }
+    if (response.status === 429 && body?.error?.type === 'foj_rate_limited') {
+        return new AiLimitError(message, body.error.retryAfterSeconds ?? 60);
+    }
+    return friendlyHttpError(response.status, message);
+}
+
+function keyHeaders(): Record<string, string> {
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' };
+    const userKey = getUserKeyFromStorage();
+    if (userKey) {
+        headers['x-user-api-key'] = userKey;
+        headers['x-foj-key-source'] = 'user';
+    }
+    return headers;
 }
 
 /** Read an Anthropic SSE stream into the final text + stop_reason. */
@@ -236,58 +264,7 @@ async function readClaudeStream(
     return { text, stopReason };
 }
 
-export async function callClaudeJSON<T>(prompt: string, schema?: z.ZodType<T>, opts?: CallClaudeOptions): Promise<T> {
-    const userKey = getUserKeyFromStorage();
-    const stream = opts?.stream ?? false;
-    const headers: Record<string, string> = {
-        'Content-Type': 'application/json',
-    };
-    if (userKey) {
-        headers['x-user-api-key'] = userKey;
-        headers['x-foj-key-source'] = 'user';
-    }
-
-    const response = await fetch(CLAUDE_PROXY_ENDPOINT, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify({
-            model: CLAUDE_MODEL,
-            max_tokens: opts?.maxTokens ?? 4096,
-            // NOTE: claude-sonnet-5 rejects `temperature` ("temperature is deprecated
-            // for this model"), which was making every AI call fail with a 400. Do not
-            // re-add it. Run-to-run stability for Analyze is preserved by the per-job
-            // fingerprint cache in analysis.ts (re-opening a role returns cached scores).
-            // Claude Sonnet 5 runs adaptive thinking by default when this is omitted,
-            // which silently eats into max_tokens on structured-output calls that
-            // don't need deep reasoning — disable it so the full budget goes to JSON.
-            thinking: { type: 'disabled' },
-            ...(stream ? { stream: true } : {}),
-            messages: [{ role: 'user', content: prompt }],
-        }),
-    });
-
-    if (!response.ok) {
-        let message = response.statusText;
-        try {
-            const data = await response.json();
-            message = data?.error?.message || data?.message || message;
-        } catch {
-            // no-op
-        }
-        throw friendlyHttpError(response.status, message);
-    }
-
-    let text: string;
-    let stopReason: string | null;
-    if (stream) {
-        const result = await readClaudeStream(response, opts?.onProgress);
-        text = result.text.trim();
-        stopReason = result.stopReason;
-    } else {
-        const body = await response.json();
-        text = body?.content?.map((part: { type?: string; text?: string }) => part?.text || '').join('\n').trim();
-        stopReason = body?.stop_reason ?? null;
-    }
+function parseAnswer<T>(text: string, stopReason: string | null, schema?: z.ZodType<T>): T {
     if (!text) {
         throw new Error('Empty response from Claude');
     }
@@ -308,8 +285,79 @@ export async function callClaudeJSON<T>(prompt: string, schema?: z.ZodType<T>, o
     }
 }
 
+/**
+ * One of the app's own Claude features (shared/aiFeatures): the browser sends
+ * only the inputs, and the server builds the prompt. Shared features come back
+ * as `{ result, shared }`, where `shared.hit` means the answer was already
+ * saved and no Claude call was made.
+ */
+export async function callClaudeFeature<T>(
+    feature: AiFeatureName,
+    input: unknown,
+    opts?: { schema?: z.ZodType<T>; stream?: boolean; onProgress?: (accumulatedText: string) => void },
+): Promise<{ result: T; shared?: SharedAnswerMeta }> {
+    const response = await fetch(CLAUDE_PROXY_ENDPOINT, {
+        method: 'POST',
+        headers: keyHeaders(),
+        body: JSON.stringify({ feature, input }),
+    });
+    if (!response.ok) throw await errorFrom(response);
+
+    if (opts?.stream) {
+        const streamed = await readClaudeStream(response, opts.onProgress);
+        return { result: parseAnswer(streamed.text.trim(), streamed.stopReason, opts.schema) };
+    }
+    const body = (await response.json()) as FeatureResponse<T>;
+    const result = opts?.schema ? opts.schema.parse(body.result) : body.result;
+    return { result, ...(body.shared ? { shared: body.shared } : {}) };
+}
+
+/**
+ * A raw Anthropic request, for the only two that still send their own prompt:
+ * the opt-in full re-score and the System status ping, both on the visitor's
+ * OWN key. The server refuses this shape on its own key (api/_lib/gateway).
+ */
+export async function callClaudeJSON<T>(prompt: string, schema?: z.ZodType<T>, opts?: CallClaudeOptions & { feature?: RawFeatureName }): Promise<T> {
+    const stream = opts?.stream ?? false;
+    const headers = { ...keyHeaders(), 'x-foj-feature': opts?.feature ?? 'rescore' };
+
+    const response = await fetch(CLAUDE_PROXY_ENDPOINT, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+            model: CLAUDE_MODEL,
+            max_tokens: opts?.maxTokens ?? 4096,
+            // NOTE: claude-sonnet-5 rejects `temperature` ("temperature is deprecated
+            // for this model"), which was making every AI call fail with a 400. Do not
+            // re-add it.
+            // Claude Sonnet 5 runs adaptive thinking by default when this is omitted,
+            // which silently eats into max_tokens on structured-output calls that
+            // don't need deep reasoning — disable it so the full budget goes to JSON.
+            thinking: { type: 'disabled' },
+            ...(stream ? { stream: true } : {}),
+            messages: [{ role: 'user', content: prompt }],
+        }),
+    });
+
+    if (!response.ok) throw await errorFrom(response);
+
+    let text: string;
+    let stopReason: string | null;
+    if (stream) {
+        const result = await readClaudeStream(response, opts?.onProgress);
+        text = result.text.trim();
+        stopReason = result.stopReason;
+    } else {
+        const body = await response.json();
+        text = body?.content?.map((part: { type?: string; text?: string }) => part?.text || '').join('\n').trim();
+        stopReason = body?.stop_reason ?? null;
+    }
+    return parseAnswer(text, stopReason, schema);
+}
+
 /** Maps Claude/proxy errors to short UI copy (never logs secrets). */
 export function getClaudeUserFriendlyMessage(err: unknown): string {
+    if (err instanceof AiLimitError) return err.message;
     const msg = err instanceof Error ? err.message : String(err);
     if (msg.startsWith('No default AI key is configured')) {
         return msg;
@@ -322,6 +370,9 @@ export function getClaudeUserFriendlyMessage(err: unknown): string {
     }
     if (msg.includes('Empty response')) {
         return 'Claude returned an empty response. Try again.';
+    }
+    if (msg.includes('did not pass the app')) {
+        return "Claude's answer did not pass the app's checks, so it was not saved. Try again.";
     }
     if (msg.includes('truncated')) {
         return "Claude's response was cut off before finishing. Try again — usually succeeds on retry.";

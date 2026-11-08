@@ -4,7 +4,8 @@
  * yearly forecasts and prompt inputs the app never reads).
  *
  *   virtual:bls-scores             meta (count, date range), one Automation
- *                                  Risk per scored SOC, and a lazy loader per field
+ *                                  Risk and one mean Human Criticality per
+ *                                  scored SOC, and a lazy loader per field
  *   virtual:bls-scores/scores-<NN>  that field's scores, slimmed to the fields
  *                                  the app reads (its own chunk)
  *
@@ -56,6 +57,7 @@ export function blsScoresPlugin(relativeFile = 'src/data/ai_scores_bls.json'): P
                 return [
                     `export const meta = ${JSON.stringify(b.meta)};`,
                     `export const risks = ${JSON.stringify(b.risks)};`,
+                    `export const humans = ${JSON.stringify(b.humans)};`,
                     `export const fieldLoaders = {${loaders.join(', ')}};`,
                 ].join('\n');
             }

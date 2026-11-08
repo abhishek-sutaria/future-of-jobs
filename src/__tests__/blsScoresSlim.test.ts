@@ -9,7 +9,7 @@
 import { describe, it, expect, beforeAll } from 'vitest';
 import fs from 'fs';
 import path from 'path';
-import { meta, risks, fieldLoaders } from 'virtual:bls-scores';
+import { meta, risks, humans, fieldLoaders } from 'virtual:bls-scores';
 import {
     READ_ENTRY_KEYS,
     READ_FILE_KEYS,
@@ -19,7 +19,7 @@ import {
     slimBlsFile,
     type RawBlsFile,
 } from '../utils/blsScoresData';
-import { BLS_SCORE_RISK, BLS_SCORES_META, blsScoreFor, loadAllBlsScores } from '../utils/blsScores';
+import { BLS_SCORE_HUMAN, BLS_SCORE_RISK, BLS_SCORES_META, blsScoreFor, loadAllBlsScores } from '../utils/blsScores';
 
 const FILE_PATH = path.resolve(__dirname, '../data/ai_scores_bls.json');
 const FULL = JSON.parse(fs.readFileSync(FILE_PATH, 'utf-8')) as RawBlsFile & { scores: Record<string, Record<string, unknown> & { tasks: Record<string, unknown>[] }> };
@@ -40,6 +40,18 @@ describe('what the main bundle holds', () => {
         expect([...BLS_SCORE_RISK.keys()].sort()).toEqual(SOCS);
     });
 
+    it('one mean Human Criticality per scored SOC, exact at 4 decimals, so ranks need no field load', () => {
+        expect(Object.keys(humans).sort()).toEqual(SOCS);
+        for (const soc of SOCS) {
+            const full = PARSED.scores.get(soc)!.humanCriticality;
+            expect(humans[soc], soc).toBe(Math.round(full * 10_000) / 10_000);
+            // Five (or four) two-decimal scores: the mean is exact at 4 decimals.
+            const hundredths = PARSED.scores.get(soc)!.tasks.reduce((sum, t) => sum + Math.round(t.humanCriticalityScore * 100), 0);
+            expect(Math.round(humans[soc] * 10_000), soc).toBe((hundredths * 100) / PARSED.scores.get(soc)!.tasks.length);
+        }
+        expect([...BLS_SCORE_HUMAN.keys()].sort()).toEqual(SOCS);
+    });
+
     it('meta: model, file date, count, first and last scoredAt and rule counts from the full file', () => {
         const dates = Object.values(FULL.scores).map((e) => e.scoredAt as string).sort((a, b) => Date.parse(a) - Date.parse(b));
         const rules: Record<string, number> = {};
@@ -56,9 +68,9 @@ describe('what the main bundle holds', () => {
     });
 
     it('stays small: no task text or forecasts in the main bundle', () => {
-        const size = JSON.stringify({ meta, risks }).length;
+        const size = JSON.stringify({ meta, risks, humans }).length;
         expect(size).toBeLessThan(40_000);
-        expect(JSON.stringify(risks)).not.toMatch(/taskName|yearlyForecast|reasoning/);
+        expect(JSON.stringify({ risks, humans })).not.toMatch(/taskName|yearlyForecast|reasoning/);
     });
 });
 
@@ -108,8 +120,8 @@ describe('what each field chunk holds', () => {
 
 describe('buildBlsBundle', () => {
     it('serves nothing for a missing or other-version file', () => {
-        expect(buildBlsBundle(null)).toEqual({ meta: null, risks: {}, fields: {} });
-        expect(buildBlsBundle({ ...FULL, version: 4 })).toEqual({ meta: null, risks: {}, fields: {} });
+        expect(buildBlsBundle(null)).toEqual({ meta: null, risks: {}, humans: {}, fields: {} });
+        expect(buildBlsBundle({ ...FULL, version: 4 })).toEqual({ meta: null, risks: {}, humans: {}, fields: {} });
     });
 
     it('leaves out an incomplete entry everywhere, as the parser does', () => {

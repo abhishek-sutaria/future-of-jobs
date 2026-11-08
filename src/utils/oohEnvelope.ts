@@ -1,4 +1,4 @@
-import { OOH_FRACTION_AT_YEAR_MAX } from '../config/constants';
+import { OOH_FRACTION_AT_YEAR_MAX } from '../config/constants.js';
 
 /**
  * Max cumulative % a baked AI forecast may reach by 2030 for a given OOH figure.

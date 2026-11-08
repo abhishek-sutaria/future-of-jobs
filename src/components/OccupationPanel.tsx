@@ -11,16 +11,15 @@ import { PayLine } from './RolePay';
 import { ProvenanceBadge } from './ProvenanceBadge';
 import { CloseButton } from './ui/CloseButton';
 import { IconInfo, IconSparkles } from './ui/Icons';
-import { blsScoreFor, SCORE_COVERAGE } from '../utils/blsScores';
-import { HumanTile, KelleyComparisonLine, RatedTasks, RiskTile, ScoreProvenanceLine } from './BlsScoreSections';
+import { SCORE_COVERAGE } from '../utils/blsScores';
 
 /**
- * Role panel for a BLS occupation outside the 50 Kelley roles. Same shell as
- * JobDetailPanel, with published BLS / O*NET values, plus the published AI
- * scores when ai_scores_bls.json has them (every occupation with O*NET tasks;
- * they load with the field's file, see worldStore.loadContinent). Never
- * an Analyze, Strategic Insight, Roadmap or Scenario, and no Claude call of
- * any kind, scored or not.
+ * Panel for a BLS occupation with NO published AI scores (the "All Other"
+ * groups O*NET lists no tasks for), and the loading state of any occupation
+ * panel. A scored occupation opens the common role panel instead
+ * (JobDetailPanel via utils/blsRoleJob, chosen in UI.tsx), with every feature
+ * a Kelley role has. This one shows published BLS / O*NET numbers only and
+ * makes no Claude call of any kind.
  */
 export const OccupationPanel: React.FC<{ soc: string; onClose: () => void }> = ({ soc, onClose }) => {
     const code = continentOf(soc);
@@ -83,7 +82,6 @@ export const OccupationBody: React.FC<{ occupation: OccupationEntry; onClose: ()
     const continent = INDEX_CONTINENT_BY_CODE.get(continentOf(o.soc));
     const ep = o.ep;
     const baseNote = payBaseNote(o.employment);
-    const score = blsScoreFor(o.soc);
 
     return (
         <>
@@ -117,18 +115,13 @@ export const OccupationBody: React.FC<{ occupation: OccupationEntry; onClose: ()
                         {ep && <ProvenanceBadge label="EP" provenance="BLS_EP" />}
                         <ProvenanceBadge label="Pay" provenance="BLS_OES_WAGES" />
                         {o.description && <ProvenanceBadge label="O*NET" provenance="ONET" />}
-                        {score && <ProvenanceBadge label="Claude tasks" provenance="CLAUDE_TASK_SCORE" />}
                     </div>
                 </div>
                 <CloseButton onClick={onClose} label="Close panel" />
             </div>
 
             <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar">
-                <div className={`grid grid-cols-2 ${score ? 'md:grid-cols-4' : 'md:grid-cols-3'} gap-2 md:gap-3 px-4 md:px-6 py-3 border-b border-white/[0.04]`}>
-                    {/* Published AI scores (ai_scores_bls.json), the same tiles as a Kelley role */}
-                    {score && <RiskTile score={score} />}
-                    {score && <HumanTile score={score} />}
-
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-3 px-4 md:px-6 py-3 border-b border-white/[0.04]">
                     {/* Workers: BLS EP 2025, all workers including self-employed */}
                     <div className="bg-white/[0.03] rounded-xl px-3 py-2 border border-white/[0.06] min-w-0">
                         {ep ? (
@@ -160,16 +153,7 @@ export const OccupationBody: React.FC<{ occupation: OccupationEntry; onClose: ()
                         )}
                     </div>
 
-                    {score ? (
-                        <>
-                            <KelleyComparisonLine score={score} />
-                            <p className="col-span-2 md:col-span-4 text-[11px] text-gray-400 leading-snug flex items-start gap-1.5">
-                                <IconInfo size={12} className="text-cyan-400 mt-0.5 shrink-0" />
-                                <span>Automation Risk and Human Criticality are independent ratings, on the role and on each task, so they are not meant to add up to 100%.</span>
-                            </p>
-                            <ScoreProvenanceLine score={score} />
-                        </>
-                    ) : (
+                    {(
                         /* No AI scores: an honest state, never a placeholder number */
                         <div className="col-span-2 md:col-span-1 rounded-xl px-3 py-2 border border-dashed border-slate-500/40 bg-slate-500/[0.05] min-w-0" data-testid="ai-soon">
                             <div className="flex items-center gap-1.5 text-slate-200 text-sm font-semibold">
@@ -187,8 +171,6 @@ export const OccupationBody: React.FC<{ occupation: OccupationEntry; onClose: ()
                 </div>
 
                 <div className="px-4 py-4 md:px-6 space-y-4">
-                    {score && <RatedTasks score={score} />}
-
                     {o.description && (
                         <section>
                             <h3 className="text-[10px] uppercase tracking-widest text-gray-500 font-semibold mb-1">What they do</h3>
@@ -226,12 +208,55 @@ export const OccupationBody: React.FC<{ occupation: OccupationEntry; onClose: ()
                 style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))' }}
             >
                 <span>
-                    Sources: {[ep && DATA_SOURCES.BLS_EP, DATA_SOURCES.BLS_OES_WAGES, o.description && DATA_SOURCES.ONET, score && `Claude (${score.model}) task scores`].filter(Boolean).join(', ')}
+                    Sources: {[ep && DATA_SOURCES.BLS_EP, DATA_SOURCES.BLS_OES_WAGES, o.description && DATA_SOURCES.ONET].filter(Boolean).join(', ')}
                 </span>
             </div>
         </>
     );
 };
+
+/**
+ * The role's BLS occupation as published, under the role panel's tasks: its
+ * workers, O*NET description and full O*NET task list. For a Kelley title the
+ * occupation can be wider than the title (Brand Manager is in 11-2021
+ * Marketing Managers), so the heading names it.
+ */
+export const OccupationAbout: React.FC<{ occupation: OccupationEntry; roleTitle: string }> = ({ occupation: o, roleTitle }) => (
+    <section className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 space-y-3" data-testid="occupation-about">
+        <div>
+            <h3 className="text-[10px] uppercase tracking-widest text-gray-500 font-semibold">
+                {o.title === roleTitle ? 'About this occupation' : `About the BLS occupation: ${o.title}`}
+                <span className="normal-case tracking-normal text-gray-600"> · BLS {o.soc}</span>
+            </h3>
+            {o.ep && (
+                <p className="text-[11px] text-gray-400 mt-1 tabular-nums" data-testid="about-workers">
+                    {formatCount(o.ep.employment2025)} workers in {YEAR_MIN}, {formatCount(o.ep.employment2035)} projected for {YEAR_MAX} ({formatGrowth(o.ep.percentChange)}). {WORKERS_NOTE}
+                </p>
+            )}
+        </div>
+        {o.description && <p className="text-sm text-gray-300 leading-relaxed" data-testid="description">{o.description}</p>}
+        <details>
+            <summary className="cursor-pointer text-[11px] text-cyan-300 hover:text-cyan-200 min-h-[32px] flex items-center">
+                {o.tasks.length > 0 ? `All ${o.tasks.length} O*NET tasks for this occupation` : NO_TASKS_NOTE}
+            </summary>
+            {o.tasks.length > 0 && (
+                <ul className="space-y-1.5 mt-2" data-testid="task-list">
+                    {o.tasks.map((t) => (
+                        <li key={`${t.onetCode}-${t.id}`} className="flex items-start gap-2 text-sm text-gray-300 leading-snug">
+                            <span className="mt-1.5 w-1 h-1 rounded-full bg-cyan-400/70 shrink-0" aria-hidden="true" />
+                            <span className="min-w-0">
+                                <span data-testid="task-text">{t.text}</span>
+                                {t.type === 'Supplemental' && (
+                                    <span className="ml-1.5 text-[9px] uppercase tracking-wider text-gray-500">Supplemental</span>
+                                )}
+                            </span>
+                        </li>
+                    ))}
+                </ul>
+            )}
+        </details>
+    </section>
+);
 
 const GrowthTile: React.FC<{ pct: number; employment2035: number }> = ({ pct, employment2035 }) => {
     const points = blsEpGrowthPathPoints(pct);

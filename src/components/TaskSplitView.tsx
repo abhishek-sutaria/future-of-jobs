@@ -1,7 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useStore } from '../store';
-import { useNonKelleyFocus } from '../hooks/useNonKelleyFocus';
-import { KelleyOnlyNote } from './KelleyOnlyNote';
+import { useWorldStore } from '../worldStore';
+import { useScoredRolesInScope } from '../hooks/useScoredRoles';
+import { socOfBlsRoleId } from '../utils/blsRoleJob';
+import type { Job } from '../types';
 import { useIsMobile } from '../hooks/useIsMobile';
 import { RISK_THRESHOLDS, MAP_SIDEBAR } from '../config/constants';
 import { RISK_BAND_COLORS } from '../config/theme';
@@ -30,11 +32,19 @@ const AI = RISK_BAND_COLORS.high;
 const HUMAN = RISK_BAND_COLORS.safe;
 
 export const TaskSplitView: React.FC = () => {
-    const jobs = useStore((s) => s.jobs);
+    // Every scored role on stage (field, family or whole map), Kelley or not.
+    const { roles, loading, scopeLabel } = useScoredRolesInScope();
     const selectedRoleIds = useStore((s) => s.selectedRoleIds);
     const setSelectedJob = useStore((s) => s.setSelectedJob);
+    const openOccupation = useWorldStore((s) => s.openOccupation);
     const isMobile = useIsMobile();
-    const nonKelleyFocus = useNonKelleyFocus();
+    // A Kelley role opens through the store, any other role through its SOC;
+    // both reach the same role panel.
+    const openRole = (job: Job) => {
+        const soc = socOfBlsRoleId(job.id);
+        if (soc) openOccupation(soc);
+        else setSelectedJob(job);
+    };
 
     // The app header is a transparent overlay, so a scroll container running the
     // full height sends rows sliding under the AI Scores badge and the
@@ -59,9 +69,10 @@ export const TaskSplitView: React.FC = () => {
 
     // Same filter contract as MapView and the terrain: an empty set means "all".
     const scored = useMemo(() => {
-        const withScores = jobs.filter((j) => j.tasks.some((t) => t.aiCapabilityScore > 0));
-        return selectedRoleIds.size === 0 ? withScores : withScores.filter((j) => selectedRoleIds.has(j.id));
-    }, [jobs, selectedRoleIds]);
+        const inView = roles.filter((j) => selectedRoleIds.has(j.id));
+        // A selection made for other roles (e.g. on the state map) does not empty this view.
+        return selectedRoleIds.size === 0 || inView.length === 0 ? roles : inView;
+    }, [roles, selectedRoleIds]);
 
     const ordered = useMemo(() => orderRolesByRisk(scored), [scored]);
 
@@ -74,12 +85,9 @@ export const TaskSplitView: React.FC = () => {
 
     const pct = (n: number) => Math.round(n);
 
-    // Task splits come from published AI scores, which cover the 50 Kelley roles only.
-    if (nonKelleyFocus) return <KelleyOnlyNote continent={nonKelleyFocus} view="tasks" />;
-
     return (
         // Opaque ground, the same way MapView paints its own: without it the 3D
-        // terrain and its 50 labels show straight through the text.
+        // terrain and its labels show straight through the text.
         <div
             className="absolute inset-0"
             style={{ background: 'radial-gradient(circle at 50% 0%, #111b2b 0%, #0a0e17 70%)' }}
@@ -105,8 +113,9 @@ export const TaskSplitView: React.FC = () => {
                 <h2 className="text-2xl md:text-3xl font-semibold text-white tracking-tight">
                     Inside each job
                 </h2>
-                <p className="text-sm text-gray-400 mt-2">
-                    Every role, ordered by GenAI capability today — not guaranteed adoption.
+                <p className="text-sm text-gray-400 mt-2" data-testid="task-view-scope">
+                    Every scored role in {scopeLabel}, ordered by GenAI capability today — not guaranteed adoption.
+                    {loading && <span className="text-gray-500"> Loading more roles…</span>}
                 </p>
 
                 <div className="mt-5 bg-gray-900/60 backdrop-blur-xl border border-cyan-400/25 rounded-2xl p-5 md:p-6 shadow-lg shadow-cyan-500/5">
@@ -167,7 +176,7 @@ export const TaskSplitView: React.FC = () => {
                                 <li key={job.id}>
                                     <button
                                         type="button"
-                                        onClick={() => setSelectedJob(job)}
+                                        onClick={() => openRole(job)}
                                         title={`${job.title} — ${job.employment.toLocaleString()} workers. Open the role.`}
                                         className="w-full grid grid-cols-[1fr_64px] md:grid-cols-[200px_1fr_64px] items-center gap-x-3 gap-y-1 px-2 py-1.5 rounded-lg hover:bg-white/[0.04] transition-colors text-left min-h-[44px]"
                                     >
@@ -210,7 +219,7 @@ export const TaskSplitView: React.FC = () => {
                                 <div key={job.id} className="bg-white/[0.03] border border-white/[0.07] rounded-xl p-4">
                                     <button
                                         type="button"
-                                        onClick={() => setSelectedJob(job)}
+                                        onClick={() => openRole(job)}
                                         className="text-left w-full flex items-center [@media(pointer:coarse)]:min-h-[44px]"
                                     >
                                         <p className="text-white font-semibold text-sm hover:text-cyan-300 transition-colors">

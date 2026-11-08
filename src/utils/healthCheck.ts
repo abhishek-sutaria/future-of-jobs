@@ -46,17 +46,47 @@ async function checkAI(): Promise<CheckOutcome> {
     const userKey = (localStorage.getItem(AI_USER_KEY) || '').trim();
     const hasUserKey = mode === 'user' && !!userKey;
 
-    // Deliberately no "is it configured?" pre-check. Nobody configures a key
-    // any more — api/claude.ts falls back to the server's ANTHROPIC_API_KEY,
-    // so the only honest test is to actually call it and report what came
-    // back. Inferring "configured" from localStorage used to report "AI has
-    // not been turned on yet" to every first-time visitor, whose localStorage
-    // is empty, while AI was in fact working fine.
-    const headers: Record<string, string> = { 'Content-Type': 'application/json' };
-    if (hasUserKey) {
-        headers['x-user-api-key'] = userKey;
-        headers['x-foj-key-source'] = 'user';
+    // With a saved key, ping Claude on that key (the visitor's own spend). With
+    // the app's key, ask the server what it has set up instead: a ping on the
+    // server key would spend it on every status check, and the server refuses
+    // any request that is not one of the app's own features (api/_lib/gateway).
+    if (!hasUserKey) {
+        try {
+            const response = await fetch(CLAUDE_PROXY, { method: 'GET' });
+            if (!response.ok) {
+                return { status: 'fail', message: 'AI did not respond properly.', detail: 'Refresh the page and try again.' };
+            }
+            const s = (await response.json()) as { serverKey?: boolean; sharedAnswers?: boolean; missing?: string[] };
+            if (!s.serverKey) {
+                return {
+                    status: 'fail',
+                    message: 'The app’s built-in AI key is missing or expired.',
+                    detail: 'This is a server-side setting, not something you can fix here — please report it.',
+                };
+            }
+            if (!s.sharedAnswers) {
+                return {
+                    status: 'warn',
+                    message: 'AI features are working, but answers are not being saved for other visitors.',
+                    detail: `The server is missing ${(s.missing ?? []).filter((m) => m !== 'ANTHROPIC_API_KEY').join(' and ') || 'its Supabase settings'}, so every visitor gets a fresh answer.`,
+                };
+            }
+            return { status: 'pass', message: 'AI features are working, and answers are saved and shared with every visitor.' };
+        } catch {
+            return {
+                status: 'fail',
+                message: 'We could not reach the AI service.',
+                detail: 'Your internet may be off, or the AI service may be temporarily down.',
+            };
+        }
     }
+
+    const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+        'x-user-api-key': userKey,
+        'x-foj-key-source': 'user',
+        'x-foj-feature': 'ping',
+    };
 
     try {
         const response = await fetch(CLAUDE_PROXY, {

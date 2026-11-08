@@ -5,9 +5,11 @@ import { initialJobs } from './data';
 import { resolveInitialScores, type ScoresSource } from './utils/bakedScores';
 import type { JobAnalysisResult } from './utils/taskScoring';
 import {
-    YEAR_MIN, PERCENTILES, RESILIENCE_LABELS, VOLATILITY_LABELS,
+    YEAR_MIN,
     CONFIDENCE, DATA_SOURCES,
 } from './config/constants';
+import { BLS_SCORE_POINTS, kelleyScorePoints } from './utils/allRoleScale';
+import { buildRoleScale, resilienceLabelFor, volatilityLabelFor } from './utils/roleScale';
 import { oohEnvelopeCap } from './utils/terrainMath';
 import { MAP_TITLE_TO_SOC } from './utils/onet';
 import blsEp2025_2035 from './data/bls_ep_2025_2035.json';
@@ -42,42 +44,21 @@ function attachEpEmployment(jobs: Job[]): Job[] {
     });
 }
 
-// ── Percentile helper (used by both fetchRealData and scoreAllJobsWithAI) ──
+// ── Percentile labels (used by both fetchRealData and scoreAllJobsWithAI) ──
+//
+// One scale for every scored role (utils/roleScale): a Kelley role's Human
+// Resilience and volatility labels rank it among ALL scored roles, the 50
+// Kelley titles plus every scored BLS occupation, never the 50 alone. The
+// published scores themselves never change here.
 //
 // Labels are only meaningful when the underlying scores are real (i.e. Claude
-// has analyzed the tasks). If every job's automation index is still 0 we leave
-// the labels at their pending sentinel ("—") instead of computing percentiles
-// from uninitialized data.
+// has analyzed the tasks). A Kelley job still at 0 keeps the pending
+// sentinel ("—") instead of a percentile of uninitialized data.
 
 const PENDING_LABEL = '—';
 
 function applyPercentileLabels(jobs: Job[]): Job[] {
-    const allUninitialized = jobs.every(j =>
-        j.automationCostIndex === 0 &&
-        j.tasks.every(t => t.aiCapabilityScore === 0 && t.humanCriticalityScore === 0)
-    );
-
-    if (allUninitialized) {
-        return jobs.map(job => ({
-            ...job,
-            humanResilienceLabel: PENDING_LABEL,
-            salaryVolatilityLabel: PENDING_LABEL,
-        }));
-    }
-
-    const autoScores = jobs.map(j => j.automationCostIndex).sort((a, b) => a - b);
-    const humanScores = jobs.map(j => {
-        const avg = j.tasks.reduce((sum, t) => sum + t.humanCriticalityScore, 0) / j.tasks.length;
-        return avg || 0;
-    }).sort((a, b) => a - b);
-
-    const pct = (arr: number[], p: number) =>
-        arr[Math.min(Math.floor(p * arr.length), arr.length - 1)];
-
-    const p75_auto  = pct(autoScores,  PERCENTILES.HIGH);
-    const p50_auto  = pct(autoScores,  PERCENTILES.MEDIUM);
-    const p75_human = pct(humanScores, PERCENTILES.HIGH);
-    const p25_human = pct(humanScores, PERCENTILES.LOW);
+    const scale = buildRoleScale([...kelleyScorePoints(jobs), ...BLS_SCORE_POINTS]);
 
     return jobs.map(job => {
         const item = { ...job };
@@ -87,27 +68,15 @@ function applyPercentileLabels(jobs: Job[]): Job[] {
 
         // Per-job pending: this specific job hasn't been Claude-scored yet
         // (e.g. a single job failed to score) — leave its labels pending.
-        if (taskScoresUninitialized) {
+        if (taskScoresUninitialized || scale.count === 0) {
             item.humanResilienceLabel = PENDING_LABEL;
             item.salaryVolatilityLabel = PENDING_LABEL;
             return item;
         }
 
         const avgHuman = job.tasks.reduce((sum, t) => sum + t.humanCriticalityScore, 0) / job.tasks.length;
-        const isHighRisk   = job.automationCostIndex >= p75_auto;
-        const isMediumRisk = job.automationCostIndex >= p50_auto;
-
-        item.humanResilienceLabel =
-            avgHuman >= p75_human ? RESILIENCE_LABELS.TOP :
-            avgHuman >= p25_human ? RESILIENCE_LABELS.MID :
-            RESILIENCE_LABELS.BOTTOM;
-
-        item.salaryVolatilityLabel =
-            isHighRisk && item.projectedGrowth < 0 ? VOLATILITY_LABELS.CRITICAL :
-            isHighRisk                              ? VOLATILITY_LABELS.HIGH :
-            isMediumRisk                            ? VOLATILITY_LABELS.MODERATE :
-            VOLATILITY_LABELS.STABLE;
-
+        item.humanResilienceLabel = resilienceLabelFor(avgHuman, scale);
+        item.salaryVolatilityLabel = volatilityLabelFor(job.automationCostIndex, item.projectedGrowth, scale);
         return item;
     });
 }
@@ -209,7 +178,8 @@ interface AppState {
     setMapView: (mode: 'globe' | 'map' | 'tasks') => void;
     selectedRoleIds: Set<string>;
     toggleRoleOnMap: (jobId: string) => void;
-    selectAllRoles: () => void;
+    /** Select these role ids (default: the 50 Kelley roles, the state map's list). */
+    selectAllRoles: (ids?: string[]) => void;
     clearAllRoles: () => void;
 
     // Real Data Integration
@@ -317,7 +287,7 @@ export const useStore = create<AppState>((set, get) => ({
         else newSet.add(jobId);
         return { selectedRoleIds: newSet };
     }),
-    selectAllRoles:  () => set((state) => ({ selectedRoleIds: new Set(state.jobs.map(j => j.id)) })),
+    selectAllRoles:  (ids) => set((state) => ({ selectedRoleIds: new Set(ids ?? state.jobs.map(j => j.id)) })),
     clearAllRoles:   () => set({ selectedRoleIds: new Set<string>() }),
 
     // ── BLS Real Data ────────────────────────────────────────────────────

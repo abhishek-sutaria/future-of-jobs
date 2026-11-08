@@ -4,9 +4,10 @@
  * `npm run generate-bls-scores` to src/data/ai_scores_bls.json (same model,
  * prompt and parser as ai_scores.json).
  *
- * Kept apart from the store on purpose: these roles are not in the jobs list,
- * the Kelley toggle or the 50-role percentile labels, and nothing here changes
- * a Kelley score, label, colour scale or rank. Their panels make no Claude call.
+ * Kept apart from the store's jobs list (these roles are not Kelley titles),
+ * but ranked on one scale with them: utils/allRoleScale puts every scored role,
+ * Kelley or not, into the same percentiles and colour bands. A scored
+ * occupation opens the same role panel as a Kelley role (utils/blsRoleJob).
  *
  * Served by scripts/lib/blsScoresPlugin.ts in two parts: the main bundle holds
  * the meta and one Automation Risk per SOC (all the world view needs), and each
@@ -15,9 +16,7 @@
  * file, every one of these occupations stays "not scored yet".
  */
 
-import { meta as BUNDLE_META, risks as BUNDLE_RISKS, fieldLoaders } from 'virtual:bls-scores';
-import { PERCENTILES, RESILIENCE_LABELS } from '../config/constants';
-import { getBakedScores } from './bakedScores';
+import { meta as BUNDLE_META, risks as BUNDLE_RISKS, humans as BUNDLE_HUMANS, fieldLoaders } from 'virtual:bls-scores';
 import { initialJobs } from '../data';
 import { MAP_TITLE_TO_SOC } from './onet';
 import { OCCUPATION_INDEX, continentOf } from './occupationIndex';
@@ -26,13 +25,14 @@ import { parseBlsScores, type BlsBundleMeta, type BlsRoleScore } from './blsScor
 export { parseBlsScores } from './blsScoresData';
 export type { BlsBundleMeta, BlsRoleScore, BlsScoresMeta, BlsTaskScore } from './blsScoresData';
 
-const mean = (xs: number[]) => xs.reduce((s, x) => s + x, 0) / xs.length;
-
 /** Model, file date, entry count and first / last scoredAt of the published set. */
 export const BLS_SCORES_META: BlsBundleMeta | null = BUNDLE_META;
 
 /** Automation Risk of every scored BLS occupation, by SOC. Always loaded. */
 export const BLS_SCORE_RISK: ReadonlyMap<string, number> = new Map(Object.entries(BUNDLE_RISKS));
+
+/** Mean Human Criticality of every scored BLS occupation, by SOC (4 decimals). Always loaded. */
+export const BLS_SCORE_HUMAN: ReadonlyMap<string, number> = new Map(Object.entries(BUNDLE_HUMANS ?? {}));
 
 const loadedScores = new Map<string, BlsRoleScore>();
 const fieldLoads = new Map<string, Promise<void>>();
@@ -83,6 +83,15 @@ export interface ScoreCounts {
     scored: number;
     /** Distinct BLS occupations the 50 Kelley titles map to. */
     kelleySocs: number;
+    /** Kelley titles (each its own scored role). */
+    kelleyTitles: number;
+    /**
+     * Scored roles, the population every rank is taken across (utils/roleScale):
+     * each Kelley title once plus each other scored occupation once.
+     */
+    roles: number;
+    /** BLS occupations that hold two or more Kelley titles (each title is its own role). */
+    sharedKelleySocs: number;
     /** Scored occupations outside the 50 Kelley roles. */
     bls: number;
     /** Occupations with no score. */
@@ -97,11 +106,20 @@ export function scoreCounts(blsScored: ReadonlyMap<string, unknown> = BLS_SCORE_
     const occs = OCCUPATION_INDEX.occupations;
     const isScored = (soc: string) => KELLEY_SOCS.has(soc) || blsScored.has(soc);
     const unscored = occs.filter((o) => !isScored(o.soc));
+    const bls = occs.filter((o) => !KELLEY_SOCS.has(o.soc) && blsScored.has(o.soc)).length;
+    const titlesPerSoc = new Map<string, number>();
+    for (const j of initialJobs) {
+        const soc = MAP_TITLE_TO_SOC[j.title];
+        if (soc) titlesPerSoc.set(soc, (titlesPerSoc.get(soc) ?? 0) + 1);
+    }
     return {
         total: occs.length,
         scored: occs.length - unscored.length,
         kelleySocs: occs.filter((o) => KELLEY_SOCS.has(o.soc)).length,
-        bls: occs.filter((o) => !KELLEY_SOCS.has(o.soc) && blsScored.has(o.soc)).length,
+        kelleyTitles: initialJobs.length,
+        roles: initialJobs.length + bls,
+        sharedKelleySocs: [...titlesPerSoc.values()].filter((n) => n > 1).length,
+        bls,
         unscored: unscored.length,
         unscoredNoTasks: unscored.filter((o) => o.taskCount === 0).length,
         unscoredAllOther: unscored.filter((o) => o.title.includes('All Other')).length,
@@ -137,11 +155,11 @@ export function scoreCoverage(c: ScoreCounts): ScoreCoverage {
         ? ` are the ${n(c.unscored)} ${what} for which O*NET lists no tasks, so they are not scored.`
         : ' are scored soon.';
     if (c.bls === 0) {
-        return { short: 'the 50 Kelley roles', sentence: 'AI scores cover the 50 Kelley business roles for now.', unscoredReason, slate };
+        return { short: `the ${n(c.kelleyTitles)} Kelley roles`, sentence: `AI scores cover the ${n(c.kelleyTitles)} Kelley business roles for now.`, unscoredReason, slate };
     }
     return {
         short: `${n(c.scored)} of ${n(c.total)} occupations`,
-        sentence: `AI scores cover ${n(c.scored)} of the ${n(c.total)} occupations: the 50 Kelley business roles (${n(c.kelleySocs)} BLS occupations) plus ${n(c.bls)} more.`,
+        sentence: `AI scores cover ${n(c.scored)} of the ${n(c.total)} occupations: the ${n(c.kelleyTitles)} Kelley business roles (${n(c.kelleySocs)} BLS occupations) plus ${n(c.bls)} more.`,
         unscoredReason,
         slate,
     };
@@ -174,43 +192,4 @@ export function scoredRangeLabel(first: string | null, last: string | null): str
     const a = scoredOnLabel(first);
     const b = scoredOnLabel(last);
     return a === b ? a : `${a} to ${b}`;
-}
-
-// ── Where a role would sit among the 50 published Kelley roles ─────────────
-
-export interface KelleyComparison {
-    total: number;
-    /** How many of the 50 have a lower Automation Risk. */
-    riskHigherThan: number;
-    /** How many of the 50 have a lower average Human Criticality. */
-    humanHigherThan: number;
-    /** The Human Resilience label the 50's own thresholds would give it. */
-    resilienceLabel: string;
-}
-
-/**
- * Compares against the published ai_scores.json set, never the 50 plus this
- * role: the 50 keep their labels and ranks. Thresholds follow store.ts
- * applyPercentileLabels (top quarter Future-Proof, middle half High, bottom
- * quarter At Risk).
- */
-export function compareWithKelley(score: Pick<BlsRoleScore, 'automationCostIndex' | 'humanCriticality'>): KelleyComparison | null {
-    const published = getBakedScores();
-    if (!published) return null;
-    const rows = Object.values(published.scores).filter((a) => a.tasks.length > 0);
-    if (rows.length === 0) return null;
-    const risks = rows.map((a) => parseFloat(mean(a.tasks.map((t) => t.aiCapabilityScore)).toFixed(2)));
-    // Three decimals on both sides: exact for five two-decimal task scores, so a
-    // tie stays a tie and two decimals' false ties (0.564 and 0.56) never appear.
-    const roundHuman = (v: number) => parseFloat(v.toFixed(3));
-    const humans = rows.map((a) => roundHuman(mean(a.tasks.map((t) => t.humanCriticalityScore))));
-    const sorted = [...humans].sort((a, b) => a - b);
-    const pct = (p: number) => sorted[Math.min(Math.floor(p * sorted.length), sorted.length - 1)];
-    const h = roundHuman(score.humanCriticality);
-    return {
-        total: rows.length,
-        riskHigherThan: risks.filter((r) => r < score.automationCostIndex).length,
-        humanHigherThan: humans.filter((x) => x < h).length,
-        resilienceLabel: h >= pct(PERCENTILES.HIGH) ? RESILIENCE_LABELS.TOP : h >= pct(PERCENTILES.LOW) ? RESILIENCE_LABELS.MID : RESILIENCE_LABELS.BOTTOM,
-    };
 }

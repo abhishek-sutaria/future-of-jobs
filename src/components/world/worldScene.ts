@@ -4,7 +4,8 @@ import type { Job } from '../../types';
 import { getRoleEntries, type RoleEntry } from '../../utils/roles';
 import { buildWorldLayout, type WorldLayout } from '../../utils/worldLayout';
 import { epLevelAtYear, getVisualHeightForEpEmployment, TERRAIN_CONFIG } from '../../utils/terrainMath';
-import { buildRiskScale, normalizeRisk, riskBandColor, riskColorRGB, RISK_UNSCORED_HEX, RISK_UNSCORED_RGB } from '../../config/theme';
+import { normalizeRisk, riskBandColor, riskColorRGB, RISK_UNSCORED_HEX, RISK_UNSCORED_RGB } from '../../config/theme';
+import { roleScaleFor } from '../../utils/allRoleScale';
 import { SHADER } from '../../config/constants';
 
 
@@ -47,9 +48,9 @@ export function buildWorldScene(jobs: readonly Job[]): WorldScene {
     const layout = layoutFor(entries);
     const jobById = new Map(jobs.map((j) => [j.id, j]));
     const entryByKey = new Map(entries.map((e) => [e.key, e]));
-    // Same basis as the old terrain: graded across all 50 Kelley roles only, so
-    // adding scored BLS occupations never moves a Kelley colour.
-    const riskScale = buildRiskScale(jobs.map((j) => j.automationCostIndex));
+    // One colour scale for every scored role, Kelley or not (utils/roleScale):
+    // the bands are terciles of all scored roles' Automation Risk.
+    const riskScale = roleScaleFor(jobs).risk;
     const peaks: ScenePeak[] = [];
     const peaksByContinent = new Map<string, ScenePeak[]>();
     const peakByKey = new Map<string, ScenePeak>();
@@ -59,7 +60,7 @@ export function buildWorldScene(jobs: readonly Job[]): WorldScene {
             const entry = entryByKey.get(p.key)!;
             const job = entry.jobId ? jobById.get(entry.jobId) ?? null : null;
             // Kelley roles read the store's index; a scored BLS occupation its own
-            // published one. Both go through the same scale, set by the 50 alone.
+            // published one. Both go through the same scale, set by all of them.
             const risk = job && entry.scored ? job.automationCostIndex : entry.scored ? entry.blsRisk ?? null : null;
             const peak: ScenePeak = {
                 entry,

@@ -10,6 +10,7 @@ declare module '*?url' {
 declare module 'virtual:bls-scores' {
     export const meta: import('./utils/blsScoresData').BlsBundleMeta | null;
     export const risks: Record<string, number>;
+    export const humans: Record<string, number>;
     export const fieldLoaders: Record<string, () => Promise<{ default: import('./utils/blsScoresData').RawBlsFile }>>;
 }
 

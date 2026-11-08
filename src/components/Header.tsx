@@ -10,6 +10,7 @@ import { useWorldStore } from '../worldStore';
 import { resetViewVisible } from '../utils/resetView';
 import { getRoleEntries, searchRoles, type RoleEntry } from '../utils/roles';
 import { CONTINENT_DISPLAY_NAMES } from '../config/continents';
+import { SCORE_COUNTS } from '../utils/blsScores';
 
 interface HeaderProps {
     economyData: { value: string; period: string; color: string } | null;
@@ -86,8 +87,8 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
                             className="hidden md:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-[10px] text-emerald-400 font-semibold uppercase tracking-wider pointer-events-auto cursor-pointer hover:bg-emerald-500/20 transition-colors"
                             title={
                                 scoresAgeLabel
-                                    ? `AI ratings computed ${scoresAgeLabel}. Click to re-score the 50 Kelley roles with fresh Claude data (uses your API key).`
-                                    : 'Click to re-score the 50 Kelley roles with fresh Claude data (uses your API key).'
+                                    ? `AI ratings computed ${scoresAgeLabel}. Click to re-score the ${SCORE_COUNTS.kelleyTitles} Kelley roles with fresh Claude data (uses your API key).`
+                                    : `Click to re-score the ${SCORE_COUNTS.kelleyTitles} Kelley roles with fresh Claude data (uses your API key).`
                             }
                             onClick={() => openRescoreModal()}
                         >

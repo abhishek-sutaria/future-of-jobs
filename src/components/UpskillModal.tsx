@@ -1,5 +1,5 @@
 import React from 'react';
-import { useStore } from '../store';
+import { getClaudeUserFriendlyMessage } from '../utils/claude';
 import { Modal } from './ui/Modal';
 import { IconAward, IconArrowRight, IconInfo, IconBook } from './ui/Icons';
 import { Skeleton, SkeletonText } from './ui/Skeleton';
@@ -11,6 +11,8 @@ interface UpskillModalProps {
     isOpen: boolean;
     onClose: () => void;
     jobId: string;
+    /** The role's title as the panel shows it (Kelley title or BLS title). */
+    jobTitle: string;
     taskName: string;
     /** Which column launched this — decides the strategy, and the prompt. */
     mode: UpskillMode;
@@ -18,31 +20,33 @@ interface UpskillModalProps {
     aiRiskPercent: number;
 }
 
-export const UpskillModal: React.FC<UpskillModalProps> = ({ isOpen, onClose, jobId, taskName, mode, aiRiskPercent }) => {
-    const job = useStore((state) => state.jobs.find(j => j.id === jobId));
+export const UpskillModal: React.FC<UpskillModalProps> = ({ isOpen, onClose, jobId, jobTitle, taskName, mode, aiRiskPercent }) => {
     const recordUpskillCompletion = useUserStore((state) => state.recordUpskillCompletion);
 
     const [courses, setCourses] = React.useState<UpskillCoursesResult | null>(null);
     const [isLoading, setIsLoading] = React.useState(true);
+    const [error, setError] = React.useState<string | null>(null);
 
     React.useEffect(() => {
-        if (!isOpen || !job) return;
+        if (!isOpen) return;
         let mounted = true;
         setIsLoading(true);
         setCourses(null);
+        setError(null);
 
+        // A saved shared answer for this task comes back with no Claude call.
         import('../utils/analysis').then(({ generateUpskillCourses }) =>
-            generateUpskillCourses(job.title, taskName, mode, aiRiskPercent)
-        ).then(result => {
+            generateUpskillCourses(jobId, jobTitle, taskName, mode, aiRiskPercent)
+        ).then(({ result }) => {
             if (mounted) { setCourses(result); setIsLoading(false); }
-        }).catch(() => {
-            if (mounted) setIsLoading(false);
+        }).catch((err: unknown) => {
+            if (!mounted) return;
+            setIsLoading(false);
+            setError(getClaudeUserFriendlyMessage(err));
         });
 
         return () => { mounted = false; };
-    }, [isOpen, job?.title, taskName, mode, aiRiskPercent]);
-
-    if (!job) return null;
+    }, [isOpen, jobId, jobTitle, taskName, mode, aiRiskPercent]);
 
     const handleComplete = () => {
         // Recorded against the user, not the occupation. Completing training
@@ -139,7 +143,7 @@ export const UpskillModal: React.FC<UpskillModalProps> = ({ isOpen, onClose, job
                             )}
                         </div>
                     ) : (
-                        <p className="text-xs text-gray-500 italic">Could not load courses. Try again later.</p>
+                        <p className="text-xs text-gray-500 italic" role="status">{error ?? 'Could not load courses. Try again later.'}</p>
                     )}
                 </div>
 

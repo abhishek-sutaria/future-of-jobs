@@ -89,11 +89,34 @@ Some "All Other" jobs **are** scored, because O*NET has sub-codes with tasks for
 
 Because of these 47 jobs, most fields will never be "fully scored". Only 13, 15 and 31 can be. Any text that says a whole field is in colour must allow for that.
 
-## Ranks and percentiles
+## Ranks and percentiles (decided 2026-11-08: one scale for all)
 
-- **New scores do not join the percentiles or ranks of the 50 Kelley roles.** The 50 keep their labels, ranks and colour scale exactly as published.
-- A new job's panel can say where it *would* sit among the 50, as the Business & Finance panels do now.
-- Ranks across all jobs will be decided **once, after everything is scored**.
+Owner's call: "Compare everything to all the roles, not only Kelley." Since 2026-11-08 every rank, label and colour uses **all scored roles together**. Score **values** never change; only where a role sits among the others.
+
+**Who is counted.** Every scored role once:
+
+- each of the 50 Kelley titles, with its own published tasks and scores, and
+- each other scored BLS occupation (ai_scores_bls.json).
+
+Three BLS occupations hold two Kelley titles each: 11-2021 (Marketing Manager, Brand Manager), 15-2051 (Business Intelligence Analyst, Data Scientist) and 13-1020 (Wholesale & Retail Buyer, Purchasing Agent). Each title was scored on its own five tasks and has its own numbers, so each title counts once as its own role. The BLS occupation itself is never counted again: no Kelley code is in ai_scores_bls.json. So **roles = Kelley titles + other scored occupations** (786 = 50 + 736 today), from **783 scored occupations**. The counts in the app come from `SCORE_COUNTS` (`roles`, `scored`, `kelleyTitles`, `sharedKelleySocs`), never typed in.
+
+**The rules** (`src/utils/roleScale.ts`), the same as before, only over all roles:
+
+- Human Resilience: mean Human Criticality at or above the 75th percentile is Future-Proof, at or above the 25th is High, below is At Risk. Means are compared at 4 decimals (exact for five or four two-decimal scores), so float noise never breaks a tie.
+- Salary volatility label: Automation Risk percentiles 50 and 75, as before.
+- Colour bands: thirds (terciles) of Automation Risk; the continuous ramp runs from the 5th to the 95th percentile.
+
+**What changed for the 50 Kelley roles.** `scripts/rank_table.ts` writes the before/after table to `src/__tests__/fixtures/kelley50_rank_change.json` (checked by `rankScale.test.ts`). 25 of 50 Human Resilience labels and 30 of 50 colour bands change. Business roles score as more automatable than the economy as a whole, so most of them move toward At Risk and red: the Human Resilience cut-offs move from 0.600 / 0.712 to 0.650 / 0.840, and the colour bands from 0.50 / 0.56 to 0.25 / 0.43.
+
+**Removed:** the "Compared with the 50 Kelley roles" line on other occupations' panels.
+
+## One common app for all scored roles (decided 2026-11-08)
+
+- Every scored role opens the same panel with the same features as a Kelley role (Analyze / Strategic Insight, Roadmap, Scenario, Defend / Build, Save role, Human Resilience, the task view). Kelley-only facts are small labels on Kelley roles only.
+- The 47 "All Other" jobs with no O*NET tasks keep the numbers-only panel and say "Not scored". They never call Claude.
+- **Source badges only where the data is in the repo.** The OOH badge shows on Kelley roles only: the repo's OOH extract covers them only. Other roles show OES, Pay, EP, O*NET and Claude tasks.
+- **State map: Kelley roles only.** `src/data/geo_real.json` (BLS OEWS May 2025, from the BLS API) covers the 47 Kelley codes. The only file in the repo with state data for every occupation is `data/all_data_M_2023.xlsx`: an official BLS file, but **May 2023**, two years older (it has 829 of the 830 codes; 29-1024 is missing). It is not used, so one map never mixes two survey years. To add the other occupations, download the official OEWS May 2025 state file (`state_M2025_dl.xlsx`) into `data/` and build them from it the same way.
+- **Live Claude answers are saved once and shared.** See `README.md`, "Claude gateway and shared answers".
 
 ## How a run works (no calls in this PR)
 

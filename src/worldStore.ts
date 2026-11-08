@@ -42,9 +42,15 @@ interface WorldState extends WorldLevel {
     kelleyOnly: boolean;
     setKelleyOnly: (on: boolean) => void;
 
-    /** SOC of the open unscored occupation panel. Never set for a Kelley role. */
+    /**
+     * SOC of the open BLS occupation panel (any occupation that is not a Kelley
+     * title). Scored ones open the common role panel, unscored ones the
+     * numbers-only panel (UI.tsx). Never set for a Kelley role.
+     */
     selectedOccupationSoc: string | null;
     closeOccupation: () => void;
+    /** Open an occupation's panel where the user is, with no flight (task view, dashboard). */
+    openOccupation: (soc: string) => void;
 
     /** Continent files loaded so far, by code. */
     continentFiles: Record<string, ContinentFile>;
@@ -99,6 +105,11 @@ export const useWorldStore = create<WorldState>((set, get) => ({
 
     selectedOccupationSoc: null,
     closeOccupation: () => set({ selectedOccupationSoc: null }),
+    openOccupation: (soc) => {
+        useStore.getState().setSelectedJob(null);
+        set({ selectedOccupationSoc: soc });
+        void get().loadContinent(soc.slice(0, 2));
+    },
 
     continentFiles: {},
     continentErrors: {},

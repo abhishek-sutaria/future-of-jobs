@@ -138,6 +138,12 @@ export interface BlsBundle {
     meta: BlsBundleMeta | null;
     /** Automation Risk per scored SOC: all the world view needs. */
     risks: Record<string, number>;
+    /**
+     * Mean Human Criticality per scored SOC, rounded to 4 decimals (exact for
+     * 5 or 4 two-decimal task scores). With `risks`, enough to rank every
+     * scored role at startup (utils/roleScale) without loading a field.
+     */
+    humans: Record<string, number>;
     /** One slim file per field (two-digit SOC major) holding its scored SOCs. */
     fields: Record<string, RawBlsFile>;
 }
@@ -145,14 +151,16 @@ export interface BlsBundle {
 /** What the build puts in the main bundle (meta, risks) and in each field's chunk. */
 export function buildBlsBundle(file: RawBlsFile | null | undefined): BlsBundle {
     const { meta, scores } = parseBlsScores(file);
-    if (!file || !meta) return { meta: null, risks: {}, fields: {} };
+    if (!file || !meta) return { meta: null, risks: {}, humans: {}, fields: {} };
     const slim = slimBlsFile(file);
     const risks: Record<string, number> = {};
+    const humans: Record<string, number> = {};
     const fields: Record<string, RawBlsFile> = {};
     const dates: string[] = [];
     const rules: Record<string, number> = {};
     for (const [soc, s] of scores) {
         risks[soc] = s.automationCostIndex;
+        humans[soc] = Math.round(s.humanCriticality * 10_000) / 10_000;
         dates.push(s.scoredAt);
         const rule = file.scores![soc].rule ?? 'unknown';
         rules[rule] = (rules[rule] ?? 0) + 1;
@@ -164,6 +172,7 @@ export function buildBlsBundle(file: RawBlsFile | null | undefined): BlsBundle {
     return {
         meta: { ...meta, count: scores.size, firstScoredAt: dates[0] ?? null, lastScoredAt: dates[dates.length - 1] ?? null, rules },
         risks,
+        humans,
         fields,
     };
 }

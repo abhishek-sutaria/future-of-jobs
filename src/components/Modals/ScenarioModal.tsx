@@ -3,7 +3,8 @@ import { Modal } from '../ui/Modal';
 import { IconSparkles } from '../ui/Icons';
 import { Skeleton, SkeletonText } from '../ui/Skeleton';
 import { YEAR_MAX } from '../../config/constants';
-import type { ScenarioResult } from '../../utils/analysis';
+import type { ScenarioResult, SharedAnswerMeta } from '../../utils/analysis';
+import { SharedAnswerNote } from '../SharedAnswerNote';
 import { ScenarioReport } from '../reports/ScenarioReport';
 
 interface ScenarioModalProps {
@@ -11,10 +12,12 @@ interface ScenarioModalProps {
     isLoading: boolean;
     result: ScenarioResult | null;
     errorMessage?: string | null;
+    /** Whether this is the saved answer every visitor sees. */
+    shared?: SharedAnswerMeta;
     onClose: () => void;
 }
 
-export const ScenarioModal: React.FC<ScenarioModalProps> = ({ isOpen, isLoading, result, errorMessage, onClose }) => {
+export const ScenarioModal: React.FC<ScenarioModalProps> = ({ isOpen, isLoading, result, errorMessage, shared, onClose }) => {
     return (
         <Modal isOpen={isOpen} onClose={onClose} title={`Future Scenario: ${YEAR_MAX}`} size="md" layer="top">
             <div className="flex items-center gap-2 mb-6 text-xs text-gray-500">
@@ -40,6 +43,7 @@ export const ScenarioModal: React.FC<ScenarioModalProps> = ({ isOpen, isLoading,
             ) : result ? (
                 <div className="animate-in fade-in duration-300">
                     <ScenarioReport result={result} />
+                    <SharedAnswerNote shared={shared} />
                 </div>
             ) : (
                 <p className="text-red-400 text-sm">Failed to generate scenario. Check your Claude setup or try again.</p>

@@ -7,8 +7,10 @@ A futuristic dashboard visualizing the impact of AI on the workforce. This appli
 - **3D Terrain Visualization**: Interactive 3D landscape representing job markets, where peak height corresponds to growth and automation resilience.
 - **Holographic World Map**: Global view of role distribution across regions.
 - **Live Economic Data**: Real-time integration with the Bureau of Labor Statistics (BLS) for unemployment rates.
+- **One app for every scored role**: every scored occupation (the 50 Kelley roles and every other BLS job with O*NET tasks) opens the same panel and is ranked on one scale across all of them.
 - **Crystal Ball Simulation**: Claude-powered "Day in the Life" scenario generator for 2030.
 - **Strategic Upskilling Roadmap**: Actionable 6-month plans to transition from at-risk tasks to safe harbors.
+- **Shared saved answers**: Strategic Insight, Scenario, Roadmap and Defend / Build are written by Claude once per role, saved on the server, and shown to every later visitor with no new Claude call. See [Claude gateway and shared answers](#claude-gateway-and-shared-answers).
 - **Individual User Activity** *(optional, requires Supabase)*: saved roles, view history, upskill progress, and saved AI reports, private per user. See [Individual User Activity](#individual-user-activity) below.
 
 ## Tech Stack
@@ -64,7 +66,12 @@ ANTHROPIC_API_KEY=your_server_default_claude_key_here
 VITE_BLS_API_KEY=your_bls_api_key_here
 VITE_SUPABASE_URL=your_supabase_project_url_here
 VITE_SUPABASE_ANON_KEY=your_supabase_anon_key_here
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_or_secret_key_here
 ```
+
+- `SUPABASE_SERVICE_ROLE_KEY` is **server-only** (no `VITE_` prefix, so Vite never puts it in the browser bundle). Only `api/claude.ts` reads it, to save shared answers and count the rate limit. Without it the app still works, but every visitor gets a fresh Claude answer and the limit counts per function instance only; System status says which name is missing.
+- `SUPABASE_URL` is optional; the server falls back to `VITE_SUPABASE_URL`.
+- Optional limits on new Claude answers made with the server key: `FOJ_RATE_PER_HOUR` (per visitor, default 30), `FOJ_RATE_PER_DAY` (per visitor, default 100), `FOJ_RATE_GLOBAL_PER_DAY` (whole app, default 1000).
 
 Notes:
 - `ANTHROPIC_API_KEY` enables default Claude key mode.
@@ -93,12 +100,29 @@ npx vercel --prod
 ### 4) Production behavior parity
 
 Production uses Vercel serverless functions under:
-- `/api/claude/messages` -> Anthropic proxy
+- `/api/claude/messages` -> Claude gateway (see below)
 - `/api/bls` and `/api/bls/:seriesId` -> BLS proxy
 
 These endpoints preserve the same runtime behavior expected by the frontend:
 - Claude default-key + user-key mode
 - BLS POST batch fetches and unemployment series fetches
+
+## Claude gateway and shared answers
+
+`api/claude.ts` (rules in `api/_lib/gateway.ts`) no longer forwards whatever the browser sends:
+
+- **Only the app's own requests.** The browser sends `{ feature, input }`. The server checks the feature is one of the app's (`src/shared/aiFeatures.ts`), checks the input's shape and size, builds the prompt itself and sets the model (`claude-sonnet-5`) and `max_tokens`. A raw Anthropic request is accepted only with the visitor's own key, for the opt-in re-score and the status ping.
+- **One shared saved answer.** For Strategic Insight (Analyze), Scenario, Roadmap and Defend / Build, the first answer that passes the app's checks is saved in Supabase (`ai_shared_answers`), keyed by role + feature + prompt version + a hash of the exact request. Every later visitor gets that answer with no Claude call. A changed input or prompt gets a new answer. Résumé-based features are never saved.
+- **Rate limit.** Each visitor (a hash of their IP) may ask for a limited number of NEW answers per hour and per day, and the whole app has a daily ceiling. Saved answers never count. Counts live in Supabase (`ai_rate_limits`), so the limit holds across serverless instances.
+- **Make one answer again.** Delete it, and the next visitor's click writes a new one:
+  ```bash
+  # .env.local (never committed) holds VITE_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY
+  node scripts/shared_answers.mjs list   --role soc:29-1141
+  node scripts/shared_answers.mjs delete --role soc:29-1141 --feature roadmap        # dry run
+  node scripts/shared_answers.mjs delete --role soc:29-1141 --feature roadmap --yes  # delete
+  ```
+  `--role` is `job-15` for a Kelley role or `soc:` plus the BLS code on the role panel; `--feature` is `analyze`, `scenario`, `roadmap` or `upskill`.
+- **Local testing without a key:** `FOJ_MOCK_CLAUDE=1 npm run dev` runs the same gateway against an in-memory mock of Claude and Supabase.
 
 ## Key Components
 
@@ -185,9 +209,11 @@ configured, the app behaves exactly as a stateless, anonymous SPA.
   only** — Startup Ideas dashboards and Skills/Résumé analyses, since both are
   derived from a résumé.
 - **What's deliberately NOT persisted per-user**: per-job Analyze results and
-  the full AI re-score. Both are pure functions of bundled job data (same
-  job → same output for everyone), so they stay in their existing shared
-  localStorage caches rather than being duplicated per account.
+  the full AI re-score. Analyze is the same for everyone, so it is one shared
+  answer on the server (see [Claude gateway and shared answers](#claude-gateway-and-shared-answers));
+  the re-score stays in its localStorage cache. Scenario and Roadmap are also
+  shared answers on the server, and a signed-in user keeps a copy in their own
+  saved reports.
 - **Résumé privacy**: raw résumé/CV text is never written to disk anywhere —
   not to localStorage, not to Supabase. It lives only in component state
   and is cleared when the relevant modal closes. Résumé-derived artifacts are
@@ -197,7 +223,7 @@ configured, the app behaves exactly as a stateless, anonymous SPA.
 ### Setup
 
 1. Create a free project at [supabase.com](https://supabase.com).
-2. In the SQL editor, run **both** migrations in `supabase/migrations/`, in
+2. In the SQL editor, run **all three** migrations in `supabase/migrations/`, in
    order — read each file's own header comment for what it does before running
    it:
    - `0001_user_activity.sql` — creates the tables and RLS policies.
@@ -207,6 +233,9 @@ configured, the app behaves exactly as a stateless, anonymous SPA.
      request from a signed-in (including anonymous) user failing with a 403
      before RLS is ever evaluated — the app looks completely broken while the
      policies themselves are perfectly correct.
+   - `0003_shared_ai_answers.sql` — the shared saved answers and rate-limit
+     counts used by `api/claude.ts`. Server-only: no access for the anon or
+     signed-in roles; only the service key used inside `api/` can reach them.
 3. In **Authentication → Settings**, enable **Allow anonymous sign-ins** (off
    by default). If you want the email-upgrade flow to work, also confirm your
    email provider is configured.

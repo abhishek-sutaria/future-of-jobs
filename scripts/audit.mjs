@@ -531,16 +531,18 @@ check(
   exists('api/bls.ts')
 );
 
-// T35: api/claude.ts correctly reads ANTHROPIC_API_KEY from process.env
+// T35: api/claude.ts hands process.env to the gateway, which reads ANTHROPIC_API_KEY
+// (the rules live in api/_lib/gateway.ts since the shared-answer change).
 {
-  if (exists('api/claude.ts')) {
-    const src = read('api/claude.ts');
+  if (exists('api/claude.ts') && exists('api/_lib/gateway.ts')) {
+    const fn = read('api/claude.ts');
+    const gw = read('api/_lib/gateway.ts');
     check(
-      'T35 — api/claude.ts reads ANTHROPIC_API_KEY from process.env',
-      src.includes('ANTHROPIC_API_KEY')
+      'T35 — api/claude.ts passes process.env; the gateway reads ANTHROPIC_API_KEY from it',
+      /env:\s*\(\)\s*=>\s*process\.env/.test(fn) && /env\.ANTHROPIC_API_KEY/.test(gw)
     );
   } else {
-    check('T35 — api/claude.ts reads ANTHROPIC_API_KEY from process.env', false, 'File missing');
+    check('T35 — api/claude.ts passes process.env; the gateway reads ANTHROPIC_API_KEY from it', false, 'File missing');
   }
 }
 
@@ -571,12 +573,15 @@ check(
   }
 }
 
-// T38: vite.config.ts dev proxy points to real Anthropic endpoint
+// T38: under `npm run dev`, /api/claude runs the same gateway as Vercel, which
+// calls the real Anthropic endpoint (was: a dev proxy straight to Anthropic).
 {
-  const src = read('vite.config.ts');
+  const cfg = read('vite.config.ts');
+  const plugin = exists('scripts/lib/devApiPlugin.ts') ? read('scripts/lib/devApiPlugin.ts') : '';
+  const gw = exists('api/_lib/gateway.ts') ? read('api/_lib/gateway.ts') : '';
   check(
-    'T38 — vite.config.ts dev proxy for /api/claude points to api.anthropic.com',
-    src.includes('api.anthropic.com')
+    'T38 — dev server mounts the Vercel gateway for /api/claude, which calls api.anthropic.com',
+    /devApiPlugin\(env\)/.test(cfg) && plugin.includes('createClaudeHandler') && /const ANTHROPIC_URL = 'https:\/\/api\.anthropic\.com\/v1\/messages'/.test(gw)
   );
 }
 

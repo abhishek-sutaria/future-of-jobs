@@ -6,8 +6,9 @@
  *
  * Always checked: the 13 targets come from the data, every task is a verbatim
  * O*NET row, the BLS inputs are the occupation's own, ai_scores.json is byte
- * for byte the published file, and the 50 Kelley roles keep their scores,
- * labels, ranks and colours.
+ * for byte the published file, and the 50 Kelley roles keep their scores and
+ * their order (their labels and colours are now ranked among every scored
+ * role: rankScale.test.ts).
  *
  * Checked once the scores file exists (it is written only after a real
  * claude-sonnet-5 run, never by hand): every planned job with tasks has a
@@ -28,16 +29,18 @@ import { MAP_TITLE_TO_SOC } from '../utils/onet';
 import { buildWorldScene } from '../components/world/worldScene';
 import { buildStage } from '../utils/stageLayout';
 import { familyOf } from '../config/socFamilies';
-import { buildRiskScale, normalizeRisk, riskColorRGB, RISK_UNSCORED_RGB } from '../config/theme';
-import { OccupationBody } from '../components/OccupationPanel';
+import { normalizeRisk, riskColorRGB, RISK_UNSCORED_RGB } from '../config/theme';
+import { JobDetailPanel } from '../components/JobDetailPanel';
 import { loadContinentFile } from '../utils/occupationIndex';
+import { roleScaleFor } from '../utils/allRoleScale';
+import { blsRoleJob } from '../utils/blsRoleJob';
+import { rankScopeText } from '../utils/roleScale';
 import {
     BLS_SCORE_RISK,
     BLS_SCORES_META,
     SCORE_COUNTS,
     SCORE_COVERAGE,
     blsScoreFor,
-    compareWithKelley,
     fullyScoredFields,
     loadAllBlsScores,
     parseBlsScores,
@@ -54,6 +57,7 @@ import {
     type RolePlan,
 } from '../../scripts/lib/blsTasks';
 import kelley50 from './fixtures/kelley50_published.json';
+import rankChange from './fixtures/kelley50_rank_change.json';
 
 const ROOT = path.resolve(__dirname, '../..');
 const SCORES_PATH = path.join(ROOT, 'src/data/ai_scores_bls.json');
@@ -179,17 +183,19 @@ describe('the 50 published Kelley roles do not change', () => {
         expect(hash).toBe(PUBLISHED_SHA256);
     });
 
-    it('scores, labels and ranks match the published set exactly', () => {
+    it('scores and order match the published set exactly; labels are ranked among all scored roles', () => {
         expect(jobs).toHaveLength(50);
         const now = jobs.map((j) => ({
             id: j.id,
             title: j.title,
             automationCostIndex: j.automationCostIndex,
             humanCriticality: Number((j.tasks.reduce((s, t) => s + t.humanCriticalityScore, 0) / j.tasks.length).toFixed(6)),
-            humanResilienceLabel: j.humanResilienceLabel,
-            salaryVolatilityLabel: j.salaryVolatilityLabel,
         }));
-        expect(now).toEqual(kelley50.roles);
+        // Score VALUES never change: the published fixture, minus its old labels.
+        expect(now).toEqual(kelley50.roles.map((r) => ({ id: r.id, title: r.title, automationCostIndex: r.automationCostIndex, humanCriticality: r.humanCriticality })));
+        // Labels now rank each role among every scored role (fixture written by scripts/rank_table.ts).
+        const newLabel = new Map(rankChange.rows.map((r) => [r.id, r.newLabel]));
+        for (const j of jobs) expect(j.humanResilienceLabel, j.title).toBe(newLabel.get(j.id));
         const byRisk = [...now].sort((a, b) => b.automationCostIndex - a.automationCostIndex || a.id.localeCompare(b.id)).map((r) => r.id);
         const byHuman = [...now].sort((a, b) => b.humanCriticality - a.humanCriticality || a.id.localeCompare(b.id)).map((r) => r.id);
         expect(byRisk).toEqual(kelley50.riskOrder);
@@ -204,8 +210,8 @@ describe('the 50 published Kelley roles do not change', () => {
         }
     });
 
-    it('Kelley hills keep their colour, on a scale set by the 50 alone', () => {
-        const scale = buildRiskScale(jobs.map((j) => j.automationCostIndex));
+    it('Kelley hills are coloured on the one scale across every scored role', () => {
+        const scale = roleScaleFor(jobs).risk;
         for (const p of scene.peaks.filter((p) => p.entry.kind === 'kelley')) {
             expect(sameColor(p.color, riskColorRGB(normalizeRisk(p.job!.automationCostIndex, scale))), p.entry.title).toBe(true);
         }
@@ -395,8 +401,8 @@ describe.runIf(PRESENT)('after the scoring run (ai_scores_bls.json)', () => {
         }
     });
 
-    it('colours every scored BLS hill from its own Automation Risk, on the Kelley scale', () => {
-        const scale = buildRiskScale(jobs.map((j) => j.automationCostIndex));
+    it('colours every scored BLS hill from its own Automation Risk, on the same all-roles scale', () => {
+        const scale = roleScaleFor(jobs).risk;
         const bls = scene.peaks.filter((p) => p.entry.kind === 'bls' && p.entry.scored);
         expect(bls).toHaveLength(EXPECTED_SCORED.length);
         for (const p of bls) {
@@ -421,61 +427,37 @@ describe.runIf(PRESENT)('after the scoring run (ai_scores_bls.json)', () => {
         }
     });
 
-    it('each panel shows the published scores, rank, provenance and tasks, and no Claude feature', async () => {
+    it('each opens the common role panel: published scores, all-roles rank, its tasks and every role feature', async () => {
         const continent = await loadContinentFile('13');
+        const scale = roleScaleFor(jobs);
         for (const soc of BF_TARGET_SOCS) {
-            const html = renderToStaticMarkup(<OccupationBody occupation={continent.occupations[soc]} onClose={() => {}} />);
+            const job = blsRoleJob(continent.occupations[soc], blsScoreFor(soc)!, scale);
+            const html = renderToStaticMarkup(
+                <JobDetailPanel
+                    job={job}
+                    occupation={continent.occupations[soc]}
+                    analysisResult={null}
+                    analysisLoading={false}
+                    analysisError={null}
+                    missingApiKey={false}
+                    onClose={() => {}}
+                    onSetAnalysisResult={() => {}}
+                    onSetAnalysisLoading={() => {}}
+                    onShowMethodology={() => {}}
+                />,
+            );
             const doc = new JSDOM(`<body>${html}</body>`).window.document;
             const s = blsScoreFor(soc)!;
-            expect(doc.querySelector('[data-testid="ai-soon"]'), soc).toBeNull();
-            expect(doc.querySelector('[data-testid="bls-risk"]')!.textContent).toContain(`${(s.automationCostIndex * 100).toFixed(0)}%`);
-            expect(doc.querySelector('[data-testid="bls-human"]')!.textContent).toContain('Human Criticality');
-            expect(doc.querySelector('[data-testid="bls-rank"]')!.textContent).toContain('50 Kelley roles');
-            expect(doc.querySelector('[data-testid="bls-provenance"]')!.textContent).toContain('claude-sonnet-5');
-            expect([...doc.querySelectorAll('[data-testid="bls-task-name"]')].map((n) => n.textContent).sort())
-                .toEqual(planBySoc.get(soc)!.tasks.map((t) => t.name).sort());
-            // Controls only: O*NET task text can itself start with "Analyze"
-            // (13-1031), so the check is on buttons, links and headings.
-            expect(claudeControls(doc), soc).toEqual([]);
-            const c = compareWithKelley(s)!;
-            expect(c.total).toBe(50);
-            expect(doc.querySelector('[data-testid="bls-rank"]')!.textContent).toContain(`human judgment is higher than ${c.humanHigherThan} of them`);
+            expect(doc.body.textContent, soc).toContain(`${(s.automationCostIndex * 100).toFixed(0)}%`);
+            expect(doc.querySelector('[data-testid="rank-scope"]')!.textContent).toBe(`Rank ${rankScopeText(scale)}`);
+            expect(doc.querySelector('[data-testid="kelley-label"]'), soc).toBeNull();
+            expect(doc.body.textContent).not.toContain('Compared with the');
+            const panelTasks = new Set([...doc.querySelectorAll('.text-sm.font-medium')].map((n) => n.textContent));
+            for (const t of planBySoc.get(soc)!.tasks) expect(panelTasks.has(t.name), `${soc}: ${t.name}`).toBe(true);
+            const controls = claudeControls(doc).join(' | ');
+            for (const feature of ['Roadmap', 'Scenario']) expect(controls, soc).toContain(feature);
+            expect(controls, soc).toMatch(/Defend this task|Build on this/);
         }
-    });
-
-    it('places all 13 among the 50, with human scores compared at a fixed precision', () => {
-        const expected: Record<string, [risk: number, human: number, label: string]> = {
-            '13-1011': [10, 9, 'At Risk'],
-            '13-1031': [44, 3, 'At Risk'],
-            '13-1032': [30, 12, 'At Risk'],
-            '13-1041': [26, 30, 'High'],
-            '13-1074': [1, 38, 'Future-Proof'],
-            '13-1075': [3, 47, 'Future-Proof'],
-            '13-1131': [11, 30, 'High'],
-            '13-1199': [4, 45, 'Future-Proof'],
-            '13-2020': [26, 12, 'High'],
-            '13-2061': [3, 47, 'Future-Proof'],
-            '13-2071': [45, 6, 'At Risk'],
-            '13-2081': [48, 0, 'At Risk'],
-            '13-2082': [47, 6, 'At Risk'],
-        };
-        for (const soc of BF_TARGET_SOCS) {
-            const c = compareWithKelley(blsScoreFor(soc)!)!;
-            expect([c.riskHigherThan, c.humanHigherThan, c.resilienceLabel], soc).toEqual(expected[soc]);
-        }
-    });
-
-    it('13-1199 ties one published role at 0.77, and the tie is not counted as lower', () => {
-        const published = JSON.parse(fs.readFileSync(path.join(ROOT, 'src/data/ai_scores.json'), 'utf-8')) as {
-            scores: Record<string, { tasks: { humanCriticalityScore: number }[] }>;
-        };
-        // Whole hundredths summed as integers, so this count has no float error of its own.
-        const totals = Object.values(published.scores).map((a) => a.tasks.reduce((sum, t) => sum + Math.round(t.humanCriticalityScore * 100), 0));
-        const target = blsScoreFor('13-1199')!.tasks.reduce((sum, t) => sum + Math.round(t.humanCriticalityScore * 100), 0);
-        expect(target).toBe(385);
-        expect(totals.filter((t) => t === target)).toHaveLength(1);
-        expect(totals.filter((t) => t < target)).toHaveLength(45);
-        expect(compareWithKelley(blsScoreFor('13-1199')!)!.humanHigherThan).toBe(45);
     });
 
     it('wording gives the counts from the data and says why the rest are not scored', () => {
@@ -486,6 +468,9 @@ describe.runIf(PRESENT)('after the scoring run (ai_scores_bls.json)', () => {
         expect(SCORE_COUNTS.unscored).toBe(NO_TASK_JOBS.length);
         expect(SCORE_COUNTS.unscoredNoTasks).toBe(NO_TASK_JOBS.length);
         expect(SCORE_COUNTS.unscoredAllOther).toBe(NO_TASK_JOBS.length);
+        expect(SCORE_COUNTS.kelleyTitles).toBe(jobs.length);
+        expect(SCORE_COUNTS.roles).toBe(jobs.length + EXPECTED_SCORED.length);
+        expect(SCORE_COUNTS.roles).toBe(roleScaleFor(jobs).count);
         expect(SCORE_COVERAGE.short).toBe(`${SCORE_COUNTS.scored} of ${SCORE_COUNTS.total} occupations`);
         expect(SCORE_COVERAGE.unscoredReason).toBe(`The other ${NO_TASK_JOBS.length} are “All Other” groups for which O*NET lists no tasks, so they are not scored.`);
     });

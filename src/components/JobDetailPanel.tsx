@@ -3,7 +3,7 @@ import RoadmapModal from './Modals/RoadmapModal';
 import { ScenarioModal } from './Modals/ScenarioModal';
 import { UpskillModal } from './UpskillModal';
 import type { UpskillMode } from '../utils/analysis';
-import { generateJobScenario, analyzeJob, alignAnalysisToTasks, getClaudeUserFriendlyMessage, type ScenarioResult, type JobAnalysis } from '../utils/analysis';
+import { generateJobScenario, analyzeJob, alignAnalysisToTasks, getClaudeUserFriendlyMessage, AiLimitError, type ScenarioResult, type JobAnalysis } from '../utils/analysis';
 import { IconBrain, IconSparkles, IconAlertTriangle, IconShield, IconTarget, IconInfo, IconTrendingDown, IconCheck, IconBookmark, IconAward } from './ui/Icons';
 import { Z } from '../config/layers';
 import { UI, CHART, RESILIENCE_LABELS, RISK_THRESHOLDS } from '../config/constants';
@@ -14,12 +14,32 @@ import { ProvenanceBadge } from './ProvenanceBadge';
 import { RolePay } from './RolePay';
 import { CloseButton } from './ui/CloseButton';
 import { useUserStore } from '../userStore';
-import { loadScenario, saveScenario } from '../lib/userData';
+import { saveScenario } from '../lib/userData';
+import { SharedAnswerNote } from './SharedAnswerNote';
+import { OccupationAbout } from './OccupationPanel';
+import { useStore } from '../store';
+import { roleScaleFor } from '../utils/allRoleScale';
+import { rankScopeText } from '../utils/roleScale';
+import { isBlsRoleId, socOfBlsRoleId } from '../utils/blsRoleJob';
+import { MAP_TITLE_TO_SOC } from '../utils/onet';
+import { CONTINENT_DISPLAY_NAMES } from '../config/continents';
+import { continentOf, INDEX_OCCUPATION_BY_SOC, type OccupationEntry } from '../utils/occupationIndex';
+import type { SharedAnswerMeta } from '../utils/claude';
 import type { Job } from '../types';
 
+/**
+ * THE role panel, for every scored role: the 50 Kelley titles and every other
+ * scored BLS occupation (as a Job from utils/blsRoleJob). Same tiles, same
+ * Analyze / Strategic Insight, Roadmap, Scenario, Defend / Build and Save role
+ * for all of them. Kelley-only facts (the Kelley label, "Shares BLS code
+ * with…") show on Kelley roles only. Live Claude answers about a role are
+ * saved server-side on first use and shared with every later visitor.
+ */
 interface JobDetailPanelProps {
     job: Job;
-    analysisResult: JobAnalysis | null;
+    /** The role's BLS occupation (pay for a non-Kelley role, and the About section), once its field is loaded. */
+    occupation?: OccupationEntry | null;
+    analysisResult: (JobAnalysis & { shared?: SharedAnswerMeta }) | null;
     analysisLoading: boolean;
     analysisError: string | null;
     missingApiKey: boolean;
@@ -36,13 +56,20 @@ const RESILIENCE_COLOR: Record<string, string> = {
 };
 
 export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
-    job, analysisResult, analysisLoading, analysisError, missingApiKey,
+    job, occupation = null, analysisResult, analysisLoading, analysisError, missingApiKey,
     onClose, onSetAnalysisResult, onSetAnalysisLoading, onShowMethodology,
 }) => {
+    const isKelley = !isBlsRoleId(job.id);
+    const soc = socOfBlsRoleId(job.id) ?? MAP_TITLE_TO_SOC[job.title] ?? null;
+    const fieldName = soc ? CONTINENT_DISPLAY_NAMES[continentOf(soc)] : job.cluster;
+    const kelleyTracks = isKelley && soc ? INDEX_OCCUPATION_BY_SOC.get(soc)?.kelleyTracks ?? [] : [];
+    const jobs = useStore((s) => s.jobs);
+    const scale = roleScaleFor(jobs);
     const [showScenarioModal, setShowScenarioModal] = React.useState(false);
     const [scenarioLoading, setScenarioLoading] = React.useState(false);
     const [scenarioResult, setScenarioResult] = React.useState<ScenarioResult | null>(null);
     const [scenarioError, setScenarioError] = React.useState<string | null>(null);
+    const [scenarioShared, setScenarioShared] = React.useState<SharedAnswerMeta | undefined>(undefined);
     const [analyzeError, setAnalyzeError] = React.useState<string | null>(null);
     const [showRoadmapModal, setShowRoadmapModal] = React.useState(false);
     // Carries the mode and the task's real exposure, because both are sent to
@@ -100,7 +127,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
             if (jobIdRef.current !== startedFor) return;
             onSetAnalysisResult(res);
         } catch (e) {
-            console.error(e);
+            if (!(e instanceof AiLimitError)) console.error(e);
             if (jobIdRef.current !== startedFor) return;
             setAnalyzeError(getClaudeUserFriendlyMessage(e));
         } finally {
@@ -116,25 +143,20 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
         setShowScenarioModal(true);
         setScenarioError(null);
         setScenarioResult(null);
+        setScenarioShared(undefined);
 
-        // A saved scenario restores instantly with no Claude call — this is a
-        // ~1KB artifact that previously had zero caching and was re-billed on
-        // every single open (see src/lib/userData.ts scenarioCacheKey).
-        const saved = await loadScenario(startedFor);
-        if (jobIdRef.current !== startedFor) return;
-        if (saved) {
-            setScenarioResult(saved);
-            return;
-        }
-
+        // One shared scenario per role on the server: the first visitor's click
+        // makes it, and every later open (anyone's) gets it with no Claude call.
         setScenarioLoading(true);
         try {
-            const result = await generateJobScenario(startedTitle, startedRisk, startedTasks);
+            const { result, shared } = await generateJobScenario(startedFor, startedTitle, startedRisk, startedTasks);
             if (jobIdRef.current !== startedFor) return;
             setScenarioResult(result);
+            setScenarioShared(shared);
+            // Also kept in the signed-in user's own saved reports (dashboard).
             void saveScenario(startedFor, startedTitle, result);
         } catch (err) {
-            console.error(err);
+            if (!(err instanceof AiLimitError)) console.error(err);
             if (jobIdRef.current !== startedFor) return;
             setScenarioError(getClaudeUserFriendlyMessage(err));
         } finally {
@@ -146,6 +168,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
     React.useEffect(() => {
         setShowScenarioModal(false);
         setScenarioResult(null);
+        setScenarioShared(undefined);
         setScenarioError(null);
         setScenarioLoading(false);
         setAnalyzeError(null);
@@ -221,17 +244,20 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                     {/* Header */}
                     <div className="flex-none px-4 py-3 md:px-6 md:py-4 border-b border-white/[0.06] flex justify-between items-start gap-4">
                         <div className="min-w-0 flex-1">
-                            <div className="flex items-center gap-2 mb-1.5">
+                            <div className="flex flex-wrap items-center gap-2 mb-1.5">
                                 <span className="px-2 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wider bg-blue-500/10 text-blue-400 border border-blue-500/20">
-                                    {job.cluster}
+                                    {fieldName}
                                 </span>
-                                {/* Employment figures come from the published BLS OES extract
-                                    (see provenance OES chip). Live-fetch age / quota chrome
-                                    was removed — it implied a degraded fallback. */}
-                                <span className="hidden md:inline text-[10px] text-gray-500 font-mono">{job.id.slice(0, 8)}</span>
+                                {soc && <span className="text-[10px] text-gray-500 font-mono">BLS {soc}</span>}
+                                {/* Kelley-only fact, as a small label on those roles only. */}
+                                {isKelley && (
+                                    <span className="text-[10px] text-amber-300/90 bg-amber-500/10 border border-amber-500/20 px-1.5 py-0.5 rounded" data-testid="kelley-label">
+                                        Kelley role{kelleyTracks.length === 1 ? ` · ${kelleyTracks[0]} track` : ''}
+                                    </span>
+                                )}
                             </div>
                             <h2 className="text-xl md:text-2xl font-bold text-white tracking-tight">{job.title}</h2>
-                            <RolePay title={job.title} />
+                            <RolePay title={job.title} occupation={occupation} />
                             <div className="flex flex-wrap gap-1.5 mt-2" aria-label="Data sources for this role">
                                 {sourceChips.map((c) => (
                                     <ProvenanceBadge key={c.key} label={c.label} provenance={c.provenance} />
@@ -365,13 +391,13 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                             {/* Published percentile label (store.ts applyPercentileLabels), the same
                                 one the 3D view colours by. A live Analyze run no longer overrides it. */}
                             <div
-                                title="How this role's average need for human judgment ranks among all 50 roles: top quarter Future-Proof, middle half High, bottom quarter At Risk."
+                                title={`How this role's average need for human judgment ranks ${rankScopeText(scale)}: top quarter Future-Proof, middle half High, bottom quarter At Risk.`}
                                 className={`text-lg font-bold leading-tight cursor-help ${RESILIENCE_COLOR[job.humanResilienceLabel] ?? 'text-gray-600'}`}
                             >
                                 {job.humanResilienceLabel}
                             </div>
                             <p className="text-[10px] uppercase text-gray-500 font-semibold tracking-wider">Human Resilience</p>
-                            <p className="text-[10px] text-gray-600">Rank among all 50 roles</p>
+                            <p className="text-[10px] text-gray-600" data-testid="rank-scope">Rank {rankScopeText(scale)}</p>
                         </div>
                         <p className="col-span-2 md:col-span-4 text-[11px] text-gray-400 leading-snug flex items-start gap-1.5">
                             <IconInfo size={12} className="text-cyan-400 mt-0.5 shrink-0" />
@@ -406,6 +432,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                         <p className="text-[11px] text-gray-500 leading-relaxed mt-3">
                                             Claude writes this insight, the reasoning under each task, and the likely replacements and required traits. Every score on this page is the published figure, the same for every visitor.
                                         </p>
+                                        <SharedAnswerNote shared={analysisResult?.shared} className="!mt-1" />
                                     </>
                                 )}
                             </div>
@@ -576,6 +603,8 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                 </div>
                             </div>
                         </div>
+
+                        {occupation && <OccupationAbout occupation={occupation} roleTitle={job.title} />}
                     </div>
                     </div>
 
@@ -628,6 +657,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                 isLoading={scenarioLoading}
                 result={scenarioResult}
                 errorMessage={scenarioError}
+                shared={scenarioShared}
                 onClose={() => setShowScenarioModal(false)}
             />
             {showRoadmapModal && riskTask && safeTask && (
@@ -638,6 +668,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                     isOpen={true}
                     onClose={() => setUpskillTarget(null)}
                     jobId={job.id}
+                    jobTitle={job.title}
                     taskName={upskillTarget.name}
                     mode={upskillTarget.mode}
                     aiRiskPercent={upskillTarget.riskPercent}
@@ -647,21 +678,16 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
     );
 };
 
-function EmptyState({ error, type, hasHybrid = false }: { loading?: boolean; error: string | null; missingKey?: boolean; type: 'risk' | 'safe'; hasHybrid?: boolean }) {
+function EmptyState({ type, hasHybrid = false }: { loading?: boolean; error?: string | null; missingKey?: boolean; type: 'risk' | 'safe'; hasHybrid?: boolean }) {
     // Task columns come from published scores, not live Analyze — never flash
-    // "Analyzing…" here (that implied the lists depend on the prose call).
+    // "Analyzing…" here (that implied the lists depend on the prose call), and
+    // never show an Analyze error here either: the Strategic Insight box does.
     return (
         <div className="flex flex-col items-center justify-center py-6 text-center space-y-2 opacity-70">
-            {error ? (
-                <p className="text-red-400 text-xs">{error}</p>
-            ) : (
-                <>
-                    {type === 'risk' ? <IconShield size={20} className="text-emerald-500" /> : <IconAlertTriangle size={20} className="text-amber-500" />}
-                    <p className="text-gray-400 text-xs max-w-[16rem] leading-relaxed">
-                        {emptyColumnNote(type === 'risk' ? 'exposed' : 'resistant', hasHybrid)}
-                    </p>
-                </>
-            )}
+            {type === 'risk' ? <IconShield size={20} className="text-emerald-500" /> : <IconAlertTriangle size={20} className="text-amber-500" />}
+            <p className="text-gray-400 text-xs max-w-[16rem] leading-relaxed">
+                {emptyColumnNote(type === 'risk' ? 'exposed' : 'resistant', hasHybrid)}
+            </p>
         </div>
     );
 }

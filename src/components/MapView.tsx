@@ -38,9 +38,11 @@ export const MapView: React.FC = () => {
         zoom: 1,
     });
 
+    // State employment exists for the 50 Kelley roles only, so a selection made
+    // in the task view for other roles falls back to all of them here.
     const activeJobs = useMemo(() => {
-        if (selectedRoleIds.size === 0) return jobs;
-        return jobs.filter((j) => selectedRoleIds.has(j.id));
+        const picked = jobs.filter((j) => selectedRoleIds.has(j.id));
+        return picked.length === 0 ? jobs : picked;
     }, [jobs, selectedRoleIds]);
 
     // Build per-state employment totals, de-duped by SOC code so alias titles
