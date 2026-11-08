@@ -1,7 +1,7 @@
 import React from 'react';
 import { getClaudeUserFriendlyMessage } from '../utils/claude';
 import { Modal } from './ui/Modal';
-import { IconAward, IconArrowRight, IconInfo, IconBook } from './ui/Icons';
+import { IconAward, IconInfo, IconBook } from './ui/Icons';
 import { Skeleton, SkeletonText } from './ui/Skeleton';
 import type { UpskillCoursesResult, UpskillMode } from '../utils/analysis';
 import { useUserStore } from '../userStore';
@@ -116,13 +116,14 @@ export const UpskillModal: React.FC<UpskillModalProps> = ({ isOpen, onClose, job
                     ) : courses ? (
                         <div className="space-y-3">
                             {courses.courses.map((course, i) => (
+                                // A plain list, not links: nothing here opens anywhere, so nothing looks clickable.
                                 <div
                                     key={i}
-                                    className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-4 hover:bg-white/[0.06] transition-colors group"
+                                    className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-4"
                                 >
                                     <div className="flex justify-between items-start gap-2">
                                         <div className="flex-1 min-w-0">
-                                            <h4 className="font-bold text-gray-200 group-hover:text-cyan-400 transition-colors text-sm leading-snug">
+                                            <h4 className="font-bold text-gray-200 text-sm leading-snug">
                                                 {course.title}
                                             </h4>
                                             <div className="flex items-center gap-2 mt-1.5 flex-wrap">
@@ -134,7 +135,6 @@ export const UpskillModal: React.FC<UpskillModalProps> = ({ isOpen, onClose, job
                                                 </span>
                                             </div>
                                         </div>
-                                        <IconArrowRight size={16} className="text-gray-500 group-hover:text-white transition-colors shrink-0 mt-1" />
                                     </div>
                                 </div>
                             ))}
