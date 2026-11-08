@@ -37,7 +37,7 @@ import { UI } from '../components/UI';
 import { useStore } from '../store';
 import { useWorldStore } from '../worldStore';
 import { getRoleEntries } from '../utils/roles';
-import { BLS_SCORES } from '../utils/blsScores';
+import { BLS_SCORE_RISK } from '../utils/blsScores';
 
 const fetchCalls: string[] = [];
 let root: Root;
@@ -73,7 +73,7 @@ describe('non-Kelley occupations never reach Claude', () => {
     it('opens all 783, scored or not, with zero Claude calls', { timeout: 120_000 }, async () => {
         const unscored = getRoleEntries(useStore.getState().jobs).filter((e) => e.kind === 'bls');
         expect(unscored).toHaveLength(783);
-        expect(unscored.filter((e) => e.scored)).toHaveLength(BLS_SCORES.size);
+        expect(unscored.filter((e) => e.scored)).toHaveLength(BLS_SCORE_RISK.size);
         for (const code of new Set(unscored.map((e) => e.continent))) {
             await act(async () => { await useWorldStore.getState().loadContinent(code); });
         }
@@ -87,9 +87,11 @@ describe('non-Kelley occupations never reach Claude', () => {
             expect(dialog?.getAttribute('aria-label'), entry.title).toBe(entry.title);
             if (entry.scored) {
                 expect(dialog?.textContent).toContain('Automation Risk');
-                expect(dialog?.textContent).not.toContain('AI scores coming soon');
+                expect(dialog?.querySelector('[data-testid="ai-soon"]'), entry.title).toBeNull();
             } else {
-                expect(dialog?.textContent).toContain('AI scores coming soon');
+                // "Not scored" (no O*NET tasks) or "AI scores coming soon": never a number.
+                expect(dialog?.querySelector('[data-testid="ai-soon"]'), entry.title).not.toBeNull();
+                expect(dialog?.textContent).not.toContain('Automation Risk');
             }
             expect(useStore.getState().selectedJob).toBeNull();
         }

@@ -3,7 +3,7 @@ import { Modal } from './ui/Modal';
 import { IconBrain, IconActivity, IconTrendingUp, IconLayers } from './ui/Icons';
 import { EP_PATH_MAX, INDEX_CONTINENTS, OCCUPATION_INDEX } from '../utils/occupationIndex';
 import { formatCount } from '../utils/roleFormat';
-import { BLS_SCORES, BLS_SCORES_META, BUSINESS_FINANCE_FULLY_SCORED, scoredOnLabel } from '../utils/blsScores';
+import { BLS_SCORES_META, SCORE_COUNTS, SCORE_COVERAGE, scoredRangeLabel } from '../utils/blsScores';
 
 // Every figure quoted below is read from the dataset, never typed in.
 const COUNTS = OCCUPATION_INDEX._meta.counts;
@@ -14,7 +14,10 @@ const TALLEST = OCCUPATION_INDEX.occupations.find(
 const NO_TASK_COUNT = COUNTS.occupations - COUNTS.withTasks;
 const smallest = [...INDEX_CONTINENTS].sort((a, b) => a.ep.employment2025 - b.ep.employment2025)[0];
 const largest = [...INDEX_CONTINENTS].sort((a, b) => b.ep.employment2025 - a.ep.employment2025)[0];
-const BF_SCORED_ON = BLS_SCORES_META?.generatedAt ? scoredOnLabel(BLS_SCORES_META.generatedAt) : null;
+const SCORED_RANGE = scoredRangeLabel(BLS_SCORES_META?.firstScoredAt ?? null, BLS_SCORES_META?.lastScoredAt ?? null);
+const RULES = BLS_SCORES_META?.rules ?? {};
+const ruleCount = (rule: string) => formatCount(RULES[rule] ?? 0);
+const MORE_SCORED = SCORE_COUNTS.bls > 0;
 
 interface MethodologyModalProps {
     isOpen: boolean;
@@ -113,7 +116,7 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                                 <tr className="border-t border-white/[0.06]">
                                     <td className="px-3 py-2">AI capability score per task</td>
                                     <td className="px-3 py-2 text-gray-400">
-                                        <SourceLink href="https://www.anthropic.com/claude">Claude</SourceLink> analyzing the O*NET task above ({BUSINESS_FINANCE_FULLY_SCORED ? 'the 50 Kelley roles plus every Business & Finance occupation; other occupations: coming soon' : 'the 50 Kelley roles; other occupations: coming soon'})
+                                        <SourceLink href="https://www.anthropic.com/claude">Claude</SourceLink> analyzing the O*NET task above ({SCORE_COVERAGE.short}{SCORE_COUNTS.unscored > 0 && `; the other ${formatCount(SCORE_COUNTS.unscored)} have no score`})
                                     </td>
                                 </tr>
                                 <tr className="border-t border-white/[0.06]">
@@ -161,8 +164,20 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                         <li><strong>Size is data.</strong> A field&apos;s area is proportional to its 2025 employment in the BLS Employment Projections summary row for that group: all workers, self-employed included. The {INDEX_CONTINENTS.length} rows add up to the {formatCount(EP_TOTAL.employment2025)} workers BLS counts in total, from {smallest.title} ({formatCount(smallest.ep.employment2025)}) to {largest.title} ({formatCount(largest.ep.employment2025)}).</li>
                         <li><strong>Position and shape are layout only.</strong> The fields are grouped by the five official BLS job families (the high-level aggregation in Table 6 of the BLS 2018 SOC User Guide), outlined on the map: area is workers, while positions within a family follow BLS code order. Each family block and each field is shaped to stay close to square, and inside a field peaks sit on an even grid in SOC order. Neither position nor shape carries any data.</li>
                         <li><strong>Peak height is data.</strong> Each peak&apos;s height is that occupation&apos;s Employment Projections job count, on a linear scale. On the whole map, one national scale runs up to the largest value on the 2025–2035 path ({formatCount(EP_PATH_MAX)}, {TALLEST?.title}), so no peak is capped. Open a family or a field and the map zooms into it: the same block, magnified, with every occupation next to the same neighbours (inside a field it is also drawn closer to a square so its labels can be read). Its hills are drawn to one fixed scale of its own, as the note beside its figures says: the largest job count any of its occupations reaches from 2025 to 2035 is full height and the rest are in proportion. So each hill rises or falls with its own BLS number as the slider moves, and the largest may sit a little under full height in 2025. Hills blend where they overlap, so a small hill on a larger neighbour&apos;s slope can move with that neighbour. Where a hill stands is layout only: related jobs sit together, one block per BLS minor group. Labels and panels always show the published numbers.</li>
-                        {BUSINESS_FINANCE_FULLY_SCORED ? (
-                            <li><strong>AI scores cover the 50 Kelley roles plus all of Business &amp; Finance.</strong> The {BLS_SCORES.size} Business &amp; Finance occupations that no Kelley role covers were scored{BF_SCORED_ON ? ` on ${BF_SCORED_ON}` : ''} by the same method (same model, prompt and five O*NET tasks each), so every peak in that field carries the Job Security colours, worked out from its own Automation Risk on the same scale as the Kelley roles. They are not Kelley roles: they stay out of the 50-role ranks, which do not change, and their panels make no live Claude call. Every other occupation is drawn in slate and its panel says &ldquo;AI scores coming soon&rdquo;; no score is estimated in their place.</li>
+                        {MORE_SCORED ? (
+                            <>
+                                <li><strong>AI scores cover {SCORE_COVERAGE.short}.</strong> The 50 Kelley roles ({SCORE_COUNTS.kelleySocs} BLS occupations) were scored first. The other {formatCount(SCORE_COUNTS.bls)} were scored{SCORED_RANGE ? ` from ${SCORED_RANGE}` : ''} by the same method: same model, same prompt, five O*NET tasks each (fewer only where O*NET lists fewer). Each of their peaks carries the Job Security colours, worked out from its own Automation Risk on the same scale as the Kelley roles. They are not Kelley roles: they stay out of the 50-role ranks, which do not change, and their panels make no live Claude call.{SCORE_COUNTS.unscored > 0 && ` ${SCORE_COVERAGE.unscoredReason} They are drawn in slate; no score is estimated in their place.`}</li>
+                                <li><strong>Which tasks are scored.</strong> Every task is a real O*NET task, copied word for word. Of the {formatCount(SCORE_COUNTS.bls)} occupations outside the 50:
+                                    <ul className="list-[circle] list-inside ml-4 mt-1 space-y-1">
+                                        <li><strong>Own code</strong> ({ruleCount('first-5-onet-order')}): the occupation has its own O*NET task list, and its first five tasks are used, in O*NET&apos;s order.</li>
+                                        <li><strong>Sub-codes</strong> ({ruleCount('round-robin-sub-codes')}): there is no list of its own, but O*NET has smaller codes under it (for example the kinds of &ldquo;Managers, All Other&rdquo;). One task is taken from each smaller code in turn, and a task whose text word for word repeats another smaller code&apos;s task is skipped, so no task is scored twice.</li>
+                                        <li><strong>Combined</strong> ({ruleCount('round-robin-onet-codes')}): BLS counts one job where O*NET has two or more, such as Teaching Assistants (O*NET splits them into preschool-to-secondary and special education). One task is taken from each O*NET code in turn.</li>
+                                        {SCORE_COUNTS.unscored > 0 && (
+                                            <li><strong>No tasks</strong> ({formatCount(SCORE_COUNTS.unscoredNoTasks)}): {SCORE_COUNTS.unscoredAllOther === SCORE_COUNTS.unscored ? '“All Other” groups' : 'occupations'} for which O*NET lists no tasks at all. They are not scored.</li>
+                                        )}
+                                    </ul>
+                                </li>
+                            </>
                         ) : (
                             <li><strong>AI scores cover the 50 Kelley roles for now.</strong> Those peaks carry the Job Security colours. Every other occupation is drawn in slate and its panel says &ldquo;AI scores coming soon&rdquo;; no score is estimated in their place.</li>
                         )}
@@ -187,8 +202,8 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                         score — the role-level number is just the average.
                     </p>
                     <ul className="list-disc list-inside text-xs text-gray-400 ml-1 space-y-1">
-                        <li><strong>Relative labels</strong> grade each role against the other 49 rather than against absolute thresholds. Human Resilience ranks a role&apos;s average human-criticality score (top quarter Future-Proof, middle half High, bottom quarter At Risk), and peak colours grade its Automation Risk against the full range of the 50 roles.{BUSINESS_FINANCE_FULLY_SCORED && ' A scored Business & Finance occupation is placed on those same scales and its panel says where it would sit among the 50, without joining them.'}</li>
-                        <li>The scores for all 50 roles are published with the app as one dated set{BUSINESS_FINANCE_FULLY_SCORED && ' (the Business & Finance scores as a second, separately dated set)'}, so every visitor sees the same figures; the &ldquo;AI Scores&rdquo; badge in the header shows the month they were produced. Clicking <strong>Analyze</strong> on a role adds Claude&apos;s reasoning without changing any score. Re-scoring from that badge uses your own Claude key and changes the figures only in your browser, until a newer published set arrives or 30 days pass.</li>
+                        <li><strong>Relative labels</strong> grade each role against the other 49 rather than against absolute thresholds. Human Resilience ranks a role&apos;s average human-criticality score (top quarter Future-Proof, middle half High, bottom quarter At Risk), and peak colours grade its Automation Risk against the full range of the 50 roles.{MORE_SCORED && ' Every other scored occupation is placed on those same scales and its panel says where it would sit among the 50, without joining them.'}</li>
+                        <li>The scores for all 50 roles are published with the app as one dated set{MORE_SCORED && ` (the other ${formatCount(SCORE_COUNTS.bls)} occupations as a second set${SCORED_RANGE ? `, scored from ${SCORED_RANGE}` : ''})`}, so every visitor sees the same figures; the &ldquo;AI Scores&rdquo; badge in the header shows the month they were produced. Clicking <strong>Analyze</strong> on a role adds Claude&apos;s reasoning without changing any score. Re-scoring from that badge uses your own Claude key and changes the figures only in your browser, until a newer published set arrives or 30 days pass.</li>
                     </ul>
                 </div>
 

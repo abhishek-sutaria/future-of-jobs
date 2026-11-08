@@ -50,8 +50,13 @@ export const IntroModal: React.FC = () => {
                         <h3 className="text-white font-semibold mb-1 text-sm">Color Indicates Relative Risk</h3>
                         <p className="text-gray-400 text-sm leading-relaxed">
                             <span className="text-red-400">High risk markers</span> are more exposed to automation than most roles here.
-                            <span className="text-emerald-400"> Safer markers</span> rank lower on that same relative scale — not immune.
-                            {SCORE_COVERAGE.sentence} <span className="text-slate-300">Slate peaks</span> are scored soon.
+                            <span className="text-emerald-400"> Safer markers</span> rank lower on that same relative scale — not immune.{' '}
+                            {SCORE_COVERAGE.sentence}
+                            {SCORE_COVERAGE.slate && (
+                                <>
+                                    {' '}<span className="text-slate-300">Slate peaks</span>{SCORE_COVERAGE.slate}
+                                </>
+                            )}
                         </p>
                     </div>
                 </div>

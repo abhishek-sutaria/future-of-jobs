@@ -5,7 +5,7 @@ import { DATA_SOURCES, YEAR_MAX, YEAR_MIN } from '../config/constants';
 import { CONTINENT_DISPLAY_NAMES } from '../config/continents';
 import { continentOf, INDEX_CONTINENT_BY_CODE, type OccupationEntry } from '../utils/occupationIndex';
 import { blsEpGrowthPathPoints } from '../utils/terrainMath';
-import { AI_SOON_TITLE, formatCount, formatGrowth, NO_TASKS_NOTE, WORKERS_NOTE } from '../utils/roleFormat';
+import { AI_SOON_TITLE, formatCount, formatGrowth, NO_TASKS_NOTE, NOT_SCORED_TITLE, WORKERS_NOTE } from '../utils/roleFormat';
 import { payBaseNote } from '../utils/wages';
 import { PayLine } from './RolePay';
 import { ProvenanceBadge } from './ProvenanceBadge';
@@ -17,7 +17,8 @@ import { HumanTile, KelleyComparisonLine, RatedTasks, RiskTile, ScoreProvenanceL
 /**
  * Role panel for a BLS occupation outside the 50 Kelley roles. Same shell as
  * JobDetailPanel, with published BLS / O*NET values, plus the published AI
- * scores when ai_scores_bls.json has them (all of Business & Finance). Never
+ * scores when ai_scores_bls.json has them (every occupation with O*NET tasks;
+ * they load with the field's file, see worldStore.loadContinent). Never
  * an Analyze, Strategic Insight, Roadmap or Scenario, and no Claude call of
  * any kind, scored or not.
  */
@@ -169,13 +170,17 @@ export const OccupationBody: React.FC<{ occupation: OccupationEntry; onClose: ()
                             <ScoreProvenanceLine score={score} />
                         </>
                     ) : (
-                        /* No AI scores yet: an honest state, never a placeholder number */
+                        /* No AI scores: an honest state, never a placeholder number */
                         <div className="col-span-2 md:col-span-1 rounded-xl px-3 py-2 border border-dashed border-slate-500/40 bg-slate-500/[0.05] min-w-0" data-testid="ai-soon">
                             <div className="flex items-center gap-1.5 text-slate-200 text-sm font-semibold">
-                                <IconSparkles size={13} className="text-slate-400" /> {AI_SOON_TITLE}
+                                <IconSparkles size={13} className="text-slate-400" /> {o.tasks.length === 0 ? NOT_SCORED_TITLE : AI_SOON_TITLE}
                             </div>
                             <p className="text-[11px] text-gray-400 leading-snug mt-0.5">
-                                {SCORE_COVERAGE.sentence} This occupation&rsquo;s tasks are not rated yet.
+                                {o.tasks.length === 0
+                                    ? `O*NET lists no tasks for this ${o.title.includes('All Other') ? '“All Other” group' : 'occupation'}, so there is nothing to score. `
+                                    : ''}
+                                {SCORE_COVERAGE.sentence}
+                                {o.tasks.length > 0 && ' This occupation’s tasks are not rated yet.'}
                             </p>
                         </div>
                     )}

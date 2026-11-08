@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import { useStore } from './store';
 import { BROAD_LABELS, FIELD_LABELS, labelsAt, type LabelDecision } from './utils/labelLevel';
 import { loadContinentFile, type ContinentFile } from './utils/occupationIndex';
+import { loadBlsFieldScores } from './utils/blsScores';
 import type { Stage } from './utils/stageLayout';
 import type { RoleEntry } from './utils/roles';
 import { familyLevel, fieldLevel, levelKind, levelUp, WORLD_LEVEL, type WorldLevel } from './utils/worldLevel';
@@ -106,8 +107,10 @@ export const useWorldStore = create<WorldState>((set, get) => ({
         if (loaded) return Promise.resolve(loaded);
         const pending = inFlight.get(code);
         if (pending) return pending;
-        const p = loadContinentFile(code)
-            .then((file) => {
+        // The field's published AI scores load with it, so a panel that has
+        // the occupation file also has its scores (utils/blsScores).
+        const p = Promise.all([loadContinentFile(code), loadBlsFieldScores(code)])
+            .then(([file]) => {
                 set((s) => {
                     const errors = { ...s.continentErrors };
                     delete errors[code];

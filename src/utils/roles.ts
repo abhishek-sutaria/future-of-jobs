@@ -14,7 +14,7 @@
 import type { Job } from '../types';
 import { MAP_TITLE_TO_SOC } from './onet';
 import { OCCUPATION_INDEX, continentOf, type IndexOccupation } from './occupationIndex';
-import { blsScoreFor } from './blsScores';
+import { BLS_SCORE_RISK } from './blsScores';
 
 export type RoleKind = 'kelley' | 'bls';
 
@@ -96,7 +96,7 @@ export function buildRoleEntries(jobs: readonly Job[]): RoleEntry[] {
 }
 
 function blsEntry(occ: IndexOccupation): RoleEntry {
-    const score = blsScoreFor(occ.soc);
+    const risk = BLS_SCORE_RISK.get(occ.soc);
     return {
         key: blsRoleKey(occ.soc),
         kind: 'bls',
@@ -107,8 +107,8 @@ function blsEntry(occ: IndexOccupation): RoleEntry {
         ep2025: occ.epEmployment2025,
         ep2035: occ.epEmployment2035,
         epPercentChange: occ.epPercentChange,
-        scored: !!score,
-        ...(score ? { blsRisk: score.automationCostIndex } : {}),
+        scored: risk !== undefined,
+        ...(risk !== undefined ? { blsRisk: risk } : {}),
     };
 }
 

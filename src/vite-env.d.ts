@@ -6,6 +6,13 @@ declare module '*?url' {
     export default src;
 }
 
+// Published BLS AI scores, served by scripts/lib/blsScoresPlugin.ts.
+declare module 'virtual:bls-scores' {
+    export const meta: import('./utils/blsScoresData').BlsBundleMeta | null;
+    export const risks: Record<string, number>;
+    export const fieldLoaders: Record<string, () => Promise<{ default: import('./utils/blsScoresData').RawBlsFile }>>;
+}
+
 interface ImportMetaEnv {
     readonly VITE_BLS_API_KEY: string;
     readonly VITE_HAS_DEFAULT_CLAUDE_KEY: boolean;

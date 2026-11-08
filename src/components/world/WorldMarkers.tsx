@@ -23,6 +23,7 @@ import { prefersReducedMotion } from './worldCamera';
 import { worldPointer } from './worldPointer';
 import { displayToWorld, layerOf, stageSurfaceAt, toDisplayX, toDisplayZ, worldView } from './worldView';
 import { WORLD_LAYER } from '../../utils/stageTransition';
+import { UNSCORED_LABEL } from '../../utils/blsScores';
 
 /** Labels follow the view's map from the world's ground to the screen's. */
 const toScreenGround: GroundMap = (x, z) => ({ x: toDisplayX(x), z: toDisplayZ(z) });
@@ -671,7 +672,7 @@ export const PeakLabel: React.FC<{ peak: ScenePeak; expanded: boolean; year: num
                             </span>
                         </div>
                     )}
-                    {!entry.scored && <div className="text-[8px] text-slate-500 leading-none">AI scores coming soon</div>}
+                    {!entry.scored && <div className="text-[8px] text-slate-500 leading-none">{UNSCORED_LABEL.title} · {UNSCORED_LABEL.detail}</div>}
                 </div>
             )}
         </div>

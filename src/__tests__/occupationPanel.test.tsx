@@ -4,8 +4,9 @@
  * around them), and it must never show an AI score, real or placeholder.
  *
  * Rendered to static markup and read back with jsdom, for every occupation
- * outside the 50 Kelley roles that has no published score (783 before the
- * Business & Finance scores, 770 after; those 13 are tested in blsScores.test).
+ * outside the 50 Kelley roles that has no published score: once every planned
+ * job is scored, only the "All Other" jobs O*NET gives no tasks (scored panels
+ * are tested in blsScores.test and blsScoresSlim.test).
  */
 
 import { describe, it, expect, beforeAll } from 'vitest';
@@ -19,12 +20,18 @@ import { RolePay } from '../components/RolePay';
 import { INDEX_CONTINENTS, OCCUPATION_INDEX, loadContinentFile, type OccupationEntry } from '../utils/occupationIndex';
 import { getRoleEntries } from '../utils/roles';
 import { useStore } from '../store';
-import { formatCount, formatGrowth, NO_TASKS_NOTE, WORKERS_NOTE, AI_SOON_TITLE } from '../utils/roleFormat';
+import { formatCount, formatGrowth, NO_TASKS_NOTE, NOT_SCORED_TITLE, WORKERS_NOTE, AI_SOON_TITLE } from '../utils/roleFormat';
 import { formatAnnualWage, formatHourlyWage, WAGES_META } from '../utils/wages';
 import { peakEmploymentAt } from '../components/world/worldScene';
 import { YEAR_MAX, YEAR_MIN } from '../config/constants';
 import nationalEmployment from '../data/national_employment.json';
-import { BLS_SCORES } from '../utils/blsScores';
+import { BLS_SCORE_RISK, SCORE_COUNTS } from '../utils/blsScores';
+import fs from 'fs';
+import path from 'path';
+
+const PLAN_ALL = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../../data/bls_score_plan_all.json'), 'utf-8')) as {
+    jobs: { soc: string; taskRule: string }[];
+};
 
 const byS = new Map<string, OccupationEntry>();
 const unscored = getRoleEntries(useStore.getState().jobs).filter((e) => e.kind === 'bls' && !e.scored);
@@ -59,6 +66,8 @@ function readableNumbers(doc: Document): { text: string; numbers: number[] } {
 /** Every number the panel may legitimately show for this occupation. */
 function allowedNumbers(o: OccupationEntry): Set<number> {
     const allowed = new Set<number>([YEAR_MIN, YEAR_MAX, YEAR_MIN % 100, YEAR_MAX % 100, 50, 30.1, 2025]);
+    // The coverage sentence's counts, all from the data (utils/blsScores scoreCounts).
+    for (const v of [SCORE_COUNTS.scored, SCORE_COUNTS.total, SCORE_COUNTS.kelleySocs, SCORE_COUNTS.bls]) allowed.add(v);
     for (const part of o.soc.split('-')) allowed.add(Number(part));
     for (const v of [o.employment, o.annualMedian, o.annualMean, o.hourlyMedian, o.hourlyMean]) if (v != null) allowed.add(v);
     if (Object.values(o.topcoded).some(Boolean)) {
@@ -75,7 +84,8 @@ function allowedNumbers(o: OccupationEntry): Set<number> {
 
 describe('unscored occupation panel: numbers', () => {
     it('covers every occupation outside the Kelley roles', () => {
-        expect(unscored).toHaveLength(783 - BLS_SCORES.size);
+        // 830 occupations, less the Kelley SOCs and every one with a published score.
+        expect(unscored).toHaveLength(OCCUPATION_INDEX.occupations.length - SCORE_COUNTS.kelleySocs - BLS_SCORE_RISK.size);
         for (const e of unscored) expect(byS.has(e.soc), e.soc).toBe(true);
     });
 
@@ -132,18 +142,27 @@ describe('unscored occupation panel: numbers', () => {
             }
             if (o.description) expect(doc.querySelector('[data-testid="description"]')!.textContent).toBe(o.description);
         }
-        // From the data, so it holds before and after the Business & Finance
-        // scores: 59 occupations have no O*NET tasks. 13-1020 is one of them but
-        // is represented by its two Kelley titles, which keep their own tasks;
-        // 13-2020 leaves this list once it is scored (its panel is tested in
-        // blsScores.test).
+        // From the data: 59 occupations have no O*NET task list of their own.
+        // 13-1020 is one of them but is represented by its two Kelley titles,
+        // which keep their own tasks. 13-2020 and the plan's "combined" jobs
+        // are scored on their split O*NET codes' tasks, so they leave this list
+        // once scored (their panels are tested in blsScores.test). Every other
+        // one is a planned "no-tasks" job and stays unscored.
         const counts = OCCUPATION_INDEX._meta.counts;
         const noTaskSocs = OCCUPATION_INDEX.occupations.filter((occ) => occ.taskCount === 0).map((occ) => occ.soc);
         expect(noTaskSocs).toHaveLength(counts.occupations - counts.withTasks);
         const kelleySocs = new Set(getRoleEntries(useStore.getState().jobs).filter((e) => e.kind === 'kelley').map((e) => e.soc));
-        const elsewhere = noTaskSocs.filter((soc) => kelleySocs.has(soc) || BLS_SCORES.has(soc));
-        expect(elsewhere).toEqual(BLS_SCORES.has('13-2020') ? ['13-1020', '13-2020'] : ['13-1020']);
+        const elsewhere = noTaskSocs.filter((soc) => kelleySocs.has(soc) || BLS_SCORE_RISK.has(soc));
+        const combined = PLAN_ALL.jobs.filter((j) => j.taskRule === 'combined').map((j) => j.soc);
+        const planNoTasks = PLAN_ALL.jobs.filter((j) => j.taskRule === 'no-tasks').map((j) => j.soc);
+        expect(combined).toHaveLength(10);
+        const scoredCombined = combined.filter((soc) => BLS_SCORE_RISK.has(soc));
+        expect(elsewhere).toEqual(['13-1020', ...(BLS_SCORE_RISK.has('13-2020') ? ['13-2020'] : []), ...scoredCombined].sort());
         expect(withoutTasks).toBe(noTaskSocs.length - elsewhere.length);
+        // Unscored with no tasks = the plan's no-tasks jobs, plus any combined job not yet scored.
+        expect(noTaskSocs.filter((soc) => !elsewhere.includes(soc)).sort()).toEqual(
+            [...planNoTasks, ...combined.filter((soc) => !BLS_SCORE_RISK.has(soc))].sort(),
+        );
         expect(byS.get('13-1020')!.tasks).toEqual([]);
     });
 });
@@ -153,7 +172,16 @@ describe('unscored occupation panel: no AI score', () => {
         for (const e of unscored) {
             const doc = render(byS.get(e.soc)!);
             const { text } = readableNumbers(doc);
-            expect(doc.querySelector('[data-testid="ai-soon"]')!.textContent).toContain(AI_SOON_TITLE);
+            const o = byS.get(e.soc)!;
+            const soon = doc.querySelector('[data-testid="ai-soon"]')!.textContent;
+            // No O*NET tasks: nothing to score, so it says "Not scored" and why.
+            if (o.tasks.length === 0) {
+                expect(soon, e.soc).toContain(NOT_SCORED_TITLE);
+                expect(soon, e.soc).toContain('O*NET lists no tasks');
+                expect(soon, e.soc).not.toContain(AI_SOON_TITLE);
+            } else {
+                expect(soon, e.soc).toContain(AI_SOON_TITLE);
+            }
             expect(text).not.toMatch(/\d+\s*%\s*(risk|human)/i);
             expect(text).not.toMatch(/Automation Risk|Human Criticality|Human Resilience|Job Security/);
             expect(text).not.toMatch(/\bAnalyze\b|Roadmap|Scenario|Defend this task|Build on this/);

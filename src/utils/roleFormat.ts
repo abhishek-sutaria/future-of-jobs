@@ -10,6 +10,8 @@ import { YEAR_MIN } from '../config/constants';
 export const WORKERS_NOTE = `All workers in ${YEAR_MIN}, including self-employed. BLS Employment Projections.`;
 export const NO_TASKS_NOTE = 'O*NET has no task list for this occupation.';
 export const AI_SOON_TITLE = 'AI scores coming soon';
+/** An occupation with no O*NET tasks: there is nothing to score, so nothing is coming. */
+export const NOT_SCORED_TITLE = 'Not scored';
 
 /** 3,465,400 → "3.5M", 140,200 → "140K" (3D labels, where space is tight). */
 export function formatWorkersShort(n: number): string {

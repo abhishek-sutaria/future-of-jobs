@@ -607,8 +607,17 @@ describe('the surface', () => {
 
 describe('colour', () => {
     it('keeps unscored jobs the existing grey: an all-grey field bakes to nothing else', () => {
-        const stage = stageOf(fieldLevel('47'));
-        expect(stage.jobs.every((j) => !j.kelley)).toBe(true);
+        const real = stageOf(fieldLevel('47'));
+        expect(real.jobs.every((j) => !j.kelley)).toBe(true);
+        // Real data: every unscored job on the stage carries the grey, every scored one does not.
+        const unscoredKeys = new Set(scene.peaks.filter((p) => !p.entry.scored).map((p) => p.entry.key));
+        const unscoredHere = real.jobs.filter((j) => unscoredKeys.has(j.key));
+        expect(unscoredHere.length).toBeGreaterThan(0);
+        const isGrey = (c: readonly number[]) => c.every((v, k) => Math.abs(v - RISK_UNSCORED_RGB[k]) < 1e-9);
+        for (const j of real.jobs) expect(isGrey(j.color), j.key).toBe(unscoredKeys.has(j.key));
+        // No field is all grey once the planned jobs are scored, so the bake rule
+        // is checked on field 47 with every job unscored (its own layout and heights).
+        const stage = { ...real, jobs: real.jobs.map((j) => ({ ...j, color: RISK_UNSCORED_RGB })) };
         const { colors } = bakeOf(stage);
         const grey = RISK_UNSCORED_RGB.map((c) => Math.round(c * 255));
         // Bare ground is its own colour; anywhere a job's colour reaches is the grey.

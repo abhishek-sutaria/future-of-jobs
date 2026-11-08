@@ -304,7 +304,7 @@ export function planAllFile(entries: PlanAllEntry[], counts: PlanCounts) {
             excluded: 'The 60 scored SOCs: 47 Kelley SOCs (src/data.ts initialJobs through MAP_TITLE_TO_SOC) and the 13 Business & Finance SOCs in src/data/ai_scores_bls.json.',
             taskRules: {
                 'own-code': "The occupation's own .00 tasks, first 5 in O*NET file order.",
-                'sub-codes': 'No .00 task list: one task from each O*NET sub-code in turn, each in O*NET file order.',
+                'sub-codes': "No .00 task list: one task from each O*NET sub-code in turn, each in O*NET file order. A task whose text exactly repeats another sub-code's task is skipped (identical text is kept once, under the first sub-code in the occupations data, e.g. 19-3039.03 repeats 19-3039.02).",
                 combined:
                     'No O*NET code of its own: the split O*NET codes it maps to (scripts/lib/blsTasks.ts ONET_CODES_FOR_SOC), taken in turn the same way, as for 13-2020.',
                 'no-tasks': 'No O*NET tasks anywhere: not scored, stays "not scored yet".',

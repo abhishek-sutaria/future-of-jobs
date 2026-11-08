@@ -31,11 +31,13 @@ Every job is scored on **5 O*NET tasks**: the first 5 in the O*NET file, the sam
 | Rule | When | Jobs |
 |---|---|---:|
 | Own code | The job has its own O*NET task list. Take its first 5. | 693 |
-| Sub-codes | No own list, but O*NET has smaller codes under it (for example 11-9199.01). Take one task from each in turn. | 20 |
+| Sub-codes | No own list, but O*NET has smaller codes under it (for example 11-9199.01). Take one task from each in turn, skipping repeats (see below). | 20 |
 | Combined | No O*NET code at all, because O*NET splits the job into separate codes. Take one task from each split code in turn. | 10 |
 | No tasks | No O*NET tasks anywhere. **Not scored.** | 47 |
 
 One exception: **39-5093 Shampooers** has only 4 tasks in O*NET, so it is scored on 4.
+
+**Sub-codes skip repeated tasks.** Some sub-codes share tasks word for word. The occupations data keeps identical text once, under the first sub-code that has it (the others are listed in its `alsoIn`), so a sub-code job skips any task whose text exactly repeats another sub-code's task. Example: **19-3039** Psychologists, All Other. 19-3039.03 (Clinical Neuropsychologists) repeats 12 of the 14 tasks of 19-3039.02 (Neuropsychologists): its first six tasks in O*NET order are all repeats. So .03 starts at its first task of its own (22215), and the 5 tasks are .02 22193, .03 22215, .02 22206, .03 22212, .02 22202. The same text is in the plan's `taskRules["sub-codes"]`.
 
 ## The combine rule
 
@@ -124,7 +126,7 @@ Based on the Business & Finance run: 1,208 input + 721 output tokens per call, $
 
 Controls add 5 calls per batch, about $0.05.
 
-## After scoring: what will need updating (not changed yet)
+## After scoring: what needed updating (done in PR #90 on 2026-11-07)
 
 Tests that go red once the new scores are in (found with fake scores in a private copy):
 

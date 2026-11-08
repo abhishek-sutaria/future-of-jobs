@@ -578,8 +578,12 @@ async function runBatch(argv: readonly string[], filter: PlanFilter, ledger: Run
     for (const e of jobs) {
         if (!scores[e.soc]) scores[e.soc] = scoreEntry({ ...e, rule: e.selectionRule! }, ledger.scores[e.soc]);
     }
+    const routeLabel = auth.mode === 'direct' ? 'api.anthropic.com/v1/messages (direct)' : 'app proxy /api/claude/messages';
     const out = {
         ...existing,
+        // The file's date and route are the latest batch's; each batch's own route is in controlRuns.
+        route: `${routeLabel}, latest batch ${key}; each controlRuns entry names its batch route, and the 13 Business & Finance entries (controlRun, 2026-11-01) used app proxy /api/claude/messages`,
+        generatedAt: new Date().toISOString(),
         controlRuns: {
             ...(existing.controlRuns ?? {}),
             [key]: {
@@ -588,7 +592,7 @@ async function runBatch(argv: readonly string[], filter: PlanFilter, ledger: Run
                 meanAbsGapHumanPoints: Number(control.gapHuman.toFixed(2)),
                 limitPoints: CONTROL_PASS_POINTS,
                 passed: control.passed,
-                route: auth.mode === 'direct' ? 'api.anthropic.com/v1/messages (direct)' : 'app proxy /api/claude/messages',
+                route: routeLabel,
                 plan: PLAN_ALL_PATH,
             },
         },

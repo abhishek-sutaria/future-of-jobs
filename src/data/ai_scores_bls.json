@@ -5,8 +5,8 @@
   "thinking": "disabled",
   "maxTokens": 4096,
   "tasksPerRole": 5,
-  "route": "app proxy /api/claude/messages",
-  "generatedAt": "2026-11-01T18:16:27.413Z",
+  "route": "api.anthropic.com/v1/messages (direct), latest batch family-3; each controlRuns entry names its batch route, and the 13 Business & Finance entries (controlRun, 2026-11-01) used app proxy /api/claude/messages",
+  "generatedAt": "2026-11-08T05:16:07.551Z",
   "inputs": {
     "employment": "BLS OEWS May 2025 national employment (src/data/occupations/13.json)",
     "growth": "BLS Employment Projections 2025–35, Table 1.2, percent change (src/data/occupations/13.json ep.percentChange)",

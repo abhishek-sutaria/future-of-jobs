@@ -656,13 +656,17 @@ heading('CAT-8', 'Real-data policy — banned simulation tokens in src/');
 }
 
 {
-  const src = read('src/utils/taskScoring.ts');
+  // Defined in scoreVersion.ts (no imports, so the Vite plugin can read it) and
+  // used and re-exported by taskScoring.ts.
+  const src = read('src/utils/scoreVersion.ts');
+  const ts = read('src/utils/taskScoring.ts');
   const m = src.match(/const CACHE_VERSION = (\d+)/);
   const v = m ? parseInt(m[1], 10) : 0;
+  const wired = ts.includes("import { CACHE_VERSION } from './scoreVersion'") && ts.includes('export { CACHE_VERSION }');
   check(
     'T48 — taskScoring.ts CACHE_VERSION is at least 5 (prompt + validation bumps)',
-    v >= 5,
-    m ? `Found CACHE_VERSION = ${v}` : 'CACHE_VERSION not found'
+    v >= 5 && wired,
+    m ? `Found CACHE_VERSION = ${v} in scoreVersion.ts${wired ? ', used by taskScoring.ts' : ', NOT wired into taskScoring.ts'}` : 'CACHE_VERSION not found'
   );
 }
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Z } from '../config/layers';
 import { RISK_BAND_COLORS, RISK_UNSCORED_HEX } from '../config/theme';
-import { BUSINESS_FINANCE_FULLY_SCORED } from '../utils/blsScores';
+import { SCORE_COUNTS, UNSCORED_LABEL } from '../utils/blsScores';
 
 // Now visible on all viewports. The year slider width is scaled on mobile
 // to leave room for the legend. Padding/radius match YearSlider's card so
@@ -44,11 +44,11 @@ export const Legend: React.FC = () => {
             {/* Which roles carry a score, then every occupation without one: no
                 score, so no risk colour. The slate matches RISK_UNSCORED_RGB on the peaks. */}
             <p className="text-[8px] md:text-[10px] text-right text-gray-400 leading-tight" data-testid="legend-coverage">
-                Scored: 50 Kelley roles{BUSINESS_FINANCE_FULLY_SCORED && <> + all Business&nbsp;&amp;&nbsp;Finance</>}
+                Scored: {SCORE_COUNTS.scored.toLocaleString('en-US')} of {SCORE_COUNTS.total.toLocaleString('en-US')} jobs
             </p>
             <div className="flex flex-row items-center justify-end gap-2 md:gap-3 border-t border-white/[0.06] pt-1.5">
                 <span className="text-[8px] md:text-[10px] font-medium text-right text-slate-400 leading-tight">
-                    Not scored yet<span className="max-md:hidden"> · AI scores coming soon</span>
+                    {UNSCORED_LABEL.title}<span className="max-md:hidden"> · {UNSCORED_LABEL.detail}</span>
                 </span>
                 <span className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full shrink-0" style={{ backgroundColor: RISK_UNSCORED_HEX }} />
             </div>
