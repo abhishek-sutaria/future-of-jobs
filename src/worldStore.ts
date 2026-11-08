@@ -3,6 +3,7 @@ import { useStore } from './store';
 import { BROAD_LABELS, FIELD_LABELS, labelsAt, type LabelDecision } from './utils/labelLevel';
 import { loadContinentFile, type ContinentFile } from './utils/occupationIndex';
 import { loadBlsFieldScores } from './utils/blsScores';
+import { isChunkLoadError, reloadForNewBuild } from './utils/staleBuild';
 import type { Stage } from './utils/stageLayout';
 import type { RoleEntry } from './utils/roles';
 import { familyLevel, fieldLevel, levelKind, levelUp, WORLD_LEVEL, type WorldLevel } from './utils/worldLevel';
@@ -120,7 +121,15 @@ export const useWorldStore = create<WorldState>((set, get) => ({
         if (pending) return pending;
         // The field's published AI scores load with it, so a panel that has
         // the occupation file also has its scores (utils/blsScores).
-        const p = Promise.all([loadContinentFile(code), loadBlsFieldScores(code)])
+        const attempt = () => Promise.all([loadContinentFile(code), loadBlsFieldScores(code)]);
+        // One quiet retry for a brief network or edge hiccup; if the chunk is
+        // gone because a new build was deployed, reload once to pick it up.
+        const p = attempt()
+            .catch(() => new Promise((resolve) => setTimeout(resolve, 1500)).then(attempt))
+            .catch((err: unknown) => {
+                if (isChunkLoadError(err) && reloadForNewBuild()) return new Promise<never>(() => {});
+                throw err;
+            })
             .then(([file]) => {
                 set((s) => {
                     const errors = { ...s.continentErrors };
