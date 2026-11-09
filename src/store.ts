@@ -3,13 +3,16 @@ import type { Job } from './types';
 
 import { initialJobs } from './data';
 import { resolveInitialScores, type ScoresSource } from './utils/bakedScores';
+import { KELLEY_SOC_SCORES } from './utils/blsScores';
+import { seedKelleyJobs } from './utils/kelleyScores';
+import { meanUnit } from './utils/scoreRounding';
 import type { JobAnalysisResult } from './utils/taskScoring';
 import {
     YEAR_MIN,
     CONFIDENCE, DATA_SOURCES,
 } from './config/constants';
-import { BLS_SCORE_POINTS, kelleyScorePoints } from './utils/allRoleScale';
-import { buildRoleScale, resilienceLabelFor, volatilityLabelFor } from './utils/roleScale';
+import { roleScaleFor } from './utils/allRoleScale';
+import { resilienceLabelFor, volatilityLabelFor } from './utils/roleScale';
 import { oohEnvelopeCap } from './utils/terrainMath';
 import { MAP_TITLE_TO_SOC } from './utils/onet';
 import blsEp2025_2035 from './data/bls_ep_2025_2035.json';
@@ -46,10 +49,9 @@ function attachEpEmployment(jobs: Job[]): Job[] {
 
 // ── Percentile labels (used by both fetchRealData and scoreAllJobsWithAI) ──
 //
-// One scale for every scored role (utils/roleScale): a Kelley role's Human
-// Resilience and volatility labels rank it among ALL scored roles, the 50
-// Kelley titles plus every scored BLS occupation, never the 50 alone. The
-// published scores themselves never change here.
+// One scale for every scored occupation (utils/allRoleScale): a Kelley role's
+// Human Resilience and volatility labels rank it among ALL scored occupations,
+// each SOC once, never the 50 alone. The published scores never change here.
 //
 // Labels are only meaningful when the underlying scores are real (i.e. Claude
 // has analyzed the tasks). A Kelley job still at 0 keeps the pending
@@ -58,7 +60,7 @@ function attachEpEmployment(jobs: Job[]): Job[] {
 const PENDING_LABEL = '—';
 
 function applyPercentileLabels(jobs: Job[]): Job[] {
-    const scale = buildRoleScale([...kelleyScorePoints(jobs), ...BLS_SCORE_POINTS]);
+    const scale = roleScaleFor(jobs);
 
     return jobs.map(job => {
         const item = { ...job };
@@ -107,7 +109,6 @@ function applyAnalysesToJobs(jobs: Job[], analyses: Record<string, JobAnalysisRe
             };
         });
 
-        const avgAi = newTasks.reduce((sum, t) => sum + t.aiCapabilityScore, 0) / newTasks.length;
         // Sign-aware envelope at the 2030 fraction of the decade OOH (≈5/9).
         const cap = oohEnvelopeCap(job.projectedGrowth);
         const lo = Math.min(0, cap);
@@ -124,8 +125,8 @@ function applyAnalysesToJobs(jobs: Job[], analyses: Record<string, JobAnalysisRe
         return {
             ...job,
             tasks: newTasks,
-            // Same display math the role panel uses: two-decimal mean AI capability.
-            automationCostIndex: parseFloat(avgAi.toFixed(2)),
+            // Two-decimal mean AI capability, rounded from whole hundredths (utils/scoreRounding).
+            automationCostIndex: meanUnit(newTasks.map((t) => t.aiCapabilityScore)),
             yearlyForecast,
         };
     });
@@ -155,14 +156,20 @@ function splitSharedSocEmployment(jobs: Job[]): Job[] {
     });
 }
 
-// Precomputed scores are applied synchronously at module load so the very first
-// render already has real risk colors and forecasts — no blocking startup pass.
+// Published scores are applied synchronously at module load so the very first
+// render already has real risk colours: no blocking startup pass. Each Kelley
+// title takes its SOC's entry in ai_scores_bls.json when there is one, else its
+// first score (utils/kelleyScores); a user's own re-score layers on top.
 const INITIAL_SCORES = resolveInitialScores();
 const SEEDED_JOBS = applyPercentileLabels(
     splitSharedSocEmployment(
-        attachEpEmployment(applyAnalysesToJobs(initialJobs, INITIAL_SCORES.scores)),
+        attachEpEmployment(seedKelleyJobs(initialJobs, KELLEY_SOC_SCORES, INITIAL_SCORES.scores, applyAnalysesToJobs)),
     ),
 );
+/** Some Kelley title is on its SOC's published entry. */
+const HAS_SOC_SCORES = SEEDED_JOBS.some((j) => KELLEY_SOC_SCORES.has(MAP_TITLE_TO_SOC[j.title]));
+/** Where the scores on screen came from: the user's own re-score, or published (either file). */
+const INITIAL_SOURCE: ScoresSource = INITIAL_SCORES.source === 'cache' || !HAS_SOC_SCORES ? INITIAL_SCORES.source : 'baked';
 
 // ── Store interface ────────────────────────────────────────────────────────
 
@@ -361,8 +368,7 @@ export const useStore = create<AppState>((set, get) => ({
             item.isStale = false;
 
             if (item.tasks.length > 0) {
-                const avg             = item.tasks.reduce((s, t) => s + t.aiCapabilityScore, 0) / item.tasks.length;
-                item.automationCostIndex = parseFloat(avg.toFixed(2));
+                item.automationCostIndex = meanUnit(item.tasks.map((t) => t.aiCapabilityScore));
             }
 
             const socCode = MAP_TITLE_TO_SOC[job.title];
@@ -390,9 +396,9 @@ export const useStore = create<AppState>((set, get) => ({
 
     isScoring: false,
     // Precomputed scores are merged at module load, so the app starts already scored.
-    hasAIScores: INITIAL_SCORES.source !== 'none',
-    scoresSource: INITIAL_SCORES.source,
-    scoresGeneratedAt: INITIAL_SCORES.generatedAt,
+    hasAIScores: INITIAL_SOURCE !== 'none',
+    scoresSource: INITIAL_SOURCE,
+    scoresGeneratedAt: INITIAL_SCORES.source === 'cache' || !HAS_SOC_SCORES ? INITIAL_SCORES.generatedAt : null,
     scoringProgress: null,
     apiKeyMode: null,
     userClaudeApiKey: '',

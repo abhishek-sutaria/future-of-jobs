@@ -1,12 +1,15 @@
 /**
- * The scoring plan for every unscored occupation (scripts/lib/scorePlanAll.ts →
- * data/bls_score_plan_all.json). No API call: --plan only reads committed files.
+ * The scoring plan for all 830 occupations, one set of rules (scripts/lib/
+ * scorePlanAll.ts → data/bls_score_plan_all.json). No API call: --plan only
+ * reads committed files.
  *
- * Checks: the 60 scored SOCs stay out; 830 = scored + plannable + no-task; the
- * committed file is exactly what --plan writes; every task is a verbatim O*NET
- * row; the combine rule covers every O*NET code with tasks that no BLS
- * occupation owns; the 13 Business & Finance prompts rebuild to their stored
- * promptSha256; and --plan makes zero network calls.
+ * Checks: one row per occupation; the 770 rows of the 2026-11-07 plan are byte
+ * for byte as they were, followed by the 13 business-finance and 47 kelley
+ * rows; 830 = 783 scorable + 47 no-task; the committed file is exactly what
+ * --plan writes; every task is a verbatim O*NET row; the combine rule covers
+ * every O*NET code with tasks that no BLS occupation owns; every published
+ * entry's promptSha256 is its plan row's; --batch kelley's controls re-score
+ * published prompts; and --plan makes zero network calls.
  */
 
 import { describe, it, expect, vi, afterEach } from 'vitest';
@@ -24,6 +27,7 @@ import {
     planAll,
 } from '../../scripts/lib/blsTasks';
 import {
+    KELLEY_CONTROL_SOCS,
     PLAN_ALL_PATH,
     applyFilter,
     batchKey,
@@ -36,14 +40,19 @@ import {
     scoredSocs,
     sha256,
 } from '../../scripts/lib/scorePlanAll';
+import { ONET_SPLIT_CODE_TITLES } from '../config/onetSplitCodes';
+import crypto from 'crypto';
 
 const ROOT = path.resolve(__dirname, '../..');
 const inputs = loadAllInputs(ROOT);
 const kelleySocs = new Set(initialJobs.map((j) => MAP_TITLE_TO_SOC[j.title]));
 const scored = scoredSocs(kelleySocs);
-const entries = planAllFields(inputs, scored);
-const counts = countPlan(entries, Object.keys(inputs.occupations).length, scored.size);
+const entries = planAllFields(inputs, kelleySocs);
+const counts = countPlan(entries, Object.keys(inputs.occupations).length);
 const bySoc = new Map(entries.map((e) => [e.soc, e]));
+/** The rows of the first plan (2026-11-07): no batch. */
+const firstPlan = entries.filter((e) => !e.batch);
+const PUBLISHED = JSON.parse(fs.readFileSync(path.join(ROOT, 'src/data/ai_scores_bls.json'), 'utf-8')).scores as Record<string, { promptSha256: string; tasks: { taskName: string; aiCapabilityScore: number; humanCriticalityScore: number }[] }>;
 const statementLines = fs.readFileSync(path.join(ROOT, TASK_STATEMENTS_PATH), 'utf-8').split('\n');
 
 /** O*NET codes with at least one task row, from the raw file. */
@@ -60,35 +69,109 @@ const onetCodes = fs
     .filter((c) => /^\d{2}-\d{4}\.\d{2}$/.test(c));
 
 describe('which occupations are planned', () => {
-    it('keeps the 60 scored SOCs out: 47 Kelley + 13 Business & Finance', () => {
+    it('one row per occupation, every one of the 830, by one set of rules', () => {
+        expect(Object.keys(inputs.occupations)).toHaveLength(830);
+        expect(entries).toHaveLength(830);
+        expect(bySoc.size).toBe(830);
+    });
+
+    it('the 60 SOCs scored before the family batches are in their own batches: 47 kelley + 13 business-finance', () => {
         expect(kelleySocs.size).toBe(47);
         expect(scored.size).toBe(60);
         for (const soc of BF_TARGET_SOCS) expect(kelleySocs.has(soc)).toBe(false);
-        for (const soc of scored) {
-            expect(inputs.occupations[soc], soc).toBeDefined();
-            expect(bySoc.has(soc), soc).toBe(false);
+        expect(entries.filter((e) => e.batch === 'kelley').map((e) => e.soc).sort()).toEqual([...kelleySocs].sort());
+        expect(entries.filter((e) => e.batch === 'business-finance').map((e) => e.soc).sort()).toEqual([...BF_TARGET_SOCS]);
+        for (const e of firstPlan) expect(scored.has(e.soc), e.soc).toBe(false);
+    });
+
+    it('the 770 rows of the first plan (2026-11-07) are byte for byte as they were, and come first', () => {
+        expect(firstPlan).toHaveLength(770);
+        expect(entries.slice(0, 770)).toEqual(firstPlan);
+        // SHA-256 of the 770 rows exactly as committed in 0646d77..1527e09, before the kelley rows were added.
+        const hash = crypto.createHash('sha256').update(firstPlan.map((r) => JSON.stringify(r, null, 2)).join('\n')).digest('hex');
+        expect(hash).toBe('49ff8ad0d3205816b7b800360a78a4a289ba588e6ec025eaf058829f43d7fd19');
+        for (const e of firstPlan) expect(e).not.toHaveProperty('batch');
+    });
+
+    it('830 = 783 scorable + 47 no-task; the first plan counted as the owner did; the two new batches', () => {
+        expect([counts.rows, counts.scorable, counts.noTasks]).toEqual([830, 783, 47]);
+        expect([1, 2, 3].map((f) => counts.byFamily[f].toDo)).toEqual([320, 71, 379]);
+        expect([1, 2, 3].map((f) => counts.byFamily[f].plannable)).toEqual([301, 66, 356]);
+        expect([1, 2, 3].map((f) => counts.byFamily[f].noTasks)).toEqual([19, 5, 23]);
+        expect(counts.byBatch['business-finance']).toEqual({ jobs: 13, byRule: { 'own-code': 11, 'sub-codes': 1, combined: 1, 'no-tasks': 0 } });
+        expect(counts.byBatch.kelley).toEqual({ jobs: 47, byRule: { 'own-code': 44, 'sub-codes': 2, combined: 1, 'no-tasks': 0 } });
+        expect(counts.byRule).toEqual({ 'own-code': 748, 'sub-codes': 23, combined: 12, 'no-tasks': 47 });
+    });
+
+    it('sorts each part by family, then field, then SOC; --family takes only first-plan rows', () => {
+        const key = (e: (typeof entries)[number]) => `${e.family}|${e.field}|${e.soc}`;
+        for (const part of [firstPlan, entries.filter((e) => e.batch === 'business-finance'), entries.filter((e) => e.batch === 'kelley')]) {
+            expect(part.map(key)).toEqual(part.map(key).sort());
+        }
+        expect(entries.map((e) => e.batch ?? '')).toEqual([...Array(770).fill(''), ...Array(13).fill('business-finance'), ...Array(47).fill('kelley')]);
+        expect(applyFilter(entries, { family: 2 }).every((e) => e.field === '41' || e.field === '43')).toBe(true);
+        // Kelley 41-xxxx SOCs are in family 2 but never in a --family 2 run.
+        expect(applyFilter(entries, { family: 2 })).toHaveLength(71);
+        expect(applyFilter(entries, { family: 1 })).toHaveLength(320);
+        expect(applyFilter(entries, { fields: ['13'] }).every((e) => !e.batch)).toBe(true);
+        expect(applyFilter(entries, { batch: 'kelley' }).map((e) => e.soc).sort()).toEqual([...kelleySocs].sort());
+    });
+});
+
+describe('every published entry is its plan row', () => {
+    it('each entry in ai_scores_bls.json has the promptSha256 of its plan row (736 today, 783 after --batch kelley)', () => {
+        const socs = Object.keys(PUBLISHED);
+        expect(socs.length).toBeGreaterThanOrEqual(736);
+        for (const soc of socs) {
+            const row = bySoc.get(soc)!;
+            expect(row, soc).toBeDefined();
+            expect(PUBLISHED[soc].promptSha256, soc).toBe(row.promptSha256);
+            expect(PUBLISHED[soc].tasks.map((t) => t.taskName), soc).toEqual(row.tasks.map((t) => t.name));
+        }
+        // Every scorable row outside the kelley batch is published.
+        for (const e of entries.filter((x) => x.taskRule !== 'no-tasks' && x.batch !== 'kelley')) expect(PUBLISHED[e.soc], e.soc).toBeDefined();
+    });
+
+    it('the business-finance rows are the 2026-11-01 plan (data/bls_scoring_plan.json), task for task', () => {
+        const plans = planAll(loadPlanInputs(ROOT));
+        for (const p of plans) {
+            const row = bySoc.get(p.soc)!;
+            expect(row.batch, p.soc).toBe('business-finance');
+            expect(row.tasks, p.soc).toEqual(p.tasks);
+            expect([row.employment, row.projectedGrowth, row.selectionRule], p.soc).toEqual([p.employment, p.projectedGrowth, p.rule]);
+        }
+    });
+});
+
+describe('the kelley batch', () => {
+    const kelleyRows = entries.filter((e) => e.batch === 'kelley');
+
+    it('plans each Kelley SOC exactly like any other job: BLS title, OEWS May 2025 employment, EP 2025-35 growth', () => {
+        for (const e of kelleyRows) {
+            const occ = inputs.occupations[e.soc];
+            expect([e.title, e.employment, e.projectedGrowth], e.soc).toEqual([occ.title, occ.employment, occ.ep!.percentChange]);
+            expect(e.tasks.length, e.soc).toBe(5);
         }
     });
 
-    it('plans every other occupation exactly once', () => {
-        expect(Object.keys(inputs.occupations)).toHaveLength(830);
-        expect(entries).toHaveLength(770);
-        expect(bySoc.size).toBe(770);
-        expect(new Set([...bySoc.keys(), ...scored]).size).toBe(830);
+    it('13-1020 (Wholesale & Retail Buyer, Purchasing Agent) is combined from 13-1021, 13-1022 and 13-1023', () => {
+        expect(bySoc.get('13-1020')!.taskRule).toBe('combined');
+        expect(bySoc.get('13-1020')!.onetCodes).toEqual(['13-1021.00', '13-1022.00', '13-1023.00']);
     });
 
-    it('830 = scored + plannable + no-task, per family as the owner counted', () => {
-        expect(counts.scored + counts.plannable + counts.noTasks).toBe(830);
-        expect([counts.scored, counts.plannable, counts.noTasks]).toEqual([60, 723, 47]);
-        expect([1, 2, 3].map((f) => counts.byFamily[f].toDo)).toEqual([320, 71, 379]);
-        expect([1, 2, 3].map((f) => counts.byFamily[f].noTasks)).toEqual([19, 5, 23]);
-        expect(counts.byRule).toEqual({ 'own-code': 693, 'sub-codes': 20, combined: 10, 'no-tasks': 47 });
-    });
-
-    it('sorts by family, then field, then SOC', () => {
-        const key = (e: (typeof entries)[number]) => `${e.family}|${e.field}|${e.soc}`;
-        expect(entries.map(key)).toEqual(entries.map(key).sort());
-        expect(applyFilter(entries, { family: 2 }).every((e) => e.field === '41' || e.field === '43')).toBe(true);
+    it('its five controls are published business-finance jobs whose plan prompt is the published one', async () => {
+        expect(KELLEY_CONTROL_SOCS).toHaveLength(5);
+        const { publishedBlsControls } = await import('../../scripts/generate_bls_scores');
+        const controls = publishedBlsControls(entries, PUBLISHED as never);
+        expect(controls.map((c) => c.key)).toEqual([...KELLEY_CONTROL_SOCS]);
+        for (const c of controls) {
+            const row = bySoc.get(c.key)!;
+            expect(row.batch).toBe('business-finance');
+            expect(sha256(promptFor({ ...c.job, tasks: c.job.taskNames.map((name) => ({ name })) }))).toBe(PUBLISHED[c.key].promptSha256);
+            expect(c.published).toBe(PUBLISHED[c.key]);
+        }
+        // All three task rules and the risk range of the 13 are covered.
+        expect(new Set(KELLEY_CONTROL_SOCS.map((soc) => bySoc.get(soc)!.taskRule))).toEqual(new Set(['own-code', 'sub-codes', 'combined']));
     });
 });
 
@@ -137,6 +220,8 @@ describe('tasks', () => {
 
 describe('the combine rule', () => {
     const COMBINED = {
+        '13-1020': ['13-1021.00', '13-1022.00', '13-1023.00'],
+        '13-2020': ['13-2022.00', '13-2023.00'],
         '21-1018': ['21-1011.00', '21-1014.00'],
         '25-2052': ['25-2055.00', '25-2056.00'],
         '25-9045': ['25-9042.00', '25-9043.00'],
@@ -179,9 +264,6 @@ describe('the combine rule', () => {
         const orphans = onetCodes.filter((c) => !inputs.occupations[c.slice(0, 7)] && (taskCounts.get(c) ?? 0) > 0);
         const used = new Set(Object.values(ONET_CODES_FOR_SOC).flat());
         const accounted: Record<string, string> = {
-            '13-1021.00': 'BLS 13-1020, a Kelley SOC (already scored)',
-            '13-1022.00': 'BLS 13-1020, a Kelley SOC (already scored)',
-            '13-1023.00': 'BLS 13-1020, a Kelley SOC (already scored)',
             '29-2011.01': 'sub-code of 29-2011.00, which has its own tasks',
             '29-2011.02': 'sub-code of 29-2011.00, which has its own tasks',
             '29-2011.04': 'sub-code of 29-2011.00, which has its own tasks',
@@ -211,6 +293,16 @@ describe('no-task jobs', () => {
     });
 });
 
+describe('split-code titles', () => {
+    it('every title the panel shows is O*NET 30.1 Occupation Data.txt word for word, for every split code used', () => {
+        const titles = new Map(
+            fs.readFileSync(path.join(ROOT, 'data/db_30_1_text/Occupation Data.txt'), 'utf-8').split('\n').slice(1).map((l) => l.split('\t')).map((c) => [c[0], c[1]] as const),
+        );
+        expect(Object.keys(ONET_SPLIT_CODE_TITLES).sort()).toEqual([...new Set(Object.values(ONET_CODES_FOR_SOC).flat())].sort());
+        for (const [code, title] of Object.entries(ONET_SPLIT_CODE_TITLES)) expect(title, code).toBe(titles.get(code));
+    });
+});
+
 describe('the 13 Business & Finance prompts', () => {
     it('rebuild byte for byte: each matches its stored promptSha256', () => {
         const stored = JSON.parse(fs.readFileSync(path.join(ROOT, 'src/data/ai_scores_bls.json'), 'utf-8')).scores;
@@ -230,6 +322,15 @@ describe('filters', () => {
         expect(() => parsePlanFilter(['--family'])).toThrow();
         expect(batchKey({ family: 1 })).toBe('family-1');
         expect(batchKey({ fields: ['11', '15'] })).toBe('fields-11,15');
+    });
+
+    it('parses --batch kelley, and refuses business-finance, other names and mixing with --family/--fields', () => {
+        expect(parsePlanFilter(['--batch', 'kelley'])).toEqual({ batch: 'kelley' });
+        expect(batchKey({ batch: 'kelley' })).toBe('kelley');
+        expect(() => parsePlanFilter(['--batch', 'business-finance'])).toThrow(/2026-11-01/);
+        expect(() => parsePlanFilter(['--batch', 'all'])).toThrow();
+        expect(() => parsePlanFilter(['--batch', 'kelley', '--family', '1'])).toThrow();
+        expect(() => parsePlanFilter(['--batch'])).toThrow();
     });
 });
 

@@ -19,15 +19,27 @@
  *   3. Growth sensitivity (report only) on 2 published Kelley roles.
  *   4. Score the 13 and write src/data/ai_scores_bls.json, all 13 or nothing.
  *
- * B. A batch of the other 770 (--family 1|2|3 or --fields 11,15,17):
- *   1. Rebuild the plan for every unscored occupation and refuse to start unless
- *      it equals the committed data/bls_score_plan_all.json.
- *   2. Control: the same 5 roles and the same pass rule, once per batch (cached
- *      in the ledger under the batch name, so a re-run does not repeat them).
- *   3. Score the batch's jobs in plan order, skipping any already in the ledger.
- *      Jobs with no O*NET tasks are never sent.
+ * B. A batch from data/bls_score_plan_all.json (--family 1|2|3, --fields 11,15,17
+ *    or --batch kelley):
+ *   1. Rebuild the plan for all 830 occupations and refuse to start unless it
+ *      equals the committed data/bls_score_plan_all.json.
+ *   2. Control: 5 re-scores of already-published roles and the same pass rule,
+ *      once per batch (cached in the ledger under the batch name, so a re-run
+ *      does not repeat them). --family/--fields re-score the 5 Kelley roles
+ *      above against ai_scores.json; --batch kelley re-scores 5 published
+ *      Business & Finance jobs (KELLEY_CONTROL_SOCS) from their own plan rows
+ *      against ai_scores_bls.json, since the Kelley SOCs are what it replaces.
+ *   3. Score the batch's jobs in plan order, skipping any already in the ledger
+ *      or already in src/data/ai_scores_bls.json. Jobs with no O*NET tasks are
+ *      never sent.
  *   4. Only when every job in the batch is scored, add them to
  *      src/data/ai_scores_bls.json; the existing entries stay byte for byte.
+ *
+ *   --batch kelley scores the 47 SOCs of the 50 Kelley titles by exactly the
+ *   rules, prompt, inputs, model and settings of every other row, so every
+ *   scored role ends up on one method. The app then reads each Kelley title's
+ *   tasks and scores from ai_scores_bls.json by its SOC (titles that share a
+ *   SOC share them too); src/data/ai_scores.json stays in the repo as history.
  *
  * Routes (pick one; the request body is identical either way):
  *   --proxy <url>  through the app's /api/claude/messages (or CLAUDE_PROXY_URL)
@@ -49,6 +61,7 @@
  *   --dry-run         print the plan, controls and budget, then exit (no API calls)
  *   --family 1|2|3    scoring order group (1 Management/Business/Science/Arts, 2 Sales
  *                     and Office, 3 the rest); --fields 11,15 picks fields instead
+ *   --batch kelley    the 47 Kelley SOCs (never with --family or --fields)
  *   --max-calls N     API calls this run may make, retries and controls included
  *                     (default 30; anything above 450 is refused)
  *   --max-jobs N      score at most N new jobs this run (batch mode)
@@ -88,7 +101,9 @@ import {
     type RolePlan,
 } from './lib/blsTasks';
 import {
+    KELLEY_CONTROL_SOCS,
     PLAN_ALL_PATH,
+    PLAN_BATCHES,
     SCORING_GROUPS,
     applyFilter,
     batchKey,
@@ -100,19 +115,23 @@ import {
     planAllFields,
     planAllFile,
     promptFor,
-    scoredSocs,
     type PlanAllEntry,
     type PlanFilter,
 } from './lib/scorePlanAll';
 import { loadDirectAuth } from './lib/scoringAuth';
+import { RANK_TABLE_FIXTURE, writeRankTable } from './rank_table';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const ROOT = path.join(__dirname, '..');
-const OUT_FILE = path.join(ROOT, 'src', 'data', 'ai_scores_bls.json');
-const PUBLISHED_FILE = path.join(ROOT, 'src', 'data', 'ai_scores.json');
-const PLAN_FILE = path.join(ROOT, 'data', 'bls_scoring_plan.json');
-const PLAN_ALL_FILE = path.join(ROOT, PLAN_ALL_PATH);
-const RUN_FILE = path.join(ROOT, 'data', 'ai_scores_bls_run.json');
+/** The repository. main({ root }) points every path below at a copy instead (tests only). */
+const REPO_ROOT = path.join(__dirname, '..');
+let ROOT = REPO_ROOT;
+const paths = () => ({
+    OUT_FILE: path.join(ROOT, 'src', 'data', 'ai_scores_bls.json'),
+    PUBLISHED_FILE: path.join(ROOT, 'src', 'data', 'ai_scores.json'),
+    PLAN_FILE: path.join(ROOT, 'data', 'bls_scoring_plan.json'),
+    PLAN_ALL_FILE: path.join(ROOT, PLAN_ALL_PATH),
+    RUN_FILE: path.join(ROOT, 'data', 'ai_scores_bls_run.json'),
+});
 
 export const DEFAULT_MAX_CALLS = 30;
 /** No single run may make more calls than this, whatever --max-calls says. */
@@ -120,7 +139,8 @@ export const HARD_MAX_CALLS = 450;
 const ATTEMPTS_PER_ROLE = 2;
 /** Failed calls for one job across every run, after which a batch stops trying it. */
 const MAX_FAILED_CALLS_PER_JOB = 4;
-const RATE_LIMIT_MS = 1200;
+/** Pause between calls; none under vitest, where Claude is mocked. */
+const RATE_LIMIT_MS = process.env.VITEST ? 0 : 1200;
 const CONTROL_PASS_POINTS = 5;
 /** claude-sonnet-5 list price, USD per million tokens. */
 const PRICE_PER_MTOK = { input: 2, output: 10 } as const;
@@ -160,15 +180,16 @@ interface RunLedger {
     /** Report-only growth sensitivity results; never written to src/data. */
     sensitivity?: Record<string, CachedResult>;
     scores: Record<string, CachedResult>;
-    /** Batch mode control re-scores, by batch name then Kelley job id. Never published. */
+    /** Batch mode control re-scores, by batch name then Kelley job id (or SOC for --batch kelley). Never published. */
     controlRuns?: Record<string, Record<string, CachedResult>>;
 }
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 const sha256 = (s: string) => crypto.createHash('sha256').update(s).digest('hex');
 const mean = (xs: number[]) => xs.reduce((s, x) => s + x, 0) / xs.length;
-const avgAi = (a: JobAnalysisResult) => mean(a.tasks.map((t) => t.aiCapabilityScore));
-const avgHuman = (a: JobAnalysisResult) => mean(a.tasks.map((t) => t.humanCriticalityScore));
+type ScoredTasks = { tasks: { aiCapabilityScore: number; humanCriticalityScore: number }[] };
+const avgAi = (a: ScoredTasks) => mean(a.tasks.map((t) => t.aiCapabilityScore));
+const avgHuman = (a: ScoredTasks) => mean(a.tasks.map((t) => t.humanCriticalityScore));
 
 /** Thrown when a role's responses are rejected on every attempt. Stops the run unless a step catches it. */
 class RejectedTwice extends Error {}
@@ -237,8 +258,8 @@ function getAuth(argv: readonly string[]): Auth {
 const isExpectedModel = (m: string | null) => m === CLAUDE_MODEL || (!!m && new RegExp(`^${CLAUDE_MODEL}-\\d{8}$`).test(m));
 
 function loadLedger(): RunLedger {
-    if (!fs.existsSync(RUN_FILE)) return { version: CACHE_VERSION, calls: [], control: {}, sensitivity: {}, scores: {} };
-    const parsed = JSON.parse(fs.readFileSync(RUN_FILE, 'utf-8')) as RunLedger;
+    if (!fs.existsSync(paths().RUN_FILE)) return { version: CACHE_VERSION, calls: [], control: {}, sensitivity: {}, scores: {} };
+    const parsed = JSON.parse(fs.readFileSync(paths().RUN_FILE, 'utf-8')) as RunLedger;
     if (parsed.version !== CACHE_VERSION) {
         // Keep the call count (money already spent) but drop results scored under another schema.
         return { version: CACHE_VERSION, calls: parsed.calls ?? [], control: {}, sensitivity: {}, scores: {} };
@@ -247,7 +268,7 @@ function loadLedger(): RunLedger {
 }
 
 function saveLedger(ledger: RunLedger): void {
-    fs.writeFileSync(RUN_FILE, JSON.stringify(ledger, null, 2) + '\n');
+    fs.writeFileSync(paths().RUN_FILE, JSON.stringify(ledger, null, 2) + '\n');
 }
 
 function usageTotals(calls: CallRecord[]) {
@@ -335,10 +356,10 @@ async function scoreOnce(ledger: RunLedger, kind: Kind, key: string, label: stri
 
 function checkPlan(plans: RolePlan[]): void {
     const fresh = JSON.stringify(plans, null, 2);
-    if (!fs.existsSync(PLAN_FILE)) fail(`${path.relative(ROOT, PLAN_FILE)} is missing. Run with --plan, review it and commit it first.`);
-    const committed = JSON.parse(fs.readFileSync(PLAN_FILE, 'utf-8'));
+    if (!fs.existsSync(paths().PLAN_FILE)) fail(`${path.relative(ROOT, paths().PLAN_FILE)} is missing. Run with --plan, review it and commit it first.`);
+    const committed = JSON.parse(fs.readFileSync(paths().PLAN_FILE, 'utf-8'));
     if (JSON.stringify(committed.roles, null, 2) !== fresh) {
-        fail(`${path.relative(ROOT, PLAN_FILE)} does not match the committed O*NET/BLS data. Re-run --plan and review the diff.`);
+        fail(`${path.relative(ROOT, paths().PLAN_FILE)} does not match the committed O*NET/BLS data. Re-run --plan and review the diff.`);
     }
 }
 
@@ -360,7 +381,7 @@ function writePlan(plans: RolePlan[], dir: string): void {
         },
         roles: plans,
     };
-    const out = path.join(dir, path.basename(PLAN_FILE));
+    const out = path.join(dir, path.basename(paths().PLAN_FILE));
     fs.writeFileSync(out, JSON.stringify(file, null, 2) + '\n');
     console.log(`💾  Wrote ${path.relative(ROOT, out)}`);
 }
@@ -373,12 +394,11 @@ function kelleySocList(): string[] {
     });
 }
 
-/** Plan for every unscored occupation in all 22 fields, plus the counts. */
+/** Plan for all 830 occupations in all 22 fields, plus the counts. */
 export function buildPlanAll(root: string = ROOT) {
     const inputs = loadAllInputs(root);
-    const scored = scoredSocs(kelleySocList());
-    const entries = planAllFields(inputs, scored);
-    const counts = countPlan(entries, Object.keys(inputs.occupations).length, scored.size);
+    const entries = planAllFields(inputs, kelleySocList());
+    const counts = countPlan(entries, Object.keys(inputs.occupations).length);
     return { entries, counts };
 }
 
@@ -388,29 +408,30 @@ function bfMeanPromptLength(plans: RolePlan[]): number {
 }
 
 function printPlanSummary(entries: PlanAllEntry[], counts: ReturnType<typeof countPlan>, filter: PlanFilter, bfMeanLength: number): void {
-    console.log(`\n${counts.totalOccupations} occupations = ${counts.scored} scored + ${counts.plannable} plannable + ${counts.noTasks} with no O*NET tasks`);
-    console.log('\n| Family | To do | Plannable | Own code | Sub-codes | Combined | No tasks | Est. cost | +15% retries | Time at 7 s/call |');
+    console.log(`\n${counts.totalOccupations} occupations, one plan row each = ${counts.scorable} scorable + ${counts.noTasks} with no O*NET tasks`);
+    console.log('\n| Batch | Rows | Scorable | Own code | Sub-codes | Combined | No tasks | Est. cost | +15% retries | Time at 7 s/call |');
     console.log('|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|');
-    for (const g of SCORING_GROUPS) {
-        const f = counts.byFamily[g.id];
-        const est = estimateCost(entries.filter((e) => e.family === g.id), bfMeanLength);
-        console.log(`| ${g.id} ${g.name} | ${f.toDo} | ${f.plannable} | ${f.byRule['own-code']} | ${f.byRule['sub-codes']} | ${f.byRule.combined} | ${f.noTasks} | $${est.cost.toFixed(2)} | $${est.costWithRetries.toFixed(2)} | ${est.minutes.toFixed(0)} min |`);
-    }
-    const all = estimateCost(entries, bfMeanLength);
-    console.log(`| All | ${counts.toDo} | ${counts.plannable} | ${counts.byRule['own-code']} | ${counts.byRule['sub-codes']} | ${counts.byRule.combined} | ${counts.noTasks} | $${all.cost.toFixed(2)} | $${all.costWithRetries.toFixed(2)} | ${all.minutes.toFixed(0)} min |`);
+    const line = (name: string, sel: PlanAllEntry[]) => {
+        const est = estimateCost(sel, bfMeanLength);
+        const r = (rule: string) => sel.filter((e) => e.taskRule === rule).length;
+        console.log(`| ${name} | ${sel.length} | ${est.jobs} | ${r('own-code')} | ${r('sub-codes')} | ${r('combined')} | ${r('no-tasks')} | $${est.cost.toFixed(2)} | $${est.costWithRetries.toFixed(2)} | ${est.minutes.toFixed(0)} min |`);
+    };
+    for (const g of SCORING_GROUPS) line(`family ${g.id} ${g.name}`, entries.filter((e) => !e.batch && e.family === g.id));
+    for (const b of PLAN_BATCHES) line(`${b}${b === 'business-finance' ? ' (scored 2026-11-01)' : ''}`, entries.filter((e) => e.batch === b));
+    line('All', entries);
     console.log('(Estimate only, no calls: B&F measured 1,208 input + 721 output tokens per call, input scaled by prompt length; controls not included.)');
     if (counts.fewerThanFiveTasks.length > 0) console.log(`Fewer than 5 tasks available: ${counts.fewerThanFiveTasks.join(', ')}`);
     if (isFiltered(filter)) {
         const sel = applyFilter(entries, filter);
         const est = estimateCost(sel, bfMeanLength);
-        console.log(`\nSelected (${batchKey(filter)}): ${sel.length} to do, ${est.jobs} plannable, ${sel.length - est.jobs} with no tasks · ~$${est.cost.toFixed(2)} ($${est.costWithRetries.toFixed(2)} with retries) · ~${est.minutes.toFixed(0)} min`);
+        console.log(`\nSelected (${batchKey(filter)}): ${sel.length} rows, ${est.jobs} scorable, ${sel.length - est.jobs} with no tasks · ~$${est.cost.toFixed(2)} ($${est.costWithRetries.toFixed(2)} with retries) · ~${est.minutes.toFixed(0)} min`);
     }
 }
 
 function checkPlanAll(entries: PlanAllEntry[]): void {
-    const rel = path.relative(ROOT, PLAN_ALL_FILE);
-    if (!fs.existsSync(PLAN_ALL_FILE)) fail(`${rel} is missing. Run with --plan, review it and commit it first.`);
-    const committed = JSON.parse(fs.readFileSync(PLAN_ALL_FILE, 'utf-8'));
+    const rel = path.relative(ROOT, paths().PLAN_ALL_FILE);
+    if (!fs.existsSync(paths().PLAN_ALL_FILE)) fail(`${rel} is missing. Run with --plan, review it and commit it first.`);
+    const committed = JSON.parse(fs.readFileSync(paths().PLAN_ALL_FILE, 'utf-8'));
     if (JSON.stringify(committed.jobs, null, 2) !== JSON.stringify(entries, null, 2)) {
         fail(`${rel} does not match the committed O*NET/BLS data. Re-run --plan and review the diff.`);
     }
@@ -423,38 +444,35 @@ interface ControlOutcome {
     passed: boolean;
 }
 
+/** One control re-score: a published role, the exact input it was scored on, and its published numbers. */
+interface ControlCase {
+    /** Ledger key: the Kelley job id, or the SOC for --batch kelley. */
+    key: string;
+    label: string;
+    job: JobInput;
+    published: ScoredTasks;
+}
+
 /** Re-scores the control roles (cached in `store`) and compares them with the published set. */
-async function runControls(
-    ledger: RunLedger,
-    store: Record<string, CachedResult>,
-    controlJobs: (typeof initialJobs)[number][],
-    published: { scores: Record<string, JobAnalysisResult> },
-    auth: Auth,
-): Promise<ControlOutcome> {
+async function runControls(ledger: RunLedger, store: Record<string, CachedResult>, cases: ControlCase[], auth: Auth): Promise<ControlOutcome> {
     console.log('Control run (never published):');
-    for (const job of controlJobs) {
-        if (store[job.id]) {
-            console.log(`·  cached   ${job.title}`);
+    for (const c of cases) {
+        if (store[c.key]) {
+            console.log(`·  cached   ${c.label}`);
             continue;
         }
-        store[job.id] = await scoreOnce(ledger, 'control', job.id, `control: ${job.title}`, {
-            title: job.title,
-            taskNames: job.tasks.map((t) => t.name),
-            employment: job.employment,
-            projectedGrowth: job.projectedGrowth,
-        }, auth);
+        store[c.key] = await scoreOnce(ledger, 'control', c.key, `control: ${c.label}`, c.job, auth);
         saveLedger(ledger);
         await sleep(RATE_LIMIT_MS);
     }
 
-    const rows = controlJobs.map((job) => {
-        const pub = published.scores[job.id];
-        const now = store[job.id].analysis;
+    const rows = cases.map((c) => {
+        const now = store[c.key].analysis;
         return {
-            role: job.title,
-            publishedAi: avgAi(pub) * 100,
+            role: c.label,
+            publishedAi: avgAi(c.published) * 100,
             newAi: avgAi(now) * 100,
-            publishedHuman: avgHuman(pub) * 100,
+            publishedHuman: avgHuman(c.published) * 100,
             newHuman: avgHuman(now) * 100,
         };
     });
@@ -480,7 +498,48 @@ function loadControlJobs(published: { scores: Record<string, JobAnalysisResult> 
     });
 }
 
-const readPublished = () => JSON.parse(fs.readFileSync(PUBLISHED_FILE, 'utf-8')) as { scores: Record<string, JobAnalysisResult> };
+/** The 5 published Kelley roles, re-scored on their published tasks and inputs (Business & Finance and --family/--fields). */
+function kelleyRoleControls(published: { scores: Record<string, JobAnalysisResult> }): ControlCase[] {
+    return loadControlJobs(published).map((job) => ({
+        key: job.id,
+        label: job.title,
+        job: { title: job.title, taskNames: job.tasks.map((t) => t.name), employment: job.employment, projectedGrowth: job.projectedGrowth },
+        published: published.scores[job.id],
+    }));
+}
+
+interface PublishedBlsEntry extends ScoredTasks {
+    title: string;
+    promptSha256?: string;
+    tasks: { taskName: string; aiCapabilityScore: number; humanCriticalityScore: number }[];
+}
+
+/**
+ * --batch kelley controls: 5 published Business & Finance jobs, re-scored from
+ * their own plan rows. Refuses to start unless each row's prompt hashes to the
+ * promptSha256 its published score was made from, so the control sends the
+ * very prompt the published numbers came from.
+ */
+export function publishedBlsControls(entries: readonly PlanAllEntry[], scores: Record<string, PublishedBlsEntry>): ControlCase[] {
+    return KELLEY_CONTROL_SOCS.map((soc) => {
+        const row = entries.find((e) => e.soc === soc);
+        const pub = scores[soc];
+        if (!row || row.batch !== 'business-finance') throw new Error(`Control ${soc} has no business-finance row in ${PLAN_ALL_PATH}`);
+        if (!pub) throw new Error(`Control ${soc} has no published score in src/data/ai_scores_bls.json`);
+        const hash = sha256(promptFor(row));
+        if (hash !== row.promptSha256 || hash !== pub.promptSha256) {
+            throw new Error(`Control ${soc}: its plan prompt does not hash to the published promptSha256, so it would not re-score the published input.`);
+        }
+        return {
+            key: soc,
+            label: `${soc} ${row.title}`,
+            job: { title: row.title, taskNames: row.tasks.map((t) => t.name), employment: row.employment, projectedGrowth: row.projectedGrowth },
+            published: pub,
+        };
+    });
+}
+
+const readPublished = () => JSON.parse(fs.readFileSync(paths().PUBLISHED_FILE, 'utf-8')) as { scores: Record<string, JobAnalysisResult> };
 
 /** One scores-file entry, the same shape as the 13 Business & Finance entries. */
 function scoreEntry(plan: { title: string; rule: string; onetCodes: string[]; employment: number; projectedGrowth: number; tasks: { onetCode: string; taskId: number }[] }, r: CachedResult) {
@@ -504,7 +563,7 @@ function scoreEntry(plan: { title: string; rule: string; onetCodes: string[]; em
     };
 }
 
-// ── B. A batch of the other 770 ─────────────────────────────────────────────
+// ── B. A batch from the plan (--family, --fields or --batch kelley) ─────────
 
 async function runBatch(argv: readonly string[], filter: PlanFilter, ledger: RunLedger, dryRun: boolean): Promise<void> {
     const { entries } = buildPlanAll();
@@ -513,37 +572,48 @@ async function runBatch(argv: readonly string[], filter: PlanFilter, ledger: Run
     currentBatch = key;
     const selected = applyFilter(entries, filter);
     const jobs = selected.filter((e) => e.taskRule !== 'no-tasks');
+    const existingFile = JSON.parse(fs.readFileSync(paths().OUT_FILE, 'utf-8')) as { scores: Record<string, PublishedBlsEntry> };
+    /** Done: in the ledger, or already published (a published entry is never replaced). */
+    const isDone = (soc: string) => Boolean(ledger.scores[soc] || existingFile.scores[soc]);
     const failedCalls = (soc: string) => ledger.calls.filter((c) => c.kind === 'score' && c.key === soc && c.outcome !== 'ok').length;
-    const pending = jobs.filter((e) => !ledger.scores[e.soc]);
+    const pending = jobs.filter((e) => !isDone(e.soc));
     const givenUp = pending.filter((e) => failedCalls(e.soc) >= MAX_FAILED_CALLS_PER_JOB);
     const maxJobs = parseMaxJobs(argv);
     ledger.controlRuns ??= {};
     const controls = (ledger.controlRuns[key] ??= {});
-    const published = readPublished();
-    const controlJobs = loadControlJobs(published);
-    const pendingControl = controlJobs.filter((j) => !controls[j.id]).length;
+    let controlCases: ControlCase[];
+    try {
+        controlCases = filter.batch === 'kelley' ? publishedBlsControls(entries, existingFile.scores) : kelleyRoleControls(readPublished());
+    } catch (err) {
+        fail(err instanceof Error ? err.message : String(err));
+    }
+    const pendingControl = controlCases.filter((c) => !controls[c.key]).length;
 
     console.log(`✔  Batch ${key}: ${selected.length} occupations, ${jobs.length} with tasks, ${selected.length - jobs.length} with no O*NET tasks (never sent).`);
     console.log(`📒  Ledger: ${ledger.calls.length} calls so far · ${jobs.length - pending.length} of ${jobs.length} already scored · ${pendingControl} control + ${pending.length - givenUp.length} jobs to go · this run may make ${maxCalls} calls${Number.isFinite(maxJobs) ? ` and score ${maxJobs} jobs` : ''}.`);
     if (givenUp.length > 0) console.log(`⚠️  Not tried again (${MAX_FAILED_CALLS_PER_JOB} failed calls each): ${givenUp.map((e) => e.soc).join(', ')}`);
 
     if (dryRun) {
-        for (const e of pending) console.log(`${e.soc}  ${e.title}  (${e.taskRule}; ${e.onetCodes.join(', ')}; ${e.tasks.length} tasks; prompt ${e.promptLength} chars)`);
-        console.log(`\nControl roles: ${controlJobs.map((j) => j.title).join(', ')}`);
+        for (const e of pending) {
+            console.log(`${e.soc}  ${e.title}  (${e.taskRule}; ${e.onetCodes.join(', ')}; ${e.tasks.length} tasks; prompt ${e.promptLength} chars)`);
+            if (filter.batch) for (const t of e.tasks) console.log(`    ${t.onetCode} #${t.taskId}  ${t.name}`);
+        }
+        console.log(`\nControl roles (${filter.batch === 'kelley' ? 'published Business & Finance jobs, ai_scores_bls.json' : 'published Kelley roles, ai_scores.json'}): ${controlCases.map((c) => c.label).join(', ')}`);
+        console.log(`Calls needed with no retries: ${pendingControl} control + ${pending.length - givenUp.length} jobs = ${pendingControl + pending.length - givenUp.length} (this run may make ${maxCalls}).`);
         return;
     }
 
     const auth = getAuth(argv);
     console.log(`    ${CLAUDE_MODEL} · thinking disabled · max_tokens ${MAX_TOKENS} · prompt schema v${CACHE_VERSION}\n`);
 
-    const control = await runControls(ledger, controls, controlJobs, published, auth);
+    const control = await runControls(ledger, controls, controlCases, auth);
     if (!control.passed) fail(`Control run failed. No ${key} job was scored. Nothing was written to src/data.`, 2);
 
     console.log(`\nBatch ${key}:`);
     let scoredThisRun = 0;
     const failedThisRun: string[] = [];
     for (const e of jobs) {
-        if (ledger.scores[e.soc]) continue;
+        if (isDone(e.soc)) continue;
         if (failedCalls(e.soc) >= MAX_FAILED_CALLS_PER_JOB) continue;
         if (scoredThisRun >= maxJobs) {
             console.log(`\n⏸  --max-jobs ${maxJobs} reached.`);
@@ -563,7 +633,7 @@ async function runBatch(argv: readonly string[], filter: PlanFilter, ledger: Run
         await sleep(RATE_LIMIT_MS);
     }
 
-    const left = jobs.filter((e) => !ledger.scores[e.soc]);
+    const left = jobs.filter((e) => !isDone(e.soc));
     console.log(`\nScored this run: ${scoredThisRun}. Batch ${key}: ${jobs.length - left.length} of ${jobs.length} scored.`);
     if (failedThisRun.length > 0) console.log(`Rejected twice this run: ${failedThisRun.join(', ')}`);
     if (left.length > 0) {
@@ -572,11 +642,14 @@ async function runBatch(argv: readonly string[], filter: PlanFilter, ledger: Run
         return;
     }
 
-    // Every job in the batch is scored: add them to the scores file.
-    const existing = JSON.parse(fs.readFileSync(OUT_FILE, 'utf-8'));
+    // Every job in the batch is scored: add the new ones to the scores file.
+    const existing = JSON.parse(fs.readFileSync(paths().OUT_FILE, 'utf-8'));
     const scores = { ...existing.scores };
+    let added = 0;
     for (const e of jobs) {
-        if (!scores[e.soc]) scores[e.soc] = scoreEntry({ ...e, rule: e.selectionRule! }, ledger.scores[e.soc]);
+        if (scores[e.soc]) continue;
+        scores[e.soc] = scoreEntry({ ...e, rule: e.selectionRule! }, ledger.scores[e.soc]);
+        added++;
     }
     const routeLabel = auth.mode === 'direct' ? 'api.anthropic.com/v1/messages (direct)' : 'app proxy /api/claude/messages';
     const out = {
@@ -594,14 +667,24 @@ async function runBatch(argv: readonly string[], filter: PlanFilter, ledger: Run
                 passed: control.passed,
                 route: routeLabel,
                 plan: PLAN_ALL_PATH,
+                comparedWith: filter.batch === 'kelley' ? 'src/data/ai_scores_bls.json (published 2026-11-01 Business & Finance entries)' : 'src/data/ai_scores.json',
             },
         },
         scores,
     };
-    fs.writeFileSync(OUT_FILE, JSON.stringify(out, null, 2) + '\n');
-    console.log(`\n💾  Wrote ${path.relative(ROOT, OUT_FILE)}: ${jobs.length} ${key} jobs added, ${Object.keys(existing.scores).length} existing entries unchanged.`);
+    fs.writeFileSync(paths().OUT_FILE, JSON.stringify(out, null, 2) + '\n');
+    console.log(`\n💾  Wrote ${path.relative(ROOT, paths().OUT_FILE)}: ${added} ${key} jobs added, ${Object.keys(existing.scores).length} existing entries unchanged.`);
+    if (filter.batch === 'kelley') {
+        // The Kelley titles now read their SOC entries: refresh their before / after rank table (checked by rankScale.test.ts).
+        const table = writeRankTable(ROOT);
+        console.log(`💾  Wrote ${RANK_TABLE_FIXTURE}: ${table.out._meta.onSocEntry} of 50 Kelley titles on their SOC entry, ranked among ${table.scale.count}.`);
+    }
     reportUsage(ledger);
-    console.log('\n✅  Done. Next: npx vitest run (expected red tests are listed in docs/scoring-decisions.md), then the user-facing text updates.');
+    console.log(
+        filter.batch === 'kelley'
+            ? '\n✅  Done. The app now reads every Kelley title from ai_scores_bls.json by its SOC. Next: npx vitest run, npm run build, then commit src/data/ai_scores_bls.json (docs/scoring-decisions.md, "The Kelley batch").'
+            : '\n✅  Done. Next: npx vitest run (expected red tests are listed in docs/scoring-decisions.md), then the user-facing text updates.',
+    );
 }
 
 // ── Entry ───────────────────────────────────────────────────────────────────
@@ -609,6 +692,8 @@ async function runBatch(argv: readonly string[], filter: PlanFilter, ledger: Run
 export interface MainOptions {
     /** Where --plan writes its two files (tests point this at a temp folder). */
     planDir?: string;
+    /** Run against a copy of the repository (tests only: a fake Kelley batch in a temp folder). */
+    root?: string;
 }
 
 export async function main(argv: readonly string[] = process.argv.slice(2), opts: MainOptions = {}): Promise<void> {
@@ -623,13 +708,14 @@ export async function main(argv: readonly string[] = process.argv.slice(2), opts
         fail(err instanceof Error ? err.message : String(err));
     }
     callsThisRun = 0;
+    ROOT = opts.root ?? REPO_ROOT;
 
     if (PLAN_ONLY) {
         const dir = opts.planDir ?? path.join(ROOT, 'data');
         const bfPlans = planAll(loadPlanInputs(ROOT));
         writePlan(bfPlans, dir);
         const { entries, counts } = buildPlanAll();
-        const file = path.join(dir, path.basename(PLAN_ALL_FILE));
+        const file = path.join(dir, path.basename(paths().PLAN_ALL_FILE));
         fs.writeFileSync(file, JSON.stringify(planAllFile(entries, counts), null, 2) + '\n');
         console.log(`💾  Wrote ${path.relative(ROOT, file)} (${entries.length} occupations)`);
         printPlanSummary(entries, counts, filter, bfMeanPromptLength(bfPlans));
@@ -645,6 +731,14 @@ export async function main(argv: readonly string[] = process.argv.slice(2), opts
     }
 
     // ── A. Business & Finance ────────────────────────────────────────────────
+    // Done on 2026-11-01. It writes the scores file whole, with only its 13
+    // entries, so it refuses once the file holds anything else.
+    if (fs.existsSync(paths().OUT_FILE)) {
+        const others = Object.keys(JSON.parse(fs.readFileSync(paths().OUT_FILE, 'utf-8')).scores ?? {}).filter((soc) => !(BF_TARGET_SOCS as readonly string[]).includes(soc));
+        if (others.length > 0) {
+            fail(`The Business & Finance run (no --family, --fields or --batch) was done on 2026-11-01 and would rewrite ${path.relative(ROOT, paths().OUT_FILE)} with only its 13 entries, dropping ${others.length} others. Refused. Use --family 1|2|3, --fields or --batch kelley.`);
+        }
+    }
     // ── 1. Confirm the 13 from the data ──────────────────────────────────────
     const inputs = loadPlanInputs(ROOT);
     const uncovered = uncoveredBusinessFinanceSocs(inputs.occupations, kelleySocList());
@@ -658,7 +752,7 @@ export async function main(argv: readonly string[] = process.argv.slice(2), opts
     checkPlan(plans);
 
     const published = readPublished();
-    const controlJobs = loadControlJobs(published);
+    const controlCases = kelleyRoleControls(published);
 
     const sensitivityJobs = SENSITIVITY_JOB_IDS.map((id) => {
         const job = initialJobs.find((j) => j.id === id);
@@ -668,7 +762,7 @@ export async function main(argv: readonly string[] = process.argv.slice(2), opts
         if (epGrowth == null) fail(`Sensitivity role ${job.title} (${soc}) has no BLS EP 2025–35 change in 13.json`);
         return { job, soc, epGrowth };
     });
-    const pendingControl = controlJobs.filter((j) => !ledger.control[j.id]).length;
+    const pendingControl = controlCases.filter((c) => !ledger.control[c.key]).length;
     const pendingSensitivity = sensitivityJobs.filter((s) => !ledger.sensitivity![s.job.id]).length;
     const pendingScores = plans.filter((p) => !ledger.scores[p.soc]).length;
     console.log(`📒  ${ledger.calls.length} API calls in the ledger · this run may make ${maxCalls} · ${pendingControl} control + ${pendingSensitivity} sensitivity + ${pendingScores} roles still to score.`);
@@ -678,7 +772,7 @@ export async function main(argv: readonly string[] = process.argv.slice(2), opts
             console.log(`\n${p.soc}  ${p.title}  (${p.rule}; ${p.onetCodes.join(', ')}; employment ${p.employment.toLocaleString()}; growth ${p.projectedGrowth}%)`);
             for (const t of p.tasks) console.log(`    ${t.onetCode} #${t.taskId}  ${t.name}`);
         }
-        console.log(`\nControl roles: ${controlJobs.map((j) => j.title).join(', ')}`);
+        console.log(`\nControl roles: ${controlCases.map((c) => c.label).join(', ')}`);
         console.log(`Sensitivity roles: ${sensitivityJobs.map((s) => `${s.job.title} (published growth ${s.job.projectedGrowth}%, EP 2025–35 ${s.epGrowth}%)`).join(', ')}`);
         return;
     }
@@ -691,7 +785,7 @@ export async function main(argv: readonly string[] = process.argv.slice(2), opts
     console.log(`    ${CLAUDE_MODEL} · thinking disabled · max_tokens ${MAX_TOKENS} · prompt schema v${CACHE_VERSION}\n`);
 
     // ── 2. Control run ───────────────────────────────────────────────────────
-    const { rows, gapAi, gapHuman, passed } = await runControls(ledger, ledger.control, controlJobs, published, auth);
+    const { rows, gapAi, gapHuman, passed } = await runControls(ledger, ledger.control, controlCases, auth);
     if (!passed) {
         fail('Control run failed. The 13 roles were NOT scored. Nothing was written to src/data.', 2);
     }
@@ -773,8 +867,8 @@ export async function main(argv: readonly string[] = process.argv.slice(2), opts
         },
         scores: Object.fromEntries(plans.map((plan) => [plan.soc, scoreEntry(plan, ledger.scores[plan.soc])])),
     };
-    fs.writeFileSync(OUT_FILE, JSON.stringify(out, null, 2) + '\n');
-    console.log(`\n💾  Wrote ${path.relative(ROOT, OUT_FILE)} — ${plans.length} roles`);
+    fs.writeFileSync(paths().OUT_FILE, JSON.stringify(out, null, 2) + '\n');
+    console.log(`\n💾  Wrote ${path.relative(ROOT, paths().OUT_FILE)} — ${plans.length} roles`);
 
     // Bands exactly as the map draws Kelley hills: the 50 published roles set the scale.
     const scale = buildRiskScale(Object.values(published.scores).map((a) => Number(avgAi(a).toFixed(2))));
@@ -786,7 +880,7 @@ export async function main(argv: readonly string[] = process.argv.slice(2), opts
         console.log(`| ${plan.title} | ${plan.soc} | ${plan.onetCodes.join(' + ')} (${plan.rule}) | ${(risk * 100).toFixed(0)}% | ${(avgHuman(a) * 100).toFixed(0)}% | ${riskBand(risk, scale)} |`);
     }
     reportUsage(ledger);
-    console.log('\n✅  Done. Next: npx vitest run, then regenerate public/student-guide.pdf and commit src/data/ai_scores_bls.json.');
+    console.log('\n✅  Done. Next: npx vitest run, then commit src/data/ai_scores_bls.json.');
 }
 
 function reportUsage(ledger: RunLedger): void {

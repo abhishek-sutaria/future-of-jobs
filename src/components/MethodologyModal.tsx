@@ -4,6 +4,9 @@ import { IconBrain, IconActivity, IconTrendingUp, IconLayers } from './ui/Icons'
 import { EP_PATH_MAX, INDEX_CONTINENTS, OCCUPATION_INDEX } from '../utils/occupationIndex';
 import { formatCount } from '../utils/roleFormat';
 import { BLS_SCORES_META, SCORE_COUNTS, SCORE_COVERAGE, scoredRangeLabel } from '../utils/blsScores';
+import { LEGACY_SCORES_DATE } from '../utils/bakedScores';
+import { SCORES_BADGE_MONTHS } from '../utils/scoreDates';
+import { isCombinedSoc } from '../config/onetSplitCodes';
 
 // Every figure quoted below is read from the dataset, never typed in.
 const COUNTS = OCCUPATION_INDEX._meta.counts;
@@ -11,13 +14,22 @@ const EP_TOTAL = OCCUPATION_INDEX._meta.sources.ep.allOccupations;
 const TALLEST = OCCUPATION_INDEX.occupations.find(
     (o) => o.epEmployment2025 === EP_PATH_MAX || o.epEmployment2035 === EP_PATH_MAX,
 );
-const NO_TASK_COUNT = COUNTS.occupations - COUNTS.withTasks;
+/** No O*NET tasks anywhere: no list of their own and no split codes (47). */
+const NO_TASK_COUNT = OCCUPATION_INDEX.occupations.filter((o) => o.taskCount === 0 && !isCombinedSoc(o.soc)).length;
+/** No list of their own, but O*NET splits the job into smaller codes that have tasks (12). */
+const SPLIT_JOB_COUNT = OCCUPATION_INDEX.occupations.filter((o) => o.taskCount === 0 && isCombinedSoc(o.soc)).length;
 const smallest = [...INDEX_CONTINENTS].sort((a, b) => a.ep.employment2025 - b.ep.employment2025)[0];
 const largest = [...INDEX_CONTINENTS].sort((a, b) => b.ep.employment2025 - a.ep.employment2025)[0];
 const SCORED_RANGE = scoredRangeLabel(BLS_SCORES_META?.firstScoredAt ?? null, BLS_SCORES_META?.lastScoredAt ?? null);
 const RULES = BLS_SCORES_META?.rules ?? {};
 const ruleCount = (rule: string) => formatCount(RULES[rule] ?? 0);
 const MORE_SCORED = SCORE_COUNTS.bls > 0;
+/** Every scored occupation is on the one method (ai_scores_bls.json): the Kelley SOCs are in too. */
+const ALL_ONE_METHOD = SCORE_COUNTS.oneMethod === SCORE_COUNTS.scored;
+const LEGACY_MONTH = LEGACY_SCORES_DATE
+    ? new Date(LEGACY_SCORES_DATE).toLocaleDateString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' })
+    : null;
+const n = formatCount;
 
 interface MethodologyModalProps {
     isOpen: boolean;
@@ -45,8 +57,8 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                         Labor-market figures shown as metrics come from the bundled BLS / O*NET snapshot
                         or from Claude outputs that are explicitly conditioned on those inputs. The live
                         BLS CPS feed powers only the national unemployment rate in the header — not
-                        per-role employment. Claude is probabilistic: treat its scores and year curves
-                        as structured judgment, not additional official statistics.
+                        per-role employment. Claude is probabilistic: treat its scores as structured
+                        judgment, not additional official statistics.
                     </p>
 
                     <div className="mt-3 rounded-lg border border-white/[0.08] overflow-hidden">
@@ -110,7 +122,7 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                                     <td className="px-3 py-2">Day-to-day task descriptions</td>
                                     <td className="px-3 py-2 text-gray-400">
                                         <SourceLink href="https://www.onetcenter.org/database.html">O*NET 30.1</SourceLink>
-                                        {' '}({NO_TASK_COUNT} of the {COUNTS.occupations} BLS occupations have no O*NET task list; their panel says so)
+                                        {' '}({NO_TASK_COUNT} of the {COUNTS.occupations} BLS occupations have no O*NET tasks at all, and their panel says so. For {SPLIT_JOB_COUNT} more, O*NET has no list under the job&apos;s own code because it splits the job into smaller codes; their panel names those codes.)
                                     </td>
                                 </tr>
                                 <tr className="border-t border-white/[0.06]">
@@ -166,22 +178,24 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                         <li><strong>Peak height is data.</strong> Each peak&apos;s height is that occupation&apos;s Employment Projections job count, on a linear scale. On the whole map, one national scale runs up to the largest value on the 2025–2035 path ({formatCount(EP_PATH_MAX)}, {TALLEST?.title}), so no peak is capped. Open a family or a field and the map zooms into it: the same block, magnified, with every occupation next to the same neighbours (inside a field it is also drawn closer to a square so its labels can be read). Its hills are drawn to one fixed scale of its own, as the note beside its figures says: the largest job count any of its occupations reaches from 2025 to 2035 is full height and the rest are in proportion. So each hill rises or falls with its own BLS number as the slider moves, and the largest may sit a little under full height in 2025. Hills blend where they overlap, so a small hill on a larger neighbour&apos;s slope can move with that neighbour. Where a hill stands is layout only: related jobs sit together, one block per BLS minor group. Labels and panels always show the published numbers.</li>
                         {MORE_SCORED ? (
                             <>
-                                <li><strong>AI scores cover {SCORE_COVERAGE.short}.</strong> The {SCORE_COUNTS.kelleyTitles} Kelley roles ({SCORE_COUNTS.kelleySocs} BLS occupations) were scored first. The other {formatCount(SCORE_COUNTS.bls)} were scored{SCORED_RANGE ? ` from ${SCORED_RANGE}` : ''} by the same method: same model, same prompt, five O*NET tasks each (fewer only where O*NET lists fewer). Every scored role is one app: it opens the same panel, with the same features (Analyze, Strategic Insight, Roadmap, Scenario, Defend / Build, Save role, Human Resilience), and is ranked on the same scale as every other.{SCORE_COUNTS.unscored > 0 && ` ${SCORE_COVERAGE.unscoredReason} They are drawn in slate and their panels show the BLS and O*NET numbers only; no score is estimated in their place.`}</li>
-                                <li><strong>Which tasks are scored.</strong> Every task is a real O*NET task, copied word for word. Of the {formatCount(SCORE_COUNTS.bls)} occupations outside the Kelley roles:
+                                {ALL_ONE_METHOD ? (
+                                    <li data-testid="method-coverage"><strong>AI scores cover {SCORE_COVERAGE.short}, all scored the same way.</strong> All {n(SCORE_COUNTS.scored)}, the {SCORE_COUNTS.kelleyTitles} Kelley roles ({SCORE_COUNTS.kelleySocs} BLS occupations) included, were scored{SCORED_RANGE ? ` from ${SCORED_RANGE}` : ''} with the same model, the same prompt, the same BLS inputs (Employment Projections 2025–35 growth and OEWS May 2025 employment) and five O*NET tasks each, picked by the four rules below (fewer only where O*NET lists fewer). Every scored role is one app: it opens the same panel, with the same features (Analyze, Strategic Insight, Roadmap, Scenario, Defend / Build, Save role, Human Resilience), and is ranked on the same scale as every other.{SCORE_COUNTS.unscored > 0 && ` ${SCORE_COVERAGE.unscoredReason} They are drawn in slate and their panels show the BLS and O*NET numbers only; no score is estimated in their place.`}</li>
+                                ) : (
+                                    <li data-testid="method-coverage"><strong>AI scores cover {SCORE_COVERAGE.short}.</strong> {n(SCORE_COUNTS.oneMethod)} of them were scored the same way{SCORED_RANGE ? `, from ${SCORED_RANGE}` : ''}: the same model, the same prompt, the same BLS inputs (Employment Projections 2025–35 growth and OEWS May 2025 employment) and five O*NET tasks each, picked by the four rules below (fewer only where O*NET lists fewer). {SCORE_COUNTS.legacyKelleyTitles === SCORE_COUNTS.kelleyTitles ? `The ${SCORE_COUNTS.kelleyTitles} Kelley roles` : `${SCORE_COUNTS.legacyKelleyTitles} Kelley roles`} still show their first scores{LEGACY_MONTH ? ` from ${LEGACY_MONTH}` : ''}, made before this method with an older prompt, older BLS inputs and their own task lists; each moves to the same method as soon as its BLS occupation is re-scored. Every scored role is one app: it opens the same panel, with the same features (Analyze, Strategic Insight, Roadmap, Scenario, Defend / Build, Save role, Human Resilience), and is ranked on the same scale as every other.{SCORE_COUNTS.unscored > 0 && ` ${SCORE_COVERAGE.unscoredReason} They are drawn in slate and their panels show the BLS and O*NET numbers only; no score is estimated in their place.`}</li>
+                                )}
+                                <li data-testid="task-rules"><strong>Which tasks are scored: four rules.</strong> Every task is a real O*NET task, copied word for word. One of four rules decides each job&apos;s tasks:
                                     <ul className="list-[circle] list-inside ml-4 mt-1 space-y-1">
-                                        <li><strong>Own code</strong> ({ruleCount('first-5-onet-order')}): the occupation has its own O*NET task list, and its first five tasks are used, in O*NET&apos;s order.</li>
-                                        <li><strong>Sub-codes</strong> ({ruleCount('round-robin-sub-codes')}): there is no list of its own, but O*NET has smaller codes under it (for example the kinds of &ldquo;Managers, All Other&rdquo;). One task is taken from each smaller code in turn, and a task whose text word for word repeats another smaller code&apos;s task is skipped, so no task is scored twice.</li>
-                                        <li><strong>Combined</strong> ({ruleCount('round-robin-onet-codes')}): BLS counts one job where O*NET has two or more, such as Teaching Assistants (O*NET splits them into preschool-to-secondary and special education). One task is taken from each O*NET code in turn.</li>
-                                        {SCORE_COUNTS.unscored > 0 && (
-                                            <li><strong>No tasks</strong> ({formatCount(SCORE_COUNTS.unscoredNoTasks)}): {SCORE_COUNTS.unscoredAllOther === SCORE_COUNTS.unscored ? '“All Other” groups' : 'occupations'} for which O*NET lists no tasks at all. They are not scored.</li>
-                                        )}
+                                        <li><strong>Own list</strong>: the job has its own O*NET task list, and its first five tasks are used, in O*NET&apos;s order ({ruleCount('first-5-onet-order')} scored jobs).</li>
+                                        <li><strong>Smaller codes</strong>: there is no list of its own, but O*NET has smaller codes under it (for example the kinds of &ldquo;Managers, All Other&rdquo;). One task is taken from each smaller code in turn, and a task whose text word for word repeats another smaller code&apos;s task is skipped, so no task is scored twice ({ruleCount('round-robin-sub-codes')} scored jobs).</li>
+                                        <li><strong>Split job</strong>: BLS counts one job where O*NET has two or more codes, such as Teaching Assistants (O*NET splits them into preschool-to-secondary and special education). One task is taken from each O*NET code in turn, and the job&apos;s panel names the codes ({ruleCount('round-robin-onet-codes')} scored jobs).</li>
+                                        <li><strong>No tasks</strong>: O*NET lists no tasks for the job anywhere, so it is not scored ({n(NO_TASK_COUNT)} jobs, all &ldquo;All Other&rdquo; groups).</li>
                                     </ul>
                                 </li>
                             </>
                         ) : (
                             <li><strong>AI scores cover the {SCORE_COUNTS.kelleyTitles} Kelley roles for now.</strong> Those peaks carry the Job Security colours. Every other occupation is drawn in slate and its panel says &ldquo;AI scores coming soon&rdquo;; no score is estimated in their place.</li>
                         )}
-                        <li>Kelley titles that share one BLS code (Marketing / Brand Manager, BI Analyst / Data Scientist, Buyer / Purchasing Agent) keep their own peaks, each with an equal share of that code&apos;s jobs, as before. Each was scored on its own five tasks, so each counts once as its own role in the ranks, and the BLS code is not counted again: {formatCount(SCORE_COUNTS.roles)} scored roles, from {formatCount(SCORE_COUNTS.scored)} scored occupations.</li>
+                        <li>Kelley titles that share one BLS code (Marketing / Brand Manager, BI Analyst / Data Scientist, Buyer / Purchasing Agent) keep their own peaks, each with an equal share of that code&apos;s jobs, and their own Kelley labels. {SCORE_COUNTS.kelleyOnFile > 0 ? 'Scored by the same method as every other job, both titles of a code have that code’s tasks and scores.' : 'Until their BLS code is re-scored, each still shows its own first score.'} In the ranks each BLS code counts once: {n(SCORE_COUNTS.ranked)} scored occupations.</li>
                         <li><strong>The task view</strong> covers every scored role in the open field, family or whole map. <strong>The state map</strong> covers the {SCORE_COUNTS.kelleyTitles} Kelley roles only: it uses BLS state employment (OEWS May 2025), which the app has for their {SCORE_COUNTS.kelleySocs} occupations and no others.</li>
                     </ul>
                 </div>
@@ -202,9 +216,9 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                         score — the role-level number is just the average.
                     </p>
                     <ul className="list-disc list-inside text-xs text-gray-400 ml-1 space-y-1">
-                        <li><strong>Relative labels</strong> grade each role against all {formatCount(SCORE_COUNTS.roles)} scored roles rather than against absolute thresholds. Human Resilience ranks a role&apos;s average human-criticality score among all of them (top quarter Future-Proof, middle half High, bottom quarter At Risk), and peak colours grade its Automation Risk in thirds of the same {formatCount(SCORE_COUNTS.roles)}. The scores themselves never change; only where a role sits among the others.</li>
-                        <li>The scores for the {SCORE_COUNTS.kelleyTitles} Kelley roles are published with the app as one dated set{MORE_SCORED && ` (the other ${formatCount(SCORE_COUNTS.bls)} occupations as a second set${SCORED_RANGE ? `, scored from ${SCORED_RANGE}` : ''})`}, so every visitor sees the same figures; the &ldquo;AI Scores&rdquo; badge in the header shows the month they were produced. Opening a role adds Claude&apos;s reasoning (<strong>Analyze</strong>) without changing any score. Re-scoring from that badge uses your own Claude key, re-scores the Kelley roles and changes the figures only in your browser, until a newer published set arrives or 30 days pass.</li>
-                        <li><strong>Saved shared answers.</strong> Strategic Insight, Scenario, Roadmap and Defend / Build are written by Claude the first time anyone asks for them on a role, checked, and saved on the server. Every later visitor sees that same saved answer, with no new Claude call. An answer is tied to the role&apos;s exact inputs and the prompt version, so if either changes, a new answer is written. A visitor can ask for only so many new answers per hour and per day; saved answers always open.</li>
+                        <li><strong>Relative labels</strong> grade each role against all {n(SCORE_COUNTS.ranked)} scored occupations (each BLS code once) rather than against absolute thresholds. Human Resilience ranks a role&apos;s average human-criticality score among all of them (top quarter Future-Proof, middle half High, bottom quarter At Risk), and peak colours grade its Automation Risk in thirds of the same {n(SCORE_COUNTS.ranked)}. The two are rated separately, so a role can be Future-Proof and still red; hover a label on the role page to see its cut-offs. The scores themselves never change; only where a role sits among the others.</li>
+                        <li>Every score is published with the app, so every visitor sees the same figures; the &ldquo;AI Scores&rdquo; badge in the header shows the months they were made{SCORES_BADGE_MONTHS ? ` (${SCORES_BADGE_MONTHS})` : ''}. Opening a role adds Claude&apos;s reasoning (<strong>Analyze</strong>) without changing any score. Re-scoring from that badge uses your own Claude key, re-scores the Kelley roles and changes the figures only in your browser, until a newer published set arrives or 30 days pass.</li>
+                        <li><strong>Saved shared answers.</strong> Strategic Insight, Scenario, Roadmap and Defend / Build are written by Claude the first time anyone asks for them on a role, and checked. When saving is on, the answer is saved on the server and every later visitor sees that same answer, with no new Claude call; a note under each answer says whether it was saved. An answer is tied to the role&apos;s exact inputs and the prompt version, so if either changes, a new answer is written. A visitor can ask for only so many new answers per hour and per day (an answer that fails does not count); saved answers always open.</li>
                     </ul>
                 </div>
 

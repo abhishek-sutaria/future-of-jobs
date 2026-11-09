@@ -19,7 +19,7 @@ const ALL_STEPS: Step[] = [
     {
         target: 'tour-fields',
         title: 'Fields',
-        description: 'Click a job family on the map to see it on its own, then a field to see its occupations, or pick any field from All 22 fields. Back, Esc or the trail next to that button takes you back up, and the line under it gives the numbers for what you have open. A field’s size is its number of workers. ' + SCORE_COVERAGE.sentence + ` Colours and Human Resilience rank each role among all ${SCORE_COUNTS.roles.toLocaleString('en-US')} scored roles.`,
+        description: 'Click a job family on the map to see it on its own, then a field to see its occupations, or pick any field from All 22 fields. Back, Esc or the trail next to that button takes you back up, and the line under it gives the numbers for what you have open. A field’s size is its number of workers. ' + SCORE_COVERAGE.sentence + ` Colours and Human Resilience rank each role among all ${SCORE_COUNTS.ranked.toLocaleString('en-US')} scored occupations.`,
         padding: 8,
     },
     {
@@ -55,7 +55,7 @@ const ALL_STEPS: Step[] = [
     {
         target: 'tour-methodology',
         title: 'Data & sources',
-        description: 'Employment and outlook come from BLS; task lists from O*NET; risk scores from Claude (judgment, not official stats). Claude writes each role’s insight, roadmap and scenario once and saves it, so everyone sees the same answer. Click to read the full methodology.',
+        description: 'Employment and outlook come from BLS; task lists from O*NET; risk scores from Claude (judgment, not official stats). Claude writes each role’s insight, roadmap and scenario the first time it is asked for; when saving is on, it is saved so everyone sees the same answer. Click to read the full methodology.',
         padding: 10,
     },
 ];

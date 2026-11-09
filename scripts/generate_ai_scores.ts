@@ -139,6 +139,13 @@ async function scoreJob(
 }
 
 async function main(): Promise<void> {
+    // src/data/ai_scores.json is history (docs/scoring-decisions.md, 2026-11-08):
+    // the Kelley roles are scored by `npm run generate-bls-scores -- --batch kelley`
+    // into src/data/ai_scores_bls.json, by the same method as every other job.
+    if (!process.argv.includes('--rewrite-history')) {
+        console.error('\n❌  src/data/ai_scores.json is kept only as history. Score the Kelley roles with\n    npm run generate-bls-scores -- --batch kelley --direct\n(see docs/scoring-decisions.md). Refused; nothing was called or written.\n');
+        process.exit(1);
+    }
     console.log('='.repeat(64));
     console.log(`  Precomputing AI scores — ${CLAUDE_MODEL} — schema v${CACHE_VERSION}`);
     console.log('='.repeat(64));

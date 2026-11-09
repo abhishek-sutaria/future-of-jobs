@@ -7,7 +7,8 @@ A futuristic dashboard visualizing the impact of AI on the workforce. This appli
 - **3D Terrain Visualization**: Interactive 3D landscape representing job markets, where peak height corresponds to growth and automation resilience.
 - **Holographic World Map**: Global view of role distribution across regions.
 - **Live Economic Data**: Real-time integration with the Bureau of Labor Statistics (BLS) for unemployment rates.
-- **One app for every scored role**: every scored occupation (the 50 Kelley roles and every other BLS job with O*NET tasks) opens the same panel and is ranked on one scale across all of them.
+- **One app for every scored role**: every scored occupation (the 50 Kelley roles and every other BLS job with O*NET tasks) opens the same panel and is ranked on one scale across all of them, each BLS occupation once.
+- **One scoring method**: every published AI score is in `src/data/ai_scores_bls.json`, made by one model, one prompt and one set of O*NET task rules from `data/bls_score_plan_all.json` (see `docs/scoring-decisions.md`). The Kelley roles' first scores (`src/data/ai_scores.json`, Aug 2026) are kept only as history, and the app stops reading them once `--batch kelley` has scored their BLS occupations.
 - **Crystal Ball Simulation**: Claude-powered "Day in the Life" scenario generator for 2030.
 - **Strategic Upskilling Roadmap**: Actionable 6-month plans to transition from at-risk tasks to safe harbors.
 - **Shared saved answers**: Strategic Insight, Scenario, Roadmap and Defend / Build are written by Claude once per role, saved on the server, and shown to every later visitor with no new Claude call. See [Claude gateway and shared answers](#claude-gateway-and-shared-answers).

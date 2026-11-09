@@ -1,6 +1,6 @@
 {
   "version": 5,
-  "promptVersion": "src/utils/taskScoring.ts buildJobAnalysisPrompt + parseJobAnalysis, schema v5 (same as src/data/ai_scores.json)",
+  "promptVersion": "src/utils/taskScoring.ts buildJobAnalysisPrompt + parseJobAnalysis, schema v5: the one prompt for every entry (the Kelley titles' first scores in src/data/ai_scores.json, Aug 2026, were made with an older prompt and are history only)",
   "model": "claude-sonnet-5",
   "thinking": "disabled",
   "maxTokens": 4096,
@@ -8,12 +8,12 @@
   "route": "api.anthropic.com/v1/messages (direct), latest batch family-3; each controlRuns entry names its batch route, and the 13 Business & Finance entries (controlRun, 2026-11-01) used app proxy /api/claude/messages",
   "generatedAt": "2026-11-08T05:16:07.551Z",
   "inputs": {
-    "employment": "BLS OEWS May 2025 national employment (src/data/occupations/13.json)",
-    "growth": "BLS Employment Projections 2025–35, Table 1.2, percent change (src/data/occupations/13.json ep.percentChange)",
+    "employment": "BLS OEWS May 2025 national employment (src/data/occupations/<field>.json employment)",
+    "growth": "BLS Employment Projections 2025–35, Table 1.2, percent change (src/data/occupations/<field>.json ep.percentChange)",
     "promptGrowthLabel": "BLS Occupational Outlook 2024-2034 projected employment change for this occupation group (10-year total)",
     "growthNote": "Vintage mismatch: the shared prompt calls this figure the BLS Occupational Outlook 2024-2034 change; the value passed is the BLS Employment Projections 2025-2035 change, the only projection the repository holds for these occupations. Both are 10-year totals in percent from the same BLS programme. The prompt text was not changed, so the method matches the published set."
   },
-  "taskSource": "O*NET 30.1 task statements (data/db_30_1_text/Task Statements.txt); plan in data/bls_scoring_plan.json",
+  "taskSource": "O*NET 30.1 task statements (data/db_30_1_text/Task Statements.txt); every entry's tasks, inputs and promptSha256 are its row in data/bls_score_plan_all.json (one row per occupation, one set of rules; the 13 Business & Finance rows were first planned in data/bls_scoring_plan.json by the same code, and the controlRun below is theirs)",
   "controlRun": {
     "roles": [
       "Financial Analyst",

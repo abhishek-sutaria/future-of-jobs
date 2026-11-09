@@ -6,7 +6,8 @@ import type { UpskillMode } from '../utils/analysis';
 import { generateJobScenario, analyzeJob, alignAnalysisToTasks, getClaudeUserFriendlyMessage, AiLimitError, type ScenarioResult, type JobAnalysis } from '../utils/analysis';
 import { IconBrain, IconSparkles, IconAlertTriangle, IconShield, IconTarget, IconInfo, IconTrendingDown, IconCheck, IconBookmark, IconAward } from './ui/Icons';
 import { Z } from '../config/layers';
-import { UI, CHART, RESILIENCE_LABELS, RISK_THRESHOLDS } from '../config/constants';
+import { UI, RESILIENCE_LABELS, RISK_THRESHOLDS } from '../config/constants';
+import { RISK_BAND_COLORS } from '../config/theme';
 import { partitionRoleTasks, isHybridTask, pickRoadmapPair, emptyColumnNote } from '../utils/taskPartition';
 import { blsEpGrowthPathPoints } from '../utils/terrainMath';
 import { jobSourceProvenanceChips, panelSourceList } from '../utils/provenance';
@@ -19,8 +20,10 @@ import { SharedAnswerNote } from './SharedAnswerNote';
 import { OccupationAbout } from './OccupationPanel';
 import { useStore } from '../store';
 import { roleScaleFor } from '../utils/allRoleScale';
-import { rankScopeText } from '../utils/roleScale';
+import { bandFor, rankScopeText, roundHuman } from '../utils/roleScale';
+import { meanPercent, percentOf } from '../utils/scoreRounding';
 import { isBlsRoleId, socOfBlsRoleId } from '../utils/blsRoleJob';
+import { KELLEY_SOC_SCORES, blsScoreFor } from '../utils/blsScores';
 import { MAP_TITLE_TO_SOC } from '../utils/onet';
 import { CONTINENT_DISPLAY_NAMES } from '../config/continents';
 import { continentOf, INDEX_OCCUPATION_BY_SOC, type OccupationEntry } from '../utils/occupationIndex';
@@ -48,6 +51,11 @@ interface JobDetailPanelProps {
     onSetAnalysisLoading: (loading: boolean) => void;
     onShowMethodology: () => void;
 }
+
+/** A 0 to 1 cut-off as a percent with one decimal, so a tie at the cut-off reads as one: 0.84 → "84.0%". */
+const cutPct = (v: number) => `${(roundHuman(v) * 100).toFixed(1)}%`;
+
+const BAND_NAME = { safe: 'green', hybrid: 'amber', high: 'red' } as const;
 
 const RESILIENCE_COLOR: Record<string, string> = {
     [RESILIENCE_LABELS.TOP]: 'text-emerald-400',
@@ -181,6 +189,13 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
     const authStatus = useUserStore((state) => state.authStatus);
 
     const riskValue = job.automationCostIndex;
+    // The map's own band function and colours (utils/roleScale bandFor, thirds of
+    // every scored occupation), so the gauge and the number always match the hill.
+    const riskBandName = bandFor(riskValue, scale);
+    const riskColor = RISK_BAND_COLORS[riskBandName];
+    const riskTitle =
+        `${percentOf(riskValue)}% Automation Risk is ${BAND_NAME[riskBandName]} on the map. Colours split all ${scale.count.toLocaleString('en-US')} scored occupations into thirds: ` +
+        `green below ${percentOf(scale.risk.lower)}%, amber from ${percentOf(scale.risk.lower)}%, red from ${percentOf(scale.risk.upper)}%.`;
 
     const { riskTask, safeTask } = pickRoadmapPair(job.tasks);
     const canShowRoadmap = !!riskTask && !!safeTask;
@@ -201,7 +216,12 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
     }, [job.tasks, analysisResult]);
 
     const humanAvg = job.tasks.reduce((sum, t) => sum + t.humanCriticalityScore, 0) / (job.tasks.length || 1);
-    const humanDisplay = (parseFloat(humanAvg.toFixed(2)) * 100).toFixed(0);
+    // Rounded from whole hundredths, halves up (utils/scoreRounding): 72.5% shows as 73%.
+    const humanDisplay = meanPercent(job.tasks.map((t) => t.humanCriticalityScore));
+    const resilienceTitle =
+        `This role's average Human Criticality is ${cutPct(humanAvg)}. Human Resilience ranks it ${rankScopeText(scale)}: ` +
+        `Future-Proof from ${cutPct(scale.humanP75)} (top quarter), High from ${cutPct(scale.humanP25)} (middle half), At Risk below ${cutPct(scale.humanP25)}. ` +
+        `It is rated separately from Automation Risk, so a role can be Future-Proof and still red on the map.`;
     const insightError = analysisResult ? analyzeError : (analyzeError ?? analysisError);
 
     const renderTaskScores = (task: Job['tasks'][number], riskChipClass: string) => {
@@ -209,13 +229,13 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
         return (
             <div className="flex items-center gap-1.5">
                 <div className={`text-[10px] font-semibold px-2 py-1 rounded border tabular-nums ${riskChipClass}`}>
-                    {(task.aiCapabilityScore * 100).toFixed(0)}% RISK
+                    {percentOf(task.aiCapabilityScore)}% RISK
                 </div>
                 <div
-                    title="Need for human judgment on this task. Rated independently of the risk score."
+                    title="Need for human judgment on this task. Rated separately from the risk score."
                     className={`text-[10px] font-semibold px-2 py-1 rounded border tabular-nums ${isHumanCritical ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20' : 'text-gray-500 bg-white/[0.04] border-white/[0.08]'}`}
                 >
-                    {(task.humanCriticalityScore * 100).toFixed(0)}% HUMAN
+                    {percentOf(task.humanCriticalityScore)}% HUMAN
                 </div>
             </div>
         );
@@ -309,26 +329,27 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                         layout at md and up, so the desktop panel is byte-for-byte unchanged. */}
                     <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar md:contents">
                     {/* Metrics Row — four slim tiles: risk, human criticality, BLS growth, resilience.
-                        Risk and human criticality sit side by side so the independence note reads
-                        against both. */}
+                        Risk and human criticality sit side by side so the "rated separately" note
+                        reads against both. */}
                     <div className="flex-none grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3 px-4 md:px-6 py-3 border-b border-white/[0.04]">
                         {/* Risk Gauge */}
-                        <div className="bg-white/[0.03] rounded-xl px-3 py-2 border border-white/[0.06] flex items-center gap-3 relative group">
+                        <div className="bg-white/[0.03] rounded-xl px-3 py-2 border border-white/[0.06] flex items-center gap-3 relative group" title={riskTitle} data-testid="risk-tile" data-band={riskBandName}>
                             <div className="relative w-11 h-11 shrink-0 flex items-center justify-center">
                                 <svg className="w-full h-full -rotate-90" viewBox="0 0 96 96">
                                     <circle cx="48" cy="48" r="38" stroke="currentColor" strokeWidth="10" fill="transparent" className="text-white/[0.06]" />
                                     <circle
-                                        cx="48" cy="48" r="38" stroke="currentColor" strokeWidth="10" fill="transparent"
+                                        cx="48" cy="48" r="38" stroke={riskColor} strokeWidth="10" fill="transparent"
                                         strokeDasharray={2 * Math.PI * 38}
                                         strokeDashoffset={2 * Math.PI * 38 * (1 - riskValue)}
                                         strokeLinecap="round"
-                                        className={`${riskValue > CHART.RADIAL_GAUGE.COLOR_HIGH ? 'text-red-500' : riskValue > CHART.RADIAL_GAUGE.COLOR_LOW ? 'text-amber-500' : 'text-emerald-500'} transition-all duration-700`}
+                                        className="transition-all duration-700"
+                                        data-testid="risk-gauge"
                                     />
                                 </svg>
                             </div>
                             <div className="min-w-0">
-                                <div className={`text-lg font-bold tabular-nums leading-tight ${riskValue > CHART.RADIAL_GAUGE.COLOR_HIGH ? 'text-red-400' : 'text-white'}`}>
-                                    {(riskValue * 100).toFixed(0)}%
+                                <div className="text-lg font-bold tabular-nums leading-tight" style={{ color: riskColor }} data-testid="risk-value">
+                                    {percentOf(riskValue)}%
                                 </div>
                                 <div className="relative group/gauge flex items-center gap-1">
                                     <p className="text-[10px] uppercase text-gray-500 font-semibold tracking-wider">Automation Risk</p>
@@ -340,7 +361,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                         <IconInfo size={10} className="text-gray-500 hover:text-cyan-400" />
                                     </button>
                                     <div className="absolute top-full left-0 mt-2 w-56 p-2 bg-gray-900 border border-gray-700 rounded-lg text-[9px] text-gray-300 opacity-0 group-hover/gauge:opacity-100 pointer-events-none transition-opacity z-10 leading-tight">
-                                        The average of the risk scores shown on each of this role&rsquo;s tasks below. It is not a count of tasks at risk, so it can sit in the middle even when no single task is mostly automated.
+                                        The average of the risk scores shown on each of this role&rsquo;s tasks below. It is not a count of tasks at risk, so it can sit in the middle even when no single task is mostly automated. {riskTitle}
                                     </div>
                                 </div>
                             </div>
@@ -348,7 +369,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
 
                         {/* Human Criticality — mean of the published per-task scores */}
                         <div className="bg-white/[0.03] rounded-xl px-3 py-2 border border-white/[0.06] flex flex-col justify-center min-w-0">
-                            <div className="text-lg font-bold tabular-nums leading-tight text-emerald-400">{humanDisplay}%</div>
+                            <div className="text-lg font-bold tabular-nums leading-tight text-emerald-400" data-testid="human-value">{humanDisplay}%</div>
                             <p className="text-[10px] uppercase text-gray-500 font-semibold tracking-wider">Human Criticality</p>
                             <p className="text-[10px] text-gray-600 leading-tight">Average need for human judgment</p>
                         </div>
@@ -391,7 +412,8 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                             {/* Published percentile label (store.ts applyPercentileLabels), the same
                                 one the 3D view colours by. A live Analyze run no longer overrides it. */}
                             <div
-                                title={`How this role's average need for human judgment ranks ${rankScopeText(scale)}: top quarter Future-Proof, middle half High, bottom quarter At Risk.`}
+                                title={resilienceTitle}
+                                data-testid="resilience-label"
                                 className={`text-lg font-bold leading-tight cursor-help ${RESILIENCE_COLOR[job.humanResilienceLabel] ?? 'text-gray-600'}`}
                             >
                                 {job.humanResilienceLabel}
@@ -401,7 +423,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                         </div>
                         <p className="col-span-2 md:col-span-4 text-[11px] text-gray-400 leading-snug flex items-start gap-1.5">
                             <IconInfo size={12} className="text-cyan-400 mt-0.5 shrink-0" />
-                            <span>Automation Risk and Human Criticality are independent ratings, on the role and on each task, so they are not meant to add up to 100%.</span>
+                            <span>Automation Risk and Human Criticality are rated separately, on the role and on each task, so they are not meant to add up to 100%.</span>
                         </p>
                     </div>
 
@@ -604,7 +626,14 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                             </div>
                         </div>
 
-                        {occupation && <OccupationAbout occupation={occupation} roleTitle={job.title} />}
+                        {occupation && (
+                            <OccupationAbout
+                                occupation={occupation}
+                                roleTitle={job.title}
+                                // The codes its published tasks came from (none for a Kelley title still on its first score).
+                                scoredFrom={soc ? (isKelley ? KELLEY_SOC_SCORES.get(soc) : blsScoreFor(soc))?.onetCodes ?? [] : []}
+                            />
+                        )}
                     </div>
                     </div>
 

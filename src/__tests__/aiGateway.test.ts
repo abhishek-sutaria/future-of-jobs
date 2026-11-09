@@ -236,6 +236,57 @@ describe('limits on new answers', () => {
         for (const k of keys) expect(k).not.toContain('203.0.113.200');
     });
 
+    it('a failed or rejected Claude answer gives the visitor their slot back, but still counts toward the app ceiling', async () => {
+        env = { ...env, FOJ_RATE_PER_HOUR: '1' };
+        let mode: 'bad-json' | 'fails-check' | 'down' | 'ok' = 'bad-json';
+        const h = createClaudeHandler({
+            fetch: async (url, init) => {
+                if (!url.startsWith('https://api.anthropic.com')) return mock.fetch(url, init);
+                if (mode === 'ok') return mock.fetch(url, init);
+                mock.calls.push({ feature: 'analyze', at: 0, stream: false });
+                if (mode === 'down') return new Response(JSON.stringify({ error: { message: 'overloaded' } }), { status: 529 });
+                const text = mode === 'bad-json' ? 'not json at all' : '{"strategic_insight":"","tasks":[]}';
+                return new Response(JSON.stringify({ content: [{ type: 'text', text }], stop_reason: 'end_turn' }), { status: 200 });
+            },
+            env: () => env,
+            now: () => clock,
+        });
+        const visitorCounts = () => [...mock.rateCounts].filter(([k]) => k.startsWith('v:')).map(([, v]) => v.count);
+        const globalCount = () => [...mock.rateCounts].filter(([k]) => k.startsWith('g:')).map(([, v]) => v.count)[0];
+
+        // With a limit of 1 per hour, three failures in a row all reach Claude: each slot comes back.
+        for (const m of ['bad-json', 'fails-check', 'down'] as const) {
+            mode = m;
+            const r = await call(h, { feature: 'analyze', input: { ...ANALYZE, title: `Nurse ${m}` } });
+            expect(r.status, m).toBe(m === 'down' ? 529 : 502);
+            expect(visitorCounts(), m).toEqual([0, 0]);
+        }
+        expect(claudeCalls()).toBe(3);
+        // The whole-app ceiling still counts every paid call.
+        expect(globalCount()).toBe(3);
+        // A good answer takes the one slot; the next new one is limited.
+        mode = 'ok';
+        expect((await call(h, { feature: 'analyze', input: { ...ANALYZE, title: 'Nurse ok' } })).status).toBe(200);
+        expect(visitorCounts()).toEqual([1, 1]);
+        expect((await call(h, { feature: 'analyze', input: { ...ANALYZE, title: 'Nurse next' } })).status).toBe(429);
+    });
+
+    it('gives the slot back in memory too, when Supabase is not set up', async () => {
+        env = { ANTHROPIC_API_KEY: SERVER_KEY, FOJ_RATE_PER_HOUR: '1' };
+        let good = false;
+        const h = createClaudeHandler({
+            fetch: async (url, init) => (good ? mock.fetch(url, init) : new Response(JSON.stringify({ content: [{ type: 'text', text: 'nope' }] }), { status: 200 })),
+            env: () => env,
+            now: () => clock,
+        });
+        const input = { roleKey: 'job-15', title: 'Marketing Manager', risk: 0.53, tasks: [{ name: 'Plan campaigns', aiCapabilityScore: 0.6 }] };
+        expect((await call(h, { feature: 'scenario', input })).status).toBe(502);
+        expect((await call(h, { feature: 'scenario', input })).status).toBe(502);
+        good = true;
+        expect((await call(h, { feature: 'scenario', input })).status).toBe(200);
+        expect((await call(h, { feature: 'scenario', input: { ...input, title: 'Brand Manager' } })).status).toBe(429);
+    });
+
     it('defaults are a sane spend ceiling', () => {
         expect(DEFAULT_LIMITS).toEqual({ perHour: 30, perDay: 100, globalPerDay: 1000 });
     });

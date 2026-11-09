@@ -1,8 +1,9 @@
 {
   "_meta": {
-    "note": "Written by scripts/rank_table.ts from src/data/ai_scores.json and src/data/ai_scores_bls.json. Scores never change; only ranks.",
-    "roles": 786,
+    "note": "Written by scripts/rank_table.ts from src/data/ai_scores.json (first scores, for \"before\") and src/data/ai_scores_bls.json. \"After\" is each title on its SOC entry when there is one, ranked among every scored occupation once.",
+    "occupations": 783,
     "kelley": 50,
+    "onSocEntry": 0,
     "before": {
       "humanP25": 0.6,
       "humanP75": 0.712,
@@ -11,17 +12,18 @@
     },
     "after": {
       "humanP25": 0.65,
-      "humanP75": 0.84,
+      "humanP75": 0.844,
       "riskLower": 0.25,
       "riskUpper": 0.43
     },
-    "labelsChanged": 25,
+    "labelsChanged": 26,
     "bandsChanged": 30
   },
   "rows": [
     {
       "id": "job-15",
       "title": "Marketing Manager",
+      "source": "first-score",
       "risk": 0.53,
       "human": 0.712,
       "oldLabel": "Future-Proof",
@@ -32,6 +34,7 @@
     {
       "id": "job-2",
       "title": "Market Research Analyst",
+      "source": "first-score",
       "risk": 0.61,
       "human": 0.48,
       "oldLabel": "At Risk",
@@ -42,6 +45,7 @@
     {
       "id": "job-3",
       "title": "Business Intelligence Analyst",
+      "source": "first-score",
       "risk": 0.58,
       "human": 0.61,
       "oldLabel": "High",
@@ -52,6 +56,7 @@
     {
       "id": "job-4",
       "title": "Financial Analyst",
+      "source": "first-score",
       "risk": 0.3,
       "human": 0.836,
       "oldLabel": "Future-Proof",
@@ -62,6 +67,7 @@
     {
       "id": "job-5",
       "title": "Financial Manager",
+      "source": "first-score",
       "risk": 0.44,
       "human": 0.75,
       "oldLabel": "Future-Proof",
@@ -72,6 +78,7 @@
     {
       "id": "job-6",
       "title": "Management Consultant",
+      "source": "first-score",
       "risk": 0.56,
       "human": 0.58,
       "oldLabel": "At Risk",
@@ -82,6 +89,7 @@
     {
       "id": "job-7",
       "title": "Supply Chain Manager",
+      "source": "first-score",
       "risk": 0.33,
       "human": 0.75,
       "oldLabel": "Future-Proof",
@@ -92,6 +100,7 @@
     {
       "id": "job-8",
       "title": "Logistics Analyst",
+      "source": "first-score",
       "risk": 0.4,
       "human": 0.7,
       "oldLabel": "High",
@@ -102,6 +111,7 @@
     {
       "id": "job-9",
       "title": "Software Developer",
+      "source": "first-score",
       "risk": 0.55,
       "human": 0.63,
       "oldLabel": "High",
@@ -112,6 +122,7 @@
     {
       "id": "job-10",
       "title": "Operations Research Analyst",
+      "source": "first-score",
       "risk": 0.47,
       "human": 0.76,
       "oldLabel": "Future-Proof",
@@ -122,6 +133,7 @@
     {
       "id": "job-11",
       "title": "Securities & Sales Agent",
+      "source": "first-score",
       "risk": 0.74,
       "human": 0.45,
       "oldLabel": "At Risk",
@@ -132,6 +144,7 @@
     {
       "id": "job-12",
       "title": "Sales Manager",
+      "source": "first-score",
       "risk": 0.47,
       "human": 0.66,
       "oldLabel": "High",
@@ -142,6 +155,7 @@
     {
       "id": "job-13",
       "title": "Accountant & Auditor",
+      "source": "first-score",
       "risk": 0.6,
       "human": 0.63,
       "oldLabel": "High",
@@ -152,6 +166,7 @@
     {
       "id": "job-14",
       "title": "Brand Manager",
+      "source": "first-score",
       "risk": 0.49,
       "human": 0.66,
       "oldLabel": "High",
@@ -162,6 +177,7 @@
     {
       "id": "job-16",
       "title": "Public Relations Manager",
+      "source": "first-score",
       "risk": 0.37,
       "human": 0.79,
       "oldLabel": "Future-Proof",
@@ -172,6 +188,7 @@
     {
       "id": "job-17",
       "title": "Advertising Sales Agent",
+      "source": "first-score",
       "risk": 0.55,
       "human": 0.61,
       "oldLabel": "High",
@@ -182,6 +199,7 @@
     {
       "id": "job-18",
       "title": "Event Coordinator",
+      "source": "first-score",
       "risk": 0.45,
       "human": 0.69,
       "oldLabel": "High",
@@ -192,6 +210,7 @@
     {
       "id": "job-19",
       "title": "Account Executive",
+      "source": "first-score",
       "risk": 0.59,
       "human": 0.5,
       "oldLabel": "At Risk",
@@ -202,6 +221,7 @@
     {
       "id": "job-20",
       "title": "Sales Representative",
+      "source": "first-score",
       "risk": 0.54,
       "human": 0.55,
       "oldLabel": "At Risk",
@@ -212,6 +232,7 @@
     {
       "id": "job-21",
       "title": "Insurance Sales Agent",
+      "source": "first-score",
       "risk": 0.57,
       "human": 0.58,
       "oldLabel": "At Risk",
@@ -222,6 +243,7 @@
     {
       "id": "job-22",
       "title": "Personal Financial Advisor",
+      "source": "first-score",
       "risk": 0.5,
       "human": 0.67,
       "oldLabel": "High",
@@ -232,6 +254,7 @@
     {
       "id": "job-23",
       "title": "Credit Analyst",
+      "source": "first-score",
       "risk": 0.73,
       "human": 0.48,
       "oldLabel": "At Risk",
@@ -242,6 +265,7 @@
     {
       "id": "job-24",
       "title": "Budget Analyst",
+      "source": "first-score",
       "risk": 0.67,
       "human": 0.56,
       "oldLabel": "At Risk",
@@ -252,6 +276,7 @@
     {
       "id": "job-25",
       "title": "Risk Specialist",
+      "source": "first-score",
       "risk": 0.51,
       "human": 0.75,
       "oldLabel": "Future-Proof",
@@ -262,6 +287,7 @@
     {
       "id": "job-26",
       "title": "Insurance Underwriter",
+      "source": "first-score",
       "risk": 0.72,
       "human": 0.41,
       "oldLabel": "At Risk",
@@ -272,6 +298,7 @@
     {
       "id": "job-27",
       "title": "Actuary",
+      "source": "first-score",
       "risk": 0.5,
       "human": 0.7,
       "oldLabel": "High",
@@ -282,6 +309,7 @@
     {
       "id": "job-28",
       "title": "Loan Officer",
+      "source": "first-score",
       "risk": 0.64,
       "human": 0.57,
       "oldLabel": "At Risk",
@@ -292,6 +320,7 @@
     {
       "id": "job-29",
       "title": "Data Scientist",
+      "source": "first-score",
       "risk": 0.7,
       "human": 0.556,
       "oldLabel": "At Risk",
@@ -302,6 +331,7 @@
     {
       "id": "job-30",
       "title": "Statistician",
+      "source": "first-score",
       "risk": 0.56,
       "human": 0.66,
       "oldLabel": "High",
@@ -312,6 +342,7 @@
     {
       "id": "job-31",
       "title": "Computer Systems Analyst",
+      "source": "first-score",
       "risk": 0.54,
       "human": 0.63,
       "oldLabel": "High",
@@ -322,6 +353,7 @@
     {
       "id": "job-32",
       "title": "Cost Estimator",
+      "source": "first-score",
       "risk": 0.52,
       "human": 0.624,
       "oldLabel": "High",
@@ -332,6 +364,7 @@
     {
       "id": "job-33",
       "title": "Compensation Analyst",
+      "source": "first-score",
       "risk": 0.55,
       "human": 0.62,
       "oldLabel": "High",
@@ -342,6 +375,7 @@
     {
       "id": "job-34",
       "title": "Purchasing Manager",
+      "source": "first-score",
       "risk": 0.51,
       "human": 0.73,
       "oldLabel": "Future-Proof",
@@ -352,6 +386,7 @@
     {
       "id": "job-35",
       "title": "Wholesale & Retail Buyer",
+      "source": "first-score",
       "risk": 0.52,
       "human": 0.62,
       "oldLabel": "High",
@@ -362,6 +397,7 @@
     {
       "id": "job-36",
       "title": "Purchasing Agent",
+      "source": "first-score",
       "risk": 0.57,
       "human": 0.67,
       "oldLabel": "High",
@@ -372,6 +408,7 @@
     {
       "id": "job-37",
       "title": "Industrial Production Manager",
+      "source": "first-score",
       "risk": 0.4,
       "human": 0.74,
       "oldLabel": "Future-Proof",
@@ -382,6 +419,7 @@
     {
       "id": "job-38",
       "title": "UX Designer",
+      "source": "first-score",
       "risk": 0.47,
       "human": 0.69,
       "oldLabel": "High",
@@ -392,6 +430,7 @@
     {
       "id": "job-39",
       "title": "IT Manager",
+      "source": "first-score",
       "risk": 0.4,
       "human": 0.77,
       "oldLabel": "Future-Proof",
@@ -402,6 +441,7 @@
     {
       "id": "job-40",
       "title": "Cybersecurity Analyst",
+      "source": "first-score",
       "risk": 0.57,
       "human": 0.62,
       "oldLabel": "High",
@@ -412,6 +452,7 @@
     {
       "id": "job-41",
       "title": "Web Developer",
+      "source": "first-score",
       "risk": 0.66,
       "human": 0.41,
       "oldLabel": "At Risk",
@@ -422,6 +463,7 @@
     {
       "id": "job-42",
       "title": "Database Administrator",
+      "source": "first-score",
       "risk": 0.57,
       "human": 0.61,
       "oldLabel": "High",
@@ -432,16 +474,18 @@
     {
       "id": "job-43",
       "title": "IT Project Manager",
+      "source": "first-score",
       "risk": 0.43,
       "human": 0.84,
       "oldLabel": "Future-Proof",
-      "newLabel": "Future-Proof",
+      "newLabel": "High",
       "oldBand": "safe",
       "newBand": "high"
     },
     {
       "id": "job-44",
       "title": "General Manager",
+      "source": "first-score",
       "risk": 0.54,
       "human": 0.62,
       "oldLabel": "High",
@@ -452,6 +496,7 @@
     {
       "id": "job-45",
       "title": "HR Manager",
+      "source": "first-score",
       "risk": 0.26,
       "human": 0.91,
       "oldLabel": "Future-Proof",
@@ -462,6 +507,7 @@
     {
       "id": "job-46",
       "title": "Project Management Specialist",
+      "source": "first-score",
       "risk": 0.43,
       "human": 0.7,
       "oldLabel": "High",
@@ -472,6 +518,7 @@
     {
       "id": "job-47",
       "title": "Training & Development Specialist",
+      "source": "first-score",
       "risk": 0.56,
       "human": 0.6,
       "oldLabel": "High",
@@ -482,6 +529,7 @@
     {
       "id": "job-48",
       "title": "HR Specialist",
+      "source": "first-score",
       "risk": 0.58,
       "human": 0.61,
       "oldLabel": "High",
@@ -492,6 +540,7 @@
     {
       "id": "job-49",
       "title": "Training & Development Manager",
+      "source": "first-score",
       "risk": 0.53,
       "human": 0.65,
       "oldLabel": "High",
@@ -502,6 +551,7 @@
     {
       "id": "job-50",
       "title": "Compensation & Benefits Manager",
+      "source": "first-score",
       "risk": 0.55,
       "human": 0.634,
       "oldLabel": "High",
@@ -512,6 +562,7 @@
     {
       "id": "job-51",
       "title": "Financial Risk Analyst",
+      "source": "first-score",
       "risk": 0.56,
       "human": 0.72,
       "oldLabel": "Future-Proof",

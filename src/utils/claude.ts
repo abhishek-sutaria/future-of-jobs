@@ -19,13 +19,36 @@ function isRetryable(response: Response): boolean {
     return response.status === 403 && !(response.headers.get('content-type') || '').includes('application/json');
 }
 
-/** POST to the proxy, retrying network errors and retryable statuses. Never retries a limit (429) or a refused request (400). */
+/** The gateway's own error type on a JSON error body, without using up the body. */
+async function gatewayErrorType(response: Response): Promise<string | null> {
+    if (!(response.headers.get('content-type') || '').includes('application/json')) return null;
+    try {
+        const body = (await response.clone().json()) as Partial<GatewayErrorBody> | null;
+        return body?.error?.type ?? null;
+    } catch {
+        return null;
+    }
+}
+
+/**
+ * Claude answered, but the answer failed the gateway's checks: each try is a
+ * paid Claude call, so it is tried again once, never more.
+ */
+const MAX_INVALID_ANSWER_RETRIES = 1;
+
+/**
+ * POST to the proxy, retrying network errors and retryable statuses. Never
+ * retries a limit (429) or a refused request (400), and retries a rejected
+ * Claude answer (502 foj_invalid_answer) only once.
+ */
 async function postToProxy(init: RequestInit): Promise<Response> {
+    let invalidAnswers = 0;
     for (let attempt = 0; ; attempt++) {
         const last = attempt >= RETRY_DELAYS_MS.length;
         try {
             const response = await fetch(CLAUDE_PROXY_ENDPOINT, init);
             if (response.ok || last || !isRetryable(response)) return response;
+            if ((await gatewayErrorType(response)) === 'foj_invalid_answer' && ++invalidAnswers > MAX_INVALID_ANSWER_RETRIES) return response;
         } catch (err) {
             if (last) throw err;
         }

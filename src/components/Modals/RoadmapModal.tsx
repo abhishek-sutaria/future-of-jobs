@@ -8,6 +8,7 @@ import { UI } from '../../config/constants';
 import { saveRoadmap } from '../../lib/userData';
 import { SharedAnswerNote } from '../SharedAnswerNote';
 import { RoadmapReport } from '../reports/RoadmapReport';
+import { percentOf } from '../../utils/scoreRounding';
 
 interface RoadmapModalProps {
     job: Job;
@@ -69,7 +70,7 @@ export default function RoadmapModal({ job, riskTask, targetTask, onClose }: Roa
                     </p>
                     <div className="flex justify-between items-end pt-3 border-t border-white/[0.04]">
                         <span className="text-[10px] text-gray-500 uppercase">Automation Risk</span>
-                        <span className="text-xl font-bold text-red-400 tabular-nums">{(riskTask.aiCapabilityScore * 100).toFixed(0)}%</span>
+                        <span className="text-xl font-bold text-red-400 tabular-nums">{percentOf(riskTask.aiCapabilityScore)}%</span>
                     </div>
                 </div>
 
@@ -97,7 +98,7 @@ export default function RoadmapModal({ job, riskTask, targetTask, onClose }: Roa
                     </div>
                     <div className="flex justify-between items-end pt-3 border-t border-white/[0.04]">
                         <span className="text-[10px] text-gray-500 uppercase">Human Criticality</span>
-                        <span className="text-xl font-bold text-emerald-400 tabular-nums">{(targetTask.humanCriticalityScore * 100).toFixed(0)}%</span>
+                        <span className="text-xl font-bold text-emerald-400 tabular-nums">{percentOf(targetTask.humanCriticalityScore)}%</span>
                     </div>
                 </div>
             </div>

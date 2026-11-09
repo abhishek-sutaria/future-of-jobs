@@ -108,7 +108,7 @@ function featureSet(panel: Element): string[] {
         /Human Resilience/.test(text) && 'Human Resilience',
         /Automation Risk/.test(text) && 'Automation Risk',
         /Human Criticality/.test(text) && 'Human Criticality',
-        /Rank among all [\d,]+ scored roles/.test(text) && 'all-roles rank',
+        /Rank among all [\d,]+ scored occupations/.test(text) && 'all-roles rank',
     ].filter(Boolean) as string[];
 }
 
@@ -160,7 +160,7 @@ describe('one role panel for every scored role', () => {
             claude.callClaudeFeature.mockClear();
             const panel = await open(role);
             expect(featureSet(panel), role.title).toEqual(FULL_SET);
-            expect(panel.querySelector('[data-testid="rank-scope"]')!.textContent).toBe(`Rank among all ${SCORE_COUNTS.roles.toLocaleString('en-US')} scored roles`);
+            expect(panel.querySelector('[data-testid="rank-scope"]')!.textContent).toBe(`Rank among all ${SCORE_COUNTS.ranked.toLocaleString('en-US')} scored occupations`);
             expect(Boolean(panel.querySelector('[data-testid="kelley-label"]')), role.title).toBe(role.kind === 'kelley');
             expect(panel.textContent).toContain('saved, so every visitor sees this same answer');
             // The BLS jobs were analyzed in the test above: reopening one in the

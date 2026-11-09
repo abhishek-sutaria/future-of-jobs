@@ -133,7 +133,7 @@ describe('one map per stage', () => {
                 }
             }
         }
-    });
+    }, 15_000); // checks every pair of jobs on every stage: under load this took over 5 s
 
     it('lands the same job in the same place every time, whatever the year or the jobs array', () => {
         for (const level of LEVELS) {

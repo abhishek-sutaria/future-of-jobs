@@ -239,9 +239,8 @@ export const CHART = {
     RADIAL_GAUGE: {
         SIZE: 120,
         STROKE_WIDTH: 8,
-        /** Thresholds for green→yellow→red */
-        COLOR_LOW: 0.3,
-        COLOR_HIGH: 0.6,
+        // No fixed colour cut-offs: every risk gauge takes the map's band
+        // colour (utils/roleScale bandFor, thirds of all scored occupations).
     },
 } as const;
 

@@ -20,6 +20,7 @@ import type { SavedRole, JobView, UpskillCompletion, StoredArtifact, ArtifactKin
 import { getFunctionalCluster, type FunctionalCluster } from '../config/clusters';
 import { buildRiskScale, riskBand, type RiskBand, type RiskScale } from '../config/theme';
 import { RISK_THRESHOLDS } from '../config/constants';
+import { meanUnit } from './scoreRounding';
 
 // ── Job lookup ───────────────────────────────────────────────────────────
 //
@@ -181,9 +182,8 @@ export function computePortfolioStats(
         savedCount: saved.length,
         exploredCount: views.length,
         trainedCount: completions.length,
-        averageRisk: scored.length > 0
-            ? scored.reduce((sum, j) => sum + j.automationCostIndex, 0) / scored.length
-            : null,
+        // Rounded from whole hundredths (utils/scoreRounding), like every score on screen.
+        averageRisk: scored.length > 0 ? meanUnit(scored.map((j) => j.automationCostIndex)) : null,
     };
 }
 

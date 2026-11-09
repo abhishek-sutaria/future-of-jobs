@@ -3,6 +3,11 @@
  * word for word into public/student-guide.html (and its PDF), which
  * studentGuide.test.ts checks. Coverage wording comes from the data
  * (utils/blsScores), never typed in.
+ *
+ * The printed guide cannot change by itself, so every sentence here is true
+ * both before and after the Kelley SOCs are re-scored (--batch kelley): the
+ * counts it quotes are the same in both, and the task rules and score dates,
+ * which do change, are explained once, in Methodology (Sources), from the data.
  */
 
 import { SCORE_COUNTS, SCORE_COVERAGE } from '../../utils/blsScores';
@@ -10,7 +15,7 @@ import { SCORE_COUNTS, SCORE_COVERAGE } from '../../utils/blsScores';
 const MORE_SCORED = SCORE_COUNTS.bls > 0;
 const SLATE = SCORE_COVERAGE.slate ? ` Slate peaks${SCORE_COVERAGE.slate}` : '';
 const n = (v: number) => v.toLocaleString('en-US');
-const ROLES = n(SCORE_COUNTS.roles);
+const RANKED = n(SCORE_COUNTS.ranked);
 const KELLEY = n(SCORE_COUNTS.kelleyTitles);
 
 export interface Feature {
@@ -53,7 +58,7 @@ export const FEATURES: Feature[] = [
         title: 'Job Detail Panel',
         description:
             'Inside a field, click any peak to open its panel: what the job involves (O*NET), how many people do it (BLS Employment Projections, 2025, self-employed included), median pay (BLS OEWS, payroll employees only), the BLS 2025–35 growth outlook, and its day-to-day O*NET tasks. For every scored role the panel also shows Automation Risk, Human Criticality and Human Resilience, with a risk score on every rated task, plus Roadmap, Scenario, Defend / Build and Save role. Automation Risk is the plain average of those task scores, so you can check it yourself.' +
-            (MORE_SCORED ? ` Human Resilience ranks the role among all ${ROLES} scored roles.` : ''),
+            (MORE_SCORED ? ` Human Resilience ranks the role among all ${RANKED} scored occupations.` : ''),
         tip: 'Two worker counts are normal: pay comes from payroll employees only, while "workers" counts everyone, self-employed included. Scores measure GenAI capability, not guaranteed adoption.',
         color: 'blue',
     },
@@ -69,18 +74,18 @@ export const FEATURES: Feature[] = [
         emoji: '🤖',
         title: 'AI Analysis',
         description:
-            'Open any scored role and Claude explains its published scores right in the panel: the reasoning under each task, a strategic insight for the role, and the likely replacements and human traits it calls for. The analysis adds the explanation; it never changes the numbers. Claude writes it the first time anyone opens the role, and it is saved, so every later visitor sees the same answer. ' +
+            'Open any scored role and Claude explains its published scores right in the panel: the reasoning under each task, a strategic insight for the role, and the likely replacements and human traits it calls for. The analysis adds the explanation; it never changes the numbers. Claude writes it the first time anyone opens the role. When the app\'s answer saving is on, it is saved, so every later visitor sees the same answer. ' +
             (SCORE_COUNTS.unscored > 0
                 ? 'Occupations without published scores have no analysis.'
                 : ''),
-        tip: 'Every student sees the same published scores for a role, dated in the header badge, and the same saved analysis, so you can compare notes. The analysis is where you get the why behind them.',
+        tip: 'Every student sees the same published scores for a role; the AI Scores badge in the header shows the months they were made. With saving on, everyone also sees the same saved analysis, so you can compare notes. The analysis is where you get the why behind them.',
         color: 'red',
     },
     {
         emoji: '🔮',
         title: 'Scenario Planning',
         description:
-            'On any scored role, the Scenario button writes a day in the life of that job in 2030: how the work is shared with AI, and what people in it focus on instead, with the key changes. Like the analysis, it is written once and saved for everyone.',
+            'On any scored role, the Scenario button writes a day in the life of that job in 2030: how the work is shared with AI, and what people in it focus on instead, with the key changes. Like the analysis, it is written once and, when saving is on, saved for everyone.',
         tip: 'Use this to stress-test career choices. Ask the same role under two different scenarios and compare the outlooks.',
         color: 'violet',
     },
@@ -88,7 +93,7 @@ export const FEATURES: Feature[] = [
         emoji: '🗺️',
         title: 'Career Roadmap',
         description:
-            'On any scored role, identifies the highest-risk task and builds a 6-month plan to defend it — own the judgment and oversight around the automatable work — while deepening a human-critical task. Covers skills, tools, and learning resources. Written once per role and saved, so everyone sees the same plan.',
+            'On any scored role, identifies the highest-risk task and builds a 6-month plan to defend it — own the judgment and oversight around the automatable work — while deepening a human-critical task. Covers skills, tools, and learning resources. Written once per role and, when saving is on, saved so everyone sees the same plan.',
         tip: 'Open it with the Roadmap button on the role panel. Defend = supervise the high-risk task; Build = deepen the human-critical one.',
         color: 'orange',
     },
@@ -112,7 +117,7 @@ export const FEATURES: Feature[] = [
         emoji: '📊',
         title: 'Job Security Index',
         description:
-            `The colour legend at the bottom right of the screen maps the scored roles into three bands: High Automation Risk (red), Hybrid/Augmented (amber), and Safe Human-Centric (green). Bands are relative, graded on a curve across all ${ROLES} scored roles, a third in each.` + (SLATE || ' Slate peaks are occupations with no AI scores yet.'),
+            `The colour legend at the bottom right of the screen maps the scored roles into three bands: High Automation Risk (red), Hybrid/Augmented (amber), and Safe Human-Centric (green). Bands are relative, graded on a curve across all ${RANKED} scored occupations (each BLS code once), a third in each.` + (SLATE || ' Slate peaks are occupations with no AI scores yet.'),
         tip: 'A "green" role here means it is safer than most others in this dataset, not that it is completely immune to automation.',
         color: 'green',
     },
@@ -120,8 +125,8 @@ export const FEATURES: Feature[] = [
         emoji: '📚',
         title: 'Data Sources',
         description:
-            'Workers in each occupation and each field come from the BLS Employment Projections 2025–35, which count everyone, self-employed included; growth outlooks come from the same projections. Pay comes from the BLS Occupational Employment & Wage Statistics (OEWS, May 2025), which covers payroll employees only. Task descriptions are from O*NET 30.1. AI risk scores are Claude\'s ratings of each O*NET task for the ' + KELLEY + ' Kelley roles' + (MORE_SCORED ? ` and ${n(SCORE_COUNTS.bls)} other occupations` : '') + ', published with the app, so every student sees the same numbers.' + (MORE_SCORED
-                ? ' Each occupation is scored on five of its O*NET tasks: its own first five, or, where O*NET splits the job into smaller codes, one task from each in turn.' + (SCORE_COVERAGE.unscoredReason ? ` ${SCORE_COVERAGE.unscoredReason}` : '')
+            'Workers in each occupation and each field come from the BLS Employment Projections 2025–35, which count everyone, self-employed included; growth outlooks come from the same projections. Pay comes from the BLS Occupational Employment & Wage Statistics (OEWS, May 2025), which covers payroll employees only. Task descriptions are from O*NET 30.1. AI risk scores are Claude\'s ratings of the tasks of ' + (MORE_SCORED ? `${n(SCORE_COUNTS.scored)} occupations, the ${KELLEY} Kelley roles among them` : `the ${KELLEY} Kelley roles`) + ', published with the app, so every student sees the same numbers. Sources explains which tasks each job is scored on and when.' + (MORE_SCORED
+                ? (SCORE_COVERAGE.unscoredReason ? ` ${SCORE_COVERAGE.unscoredReason}` : '')
                 : ' Scores for the other occupations are coming soon.'),
         tip: 'Click "Sources" at the bottom of the screen to read the full sourcing and calculation methodology.',
         color: 'gray',

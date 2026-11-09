@@ -1,11 +1,12 @@
 /**
- * One scale for every scored role (utils/roleScale, utils/allRoleScale).
+ * One scale for every scored occupation (utils/roleScale, utils/allRoleScale).
  *
  * Checked against the published files read straight from disk, not through the
- * app: who is counted (each Kelley title once, each other scored occupation
- * once, no BLS code twice), the cut-offs, the 50 Kelley roles' new labels and
- * colour bands (fixture written by scripts/rank_table.ts), and that no score
- * VALUE moved: only ranks.
+ * app: who is counted (each scored BLS occupation once: the three SOCs that
+ * hold two Kelley titles count once), the cut-offs, the 50 Kelley roles' new
+ * labels and colour bands (fixture written by scripts/rank_table.ts, which
+ * --batch kelley re-runs), and that no score VALUE moved: only ranks. Holds
+ * before and after --batch kelley.
  */
 
 import { describe, it, expect } from 'vitest';
@@ -16,9 +17,9 @@ import { MAP_TITLE_TO_SOC } from '../utils/onet';
 import { buildWorldScene } from '../components/world/worldScene';
 import { RISK_BAND_COLORS, buildRiskScale, riskBand } from '../config/theme';
 import { PERCENTILES, RESILIENCE_LABELS } from '../config/constants';
-import { BLS_SCORE_POINTS, kelleyScorePoints, roleScaleFor } from '../utils/allRoleScale';
+import { BLS_SCORE_POINTS, kelleySocPoints, roleScaleFor } from '../utils/allRoleScale';
 import { bandFor, buildRoleScale, rankScopeText, resilienceLabelFor, roundHuman, volatilityLabelFor } from '../utils/roleScale';
-import { SCORE_COUNTS } from '../utils/blsScores';
+import { KELLEY_SOC_SCORES, SCORE_COUNTS } from '../utils/blsScores';
 import { blsSummaryJob } from '../utils/blsRoleJob';
 import kelley50 from './fixtures/kelley50_published.json';
 import rankChange from './fixtures/kelley50_rank_change.json';
@@ -38,25 +39,37 @@ const scale = roleScaleFor(jobs);
 const hundredths = (xs: number[]) => xs.reduce((s, x) => s + Math.round(x * 100), 0);
 
 describe('who is counted', () => {
-    it('each Kelley title once and each other scored occupation once: no key and no BLS code twice', () => {
-        const points = [...kelleyScorePoints(jobs), ...BLS_SCORE_POINTS];
+    it('each scored occupation once: the Kelley SOCs from their titles, every other from the file; no BLS code twice', () => {
+        const points = [...kelleySocPoints(jobs), ...BLS_SCORE_POINTS];
         expect(new Set(points.map((p) => p.key)).size).toBe(points.length);
         const kelleySocs = new Set(jobs.map((j) => MAP_TITLE_TO_SOC[j.title]));
         for (const p of BLS_SCORE_POINTS) expect(kelleySocs.has(p.key.slice(4)), p.key).toBe(false);
-        expect(points).toHaveLength(Object.keys(KELLEY_FILE.scores).length + Object.keys(BLS_FILE.scores).length);
+        expect(kelleySocPoints(jobs)).toHaveLength(kelleySocs.size);
+        const nonKelley = Object.keys(BLS_FILE.scores).filter((soc) => !kelleySocs.has(soc));
+        expect(points).toHaveLength(kelleySocs.size + nonKelley.length);
         expect(scale.count).toBe(points.length);
-        expect(scale.count).toBe(SCORE_COUNTS.roles);
-        expect(SCORE_COUNTS.roles - SCORE_COUNTS.scored).toBe(SCORE_COUNTS.kelleyTitles - SCORE_COUNTS.kelleySocs);
+        expect(scale.count).toBe(SCORE_COUNTS.ranked);
+        expect(SCORE_COUNTS.ranked).toBe(SCORE_COUNTS.scored);
+        expect(SCORE_COUNTS.ranked).toBe(783);
     });
 
-    it('the Kelley titles that share a BLS code each have their own tasks and scores, so none is a duplicate', () => {
+    it('titles that share a BLS code count once, at the mean of their numbers (one SOC entry gives both the same)', () => {
         const bySoc = new Map<string, typeof jobs>();
         for (const j of jobs) bySoc.set(MAP_TITLE_TO_SOC[j.title], [...(bySoc.get(MAP_TITLE_TO_SOC[j.title]) ?? []), j]);
-        const shared = [...bySoc.values()].filter((list) => list.length > 1);
+        const shared = [...bySoc].filter(([, list]) => list.length > 1);
         expect(shared).toHaveLength(SCORE_COUNTS.sharedKelleySocs);
-        for (const list of shared) {
-            const [a, b] = list;
-            expect(a.tasks.map((t) => t.name), a.title).not.toEqual(b.tasks.map((t) => t.name));
+        const pointOf = new Map(kelleySocPoints(jobs).map((p) => [p.key.slice(4), p]));
+        for (const [soc, [a, b]] of shared) {
+            const p = pointOf.get(soc)!;
+            expect(p.risk, soc).toBeCloseTo((a.automationCostIndex + b.automationCostIndex) / 2, 12);
+            if (KELLEY_SOC_SCORES.has(soc)) {
+                // On the SOC's entry: identical tasks and scores, so the point is those numbers.
+                expect(a.tasks, soc).toEqual(b.tasks);
+                expect(p.risk, soc).toBe(KELLEY_SOC_SCORES.get(soc)!.automationCostIndex);
+            } else {
+                // Still on their first scores: each title its own task list.
+                expect(a.tasks.map((t) => t.name), a.title).not.toEqual(b.tasks.map((t) => t.name));
+            }
         }
     });
 });
@@ -64,26 +77,47 @@ describe('who is counted', () => {
 describe('the cut-offs, recomputed from the raw files', () => {
     const risks: number[] = [];
     const humans: number[] = [];
-    for (const file of [KELLEY_FILE, BLS_FILE]) {
-        for (const e of Object.values(file.scores)) {
-            const ai = hundredths(e.tasks.map((t) => t.aiCapabilityScore));
-            risks.push(Math.round(ai / e.tasks.length) / 100);
-            humans.push(hundredths(e.tasks.map((t) => t.humanCriticalityScore)) / e.tasks.length / 100);
+    // One point per scored SOC: a Kelley SOC from its entry in ai_scores_bls.json
+    // when there is one, else the mean of its titles' first scores (ai_scores.json).
+    const halvesUp = (sum: number, n: number) => Math.floor((2 * sum + n) / (2 * n)) / 100;
+    const titleSocs = new Map<string, string[]>();
+    for (const j of jobs) titleSocs.set(MAP_TITLE_TO_SOC[j.title], [...(titleSocs.get(MAP_TITLE_TO_SOC[j.title]) ?? []), j.id]);
+    for (const [soc, e] of Object.entries(BLS_FILE.scores)) {
+        if (titleSocs.has(soc)) continue;
+        risks.push(halvesUp(hundredths(e.tasks.map((t) => t.aiCapabilityScore)), e.tasks.length));
+        humans.push(hundredths(e.tasks.map((t) => t.humanCriticalityScore)) / e.tasks.length / 100);
+    }
+    for (const [soc, ids] of titleSocs) {
+        const entry = BLS_FILE.scores[soc];
+        if (entry) {
+            risks.push(halvesUp(hundredths(entry.tasks.map((t) => t.aiCapabilityScore)), entry.tasks.length));
+            humans.push(hundredths(entry.tasks.map((t) => t.humanCriticalityScore)) / entry.tasks.length / 100);
+            continue;
         }
+        const r = ids.map((id) => halvesUp(hundredths(KELLEY_FILE.scores[id].tasks.map((t) => t.aiCapabilityScore)), KELLEY_FILE.scores[id].tasks.length));
+        const h = ids.map((id) => hundredths(KELLEY_FILE.scores[id].tasks.map((t) => t.humanCriticalityScore)) / KELLEY_FILE.scores[id].tasks.length / 100);
+        risks.push(r.reduce((a, b) => a + b, 0) / r.length);
+        humans.push(h.reduce((a, b) => a + b, 0) / h.length);
     }
     risks.sort((a, b) => a - b);
     humans.sort((a, b) => a - b);
     const at = (arr: number[], p: number) => arr[Math.min(Math.floor(p * arr.length), arr.length - 1)];
 
-    it('Human Resilience: p25 and p75 of every scored role', () => {
-        expect(scale.humanP25).toBeCloseTo(at(humans, PERCENTILES.LOW), 10);
-        expect(scale.humanP75).toBeCloseTo(at(humans, PERCENTILES.HIGH), 10);
+    it('one point per scored occupation', () => {
+        expect(risks).toHaveLength(SCORE_COUNTS.ranked);
     });
 
-    it('colour bands: terciles of every scored role', () => {
+    it('Human Resilience: p25 and p75 of every scored occupation', () => {
+        expect(scale.humanP25).toBeCloseTo(at(humans, PERCENTILES.LOW), 10);
+        expect(scale.humanP75).toBeCloseTo(at(humans, PERCENTILES.HIGH), 10);
+        expect(rankChange._meta.after.humanP25).toBeCloseTo(scale.humanP25, 10);
+        expect(rankChange._meta.after.humanP75).toBeCloseTo(scale.humanP75, 10);
+    });
+
+    it('colour bands: terciles of every scored occupation', () => {
         const independent = buildRiskScale(risks);
-        expect(scale.risk.lower).toBe(independent.lower);
-        expect(scale.risk.upper).toBe(independent.upper);
+        expect(scale.risk.lower).toBeCloseTo(independent.lower, 12);
+        expect(scale.risk.upper).toBeCloseTo(independent.upper, 12);
         expect(rankChange._meta.after.riskLower).toBe(scale.risk.lower);
         expect(rankChange._meta.after.riskUpper).toBe(scale.risk.upper);
     });
@@ -103,11 +137,20 @@ describe('the cut-offs, recomputed from the raw files', () => {
 });
 
 describe('the 50 Kelley roles: same scores, ranked among all', () => {
-    it('the before columns are the labels the app published, ranked among the 50', () => {
-        const published = new Map(kelley50.roles.map((r) => [r.id, r.humanResilienceLabel]));
-        for (const r of rankChange.rows) expect(r.oldLabel, r.title).toBe(published.get(r.id));
+    it('the before columns are the labels the app published, ranked among the 50 on their first scores', () => {
+        const published = new Map(kelley50.roles.map((r) => [r.id, r]));
+        for (const r of rankChange.rows) expect(r.oldLabel, r.title).toBe(published.get(r.id)!.humanResilienceLabel);
         const oldScale = buildRiskScale(kelley50.roles.map((r) => r.automationCostIndex));
-        for (const r of rankChange.rows) expect(r.oldBand, r.title).toBe(riskBand(r.risk, oldScale));
+        for (const r of rankChange.rows) expect(r.oldBand, r.title).toBe(riskBand(published.get(r.id)!.automationCostIndex, oldScale));
+    });
+
+    it('the fixture is for the files as they are: each row on its SOC entry exactly when the app is', () => {
+        expect(rankChange._meta.occupations).toBe(scale.count);
+        for (const r of rankChange.rows) {
+            const j = jobs.find((x) => x.id === r.id)!;
+            expect(r.source, `${r.title}: re-run npx tsx scripts/rank_table.ts`).toBe(KELLEY_SOC_SCORES.has(MAP_TITLE_TO_SOC[j.title]) ? 'soc-entry' : 'first-score');
+        }
+        expect(rankChange._meta.onSocEntry).toBe(rankChange.rows.filter((r) => r.source === 'soc-entry').length);
     });
 
     it('score values are unchanged; labels and bands are the after columns', () => {
@@ -152,7 +195,7 @@ describe('roleScale rules', () => {
     });
 
     it('rank text gives the count from the data', () => {
-        expect(rankScopeText(scale)).toBe(`among all ${SCORE_COUNTS.roles.toLocaleString('en-US')} scored roles`);
+        expect(rankScopeText(scale)).toBe(`among all ${SCORE_COUNTS.ranked.toLocaleString('en-US')} scored occupations`);
     });
 
     it('a dashboard summary of a scored occupation carries the same label as its full panel would', () => {
