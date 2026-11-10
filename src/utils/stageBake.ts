@@ -26,7 +26,7 @@ export const STAGE_PEAK_HEIGHT = SHADER.HEIGHT_CLAMP_MAX * SHADER.HEIGHT_SCALE;
 const BARE_GROUND = [0.05, 0.1, 0.2] as const;
 /** Below this summed weight the live shader falls back to bare ground. */
 const MIN_COLOR_WEIGHT = 0.001;
-/** Emphasis of a non-Kelley job under the Kelley filter, as on the world map. */
+/** Emphasis of a job the Kelley or school filter leaves out, as on the world map. */
 export const STAGE_DIM_EMPHASIS = 0.22;
 /** A hill's height is negligible this many sigmas out. */
 const HEIGHT_REACH = 3.6;
@@ -57,7 +57,7 @@ export interface StageBake {
     rows: number;
     /** Height at 2025 then 2035, in world units, for each texel. Row 0 is the near (+z) edge, as the mesh's v = 0. */
     heights: Float32Array;
-    /** Blended colour (RGB) and Kelley emphasis (A), 0 to 255, for each texel. */
+    /** Blended colour (RGB) and filter emphasis (A: Kelley and/or school filter), 0 to 255, for each texel. */
     colors: Uint8Array;
 }
 
@@ -140,7 +140,11 @@ function bakeLayer(jobs: readonly StageJob[], bake: Omit<StageBake, 'heights' | 
     for (let i = 0; i < sum.length; i++) out[i * 2 + offset] = blend === 'sum' ? sum[i] : sum[i] ** (1 / power);
 }
 
-function bakeColors(jobs: readonly StageJob[], bake: Omit<StageBake, 'heights' | 'colors'>, out: Uint8Array): void {
+/** Which jobs keep full colour while a filter is on. Before the school filter it was always the Kelley roles. */
+export type StageEmphasis = (job: StageJob) => boolean;
+const kelleyEmphasis: StageEmphasis = (job) => job.kelley;
+
+function bakeColors(jobs: readonly StageJob[], bake: Omit<StageBake, 'heights' | 'colors'>, out: Uint8Array, emphasized: StageEmphasis): void {
     const { rect, cols, rows } = bake;
     const count = cols * rows;
     const r = new Float32Array(count);
@@ -162,7 +166,7 @@ function bakeColors(jobs: readonly StageJob[], bake: Omit<StageBake, 'heights' |
         falloff(job.x, x0, x1, atX, twoVariance, across);
         falloff(job.z, y0, y1, atZ, twoVariance, along);
         const [cr, cg, cb] = job.color;
-        const shine = job.kelley ? 1 : STAGE_DIM_EMPHASIS;
+        const shine = emphasized(job) ? 1 : STAGE_DIM_EMPHASIS;
         for (let y = y0; y <= y1; y++) {
             const row = y * cols;
             for (let x = x0; x <= x1; x++) {
@@ -208,6 +212,7 @@ export function bakeStage(
     blend: StageBlend,
     power: number,
     edgeBand = 0,
+    emphasized: StageEmphasis = kelleyEmphasis,
 ): StageBake {
     const shape = { rect: stage.outline, cols: segments.x + 1, rows: segments.z + 1 };
     const heights = new Float32Array(shape.cols * shape.rows * 2);
@@ -226,8 +231,17 @@ export function bakeStage(
             }
         }
     }
-    bakeColors(stage.jobs, shape, colors);
+    bakeColors(stage.jobs, shape, colors, emphasized);
     return { ...shape, heights, colors };
+}
+
+/**
+ * Re-bakes only the colour texture's emphasis (and colour, which does not
+ * change) in place, for a filter that changed while the stage is up. Heights
+ * are untouched, so nothing moves.
+ */
+export function rebakeStageColors(stage: Pick<Stage, 'jobs'>, bake: StageBake, emphasized: StageEmphasis): void {
+    bakeColors(stage.jobs, bake, bake.colors, emphasized);
 }
 
 /** Two 16-bit heights in the four 8-bit channels of each texel, for a GPU that cannot read float textures in a vertex shader. */

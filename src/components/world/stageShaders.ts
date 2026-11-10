@@ -65,7 +65,7 @@ export const stageFragmentShader = /* glsl */ `
 
   uniform vec2 uMouse;     // stage position of the pointer
   uniform float uFade;     // the whole surface, for handing over between levels
-  uniform float uKelley;   // 0 = every job at full colour, 1 = Kelley filter on
+  uniform float uKelley;   // 0 = every job at full colour, 1 = a filter (Kelley or IU school) on
   uniform vec4 uOutline;   // the stage's edge, x0, z0, x1, z1
   uniform vec4 uTiles[${MAX_STAGE_TILES}]; // field tiles or minor-group blocks; unused ones far away
   uniform float uTileLine; // how strongly tile borders draw: 1 for fields, fainter for minor groups

@@ -48,6 +48,7 @@ export const Landscape: React.FC = () => {
     const focusedFamily = useWorldStore((s) => s.focusedFamily);
     const drawnStage = useWorldStore((s) => s.drawnStage);
     const kelleyOnly = useWorldStore((s) => s.kelleyOnly);
+    const school = useWorldStore((s) => s.school);
     const focusRequestId = useWorldStore((s) => s.focusRequestId);
     const scene = useWorldScene();
     const setIsDefaultView = useStore((s) => s.setIsDefaultView);
@@ -115,8 +116,8 @@ export const Landscape: React.FC = () => {
     // map view, selected job, route, or canvas remount changes — those live
     // outside OrbitControls. Without route/canvasKey, a phone that idled then
     // opened Dashboard (or recovered from context loss) can return to a Canvas
-    // still stuck on frameloop:'never'. A level change or the Kelley filter
-    // must wake it too, or the camera and the fades would freeze partway. A
+    // still stuck on frameloop:'never'. A level change or the Kelley or school
+    // filter must wake it too, or the camera and the fades would freeze partway. A
     // repeat request for the same level changes neither, so the request id
     // wakes it. A stage going up or down is its own moment: the hills start
     // rising only once the world has gone.
@@ -125,7 +126,7 @@ export const Landscape: React.FC = () => {
         return () => {
             if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
         };
-    }, [bumpInteraction, year, mapView, selectedJob, route, canvasKey, selectedOccupationSoc, focusedContinent, focusedFamily, drawnStage, kelleyOnly, focusRequestId]);
+    }, [bumpInteraction, year, mapView, selectedJob, route, canvasKey, selectedOccupationSoc, focusedContinent, focusedFamily, drawnStage, kelleyOnly, school, focusRequestId]);
 
     const handleContextLost = useCallback((event: Event) => {
         // Without this, the browser assumes the page doesn't want to recover

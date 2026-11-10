@@ -1,0 +1,53 @@
+{
+  "_about": "Every input of scripts/build_iu_schools.ts. The build checks each committed file against its sha256 and stops on a mismatch. Re-download a file from its URL to refresh it, then update its sha256 and retrieved date and review program_cip_rules.json.",
+  "files": [
+    {
+      "path": "raw/iu_degrees_bloomington.json",
+      "title": "IU degree finder data, IU Bloomington (all 1,133 programs, each with its school or schools)",
+      "publisher": "Indiana University",
+      "url": "https://exdd-academics.webapps.iu.edu/api/public/v1/endpoint/degrees?campus=bloomington&perPage=2000",
+      "seenAt": "https://bloomington.iu.edu/academics/degrees-majors/programs.html (Browse All Programs loads this data)",
+      "retrieved": "2026-11-09",
+      "sha256": "0568d53c51308e26dd8892689a9a1ee421b215576f155201541411f94ea51576"
+    },
+    {
+      "path": "raw/ipeds_c2024_a_unitid_151351.csv",
+      "title": "IPEDS Completions 2023-24 (C2024_A), the header row and every row for IU Bloomington (UNITID 151351), bytes unchanged",
+      "publisher": "NCES, IPEDS Data Center",
+      "url": "https://nces.ed.gov/ipeds/datacenter/data/C2024_A.zip",
+      "zipSha256": "03234cc27fe4e7eb835a66d4f37aaec11bdac8dfa278f971584e1b20d03e1159",
+      "member": "C2024_a.csv",
+      "memberSha256": "a7f6d0f03093eef933ea5a31474ca1289cb97c73062b7cc1245fc3cabaff7c61",
+      "retrieved": "2026-11-09",
+      "sha256": "8d1fbe7128444d88ac2f10fa66448bd78e00f1991b515a43d8f184447a0640e1"
+    },
+    {
+      "path": "raw/CIP2020_SOC2018_Crosswalk.xlsx",
+      "title": "CIP 2020 to SOC 2018 Crosswalk",
+      "publisher": "NCES and BLS",
+      "url": "https://nces.ed.gov/ipeds/cipcode/Files/CIP2020_SOC2018_Crosswalk.xlsx",
+      "retrieved": "2026-11-09",
+      "sha256": "ba3d59a191b9d977a5c457a66b9348c4f2f7963aafacf72c0b80113b46bf0ab8"
+    }
+  ],
+  "pages": [
+    {
+      "title": "IU Bloomington schools and colleges (the list in schools.json)",
+      "url": "https://bloomington.iu.edu/academics/schools/index.html",
+      "retrieved": "2026-11-09",
+      "sha256": "26867ef4a9950b38a6c858b1f026881eb0f88049456de2e6123d90277f9811e6"
+    },
+    {
+      "title": "IU Economics, M.S. degree: 'classified as STEM (CIP Code 45.0603)'",
+      "url": "https://economics.indiana.edu/student-portal/graduate/ms-degree.html",
+      "retrieved": "2026-11-09",
+      "sha256": "215cdf5a8398088dfdb9596f3a3cd106caea4359002a865825cdc66bf25ccf21"
+    },
+    {
+      "title": "IU Economics news, 2020-10-23: all graduate programs, Ph.D. and M.S., under CIP 45.0603",
+      "url": "https://economics.indiana.edu/news-events/news/2020-10-23-01.html",
+      "retrieved": "2026-11-09",
+      "sha256": "879a846c556ec75e56df55ae657afca75e282db95903cda1362ef2507055156d"
+    }
+  ]
+}

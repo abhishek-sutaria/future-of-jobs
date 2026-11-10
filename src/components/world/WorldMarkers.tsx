@@ -3,6 +3,7 @@ import { useFrame, useThree } from '@react-three/fiber';
 import { BufferAttribute, BufferGeometry, Plane, Raycaster, Vector2, Vector3 } from 'three';
 import { Html } from '@react-three/drei';
 import { useStore } from '../../store';
+import { highlightKey, highlightOn, isHighlighted } from '../../utils/iuSchools';
 import { useWorldStore } from '../../worldStore';
 import { YEAR_MIN, YEAR_MAX } from '../../config/constants';
 import { CONTINENT_DISPLAY_NAMES } from '../../config/continents';
@@ -95,6 +96,9 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
     const focusedContinent = useWorldStore((s) => s.focusedContinent);
     const focusedFamily = useWorldStore((s) => s.focusedFamily);
     const kelleyOnly = useWorldStore((s) => s.kelleyOnly);
+    const school = useWorldStore((s) => s.school);
+    const highlight = useMemo(() => ({ kelleyOnly, school }), [kelleyOnly, school]);
+    const filterOn = highlightOn(highlight);
     const labels = useWorldStore((s) => s.labels);
     const drawnStage = useWorldStore((s) => s.drawnStage);
     // The level the labels on screen belong to: it changes with them, so the
@@ -110,9 +114,9 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
     const stage = shown.drawnStage?.key === stageKey(shown) ? shown.drawnStage : null;
 
     // Hover and tap belong to the view they happened in: zooming, changing
-    // level or toggling the Kelley filter drops them, and orbiting hides the
-    // hover card. Derived during render rather than reset from an effect.
-    const viewKey = `${focused ?? ''}|${family ?? ''}|${kelleyOnly}|${shown.labels.level}`;
+    // level or changing the Kelley or school filter drops them, and orbiting
+    // hides the hover card. Derived during render rather than reset from an effect.
+    const viewKey = `${focused ?? ''}|${family ?? ''}|${highlightKey(highlight)}|${shown.labels.level}`;
     const viewKeyRef = useRef(viewKey);
     const [hover, setHover] = useState<{ id: string; view: string } | null>(null);
     const [tap, setTap] = useState<{ key: string; view: string } | null>(null);
@@ -185,7 +189,7 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
             window.removeEventListener('resize', measure);
             window.removeEventListener('orientationchange', measure);
         };
-    }, [focused, family, kelleyOnly]);
+    }, [focused, family, kelleyOnly, school]);
 
     // Nothing stays lit from the level before.
     useEffect(() => {
@@ -212,26 +216,32 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
     }, []);
 
     // Peaks that can be hovered or tapped right now. A family has none: it offers
-    // its fields, and job roles only appear once one is open.
+    // its fields, and job roles only appear once one is open. A school shows
+    // only its jobs, so the rest of a field cannot be opened while one is picked.
     const tappablePeaks = useMemo<ScenePeak[]>(() => {
-        if (stage) return stage.kind === 'field' ? stage.jobs.map((j) => scene.peakByKey.get(j.key)!) : [];
-        if (levelKind(shown) === 'world' && shown.labels.jobs && kelleyOnly) return scene.peaks.filter((p) => p.entry.kind === 'kelley');
-        return [];
-    }, [scene, stage, shown, kelleyOnly]);
-
-    // Which peaks carry a label without being hovered.
-    const labelledPeakKeys = useMemo<Set<string>>(() => {
-        if (stage?.kind === 'field' && !kelleyOnly) {
-            return new Set(
-                [...tappablePeaks]
-                    .sort((a, b) => (b.entry.ep2025 ?? 0) - (a.entry.ep2025 ?? 0))
-                    .slice(0, STAGE_LABEL_CAP)
-                    .map((p) => p.entry.key),
-            );
+        if (stage) {
+            if (stage.kind !== 'field') return [];
+            const peaks = stage.jobs.map((j) => scene.peakByKey.get(j.key)!);
+            return school ? peaks.filter((p) => isHighlighted(highlight, p.entry)) : peaks;
         }
+        if (levelKind(shown) === 'world' && shown.labels.jobs && filterOn) return scene.peaks.filter((p) => isHighlighted(highlight, p.entry));
+        return [];
+    }, [scene, stage, shown, highlight, school, filterOn]);
+
+    // Which peaks carry a label without being hovered: the largest jobs, or with
+    // a filter on, the jobs it keeps (a school's largest first, as many as fit).
+    const labelledPeakKeys = useMemo<Set<string>>(() => {
+        const largest = (peaks: ScenePeak[]) => new Set(
+            [...peaks]
+                .sort((a, b) => (b.entry.ep2025 ?? 0) - (a.entry.ep2025 ?? 0))
+                .slice(0, STAGE_LABEL_CAP)
+                .map((p) => p.entry.key),
+        );
+        if (stage?.kind === 'field' && !filterOn) return largest(tappablePeaks);
+        if (school) return largest(tappablePeaks.filter((p) => isHighlighted(highlight, p.entry)));
         if (kelleyOnly) return new Set(tappablePeaks.filter((p) => p.entry.kind === 'kelley').map((p) => p.entry.key));
         return new Set();
-    }, [stage, kelleyOnly, tappablePeaks]);
+    }, [stage, kelleyOnly, school, highlight, filterOn, tappablePeaks]);
 
     const items = useMemo<MarkerItem[]>(() => {
         if (mapView !== 'globe') return [];
@@ -260,8 +270,8 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
             if (shown.labels.families) for (const f of scene.layout.families) out.push(familyMarker(f));
         }
         // Earlier items win collisions.
-        return sortMarkers(out, (m) => m.id === hoveredId || m.id === tappedKey, kelleyOnly);
-    }, [mapView, tappablePeaks, labelledPeakKeys, hoveredId, tappedKey, shown, stage, scene, year, kelleyOnly]);
+        return sortMarkers(out, (m) => m.id === hoveredId || m.id === tappedKey, filterOn);
+    }, [mapView, tappablePeaks, labelledPeakKeys, hoveredId, tappedKey, shown, stage, scene, year, filterOn]);
 
     const regionWeights = useRef<Map<string, number>>(new Map());
 

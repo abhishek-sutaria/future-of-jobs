@@ -6,6 +6,7 @@ import { loadBlsFieldScores } from './utils/blsScores';
 import { isChunkLoadError, reloadForNewBuild } from './utils/staleBuild';
 import type { Stage } from './utils/stageLayout';
 import type { RoleEntry } from './utils/roles';
+import type { SchoolFilter } from './utils/iuSchools';
 import { familyLevel, fieldLevel, levelKind, levelUp, WORLD_LEVEL, type WorldLevel } from './utils/worldLevel';
 
 /**
@@ -42,6 +43,22 @@ interface WorldState extends WorldLevel {
     /** Highlight only the 50 Kelley roles (their peaks, labels and colours). */
     kelleyOnly: boolean;
     setKelleyOnly: (on: boolean) => void;
+
+    /**
+     * The hidden IU school filter (components/SchoolPicker): shown by Cmd+S on
+     * a Mac, Ctrl+S elsewhere, or a long press on the field picker. Never saved
+     * anywhere, so a reload starts hidden with no school.
+     */
+    schoolsRevealed: boolean;
+    /** The school whose jobs stand out; null for none. Works with the field (level) and the Kelley filter. */
+    school: SchoolFilter | null;
+    setSchool: (school: SchoolFilter | null) => void;
+    /** Show the school picker, or hide it and drop its school. */
+    toggleSchools: () => void;
+    hideSchools: () => void;
+    /** The field picker is on screen (WorldBar mounted), so the shortcut has somewhere to open. */
+    fieldPickerMounted: boolean;
+    setFieldPickerMounted: (on: boolean) => void;
 
     /**
      * SOC of the open BLS occupation panel (any occupation that is not a Kelley
@@ -103,6 +120,14 @@ export const useWorldStore = create<WorldState>((set, get) => ({
             ? { kelleyOnly: on, kelleyZoom: true, focusRequestId: s.focusRequestId + 1 }
             : { kelleyOnly: on }
     )),
+
+    schoolsRevealed: false,
+    school: null,
+    setSchool: (school) => set({ school }),
+    toggleSchools: () => (get().schoolsRevealed ? get().hideSchools() : set({ schoolsRevealed: true })),
+    hideSchools: () => set({ schoolsRevealed: false, school: null }),
+    fieldPickerMounted: false,
+    setFieldPickerMounted: (on) => set({ fieldPickerMounted: on }),
 
     selectedOccupationSoc: null,
     closeOccupation: () => set({ selectedOccupationSoc: null }),

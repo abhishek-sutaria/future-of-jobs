@@ -3,7 +3,8 @@ import { useFrame } from '@react-three/fiber';
 import { DoubleSide, Group, Mesh, PlaneGeometry, ShaderMaterial, Vector2, Vector4 } from 'three';
 import { useStore } from '../../store';
 import { useWorldStore } from '../../worldStore';
-import { bakeStage, STAGE_BLEND, STAGE_BLEND_POWER, stageSegments, yearMix } from '../../utils/stageBake';
+import { bakeStage, rebakeStageColors, STAGE_BLEND, STAGE_BLEND_POWER, stageSegments, yearMix, type StageBake, type StageEmphasis } from '../../utils/stageBake';
+import { highlightKey, highlightOn, isHighlighted, type Highlight } from '../../utils/iuSchools';
 import { buildStage, stageEdgeBand, stageKey, type Stage } from '../../utils/stageLayout';
 import { composeMaps, invertMap, mapX, mapZ } from '../../utils/stageMap';
 import { WORLD_LAYER } from '../../utils/stageTransition';
@@ -16,7 +17,7 @@ import { prefersReducedMotion } from './worldCamera';
 import { worldPointer } from './worldPointer';
 import { layerOf, stageToDisplay, worldView } from './worldView';
 
-/** The Kelley filter's dimming fades in at this rate per second. */
+/** The Kelley or school filter's dimming fades in at this rate per second. */
 const KELLEY_RATE = 9;
 /** A layer this far in is fully drawn: labels and input move over to its stage. */
 const DRAWN = 0.999;
@@ -25,6 +26,9 @@ const ORDER = { opaque: 1, fading: 2 } as const;
 
 interface Slot {
     stage: Stage;
+    bake: StageBake;
+    /** highlightKey() of the filter its colours were baked for. */
+    baked: string;
     textures: StageTextures;
     material: ShaderMaterial;
     geometry: PlaneGeometry;
@@ -35,9 +39,12 @@ interface Slot {
 const levelOfKey = (key: string): WorldLevel =>
     key.startsWith('field:') ? fieldLevel(key.slice(6)) : familyLevel(Number(key.slice(7)));
 
-function makeSlot(stage: Stage, longSide: number, format: StageTextureFormat): Slot {
+/** The jobs a filter keeps at full colour on a stage. */
+const emphasisFor = (h: Highlight): StageEmphasis => (job) => isHighlighted(h, { kind: job.kelley ? 'kelley' : 'bls', soc: job.soc });
+
+function makeSlot(stage: Stage, longSide: number, format: StageTextureFormat, highlight: Highlight): Slot {
     const segments = stageSegments(stage.outline, longSide);
-    const bake = bakeStage(stage, segments, STAGE_BLEND, STAGE_BLEND_POWER, stageEdgeBand(stage));
+    const bake = bakeStage(stage, segments, STAGE_BLEND, STAGE_BLEND_POWER, stageEdgeBand(stage), emphasisFor(highlight));
     const textures = createStageTextures(bake, format);
     const { outline } = stage;
     const tiles = Array.from({ length: MAX_STAGE_TILES }, (_, i) => {
@@ -73,7 +80,7 @@ function makeSlot(stage: Stage, longSide: number, format: StageTextureFormat): S
     const holder = new Group();
     holder.add(mesh);
     worldView.surfaces.set(stage.key, { stage, bake });
-    return { stage, textures, material, geometry, holder };
+    return { stage, bake, baked: highlightKey(highlight), textures, material, geometry, holder };
 }
 
 function disposeSlot(slot: Slot): void {
@@ -125,8 +132,10 @@ export const StageTerrain: React.FC<{ scene: WorldScene; isMobile: boolean }> = 
         const live = slots.current;
         worldView.yearMix = yearMix(useStore.getState().year);
 
+        const highlight: Highlight = { kelleyOnly: level.kelleyOnly, school: level.school };
+        const wantedKey = highlightKey(highlight);
         const take = (key: string) => {
-            const slot = makeSlot(buildStage(levelOfKey(key), scene)!, longSide, format);
+            const slot = makeSlot(buildStage(levelOfKey(key), scene)!, longSide, format, highlight);
             live.set(key, slot);
             group.add(slot.holder);
             return slot;
@@ -161,7 +170,14 @@ export const StageTerrain: React.FC<{ scene: WorldScene; isMobile: boolean }> = 
             uniforms.uFade.value = layer.alpha;
             uniforms.uRise.value = layer.mult;
             uniforms.uYearMix.value = worldView.yearMix;
-            uniforms.uKelley.value += ((level.kelleyOnly ? 1 : 0) - uniforms.uKelley.value) * kelleyStep;
+            // A filter changed while this stage is up: re-colour it in place (heights stay).
+            // Turning every filter off keeps the old emphasis, so the dimming fades out rather than snapping.
+            if (slot.baked !== wantedKey && highlightOn(highlight)) {
+                rebakeStageColors(slot.stage, slot.bake, emphasisFor(highlight));
+                slot.textures.colors.needsUpdate = true;
+                slot.baked = wantedKey;
+            }
+            uniforms.uKelley.value += ((highlightOn(highlight) ? 1 : 0) - uniforms.uKelley.value) * kelleyStep;
             // The cursor glow, from the screen's ground back to the stage's.
             const fromScreen = composeMaps(slot.stage.map, invertMap(worldView.map));
             uniforms.uMouse.value.set(mapX(fromScreen, worldPointer.mouseX), mapZ(fromScreen, worldPointer.mouseZ));

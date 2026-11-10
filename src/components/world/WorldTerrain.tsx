@@ -13,6 +13,7 @@ import {
     Vector4,
 } from 'three';
 import { useStore } from '../../store';
+import { isHighlighted } from '../../utils/iuSchools';
 import { useWorldStore } from '../../worldStore';
 import { SCENE, SHADER, YEAR_MAX, YEAR_MIN } from '../../config/constants';
 import {
@@ -73,6 +74,7 @@ interface RegionMesh {
  */
 export const WorldTerrain: React.FC<{ scene: WorldScene; isMobile: boolean }> = ({ scene, isMobile }) => {
     const kelleyOnly = useWorldStore((s) => s.kelleyOnly);
+    const school = useWorldStore((s) => s.school);
 
     const bell = useMemo(() => (isMobile ? makeBellGeometry(12, 6) : makeBellGeometry(20, 10)), [isMobile]);
 
@@ -156,16 +158,17 @@ export const WorldTerrain: React.FC<{ scene: WorldScene; isMobile: boolean }> = 
     }, [regionMeshes]);
     useEffect(() => () => bell.dispose(), [bell]);
 
-    // Kelley filter: dim every other peak, keep the 50 at full colour.
+    // Kelley and IU school filters: dim every peak they leave out.
     useEffect(() => {
+        const highlight = { kelleyOnly, school };
         for (const m of regionMeshes) {
             const arr = m.aEmph.array as Float32Array;
             m.peaks.forEach((p, i) => {
-                arr[i] = !kelleyOnly || p.entry.kind === 'kelley' ? 1 : DIM_EMPHASIS;
+                arr[i] = isHighlighted(highlight, p.entry) ? 1 : DIM_EMPHASIS;
             });
             m.aEmph.needsUpdate = true;
         }
-    }, [regionMeshes, kelleyOnly]);
+    }, [regionMeshes, kelleyOnly, school]);
 
     const lastYear = useRef<number | null>(null);
     const groundRef = useRef<Mesh>(null);
