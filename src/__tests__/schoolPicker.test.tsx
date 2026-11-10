@@ -159,7 +159,8 @@ describe('picking a school', () => {
             'All IU schools · no filter',
             ...slim.schools.map((s) => `${s.name}${s.jobs.length} occupations`),
         ]);
-        expect(options.some((o) => o.textContent?.includes('School of Nursing'))).toBe(false);
+        expect(options.some((o) => o.textContent?.includes('Graduate School Bloomington'))).toBe(false);
+        expect(options.some((o) => o.textContent?.includes('School of Nursing'))).toBe(true);
         expect(document.activeElement).toBe(options[0]);
         const kelleyAt = options.findIndex((o) => o.textContent?.startsWith('Kelley'));
         for (let i = 0; i < kelleyAt; i++) await keyOn(document.activeElement!, 'ArrowDown');

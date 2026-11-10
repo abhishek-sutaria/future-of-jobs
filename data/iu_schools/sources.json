@@ -19,7 +19,21 @@
       "member": "C2024_a.csv",
       "memberSha256": "a7f6d0f03093eef933ea5a31474ca1289cb97c73062b7cc1245fc3cabaff7c61",
       "retrieved": "2026-11-09",
-      "sha256": "8d1fbe7128444d88ac2f10fa66448bd78e00f1991b515a43d8f184447a0640e1"
+      "sha256": "8d1fbe7128444d88ac2f10fa66448bd78e00f1991b515a43d8f184447a0640e1",
+      "ipedsUnitid": "151351"
+    },
+    {
+      "path": "raw/ipeds_c2024_a_unitid_151111_cip51_38.csv",
+      "title": "IPEDS Completions 2023-24 (C2024_A), the header row and the nursing rows (CIP 51.38xx) for IU Indianapolis (UNITID 151111), bytes unchanged. IU's School of Nursing reports its nursing degrees there; IU Bloomington reports none",
+      "publisher": "NCES, IPEDS Data Center",
+      "url": "https://nces.ed.gov/ipeds/datacenter/data/C2024_A.zip",
+      "zipSha256": "03234cc27fe4e7eb835a66d4f37aaec11bdac8dfa278f971584e1b20d03e1159",
+      "member": "C2024_a.csv",
+      "memberSha256": "a7f6d0f03093eef933ea5a31474ca1289cb97c73062b7cc1245fc3cabaff7c61",
+      "retrieved": "2026-11-09",
+      "sha256": "b788699ea372bef9686a512267d7bb2abfffcf838d4b25339befa1097f77c7ac",
+      "ipedsUnitid": "151111",
+      "cipPrefix": "51.38"
     },
     {
       "path": "raw/CIP2020_SOC2018_Crosswalk.xlsx",

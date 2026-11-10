@@ -355,6 +355,14 @@
       ]
     },
     {
+      "id": "nursing",
+      "name": "School of Nursing",
+      "jobs": [
+        "25-1072",
+        "29-1141"
+      ]
+    },
+    {
       "id": "optometry",
       "name": "School of Optometry",
       "jobs": [

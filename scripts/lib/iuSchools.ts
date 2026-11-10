@@ -66,6 +66,10 @@ export interface SourceFile {
     zipSha256?: string;
     member?: string;
     memberSha256?: string;
+    /** For an IPEDS extract: whose rows it holds. */
+    ipedsUnitid?: string;
+    /** For an IPEDS extract of another campus: only codes starting with this. */
+    cipPrefix?: string;
 }
 export interface SourcePage {
     title: string;
@@ -95,6 +99,8 @@ export interface DegreeRule {
     cips: string[];
     basis: Basis;
     note: string;
+    /** Check the code against this IU campus's IPEDS rows (sources.json) instead of IU Bloomington's. */
+    campusUnitid?: string;
 }
 export interface SubjectRule {
     subject: string;
@@ -103,6 +109,8 @@ export interface SubjectRule {
     cips: string[];
     basis: Basis;
     note: string;
+    /** Check the code against this IU campus's IPEDS rows (sources.json) instead of IU Bloomington's. */
+    campusUnitid?: string;
 }
 export interface RulesFile {
     excludedDegreeTypes: string[];
@@ -126,6 +134,8 @@ export interface IuSchoolInputs {
     rules: RulesFile;
     api: { data: ApiDegree[] };
     ipedsCsv: string;
+    /** Other IU campuses' pinned IPEDS rows, by UNITID, for rules with campusUnitid. */
+    otherIpeds: Record<string, string>;
     crosswalk: Buffer | Uint8Array;
     /** The app's 830 occupations: SOC and BLS title. */
     occupations: { soc: string; title: string }[];
@@ -140,6 +150,11 @@ export const IU_SCHOOLS_PATHS = {
     slim: 'src/data/iu_school_jobs.json',
     report: 'docs/iu-schools.md',
 } as const;
+
+/** IU Bloomington in IPEDS. */
+export const IUB_UNITID = '151351';
+/** Names for the other IU campuses a rule may check a code against. */
+export const IU_CAMPUS_NAMES: Readonly<Record<string, string>> = { '151111': 'IU Indianapolis' };
 
 export const sha256 = (buf: Buffer | Uint8Array | string): string => crypto.createHash('sha256').update(buf).digest('hex');
 
@@ -167,6 +182,9 @@ export function loadIuSchoolInputs(root: string): IuSchoolInputs {
         rules: json<RulesFile>(IU_SCHOOLS_PATHS.rules),
         api: JSON.parse(file('iu_degrees_bloomington.json').toString('utf-8')),
         ipedsCsv: file('ipeds_c2024_a_unitid_151351.csv').toString('utf-8'),
+        otherIpeds: Object.fromEntries(sources.files
+            .filter((f) => f.ipedsUnitid && f.ipedsUnitid !== IUB_UNITID)
+            .map((f) => [f.ipedsUnitid!, raw.get(f.path)!.toString('utf-8')])),
         crosswalk: file('CIP2020_SOC2018_Crosswalk.xlsx'),
         occupations: index.occupations.map((o) => ({ soc: o.soc, title: o.title })),
     };
@@ -370,6 +388,8 @@ export interface ProgramMatch {
     rule: string;
     /** Set when the program ends with no CIP, or lost one of its rule's codes to the level check. */
     reason?: string;
+    /** Set when its code was checked against another IU campus's IPEDS rows. */
+    campusUnitid?: string;
 }
 
 function subjectRuleFor(rules: RulesFile, subject: string, p: Program): SubjectRule | undefined {
@@ -385,25 +405,36 @@ function checkLevels(cips: string[], p: Program, ipeds: Map<string, Map<string, 
     return { kept, dropped: cips.filter((c) => !kept.includes(c)) };
 }
 
-const notAtLevel = (dropped: string[], level: Level) =>
-    `${dropped.join(', ')} ${dropped.length > 1 ? 'are' : 'is'} not reported by IU Bloomington at ${LEVEL_NAMES[level]} level in IPEDS 2023-24`;
+const campusName = (unitid: string) => (unitid === IUB_UNITID ? 'IU Bloomington' : IU_CAMPUS_NAMES[unitid] ?? `UNITID ${unitid}`);
 
-export function matchProgram(p: Program, rules: RulesFile, ipeds: Map<string, Map<string, number>>): ProgramMatch {
-    const finish = (cips: string[], basis: Basis | 'double-major', rule: string, note: string): ProgramMatch => {
+const notAtLevel = (dropped: string[], level: Level, unitid = IUB_UNITID) =>
+    `${dropped.join(', ')} ${dropped.length > 1 ? 'are' : 'is'} not reported by ${campusName(unitid)} at ${LEVEL_NAMES[level]} level in IPEDS 2023-24`;
+
+export function matchProgram(
+    p: Program,
+    rules: RulesFile,
+    ipeds: Map<string, Map<string, number>>,
+    otherCampuses: ReadonlyMap<string, Map<string, Map<string, number>>> = new Map(),
+): ProgramMatch {
+    const finish = (cips: string[], basis: Basis | 'double-major', rule: string, note: string, unitid?: string): ProgramMatch => {
         if (basis === 'none' || cips.length === 0) return { cips: [], basis: 'none', rule, reason: note };
-        const { kept, dropped } = checkLevels(cips, p, ipeds);
-        if (kept.length === 0) return { cips: [], basis: 'none', rule, reason: notAtLevel(dropped, p.level) };
-        return dropped.length > 0 ? { cips: kept, basis, rule, reason: notAtLevel(dropped, p.level) } : { cips: kept, basis, rule };
+        const data = unitid ? otherCampuses.get(unitid) : ipeds;
+        if (!data) throw new Error(`Rule "${rule}" checks UNITID ${unitid}, which has no IPEDS extract in sources.json`);
+        const { kept, dropped } = checkLevels(cips, p, data);
+        const campus = unitid ? { campusUnitid: unitid } : {};
+        if (kept.length === 0) return { cips: [], basis: 'none', rule, reason: notAtLevel(dropped, p.level, unitid) };
+        return dropped.length > 0 ? { cips: kept, basis, rule, reason: notAtLevel(dropped, p.level, unitid), ...campus } : { cips: kept, basis, rule, ...campus };
     };
     const degreeRule = rules.degreeRules.find((r) => r.degree === p.degree && (!r.pattern || new RegExp(r.pattern).test(p.subject)));
-    if (degreeRule) return finish(degreeRule.cips, degreeRule.basis, `degree: ${degreeRule.degree}${degreeRule.pattern ? ` /${degreeRule.pattern}/` : ''}`, degreeRule.note);
+    if (degreeRule) return finish(degreeRule.cips, degreeRule.basis, `degree: ${degreeRule.degree}${degreeRule.pattern ? ` /${degreeRule.pattern}/` : ''}`, degreeRule.note, degreeRule.campusUnitid);
     const exact = subjectRuleFor(rules, p.subject, p);
-    if (exact) return finish(exact.cips, exact.basis, `subject: ${exact.subject}`, exact.note);
+    if (exact) return finish(exact.cips, exact.basis, `subject: ${exact.subject}`, exact.note, exact.campusUnitid);
     const parts = p.subject.split('/').map((s) => s.trim()).filter(Boolean);
     if (parts.length > 1) {
         const hits = parts.map((part) => subjectRuleFor(rules, part, p));
         const missing = parts.filter((_, i) => !hits[i]);
         if (missing.length > 0) throw new Error(`No rule for part "${missing.join('", "')}" of ${p.name} (${p.degree}, ${p.url})`);
+        if (hits.some((h) => h!.campusUnitid)) throw new Error(`${p.name}: a double major cannot take a code from another campus; give it its own rule`);
         const cips = [...new Set(hits.flatMap((h) => h!.cips))];
         const none = parts.filter((_, i) => hits[i]!.cips.length === 0);
         const m = finish(cips, 'double-major', `double major: ${parts.join(' + ')}`, `No part of it has a code: ${hits.map((h) => h!.note).join(' ')}`);
@@ -424,6 +455,8 @@ export interface CipEntry {
     jobs: string[];
     /** IU Bloomington completions in 2023-24 by IPEDS award level. */
     iubAwards: Record<string, number>;
+    /** The same for another IU campus a rule checked this code against, by UNITID. */
+    campusAwards?: Record<string, Record<string, number>>;
 }
 export interface MajorOut {
     name: string;
@@ -434,6 +467,8 @@ export interface MajorOut {
     basis: ProgramMatch['basis'];
     jobs: string[];
     reason?: string;
+    /** Its code was confirmed in this IU campus's IPEDS rows, not IU Bloomington's. */
+    campusUnitid?: string;
 }
 export interface SchoolOut {
     id: string;
@@ -474,6 +509,15 @@ const byCode = (a: string, b: string) => a.localeCompare(b);
 
 export function buildIuSchools(inputs: IuSchoolInputs): { full: IuSchoolsFull; slim: IuSchoolsSlim; report: string } {
     const ipeds = parseIpeds(inputs.ipedsCsv);
+    const otherCampuses = new Map<string, Map<string, Map<string, number>>>();
+    for (const f of inputs.sources.files) {
+        if (!f.ipedsUnitid || f.ipedsUnitid === IUB_UNITID) continue;
+        const data = parseIpeds(inputs.otherIpeds[f.ipedsUnitid], f.ipedsUnitid);
+        for (const cip of data.keys()) {
+            if (f.cipPrefix && !cip.startsWith(f.cipPrefix)) throw new Error(`${f.path} holds ${cip}, outside ${f.cipPrefix}`);
+        }
+        otherCampuses.set(f.ipedsUnitid, data);
+    }
     const xw = parseCrosswalk(inputs.crosswalk);
     const appSocs = new Set(inputs.occupations.map((o) => o.soc));
     const appTitle = new Map(inputs.occupations.map((o) => [o.soc, o.title]));
@@ -488,9 +532,15 @@ export function buildIuSchools(inputs: IuSchoolInputs): { full: IuSchoolsFull; s
         const socs = xw.cipSocs.get(cip);
         if (title === undefined || socs === undefined) throw new Error(`CIP ${cip} is not in the CIP 2020 to SOC 2018 crosswalk`);
         const jobs = [...new Set(socs.map(rollup.toApp).filter((s): s is string => s !== null))].sort(byCode);
-        const awards: Record<string, number> = {};
-        for (const [lvl, n] of [...(ipeds.get(cip) ?? new Map<string, number>())].sort((a, b) => Number(a[0]) - Number(b[0]))) awards[lvl] = n;
-        e = { title, socs: [...socs].sort(byCode), jobs, iubAwards: awards };
+        const byLevel = (data: Map<string, Map<string, number>>) => {
+            const awards: Record<string, number> = {};
+            for (const [lvl, n] of [...(data.get(cip) ?? new Map<string, number>())].sort((a, b) => Number(a[0]) - Number(b[0]))) awards[lvl] = n;
+            return awards;
+        };
+        e = { title, socs: [...socs].sort(byCode), jobs, iubAwards: byLevel(ipeds) };
+        const campus: Record<string, Record<string, number>> = {};
+        for (const [unitid, data] of [...otherCampuses].sort((a, b) => byCode(a[0], b[0]))) if (data.has(cip)) campus[unitid] = byLevel(data);
+        if (Object.keys(campus).length > 0) e.campusAwards = campus;
         cipEntries.set(cip, e);
         return e;
     };
@@ -500,7 +550,7 @@ export function buildIuSchools(inputs: IuSchoolInputs): { full: IuSchoolsFull; s
     const matches = new Map<string, ProgramMatch>();
     for (const p of programs) {
         try {
-            matches.set(p.url, matchProgram(p, inputs.rules, ipeds));
+            matches.set(p.url, matchProgram(p, inputs.rules, ipeds, otherCampuses));
         } catch (err) {
             unruled.push((err as Error).message);
         }
@@ -512,6 +562,7 @@ export function buildIuSchools(inputs: IuSchoolInputs): { full: IuSchoolsFull; s
         const jobs = [...new Set(cips.flatMap((c) => cipEntry(c).jobs))].sort(byCode);
         const out: MajorOut = { name: p.name, degree: p.degree, level: p.level, url: p.url, cips, basis: m.basis, jobs };
         if (m.reason) out.reason = m.reason;
+        if (m.campusUnitid) out.campusUnitid = m.campusUnitid;
         for (const id of p.schools) majorsBySchool.get(id)!.push(out);
     }
 
@@ -613,6 +664,7 @@ function renderReport(
     L.push('   - `reviewed`: matched by subject where the title differs; the rule\'s note gives the reason (usually "the only code in this subject IU Bloomington reports at this level").');
     L.push('   - `double-major`: a program named "A/B" takes the codes of A and B.');
     L.push('   - `none`: left unmatched on purpose, with the reason. Nothing is guessed; a new program with no rule stops the build.');
+    L.push('   - A rule with `campusUnitid` is the one exception to "IU Bloomington reports it": for a school whose degrees IU reports under another campus, the code is checked against that campus\'s IPEDS rows instead. Every such program is listed under "Codes confirmed at another IU campus".');
     L.push('4. **Jobs**: the NCES CIP 2020 to SOC 2018 crosswalk (sheet CIP-SOC) gives each code its SOC occupations, then each SOC is matched to the app\'s 830 jobs.');
     L.push('');
     L.push('### SOC roll-up');
@@ -680,6 +732,16 @@ function renderReport(
         for (const m of partial) L.push(`- ${m.name}, ${m.degree}: kept ${m.cips.join(', ')}; ${m.reason}`);
         L.push('');
     }
+
+    L.push('### Codes confirmed at another IU campus');
+    L.push('');
+    const elsewhere = full.schools.flatMap((s) => s.majors.filter((m) => m.campusUnitid).map((m) => ({ s, m })));
+    if (elsewhere.length === 0) L.push('None.');
+    for (const { s, m } of elsewhere) {
+        const awards = Object.entries(full.cips[m.cips[0]]?.iubAwards ?? {}).length === 0 ? 'IU Bloomington reports none' : 'IU Bloomington reports some';
+        L.push(`- ${m.name}, ${m.degree} (${s.name}): ${m.cips.join(', ')}, as ${campusName(m.campusUnitid!)} (UNITID ${m.campusUnitid}) reports it at ${LEVEL_NAMES[m.level]} level; ${awards}.`);
+    }
+    L.push('');
 
     L.push('### CIP codes with no SOC match');
     L.push('');

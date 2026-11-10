@@ -38,6 +38,7 @@ const full = fullFile as unknown as IuSchoolsFull;
 const slim = slimFile as unknown as IuSchoolsSlim;
 const xw = parseCrosswalk(inputs.crosswalk);
 const ipeds = parseIpeds(inputs.ipedsCsv);
+const indianapolis = parseIpeds(inputs.otherIpeds['151111'], '151111');
 const appSocs = new Set(inputs.occupations.map((o) => o.soc));
 const school = (id: string) => full.schools.find((s) => s.id === id)!;
 
@@ -106,10 +107,12 @@ describe('the build', () => {
         }
     });
 
-    it('uses only codes IU Bloomington reports at each program\'s own level', () => {
+    it('uses only codes IU Bloomington reports at each program\'s own level (or, for a reviewed campus rule, that campus)', () => {
         for (const s of full.schools) {
             for (const m of s.majors) {
-                for (const cip of m.cips) expect(reportedAt(ipeds, cip, m.level), `${m.name} ${m.degree} ${cip}`).toBe(true);
+                const data = m.campusUnitid === '151111' ? indianapolis : ipeds;
+                if (m.campusUnitid) expect(m.campusUnitid).toBe('151111');
+                for (const cip of m.cips) expect(reportedAt(data, cip, m.level), `${m.name} ${m.degree} ${cip}`).toBe(true);
                 if (m.cips.length === 0) expect(m.reason, `${m.name} ${m.degree}`).toBeTruthy();
             }
         }
@@ -152,6 +155,22 @@ describe('spot checks against the real crosswalk', () => {
         expect(cs.cips).toEqual(['11.0701']);
         expect(cs.jobs).toContain('15-1252');
         expect(school('luddy').jobs).toContain('15-1252');
+    });
+
+    it('Nursing (BSN) is 51.3801, as IU Indianapolis reports it, and leads to Registered Nurses', () => {
+        expect(reportedAt(ipeds, '51.3801', 'B')).toBe(false);
+        expect(indianapolis.get('51.3801')?.get('5')).toBe(555);
+        expect(() => parseIpeds(inputs.otherIpeds['151111'], '151351')).toThrow(/151111/);
+        const nursing = school('nursing');
+        expect(nursing.inDropdown).toBe(true);
+        const bsn = nursing.majors.filter((m) => m.degree === 'Bachelor of Science in Nursing');
+        expect(bsn).toHaveLength(3);
+        for (const m of bsn) expect(m).toMatchObject({ cips: ['51.3801'], campusUnitid: '151111', basis: 'reviewed' });
+        expect(nursing.jobs).toEqual(['25-1072', '29-1141']);
+        const msn = nursing.majors.find((m) => m.degree === 'Master of Science in Nursing')!;
+        expect(msn.cips).toEqual([]);
+        expect(full.cips['51.3801']).toMatchObject({ iubAwards: {}, campusAwards: { '151111': { '5': 555, '7': 0 } } });
+        expect(built.report).toMatch(/### Codes confirmed at another IU campus[\s\S]*51\.3801, as IU Indianapolis \(UNITID 151111\)/);
     });
 
     it('Optometry leads to Optometrists; the Maurer J.D. to Lawyers', () => {
@@ -198,6 +217,16 @@ describe('matching rules never guess', () => {
         expect(reportedAt(ipeds, '26.1309', 'M')).toBe(false);
         expect(m.cips).toEqual([]);
         expect(m.reason).toMatch(/26\.1309 is not reported by IU Bloomington at master's level/);
+    });
+
+    it('a campus rule is checked against that campus, and dropped if it does not report the code there', () => {
+        const others = new Map([['151111', indianapolis]]);
+        const bsn = program({ name: 'Nursing', subject: 'Nursing', degree: 'Bachelor of Science in Nursing', level: 'B', schools: ['nursing'] });
+        expect(matchProgram(bsn, rules, ipeds, others)).toMatchObject({ cips: ['51.3801'], campusUnitid: '151111' });
+        const doctoral = matchProgram({ ...bsn, level: 'D' }, rules, ipeds, others);
+        expect(doctoral.cips).toEqual([]);
+        expect(doctoral.reason).toMatch(/not reported by IU Indianapolis at doctoral level/);
+        expect(() => matchProgram(bsn, rules, ipeds)).toThrow(/no IPEDS extract/);
     });
 
     it('stops on a program with no rule rather than guessing', () => {

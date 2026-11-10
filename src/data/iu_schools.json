@@ -26,7 +26,21 @@
           "member": "C2024_a.csv",
           "memberSha256": "a7f6d0f03093eef933ea5a31474ca1289cb97c73062b7cc1245fc3cabaff7c61",
           "retrieved": "2026-11-09",
-          "sha256": "8d1fbe7128444d88ac2f10fa66448bd78e00f1991b515a43d8f184447a0640e1"
+          "sha256": "8d1fbe7128444d88ac2f10fa66448bd78e00f1991b515a43d8f184447a0640e1",
+          "ipedsUnitid": "151351"
+        },
+        {
+          "path": "raw/ipeds_c2024_a_unitid_151111_cip51_38.csv",
+          "title": "IPEDS Completions 2023-24 (C2024_A), the header row and the nursing rows (CIP 51.38xx) for IU Indianapolis (UNITID 151111), bytes unchanged. IU's School of Nursing reports its nursing degrees there; IU Bloomington reports none",
+          "publisher": "NCES, IPEDS Data Center",
+          "url": "https://nces.ed.gov/ipeds/datacenter/data/C2024_A.zip",
+          "zipSha256": "03234cc27fe4e7eb835a66d4f37aaec11bdac8dfa278f971584e1b20d03e1159",
+          "member": "C2024_a.csv",
+          "memberSha256": "a7f6d0f03093eef933ea5a31474ca1289cb97c73062b7cc1245fc3cabaff7c61",
+          "retrieved": "2026-11-09",
+          "sha256": "b788699ea372bef9686a512267d7bb2abfffcf838d4b25339befa1097f77c7ac",
+          "ipedsUnitid": "151111",
+          "cipPrefix": "51.38"
         },
         {
           "path": "raw/CIP2020_SOC2018_Crosswalk.xlsx",
@@ -120,12 +134,12 @@
     },
     "counts": {
       "schools": 16,
-      "schoolsInDropdown": 14,
+      "schoolsInDropdown": 15,
       "programs": 807,
-      "matchedPrograms": 578,
+      "matchedPrograms": 581,
       "excludedRows": 278,
-      "cips": 133,
-      "jobs": 203,
+      "cips": 134,
+      "jobs": 205,
       "appJobs": 830
     }
   },
@@ -2419,6 +2433,24 @@
       ],
       "iubAwards": {
         "5": 71
+      }
+    },
+    "51.3801": {
+      "title": "Registered Nursing/Registered Nurse.",
+      "socs": [
+        "25-1072",
+        "29-1141"
+      ],
+      "jobs": [
+        "25-1072",
+        "29-1141"
+      ],
+      "iubAwards": {},
+      "campusAwards": {
+        "151111": {
+          "5": 555,
+          "7": 0
+        }
       }
     },
     "52.0101": {
@@ -14953,41 +14985,61 @@
     {
       "id": "nursing",
       "name": "School of Nursing",
-      "inDropdown": false,
+      "inDropdown": true,
       "majorCount": 4,
-      "matchedMajorCount": 0,
-      "cips": [],
-      "jobs": [],
+      "matchedMajorCount": 3,
+      "cips": [
+        "51.3801"
+      ],
+      "jobs": [
+        "25-1072",
+        "29-1141"
+      ],
       "majors": [
         {
           "name": "Nursing",
           "degree": "Bachelor of Science in Nursing",
           "level": "B",
           "url": "https://academics.iu.edu/degrees/bloomington/bachelor-of-science-in-nursing.html",
-          "cips": [],
-          "basis": "none",
-          "jobs": [],
-          "reason": "IU Bloomington reports no nursing code (51.38) in IPEDS 2023-24, so its nursing degrees cannot be matched from Bloomington's data."
+          "cips": [
+            "51.3801"
+          ],
+          "basis": "reviewed",
+          "jobs": [
+            "25-1072",
+            "29-1141"
+          ],
+          "campusUnitid": "151111"
         },
         {
           "name": "Nursing (100% online)",
           "degree": "Bachelor of Science in Nursing",
           "level": "B",
           "url": "https://academics.iu.edu/degrees/bloomington/bachelor-of-science-in-nursing-online.html",
-          "cips": [],
-          "basis": "none",
-          "jobs": [],
-          "reason": "IU Bloomington reports no nursing code (51.38) in IPEDS 2023-24, so its nursing degrees cannot be matched from Bloomington's data."
+          "cips": [
+            "51.3801"
+          ],
+          "basis": "reviewed",
+          "jobs": [
+            "25-1072",
+            "29-1141"
+          ],
+          "campusUnitid": "151111"
         },
         {
           "name": "Nursing (100% online) (TSAP)",
           "degree": "Bachelor of Science in Nursing",
           "level": "B",
           "url": "https://academics.iu.edu/degrees/bloomington/bachelor-of-science-in-nursing-online-tsap.html",
-          "cips": [],
-          "basis": "none",
-          "jobs": [],
-          "reason": "IU Bloomington reports no nursing code (51.38) in IPEDS 2023-24, so its nursing degrees cannot be matched from Bloomington's data."
+          "cips": [
+            "51.3801"
+          ],
+          "basis": "reviewed",
+          "jobs": [
+            "25-1072",
+            "29-1141"
+          ],
+          "campusUnitid": "151111"
         },
         {
           "name": "Nursing Education (80-99% online)",
@@ -14997,7 +15049,7 @@
           "cips": [],
           "basis": "none",
           "jobs": [],
-          "reason": "IU Bloomington reports no nursing code (51.38) in IPEDS 2023-24."
+          "reason": "No nursing education code (CIP 2020 has no 51.3817) is reported by IU Bloomington or by IU Indianapolis at master's level, so the MSN's code is not identifiable."
         }
       ]
     },

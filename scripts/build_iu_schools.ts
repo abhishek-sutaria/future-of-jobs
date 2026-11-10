@@ -9,8 +9,9 @@
  *   npx tsx scripts/build_iu_schools.ts            build and write the three files
  *   npx tsx scripts/build_iu_schools.ts --check    build and fail if any committed file differs
  *   npx tsx scripts/build_iu_schools.ts --ipeds-zip <C2024_A.zip>
- *       re-cut raw/ipeds_c2024_a_unitid_151351.csv from the NCES zip after
- *       checking the zip's and the member's sha256 in sources.json
+ *       re-cut every IPEDS extract in sources.json (IU Bloomington's rows, and
+ *       IU Indianapolis's nursing rows) from the NCES zip after checking the
+ *       zip's and the member's sha256
  *
  * No network and no Claude calls. The same inputs always give the same bytes.
  */
@@ -30,19 +31,21 @@ function fail(msg: string): never {
 
 function recutIpeds(zipPath: string): void {
     const sources = JSON.parse(fs.readFileSync(path.join(ROOT, IU_SCHOOLS_PATHS.sources), 'utf-8')) as SourcesManifest;
-    const entry = sources.files.find((f) => f.zipSha256);
-    if (!entry?.member) fail('sources.json has no IPEDS zip entry');
+    const entries = sources.files.filter((f) => f.zipSha256 && f.ipedsUnitid);
+    if (entries.length === 0) fail('sources.json has no IPEDS zip entry');
     const zip = fs.readFileSync(zipPath);
-    if (sha256(zip) !== entry.zipSha256) fail(`${zipPath}: sha256 ${sha256(zip)} is not the recorded ${entry.zipSha256}`);
-    const member = execFileSync('unzip', ['-p', zipPath, entry.member], { maxBuffer: 256 * 1024 * 1024 });
-    if (sha256(member) !== entry.memberSha256) fail(`${entry.member}: sha256 ${sha256(member)} is not the recorded ${entry.memberSha256}`);
-    const text = member.toString('utf-8');
-    const lines = text.split('\n');
-    const kept = [lines[0], ...lines.slice(1).filter((l) => l.startsWith('151351,'))];
-    const out = `${kept.join('\n')}\n`;
-    const dest = path.join(ROOT, 'data/iu_schools', entry.path);
-    fs.writeFileSync(dest, out);
-    console.log(`Wrote ${path.relative(ROOT, dest)}: ${kept.length - 1} rows, sha256 ${sha256(out)} (sources.json has ${entry.sha256})`);
+    for (const entry of entries) {
+        if (sha256(zip) !== entry.zipSha256) fail(`${zipPath}: sha256 ${sha256(zip)} is not the recorded ${entry.zipSha256}`);
+        const member = execFileSync('unzip', ['-p', zipPath, entry.member!], { maxBuffer: 256 * 1024 * 1024 });
+        if (sha256(member) !== entry.memberSha256) fail(`${entry.member}: sha256 ${sha256(member)} is not the recorded ${entry.memberSha256}`);
+        const lines = member.toString('utf-8').split('\n');
+        const prefix = entry.cipPrefix ? `${entry.ipedsUnitid},"${entry.cipPrefix}` : `${entry.ipedsUnitid},`;
+        const kept = [lines[0], ...lines.slice(1).filter((l) => l.startsWith(prefix))];
+        const out = `${kept.join('\n')}\n`;
+        const dest = path.join(ROOT, 'data/iu_schools', entry.path);
+        fs.writeFileSync(dest, out);
+        console.log(`Wrote ${path.relative(ROOT, dest)}: ${kept.length - 1} rows, sha256 ${sha256(out)} (sources.json has ${entry.sha256})`);
+    }
 }
 
 function main(): void {

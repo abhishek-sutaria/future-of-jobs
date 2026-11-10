@@ -4,7 +4,8 @@
     "IU publishes no program-to-CIP list without an IU login, so a CIP comes from IPEDS: the build only accepts a CIP that IU Bloomington (UNITID 151351) reports in IPEDS Completions 2023-24 at the program's own award level. A rule whose CIP fails that check leaves the program unmatched, and the report says why.",
     "basis: 'title' = the CIP title names the same subject; 'degree' = the whole degree is reported under one CIP, so every major in it takes that CIP; 'reviewed' = matched by subject with the reason in 'note'; 'none' = deliberately unmatched, reason in 'note'.",
     "Matching order: degreeRules (exact degree name, optional subject pattern), then subjectRules (exact subject, optional levels and degrees), then a double major 'A/B' takes the union of A and B. A degree program that no rule covers stops the build, so new IU programs must be reviewed here first.",
-    "subject = the IU program name with every parenthesis removed and a trailing ' BFA' dropped. levels: B bachelor's, M master's, D doctoral, P post-master's (specialist), A associate's."
+    "subject = the IU program name with every parenthesis removed and a trailing ' BFA' dropped. levels: B bachelor's, M master's, D doctoral, P post-master's (specialist), A associate's.",
+    "campusUnitid: the rare rule whose code IU Bloomington does not report at all, checked instead against the IU campus that reports that school's degrees (a pinned IPEDS extract for that UNITID in sources.json). The report lists every such program."
   ],
   "excludedDegreeTypes": [
     "Accelerated program",
@@ -235,8 +236,8 @@
     { "subject": "Neuroscience", "cips": ["26.1501"], "basis": "title", "note": "" },
     { "subject": "Nonprofit Management", "cips": [],"basis": "none", "note": "MPA concentration, covered by the MPA degree rule." },
     { "subject": "Nonprofit Management & Leadership", "cips": [], "basis": "none", "note": "Covered by the BSPA degree rule." },
-    { "subject": "Nursing", "cips": [], "basis": "none", "note": "IU Bloomington reports no nursing code (51.38) in IPEDS 2023-24, so its nursing degrees cannot be matched from Bloomington's data." },
-    { "subject": "Nursing Education", "cips": [], "basis": "none", "note": "IU Bloomington reports no nursing code (51.38) in IPEDS 2023-24." },
+    { "subject": "Nursing", "cips": ["51.3801"], "basis": "reviewed", "campusUnitid": "151111", "note": "Decided 2026-11-09 (Abhishek): use 51.3801 Registered Nursing/Registered Nurse. IU Bloomington reports no nursing code in IPEDS 2023-24; IU's School of Nursing reports its BSN under IU Indianapolis (UNITID 151111), 555 bachelor's awards under 51.3801." },
+    { "subject": "Nursing Education", "cips": [], "basis": "none", "note": "No nursing education code (CIP 2020 has no 51.3817) is reported by IU Bloomington or by IU Indianapolis at master's level, so the MSN's code is not identifiable." },
     { "subject": "Nutrition", "cips": ["19.0501"], "basis": "reviewed", "note": "Foods, Nutrition, and Wellness Studies, General. Reported at master's level only, so the PhD stays unmatched." },
     { "subject": "Nutrition Science", "cips": [], "basis": "none", "note": "No nutrition code is reported at bachelor's level." },
     { "subject": "Nutrition and Dietetics", "cips": ["19.0501"], "basis": "reviewed", "note": "Foods, Nutrition, and Wellness Studies, General, the only nutrition code reported at master's level." },
