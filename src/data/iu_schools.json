@@ -43,6 +43,19 @@
           "cipPrefix": "51.38"
         },
         {
+          "path": "raw/ipeds_c2024_a_unitid_151111_cip44_0701.csv",
+          "title": "IPEDS Completions 2023-24 (C2024_A), the header row and the social work rows (CIP 44.0701) for IU Indianapolis (UNITID 151111), bytes unchanged. IU's School of Social Work reports its bachelor's degrees there; IU Bloomington reports 44.0701 at master's level only",
+          "publisher": "NCES, IPEDS Data Center",
+          "url": "https://nces.ed.gov/ipeds/datacenter/data/C2024_A.zip",
+          "zipSha256": "03234cc27fe4e7eb835a66d4f37aaec11bdac8dfa278f971584e1b20d03e1159",
+          "member": "C2024_a.csv",
+          "memberSha256": "a7f6d0f03093eef933ea5a31474ca1289cb97c73062b7cc1245fc3cabaff7c61",
+          "retrieved": "2026-11-09",
+          "sha256": "85bf61b8b5521f9ddc7339279cca9d1fd861f125f595fec00f89ea750c737e4c",
+          "ipedsUnitid": "151111",
+          "cipPrefix": "44.0701"
+        },
+        {
           "path": "raw/CIP2020_SOC2018_Crosswalk.xlsx",
           "title": "CIP 2020 to SOC 2018 Crosswalk",
           "publisher": "NCES and BLS",
@@ -136,7 +149,7 @@
       "schools": 16,
       "schoolsInDropdown": 15,
       "programs": 807,
-      "matchedPrograms": 581,
+      "matchedPrograms": 582,
       "excludedRows": 278,
       "cips": 134,
       "jobs": 205,
@@ -1921,6 +1934,15 @@
       ],
       "iubAwards": {
         "7": 28
+      },
+      "campusAwards": {
+        "151111": {
+          "5": 134,
+          "6": 21,
+          "7": 396,
+          "17": 4,
+          "21": 33
+        }
       }
     },
     "45.0201": {
@@ -15682,7 +15704,7 @@
       "name": "School of Social Work",
       "inDropdown": true,
       "majorCount": 5,
-      "matchedMajorCount": 4,
+      "matchedMajorCount": 5,
       "cips": [
         "44.0701",
         "52.1004"
@@ -15737,10 +15759,22 @@
           "degree": "Bachelor of Social Work",
           "level": "B",
           "url": "https://academics.iu.edu/degrees/bloomington/bachelor-of-social-work.html",
-          "cips": [],
-          "basis": "none",
-          "jobs": [],
-          "reason": "44.0701 is not reported by IU Bloomington at bachelor's level in IPEDS 2023-24"
+          "cips": [
+            "44.0701"
+          ],
+          "basis": "reviewed",
+          "jobs": [
+            "11-9151",
+            "21-1013",
+            "21-1019",
+            "21-1021",
+            "21-1022",
+            "21-1023",
+            "21-1029",
+            "21-1092",
+            "25-1113"
+          ],
+          "campusUnitid": "151111"
         },
         {
           "name": "Social Work-Advanced Standing",

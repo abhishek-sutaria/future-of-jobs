@@ -16,6 +16,7 @@ import {
     loadIuSchoolInputs,
     matchProgram,
     parseCrosswalk,
+    parseCampusIpeds,
     parseIpeds,
     reportedAt,
     serialize,
@@ -38,7 +39,7 @@ const full = fullFile as unknown as IuSchoolsFull;
 const slim = slimFile as unknown as IuSchoolsSlim;
 const xw = parseCrosswalk(inputs.crosswalk);
 const ipeds = parseIpeds(inputs.ipedsCsv);
-const indianapolis = parseIpeds(inputs.otherIpeds['151111'], '151111');
+const indianapolis = parseCampusIpeds(inputs).get('151111')!;
 const appSocs = new Set(inputs.occupations.map((o) => o.soc));
 const school = (id: string) => full.schools.find((s) => s.id === id)!;
 
@@ -160,7 +161,7 @@ describe('spot checks against the real crosswalk', () => {
     it('Nursing (BSN) is 51.3801, as IU Indianapolis reports it, and leads to Registered Nurses', () => {
         expect(reportedAt(ipeds, '51.3801', 'B')).toBe(false);
         expect(indianapolis.get('51.3801')?.get('5')).toBe(555);
-        expect(() => parseIpeds(inputs.otherIpeds['151111'], '151351')).toThrow(/151111/);
+        expect(() => parseIpeds(inputs.otherIpeds['raw/ipeds_c2024_a_unitid_151111_cip51_38.csv'], '151351')).toThrow(/151111/);
         const nursing = school('nursing');
         expect(nursing.inDropdown).toBe(true);
         const bsn = nursing.majors.filter((m) => m.degree === 'Bachelor of Science in Nursing');
@@ -171,6 +172,28 @@ describe('spot checks against the real crosswalk', () => {
         expect(msn.cips).toEqual([]);
         expect(full.cips['51.3801']).toMatchObject({ iubAwards: {}, campusAwards: { '151111': { '5': 555, '7': 0 } } });
         expect(built.report).toMatch(/### Codes confirmed at another IU campus[\s\S]*51\.3801, as IU Indianapolis \(UNITID 151111\)/);
+    });
+
+    it('the BSW is 44.0701, as IU Indianapolis reports it; IU Bloomington reports it only for the MSW', () => {
+        expect(reportedAt(ipeds, '44.0701', 'B')).toBe(false);
+        expect(reportedAt(ipeds, '44.0701', 'M')).toBe(true);
+        expect(indianapolis.get('44.0701')?.get('5')).toBe(134);
+        const sw = school('social-work');
+        const bsw = sw.majors.find((m) => m.degree === 'Bachelor of Social Work')!;
+        expect(bsw).toMatchObject({ cips: ['44.0701'], campusUnitid: '151111', basis: 'reviewed' });
+        expect(bsw.jobs).toContain('21-1021');
+        for (const m of sw.majors.filter((x) => x.degree === 'Master of Social Work')) expect(m.campusUnitid).toBeUndefined();
+        expect(sw.matchedMajorCount).toBe(sw.majorCount);
+        expect(full.cips['44.0701'].campusAwards?.['151111']?.['5']).toBe(134);
+        expect(built.report).toMatch(/Social Work, Bachelor of Social Work \(School of Social Work\): 44\.0701, as IU Indianapolis \(UNITID 151111\) reports it at bachelor's level; IU Bloomington reports it only at master's level\./);
+    });
+
+    it('each IU Indianapolis extract holds only its own codes, and the two never overlap', () => {
+        const nursing = parseIpeds(inputs.otherIpeds['raw/ipeds_c2024_a_unitid_151111_cip51_38.csv'], '151111');
+        const social = parseIpeds(inputs.otherIpeds['raw/ipeds_c2024_a_unitid_151111_cip44_0701.csv'], '151111');
+        expect([...nursing.keys()].every((c) => c.startsWith('51.38'))).toBe(true);
+        expect([...social.keys()]).toEqual(['44.0701']);
+        expect(indianapolis.size).toBe(nursing.size + social.size);
     });
 
     it('Optometry leads to Optometrists; the Maurer J.D. to Lawyers', () => {

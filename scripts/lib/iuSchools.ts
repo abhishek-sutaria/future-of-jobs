@@ -134,7 +134,7 @@ export interface IuSchoolInputs {
     rules: RulesFile;
     api: { data: ApiDegree[] };
     ipedsCsv: string;
-    /** Other IU campuses' pinned IPEDS rows, by UNITID, for rules with campusUnitid. */
+    /** Other IU campuses' pinned IPEDS extracts, by sources.json path, for rules with campusUnitid. */
     otherIpeds: Record<string, string>;
     crosswalk: Buffer | Uint8Array;
     /** The app's 830 occupations: SOC and BLS title. */
@@ -184,7 +184,7 @@ export function loadIuSchoolInputs(root: string): IuSchoolInputs {
         ipedsCsv: file('ipeds_c2024_a_unitid_151351.csv').toString('utf-8'),
         otherIpeds: Object.fromEntries(sources.files
             .filter((f) => f.ipedsUnitid && f.ipedsUnitid !== IUB_UNITID)
-            .map((f) => [f.ipedsUnitid!, raw.get(f.path)!.toString('utf-8')])),
+            .map((f) => [f.path, raw.get(f.path)!.toString('utf-8')])),
         crosswalk: file('CIP2020_SOC2018_Crosswalk.xlsx'),
         occupations: index.occupations.map((o) => ({ soc: o.soc, title: o.title })),
     };
@@ -231,6 +231,27 @@ export function parseIpeds(csv: string, unitid = '151351'): Map<string, Map<stri
         const byLevel = out.get(cip) ?? new Map<string, number>();
         byLevel.set(level, (byLevel.get(level) ?? 0) + Number(row[iTotal] || 0));
         out.set(cip, byLevel);
+    }
+    return out;
+}
+
+/**
+ * Other IU campuses' IPEDS rows, merged per campus (UNITID -> CIP -> award
+ * level -> completions). Each extract may only hold its own CIP prefix, and
+ * two extracts of one campus may not share a code.
+ */
+export function parseCampusIpeds(inputs: Pick<IuSchoolInputs, 'sources' | 'otherIpeds'>): Map<string, Map<string, Map<string, number>>> {
+    const out = new Map<string, Map<string, Map<string, number>>>();
+    for (const f of inputs.sources.files) {
+        if (!f.ipedsUnitid || f.ipedsUnitid === IUB_UNITID) continue;
+        const data = parseIpeds(inputs.otherIpeds[f.path], f.ipedsUnitid);
+        const merged = out.get(f.ipedsUnitid) ?? new Map<string, Map<string, number>>();
+        for (const [cip, byLevel] of data) {
+            if (f.cipPrefix && !cip.startsWith(f.cipPrefix)) throw new Error(`${f.path} holds ${cip}, outside ${f.cipPrefix}`);
+            if (merged.has(cip)) throw new Error(`${cip} is in two extracts for UNITID ${f.ipedsUnitid}`);
+            merged.set(cip, byLevel);
+        }
+        out.set(f.ipedsUnitid, merged);
     }
     return out;
 }
@@ -509,15 +530,7 @@ const byCode = (a: string, b: string) => a.localeCompare(b);
 
 export function buildIuSchools(inputs: IuSchoolInputs): { full: IuSchoolsFull; slim: IuSchoolsSlim; report: string } {
     const ipeds = parseIpeds(inputs.ipedsCsv);
-    const otherCampuses = new Map<string, Map<string, Map<string, number>>>();
-    for (const f of inputs.sources.files) {
-        if (!f.ipedsUnitid || f.ipedsUnitid === IUB_UNITID) continue;
-        const data = parseIpeds(inputs.otherIpeds[f.ipedsUnitid], f.ipedsUnitid);
-        for (const cip of data.keys()) {
-            if (f.cipPrefix && !cip.startsWith(f.cipPrefix)) throw new Error(`${f.path} holds ${cip}, outside ${f.cipPrefix}`);
-        }
-        otherCampuses.set(f.ipedsUnitid, data);
-    }
+    const otherCampuses = parseCampusIpeds(inputs);
     const xw = parseCrosswalk(inputs.crosswalk);
     const appSocs = new Set(inputs.occupations.map((o) => o.soc));
     const appTitle = new Map(inputs.occupations.map((o) => [o.soc, o.title]));
@@ -738,7 +751,8 @@ function renderReport(
     const elsewhere = full.schools.flatMap((s) => s.majors.filter((m) => m.campusUnitid).map((m) => ({ s, m })));
     if (elsewhere.length === 0) L.push('None.');
     for (const { s, m } of elsewhere) {
-        const awards = Object.entries(full.cips[m.cips[0]]?.iubAwards ?? {}).length === 0 ? 'IU Bloomington reports none' : 'IU Bloomington reports some';
+        const iubLevels = [...new Set(Object.keys(full.cips[m.cips[0]]?.iubAwards ?? {}).map(awlevelName))];
+        const awards = iubLevels.length === 0 ? 'IU Bloomington reports it at no level' : `IU Bloomington reports it only at ${iubLevels.join(', ')} level`;
         L.push(`- ${m.name}, ${m.degree} (${s.name}): ${m.cips.join(', ')}, as ${campusName(m.campusUnitid!)} (UNITID ${m.campusUnitid}) reports it at ${LEVEL_NAMES[m.level]} level; ${awards}.`);
     }
     L.push('');
