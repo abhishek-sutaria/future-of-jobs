@@ -49,6 +49,16 @@ export interface RoleEntry {
 
 export const blsRoleKey = (soc: string): string => `soc:${soc}`;
 
+/**
+ * A role's Automation Risk (0 to 1) as the map colours it and its panel shows
+ * it: a Kelley title's from its Job, a BLS occupation's published one; null if
+ * not scored.
+ */
+export function roleRisk(entry: RoleEntry, job: Job | null | undefined): number | null {
+    if (!entry.scored) return null;
+    return job ? job.automationCostIndex : entry.blsRisk ?? null;
+}
+
 export const isJobScored = (job: Job): boolean =>
     job.tasks.some((t) => t.aiCapabilityScore > 0 || t.humanCriticalityScore > 0);
 

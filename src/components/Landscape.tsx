@@ -6,6 +6,7 @@ import { MOUSE, TOUCH } from 'three';
 import { WorldTerrain } from './world/WorldTerrain';
 import { WorldMarkers } from './world/WorldMarkers';
 import { StagePins } from './world/StagePins';
+import { SchoolRings } from './world/SchoolRings';
 import { StageTerrain } from './world/StageTerrain';
 import { CameraRig } from './world/CameraRig';
 import { useWorldScene } from './world/worldScene';
@@ -288,6 +289,7 @@ export const Landscape: React.FC = () => {
             <WorldTerrain scene={scene} isMobile={isMobile} />
             <StageTerrain scene={scene} isMobile={isMobile} />
             <StagePins />
+            <SchoolRings scene={scene} />
             <WorldMarkers scene={scene} />
 
             <OrbitControls

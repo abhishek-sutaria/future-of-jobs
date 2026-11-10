@@ -71,15 +71,22 @@ export interface StageTextures {
  */
 export function createStageTextures(bake: StageBake, format: StageTextureFormat): StageTextures {
     const { cols, rows } = bake;
-    const heights = format === 'float'
-        ? new DataTexture(bake.heights, cols, rows, RGFormat, FloatType)
-        : new DataTexture(packHeights(bake.heights), cols, rows, RGBAFormat, UnsignedByteType);
-    const colors = new DataTexture(bake.colors, cols, rows, RGBAFormat, UnsignedByteType);
-    for (const texture of [heights, colors]) {
-        texture.minFilter = NearestFilter;
-        texture.magFilter = NearestFilter;
-        texture.generateMipmaps = false;
-        texture.needsUpdate = true;
-    }
+    const heights = createHeightTexture(bake.heights, cols, rows, format);
+    const colors = nearest(new DataTexture(bake.colors, cols, rows, RGBAFormat, UnsignedByteType));
     return { heights, colors, dispose: () => { heights.dispose(); colors.dispose(); } };
+}
+
+function nearest(texture: DataTexture): DataTexture {
+    texture.minFilter = NearestFilter;
+    texture.magFilter = NearestFilter;
+    texture.generateMipmaps = false;
+    texture.needsUpdate = true;
+    return texture;
+}
+
+/** A two-layer height texture (2025, 2035) in the stage's format: the baked surface, or its school-sunk twin. */
+export function createHeightTexture(heights: Float32Array, cols: number, rows: number, format: StageTextureFormat): DataTexture {
+    return nearest(format === 'float'
+        ? new DataTexture(heights, cols, rows, RGFormat, FloatType)
+        : new DataTexture(packHeights(heights), cols, rows, RGBAFormat, UnsignedByteType));
 }

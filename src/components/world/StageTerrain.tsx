@@ -1,10 +1,22 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { DoubleSide, Group, Mesh, PlaneGeometry, ShaderMaterial, Vector2, Vector4 } from 'three';
+import { DoubleSide, Group, Mesh, PlaneGeometry, ShaderMaterial, Vector2, Vector4, type DataTexture } from 'three';
 import { useStore } from '../../store';
 import { useWorldStore } from '../../worldStore';
-import { bakeStage, rebakeStageColors, STAGE_BLEND, STAGE_BLEND_POWER, stageSegments, yearMix, type StageBake, type StageEmphasis } from '../../utils/stageBake';
-import { highlightKey, highlightOn, isHighlighted, type Highlight } from '../../utils/iuSchools';
+import {
+    bakeStage,
+    bakeSunkHeights,
+    rebakeStageColors,
+    sinkEase,
+    sinkStep,
+    STAGE_BLEND,
+    STAGE_BLEND_POWER,
+    stageSegments,
+    yearMix,
+    type StageBake,
+    type StageEmphasis,
+} from '../../utils/stageBake';
+import { highlightKey, highlightOn, isHighlighted, type Highlight, type SchoolFilter } from '../../utils/iuSchools';
 import { buildStage, stageEdgeBand, stageKey, type Stage } from '../../utils/stageLayout';
 import { composeMaps, invertMap, mapX, mapZ } from '../../utils/stageMap';
 import { WORLD_LAYER } from '../../utils/stageTransition';
@@ -12,13 +24,15 @@ import { rectDepth, rectWidth } from '../../utils/worldLayout';
 import { familyLevel, fieldLevel, type WorldLevel } from '../../utils/worldLevel';
 import { GROUND_Y, type WorldScene } from './worldScene';
 import { MAX_STAGE_TILES, STAGE_SEGMENTS, stageFragmentShader, stageVertexShader, TILE_LINE } from './stageShaders';
-import { createStageTextures, stageTextureFormat, type StageTextureFormat, type StageTextures } from './stageTextures';
+import { createHeightTexture, createStageTextures, stageTextureFormat, type StageTextureFormat, type StageTextures } from './stageTextures';
 import { prefersReducedMotion } from './worldCamera';
 import { worldPointer } from './worldPointer';
 import { layerOf, stageToDisplay, worldView } from './worldView';
 
 /** The Kelley or school filter's dimming fades in at this rate per second. */
 const KELLEY_RATE = 9;
+/** Most of a frame the school's sunk layers may take to bake, a few jobs at a time. */
+const SINK_BAKE_BUDGET_MS = 3;
 /** A layer this far in is fully drawn: labels and input move over to its stage. */
 const DRAWN = 0.999;
 /** Opaque layers draw first and write depth; a layer fading in or out draws after them, over what it hands over to. */
@@ -34,6 +48,13 @@ interface Slot {
     geometry: PlaneGeometry;
     /** Carries the stage's ground to the screen's: stageToDisplay, every frame. */
     holder: Group;
+    /** The school-sunk height layers on the GPU, and the school they were baked for. */
+    sunkTexture: DataTexture | null;
+    sunkFor: string | null;
+    /** Sunk layers for a newly picked school, baking a few jobs a frame. */
+    sunkBaking: { school: string; step: (budgetMs: number) => Float32Array | null } | null;
+    /** Linear progress of the sinking, 0 to 1 (eased into bake.sink). */
+    sinkProgress: number;
 }
 
 const levelOfKey = (key: string): WorldLevel =>
@@ -41,6 +62,20 @@ const levelOfKey = (key: string): WorldLevel =>
 
 /** The jobs a filter keeps at full colour on a stage. */
 const emphasisFor = (h: Highlight): StageEmphasis => (job) => isHighlighted(h, { kind: job.kelley ? 'kelley' : 'bls', soc: job.soc });
+/** The jobs a school keeps standing; only the school sinks hills, never the Kelley filter. */
+const schoolKeeps = (school: SchoolFilter): StageEmphasis => (job) => school.socs.has(job.soc);
+
+function sunkBaker(stage: Stage, bake: StageBake, school: SchoolFilter) {
+    return bakeSunkHeights(stage, bake, STAGE_BLEND, STAGE_BLEND_POWER, stageEdgeBand(stage), schoolKeeps(school));
+}
+
+function installSunk(slot: Slot, heights: Float32Array, school: string, format: StageTextureFormat): void {
+    slot.sunkTexture?.dispose();
+    slot.sunkTexture = createHeightTexture(heights, slot.bake.cols, slot.bake.rows, format);
+    slot.material.uniforms.uSunk.value = slot.sunkTexture;
+    slot.bake.sunk = heights;
+    slot.sunkFor = school;
+}
 
 function makeSlot(stage: Stage, longSide: number, format: StageTextureFormat, highlight: Highlight): Slot {
     const segments = stageSegments(stage.outline, longSide);
@@ -60,10 +95,13 @@ function makeSlot(stage: Stage, longSide: number, format: StageTextureFormat, hi
             uColors: { value: textures.colors },
             uTexels: { value: new Vector2(bake.cols, bake.rows) },
             uCentre: { value: new Vector2((outline.x0 + outline.x1) / 2, (outline.z0 + outline.z1) / 2) },
+            uSunk: { value: textures.heights },
+            uSink: { value: 0 },
             uYearMix: { value: 0 },
             uRise: { value: 1 },
             uFade: { value: 0 },
             uKelley: { value: 0 },
+            uSchool: { value: highlight.school ? 1 : 0 },
             uMouse: { value: new Vector2(1e6, 1e6) },
             uOutline: { value: new Vector4(outline.x0, outline.z0, outline.x1, outline.z1) },
             uTiles: { value: tiles },
@@ -80,12 +118,21 @@ function makeSlot(stage: Stage, longSide: number, format: StageTextureFormat, hi
     const holder = new Group();
     holder.add(mesh);
     worldView.surfaces.set(stage.key, { stage, bake });
-    return { stage, bake, baked: highlightKey(highlight), textures, material, geometry, holder };
+    const slot: Slot = { stage, bake, baked: highlightKey(highlight), textures, material, geometry, holder, sunkTexture: null, sunkFor: null, sunkBaking: null, sinkProgress: 0 };
+    // A stage that arrives with a school already picked arrives sunk, as the world it opens from is.
+    if (highlight.school) {
+        installSunk(slot, sunkBaker(stage, bake, highlight.school).step(Infinity)!, highlight.school.id, format);
+        slot.sinkProgress = 1;
+        bake.sink = 1;
+        material.uniforms.uSink.value = 1;
+    }
+    return slot;
 }
 
 function disposeSlot(slot: Slot): void {
     slot.holder.removeFromParent();
     slot.textures.dispose();
+    slot.sunkTexture?.dispose();
     slot.material.dispose();
     slot.geometry.dispose();
     if (worldView.surfaces.get(slot.stage.key)?.stage === slot.stage) worldView.surfaces.delete(slot.stage.key);
@@ -178,6 +225,24 @@ export const StageTerrain: React.FC<{ scene: WorldScene; isMobile: boolean }> = 
                 slot.baked = wantedKey;
             }
             uniforms.uKelley.value += ((highlightOn(highlight) ? 1 : 0) - uniforms.uKelley.value) * kelleyStep;
+            uniforms.uSchool.value += ((highlight.school ? 1 : 0) - uniforms.uSchool.value) * kelleyStep;
+            // The school's hills: bake its sunk layers a slice a frame, swap them in
+            // only once the old school's have risen back, then sink smoothly.
+            const school = highlight.school;
+            if (school && slot.sunkFor !== school.id && slot.sunkBaking?.school !== school.id) {
+                slot.sunkBaking = { school: school.id, step: sunkBaker(slot.stage, slot.bake, school).step };
+            }
+            if (slot.sunkBaking) {
+                const heights = slot.sunkBaking.step(SINK_BAKE_BUDGET_MS);
+                if (heights && slot.sinkProgress <= 0) {
+                    installSunk(slot, heights, slot.sunkBaking.school, format);
+                    slot.sunkBaking = null;
+                }
+            }
+            const sinkTo = school && slot.sunkFor === school.id ? 1 : 0;
+            slot.sinkProgress = sinkStep(slot.sinkProgress, sinkTo, delta, reduced);
+            slot.bake.sink = sinkEase(slot.sinkProgress);
+            uniforms.uSink.value = slot.bake.sink;
             // The cursor glow, from the screen's ground back to the stage's.
             const fromScreen = composeMaps(slot.stage.map, invertMap(worldView.map));
             uniforms.uMouse.value.set(mapX(fromScreen, worldPointer.mouseX), mapZ(fromScreen, worldPointer.mouseZ));

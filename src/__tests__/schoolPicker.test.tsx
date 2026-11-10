@@ -15,14 +15,14 @@ import { SCHOOL_ENTER_MS, SCHOOL_FADE_MS, SCHOOL_LEAVE_MS } from '../components/
 import { useStore } from '../store';
 import { useWorldStore } from '../worldStore';
 import { BROAD_LABELS } from '../utils/labelLevel';
-import { WORLD_LEVEL } from '../utils/worldLevel';
+import { WORLD_LEVEL, fieldLevel } from '../utils/worldLevel';
 import { LONG_PRESS_MS } from '../utils/schoolShortcut';
 import { highlightOn, isHighlighted, loadIuSchools, schoolFilterOf, type IuSchool } from '../utils/iuSchools';
-import { INDEX_CONTINENT_BY_CODE, OCCUPATION_INDEX, continentOf } from '../utils/occupationIndex';
 import { CONTINENT_DISPLAY_NAMES } from '../config/continents';
 import slim from '../data/iu_school_jobs.json';
 import { bakeStage, rebakeStageColors, STAGE_DIM_EMPHASIS } from '../utils/stageBake';
-import type { StageJob } from '../utils/stageLayout';
+import { buildStage, type StageJob } from '../utils/stageLayout';
+import { buildWorldScene } from '../components/world/worldScene';
 
 (globalThis as unknown as { IS_REACT_ACT_ENVIRONMENT: boolean }).IS_REACT_ACT_ENVIRONMENT = true;
 
@@ -172,20 +172,25 @@ describe('picking a school', () => {
         expect(announcer()).toBe(`Kelley School of Business: ${kelley().jobs.length} occupations stand out.`);
     });
 
-    it('works with the field: counts at the world, in a field, and in the field list', async () => {
-        await act(async () => useWorldStore.getState().setSchool(schoolFilterOf(kelley())));
-        expect(q('[data-testid="school-count"]')!.textContent).toBe(`${kelley().jobs.length} occupations · Kelley School of Business`);
+    it('works with the field: the chip counts what the map lights, at the world, in a field, and in the field list', async () => {
+        const filter = schoolFilterOf(kelley());
+        await act(async () => useWorldStore.getState().setSchool(filter));
+        const scene = buildWorldScene(useStore.getState().jobs);
+        const h = { kelleyOnly: false, school: filter };
+        const lit = scene.peaks.filter((p) => isHighlighted(h, p.entry));
+        expect(lit.length).toBeGreaterThan(0);
+        expect(q('[data-testid="school-chip"]')!.textContent).toBe(`Kelley · ${lit.length} jobs. Show list`);
 
-        const inField = OCCUPATION_INDEX.occupations.filter((o) => continentOf(o.soc) === '13');
-        const matches = inField.filter((o) => kelley().jobs.includes(o.soc)).length;
-        expect(matches).toBeGreaterThan(0);
         await act(async () => useWorldStore.getState().focusContinent('13'));
-        expect(q('[data-testid="world-bar-info"] [data-testid="school-count"]')!.textContent)
-            .toBe(`${matches} of ${INDEX_CONTINENT_BY_CODE.get('13')!.occupationCount} occupations · Kelley School of Business`);
+        const stage = buildStage(fieldLevel('13'), scene)!;
+        const litHere = stage.jobs.filter((j) => isHighlighted(h, { kind: j.kelley ? 'kelley' : 'bls', soc: j.soc }));
+        expect(litHere.length).toBeGreaterThan(0);
+        expect(litHere.length).toBeLessThan(stage.jobs.length);
+        expect(q('[data-testid="school-chip"]')!.textContent).toBe(`Kelley · ${litHere.length} jobs here. Show list`);
 
         await act(async () => fieldPicker().click());
         const badges = [...container.querySelectorAll('[data-testid="field-school-count"]')].map((b) => Number.parseInt(b.textContent!, 10));
-        expect(badges.reduce((a, b) => a + b, 0)).toBe(kelley().jobs.length);
+        expect(badges.reduce((a, b) => a + b, 0)).toBe(lit.length);
     });
 
     it('when nothing matches, says so with a one-click way to clear the school', async () => {

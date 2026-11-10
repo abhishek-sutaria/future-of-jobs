@@ -1,8 +1,9 @@
 import React, { useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
 import { useWorldStore } from '../worldStore';
-import { countMatches, loadIuSchools, schoolFilterOf, type IuSchool, type SchoolFilter } from '../utils/iuSchools';
+import { loadIuSchools, schoolFilterOf, type IuSchool, type SchoolFilter } from '../utils/iuSchools';
 import { prefersReducedMotion } from './world/worldCamera';
-import { IconChevronDown, IconGraduationCap } from './ui/Icons';
+import { listPlacement } from '../utils/schoolLook';
+import { IconCheck, IconChevronDown, IconGraduationCap } from './ui/Icons';
 
 /** Entrance: slide, shimmer and sparks all done (index.css .iu-school--enter and its parts). */
 export const SCHOOL_ENTER_MS = 640;
@@ -14,6 +15,14 @@ export const SCHOOL_FADE_MS = 180;
 type Phase = 'hidden' | 'enter' | 'shown' | 'leave';
 
 const CRIMSON = '#990000';
+/** The picked school in the list: IU crimson, with a check. */
+const SELECTED = 'bg-[#990000] text-white hover:bg-[#a80d0d] focus-visible:bg-[#a80d0d]';
+
+const CheckSlot: React.FC<{ on: boolean }> = ({ on }) => (
+    <span aria-hidden="true" className="w-3.5 shrink-0 flex items-center justify-center">
+        {on && <IconCheck size={14} data-testid="school-check" className="text-white" />}
+    </span>
+);
 const BLUSH = '#ffd9d9';
 
 /** The trail of sparks, from where the two pickers meet out along the slide. */
@@ -47,6 +56,7 @@ const Spark: React.FC<{ dx: number; dy: number; size: number; delay: number; col
 );
 
 const fieldPicker = () => document.querySelector<HTMLElement>('[data-field-picker]');
+
 
 type FocusTarget = 'selected' | 'first' | 'last' | number;
 
@@ -154,6 +164,16 @@ export const SchoolPicker: React.FC<{ onOpenChange?: (open: boolean) => void }> 
         return () => document.removeEventListener('pointerdown', onDown);
     }, [open]);
 
+    // Below the button, or above it if only there it fits. Measured before paint.
+    const [placement, setPlacement] = useState<'below' | 'above'>('below');
+    useLayoutEffect(() => {
+        if (!open) return;
+        const button = buttonRef.current?.getBoundingClientRect();
+        const list = listRef.current;
+        if (!button || !list) return;
+        setPlacement(listPlacement(button, list.offsetHeight, window.innerHeight));
+    }, [open, schools]);
+
     // Open the list, then move into it once its options are on screen.
     const pendingFocus = useRef<FocusTarget | null>(null);
     useLayoutEffect(() => {
@@ -182,6 +202,13 @@ export const SchoolPicker: React.FC<{ onOpenChange?: (open: boolean) => void }> 
         if (e.key in moves) {
             e.preventDefault();
             focusOptionIn(listRef.current, moves[e.key]);
+        } else if (e.key === 'Enter' || e.key === ' ') {
+            // Picks the focused school (the button's own activation, made explicit).
+            const option = (e.target as HTMLElement).closest<HTMLButtonElement>('[role="option"]');
+            if (option) {
+                e.preventDefault();
+                option.click();
+            }
         } else if (e.key === 'Escape') {
             e.preventDefault();
             setOpen(false);
@@ -209,7 +236,8 @@ export const SchoolPicker: React.FC<{ onOpenChange?: (open: boolean) => void }> 
                     ref={wrapRef}
                     data-school-picker
                     data-phase={phase}
-                    className={`iu-school ${motionClass} relative shrink-0 min-w-0 max-md:self-start pointer-events-auto`}
+                    // Open, the picker and its list lie over the rows under it (the school's chip and the info line).
+                    className={`iu-school ${motionClass} relative ${open ? 'z-30' : ''} shrink-0 min-w-0 max-md:self-start pointer-events-auto`}
                     // Leaving: no longer a control, though it is still on screen for a moment.
                     inert={phase === 'leave' ? true : undefined}
                 >
@@ -242,8 +270,9 @@ export const SchoolPicker: React.FC<{ onOpenChange?: (open: boolean) => void }> 
                             id={listId}
                             role="listbox"
                             aria-label="IU schools"
+                            data-placement={placement}
                             onKeyDown={onListKey}
-                            className="absolute left-0 mt-1.5 w-[min(22rem,calc(100vw-2rem))] max-h-[min(60vh,26rem)] overflow-y-auto custom-scrollbar rounded-xl border border-[#990000]/40 bg-gray-900/95 backdrop-blur-xl shadow-2xl py-1"
+                            className={`absolute left-0 z-30 ${placement === 'below' ? 'top-full mt-1.5' : 'bottom-full mb-1.5'} w-[min(22rem,calc(100vw-2rem))] max-h-[min(60vh,26rem)] overflow-y-auto custom-scrollbar rounded-xl border border-[#990000]/40 bg-gray-900/95 backdrop-blur-xl shadow-2xl py-1`}
                         >
                             <li>
                                 <button
@@ -251,9 +280,10 @@ export const SchoolPicker: React.FC<{ onOpenChange?: (open: boolean) => void }> 
                                     role="option"
                                     aria-selected={!school}
                                     onClick={() => pick(null)}
-                                    className="w-full text-left px-3 py-2.5 text-xs text-gray-300 hover:bg-white/[0.06] focus-visible:bg-white/[0.08] outline-none"
+                                    className={`w-full text-left px-3 py-2.5 text-xs flex items-center gap-2 outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#ff8080] ${!school ? SELECTED : 'text-gray-300 hover:bg-white/[0.06] focus-visible:bg-white/[0.08]'}`}
                                 >
-                                    All IU schools <span className="text-gray-500">· no filter</span>
+                                    <CheckSlot on={!school} />
+                                    <span>All IU schools <span className={!school ? 'text-rose-100/80' : 'text-gray-500'}>· no filter</span></span>
                                 </button>
                             </li>
                             {schools?.map((s) => (
@@ -263,10 +293,11 @@ export const SchoolPicker: React.FC<{ onOpenChange?: (open: boolean) => void }> 
                                         role="option"
                                         aria-selected={school?.id === s.id}
                                         onClick={() => pick(schoolFilterOf(s))}
-                                        className={`w-full text-left px-3 py-2 min-h-[40px] flex items-center justify-between gap-3 hover:bg-white/[0.06] focus-visible:bg-white/[0.08] outline-none ${school?.id === s.id ? 'bg-[#990000]/20' : ''}`}
+                                        className={`w-full text-left px-3 py-2 min-h-[40px] flex items-center gap-2 outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#ff8080] ${school?.id === s.id ? SELECTED : 'hover:bg-white/[0.06] focus-visible:bg-white/[0.08]'}`}
                                     >
-                                        <span className="text-[13px] text-gray-200">{s.name}</span>
-                                        <span className="text-[11px] text-gray-500 tabular-nums shrink-0">{s.jobs.length} occupations</span>
+                                        <CheckSlot on={school?.id === s.id} />
+                                        <span className={`text-[13px] flex-1 ${school?.id === s.id ? 'text-white font-semibold' : 'text-gray-200'}`}>{s.name}</span>
+                                        <span className={`text-[11px] tabular-nums shrink-0 ${school?.id === s.id ? 'text-rose-100/80' : 'text-gray-500'}`}>{s.jobs.length} occupations</span>
                                     </button>
                                 </li>
                             ))}
@@ -280,37 +311,5 @@ export const SchoolPicker: React.FC<{ onOpenChange?: (open: boolean) => void }> 
                 </div>
             )}
         </>
-    );
-};
-
-/**
- * What the picked school matches where you are: "9 of 46 occupations" in a
- * field or family, every match at the whole map, and when nothing here
- * matches, says so with a one-click way out. Lives in WorldBar's info line,
- * beside the field's own occupation count.
- */
-export const SchoolMatchNote: React.FC<{ school: SchoolFilter; scopeSocs: readonly string[]; scopeName: string | null }> = ({ school, scopeSocs, scopeName }) => {
-    const setSchool = useWorldStore((s) => s.setSchool);
-    const matches = countMatches(school, scopeSocs);
-    if (matches === 0) {
-        return (
-            <p data-testid="school-empty" className="pointer-events-auto text-[11px] text-rose-100 bg-[#990000]/25 border border-[#990000]/50 backdrop-blur-sm rounded-md pl-2 pr-1 py-0.5 leading-snug max-w-full flex flex-wrap items-center gap-x-2 gap-y-0.5">
-                <span>No {school.name} jobs {scopeName ? `in ${scopeName}` : 'here'}.</span>
-                <button
-                    type="button"
-                    data-testid="school-clear"
-                    onClick={() => setSchool(null)}
-                    className="[@media(pointer:coarse)]:min-h-9 px-1.5 rounded font-semibold text-white underline underline-offset-2 hover:bg-white/10"
-                >
-                    Clear school
-                </button>
-            </p>
-        );
-    }
-    return (
-        <p data-testid="school-count" className="pointer-events-auto text-[11px] text-rose-100 bg-[#990000]/20 border border-[#990000]/40 backdrop-blur-sm rounded-md px-2 py-1 leading-snug max-w-full">
-            <span className="font-semibold tabular-nums">{scopeName ? `${matches} of ${scopeSocs.length}` : matches}</span>
-            {' '}occupations · {school.name}
-        </p>
     );
 };

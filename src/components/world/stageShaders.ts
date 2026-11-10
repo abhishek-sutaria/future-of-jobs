@@ -1,5 +1,5 @@
 import { SCENE, SHADER_COLORS, SHADER_VISUAL } from '../../config/constants';
-import { STAGE_HEIGHT_RANGE } from '../../utils/stageBake';
+import { STAGE_DIM_EMPHASIS, STAGE_HEIGHT_RANGE } from '../../utils/stageBake';
 
 /** Tile rectangles a stage can draw: a family's fields, or a field's minor groups (Production has 9). */
 export const MAX_STAGE_TILES = 12;
@@ -23,11 +23,22 @@ export const stageVertexShader = /* glsl */ `
   varying vec2 vStage;
 
   uniform sampler2D uHeights;  // 2025 height, 2035 height
+  uniform sampler2D uSunk;     // the same with every job outside the IU school sunk low
+  uniform float uSink;         // 0 = uHeights, 1 = uSunk
   uniform sampler2D uColors;   // blended colour, Kelley emphasis
   uniform vec2 uTexels;        // texels along x, along z
   uniform vec2 uCentre;        // stage position of the mesh's middle
   uniform float uYearMix;      // 0 = 2025, 1 = 2035
   uniform float uRise;         // height multiplier: 1 on the stage's own scale
+
+  vec2 readYears(sampler2D t, vec2 texel) {
+    #ifdef STAGE_PACKED
+      vec4 packed = texture2D(t, texel) * 255.0;
+      return vec2(packed.r * 256.0 + packed.g, packed.b * 256.0 + packed.a) * ${(STAGE_HEIGHT_RANGE / 65535).toFixed(10)};
+    #else
+      return texture2D(t, texel).rg;
+    #endif
+  }
 
   void main() {
     vUv = uv;
@@ -35,12 +46,8 @@ export const stageVertexShader = /* glsl */ `
 
     // Mesh vertices and texels line up one to one, so this reads each vertex's own texel.
     vec2 texel = (uv * (uTexels - 1.0) + 0.5) / uTexels;
-    #ifdef STAGE_PACKED
-      vec4 packed = texture2D(uHeights, texel) * 255.0;
-      vec2 years = vec2(packed.r * 256.0 + packed.g, packed.b * 256.0 + packed.a) * ${(STAGE_HEIGHT_RANGE / 65535).toFixed(10)};
-    #else
-      vec2 years = texture2D(uHeights, texel).rg;
-    #endif
+    vec2 years = readYears(uHeights, texel);
+    if (uSink > 0.0) years = mix(years, readYears(uSunk, texel), uSink);
     vec4 color = texture2D(uColors, texel);
 
     vColor = color.rgb;
@@ -66,6 +73,7 @@ export const stageFragmentShader = /* glsl */ `
   uniform vec2 uMouse;     // stage position of the pointer
   uniform float uFade;     // the whole surface, for handing over between levels
   uniform float uKelley;   // 0 = every job at full colour, 1 = a filter (Kelley or IU school) on
+  uniform float uSchool;   // 0 = the Kelley look, 1 = the IU school's: what it leaves out goes grey and dark
   uniform vec4 uOutline;   // the stage's edge, x0, z0, x1, z1
   uniform vec4 uTiles[${MAX_STAGE_TILES}]; // field tiles or minor-group blocks; unused ones far away
   uniform float uTileLine; // how strongly tile borders draw: 1 for fields, fainter for minor groups
@@ -118,7 +126,15 @@ export const stageFragmentShader = /* glsl */ `
     vec3 finalColor = dataPeakColor;
     finalColor = mix(finalColor, gridColor, grid * 0.3);
     finalColor = mix(finalColor, isolineColor, isoline * 0.2);
-    finalColor = mix(baseColor * 0.85, finalColor, mix(1.0, vEmphasis, uKelley));
+    vec3 kelleyLook = mix(baseColor * 0.85, finalColor, mix(1.0, vEmphasis, uKelley));
+    if (uSchool > 0.0) {
+      // Out of the school: grey, and much darker than the Kelley dimming.
+      float leftOut = clamp((1.0 - vEmphasis) / ${(1 - STAGE_DIM_EMPHASIS).toFixed(4)}, 0.0, 1.0);
+      vec3 greyed = mix(baseColor * 0.7, vec3(dot(finalColor, vec3(0.299, 0.587, 0.114))), 0.32);
+      finalColor = mix(kelleyLook, mix(finalColor, greyed, leftOut), uSchool);
+    } else {
+      finalColor = kelleyLook;
+    }
     finalColor += rim + cursorColor;
 
     // The world map's borders: a thin line round every tile, a wider, lighter one round the stage.

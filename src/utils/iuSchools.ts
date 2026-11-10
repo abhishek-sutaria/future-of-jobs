@@ -54,6 +54,36 @@ export const isHighlighted = (h: Highlight, role: { kind: RoleKind; soc: string 
 /** A short key for "what is highlighted", to tell when a bake or a view must change. */
 export const highlightKey = (h: Highlight): string => `${h.kelleyOnly ? 'k' : ''}|${h.school?.id ?? ''}`;
 
+/** Short names for the school's chip ("Kelley · 12 jobs here"); any other school shows its full name. */
+export const SCHOOL_SHORT_NAMES: Readonly<Record<string, string>> = {
+    coas: 'Arts & Sciences',
+    eskenazi: 'Eskenazi',
+    'hamilton-lugar': 'Hamilton Lugar',
+    jacobs: 'Jacobs',
+    kelley: 'Kelley',
+    luddy: 'Luddy',
+    maurer: 'Maurer',
+    media: 'Media School',
+    oneill: 'O’Neill',
+    education: 'Education',
+    medicine: 'Medicine',
+    nursing: 'Nursing',
+    optometry: 'Optometry',
+    'public-health': 'Public Health',
+    'social-work': 'Social Work',
+};
+
+export const schoolShortName = (school: { id: string; name: string }): string => SCHOOL_SHORT_NAMES[school.id] ?? school.name;
+
+/**
+ * The roles that stand out in a scope (the whole map, a family or a field):
+ * exactly the peaks drawn at full colour there, one per role, so a Kelley code
+ * shared by two titles counts twice, as it stands twice on the map.
+ */
+export function highlightedRoles<T extends { kind: RoleKind; soc: string }>(roles: readonly T[], h: Highlight, inScope: (role: T) => boolean = () => true): T[] {
+    return roles.filter((r) => inScope(r) && isHighlighted(h, r));
+}
+
 /** How many of `socs` (an occupation list: the world, a family or a field) the school's jobs include. */
 export function countMatches(school: SchoolFilter, socs: Iterable<string>): number {
     let n = 0;

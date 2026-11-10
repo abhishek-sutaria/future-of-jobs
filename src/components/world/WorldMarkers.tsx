@@ -492,7 +492,7 @@ export const WorldMarkers: React.FC<{ scene: WorldScene }> = ({ scene }) => {
         if (stageNow) stageMarkerHeights(itemsRef.current, surface);
         for (const p of tappablePeaksRef.current) {
             const onStage = !!stageNow?.byKey.get(p.entry.key);
-            const top = onStage ? surface(p.x, p.z) : peakHeightAt(p.entry, yearNow) * worldLift;
+            const top = onStage ? surface(p.x, p.z) : peakHeightAt(p.entry, yearNow) * worldLift * (worldView.peakSink.get(p.entry.key) ?? 1);
             projected.set(toDisplayX(p.x), GROUND_Y + top, toDisplayZ(p.z));
             projected.project(camera);
             if (projected.z < -1 || projected.z > 1) {

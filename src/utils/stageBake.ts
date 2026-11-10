@@ -59,7 +59,29 @@ export interface StageBake {
     heights: Float32Array;
     /** Blended colour (RGB) and filter emphasis (A: Kelley and/or school filter), 0 to 255, for each texel. */
     colors: Uint8Array;
+    /**
+     * The same two layers with every job outside the IU school sunk to
+     * SCHOOL_SINK of its height (bakeSunkHeights), or null before any school.
+     */
+    sunk?: Float32Array | null;
+    /** How far the drawn surface has gone from `heights` toward `sunk`, 0 to 1: the shader's uSink, so pins and labels stand where it draws. */
+    sink?: number;
 }
+
+/** A job outside the picked IU school is drawn at this share of its height (world peaks and stages alike). */
+export const SCHOOL_SINK = 0.2;
+/** Seconds the school's sinking (or rising back) takes. */
+export const SCHOOL_SINK_SECONDS = 0.45;
+
+/** One frame of the sinking: linear progress toward `to`, all at once with reduced motion. */
+export function sinkStep(from: number, to: number, deltaSeconds: number, reduced: boolean): number {
+    if (reduced) return to;
+    const step = deltaSeconds / SCHOOL_SINK_SECONDS;
+    return to > from ? Math.min(to, from + step) : Math.max(to, from - step);
+}
+
+/** Progress eased for drawing (smoothstep), so a peak starts and stops gently. */
+export const sinkEase = (t: number): number => t * t * (3 - 2 * t);
 
 /**
  * The stage's fixed height scale: the largest employment any of its jobs reaches
@@ -112,32 +134,53 @@ function window1D(center: number, reach: number, start: number, step: number, co
  * does; `smoothmax` lets the taller hill win where they overlap, by summing
  * heights to the power `power` and taking the root.
  */
-function bakeLayer(jobs: readonly StageJob[], bake: Omit<StageBake, 'heights' | 'colors'>, atYear: number, blend: StageBlend, power: number, out: Float32Array, offset: number): void {
-    const { rect, cols, rows } = bake;
-    const maxEmployment = stageMaxEmployment(jobs);
+type BakeShape = Omit<StageBake, 'heights' | 'colors' | 'sunk' | 'sink'>;
+
+/** Adds one job's hill (its height times `scale`) to the running sum of a layer. */
+function addHill(job: StageJob, shape: BakeShape, height: number, blend: StageBlend, power: number, sum: Float32Array, across: Float32Array, along: Float32Array): void {
+    const { rect, cols, rows } = shape;
     const stepX = rectWidth(rect) / (cols - 1);
     const stepZ = -rectDepth(rect) / (rows - 1);
-    const across = new Float32Array(cols);
-    const along = new Float32Array(rows);
-    const sum = new Float32Array(cols * rows);
-    const atX = (i: number) => columnX(rect, cols, i);
-    const atZ = (i: number) => rowZ(rect, rows, i);
-    for (const job of jobs) {
-        const reach = job.sigma * HEIGHT_REACH;
-        const twoVariance = (2 * job.sigma * job.sigma) / (blend === 'sum' ? 1 : power);
-        const height = stageJobHeight(job, atYear, maxEmployment);
-        const amount = blend === 'sum' ? height : height ** power;
-        const [x0, x1] = window1D(job.x, reach, rect.x0, stepX, cols);
-        const [y0, y1] = window1D(job.z, reach, rect.z1, stepZ, rows);
-        falloff(job.x, x0, x1, atX, twoVariance, across);
-        falloff(job.z, y0, y1, atZ, twoVariance, along);
-        for (let y = y0; y <= y1; y++) {
-            const row = y * cols;
-            const inRow = amount * along[y];
-            for (let x = x0; x <= x1; x++) sum[row + x] += inRow * across[x];
+    const reach = job.sigma * HEIGHT_REACH;
+    const twoVariance = (2 * job.sigma * job.sigma) / (blend === 'sum' ? 1 : power);
+    const amount = blend === 'sum' ? height : height ** power;
+    const [x0, x1] = window1D(job.x, reach, rect.x0, stepX, cols);
+    const [y0, y1] = window1D(job.z, reach, rect.z1, stepZ, rows);
+    falloff(job.x, x0, x1, (i) => columnX(rect, cols, i), twoVariance, across);
+    falloff(job.z, y0, y1, (i) => rowZ(rect, rows, i), twoVariance, along);
+    for (let y = y0; y <= y1; y++) {
+        const row = y * cols;
+        const inRow = amount * along[y];
+        for (let x = x0; x <= x1; x++) sum[row + x] += inRow * across[x];
+    }
+}
+
+function finishLayer(sum: Float32Array, blend: StageBlend, power: number, out: Float32Array, offset: number): void {
+    for (let i = 0; i < sum.length; i++) out[i * 2 + offset] = blend === 'sum' ? sum[i] : sum[i] ** (1 / power);
+}
+
+function bakeLayer(jobs: readonly StageJob[], bake: BakeShape, atYear: number, blend: StageBlend, power: number, out: Float32Array, offset: number): void {
+    const maxEmployment = stageMaxEmployment(jobs);
+    const across = new Float32Array(bake.cols);
+    const along = new Float32Array(bake.rows);
+    const sum = new Float32Array(bake.cols * bake.rows);
+    for (const job of jobs) addHill(job, bake, stageJobHeight(job, atYear, maxEmployment), blend, power, sum, across, along);
+    finishLayer(sum, blend, power, out, offset);
+}
+
+/** Lowers both height layers toward the ground across the empty band round the stage's edge. */
+function taperEdges(shape: BakeShape, heights: Float32Array, edgeBand: number): void {
+    if (edgeBand <= 0) return;
+    for (let row = 0; row < shape.rows; row++) {
+        const z = rowZ(shape.rect, shape.rows, row);
+        for (let col = 0; col < shape.cols; col++) {
+            const k = stageEdgeTaper(shape.rect, edgeBand, columnX(shape.rect, shape.cols, col), z);
+            if (k >= 1) continue;
+            const i = (row * shape.cols + col) * 2;
+            heights[i] *= k;
+            heights[i + 1] *= k;
         }
     }
-    for (let i = 0; i < sum.length; i++) out[i * 2 + offset] = blend === 'sum' ? sum[i] : sum[i] ** (1 / power);
 }
 
 /** Which jobs keep full colour while a filter is on. Before the school filter it was always the Kelley roles. */
@@ -219,20 +262,52 @@ export function bakeStage(
     const colors = new Uint8Array(shape.cols * shape.rows * 4);
     bakeLayer(stage.jobs, shape, 0, blend, power, heights, 0);
     bakeLayer(stage.jobs, shape, 1, blend, power, heights, 1);
-    if (edgeBand > 0) {
-        for (let row = 0; row < shape.rows; row++) {
-            const z = rowZ(shape.rect, shape.rows, row);
-            for (let col = 0; col < shape.cols; col++) {
-                const k = stageEdgeTaper(shape.rect, edgeBand, columnX(shape.rect, shape.cols, col), z);
-                if (k >= 1) continue;
-                const i = (row * shape.cols + col) * 2;
-                heights[i] *= k;
-                heights[i + 1] *= k;
-            }
-        }
-    }
+    taperEdges(shape, heights, edgeBand);
     bakeColors(stage.jobs, shape, colors, emphasized);
     return { ...shape, heights, colors };
+}
+
+/**
+ * Bakes the sunk layers (every job `kept` leaves out at SCHOOL_SINK of its
+ * height) a few jobs at a time, so picking a school while a stage is up never
+ * holds a frame for a whole bake. Call `step` once a frame with the time it may
+ * use; it returns the finished layers (same layout as `heights`) once every job
+ * is in, else null. `step(Infinity)` bakes it all at once.
+ */
+export function bakeSunkHeights(
+    stage: Pick<Stage, 'jobs'>,
+    shape: BakeShape,
+    blend: StageBlend,
+    power: number,
+    edgeBand: number,
+    kept: StageEmphasis,
+    now: () => number = () => performance.now(),
+): { step: (budgetMs: number) => Float32Array | null } {
+    const { jobs } = stage;
+    const maxEmployment = stageMaxEmployment(jobs);
+    const across = new Float32Array(shape.cols);
+    const along = new Float32Array(shape.rows);
+    const sums = [new Float32Array(shape.cols * shape.rows), new Float32Array(shape.cols * shape.rows)];
+    let next = 0;
+    let done: Float32Array | null = null;
+    return {
+        step(budgetMs) {
+            if (done) return done;
+            const until = now() + budgetMs;
+            while (next < jobs.length) {
+                const job = jobs[next++];
+                const scale = kept(job) ? 1 : SCHOOL_SINK;
+                for (const year of [0, 1] as const) addHill(job, shape, stageJobHeight(job, year, maxEmployment) * scale, blend, power, sums[year], across, along);
+                if (next < jobs.length && now() >= until) return null;
+            }
+            const out = new Float32Array(shape.cols * shape.rows * 2);
+            finishLayer(sums[0], blend, power, out, 0);
+            finishLayer(sums[1], blend, power, out, 1);
+            taperEdges(shape, out, edgeBand);
+            done = out;
+            return done;
+        },
+    };
 }
 
 /**
@@ -296,9 +371,12 @@ export function surfaceHeight(bake: StageBake, x: number, z: number, mix: number
     const y0 = Math.floor(cy);
     const fx = cx - x0;
     const fy = cy - y0;
+    const sunk = bake.sunk;
+    const sink = sunk ? bake.sink ?? 0 : 0;
     const at = (col: number, row: number) => {
         const i = (row * cols + col) * 2;
-        return heights[i] + (heights[i + 1] - heights[i]) * mix;
+        const h = heights[i] + (heights[i + 1] - heights[i]) * mix;
+        return sink > 0 ? h + (sunk![i] + (sunk![i + 1] - sunk![i]) * mix - h) * sink : h;
     };
     const near = at(x0, y0) + (at(x0 + 1, y0) - at(x0, y0)) * fx;
     const far = at(x0, y0 + 1) + (at(x0 + 1, y0 + 1) - at(x0, y0 + 1)) * fx;

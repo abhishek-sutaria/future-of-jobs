@@ -5,10 +5,13 @@ import { Z } from '../config/layers';
 import { YEAR_MAX, YEAR_MIN } from '../config/constants';
 import { CONTINENT_DISPLAY_NAMES } from '../config/continents';
 import { SOC_FAMILIES } from '../config/socFamilies';
-import { INDEX_CONTINENTS, INDEX_CONTINENT_BY_CODE, OCCUPATION_INDEX, continentOf } from '../utils/occupationIndex';
+import { INDEX_CONTINENTS, INDEX_CONTINENT_BY_CODE } from '../utils/occupationIndex';
 import { familyOf } from '../config/socFamilies';
 import { createLongPress } from '../utils/schoolShortcut';
-import { SchoolMatchNote, SchoolPicker } from './SchoolPicker';
+import { SchoolPicker } from './SchoolPicker';
+import { SchoolJobs } from './SchoolJobs';
+import { highlightedRoles } from '../utils/iuSchools';
+import { getRoleEntries } from '../utils/roles';
 import { useIsMobile } from '../hooks/useIsMobile';
 import { formatCount, formatGrowth, formatWorkersShort, growthColor } from '../utils/roleFormat';
 import { breadcrumbs, escapeGoesUp, familySummary, levelAnnouncement, levelKind, type Crumb, type WorldLevel } from '../utils/worldLevel';
@@ -144,6 +147,8 @@ export const WorldBar: React.FC = () => {
     const goToLevel = useWorldStore((s) => s.goToLevel);
     const goUp = useWorldStore((s) => s.goUp);
     const school = useWorldStore((s) => s.school);
+    const kelleyOnly = useWorldStore((s) => s.kelleyOnly);
+    const jobs = useStore((s) => s.jobs);
     const setFieldPickerMounted = useWorldStore((s) => s.setFieldPickerMounted);
     const [open, setOpen] = useState(false);
     const [schoolOpen, setSchoolOpen] = useState(false);
@@ -227,8 +232,9 @@ export const WorldBar: React.FC = () => {
             if (e.key !== 'Escape' || e.repeat) return;
             const main = useStore.getState();
             const world = useWorldStore.getState();
-            // The school picker handles its own Esc (close its list, or hide it).
-            if (main.route === 'dashboard' || (e.target as Element | null)?.closest?.('input, textarea, select, [data-school-picker]')) return;
+            // The school picker handles its own Esc (close its list, or hide it), and so does the school's job list.
+            if (main.route === 'dashboard' || (e.target as Element | null)?.closest?.('input, textarea, select, [data-school-picker], [data-school-jobs]')) return;
+            if (document.querySelector('[data-school-jobs-list]')) return;
             const layers = {
                 panel: !!main.selectedJob || !!world.selectedOccupationSoc,
                 modal: !!document.querySelector('[aria-modal="true"]'),
@@ -286,19 +292,21 @@ export const WorldBar: React.FC = () => {
         focusContinent(code);
     };
 
-    // With a school picked: its matches in each field, and in the scope on screen.
+    // With a school picked: the roles it lights, one per peak on the map, in
+    // each field and in the scope on screen (so every count is what is drawn).
+    const schoolRoles = useMemo(() => (school ? highlightedRoles(getRoleEntries(jobs), { kelleyOnly, school }) : null), [jobs, kelleyOnly, school]);
     const schoolByField = useMemo(() => {
-        if (!school) return null;
+        if (!schoolRoles) return null;
         const counts = new Map<string, number>();
-        for (const o of OCCUPATION_INDEX.occupations) {
-            if (school.socs.has(o.soc)) counts.set(continentOf(o.soc), (counts.get(continentOf(o.soc)) ?? 0) + 1);
-        }
+        for (const r of schoolRoles) counts.set(r.continent, (counts.get(r.continent) ?? 0) + 1);
         return counts;
-    }, [school]);
-    const scopeSocs = useMemo(() => OCCUPATION_INDEX.occupations
-        .filter((o) => (focused ? continentOf(o.soc) === focused : focusedFamily != null ? familyOf(continentOf(o.soc)).id === focusedFamily : true))
-        .map((o) => o.soc), [focused, focusedFamily]);
+    }, [schoolRoles]);
+    const scopeRoles = useMemo(() => schoolRoles?.filter((r) => (focused ? r.continent === focused : focusedFamily != null ? familyOf(r.continent).id === focusedFamily : true)) ?? [],
+        [schoolRoles, focused, focusedFamily]);
     const scopeName = region ? CONTINENT_DISPLAY_NAMES[region.code] : family ? family.shortName : null;
+    const schoolJobs = school && (
+        <SchoolJobs school={school} roles={scopeRoles} atWorld={kind === 'world'} scopeName={scopeName} narrow={narrow} />
+    );
 
     return (
         <div
@@ -379,14 +387,11 @@ export const WorldBar: React.FC = () => {
                         )}
                     </div>
                     {!narrow && <SchoolPicker onOpenChange={onSchoolOpenChange} />}
+                    {!narrow && schoolJobs}
                     {kind !== 'world' && <Breadcrumb crumbs={breadcrumbs(level)} onGo={goToLevel} onBack={goUp} fitWithin={frameRef} />}
                 </div>
                 {narrow && <SchoolPicker onOpenChange={onSchoolOpenChange} />}
-                {kind === 'world' && school && (
-                    <div data-testid="world-bar-school" className="flex flex-wrap items-center gap-1.5">
-                        <SchoolMatchNote school={school} scopeSocs={scopeSocs} scopeName={null} />
-                    </div>
-                )}
+                {narrow && schoolJobs && <div data-testid="world-bar-school" className="flex">{schoolJobs}</div>}
                 {kind !== 'world' && (
                     <div data-testid="world-bar-info" className="flex flex-wrap items-center gap-1.5">
                         {region && (
@@ -424,7 +429,6 @@ export const WorldBar: React.FC = () => {
                                 Peak heights scaled within this family.
                             </p>
                         )}
-                        {school && <SchoolMatchNote school={school} scopeSocs={scopeSocs} scopeName={scopeName} />}
                     </div>
                 )}
             </div>

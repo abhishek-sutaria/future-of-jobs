@@ -13,7 +13,6 @@ import {
     Vector4,
 } from 'three';
 import { useStore } from '../../store';
-import { isHighlighted } from '../../utils/iuSchools';
 import { useWorldStore } from '../../worldStore';
 import { SCENE, SHADER, YEAR_MAX, YEAR_MIN } from '../../config/constants';
 import {
@@ -30,9 +29,10 @@ import { displayToWorld, layerOf, worldView } from './worldView';
 import { rectDepth, rectWidth, WORLD_BOUNDS } from '../../utils/worldLayout';
 import { isIdentityMap } from '../../utils/stageMap';
 import { WORLD_LAYER } from '../../utils/stageTransition';
+import { SCHOOL_SINK, sinkEase, sinkStep } from '../../utils/stageBake';
+import { peakFilterTargets } from '../../utils/schoolLook';
+import { prefersReducedMotion } from './worldCamera';
 
-/** How far a peak outside the highlight fades toward the ground colour. */
-const DIM_EMPHASIS = 0.22;
 /** Opaque, the peaks draw first and write depth; fading, after a stage that is taking over. */
 const PEAK_ORDER = { opaque: 1, fading: 2 } as const;
 
@@ -58,6 +58,11 @@ interface RegionMesh {
     material: ShaderMaterial;
     aPeak: InstancedBufferAttribute;
     aEmph: InstancedBufferAttribute;
+    /** Eased 0 to 1 per peak: how far the IU school has greyed and sunk it. */
+    aOut: InstancedBufferAttribute;
+    /** Linear progress behind aOut, and where each peak is heading. */
+    outProgress: Float32Array;
+    outTarget: Float32Array;
     aColor: InstancedBufferAttribute;
     mesh: Mesh | null;
 }
@@ -124,6 +129,8 @@ export const WorldTerrain: React.FC<{ scene: WorldScene; isMobile: boolean }> = 
             geometry.setAttribute('aPeak', aPeak);
             geometry.setAttribute('aColor', aColor);
             geometry.setAttribute('aEmph', aEmph);
+            const aOut = new InstancedBufferAttribute(new Float32Array(n), 1);
+            geometry.setAttribute('aOut', aOut);
             geometry.setAttribute('aIndex', new InstancedBufferAttribute(indexArr, 1));
             geometry.instanceCount = n;
             // Real bounds for frustum culling (the unit bell's own bounds would
@@ -146,7 +153,7 @@ export const WorldTerrain: React.FC<{ scene: WorldScene; isMobile: boolean }> = 
                     uView: { value: viewUniform },
                 },
             });
-            return { code: region.code, peaks, geometry, material, aPeak, aEmph, aColor, mesh: null };
+            return { code: region.code, peaks, geometry, material, aPeak, aEmph, aOut, outProgress: new Float32Array(n), outTarget: new Float32Array(n), aColor, mesh: null };
         });
     }, [scene, bell]);
 
@@ -158,21 +165,48 @@ export const WorldTerrain: React.FC<{ scene: WorldScene; isMobile: boolean }> = 
     }, [regionMeshes]);
     useEffect(() => () => bell.dispose(), [bell]);
 
-    // Kelley and IU school filters: dim every peak they leave out.
+    // The Kelley filter dims every peak it leaves out, as it always has. The IU
+    // school instead greys and sinks what it leaves out, eased frame by frame below.
+    const sinking = useRef(false);
     useEffect(() => {
-        const highlight = { kelleyOnly, school };
         for (const m of regionMeshes) {
             const arr = m.aEmph.array as Float32Array;
             m.peaks.forEach((p, i) => {
-                arr[i] = isHighlighted(highlight, p.entry) ? 1 : DIM_EMPHASIS;
+                const t = peakFilterTargets({ kelleyOnly, school }, p.entry);
+                arr[i] = t.emphasis;
+                m.outTarget[i] = t.out;
             });
             m.aEmph.needsUpdate = true;
         }
+        sinking.current = true;
     }, [regionMeshes, kelleyOnly, school]);
 
     const lastYear = useRef<number | null>(null);
     const groundRef = useRef<Mesh>(null);
-    useFrame(() => {
+    useFrame((_, delta) => {
+        if (sinking.current) {
+            // Only while some peak is still on its way: 833 floats, no re-bake.
+            const reduced = prefersReducedMotion();
+            let moving = false;
+            for (const m of regionMeshes) {
+                const out = m.aOut.array as Float32Array;
+                let changed = false;
+                m.peaks.forEach((p, i) => {
+                    const from = m.outProgress[i];
+                    const to = m.outTarget[i];
+                    if (from === to) return;
+                    const next = sinkStep(from, to, delta, reduced);
+                    m.outProgress[i] = next;
+                    out[i] = sinkEase(next);
+                    if (out[i] > 0) worldView.peakSink.set(p.entry.key, 1 + (SCHOOL_SINK - 1) * out[i]);
+                    else worldView.peakSink.delete(p.entry.key);
+                    changed = true;
+                    if (next !== to) moving = true;
+                });
+                if (changed) m.aOut.needsUpdate = true;
+            }
+            sinking.current = moving;
+        }
         const year = useStore.getState().year;
         const { alpha: fade, mult: lift } = layerOf(WORLD_LAYER);
         // Nothing to rewrite while the treemap is out of the draw list: it catches up on its way back.
