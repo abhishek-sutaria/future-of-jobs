@@ -10,6 +10,7 @@ import path from 'path';
 import { JSDOM } from 'jsdom';
 import { FEATURES } from '../components/Modals/studentGuideFeatures';
 import { SCORE_COVERAGE } from '../utils/blsScores';
+import { STATE_MAP_COVERAGE } from '../utils/stateMapData';
 
 const ROOT = path.resolve(__dirname, '../..');
 const doc = new JSDOM(fs.readFileSync(path.join(ROOT, 'public/student-guide.html'), 'utf-8')).window.document;
@@ -34,6 +35,16 @@ describe('public/student-guide.html', () => {
         expect(text).toContain(SCORE_COVERAGE.sentence);
         if (SCORE_COVERAGE.unscoredReason) expect(text).toContain(SCORE_COVERAGE.unscoredReason);
         expect(text).not.toMatch(/Business & Finance occupation|coming soon/);
+    });
+
+    it('says the state map covers every job, from the data, and what grey means', () => {
+        const card = cards.find((c) => c.querySelector('h2')!.textContent === 'US Map View')!;
+        const text = card.querySelector('p')!.textContent!;
+        expect(STATE_MAP_COVERAGE.jobs).toBe(830);
+        expect(text).toContain(`all ${STATE_MAP_COVERAGE.jobs} jobs are on it, Kelley or not`);
+        expect(text).toContain('BLS OEWS May 2025');
+        expect(text).toContain('Grey means BLS publishes no number for them in that state.');
+        expect(doc.body.textContent).not.toMatch(/state data for their occupations only|map of the \d+ Kelley roles/);
     });
 
     it('is set in Inter, from font files in public/, so the PDF does not fall back to a system font', () => {

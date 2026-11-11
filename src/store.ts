@@ -185,7 +185,7 @@ interface AppState {
     setMapView: (mode: 'globe' | 'map' | 'tasks') => void;
     selectedRoleIds: Set<string>;
     toggleRoleOnMap: (jobId: string) => void;
-    /** Select these role ids (default: the 50 Kelley roles, the state map's list). */
+    /** Select these role ids (default: the 50 Kelley roles; the role lists always pass their own ids). */
     selectAllRoles: (ids?: string[]) => void;
     clearAllRoles: () => void;
 
