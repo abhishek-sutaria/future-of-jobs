@@ -1,29 +1,22 @@
 import React from 'react';
 import { CHART } from '../../config/constants';
 import { CHART_COLORS } from '../../config/theme';
+import { percentOf } from '../../utils/scoreRounding';
 
 interface RadialGaugeProps {
     value: number; // 0 to 1
     label: string;
     sublabel?: string;
     size?: number;
+    /** Ring colour. The dashboard passes the map's own band colour (utils/roleScale bandFor), so it matches the hills. */
+    color: string;
 }
 
-export const RadialGauge: React.FC<RadialGaugeProps> = ({ value, label, sublabel, size = CHART.RADIAL_GAUGE.SIZE }) => {
+export const RadialGauge: React.FC<RadialGaugeProps> = ({ value, label, sublabel, size = CHART.RADIAL_GAUGE.SIZE, color }) => {
     const strokeWidth = CHART.RADIAL_GAUGE.STROKE_WIDTH;
     const radius = (size - strokeWidth) / 2;
     const circumference = radius * 2 * Math.PI;
     const offset = circumference - value * circumference;
-
-    // Color logic based on value (0.0 - 1.0)
-    // Low Risk (Green) -> High Risk (Red)
-    const getColor = (v: number) => {
-        if (v < CHART.RADIAL_GAUGE.COLOR_LOW) return CHART_COLORS.success;
-        if (v < CHART.RADIAL_GAUGE.COLOR_HIGH) return CHART_COLORS.warning;
-        return CHART_COLORS.danger;
-    };
-
-    const color = getColor(value);
 
     return (
         <div className="relative flex flex-col items-center justify-center" style={{ width: size, height: size }}>
@@ -53,7 +46,7 @@ export const RadialGauge: React.FC<RadialGaugeProps> = ({ value, label, sublabel
             </svg>
             <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
                 <span className="text-2xl font-bold text-white drop-shadow-md">
-                    {(value * 100).toFixed(0)}%
+                    {percentOf(value)}%
                 </span>
                 <span className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mt-1">
                     {label}

@@ -4,8 +4,9 @@
  * around them), and it must never show an AI score, real or placeholder.
  *
  * Rendered to static markup and read back with jsdom, for every occupation
- * outside the 50 Kelley roles that has no published score (783 before the
- * Business & Finance scores, 770 after; those 13 are tested in blsScores.test).
+ * outside the 50 Kelley roles that has no published score: once every planned
+ * job is scored, only the "All Other" jobs O*NET gives no tasks (scored panels
+ * are tested in blsScores.test and blsScoresSlim.test).
  */
 
 import { describe, it, expect, beforeAll } from 'vitest';
@@ -14,17 +15,24 @@ import { describe, it, expect, beforeAll } from 'vitest';
 const ALL_PANELS = { timeout: 60_000 };
 import { renderToStaticMarkup } from 'react-dom/server';
 import { JSDOM } from 'jsdom';
-import { OccupationBody } from '../components/OccupationPanel';
+import { OccupationAbout, OccupationBody } from '../components/OccupationPanel';
+import { ONET_CODES_FOR_SOC, ONET_SPLIT_CODE_TITLES } from '../config/onetSplitCodes';
 import { RolePay } from '../components/RolePay';
 import { INDEX_CONTINENTS, OCCUPATION_INDEX, loadContinentFile, type OccupationEntry } from '../utils/occupationIndex';
 import { getRoleEntries } from '../utils/roles';
 import { useStore } from '../store';
-import { formatCount, formatGrowth, NO_TASKS_NOTE, WORKERS_NOTE, AI_SOON_TITLE } from '../utils/roleFormat';
+import { formatCount, formatGrowth, NO_TASKS_NOTE, NOT_SCORED_TITLE, WORKERS_NOTE, AI_SOON_TITLE, noOwnTaskListNote } from '../utils/roleFormat';
 import { formatAnnualWage, formatHourlyWage, WAGES_META } from '../utils/wages';
 import { peakEmploymentAt } from '../components/world/worldScene';
 import { YEAR_MAX, YEAR_MIN } from '../config/constants';
 import nationalEmployment from '../data/national_employment.json';
-import { BLS_SCORES } from '../utils/blsScores';
+import { BLS_SCORE_RISK, KELLEY_SOC_SCORES, SCORE_COUNTS, blsScoreFor, loadAllBlsScores } from '../utils/blsScores';
+import fs from 'fs';
+import path from 'path';
+
+const PLAN_ALL = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../../data/bls_score_plan_all.json'), 'utf-8')) as {
+    jobs: { soc: string; taskRule: string }[];
+};
 
 const byS = new Map<string, OccupationEntry>();
 const unscored = getRoleEntries(useStore.getState().jobs).filter((e) => e.kind === 'bls' && !e.scored);
@@ -59,6 +67,8 @@ function readableNumbers(doc: Document): { text: string; numbers: number[] } {
 /** Every number the panel may legitimately show for this occupation. */
 function allowedNumbers(o: OccupationEntry): Set<number> {
     const allowed = new Set<number>([YEAR_MIN, YEAR_MAX, YEAR_MIN % 100, YEAR_MAX % 100, 50, 30.1, 2025]);
+    // The coverage sentence's counts, all from the data (utils/blsScores scoreCounts).
+    for (const v of [SCORE_COUNTS.scored, SCORE_COUNTS.total, SCORE_COUNTS.kelleySocs, SCORE_COUNTS.bls]) allowed.add(v);
     for (const part of o.soc.split('-')) allowed.add(Number(part));
     for (const v of [o.employment, o.annualMedian, o.annualMean, o.hourlyMedian, o.hourlyMean]) if (v != null) allowed.add(v);
     if (Object.values(o.topcoded).some(Boolean)) {
@@ -75,7 +85,8 @@ function allowedNumbers(o: OccupationEntry): Set<number> {
 
 describe('unscored occupation panel: numbers', () => {
     it('covers every occupation outside the Kelley roles', () => {
-        expect(unscored).toHaveLength(783 - BLS_SCORES.size);
+        // 830 occupations, less the Kelley SOCs and every one with a published score.
+        expect(unscored).toHaveLength(OCCUPATION_INDEX.occupations.length - SCORE_COUNTS.kelleySocs - BLS_SCORE_RISK.size);
         for (const e of unscored) expect(byS.has(e.soc), e.soc).toBe(true);
     });
 
@@ -132,19 +143,61 @@ describe('unscored occupation panel: numbers', () => {
             }
             if (o.description) expect(doc.querySelector('[data-testid="description"]')!.textContent).toBe(o.description);
         }
-        // From the data, so it holds before and after the Business & Finance
-        // scores: 59 occupations have no O*NET tasks. 13-1020 is one of them but
-        // is represented by its two Kelley titles, which keep their own tasks;
-        // 13-2020 leaves this list once it is scored (its panel is tested in
-        // blsScores.test).
+        // From the data: 59 occupations have no O*NET task list under their own
+        // code. 12 of them are "combined" jobs (O*NET splits them into smaller
+        // codes): 13-1020, held by its two Kelley titles, and 11 scored on
+        // their split codes' tasks (their panels name those codes: see
+        // "combined jobs" below). The other 47 have no O*NET tasks anywhere,
+        // are planned "no-tasks" and stay unscored.
         const counts = OCCUPATION_INDEX._meta.counts;
         const noTaskSocs = OCCUPATION_INDEX.occupations.filter((occ) => occ.taskCount === 0).map((occ) => occ.soc);
         expect(noTaskSocs).toHaveLength(counts.occupations - counts.withTasks);
         const kelleySocs = new Set(getRoleEntries(useStore.getState().jobs).filter((e) => e.kind === 'kelley').map((e) => e.soc));
-        const elsewhere = noTaskSocs.filter((soc) => kelleySocs.has(soc) || BLS_SCORES.has(soc));
-        expect(elsewhere).toEqual(BLS_SCORES.has('13-2020') ? ['13-1020', '13-2020'] : ['13-1020']);
+        const elsewhere = noTaskSocs.filter((soc) => kelleySocs.has(soc) || BLS_SCORE_RISK.has(soc));
+        const combined = PLAN_ALL.jobs.filter((j) => j.taskRule === 'combined').map((j) => j.soc);
+        const planNoTasks = PLAN_ALL.jobs.filter((j) => j.taskRule === 'no-tasks').map((j) => j.soc);
+        expect(combined).toHaveLength(12);
+        expect(combined.sort()).toEqual(Object.keys(ONET_CODES_FOR_SOC).sort());
+        const scoredCombined = combined.filter((soc) => BLS_SCORE_RISK.has(soc) || kelleySocs.has(soc));
+        expect(elsewhere.sort()).toEqual(scoredCombined.sort());
         expect(withoutTasks).toBe(noTaskSocs.length - elsewhere.length);
+        expect(withoutTasks).toBe(47);
+        // Unscored with no tasks = the plan's no-tasks jobs, plus any combined job not yet scored.
+        expect(noTaskSocs.filter((soc) => !elsewhere.includes(soc)).sort()).toEqual(
+            [...planNoTasks, ...combined.filter((soc) => !BLS_SCORE_RISK.has(soc) && !kelleySocs.has(soc))].sort(),
+        );
         expect(byS.get('13-1020')!.tasks).toEqual([]);
+    });
+});
+
+describe('combined jobs name the O*NET codes their tasks come from', () => {
+    beforeAll(() => loadAllBlsScores());
+
+    it('all 12 (11 scored on split codes, and 13-1020) say where their tasks come from, never "no task list"', async () => {
+        const combined = Object.keys(ONET_CODES_FOR_SOC);
+        expect(combined).toHaveLength(12);
+        for (const soc of combined) {
+            const o = (await loadContinentFile(soc.slice(0, 2))).occupations[soc];
+            expect(o.tasks, soc).toEqual([]);
+            const score = KELLEY_SOC_SCORES.get(soc) ?? blsScoreFor(soc);
+            const html = renderToStaticMarkup(<OccupationAbout occupation={o} roleTitle={o.title} scoredFrom={score?.onetCodes ?? []} />);
+            const note = new JSDOM(`<body>${html}</body>`).window.document.querySelector('[data-testid="task-source-note"]')!.textContent!;
+            expect(note, soc).not.toBe(NO_TASKS_NOTE);
+            expect(note, soc).toBe(noOwnTaskListNote(soc, score?.onetCodes ?? []));
+            for (const code of score?.onetCodes ?? ONET_CODES_FOR_SOC[soc]) {
+                expect(note, `${soc} ${code}`).toContain(code);
+                expect(note, `${soc} ${code}`).toContain(ONET_SPLIT_CODE_TITLES[code]);
+            }
+            // A scored job's codes are exactly the ones its published tasks came from.
+            if (score) expect(score.onetCodes, soc).toEqual([...ONET_CODES_FOR_SOC[soc]]);
+        }
+    });
+
+    it('Teaching Assistants names both split codes', () => {
+        expect(noOwnTaskListNote('25-9045', ['25-9042.00', '25-9043.00'])).toBe(
+            'O*NET has no task list under 25-9045 itself. The scored tasks above come from O*NET 25-9042.00 (Teaching Assistants, Preschool, Elementary, Middle, and Secondary School, Except Special Education) and 25-9043.00 (Teaching Assistants, Special Education).',
+        );
+        expect(noOwnTaskListNote('47-3019')).toBe(NO_TASKS_NOTE);
     });
 });
 
@@ -153,7 +206,16 @@ describe('unscored occupation panel: no AI score', () => {
         for (const e of unscored) {
             const doc = render(byS.get(e.soc)!);
             const { text } = readableNumbers(doc);
-            expect(doc.querySelector('[data-testid="ai-soon"]')!.textContent).toContain(AI_SOON_TITLE);
+            const o = byS.get(e.soc)!;
+            const soon = doc.querySelector('[data-testid="ai-soon"]')!.textContent;
+            // No O*NET tasks: nothing to score, so it says "Not scored" and why.
+            if (o.tasks.length === 0) {
+                expect(soon, e.soc).toContain(NOT_SCORED_TITLE);
+                expect(soon, e.soc).toContain('O*NET lists no tasks');
+                expect(soon, e.soc).not.toContain(AI_SOON_TITLE);
+            } else {
+                expect(soon, e.soc).toContain(AI_SOON_TITLE);
+            }
             expect(text).not.toMatch(/\d+\s*%\s*(risk|human)/i);
             expect(text).not.toMatch(/Automation Risk|Human Criticality|Human Resilience|Job Security/);
             expect(text).not.toMatch(/\bAnalyze\b|Roadmap|Scenario|Defend this task|Build on this/);

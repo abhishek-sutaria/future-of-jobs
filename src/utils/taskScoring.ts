@@ -19,6 +19,7 @@ import {
     OOH_ENDPOINT_YEAR,
 } from '../config/constants';
 import { oohEnvelopeCap, oohEnvelopeCapLabel } from './oohEnvelope';
+import { CACHE_VERSION } from './scoreVersion';
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
@@ -48,9 +49,8 @@ interface ScoreCache {
 // ── Cache ──────────────────────────────────────────────────────────────────
 
 const CACHE_KEY = 'foj_ai_scores_v1';
-// v4 = cumulative % from 2025 baseline (not YoY deltas).
-// v5 = prompts grounded in inlined BLS numbers; post-parse forecast cap validation.
-export const CACHE_VERSION = 5;
+// Version history in ./scoreVersion.
+export { CACHE_VERSION };
 const CACHE_TTL_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
 const RATE_LIMIT_MS = 1200; // stay under free-tier limits (~50 req/min)
 

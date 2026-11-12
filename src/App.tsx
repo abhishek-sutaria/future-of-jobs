@@ -9,6 +9,7 @@ import { RescoreConfirmModal } from './components/RescoreConfirmModal';
 import { WebGLFallback } from './components/WebGLFallback';
 import { useStore } from './store';
 import { useUserStore } from './userStore';
+import { useSchoolShortcut } from './hooks/useSchoolShortcut';
 
 /**
  * Feature-detect WebGL before mounting the 3D canvas.
@@ -46,6 +47,9 @@ function App() {
   useEffect(() => {
     hydrateAIConfig();
   }, [hydrateAIConfig]);
+
+  // Cmd/Ctrl+S: the hidden IU school filter. Also keeps the browser's Save page from opening.
+  useSchoolShortcut();
 
   // The single popstate listener for the whole app. `route` itself is seeded
   // synchronously from window.location at store creation (store.ts), so a

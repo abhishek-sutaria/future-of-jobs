@@ -16,6 +16,7 @@
 
 import fs from 'fs';
 import path from 'path';
+import { ONET_CODES_FOR_SOC } from '../../src/config/onetSplitCodes';
 
 /** The 13 detailed occupations in SOC major 13 that no Kelley title covers. */
 export const BF_TARGET_SOCS = [
@@ -43,11 +44,11 @@ export const SENSITIVITY_JOB_IDS = ['job-22', 'job-51'] as const;
 
 export const TASKS_PER_ROLE = 5;
 
-/** O*NET codes that stand in for SOC 13-2020, which has none of its own. */
-export const ONET_CODES_FOR_SOC: Readonly<Record<string, readonly string[]>> = {
-    '13-2020': ['13-2022.00', '13-2023.00'],
-};
-
+/**
+ * The combine rule's table lives in src/config/onetSplitCodes.ts, so the app
+ * can name a combined job's O*NET codes too. Re-exported here unchanged.
+ */
+export { ONET_CODES_FOR_SOC, ONET_SPLIT_CODES_WITHOUT_TASKS } from '../../src/config/onetSplitCodes';
 export const TASK_STATEMENTS_PATH = 'data/db_30_1_text/Task Statements.txt';
 export const OCCUPATIONS_13_PATH = 'src/data/occupations/13.json';
 

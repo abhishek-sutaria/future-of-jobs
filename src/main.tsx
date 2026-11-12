@@ -4,6 +4,12 @@ import './index.css'
 import App from './App.tsx'
 import { ErrorBoundary } from './components/ErrorBoundary'
 import { ToastContainer } from './components/ui/Toast'
+import { reloadForNewBuild } from './utils/staleBuild'
+
+// A lazy chunk from an older deploy failed to preload: reload once into the new build (utils/staleBuild).
+window.addEventListener('vite:preloadError', (event) => {
+  if (reloadForNewBuild()) event.preventDefault()
+})
 
 // Dev: open with ?resetClaude=1 to see the Connect Claude modal again (clears saved choice before React boots).
 // Optional: &clearScores=1 also drops cached AI task scores so scoring runs fresh.

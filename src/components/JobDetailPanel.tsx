@@ -3,10 +3,11 @@ import RoadmapModal from './Modals/RoadmapModal';
 import { ScenarioModal } from './Modals/ScenarioModal';
 import { UpskillModal } from './UpskillModal';
 import type { UpskillMode } from '../utils/analysis';
-import { generateJobScenario, analyzeJob, alignAnalysisToTasks, getClaudeUserFriendlyMessage, type ScenarioResult, type JobAnalysis } from '../utils/analysis';
+import { generateJobScenario, analyzeJob, alignAnalysisToTasks, getClaudeUserFriendlyMessage, AiLimitError, type ScenarioResult, type JobAnalysis } from '../utils/analysis';
 import { IconBrain, IconSparkles, IconAlertTriangle, IconShield, IconTarget, IconInfo, IconTrendingDown, IconCheck, IconBookmark, IconAward } from './ui/Icons';
 import { Z } from '../config/layers';
-import { UI, CHART, RESILIENCE_LABELS, RISK_THRESHOLDS } from '../config/constants';
+import { UI, RESILIENCE_LABELS, RISK_THRESHOLDS } from '../config/constants';
+import { RISK_BAND_COLORS } from '../config/theme';
 import { partitionRoleTasks, isHybridTask, pickRoadmapPair, emptyColumnNote } from '../utils/taskPartition';
 import { blsEpGrowthPathPoints } from '../utils/terrainMath';
 import { jobSourceProvenanceChips, panelSourceList } from '../utils/provenance';
@@ -14,12 +15,34 @@ import { ProvenanceBadge } from './ProvenanceBadge';
 import { RolePay } from './RolePay';
 import { CloseButton } from './ui/CloseButton';
 import { useUserStore } from '../userStore';
-import { loadScenario, saveScenario } from '../lib/userData';
+import { saveScenario } from '../lib/userData';
+import { SharedAnswerNote } from './SharedAnswerNote';
+import { OccupationAbout } from './OccupationPanel';
+import { useStore } from '../store';
+import { roleScaleFor } from '../utils/allRoleScale';
+import { bandFor, rankScopeText, roundHuman } from '../utils/roleScale';
+import { meanPercent, percentOf } from '../utils/scoreRounding';
+import { isBlsRoleId, socOfBlsRoleId } from '../utils/blsRoleJob';
+import { KELLEY_SOC_SCORES, blsScoreFor } from '../utils/blsScores';
+import { MAP_TITLE_TO_SOC } from '../utils/onet';
+import { CONTINENT_DISPLAY_NAMES } from '../config/continents';
+import { continentOf, INDEX_OCCUPATION_BY_SOC, type OccupationEntry } from '../utils/occupationIndex';
+import type { SharedAnswerMeta } from '../utils/claude';
 import type { Job } from '../types';
 
+/**
+ * THE role panel, for every scored role: the 50 Kelley titles and every other
+ * scored BLS occupation (as a Job from utils/blsRoleJob). Same tiles, same
+ * Analyze / Strategic Insight, Roadmap, Scenario, Defend / Build and Save role
+ * for all of them. Kelley-only facts (the Kelley label, "Shares BLS code
+ * with…") show on Kelley roles only. Live Claude answers about a role are
+ * saved server-side on first use and shared with every later visitor.
+ */
 interface JobDetailPanelProps {
     job: Job;
-    analysisResult: JobAnalysis | null;
+    /** The role's BLS occupation (pay for a non-Kelley role, and the About section), once its field is loaded. */
+    occupation?: OccupationEntry | null;
+    analysisResult: (JobAnalysis & { shared?: SharedAnswerMeta }) | null;
     analysisLoading: boolean;
     analysisError: string | null;
     missingApiKey: boolean;
@@ -29,6 +52,11 @@ interface JobDetailPanelProps {
     onShowMethodology: () => void;
 }
 
+/** A 0 to 1 cut-off as a percent with one decimal, so a tie at the cut-off reads as one: 0.84 → "84.0%". */
+const cutPct = (v: number) => `${(roundHuman(v) * 100).toFixed(1)}%`;
+
+const BAND_NAME = { safe: 'green', hybrid: 'amber', high: 'red' } as const;
+
 const RESILIENCE_COLOR: Record<string, string> = {
     [RESILIENCE_LABELS.TOP]: 'text-emerald-400',
     [RESILIENCE_LABELS.MID]: 'text-cyan-400',
@@ -36,13 +64,20 @@ const RESILIENCE_COLOR: Record<string, string> = {
 };
 
 export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
-    job, analysisResult, analysisLoading, analysisError, missingApiKey,
+    job, occupation = null, analysisResult, analysisLoading, analysisError, missingApiKey,
     onClose, onSetAnalysisResult, onSetAnalysisLoading, onShowMethodology,
 }) => {
+    const isKelley = !isBlsRoleId(job.id);
+    const soc = socOfBlsRoleId(job.id) ?? MAP_TITLE_TO_SOC[job.title] ?? null;
+    const fieldName = soc ? CONTINENT_DISPLAY_NAMES[continentOf(soc)] : job.cluster;
+    const kelleyTracks = isKelley && soc ? INDEX_OCCUPATION_BY_SOC.get(soc)?.kelleyTracks ?? [] : [];
+    const jobs = useStore((s) => s.jobs);
+    const scale = roleScaleFor(jobs);
     const [showScenarioModal, setShowScenarioModal] = React.useState(false);
     const [scenarioLoading, setScenarioLoading] = React.useState(false);
     const [scenarioResult, setScenarioResult] = React.useState<ScenarioResult | null>(null);
     const [scenarioError, setScenarioError] = React.useState<string | null>(null);
+    const [scenarioShared, setScenarioShared] = React.useState<SharedAnswerMeta | undefined>(undefined);
     const [analyzeError, setAnalyzeError] = React.useState<string | null>(null);
     const [showRoadmapModal, setShowRoadmapModal] = React.useState(false);
     // Carries the mode and the task's real exposure, because both are sent to
@@ -100,7 +135,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
             if (jobIdRef.current !== startedFor) return;
             onSetAnalysisResult(res);
         } catch (e) {
-            console.error(e);
+            if (!(e instanceof AiLimitError)) console.error(e);
             if (jobIdRef.current !== startedFor) return;
             setAnalyzeError(getClaudeUserFriendlyMessage(e));
         } finally {
@@ -116,25 +151,20 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
         setShowScenarioModal(true);
         setScenarioError(null);
         setScenarioResult(null);
+        setScenarioShared(undefined);
 
-        // A saved scenario restores instantly with no Claude call — this is a
-        // ~1KB artifact that previously had zero caching and was re-billed on
-        // every single open (see src/lib/userData.ts scenarioCacheKey).
-        const saved = await loadScenario(startedFor);
-        if (jobIdRef.current !== startedFor) return;
-        if (saved) {
-            setScenarioResult(saved);
-            return;
-        }
-
+        // One shared scenario per role on the server: the first visitor's click
+        // makes it, and every later open (anyone's) gets it with no Claude call.
         setScenarioLoading(true);
         try {
-            const result = await generateJobScenario(startedTitle, startedRisk, startedTasks);
+            const { result, shared } = await generateJobScenario(startedFor, startedTitle, startedRisk, startedTasks);
             if (jobIdRef.current !== startedFor) return;
             setScenarioResult(result);
+            setScenarioShared(shared);
+            // Also kept in the signed-in user's own saved reports (dashboard).
             void saveScenario(startedFor, startedTitle, result);
         } catch (err) {
-            console.error(err);
+            if (!(err instanceof AiLimitError)) console.error(err);
             if (jobIdRef.current !== startedFor) return;
             setScenarioError(getClaudeUserFriendlyMessage(err));
         } finally {
@@ -146,6 +176,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
     React.useEffect(() => {
         setShowScenarioModal(false);
         setScenarioResult(null);
+        setScenarioShared(undefined);
         setScenarioError(null);
         setScenarioLoading(false);
         setAnalyzeError(null);
@@ -158,6 +189,13 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
     const authStatus = useUserStore((state) => state.authStatus);
 
     const riskValue = job.automationCostIndex;
+    // The map's own band function and colours (utils/roleScale bandFor, thirds of
+    // every scored occupation), so the gauge and the number always match the hill.
+    const riskBandName = bandFor(riskValue, scale);
+    const riskColor = RISK_BAND_COLORS[riskBandName];
+    const riskTitle =
+        `${percentOf(riskValue)}% Automation Risk is ${BAND_NAME[riskBandName]} on the map. Colours split all ${scale.count.toLocaleString('en-US')} scored occupations into thirds: ` +
+        `green below ${percentOf(scale.risk.lower)}%, amber from ${percentOf(scale.risk.lower)}%, red from ${percentOf(scale.risk.upper)}%.`;
 
     const { riskTask, safeTask } = pickRoadmapPair(job.tasks);
     const canShowRoadmap = !!riskTask && !!safeTask;
@@ -178,7 +216,12 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
     }, [job.tasks, analysisResult]);
 
     const humanAvg = job.tasks.reduce((sum, t) => sum + t.humanCriticalityScore, 0) / (job.tasks.length || 1);
-    const humanDisplay = (parseFloat(humanAvg.toFixed(2)) * 100).toFixed(0);
+    // Rounded from whole hundredths, halves up (utils/scoreRounding): 72.5% shows as 73%.
+    const humanDisplay = meanPercent(job.tasks.map((t) => t.humanCriticalityScore));
+    const resilienceTitle =
+        `This role's average Human Criticality is ${cutPct(humanAvg)}. Human Resilience ranks it ${rankScopeText(scale)}: ` +
+        `Future-Proof from ${cutPct(scale.humanP75)} (top quarter), High from ${cutPct(scale.humanP25)} (middle half), At Risk below ${cutPct(scale.humanP25)}. ` +
+        `It is rated separately from Automation Risk, so a role can be Future-Proof and still red on the map.`;
     const insightError = analysisResult ? analyzeError : (analyzeError ?? analysisError);
 
     const renderTaskScores = (task: Job['tasks'][number], riskChipClass: string) => {
@@ -186,13 +229,13 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
         return (
             <div className="flex items-center gap-1.5">
                 <div className={`text-[10px] font-semibold px-2 py-1 rounded border tabular-nums ${riskChipClass}`}>
-                    {(task.aiCapabilityScore * 100).toFixed(0)}% RISK
+                    {percentOf(task.aiCapabilityScore)}% RISK
                 </div>
                 <div
-                    title="Need for human judgment on this task. Rated independently of the risk score."
+                    title="Need for human judgment on this task. Rated separately from the risk score."
                     className={`text-[10px] font-semibold px-2 py-1 rounded border tabular-nums ${isHumanCritical ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20' : 'text-gray-500 bg-white/[0.04] border-white/[0.08]'}`}
                 >
-                    {(task.humanCriticalityScore * 100).toFixed(0)}% HUMAN
+                    {percentOf(task.humanCriticalityScore)}% HUMAN
                 </div>
             </div>
         );
@@ -221,17 +264,20 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                     {/* Header */}
                     <div className="flex-none px-4 py-3 md:px-6 md:py-4 border-b border-white/[0.06] flex justify-between items-start gap-4">
                         <div className="min-w-0 flex-1">
-                            <div className="flex items-center gap-2 mb-1.5">
+                            <div className="flex flex-wrap items-center gap-2 mb-1.5">
                                 <span className="px-2 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wider bg-blue-500/10 text-blue-400 border border-blue-500/20">
-                                    {job.cluster}
+                                    {fieldName}
                                 </span>
-                                {/* Employment figures come from the published BLS OES extract
-                                    (see provenance OES chip). Live-fetch age / quota chrome
-                                    was removed — it implied a degraded fallback. */}
-                                <span className="hidden md:inline text-[10px] text-gray-500 font-mono">{job.id.slice(0, 8)}</span>
+                                {soc && <span className="text-[10px] text-gray-500 font-mono">BLS {soc}</span>}
+                                {/* Kelley-only fact, as a small label on those roles only. */}
+                                {isKelley && (
+                                    <span className="text-[10px] text-amber-300/90 bg-amber-500/10 border border-amber-500/20 px-1.5 py-0.5 rounded" data-testid="kelley-label">
+                                        Kelley role{kelleyTracks.length === 1 ? ` · ${kelleyTracks[0]} track` : ''}
+                                    </span>
+                                )}
                             </div>
                             <h2 className="text-xl md:text-2xl font-bold text-white tracking-tight">{job.title}</h2>
-                            <RolePay title={job.title} />
+                            <RolePay title={job.title} occupation={occupation} />
                             <div className="flex flex-wrap gap-1.5 mt-2" aria-label="Data sources for this role">
                                 {sourceChips.map((c) => (
                                     <ProvenanceBadge key={c.key} label={c.label} provenance={c.provenance} />
@@ -283,26 +329,27 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                         layout at md and up, so the desktop panel is byte-for-byte unchanged. */}
                     <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar md:contents">
                     {/* Metrics Row — four slim tiles: risk, human criticality, BLS growth, resilience.
-                        Risk and human criticality sit side by side so the independence note reads
-                        against both. */}
+                        Risk and human criticality sit side by side so the "rated separately" note
+                        reads against both. */}
                     <div className="flex-none grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3 px-4 md:px-6 py-3 border-b border-white/[0.04]">
                         {/* Risk Gauge */}
-                        <div className="bg-white/[0.03] rounded-xl px-3 py-2 border border-white/[0.06] flex items-center gap-3 relative group">
+                        <div className="bg-white/[0.03] rounded-xl px-3 py-2 border border-white/[0.06] flex items-center gap-3 relative group" title={riskTitle} data-testid="risk-tile" data-band={riskBandName}>
                             <div className="relative w-11 h-11 shrink-0 flex items-center justify-center">
                                 <svg className="w-full h-full -rotate-90" viewBox="0 0 96 96">
                                     <circle cx="48" cy="48" r="38" stroke="currentColor" strokeWidth="10" fill="transparent" className="text-white/[0.06]" />
                                     <circle
-                                        cx="48" cy="48" r="38" stroke="currentColor" strokeWidth="10" fill="transparent"
+                                        cx="48" cy="48" r="38" stroke={riskColor} strokeWidth="10" fill="transparent"
                                         strokeDasharray={2 * Math.PI * 38}
                                         strokeDashoffset={2 * Math.PI * 38 * (1 - riskValue)}
                                         strokeLinecap="round"
-                                        className={`${riskValue > CHART.RADIAL_GAUGE.COLOR_HIGH ? 'text-red-500' : riskValue > CHART.RADIAL_GAUGE.COLOR_LOW ? 'text-amber-500' : 'text-emerald-500'} transition-all duration-700`}
+                                        className="transition-all duration-700"
+                                        data-testid="risk-gauge"
                                     />
                                 </svg>
                             </div>
                             <div className="min-w-0">
-                                <div className={`text-lg font-bold tabular-nums leading-tight ${riskValue > CHART.RADIAL_GAUGE.COLOR_HIGH ? 'text-red-400' : 'text-white'}`}>
-                                    {(riskValue * 100).toFixed(0)}%
+                                <div className="text-lg font-bold tabular-nums leading-tight" style={{ color: riskColor }} data-testid="risk-value">
+                                    {percentOf(riskValue)}%
                                 </div>
                                 <div className="relative group/gauge flex items-center gap-1">
                                     <p className="text-[10px] uppercase text-gray-500 font-semibold tracking-wider">Automation Risk</p>
@@ -314,7 +361,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                         <IconInfo size={10} className="text-gray-500 hover:text-cyan-400" />
                                     </button>
                                     <div className="absolute top-full left-0 mt-2 w-56 p-2 bg-gray-900 border border-gray-700 rounded-lg text-[9px] text-gray-300 opacity-0 group-hover/gauge:opacity-100 pointer-events-none transition-opacity z-10 leading-tight">
-                                        The average of the risk scores shown on each of this role&rsquo;s tasks below. It is not a count of tasks at risk, so it can sit in the middle even when no single task is mostly automated.
+                                        The average of the risk scores shown on each of this role&rsquo;s tasks below. It is not a count of tasks at risk, so it can sit in the middle even when no single task is mostly automated. {riskTitle}
                                     </div>
                                 </div>
                             </div>
@@ -322,7 +369,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
 
                         {/* Human Criticality — mean of the published per-task scores */}
                         <div className="bg-white/[0.03] rounded-xl px-3 py-2 border border-white/[0.06] flex flex-col justify-center min-w-0">
-                            <div className="text-lg font-bold tabular-nums leading-tight text-emerald-400">{humanDisplay}%</div>
+                            <div className="text-lg font-bold tabular-nums leading-tight text-emerald-400" data-testid="human-value">{humanDisplay}%</div>
                             <p className="text-[10px] uppercase text-gray-500 font-semibold tracking-wider">Human Criticality</p>
                             <p className="text-[10px] text-gray-600 leading-tight">Average need for human judgment</p>
                         </div>
@@ -365,17 +412,18 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                             {/* Published percentile label (store.ts applyPercentileLabels), the same
                                 one the 3D view colours by. A live Analyze run no longer overrides it. */}
                             <div
-                                title="How this role's average need for human judgment ranks among all 50 roles: top quarter Future-Proof, middle half High, bottom quarter At Risk."
+                                title={resilienceTitle}
+                                data-testid="resilience-label"
                                 className={`text-lg font-bold leading-tight cursor-help ${RESILIENCE_COLOR[job.humanResilienceLabel] ?? 'text-gray-600'}`}
                             >
                                 {job.humanResilienceLabel}
                             </div>
                             <p className="text-[10px] uppercase text-gray-500 font-semibold tracking-wider">Human Resilience</p>
-                            <p className="text-[10px] text-gray-600">Rank among all 50 roles</p>
+                            <p className="text-[10px] text-gray-600" data-testid="rank-scope">Rank {rankScopeText(scale)}</p>
                         </div>
                         <p className="col-span-2 md:col-span-4 text-[11px] text-gray-400 leading-snug flex items-start gap-1.5">
                             <IconInfo size={12} className="text-cyan-400 mt-0.5 shrink-0" />
-                            <span>Automation Risk and Human Criticality are independent ratings, on the role and on each task, so they are not meant to add up to 100%.</span>
+                            <span>Automation Risk and Human Criticality are rated separately, on the role and on each task, so they are not meant to add up to 100%.</span>
                         </p>
                     </div>
 
@@ -406,6 +454,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                         <p className="text-[11px] text-gray-500 leading-relaxed mt-3">
                                             Claude writes this insight, the reasoning under each task, and the likely replacements and required traits. Every score on this page is the published figure, the same for every visitor.
                                         </p>
+                                        <SharedAnswerNote shared={analysisResult?.shared} className="!mt-1" />
                                     </>
                                 )}
                             </div>
@@ -576,6 +625,15 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                 </div>
                             </div>
                         </div>
+
+                        {occupation && (
+                            <OccupationAbout
+                                occupation={occupation}
+                                roleTitle={job.title}
+                                // The codes its published tasks came from (none for a Kelley title still on its first score).
+                                scoredFrom={soc ? (isKelley ? KELLEY_SOC_SCORES.get(soc) : blsScoreFor(soc))?.onetCodes ?? [] : []}
+                            />
+                        )}
                     </div>
                     </div>
 
@@ -628,6 +686,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                 isLoading={scenarioLoading}
                 result={scenarioResult}
                 errorMessage={scenarioError}
+                shared={scenarioShared}
                 onClose={() => setShowScenarioModal(false)}
             />
             {showRoadmapModal && riskTask && safeTask && (
@@ -638,6 +697,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                     isOpen={true}
                     onClose={() => setUpskillTarget(null)}
                     jobId={job.id}
+                    jobTitle={job.title}
                     taskName={upskillTarget.name}
                     mode={upskillTarget.mode}
                     aiRiskPercent={upskillTarget.riskPercent}
@@ -647,21 +707,16 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
     );
 };
 
-function EmptyState({ error, type, hasHybrid = false }: { loading?: boolean; error: string | null; missingKey?: boolean; type: 'risk' | 'safe'; hasHybrid?: boolean }) {
+function EmptyState({ type, hasHybrid = false }: { loading?: boolean; error?: string | null; missingKey?: boolean; type: 'risk' | 'safe'; hasHybrid?: boolean }) {
     // Task columns come from published scores, not live Analyze — never flash
-    // "Analyzing…" here (that implied the lists depend on the prose call).
+    // "Analyzing…" here (that implied the lists depend on the prose call), and
+    // never show an Analyze error here either: the Strategic Insight box does.
     return (
         <div className="flex flex-col items-center justify-center py-6 text-center space-y-2 opacity-70">
-            {error ? (
-                <p className="text-red-400 text-xs">{error}</p>
-            ) : (
-                <>
-                    {type === 'risk' ? <IconShield size={20} className="text-emerald-500" /> : <IconAlertTriangle size={20} className="text-amber-500" />}
-                    <p className="text-gray-400 text-xs max-w-[16rem] leading-relaxed">
-                        {emptyColumnNote(type === 'risk' ? 'exposed' : 'resistant', hasHybrid)}
-                    </p>
-                </>
-            )}
+            {type === 'risk' ? <IconShield size={20} className="text-emerald-500" /> : <IconAlertTriangle size={20} className="text-amber-500" />}
+            <p className="text-gray-400 text-xs max-w-[16rem] leading-relaxed">
+                {emptyColumnNote(type === 'risk' ? 'exposed' : 'resistant', hasHybrid)}
+            </p>
         </div>
     );
 }

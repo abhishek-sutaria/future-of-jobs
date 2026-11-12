@@ -27,7 +27,8 @@ export const OOH_FRACTION_AT_YEAR_MAX =
 // BLS_OES is the NATIONAL OEWS headcount baked into src/data.ts (role-panel
 // Workers badge / OES chip). Landscape peak height uses BLS Employment
 // Projections levels (epEmployment2025/2035 from bls_ep_2025_2035.json).
-// BLS_STATE is a SEPARATE vintage: state-level employment/LQ in geo_real.json.
+// BLS_STATE is a SEPARATE extract: state-level employment/LQ for the state
+// map (geo_real.json + data/state_map/, scripts/build_state_map.ts).
 // Keep BLS_OES in sync with every `dataSources` array in src/data.ts —
 // src/__tests__/oesVintage.test.ts guards this.
 // ONET carried exactly that bug until 2026-09: this read 'ONET' while the data
@@ -239,9 +240,8 @@ export const CHART = {
     RADIAL_GAUGE: {
         SIZE: 120,
         STROKE_WIDTH: 8,
-        /** Thresholds for green→yellow→red */
-        COLOR_LOW: 0.3,
-        COLOR_HIGH: 0.6,
+        // No fixed colour cut-offs: every risk gauge takes the map's band
+        // colour (utils/roleScale bandFor, thirds of all scored occupations).
     },
 } as const;
 

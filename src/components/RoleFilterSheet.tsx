@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Modal } from './ui/Modal';
 import { RoleFilterChrome, RoleFilterRow } from './RoleSelectorBody';
 import { useStore } from '../store';
+import { useFilterRoles } from '../hooks/useFilterRoles';
 import { FALLBACK_COLORS } from '../config/theme';
 
 interface RoleFilterSheetProps {
@@ -20,7 +21,7 @@ interface RoleFilterSheetProps {
  * list was scrolled — the "bleeding" on phones.
  */
 export const RoleFilterSheet: React.FC<RoleFilterSheetProps> = ({ isOpen, onClose }) => {
-    const jobs = useStore((state) => state.jobs);
+    const jobs = useFilterRoles();
     const selectedRoleIds = useStore((state) => state.selectedRoleIds);
     const toggleRoleOnMap = useStore((state) => state.toggleRoleOnMap);
     const selectAllRoles = useStore((state) => state.selectAllRoles);
@@ -44,7 +45,7 @@ export const RoleFilterSheet: React.FC<RoleFilterSheetProps> = ({ isOpen, onClos
                     onSearchChange={setSearchQuery}
                     selectedCount={selectedRoleIds.size}
                     totalCount={jobs.length}
-                    onSelectAll={selectAllRoles}
+                    onSelectAll={() => selectAllRoles(jobs.map((j) => j.id))}
                     onClearAll={clearAllRoles}
                 />
             }

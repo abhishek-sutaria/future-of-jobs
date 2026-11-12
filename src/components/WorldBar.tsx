@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useWorldStore } from '../worldStore';
 import { useStore } from '../store';
 import { Z } from '../config/layers';
@@ -6,6 +6,13 @@ import { YEAR_MAX, YEAR_MIN } from '../config/constants';
 import { CONTINENT_DISPLAY_NAMES } from '../config/continents';
 import { SOC_FAMILIES } from '../config/socFamilies';
 import { INDEX_CONTINENTS, INDEX_CONTINENT_BY_CODE } from '../utils/occupationIndex';
+import { familyOf } from '../config/socFamilies';
+import { createLongPress } from '../utils/schoolShortcut';
+import { SchoolPicker } from './SchoolPicker';
+import { SchoolJobs } from './SchoolJobs';
+import { highlightedRoles } from '../utils/iuSchools';
+import { getRoleEntries } from '../utils/roles';
+import { useIsMobile } from '../hooks/useIsMobile';
 import { formatCount, formatGrowth, formatWorkersShort, growthColor } from '../utils/roleFormat';
 import { breadcrumbs, escapeGoesUp, familySummary, levelAnnouncement, levelKind, type Crumb, type WorldLevel } from '../utils/worldLevel';
 import { IconChevronDown, IconLayers } from './ui/Icons';
@@ -139,7 +146,15 @@ export const WorldBar: React.FC = () => {
     const focusContinent = useWorldStore((s) => s.focusContinent);
     const goToLevel = useWorldStore((s) => s.goToLevel);
     const goUp = useWorldStore((s) => s.goUp);
+    const school = useWorldStore((s) => s.school);
+    const kelleyOnly = useWorldStore((s) => s.kelleyOnly);
+    const jobs = useStore((s) => s.jobs);
+    const setFieldPickerMounted = useWorldStore((s) => s.setFieldPickerMounted);
     const [open, setOpen] = useState(false);
+    const [schoolOpen, setSchoolOpen] = useState(false);
+    // Beside the field picker, or on a narrow screen on its own row right under
+    // it, so the Back button and trail keep their place beside the field picker.
+    const narrow = useIsMobile();
     const [top, setTop] = useState(112);
     // The frame is the room the bar may use; the bar inside it is only as wide
     // as what it shows, so the map's labels can use the rest.
@@ -147,6 +162,30 @@ export const WorldBar: React.FC = () => {
     const rootRef = useRef<HTMLDivElement>(null);
     // Narrower than the frame only when something stands beside the bar.
     const [maxWidth, setMaxWidth] = useState<number | undefined>(undefined);
+
+    // The Cmd/Ctrl+S shortcut (hooks/useSchoolShortcut) only opens the school
+    // picker where the field picker is.
+    useEffect(() => {
+        setFieldPickerMounted(true);
+        return () => setFieldPickerMounted(false);
+    }, [setFieldPickerMounted]);
+
+    // A long press on the field picker shows or hides the school picker on a
+    // touch screen; a short tap still opens the field list.
+    const [longPress] = useState(() => createLongPress({
+        onLongPress: () => {
+            setOpen(false);
+            navigator.vibrate?.(12);
+            useWorldStore.getState().toggleSchools();
+        },
+    }));
+    useEffect(() => () => longPress.cancel(), [longPress]);
+
+    // One list open at a time: the school list opening closes the field list.
+    const onSchoolOpenChange = useCallback((o: boolean) => {
+        setSchoolOpen(o);
+        if (o) setOpen(false);
+    }, []);
 
     // Sit just under the header, measured rather than hard-coded: it wraps to
     // different heights across widths.
@@ -193,7 +232,9 @@ export const WorldBar: React.FC = () => {
             if (e.key !== 'Escape' || e.repeat) return;
             const main = useStore.getState();
             const world = useWorldStore.getState();
-            if (main.route === 'dashboard' || (e.target as Element | null)?.closest?.('input, textarea, select')) return;
+            // The school picker handles its own Esc (close its list, or hide it), and so does the school's job list.
+            if (main.route === 'dashboard' || (e.target as Element | null)?.closest?.('input, textarea, select, [data-school-picker], [data-school-jobs]')) return;
+            if (document.querySelector('[data-school-jobs-list]')) return;
             const layers = {
                 panel: !!main.selectedJob || !!world.selectedOccupationSoc,
                 modal: !!document.querySelector('[aria-modal="true"]'),
@@ -251,25 +292,53 @@ export const WorldBar: React.FC = () => {
         focusContinent(code);
     };
 
+    // With a school picked: the roles it lights, one per peak on the map, in
+    // each field and in the scope on screen (so every count is what is drawn).
+    const schoolRoles = useMemo(() => (school ? highlightedRoles(getRoleEntries(jobs), { kelleyOnly, school }) : null), [jobs, kelleyOnly, school]);
+    const schoolByField = useMemo(() => {
+        if (!schoolRoles) return null;
+        const counts = new Map<string, number>();
+        for (const r of schoolRoles) counts.set(r.continent, (counts.get(r.continent) ?? 0) + 1);
+        return counts;
+    }, [schoolRoles]);
+    const scopeRoles = useMemo(() => schoolRoles?.filter((r) => (focused ? r.continent === focused : focusedFamily != null ? familyOf(r.continent).id === focusedFamily : true)) ?? [],
+        [schoolRoles, focused, focusedFamily]);
+    const scopeName = region ? CONTINENT_DISPLAY_NAMES[region.code] : family ? family.shortName : null;
+    const schoolJobs = school && (
+        <SchoolJobs school={school} roles={scopeRoles} atWorld={kind === 'world'} scopeName={scopeName} narrow={narrow} />
+    );
+
     return (
         <div
             ref={frameRef}
             className="absolute left-4 right-4 md:left-8 md:right-8 md:max-w-[66rem] pointer-events-none"
             // Open, the list must lie over the year slider, which outranks the bar.
-            style={{ top, zIndex: open ? Z.sidebar : Z.base }}
+            style={{ top, zIndex: open || schoolOpen ? Z.sidebar : Z.base }}
         >
             <div ref={rootRef} data-world-bar data-tour="tour-fields" className="w-fit max-w-full flex flex-col gap-1.5" style={{ maxWidth }}>
                 <p className="sr-only" aria-live="polite">{levelAnnouncement(level, showingFields)}</p>
                 <div data-testid="world-bar-nav" className="flex items-center gap-1.5 min-w-0">
-                    <div className="relative shrink-0 pointer-events-auto">
+                    <div className="relative shrink-0 pointer-events-auto" style={open ? { zIndex: 1 } : undefined}>
                         <button
                             type="button"
                             data-field-picker
-                            onClick={() => setOpen((o) => !o)}
+                            onClick={() => {
+                                if (longPress.consumeClick()) return;
+                                setOpen((o) => !o);
+                            }}
+                            onPointerDown={(e) => longPress.down(e)}
+                            onPointerMove={(e) => longPress.move(e)}
+                            onPointerUp={() => longPress.up()}
+                            onPointerCancel={() => longPress.cancel()}
+                            onPointerLeave={() => longPress.cancel()}
+                            // No callout, text selection or context menu while a finger rests on it.
+                            onContextMenu={(e) => {
+                                if (longPress.pending || (e.nativeEvent as PointerEvent).pointerType === 'touch') e.preventDefault();
+                            }}
                             aria-expanded={open}
                             aria-haspopup="listbox"
                             title="Pick one of the 22 fields (BLS major occupation groups)"
-                            className="h-9 [@media(pointer:coarse)]:h-11 pl-3 pr-2.5 rounded-lg border border-cyan-400/30 bg-gray-900/70 backdrop-blur-sm text-xs font-semibold text-cyan-100 hover:bg-cyan-500/10 transition-colors flex items-center gap-1.5 whitespace-nowrap"
+                            className="h-9 [@media(pointer:coarse)]:h-11 pl-3 pr-2.5 rounded-lg border border-cyan-400/30 bg-gray-900/70 backdrop-blur-sm text-xs font-semibold text-cyan-100 hover:bg-cyan-500/10 transition-colors flex items-center gap-1.5 whitespace-nowrap select-none [-webkit-touch-callout:none] [-webkit-user-select:none] touch-manipulation"
                         >
                             <IconLayers size={13} className="text-cyan-400" />
                             All 22 fields
@@ -303,15 +372,26 @@ export const WorldBar: React.FC = () => {
                                             className={`w-full text-left px-3 py-2 min-h-[40px] flex items-center justify-between gap-3 hover:bg-white/[0.06] ${focused === c.code ? 'bg-cyan-500/10' : ''}`}
                                         >
                                             <span className="text-[13px] text-gray-200 truncate">{CONTINENT_DISPLAY_NAMES[c.code]}</span>
-                                            <span className="text-[11px] text-gray-500 tabular-nums shrink-0">{formatWorkersShort(c.ep.employment2025)} workers</span>
+                                            <span className="flex items-center gap-2 shrink-0">
+                                                {schoolByField && (
+                                                    <span data-testid="field-school-count" className={`text-[11px] tabular-nums rounded px-1.5 ${schoolByField.get(c.code) ? 'text-rose-100 bg-[#990000]/30' : 'text-gray-600'}`}>
+                                                        {schoolByField.get(c.code) ?? 0}<span className="sr-only"> matching occupations</span>
+                                                    </span>
+                                                )}
+                                                <span className="text-[11px] text-gray-500 tabular-nums">{formatWorkersShort(c.ep.employment2025)} workers</span>
+                                            </span>
                                         </button>
                                     </li>
                                 ))}
                             </ul>
                         )}
                     </div>
+                    {!narrow && <SchoolPicker onOpenChange={onSchoolOpenChange} />}
+                    {!narrow && schoolJobs}
                     {kind !== 'world' && <Breadcrumb crumbs={breadcrumbs(level)} onGo={goToLevel} onBack={goUp} fitWithin={frameRef} />}
                 </div>
+                {narrow && <SchoolPicker onOpenChange={onSchoolOpenChange} />}
+                {narrow && schoolJobs && <div data-testid="world-bar-school" className="flex">{schoolJobs}</div>}
                 {kind !== 'world' && (
                     <div data-testid="world-bar-info" className="flex flex-wrap items-center gap-1.5">
                         {region && (

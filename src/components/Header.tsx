@@ -10,6 +10,8 @@ import { useWorldStore } from '../worldStore';
 import { resetViewVisible } from '../utils/resetView';
 import { getRoleEntries, searchRoles, type RoleEntry } from '../utils/roles';
 import { CONTINENT_DISPLAY_NAMES } from '../config/continents';
+import { SCORE_COUNTS } from '../utils/blsScores';
+import { SCORES_BADGE_MONTHS, SCORES_DATE_RANGE } from '../utils/scoreDates';
 
 interface HeaderProps {
     economyData: { value: string; period: string; color: string } | null;
@@ -30,6 +32,7 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
     const hasAIScores = useStore((state) => state.hasAIScores);
     const scoringProgress = useStore((state) => state.scoringProgress);
     const scoresGeneratedAt = useStore((state) => state.scoresGeneratedAt);
+    const scoresSource = useStore((state) => state.scoresSource);
     const openRescoreModal = useStore((state) => state.openRescoreModal);
     const navigate = useStore((state) => state.navigate);
     const isDefaultView = useStore((state) => state.isDefaultView);
@@ -43,9 +46,16 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
     const authStatus = useUserStore((state) => state.authStatus);
     const savedCount = useUserStore((state) => state.activity.savedRoles.length);
 
-    const scoresAgeLabel = scoresGeneratedAt
-        ? new Date(scoresGeneratedAt).toLocaleDateString(undefined, { month: 'short', year: 'numeric' })
+    // The badge's date is the published scores' own dates (utils/scoreDates),
+    // never the build or a browser cache. A user's own re-score is only named
+    // in the tooltip, since it changes the Kelley roles in that browser only.
+    const ownRescore = (scoresSource === 'cache' || scoresSource === 'live') && scoresGeneratedAt
+        ? new Date(scoresGeneratedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
         : null;
+    const scoresBadgeTitle =
+        (SCORES_DATE_RANGE ? `Published AI scores, made ${SCORES_DATE_RANGE}, the same for every visitor.` : 'Published AI scores, the same for every visitor.') +
+        (ownRescore ? ` This browser shows your own re-score of the Kelley roles from ${ownRescore}.` : '') +
+        ` Click to re-score the ${SCORE_COUNTS.kelleyTitles} Kelley roles with your own Claude key (changes only this browser).`;
 
     const [showMoreSheet, setShowMoreSheet] = useState(false);
     const isMobile = useIsMobile();
@@ -84,15 +94,12 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
                     {!isScoring && hasAIScores && (
                         <span
                             className="hidden md:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-[10px] text-emerald-400 font-semibold uppercase tracking-wider pointer-events-auto cursor-pointer hover:bg-emerald-500/20 transition-colors"
-                            title={
-                                scoresAgeLabel
-                                    ? `AI ratings computed ${scoresAgeLabel}. Click to re-score the 50 Kelley roles with fresh Claude data (uses your API key).`
-                                    : 'Click to re-score the 50 Kelley roles with fresh Claude data (uses your API key).'
-                            }
+                            title={scoresBadgeTitle}
                             onClick={() => openRescoreModal()}
+                            data-testid="scores-badge"
                         >
                             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                            {scoresAgeLabel ? `AI Scores · ${scoresAgeLabel}` : 'AI Scores'}
+                            {SCORES_BADGE_MONTHS ? `AI Scores · ${SCORES_BADGE_MONTHS}` : 'AI Scores'}
                         </span>
                     )}
 
@@ -244,7 +251,7 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
             onShowMethodology={onShowMethodology}
             onOpenHealthCheck={onOpenHealthCheck}
             onOpenRescore={() => openRescoreModal()}
-            scoresAgeLabel={scoresAgeLabel}
+            scoresAgeLabel={SCORES_BADGE_MONTHS}
         />
         </>
     );
@@ -363,7 +370,7 @@ const SearchBar: React.FC<{ onSelectRole: (role: RoleEntry) => void }> = ({ onSe
                             </span>
                             <span className="flex items-center gap-1 shrink-0">
                                 {r.kind === 'kelley' && (
-                                    <span className="text-[10px] uppercase tracking-wider text-amber-300 px-1.5 py-0.5 rounded bg-amber-500/10 border border-amber-500/20" title="Kelley role with published AI scores">Kelley</span>
+                                    <span className="text-[10px] uppercase tracking-wider text-amber-300 px-1.5 py-0.5 rounded bg-amber-500/10 border border-amber-500/20" title="One of the 50 Kelley business roles. Every scored job has published AI scores and the same panel; this tag only marks the Kelley list.">Kelley</span>
                                 )}
                                 <span className="text-[9px] uppercase tracking-wider text-gray-500 px-1.5 py-0.5 rounded bg-white/[0.04] border border-white/[0.06] max-w-[7.5rem] text-right leading-tight">{CONTINENT_DISPLAY_NAMES[r.continent]}</span>
                             </span>

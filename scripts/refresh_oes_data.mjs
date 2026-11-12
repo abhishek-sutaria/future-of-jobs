@@ -19,19 +19,19 @@
  *   datatype '01'           = employment          (workbook TOT_EMP)
  *   datatype '17'           = location quotient   (workbook LOC_QUOTIENT)
  *
- * That is exactly the two measures src/data/geo_real.json stores, so this
- * script fully replaces the workbook path for the fields the app uses.
+ * STATE DATA IS NOT REFRESHED HERE ANY MORE (2026-11-10). The state map
+ * (src/data/geo_real.json and src/data/state_map/) is built for all 830 jobs
+ * from the BLS OEWS state file by `npx tsx scripts/build_state_map.ts`
+ * (docs/state-map.md). This script refreshes the national figures only.
  *
  * HARD RULE: never fabricate. A SOC/area with no published series is reported
  * and omitted. Values are never interpolated, split across titles, or guessed.
  *
  * USAGE
- *   node scripts/refresh_oes_data.mjs [--national-only] [--dry-run] [--year=2025]
+ *   node scripts/refresh_oes_data.mjs [--dry-run] [--year=2025]
  *
- * A registered BLS API key (free: https://data.bls.gov/registrationEngine/)
- * is required for the state pass: the unregistered tier allows 25 series per
- * request and 25 requests/day, while the state pass needs ~5k series. Set it
- * as VITE_BLS_API_KEY (the name the app already uses) or BLS_API_KEY.
+ * The national pass is one series per Kelley SOC (47), well inside the
+ * unregistered tier; a BLS key (VITE_BLS_API_KEY or BLS_API_KEY) is optional.
  *
  * Raw API responses are cached in data/.oes_api_cache.json (gitignored) so
  * re-runs and interrupted runs do not burn the daily quota.
@@ -46,16 +46,13 @@ const ROOT = path.resolve(__dirname, '..');
 
 const ONET_PATH = path.join(ROOT, 'src/utils/onet.ts');
 const DATA_TS_PATH = path.join(ROOT, 'src/data.ts');
-const GEO_PATH = path.join(ROOT, 'src/data/geo_real.json');
 const NATIONAL_PATH = path.join(ROOT, 'src/data/national_employment.json');
 const CACHE_PATH = path.join(ROOT, 'data/.oes_api_cache.json');
 
 const API_URL = 'https://api.bls.gov/publicAPI/v2/timeseries/data/';
 const DT_EMPLOYMENT = '01';
-const DT_LOCATION_QUOTIENT = '17';
 
 const args = process.argv.slice(2);
-const NATIONAL_ONLY = args.includes('--national-only');
 const DRY_RUN = args.includes('--dry-run');
 const YEAR = (args.find((a) => a.startsWith('--year=')) || '--year=2025').split('=')[1];
 
@@ -64,35 +61,11 @@ const API_KEY = (process.env.VITE_BLS_API_KEY || process.env.BLS_API_KEY || '').
 // 25 series/request + 25 requests/day unregistered.
 const SERIES_PER_REQUEST = API_KEY ? 50 : 25;
 
-/**
- * BLS OEWS state area codes (2-digit FIPS). Includes the three territories
- * that the existing geo_real.json already carries, so coverage does not
- * silently shrink on refresh.
- */
-const STATE_FIPS = {
-    '01': 'Alabama', '02': 'Alaska', '04': 'Arizona', '05': 'Arkansas',
-    '06': 'California', '08': 'Colorado', '09': 'Connecticut', '10': 'Delaware',
-    '11': 'District of Columbia', '12': 'Florida', '13': 'Georgia', '15': 'Hawaii',
-    '16': 'Idaho', '17': 'Illinois', '18': 'Indiana', '19': 'Iowa',
-    '20': 'Kansas', '21': 'Kentucky', '22': 'Louisiana', '23': 'Maine',
-    '24': 'Maryland', '25': 'Massachusetts', '26': 'Michigan', '27': 'Minnesota',
-    '28': 'Mississippi', '29': 'Missouri', '30': 'Montana', '31': 'Nebraska',
-    '32': 'Nevada', '33': 'New Hampshire', '34': 'New Jersey', '35': 'New Mexico',
-    '36': 'New York', '37': 'North Carolina', '38': 'North Dakota', '39': 'Ohio',
-    '40': 'Oklahoma', '41': 'Oregon', '42': 'Pennsylvania', '44': 'Rhode Island',
-    '45': 'South Carolina', '46': 'South Dakota', '47': 'Tennessee', '48': 'Texas',
-    '49': 'Utah', '50': 'Vermont', '51': 'Virginia', '53': 'Washington',
-    '54': 'West Virginia', '55': 'Wisconsin', '56': 'Wyoming',
-    '66': 'Guam', '72': 'Puerto Rico', '78': 'Virgin Islands',
-};
-
 // ── Series ID construction ─────────────────────────────────────────
 
 const socDigits = (soc) => soc.replace('-', '');
 const nationalSeries = (soc, dt = DT_EMPLOYMENT) =>
     `OEUN0000000000000${socDigits(soc)}${dt}`;
-const stateSeries = (fips, soc, dt = DT_EMPLOYMENT) =>
-    `OEUS${fips}00000000000${socDigits(soc)}${dt}`;
 
 // ── SOC map (parsed from onet.ts so there is one source of truth) ───
 
@@ -248,14 +221,6 @@ async function main() {
     const socMap = parseSocMap();
     const socs = [...new Set(Object.values(socMap))].sort();
     console.log(`SOC map: ${Object.keys(socMap).length} titles -> ${socs.length} unique SOC codes`);
-    if (!API_KEY && !NATIONAL_ONLY) {
-        console.log(
-            '\nNO BLS API KEY FOUND (VITE_BLS_API_KEY / BLS_API_KEY).\n' +
-            'The state pass needs ~5,000 series; the unregistered tier allows 25/day.\n' +
-            'Get a free key at https://data.bls.gov/registrationEngine/ or run with --national-only.\n'
-        );
-    }
-
     const cache = loadCache();
     if (cache.year !== YEAR) {
         console.log(`Cache is for ${cache.year}, target is ${YEAR} — starting a fresh cache.`);
@@ -279,87 +244,9 @@ async function main() {
         console.log(`  NOT PUBLISHED (left untouched, never guessed): ${unpublished.join(', ')}`);
     }
 
-    // ── State pass ──
-    let geoBySoc = null;
-    if (!NATIONAL_ONLY) {
-        const fipsList = Object.keys(STATE_FIPS);
-        const stateIds = [];
-        for (const soc of Object.keys(nationalEmp)) {
-            for (const fips of fipsList) {
-                stateIds.push(stateSeries(fips, soc, DT_EMPLOYMENT));
-                stateIds.push(stateSeries(fips, soc, DT_LOCATION_QUOTIENT));
-            }
-        }
-        console.log('\nState employment + location quotients:');
-        await fetchSeries(stateIds, cache, 'state');
-
-        // Reuse the existing Census centroids so display coordinates do not
-        // drift and audit T60's note_coordinates contract still holds.
-        const prevGeo = JSON.parse(fs.readFileSync(GEO_PATH, 'utf8'));
-        const centroid = {};
-        for (const [k, rows] of Object.entries(prevGeo)) {
-            if (k === '_meta') continue;
-            for (const r of rows) if (!centroid[r.name]) centroid[r.name] = { lat: r.lat, lng: r.lng };
-        }
-
-        geoBySoc = {};
-        let rowCount = 0;
-        const noCentroid = new Set();
-        for (const soc of Object.keys(nationalEmp)) {
-            const rows = [];
-            for (const [fips, name] of Object.entries(STATE_FIPS)) {
-                const emp = cache.values[stateSeries(fips, soc, DT_EMPLOYMENT)];
-                const lq = cache.values[stateSeries(fips, soc, DT_LOCATION_QUOTIENT)];
-                if (typeof emp !== 'number' || emp <= 0) continue; // suppressed -> omit
-                const coords = centroid[name];
-                if (!coords) { noCentroid.add(name); continue; }
-                rows.push({
-                    name,
-                    lat: coords.lat,
-                    lng: coords.lng,
-                    employment: emp,
-                    lq: typeof lq === 'number' && lq >= 0 ? lq : 0,
-                });
-            }
-            rows.sort((a, b) => b.employment - a.employment);
-            geoBySoc[soc] = rows;
-            rowCount += rows.length;
-        }
-        console.log(`  ${Object.keys(geoBySoc).length} SOC codes, ${rowCount} state rows`);
-        if (noCentroid.size) {
-            console.log(`  WARNING no centroid for: ${[...noCentroid].join(', ')} (rows omitted)`);
-        }
-    }
+    console.log('\nState data is not refreshed here: npx tsx scripts/build_state_map.ts builds it from the BLS state file.');
 
     if (DRY_RUN) console.log('\n--dry-run: computing the report below, but no files will be written.');
-
-    // ── Write geo_real.json ──
-    if (geoBySoc && !DRY_RUN) {
-        const out = {
-            _meta: {
-                source: `BLS Occupational Employment and Wage Statistics (OEWS), May ${YEAR}`,
-                source_api: 'https://api.bls.gov/publicAPI/v2/timeseries/data/',
-                bls_release: `OEWS May ${YEAR}`,
-                api_vintage: `${YEAR} A01`,
-                extracted: new Date().toISOString().slice(0, 10),
-                soc_count: Object.keys(geoBySoc).length,
-                note_coordinates:
-                    'lat/lng values are US Census Bureau geographic centroids (display-only). ' +
-                    'They are NOT part of BLS data.',
-                note_employment:
-                    'employment values are BLS OEWS employment (datatype 01, cross-industry). ' +
-                    'lq values are BLS OEWS location quotient (datatype 17).',
-                note_soc_codes:
-                    'SOC codes match MAP_TITLE_TO_SOC in src/utils/onet.ts exactly. Some titles ' +
-                    'share a SOC (e.g. Marketing Manager and Brand Manager both map to 11-2021). ' +
-                    'The map aggregation layer de-dupes by SOC.',
-                note_refresh: 'Regenerate with: node scripts/refresh_oes_data.mjs',
-            },
-            ...geoBySoc,
-        };
-        fs.writeFileSync(GEO_PATH, JSON.stringify(out, null, 2) + '\n');
-        console.log(`\nwrote ${path.relative(ROOT, GEO_PATH)}`);
-    }
 
     // ── Write national_employment.json ──
     const nationalOut = {

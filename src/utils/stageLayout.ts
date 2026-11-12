@@ -48,6 +48,8 @@ export interface StageJob {
     ep2035: number;
     color: readonly [number, number, number];
     kelley: boolean;
+    /** The job's SOC code (shared by Kelley titles on one code), for the school filter. */
+    soc: string;
 }
 
 /** A field's tile on a family's stage, or a minor group's block on a field's. */
@@ -127,6 +129,7 @@ export function buildStage(level: WorldLevel, world: StageWorld): Stage | null {
         ep2035: p.entry.ep2035 ?? 1,
         color: p.color,
         kelley: p.entry.kind === 'kelley',
+        soc: p.entry.soc,
     }));
     return {
         key: stageKey(level)!,

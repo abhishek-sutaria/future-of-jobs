@@ -14,7 +14,7 @@
 import type { Job } from '../types';
 import { MAP_TITLE_TO_SOC } from './onet';
 import { OCCUPATION_INDEX, continentOf, type IndexOccupation } from './occupationIndex';
-import { blsScoreFor } from './blsScores';
+import { BLS_SCORE_RISK } from './blsScores';
 
 export type RoleKind = 'kelley' | 'bls';
 
@@ -48,6 +48,16 @@ export interface RoleEntry {
 }
 
 export const blsRoleKey = (soc: string): string => `soc:${soc}`;
+
+/**
+ * A role's Automation Risk (0 to 1) as the map colours it and its panel shows
+ * it: a Kelley title's from its Job, a BLS occupation's published one; null if
+ * not scored.
+ */
+export function roleRisk(entry: RoleEntry, job: Job | null | undefined): number | null {
+    if (!entry.scored) return null;
+    return job ? job.automationCostIndex : entry.blsRisk ?? null;
+}
 
 export const isJobScored = (job: Job): boolean =>
     job.tasks.some((t) => t.aiCapabilityScore > 0 || t.humanCriticalityScore > 0);
@@ -96,7 +106,7 @@ export function buildRoleEntries(jobs: readonly Job[]): RoleEntry[] {
 }
 
 function blsEntry(occ: IndexOccupation): RoleEntry {
-    const score = blsScoreFor(occ.soc);
+    const risk = BLS_SCORE_RISK.get(occ.soc);
     return {
         key: blsRoleKey(occ.soc),
         kind: 'bls',
@@ -107,8 +117,8 @@ function blsEntry(occ: IndexOccupation): RoleEntry {
         ep2025: occ.epEmployment2025,
         ep2035: occ.epEmployment2035,
         epPercentChange: occ.epPercentChange,
-        scored: !!score,
-        ...(score ? { blsRisk: score.automationCostIndex } : {}),
+        scored: risk !== undefined,
+        ...(risk !== undefined ? { blsRisk: risk } : {}),
     };
 }
 
@@ -162,14 +172,4 @@ export function getRoleEntries(jobs: readonly Job[]): RoleEntry[] {
         entriesCache.set(jobs, entries);
     }
     return entries;
-}
-
-/** How many Kelley titles sit in each continent. */
-export function kelleyCountByContinent(jobs: readonly Job[]): Map<string, number> {
-    const counts = new Map<string, number>();
-    for (const job of jobs) {
-        const soc = MAP_TITLE_TO_SOC[job.title];
-        if (soc) counts.set(continentOf(soc), (counts.get(continentOf(soc)) ?? 0) + 1);
-    }
-    return counts;
 }

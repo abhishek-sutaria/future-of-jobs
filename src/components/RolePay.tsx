@@ -1,6 +1,6 @@
 import React from 'react';
 import { paySummary, payScopeNote, payBaseNote, wageForTitle, type PayFields } from '../utils/wages';
-import { INDEX_OCCUPATION_BY_SOC } from '../utils/occupationIndex';
+import { INDEX_OCCUPATION_BY_SOC, type OccupationEntry } from '../utils/occupationIndex';
 
 /**
  * Median pay line for the role panel header, read as one quiet sentence under
@@ -8,9 +8,13 @@ import { INDEX_OCCUPATION_BY_SOC } from '../utils/occupationIndex';
  * figures only (src/data/national_wages.json), so it renders at full height on
  * first paint and never shifts the panel. Provenance is the "Pay" chip below.
  */
-export const RolePay: React.FC<{ title: string }> = ({ title }) => {
+export const RolePay: React.FC<{ title: string; occupation?: OccupationEntry | null }> = ({ title, occupation }) => {
     const found = wageForTitle(title);
-    if (!found) return null;
+    if (!found) {
+        // Any other occupation: the same OEWS May 2025 national workbook, read
+        // into its occupation file (scripts/build_occupations.py).
+        return occupation ? <PayLine entry={occupation} baseNote={payBaseNote(occupation.employment)} /> : null;
+    }
     // Payroll base: the SOC's whole OEWS headcount, never the 3D view's split share.
     const base = INDEX_OCCUPATION_BY_SOC.get(found.soc)?.employment ?? null;
     return <PayLine entry={found.entry} baseNote={payBaseNote(base)} scopeNote={payScopeNote(title)} />;

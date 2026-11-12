@@ -12,7 +12,9 @@ import RoleSelector from './RoleSelector';
 import { RoleFilterButton } from './RoleFilterButton';
 import { RoleFilterSheet } from './RoleFilterSheet';
 import { useIsMobile } from '../hooks/useIsMobile';
-import { analyzeJob, getClaudeUserFriendlyMessage, type JobAnalysis } from '../utils/analysis';
+import { analyzeJob, getClaudeUserFriendlyMessage, AiLimitError, type JobAnalysis, type SharedAnswerMeta } from '../utils/analysis';
+import { useFieldOccupation, useOccupationRole } from '../hooks/useOccupationRole';
+import { MAP_TITLE_TO_SOC } from '../utils/onet';
 import { Legend } from './Legend';
 import { Header } from './Header';
 import { YearSlider } from './YearSlider';
@@ -41,6 +43,12 @@ export const UI: React.FC<UIProps> = ({ dashboardOpen }) => {
     const mapView = useStore((state) => state.mapView);
     const selectedOccupationSoc = useWorldStore((state) => state.selectedOccupationSoc);
     const closeOccupation = useWorldStore((state) => state.closeOccupation);
+    // A scored BLS occupation opens the same role panel as a Kelley role, as a
+    // Job built from its published data (hooks/useOccupationRole). An unscored
+    // one keeps the numbers-only OccupationPanel and never reaches Claude.
+    const { occupation: openOccupation, job: occupationJob } = useOccupationRole(selectedJob ? null : selectedOccupationSoc);
+    const kelleyOccupation = useFieldOccupation(selectedJob ? MAP_TITLE_TO_SOC[selectedJob.title] ?? null : null);
+    const activeJob = selectedJob ?? occupationJob;
 
     const [showSkillsModal, setShowSkillsModal] = useState(false);
     const [showStartupIdeasModal, setShowStartupIdeasModal] = useState(false);
@@ -71,33 +79,37 @@ export const UI: React.FC<UIProps> = ({ dashboardOpen }) => {
     const [loadingEconomy, setLoadingEconomy] = useState(true);
 
     const [analysisLoading, setAnalysisLoading] = useState(false);
-    const [analysisResult, setAnalysisResult] = useState<JobAnalysis | null>(null);
+    type Analysis = JobAnalysis & { shared?: SharedAnswerMeta };
+    const [analysisResult, setAnalysisResult] = useState<Analysis | null>(null);
     const [analysisError, setAnalysisError] = useState<string | null>(null);
     const missingApiKey = false;
 
     // Session cache of successful auto-analyze prose. Mark ids only after
     // success so a failed/in-flight call can retry, and restore on revisit
     // instead of clearing to blank.
-    const analysisCacheRef = React.useRef<Map<string, JobAnalysis>>(new Map());
+    const analysisCacheRef = React.useRef<Map<string, Analysis>>(new Map());
     const analyzeGenerationRef = React.useRef(0);
 
     // Record the view as user activity. Kept in its own effect rather than
     // folded into auto-analysis below, which short-circuits for already-analyzed
     // jobs and would therefore miss most repeat visits.
     React.useEffect(() => {
-        if (!selectedJob) return;
-        void useUserStore.getState().recordJobView(selectedJob.id, selectedJob.title);
-    }, [selectedJob?.id]);
+        if (!activeJob) return;
+        void useUserStore.getState().recordJobView(activeJob.id, activeJob.title);
+    }, [activeJob?.id]);
 
-    // Auto-analyze selected job. Generation id + stale checks prevent a slow
-    // response for role A from writing onto role B. Only a Kelley role is ever
-    // a selectedJob: an occupation without published scores opens through
-    // selectedOccupationSoc and never reaches Claude (no scores to explain,
-    // and every call costs money).
+    // Auto-analyze the open role: any scored role, Kelley or not. Generation id
+    // + stale checks prevent a slow response for role A from writing onto role
+    // B. The answer is saved server-side on first use and shared, so later
+    // visitors get it back with no Claude call. An occupation without
+    // published scores never gets here (activeJob stays null for it).
     React.useEffect(() => {
-        if (!selectedJob) return;
-        const jobId = selectedJob.id;
-        const { title, tasks, employment, projectedGrowth } = selectedJob;
+        if (!activeJob) return;
+        const jobId = activeJob.id;
+        const { title, tasks, employment, projectedGrowth } = activeJob;
+        const currentRoleId = () =>
+            useStore.getState().selectedJob?.id
+            ?? (useWorldStore.getState().selectedOccupationSoc ? `soc:${useWorldStore.getState().selectedOccupationSoc}` : null);
 
         const cached = analysisCacheRef.current.get(jobId);
         if (cached) {
@@ -113,7 +125,7 @@ export const UI: React.FC<UIProps> = ({ dashboardOpen }) => {
         const generation = ++analyzeGenerationRef.current;
         const isStale = () =>
             analyzeGenerationRef.current !== generation
-            || useStore.getState().selectedJob?.id !== jobId;
+            || currentRoleId() !== jobId;
 
         const runAnalysis = async () => {
             setAnalysisLoading(true);
@@ -132,10 +144,15 @@ export const UI: React.FC<UIProps> = ({ dashboardOpen }) => {
                 setAnalysisResult(res);
                 toast.success('AI analysis complete');
             } catch (e: unknown) {
-                console.error('Auto-analysis failed', e);
+                // The visitor limit is an expected state, not a fault.
+                if (e instanceof AiLimitError) console.info('[Analyze] visitor limit reached; saved answers still open.');
+                else console.error('Auto-analysis failed', e);
                 if (isStale()) return;
                 const msg = e instanceof Error ? e.message : 'Failed to analyze';
-                if (msg.includes('429') || msg.includes('quota')) {
+                if (e instanceof AiLimitError) {
+                    // The visitor limit: say so in the panel, with the server's own words.
+                    setAnalysisError(e.message);
+                } else if (msg.includes('429') || msg.includes('quota')) {
                     toast.warning('AI analysis rate limited. Try again in a moment.');
                 } else {
                     setAnalysisError(getClaudeUserFriendlyMessage(e));
@@ -147,7 +164,7 @@ export const UI: React.FC<UIProps> = ({ dashboardOpen }) => {
             }
         };
         void runAnalysis();
-    }, [selectedJob?.id]);
+    }, [activeJob?.id]);
 
     // Fetch BLS unemployment
     React.useEffect(() => {
@@ -223,6 +240,7 @@ export const UI: React.FC<UIProps> = ({ dashboardOpen }) => {
                 <ErrorBoundary fallback={<div className="fixed inset-0 flex items-center justify-center pointer-events-auto" style={{ zIndex: Z.detailPanel }}><div className="bg-gray-900 border border-white/10 rounded-xl p-6 text-center"><p className="text-white mb-3">Panel encountered an error</p><button onClick={() => setSelectedJob(null)} className="px-4 py-2 bg-white/10 rounded-lg text-sm text-white">Close</button></div></div>}>
                     <JobDetailPanel
                         job={selectedJob}
+                        occupation={kelleyOccupation}
                         analysisResult={analysisResult}
                         analysisLoading={analysisLoading}
                         analysisError={analysisError}
@@ -238,9 +256,27 @@ export const UI: React.FC<UIProps> = ({ dashboardOpen }) => {
                 </ErrorBoundary>
             )}
 
-            {selectedOccupationSoc && (
+            {!selectedJob && selectedOccupationSoc && (
                 <ErrorBoundary fallback={<div className="fixed inset-0 flex items-center justify-center pointer-events-auto" style={{ zIndex: Z.detailPanel }}><div className="bg-gray-900 border border-white/10 rounded-xl p-6 text-center"><p className="text-white mb-3">Panel encountered an error</p><button onClick={closeOccupation} className="px-4 py-2 bg-white/10 rounded-lg text-sm text-white">Close</button></div></div>}>
-                    <OccupationPanel soc={selectedOccupationSoc} onClose={closeOccupation} />
+                    {occupationJob ? (
+                        <JobDetailPanel
+                            job={occupationJob}
+                            occupation={openOccupation}
+                            analysisResult={analysisResult}
+                            analysisLoading={analysisLoading}
+                            analysisError={analysisError}
+                            missingApiKey={missingApiKey}
+                            onClose={closeOccupation}
+                            onSetAnalysisResult={(res) => {
+                                if (res) analysisCacheRef.current.set(occupationJob.id, res);
+                                setAnalysisResult(res);
+                            }}
+                            onSetAnalysisLoading={setAnalysisLoading}
+                            onShowMethodology={() => setShowMethodologyModal(true)}
+                        />
+                    ) : (
+                        <OccupationPanel soc={selectedOccupationSoc} onClose={closeOccupation} />
+                    )}
                 </ErrorBoundary>
             )}
 

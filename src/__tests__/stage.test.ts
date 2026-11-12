@@ -133,7 +133,7 @@ describe('one map per stage', () => {
                 }
             }
         }
-    });
+    }, 15_000); // checks every pair of jobs on every stage: under load this took over 5 s
 
     it('lands the same job in the same place every time, whatever the year or the jobs array', () => {
         for (const level of LEVELS) {
@@ -549,7 +549,7 @@ describe.each(named)('the bake of %s', (_key, stage) => {
 });
 
 describe('the surface', () => {
-    const lone: StageJob = { key: 'a', code: '11', x: 4, z: -6, sigma: 2, ep2025: 1000, ep2035: 2000, color: [1, 0, 0], kelley: false };
+    const lone: StageJob = { key: 'a', code: '11', x: 4, z: -6, sigma: 2, ep2025: 1000, ep2035: 2000, color: [1, 0, 0], kelley: false, soc: '11-1011' };
     const outline: Rect = { x0: -35, z0: -35, x1: 35, z1: 35 };
     const stage = { jobs: [lone], outline };
 
@@ -607,8 +607,17 @@ describe('the surface', () => {
 
 describe('colour', () => {
     it('keeps unscored jobs the existing grey: an all-grey field bakes to nothing else', () => {
-        const stage = stageOf(fieldLevel('47'));
-        expect(stage.jobs.every((j) => !j.kelley)).toBe(true);
+        const real = stageOf(fieldLevel('47'));
+        expect(real.jobs.every((j) => !j.kelley)).toBe(true);
+        // Real data: every unscored job on the stage carries the grey, every scored one does not.
+        const unscoredKeys = new Set(scene.peaks.filter((p) => !p.entry.scored).map((p) => p.entry.key));
+        const unscoredHere = real.jobs.filter((j) => unscoredKeys.has(j.key));
+        expect(unscoredHere.length).toBeGreaterThan(0);
+        const isGrey = (c: readonly number[]) => c.every((v, k) => Math.abs(v - RISK_UNSCORED_RGB[k]) < 1e-9);
+        for (const j of real.jobs) expect(isGrey(j.color), j.key).toBe(unscoredKeys.has(j.key));
+        // No field is all grey once the planned jobs are scored, so the bake rule
+        // is checked on field 47 with every job unscored (its own layout and heights).
+        const stage = { ...real, jobs: real.jobs.map((j) => ({ ...j, color: RISK_UNSCORED_RGB })) };
         const { colors } = bakeOf(stage);
         const grey = RISK_UNSCORED_RGB.map((c) => Math.round(c * 255));
         // Bare ground is its own colour; anywhere a job's colour reaches is the grey.

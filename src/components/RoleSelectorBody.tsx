@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useStore } from '../store';
+import { useFilterRoles } from '../hooks/useFilterRoles';
 import { FALLBACK_COLORS } from '../config/theme';
 
 /**
@@ -8,7 +9,7 @@ import { FALLBACK_COLORS } from '../config/theme';
  * outside Modal's scroller so selected rows cannot bleed over search.
  */
 export default function RoleSelectorBody() {
-    const jobs = useStore((state) => state.jobs);
+    const jobs = useFilterRoles();
     const selectedRoleIds = useStore((state) => state.selectedRoleIds);
     const toggleRoleOnMap = useStore((state) => state.toggleRoleOnMap);
     const selectAllRoles = useStore((state) => state.selectAllRoles);
@@ -29,7 +30,7 @@ export default function RoleSelectorBody() {
                 onSearchChange={setSearchQuery}
                 selectedCount={selectedRoleIds.size}
                 totalCount={jobs.length}
-                onSelectAll={selectAllRoles}
+                onSelectAll={() => selectAllRoles(jobs.map((j) => j.id))}
                 onClearAll={clearAllRoles}
             />
 

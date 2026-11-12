@@ -3,10 +3,12 @@ import { Modal } from '../ui/Modal';
 import { IconAlertTriangle, IconTarget, IconBook, IconArrowRight } from '../ui/Icons';
 import { Skeleton, SkeletonText } from '../ui/Skeleton';
 import type { Job } from '../../types';
-import { getClaudeUserFriendlyMessage, type RoadmapResult } from '../../utils/analysis';
+import { getClaudeUserFriendlyMessage, AiLimitError, type RoadmapResult, type SharedAnswerMeta } from '../../utils/analysis';
 import { UI } from '../../config/constants';
-import { loadRoadmap, saveRoadmap } from '../../lib/userData';
+import { saveRoadmap } from '../../lib/userData';
+import { SharedAnswerNote } from '../SharedAnswerNote';
 import { RoadmapReport } from '../reports/RoadmapReport';
+import { percentOf } from '../../utils/scoreRounding';
 
 interface RoadmapModalProps {
     job: Job;
@@ -19,29 +21,26 @@ export default function RoadmapModal({ job, riskTask, targetTask, onClose }: Roa
     const [isLoading, setIsLoading] = useState(true);
     const [roadmapData, setRoadmapData] = useState<RoadmapResult | null>(null);
     const [roadmapError, setRoadmapError] = useState<string | null>(null);
+    const [shared, setShared] = useState<SharedAnswerMeta | undefined>(undefined);
 
     useEffect(() => {
         let mounted = true;
         const fetchRoadmap = async () => {
             setRoadmapError(null);
             setRoadmapData(null);
+            setShared(undefined);
             setIsLoading(true);
             try {
-                // A saved roadmap for this exact (job, riskTask, targetTask) transition
-                // restores instantly with no Claude call — previously this modal
-                // re-generated on every single open, including reopening the same
-                // transition (see src/lib/userData.ts roadmapCacheKey).
-                const saved = await loadRoadmap(job.id, riskTask.name, targetTask.name);
-                if (saved) {
-                    if (mounted) setRoadmapData(saved);
-                    return;
-                }
+                // The server keeps one shared roadmap per role and exact
+                // (riskTask, targetTask) pair: the first visitor's click makes it,
+                // and every later open, by anyone, gets it back with no Claude call.
                 const { generateRoadmap } = await import('../../utils/analysis');
-                const result = await generateRoadmap(job.title, riskTask.name, targetTask.name);
-                if (mounted) setRoadmapData(result);
+                const { result, shared: meta } = await generateRoadmap(job.id, job.title, riskTask.name, targetTask.name);
+                if (mounted) { setRoadmapData(result); setShared(meta); }
+                // Also kept in the signed-in user's own saved reports (dashboard).
                 void saveRoadmap(job.id, job.title, riskTask.name, targetTask.name, result);
             } catch (err) {
-                console.error(err);
+                if (!(err instanceof AiLimitError)) console.error(err);
                 if (mounted) setRoadmapError(getClaudeUserFriendlyMessage(err));
             } finally {
                 if (mounted) setIsLoading(false);
@@ -71,7 +70,7 @@ export default function RoadmapModal({ job, riskTask, targetTask, onClose }: Roa
                     </p>
                     <div className="flex justify-between items-end pt-3 border-t border-white/[0.04]">
                         <span className="text-[10px] text-gray-500 uppercase">Automation Risk</span>
-                        <span className="text-xl font-bold text-red-400 tabular-nums">{(riskTask.aiCapabilityScore * 100).toFixed(0)}%</span>
+                        <span className="text-xl font-bold text-red-400 tabular-nums">{percentOf(riskTask.aiCapabilityScore)}%</span>
                     </div>
                 </div>
 
@@ -99,7 +98,7 @@ export default function RoadmapModal({ job, riskTask, targetTask, onClose }: Roa
                     </div>
                     <div className="flex justify-between items-end pt-3 border-t border-white/[0.04]">
                         <span className="text-[10px] text-gray-500 uppercase">Human Criticality</span>
-                        <span className="text-xl font-bold text-emerald-400 tabular-nums">{(targetTask.humanCriticalityScore * 100).toFixed(0)}%</span>
+                        <span className="text-xl font-bold text-emerald-400 tabular-nums">{percentOf(targetTask.humanCriticalityScore)}%</span>
                     </div>
                 </div>
             </div>
@@ -130,6 +129,7 @@ export default function RoadmapModal({ job, riskTask, targetTask, onClose }: Roa
                 ) : roadmapData ? (
                     <div className="animate-in fade-in duration-300">
                         <RoadmapReport result={roadmapData} />
+                        <SharedAnswerNote shared={shared} />
                     </div>
                 ) : (
                     <div className="flex flex-col items-center py-8 text-center bg-red-500/[0.04] border border-red-500/15 rounded-xl">

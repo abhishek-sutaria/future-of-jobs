@@ -5,7 +5,7 @@ import { IconLayers, IconAlertTriangle, IconSearch } from './ui/Icons';
 import { useStore } from '../store';
 
 import { UI } from '../config/constants';
-import { SCORE_COVERAGE } from '../utils/blsScores';
+import { SCORE_COUNTS, SCORE_COVERAGE } from '../utils/blsScores';
 
 const STORAGE_KEY = UI.INTRO_STORAGE_KEY;
 
@@ -49,9 +49,14 @@ export const IntroModal: React.FC = () => {
                     <div>
                         <h3 className="text-white font-semibold mb-1 text-sm">Color Indicates Relative Risk</h3>
                         <p className="text-gray-400 text-sm leading-relaxed">
-                            <span className="text-red-400">High risk markers</span> are more exposed to automation than most roles here.
-                            <span className="text-emerald-400"> Safer markers</span> rank lower on that same relative scale — not immune.
-                            {SCORE_COVERAGE.sentence} <span className="text-slate-300">Slate peaks</span> are scored soon.
+                            <span className="text-red-400">High risk markers</span> are more exposed to automation than most of the {SCORE_COUNTS.ranked.toLocaleString('en-US')} scored occupations.
+                            <span className="text-emerald-400"> Safer markers</span> rank lower on that same relative scale — not immune.{' '}
+                            {SCORE_COVERAGE.sentence}
+                            {SCORE_COVERAGE.slate && (
+                                <>
+                                    {' '}<span className="text-slate-300">Slate peaks</span>{SCORE_COVERAGE.slate}
+                                </>
+                            )}
                         </p>
                     </div>
                 </div>
@@ -63,7 +68,7 @@ export const IntroModal: React.FC = () => {
                     <div>
                         <h3 className="text-white font-semibold mb-1 text-sm">Role detail</h3>
                         <p className="text-gray-400 text-sm leading-relaxed">
-                            Click any marker to open the role panel and compare AI-capable tasks with ones that still need a person.
+                            Click any marker to open the role panel and compare AI-capable tasks with ones that still need a person. Every scored role has the same panel: Strategic Insight, Roadmap, Scenario and Defend / Build. Claude writes each answer the first time it is asked for; when saving is on, it is saved so every visitor sees the same one.
                         </p>
                     </div>
                 </div>

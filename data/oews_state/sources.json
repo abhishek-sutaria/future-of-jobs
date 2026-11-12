@@ -1,0 +1,33 @@
+{
+  "_about": "Every input of scripts/build_state_map.ts. The build checks each committed file against its sha256 and stops on a mismatch. To refresh: download the zip from its URL, check it, unzip the workbook here, then update the sha256 values and the retrieved date.",
+  "files": [
+    {
+      "path": "state_M2025_dl.xlsx",
+      "title": "OEWS May 2025 state estimates, all occupations, all 54 state-level areas (50 states, DC, Guam, Puerto Rico, Virgin Islands), the workbook from the zip, bytes unchanged",
+      "publisher": "U.S. Bureau of Labor Statistics, Occupational Employment and Wage Statistics (OEWS)",
+      "url": "https://www.bls.gov/oes/special-requests/oesm25st.zip",
+      "seenAt": "https://www.bls.gov/oes/tables.htm",
+      "retrieved": "2026-11-10",
+      "zipSha256": "74d5be0e1df865517d22dc3bd1fc3a8af5f6f9e3052a2163143021505d8e04c6",
+      "member": "oesm25st/state_M2025_dl.xlsx",
+      "sha256": "e9590ec791fd2941341631f84ee6445d3df931c1ad5776b80ea07c9f89fba95d",
+      "sheet": "state_M2025_dl"
+    },
+    {
+      "path": "area_centroids.json",
+      "title": "Display coordinates for the 54 areas (US Census Bureau centroids, not BLS data), copied from src/data/geo_real.json at c7a7e55",
+      "publisher": "US Census Bureau (via the app's earlier src/data/geo_real.json)",
+      "url": "https://github.com/abhishek-sutaria/future-of-jobs/blob/c7a7e550af792f0763b1b4f83d20c0fab8f3459a/src/data/geo_real.json",
+      "retrieved": "2026-11-10",
+      "sha256": "ff5588838fc63b6beae61866ff1a29fe3c02a1f79da843902435ce9c69895231"
+    },
+    {
+      "path": "earlier_geo_real_bls_api.json",
+      "title": "The earlier Kelley state data (src/data/geo_real.json at c7a7e55, built 2026-08-29 from the BLS public API by scripts/refresh_oes_data.mjs), bytes unchanged. Kept only so docs/state-map.md can list exactly what changed when the map moved to the state file",
+      "publisher": "U.S. Bureau of Labor Statistics, public data API (OEWS series)",
+      "url": "https://github.com/abhishek-sutaria/future-of-jobs/blob/c7a7e550af792f0763b1b4f83d20c0fab8f3459a/src/data/geo_real.json",
+      "retrieved": "2026-11-10",
+      "sha256": "187bcba3ad656faa8f91a23d5fd7c2e3f59b7d00fa7e4315cc13a41f326f9077"
+    }
+  ]
+}
