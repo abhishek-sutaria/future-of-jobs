@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useStore } from '../../store';
 import type { Job } from '../../types';
-import { getRoleEntries, type RoleEntry } from '../../utils/roles';
+import { getRoleEntries, roleRisk, type RoleEntry } from '../../utils/roles';
 import { buildWorldLayout, type WorldLayout } from '../../utils/worldLayout';
 import { epLevelAtYear, getVisualHeightForEpEmployment, TERRAIN_CONFIG } from '../../utils/terrainMath';
 import { normalizeRisk, riskBandColor, riskColorRGB, RISK_UNSCORED_HEX, RISK_UNSCORED_RGB } from '../../config/theme';
@@ -61,7 +61,7 @@ export function buildWorldScene(jobs: readonly Job[]): WorldScene {
             const job = entry.jobId ? jobById.get(entry.jobId) ?? null : null;
             // Kelley roles read the store's index; a scored BLS occupation its own
             // published one. Both go through the same scale, set by all of them.
-            const risk = job && entry.scored ? job.automationCostIndex : entry.scored ? entry.blsRisk ?? null : null;
+            const risk = roleRisk(entry, job);
             const peak: ScenePeak = {
                 entry,
                 index,

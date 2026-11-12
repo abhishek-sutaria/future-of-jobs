@@ -1,6 +1,8 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { useStore } from '../store';
 import { initialJobs } from '../data';
+import { KELLEY_SOC_SCORES } from '../utils/blsScores';
+import { MAP_TITLE_TO_SOC } from '../utils/onet';
 
 // Mock dependencies
 vi.mock('../utils/bls', () => ({
@@ -8,9 +10,10 @@ vi.mock('../utils/bls', () => ({
     getSeriesIdForJob: vi.fn(() => 'LEU0252881500'),
 }));
 
-vi.mock('../utils/onet', () => ({
+// The real title → SOC map: each Kelley title is seeded from its SOC's entry once --batch kelley is in.
+vi.mock('../utils/onet', async (importOriginal) => ({
+    ...(await importOriginal<typeof import('../utils/onet')>()),
     getRealOnetTasks: vi.fn(() => []),
-    MAP_TITLE_TO_SOC: {},
 }));
 
 vi.mock('../data/geo_real.json', () => ({
@@ -26,22 +29,24 @@ describe('Store Logic: Truth in Data', () => {
         });
     });
 
-    // Guards the fix for the ~5-minute cold start: scores must come precomputed
-    // from src/data/ai_scores.json at module load, not from a blocking live pass.
-    // If this fails, either the file is missing or its schema version drifted —
-    // run `npm run generate-scores`.
-    it('seeds precomputed AI scores at store init, with no live scoring needed', () => {
+    // Guards the fix for the ~5-minute cold start: scores must come published at
+    // module load (each Kelley title's SOC entry in ai_scores_bls.json, else its
+    // first score in ai_scores.json), not from a blocking live pass.
+    it('seeds published AI scores at store init, with no live scoring needed', () => {
         const initial = useStore.getInitialState();
 
         expect(initial.scoresSource).toBe('baked');
         expect(initial.hasAIScores).toBe(true);
-        expect(initial.scoresGeneratedAt).toBeTypeOf('number');
 
         const scored = initial.jobs.filter((j) => j.automationCostIndex > 0);
         expect(scored.length).toBe(initial.jobs.length);
 
-        const withFullForecast = initial.jobs.filter((j) => (j.yearlyForecast?.length ?? 0) >= 6);
-        expect(withFullForecast.length).toBe(initial.jobs.length);
+        // A title still on its first score keeps that score's forecast path; a
+        // title on its SOC entry has none (no published entry carries one, and
+        // the app draws no AI forecast).
+        const onFirst = initial.jobs.filter((j) => !KELLEY_SOC_SCORES.has(MAP_TITLE_TO_SOC[j.title]));
+        for (const j of onFirst) expect(j.yearlyForecast?.length ?? 0, j.title).toBeGreaterThanOrEqual(6);
+        if (onFirst.length > 0) expect(initial.scoresGeneratedAt).toBeTypeOf('number');
 
         // Risk must actually vary, otherwise the terrain renders one flat color.
         const indices = initial.jobs.map((j) => j.automationCostIndex);

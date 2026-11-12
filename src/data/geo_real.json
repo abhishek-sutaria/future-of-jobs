@@ -1,15 +1,16 @@
 {
   "_meta": {
     "source": "BLS Occupational Employment and Wage Statistics (OEWS), May 2025",
-    "source_api": "https://api.bls.gov/publicAPI/v2/timeseries/data/",
+    "source_file": "https://www.bls.gov/oes/special-requests/oesm25st.zip (oesm25st/state_M2025_dl.xlsx, sheet state_M2025_dl)",
+    "source_sha256": "zip 74d5be0e1df865517d22dc3bd1fc3a8af5f6f9e3052a2163143021505d8e04c6, workbook e9590ec791fd2941341631f84ee6445d3df931c1ad5776b80ea07c9f89fba95d",
     "bls_release": "OEWS May 2025",
-    "api_vintage": "2025 A01",
-    "extracted": "2026-08-29",
+    "retrieved": "2026-11-10",
+    "extracted": "2026-11-10",
     "soc_count": 47,
     "note_coordinates": "lat/lng values are US Census Bureau geographic centroids (display-only). They are NOT part of BLS data.",
-    "note_employment": "employment values are BLS OEWS employment (datatype 01, cross-industry). lq values are BLS OEWS location quotient (datatype 17).",
-    "note_soc_codes": "SOC codes match MAP_TITLE_TO_SOC in src/utils/onet.ts exactly. Some titles share a SOC (e.g. Marketing Manager and Brand Manager both map to 11-2021). The map aggregation layer de-dupes by SOC.",
-    "note_refresh": "Regenerate with: node scripts/refresh_oes_data.mjs"
+    "note_employment": "employment = TOT_EMP and lq = LOC_QUOTIENT (cross-industry, detailed occupation, state and territory rows). An area BLS marks \"**\" (employment estimate not available) or does not list is left out. Rows: largest employment first, ties by state name A to Z.",
+    "note_soc_codes": "The Kelley SOCs (src/utils/kelleySocs.ts). Some titles share a SOC (e.g. Marketing Manager and Brand Manager both map to 11-2021). The map aggregation layer de-dupes by SOC. Every other occupation's rows are in src/data/state_map/, built the same way.",
+    "note_refresh": "Regenerate with: npx tsx scripts/build_state_map.ts"
   },
   "11-1021": [
     {
@@ -2335,18 +2336,18 @@
       "lq": 0.71
     },
     {
-      "name": "Iowa",
-      "lat": 41.88,
-      "lng": -93.1,
-      "employment": 3620,
-      "lq": 1.47
-    },
-    {
       "name": "Alabama",
       "lat": 32.81,
       "lng": -86.79,
       "employment": 3620,
       "lq": 1.08
+    },
+    {
+      "name": "Iowa",
+      "lat": 41.88,
+      "lng": -93.1,
+      "employment": 3620,
+      "lq": 1.47
     },
     {
       "name": "Connecticut",
@@ -2918,18 +2919,18 @@
       "lq": 0.22
     },
     {
-      "name": "Wyoming",
-      "lat": 43.08,
-      "lng": -107.29,
-      "employment": 40,
-      "lq": 0.26
-    },
-    {
       "name": "Guam",
       "lat": 13.44,
       "lng": 144.79,
       "employment": 40,
       "lq": 1.17
+    },
+    {
+      "name": "Wyoming",
+      "lat": 43.08,
+      "lng": -107.29,
+      "employment": 40,
+      "lq": 0.26
     }
   ],
   "11-3071": [
@@ -3102,18 +3103,18 @@
       "lq": 0.49
     },
     {
-      "name": "Mississippi",
-      "lat": 32.35,
-      "lng": -89.4,
-      "employment": 2410,
-      "lq": 1.46
-    },
-    {
       "name": "Connecticut",
       "lat": 41.6,
       "lng": -73.09,
       "employment": 2410,
       "lq": 1
+    },
+    {
+      "name": "Mississippi",
+      "lat": 32.35,
+      "lng": -89.4,
+      "employment": 2410,
+      "lq": 1.46
     },
     {
       "name": "Kentucky",
@@ -3489,18 +3490,18 @@
       "lq": 0.37
     },
     {
-      "name": "Nebraska",
-      "lat": 41.49,
-      "lng": -99.9,
-      "employment": 140,
-      "lq": 0.9
-    },
-    {
       "name": "Arkansas",
       "lat": 34.75,
       "lng": -92.29,
       "employment": 140,
       "lq": 0.73
+    },
+    {
+      "name": "Nebraska",
+      "lat": 41.49,
+      "lng": -99.9,
+      "employment": 140,
+      "lq": 0.9
     },
     {
       "name": "District of Columbia",
@@ -3594,18 +3595,18 @@
       "lq": 0.32
     },
     {
-      "name": "Puerto Rico",
-      "lat": 18.22,
-      "lng": -66.59,
-      "employment": 30,
-      "lq": 0.25
-    },
-    {
       "name": "Alaska",
       "lat": 63.35,
       "lng": -152,
       "employment": 30,
       "lq": 0.66
+    },
+    {
+      "name": "Puerto Rico",
+      "lat": 18.22,
+      "lng": -66.59,
+      "employment": 30,
+      "lq": 0.25
     }
   ],
   "11-3121": [
@@ -3848,18 +3849,18 @@
       "lq": 0.5
     },
     {
-      "name": "Kansas",
-      "lat": 39.01,
-      "lng": -98.48,
-      "employment": 1290,
-      "lq": 0.63
-    },
-    {
       "name": "Arkansas",
       "lat": 34.75,
       "lng": -92.29,
       "employment": 1290,
       "lq": 0.7
+    },
+    {
+      "name": "Kansas",
+      "lat": 39.01,
+      "lng": -98.48,
+      "employment": 1290,
+      "lq": 0.63
     },
     {
       "name": "New Hampshire",
@@ -4221,18 +4222,18 @@
       "lq": 0.51
     },
     {
-      "name": "District of Columbia",
-      "lat": 38.91,
-      "lng": -77.04,
-      "employment": 210,
-      "lq": 0.96
-    },
-    {
       "name": "Arkansas",
       "lat": 34.75,
       "lng": -92.29,
       "employment": 210,
       "lq": 0.52
+    },
+    {
+      "name": "District of Columbia",
+      "lat": 38.91,
+      "lng": -77.04,
+      "employment": 210,
+      "lq": 0.96
     },
     {
       "name": "Mississippi",
@@ -6114,18 +6115,18 @@
       "lq": 0.82
     },
     {
-      "name": "Nebraska",
-      "lat": 41.49,
-      "lng": -99.9,
-      "employment": 3190,
-      "lq": 0.45
-    },
-    {
       "name": "Alabama",
       "lat": 32.81,
       "lng": -86.79,
       "employment": 3190,
       "lq": 0.22
+    },
+    {
+      "name": "Nebraska",
+      "lat": 41.49,
+      "lng": -99.9,
+      "employment": 3190,
+      "lq": 0.45
     },
     {
       "name": "Montana",
@@ -6853,18 +6854,18 @@
       "lq": 0.65
     },
     {
-      "name": "Hawaii",
-      "lat": 19.9,
-      "lng": -155.58,
-      "employment": 550,
-      "lq": 0.96
-    },
-    {
       "name": "Arkansas",
       "lat": 34.75,
       "lng": -92.29,
       "employment": 550,
       "lq": 0.46
+    },
+    {
+      "name": "Hawaii",
+      "lat": 19.9,
+      "lng": -155.58,
+      "employment": 550,
+      "lq": 0.96
     },
     {
       "name": "New Hampshire",
@@ -7261,18 +7262,18 @@
       "lq": 0.51
     },
     {
-      "name": "Maine",
-      "lat": 45.25,
-      "lng": -69.45,
-      "employment": 180,
-      "lq": 0.38
-    },
-    {
       "name": "Alaska",
       "lat": 63.35,
       "lng": -152,
       "employment": 180,
       "lq": 0.78
+    },
+    {
+      "name": "Maine",
+      "lat": 45.25,
+      "lng": -69.45,
+      "employment": 180,
+      "lq": 0.38
     },
     {
       "name": "Vermont",
@@ -7487,18 +7488,18 @@
       "lq": 1.01
     },
     {
-      "name": "Nebraska",
-      "lat": 41.49,
-      "lng": -99.9,
-      "employment": 3650,
-      "lq": 1.21
-    },
-    {
       "name": "Connecticut",
       "lat": 41.6,
       "lng": -73.09,
       "employment": 3650,
       "lq": 0.73
+    },
+    {
+      "name": "Nebraska",
+      "lat": 41.49,
+      "lng": -99.9,
+      "employment": 3650,
+      "lq": 1.21
     },
     {
       "name": "Nevada",
@@ -9021,18 +9022,18 @@
       "lq": 0.61
     },
     {
-      "name": "Kentucky",
-      "lat": 37.67,
-      "lng": -84.65,
-      "employment": 370,
-      "lq": 0.44
-    },
-    {
       "name": "Alabama",
       "lat": 32.81,
       "lng": -86.79,
       "employment": 370,
       "lq": 0.42
+    },
+    {
+      "name": "Kentucky",
+      "lat": 37.67,
+      "lng": -84.65,
+      "employment": 370,
+      "lq": 0.44
     },
     {
       "name": "Idaho",
@@ -9042,18 +9043,18 @@
       "lq": 0.92
     },
     {
-      "name": "North Dakota",
-      "lat": 47.55,
-      "lng": -101,
-      "employment": 300,
-      "lq": 1.67
-    },
-    {
       "name": "Arkansas",
       "lat": 34.75,
       "lng": -92.29,
       "employment": 300,
       "lq": 0.56
+    },
+    {
+      "name": "North Dakota",
+      "lat": 47.55,
+      "lng": -101,
+      "employment": 300,
+      "lq": 1.67
     },
     {
       "name": "Louisiana",
@@ -9133,18 +9134,18 @@
       "lq": 0.16
     },
     {
-      "name": "Wyoming",
-      "lat": 43.08,
-      "lng": -107.29,
-      "employment": 40,
-      "lq": 0.38
-    },
-    {
       "name": "Alaska",
       "lat": 63.35,
       "lng": -152,
       "employment": 40,
       "lq": 0.27
+    },
+    {
+      "name": "Wyoming",
+      "lat": 43.08,
+      "lng": -107.29,
+      "employment": 40,
+      "lq": 0.38
     }
   ],
   "13-2051": [
@@ -9485,18 +9486,18 @@
       "lq": 0.32
     },
     {
-      "name": "Wyoming",
-      "lat": 43.08,
-      "lng": -107.29,
-      "employment": 190,
-      "lq": 0.29
-    },
-    {
       "name": "Alaska",
       "lat": 63.35,
       "lng": -152,
       "employment": 190,
       "lq": 0.25
+    },
+    {
+      "name": "Wyoming",
+      "lat": 43.08,
+      "lng": -107.29,
+      "employment": 190,
+      "lq": 0.29
     },
     {
       "name": "Virgin Islands",
@@ -9997,7 +9998,7 @@
       "lat": 41.49,
       "lng": -99.9,
       "employment": 1410,
-      "lq": 2.03
+      "lq": 2.04
     },
     {
       "name": "Maryland",
@@ -10168,18 +10169,18 @@
       "lq": 0.4
     },
     {
-      "name": "New Mexico",
-      "lat": 34.52,
-      "lng": -105.87,
-      "employment": 100,
-      "lq": 0.17
-    },
-    {
       "name": "Alaska",
       "lat": 63.35,
       "lng": -152,
       "employment": 100,
       "lq": 0.46
+    },
+    {
+      "name": "New Mexico",
+      "lat": 34.52,
+      "lng": -105.87,
+      "employment": 100,
+      "lq": 0.17
     },
     {
       "name": "Wyoming",
@@ -10464,18 +10465,18 @@
       "lq": 0.75
     },
     {
-      "name": "New Mexico",
-      "lat": 34.52,
-      "lng": -105.87,
-      "employment": 180,
-      "lq": 0.49
-    },
-    {
       "name": "Alabama",
       "lat": 32.81,
       "lng": -86.79,
       "employment": 180,
       "lq": 0.2
+    },
+    {
+      "name": "New Mexico",
+      "lat": 34.52,
+      "lng": -105.87,
+      "employment": 180,
+      "lq": 0.49
     },
     {
       "name": "Wyoming",
@@ -10485,18 +10486,18 @@
       "lq": 1.49
     },
     {
-      "name": "Kansas",
-      "lat": 39.01,
-      "lng": -98.48,
-      "employment": 150,
-      "lq": 0.25
-    },
-    {
       "name": "Arkansas",
       "lat": 34.75,
       "lng": -92.29,
       "employment": 150,
       "lq": 0.27
+    },
+    {
+      "name": "Kansas",
+      "lat": 39.01,
+      "lng": -98.48,
+      "employment": 150,
+      "lq": 0.25
     },
     {
       "name": "South Dakota",
@@ -10520,6 +10521,13 @@
       "lq": 0.51
     },
     {
+      "name": "Alaska",
+      "lat": 63.35,
+      "lng": -152,
+      "employment": 50,
+      "lq": 0.34
+    },
+    {
       "name": "Montana",
       "lat": 46.88,
       "lng": -110.36,
@@ -10532,13 +10540,6 @@
       "lng": -80.45,
       "employment": 50,
       "lq": 0.17
-    },
-    {
-      "name": "Alaska",
-      "lat": 63.35,
-      "lng": -152,
-      "employment": 50,
-      "lq": 0.34
     }
   ],
   "13-2072": [
@@ -10993,18 +10994,18 @@
       "lq": 0.98
     },
     {
-      "name": "Pennsylvania",
-      "lat": 41.2,
-      "lng": -77.19,
-      "employment": 4030,
-      "lq": 0.78
-    },
-    {
       "name": "Colorado",
       "lat": 39.55,
       "lng": -105.78,
       "employment": 4030,
       "lq": 1.65
+    },
+    {
+      "name": "Pennsylvania",
+      "lat": 41.2,
+      "lng": -77.19,
+      "employment": 4030,
+      "lq": 0.78
     },
     {
       "name": "Maryland",
@@ -11380,18 +11381,18 @@
       "lq": 0.71
     },
     {
-      "name": "Minnesota",
-      "lat": 46.73,
-      "lng": -94.69,
-      "employment": 11330,
-      "lq": 1.15
-    },
-    {
       "name": "Arizona",
       "lat": 34.05,
       "lng": -111.09,
       "employment": 11330,
       "lq": 1.05
+    },
+    {
+      "name": "Minnesota",
+      "lat": 46.73,
+      "lng": -94.69,
+      "employment": 11330,
+      "lq": 1.15
     },
     {
       "name": "Tennessee",
@@ -12126,18 +12127,18 @@
       "lq": 1.08
     },
     {
-      "name": "Wisconsin",
-      "lat": 43.78,
-      "lng": -88.79,
-      "employment": 1220,
-      "lq": 0.92
-    },
-    {
       "name": "Colorado",
       "lat": 39.55,
       "lng": -105.78,
       "employment": 1220,
       "lq": 0.95
+    },
+    {
+      "name": "Wisconsin",
+      "lat": 43.78,
+      "lng": -88.79,
+      "employment": 1220,
+      "lq": 0.92
     },
     {
       "name": "Utah",
@@ -12329,18 +12330,18 @@
       "lq": 0.48
     },
     {
-      "name": "South Dakota",
-      "lat": 43.97,
-      "lng": -99.9,
-      "employment": 170,
-      "lq": 0.83
-    },
-    {
       "name": "Puerto Rico",
       "lat": 18.22,
       "lng": -66.59,
       "employment": 170,
       "lq": 0.39
+    },
+    {
+      "name": "South Dakota",
+      "lat": 43.97,
+      "lng": -99.9,
+      "employment": 170,
+      "lq": 0.83
     },
     {
       "name": "Vermont",
@@ -12977,18 +12978,18 @@
       "lq": 0.53
     },
     {
-      "name": "West Virginia",
-      "lat": 38.6,
-      "lng": -80.45,
-      "employment": 400,
-      "lq": 1.28
-    },
-    {
       "name": "Arkansas",
       "lat": 34.75,
       "lng": -92.29,
       "employment": 400,
       "lq": 0.67
+    },
+    {
+      "name": "West Virginia",
+      "lat": 38.6,
+      "lng": -80.45,
+      "employment": 400,
+      "lq": 1.28
     },
     {
       "name": "South Dakota",
@@ -13231,18 +13232,18 @@
       "lq": 0.5
     },
     {
-      "name": "Utah",
-      "lat": 39.32,
-      "lng": -111.09,
-      "employment": 1060,
-      "lq": 0.84
-    },
-    {
       "name": "Connecticut",
       "lat": 41.6,
       "lng": -73.09,
       "employment": 1060,
       "lq": 0.86
+    },
+    {
+      "name": "Utah",
+      "lat": 39.32,
+      "lng": -111.09,
+      "employment": 1060,
+      "lq": 0.84
     },
     {
       "name": "Wisconsin",
@@ -13371,18 +13372,18 @@
       "lq": 0.12
     },
     {
-      "name": "Delaware",
-      "lat": 38.91,
-      "lng": -75.53,
-      "employment": 130,
-      "lq": 0.36
-    },
-    {
       "name": "Alabama",
       "lat": 32.81,
       "lng": -86.79,
       "employment": 130,
       "lq": 0.09
+    },
+    {
+      "name": "Delaware",
+      "lat": 38.91,
+      "lng": -75.53,
+      "employment": 130,
+      "lq": 0.36
     },
     {
       "name": "Wyoming",
@@ -13413,18 +13414,18 @@
       "lq": 0.12
     },
     {
-      "name": "Guam",
-      "lat": 13.44,
-      "lng": 144.79,
-      "employment": 30,
-      "lq": 0.66
-    },
-    {
       "name": "Alaska",
       "lat": 63.35,
       "lng": -152,
       "employment": 30,
       "lq": 0.15
+    },
+    {
+      "name": "Guam",
+      "lat": 13.44,
+      "lng": 144.79,
+      "employment": 30,
+      "lq": 0.66
     }
   ],
   "15-1299": [
@@ -14182,18 +14183,18 @@
       "lq": 1.97
     },
     {
-      "name": "Ohio",
-      "lat": 40.42,
-      "lng": -82.91,
-      "employment": 2600,
-      "lq": 0.67
-    },
-    {
       "name": "Arizona",
       "lat": 34.05,
       "lng": -111.09,
       "employment": 2600,
       "lq": 1.15
+    },
+    {
+      "name": "Ohio",
+      "lat": 40.42,
+      "lng": -82.91,
+      "employment": 2600,
+      "lq": 0.67
     },
     {
       "name": "North Carolina",
@@ -14294,18 +14295,18 @@
       "lq": 0.47
     },
     {
-      "name": "Louisiana",
-      "lat": 30.98,
-      "lng": -91.96,
-      "employment": 550,
-      "lq": 0.41
-    },
-    {
       "name": "Alabama",
       "lat": 32.81,
       "lng": -86.79,
       "employment": 550,
       "lq": 0.37
+    },
+    {
+      "name": "Louisiana",
+      "lat": 30.98,
+      "lng": -91.96,
+      "employment": 550,
+      "lq": 0.41
     },
     {
       "name": "New Mexico",
@@ -14443,18 +14444,18 @@
       "lq": 5.3
     },
     {
-      "name": "Massachusetts",
-      "lat": 42.41,
-      "lng": -71.38,
-      "employment": 2480,
-      "lq": 3.65
-    },
-    {
       "name": "California",
       "lat": 36.78,
       "lng": -119.42,
       "employment": 2480,
       "lq": 0.73
+    },
+    {
+      "name": "Massachusetts",
+      "lat": 42.41,
+      "lng": -71.38,
+      "employment": 2480,
+      "lq": 3.65
     },
     {
       "name": "Pennsylvania",
@@ -14492,18 +14493,18 @@
       "lq": 1.09
     },
     {
-      "name": "Minnesota",
-      "lat": 46.73,
-      "lng": -94.69,
-      "employment": 780,
-      "lq": 1.42
-    },
-    {
       "name": "Colorado",
       "lat": 39.55,
       "lng": -105.78,
       "employment": 780,
       "lq": 1.45
+    },
+    {
+      "name": "Minnesota",
+      "lat": 46.73,
+      "lng": -94.69,
+      "employment": 780,
+      "lq": 1.42
     },
     {
       "name": "Virginia",
@@ -14534,18 +14535,18 @@
       "lq": 0.56
     },
     {
-      "name": "Michigan",
-      "lat": 44.31,
-      "lng": -85.6,
-      "employment": 570,
-      "lq": 0.7
-    },
-    {
       "name": "Arkansas",
       "lat": 34.75,
       "lng": -92.29,
       "employment": 570,
       "lq": 2.33
+    },
+    {
+      "name": "Michigan",
+      "lat": 44.31,
+      "lng": -85.6,
+      "employment": 570,
+      "lq": 0.7
     },
     {
       "name": "District of Columbia",
@@ -14681,6 +14682,13 @@
       "lq": 0.7
     },
     {
+      "name": "Alaska",
+      "lat": 63.35,
+      "lng": -152,
+      "employment": 80,
+      "lq": 1.24
+    },
+    {
       "name": "Kansas",
       "lat": 39.01,
       "lng": -98.48,
@@ -14707,13 +14715,6 @@
       "lng": -89.4,
       "employment": 80,
       "lq": 0.35
-    },
-    {
-      "name": "Alaska",
-      "lat": 63.35,
-      "lng": -152,
-      "employment": 80,
-      "lq": 1.24
     },
     {
       "name": "Delaware",
@@ -15273,18 +15274,18 @@
       "lq": 0.61
     },
     {
-      "name": "Utah",
-      "lat": 39.32,
-      "lng": -111.09,
-      "employment": 1110,
-      "lq": 1.08
-    },
-    {
       "name": "Colorado",
       "lat": 39.55,
       "lng": -105.78,
       "employment": 1110,
       "lq": 0.65
+    },
+    {
+      "name": "Utah",
+      "lat": 39.32,
+      "lng": -111.09,
+      "employment": 1110,
+      "lq": 1.08
     },
     {
       "name": "Oregon",
@@ -15308,18 +15309,18 @@
       "lq": 0.73
     },
     {
-      "name": "Iowa",
-      "lat": 41.88,
-      "lng": -93.1,
-      "employment": 900,
-      "lq": 0.98
-    },
-    {
       "name": "Arkansas",
       "lat": 34.75,
       "lng": -92.29,
       "employment": 900,
       "lq": 1.18
+    },
+    {
+      "name": "Iowa",
+      "lat": 41.88,
+      "lng": -93.1,
+      "employment": 900,
+      "lq": 0.98
     },
     {
       "name": "Maryland",

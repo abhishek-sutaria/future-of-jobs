@@ -45,7 +45,7 @@ export const Legend: React.FC = () => {
                 score, so no risk colour. The slate matches RISK_UNSCORED_RGB on the peaks. */}
             <p className="text-[8px] md:text-[10px] text-right text-gray-400 leading-tight" data-testid="legend-coverage">
                 Scored: {SCORE_COUNTS.scored.toLocaleString('en-US')} of {SCORE_COUNTS.total.toLocaleString('en-US')} jobs
-                <span className="max-md:hidden" data-testid="legend-scale"> · colours rank all {SCORE_COUNTS.roles.toLocaleString('en-US')} scored roles</span>
+                <span className="max-md:hidden" data-testid="legend-scale"> · colours rank all {SCORE_COUNTS.ranked.toLocaleString('en-US')} scored jobs, a third each</span>
             </p>
             <div className="flex flex-row items-center justify-end gap-2 md:gap-3 border-t border-white/[0.06] pt-1.5">
                 <span className="text-[8px] md:text-[10px] font-medium text-right text-slate-400 leading-tight">

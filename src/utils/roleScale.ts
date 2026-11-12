@@ -1,19 +1,17 @@
 /**
  * One scale for every scored role. Human Resilience labels, the salary
  * volatility label, the colour bands and every "rank" sentence are worked out
- * against ALL scored roles together, not the 50 Kelley roles alone. Published
- * score values never change here: only where a role sits among the others.
+ * against ALL scored occupations together, not the 50 Kelley roles alone.
+ * Published score values never change here: only where a role sits among the
+ * others.
  *
- * WHO IS COUNTED (docs/scoring-decisions.md, "Ranks across all roles"):
- * every scored role on the map, once. That is each of the 50 Kelley titles
- * (with their own published tasks and scores) plus every other scored BLS
- * occupation. Three BLS occupations hold two Kelley titles each (11-2021
- * Marketing / Brand Manager, 15-2051 Business Intelligence Analyst / Data
- * Scientist, 13-1020 Wholesale & Retail Buyer / Purchasing Agent). Each title
- * was scored on its own five tasks and has its own numbers, so each counts as
- * one role; the BLS occupation itself is never counted a second time (a
- * Kelley SOC is never in ai_scores_bls.json). So roles = Kelley titles +
- * other scored occupations, and occupations = roles minus the shared titles.
+ * WHO IS COUNTED (docs/scoring-decisions.md, "Ranks and percentiles"): every
+ * scored BLS occupation (SOC) once, 783 today. A Kelley title takes its SOC's
+ * place: the three SOCs that hold two Kelley titles each (11-2021 Marketing /
+ * Brand Manager, 15-2051 Business Intelligence Analyst / Data Scientist,
+ * 13-1020 Wholesale & Retail Buyer / Purchasing Agent) count once, and once
+ * `--batch kelley` is in, both titles have the SOC's own tasks and scores
+ * (utils/kelleyScores). The points are built in utils/allRoleScale.
  *
  * Pure: no store, no Vite, so tests and the rank table script use it directly.
  */
@@ -31,7 +29,7 @@ export interface ScorePoint {
 }
 
 export interface RoleScale {
-    /** How many scored roles the ranks are taken across. */
+    /** How many scored occupations the ranks are taken across (each SOC once). */
     count: number;
     risk: RiskScale;
     humanP25: number;
@@ -81,5 +79,5 @@ export function bandFor(risk: number, scale: RoleScale): RiskBand {
     return riskBand(risk, scale.risk);
 }
 
-/** "among all 786 scored roles", from the data. */
-export const rankScopeText = (scale: Pick<RoleScale, 'count'>): string => `among all ${scale.count.toLocaleString('en-US')} scored roles`;
+/** "among all 783 scored occupations", from the data. */
+export const rankScopeText = (scale: Pick<RoleScale, 'count'>): string => `among all ${scale.count.toLocaleString('en-US')} scored occupations`;

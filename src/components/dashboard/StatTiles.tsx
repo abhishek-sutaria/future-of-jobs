@@ -2,6 +2,7 @@ import React from 'react';
 import { RadialGauge } from '../charts/RadialGauge';
 import { IconBookmark, IconClock, IconAward } from '../ui/Icons';
 import type { PortfolioStats } from '../../utils/dashboardSelectors';
+import { RISK_BAND_COLORS, riskBand, type RiskScale } from '../../config/theme';
 
 const Tile: React.FC<{ icon: React.ReactNode; label: string; value: React.ReactNode; accent: string }> = ({
     icon, label, value, accent,
@@ -17,7 +18,7 @@ const Tile: React.FC<{ icon: React.ReactNode; label: string; value: React.ReactN
     </div>
 );
 
-export const StatTiles: React.FC<{ stats: PortfolioStats }> = ({ stats }) => (
+export const StatTiles: React.FC<{ stats: PortfolioStats; riskScale: RiskScale }> = ({ stats, riskScale }) => (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <Tile
             icon={<IconBookmark size={18} className="text-indigo-400" />}
@@ -43,7 +44,7 @@ export const StatTiles: React.FC<{ stats: PortfolioStats }> = ({ stats }) => (
                 // and RadialGauge's fixed-size text box (tuned for its 120px
                 // default) clips/overflows a third line at this compact size —
                 // confirmed live, the sublabel bled past the tile's edge.
-                <RadialGauge value={stats.averageRisk} label="Portfolio Risk" size={96} />
+                <RadialGauge value={stats.averageRisk} label="Portfolio Risk" size={96} color={RISK_BAND_COLORS[riskBand(stats.averageRisk, riskScale)]} />
             ) : (
                 <div className="text-center py-2">
                     <div className="text-[10px] uppercase text-gray-500 font-semibold tracking-wider">Portfolio Risk</div>

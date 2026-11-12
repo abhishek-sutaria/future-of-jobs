@@ -144,7 +144,7 @@ export const DashboardPage: React.FC = () => {
                         </div>
                     ) : (
                         <>
-                            <StatTiles stats={stats} />
+                            <StatTiles stats={stats} riskScale={riskScale} />
 
                             <div className="flex gap-1 border-b border-white/[0.06] overflow-x-auto">
                                 {TABS.map((t) => (

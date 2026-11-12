@@ -7,7 +7,7 @@
  * with valid JSON in the app's shapes, and logs every call so a check can
  * prove a saved answer made no second call.
  * Supabase: ai_shared_answers (select / insert ignore-duplicates / delete) and
- * rpc/ai_rate_take, in memory, with the same semantics as the migration.
+ * rpc/ai_rate_take and rpc/ai_rate_give, in memory, with the same semantics as the migrations.
  */
 
 export const MOCK_SUPABASE_URL = 'http://mock-supabase.local';
@@ -145,6 +145,14 @@ export function createMockBackend(): MockBackend {
                 }
                 for (const k of keys) rateCounts.get(k)!.count += 1;
                 return json(200, null);
+            }
+            if (url.pathname === '/rest/v1/rpc/ai_rate_give') {
+                // Same rule as supabase/migrations/0004_rate_give.sql: visitor buckets only, never below 0.
+                for (const k of body.p_keys as string[]) {
+                    const c = rateCounts.get(k);
+                    if (c && k.startsWith('v:') && c.count > 0) c.count -= 1;
+                }
+                return new Response(null, { status: 204 });
             }
             if (url.pathname === '/rest/v1/ai_shared_answers') {
                 const fs = filters(url);

@@ -39,6 +39,26 @@ describe('AI requests retry quietly before showing an error', () => {
         expect(getClaudeUserFriendlyMessage(err)).toBe("Couldn't reach the AI right now. Please try again in a minute.");
     });
 
+    it('retries a rejected Claude answer (502 foj_invalid_answer) once, never more: at most 2 paid calls per click', async () => {
+        const invalid = vi.fn().mockImplementation(async () => json({ error: { type: 'foj_invalid_answer', message: 'did not pass the checks' } }, 502));
+        vi.stubGlobal('fetch', invalid);
+        await expect(callClaudeFeature('analyze', input)).rejects.toThrow();
+        expect(invalid).toHaveBeenCalledTimes(2);
+
+        const thenOk = vi.fn()
+            .mockResolvedValueOnce(json({ error: { type: 'foj_invalid_answer', message: 'x' } }, 502))
+            .mockResolvedValueOnce(json({ result: { strategic_insight: 'ok' } }));
+        vi.stubGlobal('fetch', thenOk);
+        await expect(callClaudeFeature('analyze', input)).resolves.toBeTruthy();
+        expect(thenOk).toHaveBeenCalledTimes(2);
+
+        // An upstream fault (Claude down) still gets the full two retries.
+        const down = vi.fn().mockImplementation(async () => json({ error: { type: 'foj_upstream', message: 'overloaded' } }, 502));
+        vi.stubGlobal('fetch', down);
+        await expect(callClaudeFeature('analyze', input)).rejects.toThrow();
+        expect(down).toHaveBeenCalledTimes(3);
+    });
+
     it('never retries the visitor limit (429) or a refused request (400)', async () => {
         const limited = vi.fn().mockResolvedValue(json({ error: { type: 'foj_rate_limited', message: 'limit', retryAfterSeconds: 60 } }, 429));
         vi.stubGlobal('fetch', limited);

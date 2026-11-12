@@ -1,6 +1,7 @@
 import React, { useMemo, useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import { DoubleSide, Matrix4, Quaternion, RingGeometry, SphereGeometry, Vector3, type InstancedMesh, type MeshBasicMaterial } from 'three';
+import { highlightOn, isHighlighted } from '../../utils/iuSchools';
 import { useWorldStore } from '../../worldStore';
 import { SCENE } from '../../config/constants';
 import { surfaceHeight } from '../../utils/stageBake';
@@ -29,13 +30,15 @@ const flat = new Quaternion().setFromAxisAngle(new Vector3(1, 0, 0), -Math.PI / 
 export const StagePins: React.FC = () => {
     const stage = useWorldStore((s) => s.drawnStage);
     const kelleyOnly = useWorldStore((s) => s.kelleyOnly);
+    const school = useWorldStore((s) => s.school);
     const rings = useRef<InstancedMesh>(null);
     const dots = useRef<InstancedMesh>(null);
 
     const jobs = useMemo(() => {
         if (stage?.kind !== 'field') return [];
-        return kelleyOnly ? stage.jobs.filter((j) => j.kelley) : stage.jobs;
-    }, [stage, kelleyOnly]);
+        const highlight = { kelleyOnly, school };
+        return highlightOn(highlight) ? stage.jobs.filter((j) => isHighlighted(highlight, { kind: j.kelley ? 'kelley' : 'bls', soc: j.soc })) : stage.jobs;
+    }, [stage, kelleyOnly, school]);
 
     const ringGeometry = useMemo(() => new RingGeometry(SCENE.ANCHOR.RING_INNER, SCENE.ANCHOR.RING_OUTER, SCENE.ANCHOR.RING_SEGMENTS), []);
     const dotGeometry = useMemo(() => new SphereGeometry(SCENE.ANCHOR.SPHERE_RADIUS, 12, 8), []);

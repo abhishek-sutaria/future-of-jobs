@@ -10,7 +10,9 @@
  *      once, with no Claude call and no rate-limit count;
  *   4. otherwise, on the server key, the visitor's limit is taken first;
  *   5. Claude's answer is parsed and checked; only a checked answer is
- *      returned, and for shared features saved for every later visitor.
+ *      returned, and for shared features saved for every later visitor. If
+ *      the call fails or the answer is rejected, the visitor's slot is given
+ *      back (api/_lib/rateLimit give), so a failed click costs them nothing.
  *
  * POST <raw Anthropic body> + x-foj-feature: rescore | ping
  *   Only with the visitor's OWN key (x-foj-key-source: user). Shape-checked
@@ -213,9 +215,11 @@ export function createClaudeHandler(deps: GatewayDeps) {
         }
 
         // A new Claude answer on the server key counts against the visitor's limit.
-        if (!usingUserKey) {
+        let refund: string[] = [];
+        const limiter = usingUserKey ? null : limiterFor(env);
+        if (limiter) {
             const t = now();
-            const taken = await limiterFor(env).take(visitorId(req.headers, req.socket?.remoteAddress), t);
+            const taken = await limiter.take(visitorId(req.headers, req.socket?.remoteAddress), t);
             if (!taken.allowed) {
                 res.setHeader('retry-after', String(taken.retryAfterSeconds));
                 return fail(res, 429, 'foj_rate_limited', rateLimitMessage(taken.window, taken.limit, taken.retryAfterSeconds), {
@@ -224,16 +228,21 @@ export function createClaudeHandler(deps: GatewayDeps) {
                     window: taken.window,
                 });
             }
+            refund = taken.refund;
         }
+        /** Claude's answer failed or was rejected: give the visitor's slot back, then answer with the error. */
+        const failAndRefund = async (status: number, type: string, message: string) => {
+            if (limiter && refund.length > 0) await limiter.give(refund);
+            refund = [];
+            return fail(res, status, type, message);
+        };
 
         let upstream: Response;
         try {
             upstream = await callClaude(feature.stream ? { ...anthropicBody, stream: true } : anthropicBody);
         } catch (error) {
-            return fail(res, 502, 'foj_upstream', error instanceof Error ? error.message : 'Unknown proxy error');
+            return failAndRefund(502, 'foj_upstream', error instanceof Error ? error.message : 'Unknown proxy error');
         }
-
-        if (feature.stream) return pipe(upstream, res);
 
         if (!upstream.ok) {
             let message = upstream.statusText || 'Claude error';
@@ -241,24 +250,26 @@ export function createClaudeHandler(deps: GatewayDeps) {
                 const data = (await upstream.json()) as { error?: { message?: string } };
                 message = data?.error?.message || message;
             } catch { /* keep the status text */ }
-            return fail(res, upstream.status, 'foj_upstream', message);
+            return failAndRefund(upstream.status, 'foj_upstream', message);
         }
+
+        if (feature.stream) return pipe(upstream, res);
 
         let answer: unknown;
         try {
             const data = (await upstream.json()) as { content?: { text?: string }[]; stop_reason?: string };
             const text = (data.content ?? []).map((p) => p?.text || '').join('\n').trim();
-            if (!text) return fail(res, 502, 'foj_invalid_answer', 'Empty response from Claude');
+            if (!text) return failAndRefund(502, 'foj_invalid_answer', 'Empty response from Claude');
             try {
                 answer = JSON.parse(extractJsonBlock(text));
             } catch {
-                return fail(res, 502, 'foj_invalid_answer', data.stop_reason === 'max_tokens'
+                return failAndRefund(502, 'foj_invalid_answer', data.stop_reason === 'max_tokens'
                     ? 'Claude response truncated: hit max_tokens before finishing the JSON output.'
                     : 'Claude’s answer was not valid JSON, so it was not saved. Try again.');
             }
             answer = (feature.check as (a: unknown, i: unknown) => unknown)(answer, input);
         } catch {
-            return fail(res, 502, 'foj_invalid_answer', 'Claude’s answer did not pass the app’s checks, so it was not saved. Try again.');
+            return failAndRefund(502, 'foj_invalid_answer', 'Claude’s answer did not pass the app’s checks, so it was not saved. Try again.');
         }
 
         if (!feature.shared || !key) return res.status(200).json({ result: answer });

@@ -2,7 +2,8 @@
  * The published BLS scores (scripts/generate_bls_scores.ts →
  * src/data/ai_scores_bls.json): the 13 Business & Finance occupations scored
  * first, then every job in data/bls_score_plan_all.json that has O*NET tasks,
- * and everything they must leave alone.
+ * and everything they must leave alone. Holds both before and after
+ * `--batch kelley` adds the 47 Kelley SOCs (all at once or none).
  *
  * Always checked: the 13 targets come from the data, every task is a verbatim
  * O*NET row, the BLS inputs are the occupation's own, ai_scores.json is byte
@@ -38,6 +39,7 @@ import { rankScopeText } from '../utils/roleScale';
 import {
     BLS_SCORE_RISK,
     BLS_SCORES_META,
+    KELLEY_SOC_SCORES,
     SCORE_COUNTS,
     SCORE_COVERAGE,
     blsScoreFor,
@@ -72,9 +74,17 @@ const PUBLISHED_SHA256 = 'df8d9f41388c625576cd9afd66af2c85befb7fcfe7c12d9d89babe
  */
 const BF_ENTRIES_SHA256 = '545be8cc011b20a56fef3eff80cc63b84cc8aca83bb69ea2715780d5c6621bb7';
 
+/**
+ * SHA-256 of all 736 non-Kelley entries as published on 2026-11-08 (JSON.stringify
+ * of [soc, entry] pairs in SOC order, file at commit 1527e09): --batch kelley
+ * only adds entries, so this never changes.
+ */
+const ENTRIES_736_SHA256 = 'a404fadde75ed1d45cc13f69289eff8839b4a5a53885888b113aad7bb4a99165';
+
 interface PlanAllJob {
     soc: string;
     field: string;
+    batch?: 'business-finance' | 'kelley';
     taskRule: 'own-code' | 'sub-codes' | 'combined' | 'no-tasks';
     selectionRule?: string;
     onetCodes: string[];
@@ -86,8 +96,14 @@ interface PlanAllJob {
 const PLAN_ALL = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/bls_score_plan_all.json'), 'utf-8')) as { jobs: PlanAllJob[] };
 const PLANNED = PLAN_ALL.jobs.filter((j) => j.taskRule !== 'no-tasks');
 const NO_TASK_JOBS = PLAN_ALL.jobs.filter((j) => j.taskRule === 'no-tasks');
-/** Every SOC that should carry a published BLS score: the 13, then every planned job with tasks. */
-const EXPECTED_SCORED = [...BF_TARGET_SOCS, ...PLANNED.map((j) => j.soc)].sort();
+const KELLEY_ROWS = PLAN_ALL.jobs.filter((j) => j.batch === 'kelley');
+const FILE_SCORES: Record<string, unknown> = PRESENT ? JSON.parse(fs.readFileSync(SCORES_PATH, 'utf-8')).scores : {};
+/** --batch kelley is in: it writes all 47 Kelley SOCs at once. */
+const KELLEY_IN_FILE = KELLEY_ROWS.some((r) => r.soc in FILE_SCORES);
+/** Every non-Kelley SOC that should carry a published score: the 13 and every first-plan job with tasks (736). */
+const EXPECTED_SCORED = PLANNED.filter((j) => j.batch !== 'kelley').map((j) => j.soc).sort();
+/** Every entry the file should hold: those, plus the 47 Kelley SOCs once --batch kelley is in. */
+const EXPECTED_FILE = [...EXPECTED_SCORED, ...(KELLEY_IN_FILE ? KELLEY_ROWS.map((r) => r.soc) : [])].sort();
 
 const jobs = useStore.getState().jobs;
 const kelleySocs = new Set(jobs.map((j) => MAP_TITLE_TO_SOC[j.title]));
@@ -183,7 +199,7 @@ describe('the 50 published Kelley roles do not change', () => {
         expect(hash).toBe(PUBLISHED_SHA256);
     });
 
-    it('scores and order match the published set exactly; labels are ranked among all scored roles', () => {
+    it('each title shows its SOC entry when there is one, else exactly its first published score; labels rank among all scored occupations', () => {
         expect(jobs).toHaveLength(50);
         const now = jobs.map((j) => ({
             id: j.id,
@@ -191,15 +207,26 @@ describe('the 50 published Kelley roles do not change', () => {
             automationCostIndex: j.automationCostIndex,
             humanCriticality: Number((j.tasks.reduce((s, t) => s + t.humanCriticalityScore, 0) / j.tasks.length).toFixed(6)),
         }));
-        // Score VALUES never change: the published fixture, minus its old labels.
-        expect(now).toEqual(kelley50.roles.map((r) => ({ id: r.id, title: r.title, automationCostIndex: r.automationCostIndex, humanCriticality: r.humanCriticality })));
-        // Labels now rank each role among every scored role (fixture written by scripts/rank_table.ts).
+        const first = new Map(kelley50.roles.map((r) => [r.id, { id: r.id, title: r.title, automationCostIndex: r.automationCostIndex, humanCriticality: r.humanCriticality }]));
+        const legacy = now.filter((r) => !KELLEY_SOC_SCORES.has(MAP_TITLE_TO_SOC[r.title]));
+        // A title still on its first score: score VALUES never change (the published fixture, minus its old labels).
+        for (const r of legacy) expect(r, r.title).toEqual(first.get(r.id));
+        // A title on its SOC's entry: exactly that entry's tasks and scores.
+        for (const j of jobs.filter((x) => KELLEY_SOC_SCORES.has(MAP_TITLE_TO_SOC[x.title]))) {
+            const s = KELLEY_SOC_SCORES.get(MAP_TITLE_TO_SOC[j.title])!;
+            expect(j.tasks.map((t) => [t.name, t.aiCapabilityScore, t.humanCriticalityScore]), j.title).toEqual(s.tasks.map((t) => [t.name, t.aiCapabilityScore, t.humanCriticalityScore]));
+            expect(j.automationCostIndex, j.title).toBe(s.automationCostIndex);
+        }
+        expect(legacy.length === 0 || legacy.length === 50).toBe(true);
+        // Labels rank each role among every scored occupation (fixture written by scripts/rank_table.ts).
         const newLabel = new Map(rankChange.rows.map((r) => [r.id, r.newLabel]));
         for (const j of jobs) expect(j.humanResilienceLabel, j.title).toBe(newLabel.get(j.id));
-        const byRisk = [...now].sort((a, b) => b.automationCostIndex - a.automationCostIndex || a.id.localeCompare(b.id)).map((r) => r.id);
-        const byHuman = [...now].sort((a, b) => b.humanCriticality - a.humanCriticality || a.id.localeCompare(b.id)).map((r) => r.id);
-        expect(byRisk).toEqual(kelley50.riskOrder);
-        expect(byHuman).toEqual(kelley50.humanOrder);
+        if (legacy.length === 50) {
+            const byRisk = [...now].sort((a, b) => b.automationCostIndex - a.automationCostIndex || a.id.localeCompare(b.id)).map((r) => r.id);
+            const byHuman = [...now].sort((a, b) => b.humanCriticality - a.humanCriticality || a.id.localeCompare(b.id)).map((r) => r.id);
+            expect(byRisk).toEqual(kelley50.riskOrder);
+            expect(byHuman).toEqual(kelley50.humanOrder);
+        }
     });
 
     it('none of the 13 joins the jobs list or the Kelley filter', () => {
@@ -245,19 +272,23 @@ describe('parseBlsScores', () => {
 });
 
 describe('scores file: either absent or complete', () => {
-    it('never holds a partial set: nothing, or the 13 plus every planned job with tasks', () => {
+    it('never holds a partial set: nothing, or the 13 plus every planned job with tasks, and all 47 Kelley SOCs or none', () => {
         expect([0, EXPECTED_SCORED.length]).toContain(BLS_SCORE_RISK.size);
         expect(PRESENT).toBe(BLS_SCORE_RISK.size > 0);
         if (PRESENT) expect([...BLS_SCORE_RISK.keys()].sort()).toEqual(EXPECTED_SCORED);
-        expect(BLS_SCORES_META?.count ?? 0).toBe(BLS_SCORE_RISK.size);
+        expect([0, 47]).toContain(KELLEY_SOC_SCORES.size);
+        expect(KELLEY_SOC_SCORES.size > 0).toBe(KELLEY_IN_FILE);
+        expect(BLS_SCORES_META?.count ?? 0).toBe(BLS_SCORE_RISK.size + KELLEY_SOC_SCORES.size);
+        expect(Object.keys(FILE_SCORES).sort()).toEqual(PRESENT ? EXPECTED_FILE : []);
     });
 
-    it('scores no Kelley SOC, no job outside the plan and none of the no-task jobs', () => {
+    it('the non-Kelley maps hold no Kelley SOC, no job outside the plan and none of the no-task jobs', () => {
         const allowed = new Set(EXPECTED_SCORED);
         for (const soc of BLS_SCORE_RISK.keys()) {
             expect(allowed.has(soc), soc).toBe(true);
             expect(kelleySocs.has(soc), soc).toBe(false);
         }
+        for (const soc of KELLEY_SOC_SCORES.keys()) expect(kelleySocs.has(soc), soc).toBe(true);
         expect(NO_TASK_JOBS).toHaveLength(47);
         for (const j of NO_TASK_JOBS) expect(BLS_SCORE_RISK.has(j.soc), j.soc).toBe(false);
         // A field is fully scored exactly when none of its jobs is a no-task job.
@@ -316,7 +347,8 @@ describe.runIf(PRESENT)('after the scoring run (ai_scores_bls.json)', () => {
             expect(run.meanAbsGapRiskPoints, batch).toBeLessThanOrEqual(run.limitPoints);
             expect(run.meanAbsGapHumanPoints, batch).toBeLessThanOrEqual(run.limitPoints);
         }
-        expect(Object.keys(file.controlRuns).sort()).toEqual(['family-1', 'family-2', 'family-3']);
+        expect(Object.keys(file.controlRuns).sort()).toEqual(['family-1', 'family-2', 'family-3', ...(KELLEY_IN_FILE ? ['kelley'] : [])]);
+        if (KELLEY_IN_FILE) expect(file.controlRuns.kelley.comparedWith).toContain('ai_scores_bls.json');
         expect(BLS_SCORES_META?.model).toBe('claude-sonnet-5');
         // The file date is the latest run, never before its last score.
         expect(Date.parse(file.generatedAt)).toBeGreaterThanOrEqual(Date.parse(BLS_SCORES_META!.lastScoredAt!));
@@ -329,9 +361,15 @@ describe.runIf(PRESENT)('after the scoring run (ai_scores_bls.json)', () => {
         expect(crypto.createHash('sha256').update(JSON.stringify(pairs)).digest('hex')).toBe(BF_ENTRIES_SHA256);
     });
 
+    it('keeps all 736 non-Kelley entries exactly as published on 2026-11-08', () => {
+        const pairs = EXPECTED_SCORED.map((soc) => [soc, file.scores[soc]]);
+        expect(pairs).toHaveLength(736);
+        expect(crypto.createHash('sha256').update(JSON.stringify(pairs)).digest('hex')).toBe(ENTRIES_736_SHA256);
+    });
+
     it('scores every planned job with tasks on exactly its planned tasks and inputs', () => {
-        expect(Object.keys(file.scores).sort()).toEqual(EXPECTED_SCORED);
-        for (const job of PLANNED) {
+        expect(Object.keys(file.scores).sort()).toEqual(EXPECTED_FILE);
+        for (const job of PLANNED.filter((j) => j.soc in file.scores)) {
             const entry = file.scores[job.soc];
             expect(isSonnet5(entry.responseModel), job.soc).toBe(true);
             expect(entry.rule, job.soc).toBe(job.selectionRule);
@@ -354,9 +392,9 @@ describe.runIf(PRESENT)('after the scoring run (ai_scores_bls.json)', () => {
                     expect(v, soc).toBeLessThanOrEqual(1);
                 }
             }
-            expect(blsScoreFor(soc), soc).toBeDefined();
+            expect(kelleySocs.has(soc) ? KELLEY_SOC_SCORES.get(soc) : blsScoreFor(soc), soc).toBeDefined();
         }
-        expect(BLS_SCORE_RISK.size).toBe(Object.keys(file.scores).length);
+        expect(BLS_SCORE_RISK.size + KELLEY_SOC_SCORES.size).toBe(Object.keys(file.scores).length);
     });
 
     it('has all 13, each on its planned tasks, every score a number from 0 to 1', () => {
@@ -470,7 +508,11 @@ describe.runIf(PRESENT)('after the scoring run (ai_scores_bls.json)', () => {
         expect(SCORE_COUNTS.unscoredAllOther).toBe(NO_TASK_JOBS.length);
         expect(SCORE_COUNTS.kelleyTitles).toBe(jobs.length);
         expect(SCORE_COUNTS.roles).toBe(jobs.length + EXPECTED_SCORED.length);
-        expect(SCORE_COUNTS.roles).toBe(roleScaleFor(jobs).count);
+        // Ranks count each scored occupation once: 783, before and after --batch kelley.
+        expect(SCORE_COUNTS.ranked).toBe(SCORE_COUNTS.scored);
+        expect(SCORE_COUNTS.ranked).toBe(roleScaleFor(jobs).count);
+        expect(SCORE_COUNTS.kelleyOnFile).toBe(KELLEY_IN_FILE ? kelleySocs.size : 0);
+        expect(SCORE_COUNTS.oneMethod).toBe(EXPECTED_FILE.length);
         expect(SCORE_COVERAGE.short).toBe(`${SCORE_COUNTS.scored} of ${SCORE_COUNTS.total} occupations`);
         expect(SCORE_COVERAGE.unscoredReason).toBe(`The other ${NO_TASK_JOBS.length} are “All Other” groups for which O*NET lists no tasks, so they are not scored.`);
     });

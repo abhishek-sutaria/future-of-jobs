@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import bakedFile from '../data/ai_scores.json';
+import served from 'virtual:kelley-legacy-scores';
 import { getBakedScores, resolveInitialScores } from '../utils/bakedScores';
 import { CACHE_VERSION } from '../utils/taskScoring';
 
@@ -30,7 +31,20 @@ const anAnalysis = (score: number) => ({
     ],
 });
 
-describe('baked score resolution', () => {
+/** Kelley titles whose SOC has no entry in ai_scores_bls.json yet: all 50 before --batch kelley, none after. */
+const IN_USE = Object.keys(served.scores ?? {}).length;
+
+describe.runIf(IN_USE === 0)('after --batch kelley: the app reads nothing from ai_scores.json', () => {
+    beforeEach(() => installLocalStorage());
+    afterEach(() => vi.unstubAllGlobals());
+    it('serves no first scores, so there is nothing to resolve but a user re-score', () => {
+        expect(getBakedScores()).toBeNull();
+        expect(resolveInitialScores().source).toBe('none');
+        expect(Object.keys(bakedFile.scores)).toHaveLength(50); // still in the repo, as history
+    });
+});
+
+describe.runIf(IN_USE > 0)('baked score resolution', () => {
     beforeEach(() => installLocalStorage());
     afterEach(() => vi.unstubAllGlobals());
 

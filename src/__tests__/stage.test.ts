@@ -133,7 +133,7 @@ describe('one map per stage', () => {
                 }
             }
         }
-    });
+    }, 15_000); // checks every pair of jobs on every stage: under load this took over 5 s
 
     it('lands the same job in the same place every time, whatever the year or the jobs array', () => {
         for (const level of LEVELS) {
@@ -549,7 +549,7 @@ describe.each(named)('the bake of %s', (_key, stage) => {
 });
 
 describe('the surface', () => {
-    const lone: StageJob = { key: 'a', code: '11', x: 4, z: -6, sigma: 2, ep2025: 1000, ep2035: 2000, color: [1, 0, 0], kelley: false };
+    const lone: StageJob = { key: 'a', code: '11', x: 4, z: -6, sigma: 2, ep2025: 1000, ep2035: 2000, color: [1, 0, 0], kelley: false, soc: '11-1011' };
     const outline: Rect = { x0: -35, z0: -35, x1: 35, z1: 35 };
     const stage = { jobs: [lone], outline };
 

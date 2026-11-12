@@ -3,9 +3,11 @@ import { useStore } from './store';
 import { BROAD_LABELS, FIELD_LABELS, labelsAt, type LabelDecision } from './utils/labelLevel';
 import { loadContinentFile, type ContinentFile } from './utils/occupationIndex';
 import { loadBlsFieldScores } from './utils/blsScores';
+import { loadStateMapField } from './utils/stateMapData';
 import { isChunkLoadError, reloadForNewBuild } from './utils/staleBuild';
 import type { Stage } from './utils/stageLayout';
 import type { RoleEntry } from './utils/roles';
+import type { SchoolFilter } from './utils/iuSchools';
 import { familyLevel, fieldLevel, levelKind, levelUp, WORLD_LEVEL, type WorldLevel } from './utils/worldLevel';
 
 /**
@@ -44,6 +46,22 @@ interface WorldState extends WorldLevel {
     setKelleyOnly: (on: boolean) => void;
 
     /**
+     * The hidden IU school filter (components/SchoolPicker): shown by Cmd+S on
+     * a Mac, Ctrl+S elsewhere, or a long press on the field picker. Never saved
+     * anywhere, so a reload starts hidden with no school.
+     */
+    schoolsRevealed: boolean;
+    /** The school whose jobs stand out; null for none. Works with the field (level) and the Kelley filter. */
+    school: SchoolFilter | null;
+    setSchool: (school: SchoolFilter | null) => void;
+    /** Show the school picker, or hide it and drop its school. */
+    toggleSchools: () => void;
+    hideSchools: () => void;
+    /** The field picker is on screen (WorldBar mounted), so the shortcut has somewhere to open. */
+    fieldPickerMounted: boolean;
+    setFieldPickerMounted: (on: boolean) => void;
+
+    /**
      * SOC of the open BLS occupation panel (any occupation that is not a Kelley
      * title). Scored ones open the common role panel, unscored ones the
      * numbers-only panel (UI.tsx). Never set for a Kelley role.
@@ -58,11 +76,21 @@ interface WorldState extends WorldLevel {
     continentErrors: Record<string, string>;
     loadContinent: (code: string) => Promise<ContinentFile | null>;
 
+    /**
+     * Fields whose BLS state rows (utils/stateMapData) are loaded, by code.
+     * A field's rows load with the field (loadContinent) or when the Map view
+     * needs them (loadStateMap); the Map view re-renders on this.
+     */
+    stateMapFields: Record<string, true>;
+    stateMapErrors: Record<string, string>;
+    loadStateMap: (code: string) => Promise<void>;
+
     /** Fly to the role's region and open its panel. */
     openRole: (entry: RoleEntry) => void;
 }
 
 const inFlight = new Map<string, Promise<ContinentFile | null>>();
+const stateMapInFlight = new Map<string, Promise<void>>();
 
 export const useWorldStore = create<WorldState>((set, get) => ({
     ...WORLD_LEVEL,
@@ -104,6 +132,14 @@ export const useWorldStore = create<WorldState>((set, get) => ({
             : { kelleyOnly: on }
     )),
 
+    schoolsRevealed: false,
+    school: null,
+    setSchool: (school) => set({ school }),
+    toggleSchools: () => (get().schoolsRevealed ? get().hideSchools() : set({ schoolsRevealed: true })),
+    hideSchools: () => set({ schoolsRevealed: false, school: null }),
+    fieldPickerMounted: false,
+    setFieldPickerMounted: (on) => set({ fieldPickerMounted: on }),
+
     selectedOccupationSoc: null,
     closeOccupation: () => set({ selectedOccupationSoc: null }),
     openOccupation: (soc) => {
@@ -119,6 +155,9 @@ export const useWorldStore = create<WorldState>((set, get) => ({
         if (loaded) return Promise.resolve(loaded);
         const pending = inFlight.get(code);
         if (pending) return pending;
+        // Its state-map rows load alongside, on their own: the Map view waits
+        // for them, and a failure there never holds up the field.
+        void get().loadStateMap(code);
         // The field's published AI scores load with it, so a panel that has
         // the occupation file also has its scores (utils/blsScores).
         const attempt = () => Promise.all([loadContinentFile(code), loadBlsFieldScores(code)]);
@@ -145,6 +184,34 @@ export const useWorldStore = create<WorldState>((set, get) => ({
             })
             .finally(() => inFlight.delete(code));
         inFlight.set(code, p);
+        return p;
+    },
+
+    stateMapFields: {},
+    stateMapErrors: {},
+    loadStateMap: (code) => {
+        if (get().stateMapFields[code]) return Promise.resolve();
+        const pending = stateMapInFlight.get(code);
+        if (pending) return pending;
+        const p = loadStateMapField(code)
+            .catch(() => new Promise((resolve) => setTimeout(resolve, 1500)).then(() => loadStateMapField(code)))
+            .catch((err: unknown) => {
+                if (isChunkLoadError(err) && reloadForNewBuild()) return new Promise<never>(() => {});
+                throw err;
+            })
+            .then(() => {
+                set((s) => {
+                    const errors = { ...s.stateMapErrors };
+                    delete errors[code];
+                    return { stateMapFields: { ...s.stateMapFields, [code]: true as const }, stateMapErrors: errors };
+                });
+            })
+            .catch((err: unknown) => {
+                console.error(`[World] Could not load state data for field ${code}`, err);
+                set((s) => ({ stateMapErrors: { ...s.stateMapErrors, [code]: 'Could not load the BLS state data.' } }));
+            })
+            .finally(() => stateMapInFlight.delete(code));
+        stateMapInFlight.set(code, p);
         return p;
     },
 

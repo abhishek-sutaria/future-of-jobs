@@ -6,7 +6,11 @@
  *
  * What counts: only a request that is about to call Claude on the server key.
  * A saved shared answer, a request with the visitor's own key, a refused
- * request and the status check never count.
+ * request and the status check never count. When Claude's answer then fails
+ * (an upstream error, or an answer that fails parsing or the app's checks),
+ * the gateway gives the visitor's hour and day slots back (`give`), so a
+ * failed click costs the visitor nothing. The whole-app day count keeps it:
+ * that call was still paid for, and that bucket is the spend ceiling.
  *
  * Buckets, all fixed windows (UTC):
  *   visitor per hour   FOJ_RATE_PER_HOUR        default 30
@@ -56,14 +60,22 @@ export interface Bucket {
 }
 
 export type TakeResult =
-    | { allowed: true }
+    /** `refund` names the visitor's own buckets this take counted in, for `give`. */
+    | { allowed: true; refund: string[] }
     | { allowed: false; window: Window; limit: number; retryAfterSeconds: number };
 
 export interface RateLimiter {
     take(visitor: string, nowMs: number): Promise<TakeResult>;
+    /** Gives back one count in each named bucket (never below zero). Never throws. */
+    give(keys: readonly string[]): Promise<void>;
 }
 
+/** The buckets a failed answer gives back: the visitor's own, never the whole-app spend ceiling. */
+const visitorKeys = (buckets: readonly Bucket[]) => buckets.filter((b) => b.window !== 'global-day').map((b) => b.key);
+
 const HOUR = 3_600_000;
+/** Marks a refund key as counted in Supabase (rather than in memory). */
+const SUPABASE_PREFIX = 'sb:';
 const DAY = 24 * HOUR;
 
 /** Visitor id from the request: SHA-256 of the client IP (Vercel sets x-forwarded-for). */
@@ -103,7 +115,13 @@ export function memoryRateLimiter(limits: RateLimits): RateLimiter {
                 if ((counts.get(b.key)?.n ?? 0) >= b.limit) return blocked(b, nowMs);
             }
             for (const b of buckets) counts.set(b.key, { n: (counts.get(b.key)?.n ?? 0) + 1, resetsAt: b.resetsAt });
-            return { allowed: true };
+            return { allowed: true, refund: visitorKeys(buckets) };
+        },
+        async give(keys) {
+            for (const k of keys) {
+                const c = counts.get(k);
+                if (c && c.n > 0) c.n--;
+            }
         },
     };
 }
@@ -125,12 +143,31 @@ export function supabaseRateLimiter(cfg: SupabaseConfig, fetchImpl: FetchLike, l
                 });
                 if (!res.ok) throw new SupabaseError('rate limit', res.status);
                 const blockedKey = (await res.json()) as string | null;
-                if (!blockedKey) return { allowed: true };
+                if (!blockedKey) return { allowed: true, refund: visitorKeys(buckets).map((k) => `${SUPABASE_PREFIX}${k}`) };
                 const b = buckets.find((x) => x.key === blockedKey) ?? buckets[0];
                 return blocked(b, nowMs);
             } catch (err) {
                 console.warn('[ai-gateway] rate limit store unavailable, counting in memory:', err instanceof Error ? err.message : 'error');
                 return fallback.take(visitor, nowMs);
+            }
+        },
+        // A take counted in Supabase gives back there (keys marked by the prefix);
+        // one that fell back to memory gives back in memory.
+        async give(keys) {
+            const remote = keys.filter((k) => k.startsWith(SUPABASE_PREFIX)).map((k) => k.slice(SUPABASE_PREFIX.length));
+            const local = keys.filter((k) => !k.startsWith(SUPABASE_PREFIX));
+            if (local.length > 0) await fallback.give(local);
+            if (remote.length === 0) return;
+            try {
+                // public.ai_rate_give: supabase/migrations/0004_rate_give.sql.
+                const res = await fetchImpl(`${cfg.url}/rest/v1/rpc/ai_rate_give`, {
+                    method: 'POST',
+                    headers: serviceHeaders(cfg),
+                    body: JSON.stringify({ p_keys: remote }),
+                });
+                if (!res.ok) throw new SupabaseError('rate give', res.status);
+            } catch (err) {
+                console.warn('[ai-gateway] could not give a rate-limit slot back:', err instanceof Error ? err.message : 'error');
             }
         },
     };

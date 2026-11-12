@@ -5,7 +5,7 @@ import { DATA_SOURCES, YEAR_MAX, YEAR_MIN } from '../config/constants';
 import { CONTINENT_DISPLAY_NAMES } from '../config/continents';
 import { continentOf, INDEX_CONTINENT_BY_CODE, type OccupationEntry } from '../utils/occupationIndex';
 import { blsEpGrowthPathPoints } from '../utils/terrainMath';
-import { AI_SOON_TITLE, formatCount, formatGrowth, NO_TASKS_NOTE, NOT_SCORED_TITLE, WORKERS_NOTE } from '../utils/roleFormat';
+import { AI_SOON_TITLE, formatCount, formatGrowth, NO_TASKS_NOTE, NOT_SCORED_TITLE, WORKERS_NOTE, noOwnTaskListNote } from '../utils/roleFormat';
 import { payBaseNote } from '../utils/wages';
 import { PayLine } from './RolePay';
 import { ProvenanceBadge } from './ProvenanceBadge';
@@ -219,9 +219,10 @@ export const OccupationBody: React.FC<{ occupation: OccupationEntry; onClose: ()
  * The role's BLS occupation as published, under the role panel's tasks: its
  * workers, O*NET description and full O*NET task list. For a Kelley title the
  * occupation can be wider than the title (Brand Manager is in 11-2021
- * Marketing Managers), so the heading names it.
+ * Marketing Managers), so the heading names it. With no list of its own (the
+ * combined jobs), it names the O*NET codes the scored tasks come from.
  */
-export const OccupationAbout: React.FC<{ occupation: OccupationEntry; roleTitle: string }> = ({ occupation: o, roleTitle }) => (
+export const OccupationAbout: React.FC<{ occupation: OccupationEntry; roleTitle: string; scoredFrom?: readonly string[] }> = ({ occupation: o, roleTitle, scoredFrom = [] }) => (
     <section className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4 space-y-3" data-testid="occupation-about">
         <div>
             <h3 className="text-[10px] uppercase tracking-widest text-gray-500 font-semibold">
@@ -235,11 +236,13 @@ export const OccupationAbout: React.FC<{ occupation: OccupationEntry; roleTitle:
             )}
         </div>
         {o.description && <p className="text-sm text-gray-300 leading-relaxed" data-testid="description">{o.description}</p>}
-        <details>
-            <summary className="cursor-pointer text-[11px] text-cyan-300 hover:text-cyan-200 min-h-[32px] flex items-center">
-                {o.tasks.length > 0 ? `All ${o.tasks.length} O*NET tasks for this occupation` : NO_TASKS_NOTE}
-            </summary>
-            {o.tasks.length > 0 && (
+        {o.tasks.length === 0 ? (
+            <p className="text-[11px] text-gray-400 leading-snug" data-testid="task-source-note">{noOwnTaskListNote(o.soc, scoredFrom)}</p>
+        ) : (
+            <details>
+                <summary className="cursor-pointer text-[11px] text-cyan-300 hover:text-cyan-200 min-h-[32px] flex items-center">
+                    All {o.tasks.length} O*NET tasks for this occupation
+                </summary>
                 <ul className="space-y-1.5 mt-2" data-testid="task-list">
                     {o.tasks.map((t) => (
                         <li key={`${t.onetCode}-${t.id}`} className="flex items-start gap-2 text-sm text-gray-300 leading-snug">
@@ -253,8 +256,8 @@ export const OccupationAbout: React.FC<{ occupation: OccupationEntry; roleTitle:
                         </li>
                     ))}
                 </ul>
-            )}
-        </details>
+            </details>
+        )}
     </section>
 );
 

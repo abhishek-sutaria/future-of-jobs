@@ -10,7 +10,7 @@ interface RoleFilterButtonProps {
 /**
  * Mobile-only trigger for RoleFilterSheet, replacing the desktop sidebar in
  * 2D map view. Badges the selection count — essential, since 0 selected
- * means "showing all 50 roles" (MapView.tsx), not "showing nothing", so the
+ * means "showing every role in scope" (MapView.tsx), not "showing nothing", so the
  * badge is the only signal a filter is actually applied.
  *
  * Placement: the entire bottom band on a 390px phone is already occupied —
