@@ -32,6 +32,8 @@ export const worldView = {
     yearMix: 0,
     /** Baked stages on the mesh now, by key. */
     surfaces: new Map<string, DrawnSurface>(),
+    /** World peaks the IU school is sinking (role key → height multiplier now); absent means full height. Written by WorldTerrain. */
+    peakSink: new Map<string, number>(),
 };
 
 /** Straight back to the whole world at rest, for Reset view, which moves the camera itself. */

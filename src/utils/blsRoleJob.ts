@@ -10,8 +10,8 @@
  *   tasks and their scores      ai_scores_bls.json (published, same for everyone)
  *   labels                      the one all-roles scale (utils/roleScale)
  * Sources list only what the repo has for this occupation: no OOH badge (the
- * repo's OOH extract covers the Kelley roles only) and no state map (state
- * employment covers the Kelley codes only; see docs/scoring-decisions.md).
+ * repo's OOH extract covers the Kelley roles only). Its state employment is
+ * not on the Job: the Map view reads it per field (utils/stateMapData).
  */
 
 import type { Job } from '../types';

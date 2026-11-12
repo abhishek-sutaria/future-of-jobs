@@ -294,3 +294,85 @@ canvas {
     animation: none;
   }
 }
+
+/* The hidden IU school picker (components/SchoolPicker). It slides out of the
+   field picker with a crimson shimmer and a short trail of sparks, and slips
+   back in, quicker and quieter, when hidden. Only transform and opacity
+   animate, so the compositor runs it without layout or paint. Timings match
+   SCHOOL_ENTER_MS / SCHOOL_LEAVE_MS / SCHOOL_FADE_MS. Beside the field picker
+   it comes from the left; under it, on a narrow screen, from above. */
+.iu-school {
+  --iu-crimson: #990000;
+  --iu-from-x: -26px;
+  --iu-from-y: 0px;
+}
+@media (max-width: 767px) {
+  .iu-school {
+    --iu-from-x: 0px;
+    --iu-from-y: -14px;
+  }
+}
+.iu-school--enter {
+  animation: iu-school-in 600ms cubic-bezier(0.2, 0.9, 0.25, 1.12) both;
+  will-change: transform, opacity;
+}
+.iu-school--leave {
+  animation: iu-school-out 220ms cubic-bezier(0.4, 0, 1, 1) both;
+  will-change: transform, opacity;
+}
+.iu-school--fade-in { animation: iu-school-fade 180ms ease-out both; }
+.iu-school--fade-out { animation: iu-school-fade 180ms ease-in reverse both; }
+@keyframes iu-school-in {
+  0% { opacity: 0; transform: translate(var(--iu-from-x), var(--iu-from-y)) scale(0.88); }
+  55% { opacity: 1; }
+  100% { opacity: 1; transform: none; }
+}
+@keyframes iu-school-out {
+  to { opacity: 0; transform: translate(calc(var(--iu-from-x) / 2), calc(var(--iu-from-y) / 2)) scale(0.95); }
+}
+@keyframes iu-school-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+/* A band of light that sweeps the button once as it arrives. */
+.iu-school__shimmer {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 55%;
+  pointer-events: none;
+  background: linear-gradient(100deg, transparent 0%, rgba(153, 0, 0, 0.35) 35%, rgba(255, 236, 236, 0.45) 50%, rgba(153, 0, 0, 0.35) 65%, transparent 100%);
+  opacity: 0;
+  transform: translateX(-120%) skewX(-18deg);
+  animation: iu-school-shimmer 560ms 80ms cubic-bezier(0.3, 0.6, 0.3, 1) both;
+  will-change: transform, opacity;
+}
+@keyframes iu-school-shimmer {
+  0% { opacity: 0; transform: translateX(-120%) skewX(-18deg); }
+  20% { opacity: 1; }
+  100% { opacity: 0; transform: translateX(260%) skewX(-18deg); }
+}
+/* Sparks: each starts where the two pickers meet and drifts out along the
+   trail (--dx, --dy), turning as it twinkles out. */
+.iu-school__spark {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: var(--size, 8px);
+  height: var(--size, 8px);
+  margin: calc(var(--size, 8px) / -2) 0 0 calc(var(--size, 8px) / -2);
+  pointer-events: none;
+  opacity: 0;
+  animation: iu-school-spark 520ms var(--delay, 0ms) cubic-bezier(0.2, 0.7, 0.3, 1) both;
+  will-change: transform, opacity;
+}
+@keyframes iu-school-spark {
+  0% { opacity: 0; transform: translate(0, 0) scale(0.2) rotate(0deg); }
+  30% { opacity: 1; transform: translate(calc(var(--dx) * 0.45), calc(var(--dy) * 0.45)) scale(1) rotate(50deg); }
+  100% { opacity: 0; transform: translate(var(--dx), var(--dy)) scale(0.35) rotate(120deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .iu-school--enter { animation: iu-school-fade 180ms ease-out both; }
+  .iu-school--leave { animation: iu-school-fade 180ms ease-in reverse both; }
+  .iu-school__shimmer,
+  .iu-school__spark { display: none; }
+}

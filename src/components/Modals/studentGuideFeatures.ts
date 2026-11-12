@@ -2,7 +2,7 @@
  * The Student Guide's feature cards: shown by StudentGuideModal and copied
  * word for word into public/student-guide.html (and its PDF), which
  * studentGuide.test.ts checks. Coverage wording comes from the data
- * (utils/blsScores), never typed in.
+ * (utils/blsScores, utils/stateMapData), never typed in.
  *
  * The printed guide cannot change by itself, so every sentence here is true
  * both before and after the Kelley SOCs are re-scored (--batch kelley): the
@@ -11,6 +11,7 @@
  */
 
 import { SCORE_COUNTS, SCORE_COVERAGE } from '../../utils/blsScores';
+import { STATE_MAP_COVERAGE } from '../../utils/stateMapData';
 
 const MORE_SCORED = SCORE_COUNTS.bls > 0;
 const SLATE = SCORE_COVERAGE.slate ? ` Slate peaks${SCORE_COVERAGE.slate}` : '';
@@ -109,7 +110,7 @@ export const FEATURES: Feature[] = [
         emoji: '🗺️',
         title: 'US Map View',
         description:
-            `Switch from the 3D terrain to a flat 2D US map of the ${KELLEY} Kelley roles (the app has BLS state data for their occupations only). State colour and circle size both encode BLS employment volume: darker and larger means more workers in that state for the selected roles. Hover a state to see the exact BLS OEWS May 2025 employment count and Location Quotient (LQ) per occupation.`,
+            `Switch from the 3D terrain to a flat 2D US map of every job in the field you have open (or the whole map): all ${n(STATE_MAP_COVERAGE.jobs)} jobs are on it, Kelley or not. State colour and circle size both show BLS employment: the brighter the colour and the bigger the circle, the more workers in that state for the selected roles. Grey means BLS publishes no number for them in that state. Hover a state to see the exact BLS OEWS May 2025 employment count and Location Quotient (LQ) per occupation.`,
         tip: 'Select specific roles using the role filter before opening the map to compare which states are most exposed for those jobs in particular.',
         color: 'teal',
     },

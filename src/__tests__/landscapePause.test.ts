@@ -19,9 +19,9 @@ describe('Landscape GL pause hardening', () => {
         expect(src).toMatch(/frameloop=\{pauseLoop \? 'never' : 'always'\}/);
     });
 
-    it('wakes the mobile idle timer when a panel, level change or the Kelley filter changes', () => {
+    it('wakes the mobile idle timer when a panel, level change, the Kelley filter or the IU school filter changes', () => {
         // A level change that left the loop asleep would freeze its fades partway.
-        expect(src).toMatch(/bumpInteraction,\s*year,\s*mapView,\s*selectedJob,\s*route,\s*canvasKey,\s*selectedOccupationSoc,\s*focusedContinent,\s*focusedFamily,\s*drawnStage,\s*kelleyOnly,\s*focusRequestId\]/);
+        expect(src).toMatch(/bumpInteraction,\s*year,\s*mapView,\s*selectedJob,\s*route,\s*canvasKey,\s*selectedOccupationSoc,\s*focusedContinent,\s*focusedFamily,\s*drawnStage,\s*kelleyOnly,\s*school,\s*focusRequestId\]/);
     });
 
     it('skips the second fill light on mobile', () => {

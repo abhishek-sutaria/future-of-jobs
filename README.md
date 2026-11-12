@@ -142,35 +142,35 @@ they can drift apart between refreshes:
 | Extract | File | Drives | Current vintage |
 |---|---|---|---|
 | National, per role | `src/data.ts` | 3D terrain height, the Workers stat, the "OES" badge | **May 2025** |
-| State-level | `src/data/geo_real.json` | 2D US map employment + Location Quotient | **May 2025** |
+| State-level | `src/data/geo_real.json` (Kelley codes) + `src/data/state_map/` (all 830 jobs) | 2D US map employment + Location Quotient | **May 2025** (BLS state file) |
 
 ### Refreshing
 
+National per-role employment (`src/data.ts`) comes from the BLS public API:
+
 ```bash
-# 1. Get a free BLS registration key (unregistered tier is 25 req/day, not
-#    enough to cover the ~5,000 series a full refresh needs):
+# Optional BLS registration key (the national pass is 47 series):
 #    https://data.bls.gov/registrationEngine/
 export VITE_BLS_API_KEY=your_key_here
-
-# 2. Preview the change with no files written:
-node scripts/refresh_oes_data.mjs --dry-run
-
-# 3. Apply it (both national and state-level; add --national-only for just
-#    the smaller national pass, e.g. while iterating without spending quota
-#    on the full state-level fetch):
-node scripts/refresh_oes_data.mjs
+node scripts/refresh_oes_data.mjs --dry-run   # preview, no files written
+node scripts/refresh_oes_data.mjs             # apply
 ```
 
-This pulls directly from `api.bls.gov` — `www.bls.gov`/`download.bls.gov` block
-automated downloads (Akamai bot protection), so the classic "download the OEWS
-workbook" path (`scripts/extract_bls_data.py`) can no longer be refreshed
-programmatically for a new vintage. `scripts/refresh_oes_data.mjs` rewrites, in
-one pass: `src/data.ts` employment values, all 50 `dataSources` literals in
-that file, `DATA_SOURCES.BLS_OES` in `src/config/constants.ts`,
-`src/data/national_employment.json`, and (unless `--national-only`)
-`src/data/geo_real.json`. `src/__tests__/oesVintage.test.ts` and
-`scripts/audit.mjs` (T65–T67) both guard
-that `DATA_SOURCES.BLS_OES` and the literals in `data.ts` never drift apart.
+It rewrites `src/data.ts` employment values, all 50 `dataSources` literals in
+that file, `DATA_SOURCES.BLS_OES` in `src/config/constants.ts` and
+`src/data/national_employment.json`. `src/__tests__/oesVintage.test.ts` and
+`scripts/audit.mjs` (T65–T67) both guard that `DATA_SOURCES.BLS_OES` and the
+literals in `data.ts` never drift apart.
+
+State-level data (the state map, all 830 jobs) comes from the BLS OEWS state
+file committed in `data/oews_state/` (sha256-pinned):
+
+```bash
+npx tsx scripts/build_state_map.ts           # rebuild geo_real.json, src/data/state_map/, docs/state-map.md
+npx tsx scripts/build_state_map.ts --check   # fail if any of them is stale
+```
+
+`docs/state-map.md` has the method, coverage and source.
 
 `src/utils/onet.ts`'s `MAP_TITLE_TO_SOC` is the single source of truth for
 which SOC code each role uses, for both extracts. If BLS retires or

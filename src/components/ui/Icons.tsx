@@ -100,6 +100,10 @@ export const IconActivity = ({ size, ...p }: IconProps) => (
     <svg {...d(size)} {...p}><polyline points="22 12 18 12 15 21 9 3 6 12 2 12" /></svg>
 );
 
+export const IconGraduationCap = ({ size, ...p }: IconProps) => (
+    <svg {...d(size)} {...p}><path d="M22 10 12 5 2 10l10 5 10-5Z" /><path d="M6 12v5c3 2 9 2 12 0v-5" /><path d="M22 10v6" /></svg>
+);
+
 export const IconLayers = ({ size, ...p }: IconProps) => (
     <svg {...d(size)} {...p}><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.84Z" /><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65" /><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65" /></svg>
 );
