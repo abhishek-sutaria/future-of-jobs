@@ -1,4 +1,5 @@
 import { SHADER_VISUAL, SHADER_COLORS, SCENE } from '../../config/constants';
+import { SCHOOL_SINK } from '../../utils/stageBake';
 
 /** Region rectangles uploaded to the ground shader (one vec4 each). */
 export const MAX_REGIONS = 22;
@@ -38,6 +39,7 @@ export const peakVertexShader = /* glsl */ `
   attribute vec4 aPeak;     // world x, world z, footprint radius, height (world units)
   attribute vec3 aColor;    // Job Security colour, or the neutral "not scored yet" slate
   attribute float aEmph;    // 1 = full colour, lower = dimmed by the Kelley filter
+  attribute float aOut;     // 0 = standing, 1 = left out by the IU school: grey and sunk (eased on the CPU)
   attribute float aIndex;   // instance index within this region, for the hover glow
 
   uniform float uGroundY;
@@ -49,10 +51,11 @@ export const peakVertexShader = /* glsl */ `
   varying vec2 vMap;
   varying float vElev;
   varying float vEmph;
+  varying float vOut;
   varying float vHover;
 
   void main() {
-    float h = aPeak.w * uRegionLift;
+    float h = aPeak.w * uRegionLift * mix(1.0, ${f(SCHOOL_SINK)}, aOut);
     vec3 map = vec3(aPeak.x + position.x * aPeak.z, uGroundY + position.y * h, aPeak.y + position.z * aPeak.z);
     vec3 world = toScreen(map);
     vMap = map.xz;
@@ -60,6 +63,7 @@ export const peakVertexShader = /* glsl */ `
     vElev = position.y * h;
     vColor = aColor;
     vEmph = aEmph;
+    vOut = aOut;
     vHover = abs(aIndex - uHover) < 0.5 ? 1.0 : 0.0;
     gl_Position = projectionMatrix * viewMatrix * vec4(world, 1.0);
   }
@@ -73,6 +77,7 @@ export const peakFragmentShader = /* glsl */ `
   varying vec2 vMap;
   varying float vElev;
   varying float vEmph;
+  varying float vOut;
   varying float vHover;
 
   void main() {
@@ -98,6 +103,8 @@ export const peakFragmentShader = /* glsl */ `
     color += ${SHADER_COLORS.RIM_LIGHTING} * fresnel * 0.3;
 
     color = mix(TERRAIN_BASE * 0.85, color, vEmph);
+    // Left out by the IU school: grey and much darker (the Kelley look above is untouched).
+    color = mix(color, mix(TERRAIN_BASE * 0.7, vec3(dot(color, vec3(0.299, 0.587, 0.114))), 0.32), vOut);
     color += vec3(0.16, 0.22, 0.28) * vHover;
 
     gl_FragColor = vec4(color, uFade);

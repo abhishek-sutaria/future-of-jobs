@@ -11,9 +11,13 @@ import { ActivityTable } from './ActivityTable';
 import { TrainingLog } from './TrainingLog';
 import { SavedReports } from './SavedReports';
 import { AccountSection } from './AccountSection';
+import { useWorldStore } from '../../worldStore';
+import { roleScaleFor } from '../../utils/allRoleScale';
+import { blsSummaryJob, socOfBlsRoleId } from '../../utils/blsRoleJob';
+import type { Job } from '../../types';
 import {
     buildJobIndex, enrichSavedRoles, enrichViewedRoles, filterRows, sortRows,
-    computePortfolioStats, groupTrainingByRole, buildRiskScale,
+    computePortfolioStats, groupTrainingByRole,
     EMPTY_FILTERS, type DashboardFilters, type SortKey, type SortDirection,
 } from '../../utils/dashboardSelectors';
 
@@ -46,11 +50,26 @@ export const DashboardPage: React.FC = () => {
     const [viewedFilters, setViewedFilters] = useState<DashboardFilters>(EMPTY_FILTERS);
     const [viewedSort, setViewedSort] = useState<SortState>({ key: 'views', dir: 'desc' });
 
-    const jobIndex = useMemo(() => buildJobIndex(jobs), [jobs]);
-    // Built from the FULL job list, never a filtered subset — see the caveat
-    // on buildRiskScale itself; a scale built from filtered rows would make a
-    // role's risk colour shift as the user changes filters.
-    const riskScale = useMemo(() => buildRiskScale(jobs.map((j) => j.automationCostIndex)), [jobs]);
+    // Kelley roles from the store, plus any other scored occupation the user
+    // saved, viewed or trained on ("soc:<SOC>" ids), from the bundled scores.
+    const roleScale = roleScaleFor(jobs);
+    const jobIndex = useMemo(() => {
+        const ids = new Set([
+            ...activity.savedRoles.map((r) => r.jobId),
+            ...activity.recentViews.map((v) => v.jobId),
+            ...activity.upskillCompletions.map((u) => u.jobId),
+        ]);
+        const extra: Job[] = [];
+        for (const id of ids) {
+            const soc = socOfBlsRoleId(id);
+            const job = soc ? blsSummaryJob(soc, roleScale) : null;
+            if (job) extra.push(job);
+        }
+        return buildJobIndex([...jobs, ...extra]);
+    }, [jobs, activity.savedRoles, activity.recentViews, activity.upskillCompletions, roleScale]);
+    // The one colour scale across every scored role (utils/roleScale), never a
+    // filtered subset, so a role's colour never shifts as filters change.
+    const riskScale = roleScale.risk;
 
     const stats = useMemo(
         () => computePortfolioStats(activity.savedRoles, activity.recentViews, activity.upskillCompletions, jobIndex),
@@ -81,7 +100,9 @@ export const DashboardPage: React.FC = () => {
             toast.warning('That role is no longer in the dataset.');
             return;
         }
-        setSelectedJob(job);
+        const soc = socOfBlsRoleId(jobId);
+        if (soc) useWorldStore.getState().openOccupation(soc);
+        else setSelectedJob(job);
         navigate('map');
     }, [jobIndex, setSelectedJob, navigate]);
 
@@ -123,7 +144,7 @@ export const DashboardPage: React.FC = () => {
                         </div>
                     ) : (
                         <>
-                            <StatTiles stats={stats} />
+                            <StatTiles stats={stats} riskScale={riskScale} />
 
                             <div className="flex gap-1 border-b border-white/[0.06] overflow-x-auto">
                                 {TABS.map((t) => (

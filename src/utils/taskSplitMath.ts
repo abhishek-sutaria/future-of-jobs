@@ -1,4 +1,5 @@
 import type { Job } from '../types';
+import { meanPercent, percentOf } from './scoreRounding';
 
 /**
  * Pure helpers for the Task view. Kept out of the React component so ordering,
@@ -23,10 +24,18 @@ export function orderRolesByRisk(jobs: readonly Job[]): Job[] {
     );
 }
 
-/** Plain average of published risk across the listed roles (not employment-weighted). */
+/** Plain average of published risk across the listed roles (not employment-weighted), a whole percent rounded from whole hundredths. */
 export function averageRiskPct(jobs: readonly Job[]): number {
-    if (!jobs.length) return 0;
-    return (jobs.reduce((a, job) => a + publishedRisk(job), 0) / jobs.length) * 100;
+    return meanPercent(jobs.map(publishedRisk));
+}
+
+/**
+ * Workers behind the listed roles: BLS Employment Projections 2025 (every
+ * worker, self-employed included), the same "workers" as everywhere else in the
+ * app. Kelley titles that share a SOC each carry their equal share.
+ */
+export function totalWorkers(jobs: readonly Job[]): number {
+    return jobs.reduce((a, job) => a + (job.epEmployment2025 ?? 0), 0);
 }
 
 /**
@@ -39,7 +48,7 @@ export function findContrastPair(jobs: readonly Job[]): [Job, Job] | null {
         for (let j = i + 1; j < jobs.length; j++) {
             const a = jobs[i];
             const b = jobs[j];
-            if (Math.round(publishedRisk(a) * 100) !== Math.round(publishedRisk(b) * 100)) continue;
+            if (percentOf(publishedRisk(a)) !== percentOf(publishedRisk(b))) continue;
             const gap = Math.abs(taskSpread(a) - taskSpread(b));
             if (!best || gap > best.gap) best = { a, b, gap };
         }

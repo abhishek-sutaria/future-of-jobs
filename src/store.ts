@@ -3,11 +3,16 @@ import type { Job } from './types';
 
 import { initialJobs } from './data';
 import { resolveInitialScores, type ScoresSource } from './utils/bakedScores';
+import { KELLEY_SOC_SCORES } from './utils/blsScores';
+import { seedKelleyJobs } from './utils/kelleyScores';
+import { meanUnit } from './utils/scoreRounding';
 import type { JobAnalysisResult } from './utils/taskScoring';
 import {
-    YEAR_MIN, PERCENTILES, RESILIENCE_LABELS, VOLATILITY_LABELS,
+    YEAR_MIN,
     CONFIDENCE, DATA_SOURCES,
 } from './config/constants';
+import { roleScaleFor } from './utils/allRoleScale';
+import { resilienceLabelFor, volatilityLabelFor } from './utils/roleScale';
 import { oohEnvelopeCap } from './utils/terrainMath';
 import { MAP_TITLE_TO_SOC } from './utils/onet';
 import blsEp2025_2035 from './data/bls_ep_2025_2035.json';
@@ -42,42 +47,20 @@ function attachEpEmployment(jobs: Job[]): Job[] {
     });
 }
 
-// ── Percentile helper (used by both fetchRealData and scoreAllJobsWithAI) ──
+// ── Percentile labels (used by both fetchRealData and scoreAllJobsWithAI) ──
+//
+// One scale for every scored occupation (utils/allRoleScale): a Kelley role's
+// Human Resilience and volatility labels rank it among ALL scored occupations,
+// each SOC once, never the 50 alone. The published scores never change here.
 //
 // Labels are only meaningful when the underlying scores are real (i.e. Claude
-// has analyzed the tasks). If every job's automation index is still 0 we leave
-// the labels at their pending sentinel ("—") instead of computing percentiles
-// from uninitialized data.
+// has analyzed the tasks). A Kelley job still at 0 keeps the pending
+// sentinel ("—") instead of a percentile of uninitialized data.
 
 const PENDING_LABEL = '—';
 
 function applyPercentileLabels(jobs: Job[]): Job[] {
-    const allUninitialized = jobs.every(j =>
-        j.automationCostIndex === 0 &&
-        j.tasks.every(t => t.aiCapabilityScore === 0 && t.humanCriticalityScore === 0)
-    );
-
-    if (allUninitialized) {
-        return jobs.map(job => ({
-            ...job,
-            humanResilienceLabel: PENDING_LABEL,
-            salaryVolatilityLabel: PENDING_LABEL,
-        }));
-    }
-
-    const autoScores = jobs.map(j => j.automationCostIndex).sort((a, b) => a - b);
-    const humanScores = jobs.map(j => {
-        const avg = j.tasks.reduce((sum, t) => sum + t.humanCriticalityScore, 0) / j.tasks.length;
-        return avg || 0;
-    }).sort((a, b) => a - b);
-
-    const pct = (arr: number[], p: number) =>
-        arr[Math.min(Math.floor(p * arr.length), arr.length - 1)];
-
-    const p75_auto  = pct(autoScores,  PERCENTILES.HIGH);
-    const p50_auto  = pct(autoScores,  PERCENTILES.MEDIUM);
-    const p75_human = pct(humanScores, PERCENTILES.HIGH);
-    const p25_human = pct(humanScores, PERCENTILES.LOW);
+    const scale = roleScaleFor(jobs);
 
     return jobs.map(job => {
         const item = { ...job };
@@ -87,27 +70,15 @@ function applyPercentileLabels(jobs: Job[]): Job[] {
 
         // Per-job pending: this specific job hasn't been Claude-scored yet
         // (e.g. a single job failed to score) — leave its labels pending.
-        if (taskScoresUninitialized) {
+        if (taskScoresUninitialized || scale.count === 0) {
             item.humanResilienceLabel = PENDING_LABEL;
             item.salaryVolatilityLabel = PENDING_LABEL;
             return item;
         }
 
         const avgHuman = job.tasks.reduce((sum, t) => sum + t.humanCriticalityScore, 0) / job.tasks.length;
-        const isHighRisk   = job.automationCostIndex >= p75_auto;
-        const isMediumRisk = job.automationCostIndex >= p50_auto;
-
-        item.humanResilienceLabel =
-            avgHuman >= p75_human ? RESILIENCE_LABELS.TOP :
-            avgHuman >= p25_human ? RESILIENCE_LABELS.MID :
-            RESILIENCE_LABELS.BOTTOM;
-
-        item.salaryVolatilityLabel =
-            isHighRisk && item.projectedGrowth < 0 ? VOLATILITY_LABELS.CRITICAL :
-            isHighRisk                              ? VOLATILITY_LABELS.HIGH :
-            isMediumRisk                            ? VOLATILITY_LABELS.MODERATE :
-            VOLATILITY_LABELS.STABLE;
-
+        item.humanResilienceLabel = resilienceLabelFor(avgHuman, scale);
+        item.salaryVolatilityLabel = volatilityLabelFor(job.automationCostIndex, item.projectedGrowth, scale);
         return item;
     });
 }
@@ -138,7 +109,6 @@ function applyAnalysesToJobs(jobs: Job[], analyses: Record<string, JobAnalysisRe
             };
         });
 
-        const avgAi = newTasks.reduce((sum, t) => sum + t.aiCapabilityScore, 0) / newTasks.length;
         // Sign-aware envelope at the 2030 fraction of the decade OOH (≈5/9).
         const cap = oohEnvelopeCap(job.projectedGrowth);
         const lo = Math.min(0, cap);
@@ -155,8 +125,8 @@ function applyAnalysesToJobs(jobs: Job[], analyses: Record<string, JobAnalysisRe
         return {
             ...job,
             tasks: newTasks,
-            // Same display math the role panel uses: two-decimal mean AI capability.
-            automationCostIndex: parseFloat(avgAi.toFixed(2)),
+            // Two-decimal mean AI capability, rounded from whole hundredths (utils/scoreRounding).
+            automationCostIndex: meanUnit(newTasks.map((t) => t.aiCapabilityScore)),
             yearlyForecast,
         };
     });
@@ -186,14 +156,20 @@ function splitSharedSocEmployment(jobs: Job[]): Job[] {
     });
 }
 
-// Precomputed scores are applied synchronously at module load so the very first
-// render already has real risk colors and forecasts — no blocking startup pass.
+// Published scores are applied synchronously at module load so the very first
+// render already has real risk colours: no blocking startup pass. Each Kelley
+// title takes its SOC's entry in ai_scores_bls.json when there is one, else its
+// first score (utils/kelleyScores); a user's own re-score layers on top.
 const INITIAL_SCORES = resolveInitialScores();
 const SEEDED_JOBS = applyPercentileLabels(
     splitSharedSocEmployment(
-        attachEpEmployment(applyAnalysesToJobs(initialJobs, INITIAL_SCORES.scores)),
+        attachEpEmployment(seedKelleyJobs(initialJobs, KELLEY_SOC_SCORES, INITIAL_SCORES.scores, applyAnalysesToJobs)),
     ),
 );
+/** Some Kelley title is on its SOC's published entry. */
+const HAS_SOC_SCORES = SEEDED_JOBS.some((j) => KELLEY_SOC_SCORES.has(MAP_TITLE_TO_SOC[j.title]));
+/** Where the scores on screen came from: the user's own re-score, or published (either file). */
+const INITIAL_SOURCE: ScoresSource = INITIAL_SCORES.source === 'cache' || !HAS_SOC_SCORES ? INITIAL_SCORES.source : 'baked';
 
 // ── Store interface ────────────────────────────────────────────────────────
 
@@ -209,7 +185,8 @@ interface AppState {
     setMapView: (mode: 'globe' | 'map' | 'tasks') => void;
     selectedRoleIds: Set<string>;
     toggleRoleOnMap: (jobId: string) => void;
-    selectAllRoles: () => void;
+    /** Select these role ids (default: the 50 Kelley roles; the role lists always pass their own ids). */
+    selectAllRoles: (ids?: string[]) => void;
     clearAllRoles: () => void;
 
     // Real Data Integration
@@ -317,7 +294,7 @@ export const useStore = create<AppState>((set, get) => ({
         else newSet.add(jobId);
         return { selectedRoleIds: newSet };
     }),
-    selectAllRoles:  () => set((state) => ({ selectedRoleIds: new Set(state.jobs.map(j => j.id)) })),
+    selectAllRoles:  (ids) => set((state) => ({ selectedRoleIds: new Set(ids ?? state.jobs.map(j => j.id)) })),
     clearAllRoles:   () => set({ selectedRoleIds: new Set<string>() }),
 
     // ── BLS Real Data ────────────────────────────────────────────────────
@@ -391,8 +368,7 @@ export const useStore = create<AppState>((set, get) => ({
             item.isStale = false;
 
             if (item.tasks.length > 0) {
-                const avg             = item.tasks.reduce((s, t) => s + t.aiCapabilityScore, 0) / item.tasks.length;
-                item.automationCostIndex = parseFloat(avg.toFixed(2));
+                item.automationCostIndex = meanUnit(item.tasks.map((t) => t.aiCapabilityScore));
             }
 
             const socCode = MAP_TITLE_TO_SOC[job.title];
@@ -420,9 +396,9 @@ export const useStore = create<AppState>((set, get) => ({
 
     isScoring: false,
     // Precomputed scores are merged at module load, so the app starts already scored.
-    hasAIScores: INITIAL_SCORES.source !== 'none',
-    scoresSource: INITIAL_SCORES.source,
-    scoresGeneratedAt: INITIAL_SCORES.generatedAt,
+    hasAIScores: INITIAL_SOURCE !== 'none',
+    scoresSource: INITIAL_SOURCE,
+    scoresGeneratedAt: INITIAL_SCORES.source === 'cache' || !HAS_SOC_SCORES ? INITIAL_SCORES.generatedAt : null,
     scoringProgress: null,
     apiKeyMode: null,
     userClaudeApiKey: '',

@@ -15,17 +15,18 @@ import { describe, it, expect, beforeAll } from 'vitest';
 const ALL_PANELS = { timeout: 60_000 };
 import { renderToStaticMarkup } from 'react-dom/server';
 import { JSDOM } from 'jsdom';
-import { OccupationBody } from '../components/OccupationPanel';
+import { OccupationAbout, OccupationBody } from '../components/OccupationPanel';
+import { ONET_CODES_FOR_SOC, ONET_SPLIT_CODE_TITLES } from '../config/onetSplitCodes';
 import { RolePay } from '../components/RolePay';
 import { INDEX_CONTINENTS, OCCUPATION_INDEX, loadContinentFile, type OccupationEntry } from '../utils/occupationIndex';
 import { getRoleEntries } from '../utils/roles';
 import { useStore } from '../store';
-import { formatCount, formatGrowth, NO_TASKS_NOTE, NOT_SCORED_TITLE, WORKERS_NOTE, AI_SOON_TITLE } from '../utils/roleFormat';
+import { formatCount, formatGrowth, NO_TASKS_NOTE, NOT_SCORED_TITLE, WORKERS_NOTE, AI_SOON_TITLE, noOwnTaskListNote } from '../utils/roleFormat';
 import { formatAnnualWage, formatHourlyWage, WAGES_META } from '../utils/wages';
 import { peakEmploymentAt } from '../components/world/worldScene';
 import { YEAR_MAX, YEAR_MIN } from '../config/constants';
 import nationalEmployment from '../data/national_employment.json';
-import { BLS_SCORE_RISK, SCORE_COUNTS } from '../utils/blsScores';
+import { BLS_SCORE_RISK, KELLEY_SOC_SCORES, SCORE_COUNTS, blsScoreFor, loadAllBlsScores } from '../utils/blsScores';
 import fs from 'fs';
 import path from 'path';
 
@@ -142,12 +143,12 @@ describe('unscored occupation panel: numbers', () => {
             }
             if (o.description) expect(doc.querySelector('[data-testid="description"]')!.textContent).toBe(o.description);
         }
-        // From the data: 59 occupations have no O*NET task list of their own.
-        // 13-1020 is one of them but is represented by its two Kelley titles,
-        // which keep their own tasks. 13-2020 and the plan's "combined" jobs
-        // are scored on their split O*NET codes' tasks, so they leave this list
-        // once scored (their panels are tested in blsScores.test). Every other
-        // one is a planned "no-tasks" job and stays unscored.
+        // From the data: 59 occupations have no O*NET task list under their own
+        // code. 12 of them are "combined" jobs (O*NET splits them into smaller
+        // codes): 13-1020, held by its two Kelley titles, and 11 scored on
+        // their split codes' tasks (their panels name those codes: see
+        // "combined jobs" below). The other 47 have no O*NET tasks anywhere,
+        // are planned "no-tasks" and stay unscored.
         const counts = OCCUPATION_INDEX._meta.counts;
         const noTaskSocs = OCCUPATION_INDEX.occupations.filter((occ) => occ.taskCount === 0).map((occ) => occ.soc);
         expect(noTaskSocs).toHaveLength(counts.occupations - counts.withTasks);
@@ -155,15 +156,48 @@ describe('unscored occupation panel: numbers', () => {
         const elsewhere = noTaskSocs.filter((soc) => kelleySocs.has(soc) || BLS_SCORE_RISK.has(soc));
         const combined = PLAN_ALL.jobs.filter((j) => j.taskRule === 'combined').map((j) => j.soc);
         const planNoTasks = PLAN_ALL.jobs.filter((j) => j.taskRule === 'no-tasks').map((j) => j.soc);
-        expect(combined).toHaveLength(10);
-        const scoredCombined = combined.filter((soc) => BLS_SCORE_RISK.has(soc));
-        expect(elsewhere).toEqual(['13-1020', ...(BLS_SCORE_RISK.has('13-2020') ? ['13-2020'] : []), ...scoredCombined].sort());
+        expect(combined).toHaveLength(12);
+        expect(combined.sort()).toEqual(Object.keys(ONET_CODES_FOR_SOC).sort());
+        const scoredCombined = combined.filter((soc) => BLS_SCORE_RISK.has(soc) || kelleySocs.has(soc));
+        expect(elsewhere.sort()).toEqual(scoredCombined.sort());
         expect(withoutTasks).toBe(noTaskSocs.length - elsewhere.length);
+        expect(withoutTasks).toBe(47);
         // Unscored with no tasks = the plan's no-tasks jobs, plus any combined job not yet scored.
         expect(noTaskSocs.filter((soc) => !elsewhere.includes(soc)).sort()).toEqual(
-            [...planNoTasks, ...combined.filter((soc) => !BLS_SCORE_RISK.has(soc))].sort(),
+            [...planNoTasks, ...combined.filter((soc) => !BLS_SCORE_RISK.has(soc) && !kelleySocs.has(soc))].sort(),
         );
         expect(byS.get('13-1020')!.tasks).toEqual([]);
+    });
+});
+
+describe('combined jobs name the O*NET codes their tasks come from', () => {
+    beforeAll(() => loadAllBlsScores());
+
+    it('all 12 (11 scored on split codes, and 13-1020) say where their tasks come from, never "no task list"', async () => {
+        const combined = Object.keys(ONET_CODES_FOR_SOC);
+        expect(combined).toHaveLength(12);
+        for (const soc of combined) {
+            const o = (await loadContinentFile(soc.slice(0, 2))).occupations[soc];
+            expect(o.tasks, soc).toEqual([]);
+            const score = KELLEY_SOC_SCORES.get(soc) ?? blsScoreFor(soc);
+            const html = renderToStaticMarkup(<OccupationAbout occupation={o} roleTitle={o.title} scoredFrom={score?.onetCodes ?? []} />);
+            const note = new JSDOM(`<body>${html}</body>`).window.document.querySelector('[data-testid="task-source-note"]')!.textContent!;
+            expect(note, soc).not.toBe(NO_TASKS_NOTE);
+            expect(note, soc).toBe(noOwnTaskListNote(soc, score?.onetCodes ?? []));
+            for (const code of score?.onetCodes ?? ONET_CODES_FOR_SOC[soc]) {
+                expect(note, `${soc} ${code}`).toContain(code);
+                expect(note, `${soc} ${code}`).toContain(ONET_SPLIT_CODE_TITLES[code]);
+            }
+            // A scored job's codes are exactly the ones its published tasks came from.
+            if (score) expect(score.onetCodes, soc).toEqual([...ONET_CODES_FOR_SOC[soc]]);
+        }
+    });
+
+    it('Teaching Assistants names both split codes', () => {
+        expect(noOwnTaskListNote('25-9045', ['25-9042.00', '25-9043.00'])).toBe(
+            'O*NET has no task list under 25-9045 itself. The scored tasks above come from O*NET 25-9042.00 (Teaching Assistants, Preschool, Elementary, Middle, and Secondary School, Except Special Education) and 25-9043.00 (Teaching Assistants, Special Education).',
+        );
+        expect(noOwnTaskListNote('47-3019')).toBe(NO_TASKS_NOTE);
     });
 });
 

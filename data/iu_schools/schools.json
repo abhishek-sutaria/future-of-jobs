@@ -1,0 +1,28 @@
+{
+  "_about": [
+    "IU Bloomington's degree-granting schools, named exactly as https://bloomington.iu.edu/academics/schools/index.html lists them (retrieved 2026-11-09; the page says '16 degree-granting schools and colleges, along with ... the Hutton Honors College').",
+    "apiNames are the names the same schools carry in IU's degree finder data (raw/iu_degrees_bloomington.json). A program listed under 'Graduate School' or 'University Graduate School' together with another school belongs to that other school (its academic home); only a program listed under the graduate school alone belongs to Graduate School Bloomington.",
+    "The College's three schools (Eskenazi, Hamilton Lugar, The Media School) are part of the College of Arts and Sciences. IU lists most of their programs under both the College and the school, and each program counts for every school it is listed under."
+  ],
+  "excluded": [
+    { "name": "Hutton Honors College", "reason": "Listed on the schools page as a specialized honors program, not one of the 16 degree-granting schools; it offers no degree of its own." }
+  ],
+  "schools": [
+    { "id": "coas", "name": "College of Arts and Sciences", "apiNames": ["College of Arts and Sciences"] },
+    { "id": "eskenazi", "name": "Eskenazi School of Art, Architecture, and Design", "apiNames": ["Eskenazi School of Art, Architecture + Design"] },
+    { "id": "graduate", "name": "Graduate School Bloomington", "apiNames": ["Graduate School", "University Graduate School"], "onlyWhenAlone": true },
+    { "id": "hamilton-lugar", "name": "Hamilton Lugar School of Global and International Studies", "apiNames": ["Hamilton Lugar School of Global and International Studies"] },
+    { "id": "jacobs", "name": "Jacobs School of Music", "apiNames": ["Jacobs School of Music"] },
+    { "id": "kelley", "name": "Kelley School of Business", "apiNames": ["Kelley School of Business"] },
+    { "id": "luddy", "name": "Luddy School of Informatics, Computing, and Engineering", "apiNames": ["Luddy School of Informatics, Computing, and Engineering", "School of Informatics, Computing, and Engineering"] },
+    { "id": "maurer", "name": "Maurer School of Law", "apiNames": ["Maurer School of Law"] },
+    { "id": "media", "name": "The Media School", "apiNames": ["The Media School"] },
+    { "id": "oneill", "name": "O’Neill School of Public and Environmental Affairs", "apiNames": ["O'Neill School of Public and Environmental Affairs"] },
+    { "id": "education", "name": "School of Education", "apiNames": ["School of Education"] },
+    { "id": "medicine", "name": "School of Medicine", "apiNames": ["School of Medicine"] },
+    { "id": "nursing", "name": "School of Nursing", "apiNames": ["School of Nursing"] },
+    { "id": "optometry", "name": "School of Optometry", "apiNames": ["School of Optometry"] },
+    { "id": "public-health", "name": "School of Public Health - Bloomington", "apiNames": ["School of Public Health"] },
+    { "id": "social-work", "name": "School of Social Work", "apiNames": ["School of Social Work"] }
+  ]
+}

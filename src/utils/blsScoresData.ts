@@ -10,9 +10,19 @@
  * (buildBlsBundle). The meta also counts entries per task rule for the
  * Methodology text. blsScoresSlim.test.ts checks the result against the full
  * file on every field the app reads.
+ *
+ * Kelley SOCs (the 47 occupations the 50 Kelley titles map to) are scored by
+ * `--batch kelley` into this same file. Their entries never go into `risks`,
+ * `humans` or the field chunks: they go whole (slimmed) into `kelley`, in the
+ * main bundle, because the store seeds every Kelley title at startup and reads
+ * its tasks and scores from there (utils/kelleyScores). A Kelley title whose
+ * SOC has no entry yet keeps its old score from src/data/ai_scores.json, and
+ * the build serves only those old entries (legacyKelleySubset), so once every
+ * Kelley SOC is in this file the app reads nothing from ai_scores.json.
  */
 
 import { CACHE_VERSION } from './scoreVersion';
+import { meanUnit } from './scoreRounding';
 
 export interface BlsTaskScore {
     name: string;
@@ -26,7 +36,7 @@ export interface BlsRoleScore {
     soc: string;
     title: string;
     tasks: BlsTaskScore[];
-    /** Mean task aiCapabilityScore to two decimals: the Kelley automationCostIndex rule. */
+    /** Mean task aiCapabilityScore to two decimals, rounded from whole hundredths (utils/scoreRounding). */
     automationCostIndex: number;
     /** Mean task humanCriticalityScore. */
     humanCriticality: number;
@@ -100,7 +110,7 @@ export function parseBlsScores(file: RawBlsFile | null | undefined): { meta: Bls
             soc,
             title: raw.title,
             tasks,
-            automationCostIndex: parseFloat(mean(tasks.map((t) => t.aiCapabilityScore)).toFixed(2)),
+            automationCostIndex: meanUnit(tasks.map((t) => t.aiCapabilityScore)),
             humanCriticality: mean(tasks.map((t) => t.humanCriticalityScore)),
             scoredAt: raw.scoredAt,
             model: raw.responseModel ?? file.model,
@@ -136,26 +146,49 @@ export function slimBlsFile(file: RawBlsFile): RawBlsFile {
 
 export interface BlsBundle {
     meta: BlsBundleMeta | null;
+    /**
+     * The entries of Kelley SOCs, slimmed, as one file (version, model, scores),
+     * for the store's startup seed. Empty scores until --batch kelley is written.
+     */
+    kelley: RawBlsFile;
     /** Automation Risk per scored SOC: all the world view needs. */
     risks: Record<string, number>;
+    /**
+     * Mean Human Criticality per scored SOC, rounded to 4 decimals (exact for
+     * 5 or 4 two-decimal task scores). With `risks`, enough to rank every
+     * scored role at startup (utils/roleScale) without loading a field.
+     */
+    humans: Record<string, number>;
     /** One slim file per field (two-digit SOC major) holding its scored SOCs. */
     fields: Record<string, RawBlsFile>;
 }
 
-/** What the build puts in the main bundle (meta, risks) and in each field's chunk. */
-export function buildBlsBundle(file: RawBlsFile | null | undefined): BlsBundle {
+/**
+ * What the build puts in the main bundle (meta, risks, humans, kelley) and in
+ * each field's chunk. `kelleySocs` are the Kelley titles' SOCs: their entries
+ * go to `kelley` only.
+ */
+export function buildBlsBundle(file: RawBlsFile | null | undefined, kelleySocs: Iterable<string> = []): BlsBundle {
     const { meta, scores } = parseBlsScores(file);
-    if (!file || !meta) return { meta: null, risks: {}, fields: {} };
+    if (!file || !meta) return { meta: null, risks: {}, humans: {}, kelley: { scores: {} }, fields: {} };
+    const kelleySet = new Set(kelleySocs);
     const slim = slimBlsFile(file);
     const risks: Record<string, number> = {};
+    const humans: Record<string, number> = {};
     const fields: Record<string, RawBlsFile> = {};
+    const kelley: RawBlsFile = { ...pick(slim, READ_FILE_KEYS), scores: {} };
     const dates: string[] = [];
     const rules: Record<string, number> = {};
     for (const [soc, s] of scores) {
-        risks[soc] = s.automationCostIndex;
         dates.push(s.scoredAt);
         const rule = file.scores![soc].rule ?? 'unknown';
         rules[rule] = (rules[rule] ?? 0) + 1;
+        if (kelleySet.has(soc)) {
+            kelley.scores![soc] = slim.scores![soc];
+            continue;
+        }
+        risks[soc] = s.automationCostIndex;
+        humans[soc] = Math.round(s.humanCriticality * 10_000) / 10_000;
         const code = soc.slice(0, 2);
         const field = (fields[code] ??= { ...pick(slim, READ_FILE_KEYS), scores: {} });
         field.scores![soc] = slim.scores![soc];
@@ -164,6 +197,31 @@ export function buildBlsBundle(file: RawBlsFile | null | undefined): BlsBundle {
     return {
         meta: { ...meta, count: scores.size, firstScoredAt: dates[0] ?? null, lastScoredAt: dates[dates.length - 1] ?? null, rules },
         risks,
+        humans,
+        kelley,
         fields,
     };
+}
+
+/** src/data/ai_scores.json: the Kelley titles' first published scores (Aug 2026), by job id. */
+export interface LegacyKelleyFile {
+    version?: number;
+    model?: string;
+    generatedAt?: string;
+    scores?: Record<string, unknown>;
+}
+
+/**
+ * The part of ai_scores.json the app still needs: the entries of Kelley titles
+ * whose SOC has no entry in ai_scores_bls.json. Empty (and so unused) once
+ * --batch kelley has scored every Kelley SOC.
+ */
+export function legacyKelleySubset(
+    legacy: LegacyKelleyFile | null | undefined,
+    kelleyJobs: readonly { id: string; soc: string }[],
+    socsOnFile: ReadonlySet<string>,
+): LegacyKelleyFile {
+    const keep = new Set(kelleyJobs.filter((k) => !socsOnFile.has(k.soc)).map((k) => k.id));
+    const scores = Object.fromEntries(Object.entries(legacy?.scores ?? {}).filter(([id]) => keep.has(id)));
+    return { version: legacy?.version, model: legacy?.model, generatedAt: legacy?.generatedAt, scores };
 }

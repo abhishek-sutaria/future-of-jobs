@@ -1,12 +1,17 @@
 /**
- * Published AI scores for BLS occupations outside the 50 Kelley roles: every
- * occupation with O*NET tasks that no Kelley title covers. Written by
- * `npm run generate-bls-scores` to src/data/ai_scores_bls.json (same model,
- * prompt and parser as ai_scores.json).
+ * Published AI scores for BLS occupations, by SOC: src/data/ai_scores_bls.json,
+ * written by `npm run generate-bls-scores` (one model, prompt, parser and set
+ * of task rules for every row of data/bls_score_plan_all.json).
  *
- * Kept apart from the store on purpose: these roles are not in the jobs list,
- * the Kelley toggle or the 50-role percentile labels, and nothing here changes
- * a Kelley score, label, colour scale or rank. Their panels make no Claude call.
+ * Two kinds of entry:
+ *   - occupations no Kelley title covers (the 736 so far): kept apart from the
+ *     store's jobs list, opened as role-panel Jobs (utils/blsRoleJob);
+ *   - the 47 Kelley SOCs, once `--batch kelley` has scored them
+ *     (KELLEY_SOC_SCORES): the store seeds every Kelley title from its SOC's
+ *     entry (utils/kelleyScores), so titles that share a SOC share its tasks
+ *     and scores. Until then a Kelley title keeps its first score
+ *     (ai_scores.json).
+ * Every scored occupation is ranked once on one scale (utils/allRoleScale).
  *
  * Served by scripts/lib/blsScoresPlugin.ts in two parts: the main bundle holds
  * the meta and one Automation Risk per SOC (all the world view needs), and each
@@ -15,24 +20,29 @@
  * file, every one of these occupations stays "not scored yet".
  */
 
-import { meta as BUNDLE_META, risks as BUNDLE_RISKS, fieldLoaders } from 'virtual:bls-scores';
-import { PERCENTILES, RESILIENCE_LABELS } from '../config/constants';
-import { getBakedScores } from './bakedScores';
-import { initialJobs } from '../data';
-import { MAP_TITLE_TO_SOC } from './onet';
+import { meta as BUNDLE_META, risks as BUNDLE_RISKS, humans as BUNDLE_HUMANS, kelley as BUNDLE_KELLEY, fieldLoaders } from 'virtual:bls-scores';
+import { KELLEY_JOB_SOCS, KELLEY_SOC_SET } from './kelleySocs';
 import { OCCUPATION_INDEX, continentOf } from './occupationIndex';
 import { parseBlsScores, type BlsBundleMeta, type BlsRoleScore } from './blsScoresData';
 
 export { parseBlsScores } from './blsScoresData';
 export type { BlsBundleMeta, BlsRoleScore, BlsScoresMeta, BlsTaskScore } from './blsScoresData';
 
-const mean = (xs: number[]) => xs.reduce((s, x) => s + x, 0) / xs.length;
-
-/** Model, file date, entry count and first / last scoredAt of the published set. */
+/** Model, file date, entry count and first / last scoredAt of the published set (every entry, Kelley SOCs included). */
 export const BLS_SCORES_META: BlsBundleMeta | null = BUNDLE_META;
 
-/** Automation Risk of every scored BLS occupation, by SOC. Always loaded. */
+/** Automation Risk of every scored BLS occupation outside the Kelley SOCs, by SOC. Always loaded. */
 export const BLS_SCORE_RISK: ReadonlyMap<string, number> = new Map(Object.entries(BUNDLE_RISKS));
+
+/** Mean Human Criticality of every scored BLS occupation outside the Kelley SOCs, by SOC (4 decimals). Always loaded. */
+export const BLS_SCORE_HUMAN: ReadonlyMap<string, number> = new Map(Object.entries(BUNDLE_HUMANS ?? {}));
+
+/**
+ * The Kelley SOCs' entries in ai_scores_bls.json, by SOC, in the main bundle:
+ * each Kelley title whose SOC is here reads its tasks and scores from it.
+ * Empty until `--batch kelley` is written.
+ */
+export const KELLEY_SOC_SCORES: ReadonlyMap<string, BlsRoleScore> = parseBlsScores(BUNDLE_KELLEY ?? null).scores;
 
 const loadedScores = new Map<string, BlsRoleScore>();
 const fieldLoads = new Map<string, Promise<void>>();
@@ -62,7 +72,7 @@ export const loadAllBlsScores = (): Promise<void> =>
 /** Full published score, once its field is loaded (OccupationPanel waits for that). */
 export const blsScoreFor = (soc: string): BlsRoleScore | undefined => loadedScores.get(soc);
 
-const KELLEY_SOCS: ReadonlySet<string> = new Set(initialJobs.map((j) => MAP_TITLE_TO_SOC[j.title]).filter(Boolean));
+const KELLEY_SOCS: ReadonlySet<string> = KELLEY_SOC_SET;
 
 /** Fields (two-digit SOC majors) in which every occupation has published AI scores. */
 export function fullyScoredFields(blsScored: ReadonlyMap<string, unknown> = BLS_SCORE_RISK): string[] {
@@ -83,8 +93,33 @@ export interface ScoreCounts {
     scored: number;
     /** Distinct BLS occupations the 50 Kelley titles map to. */
     kelleySocs: number;
+    /** Kelley titles (each its own scored role). */
+    kelleyTitles: number;
+    /**
+     * Scored roles, the population every rank is taken across (utils/roleScale):
+     * each Kelley title once plus each other scored occupation once.
+     */
+    roles: number;
+    /** BLS occupations that hold two or more Kelley titles (each title is its own role). */
+    sharedKelleySocs: number;
     /** Scored occupations outside the 50 Kelley roles. */
     bls: number;
+    /** Kelley SOCs with an entry in ai_scores_bls.json (scored by the one method): 0 until --batch kelley, then 47. */
+    kelleyOnFile: number;
+    /** Kelley titles whose SOC is on file. */
+    kelleyTitlesOnFile: number;
+    /** Kelley SOCs still on their first score (ai_scores.json). */
+    legacyKelleySocs: number;
+    /** Kelley titles still on their first score. */
+    legacyKelleyTitles: number;
+    /** Occupations scored by the one method (every entry of ai_scores_bls.json): bls + kelleyOnFile. */
+    oneMethod: number;
+    /**
+     * The population every rank is taken across (utils/allRoleScale): each
+     * scored occupation once, so the three SOCs that hold two Kelley titles
+     * count once. Equal to `scored`.
+     */
+    ranked: number;
     /** Occupations with no score. */
     unscored: number;
     /** Of those, how many have no O*NET task list at all (index taskCount 0). */
@@ -93,15 +128,34 @@ export interface ScoreCounts {
     unscoredAllOther: number;
 }
 
-export function scoreCounts(blsScored: ReadonlyMap<string, unknown> = BLS_SCORE_RISK): ScoreCounts {
+export function scoreCounts(
+    blsScored: ReadonlyMap<string, unknown> = BLS_SCORE_RISK,
+    kelleyOnFile: ReadonlyMap<string, unknown> = KELLEY_SOC_SCORES,
+): ScoreCounts {
     const occs = OCCUPATION_INDEX.occupations;
     const isScored = (soc: string) => KELLEY_SOCS.has(soc) || blsScored.has(soc);
     const unscored = occs.filter((o) => !isScored(o.soc));
+    const bls = occs.filter((o) => !KELLEY_SOCS.has(o.soc) && blsScored.has(o.soc)).length;
+    const titlesPerSoc = new Map<string, number>();
+    for (const k of KELLEY_JOB_SOCS) titlesPerSoc.set(k.soc, (titlesPerSoc.get(k.soc) ?? 0) + 1);
+    const kelleySocs = occs.filter((o) => KELLEY_SOCS.has(o.soc)).length;
+    const onFile = occs.filter((o) => KELLEY_SOCS.has(o.soc) && kelleyOnFile.has(o.soc)).length;
+    const titlesOnFile = KELLEY_JOB_SOCS.filter((k) => kelleyOnFile.has(k.soc)).length;
+    const scored = occs.length - unscored.length;
     return {
         total: occs.length,
-        scored: occs.length - unscored.length,
-        kelleySocs: occs.filter((o) => KELLEY_SOCS.has(o.soc)).length,
-        bls: occs.filter((o) => !KELLEY_SOCS.has(o.soc) && blsScored.has(o.soc)).length,
+        scored,
+        kelleySocs,
+        kelleyTitles: KELLEY_JOB_SOCS.length,
+        roles: KELLEY_JOB_SOCS.length + bls,
+        sharedKelleySocs: [...titlesPerSoc.values()].filter((n) => n > 1).length,
+        bls,
+        kelleyOnFile: onFile,
+        kelleyTitlesOnFile: titlesOnFile,
+        legacyKelleySocs: kelleySocs - onFile,
+        legacyKelleyTitles: KELLEY_JOB_SOCS.length - titlesOnFile,
+        oneMethod: bls + onFile,
+        ranked: scored,
         unscored: unscored.length,
         unscoredNoTasks: unscored.filter((o) => o.taskCount === 0).length,
         unscoredAllOther: unscored.filter((o) => o.title.includes('All Other')).length,
@@ -137,11 +191,11 @@ export function scoreCoverage(c: ScoreCounts): ScoreCoverage {
         ? ` are the ${n(c.unscored)} ${what} for which O*NET lists no tasks, so they are not scored.`
         : ' are scored soon.';
     if (c.bls === 0) {
-        return { short: 'the 50 Kelley roles', sentence: 'AI scores cover the 50 Kelley business roles for now.', unscoredReason, slate };
+        return { short: `the ${n(c.kelleyTitles)} Kelley roles`, sentence: `AI scores cover the ${n(c.kelleyTitles)} Kelley business roles for now.`, unscoredReason, slate };
     }
     return {
         short: `${n(c.scored)} of ${n(c.total)} occupations`,
-        sentence: `AI scores cover ${n(c.scored)} of the ${n(c.total)} occupations: the 50 Kelley business roles (${n(c.kelleySocs)} BLS occupations) plus ${n(c.bls)} more.`,
+        sentence: `AI scores cover ${n(c.scored)} of the ${n(c.total)} occupations: the ${n(c.kelleyTitles)} Kelley business roles (${n(c.kelleySocs)} BLS occupations) plus ${n(c.bls)} more.`,
         unscoredReason,
         slate,
     };
@@ -176,41 +230,28 @@ export function scoredRangeLabel(first: string | null, last: string | null): str
     return a === b ? a : `${a} to ${b}`;
 }
 
-// ── Where a role would sit among the 50 published Kelley roles ─────────────
-
-export interface KelleyComparison {
-    total: number;
-    /** How many of the 50 have a lower Automation Risk. */
-    riskHigherThan: number;
-    /** How many of the 50 have a lower average Human Criticality. */
-    humanHigherThan: number;
-    /** The Human Resilience label the 50's own thresholds would give it. */
-    resilienceLabel: string;
+/**
+ * Month label of a date range for the header badge, from the data: "Nov 2026",
+ * "Aug–Nov 2026" or "Dec 2026–Jan 2027" (UTC). Null with no dates.
+ */
+export function monthRangeLabel(first: string | null, last: string | null): string | null {
+    if (!first || !last) return null;
+    const a = new Date(first);
+    const b = new Date(last);
+    if (Number.isNaN(a.getTime()) || Number.isNaN(b.getTime())) return null;
+    const month = (d: Date) => d.toLocaleDateString('en-US', { month: 'short', timeZone: 'UTC' });
+    const year = (d: Date) => d.getUTCFullYear();
+    if (year(a) === year(b)) return month(a) === month(b) ? `${month(a)} ${year(a)}` : `${month(a)}–${month(b)} ${year(a)}`;
+    return `${month(a)} ${year(a)}–${month(b)} ${year(b)}`;
 }
 
 /**
- * Compares against the published ai_scores.json set, never the 50 plus this
- * role: the 50 keep their labels and ranks. Thresholds follow store.ts
- * applyPercentileLabels (top quarter Future-Proof, middle half High, bottom
- * quarter At Risk).
+ * When the published scores on the map were made: the scoredAt dates in
+ * ai_scores_bls.json, plus the first-score date of ai_scores.json while any
+ * Kelley title still uses it (`legacyGeneratedAt`, null once none does).
  */
-export function compareWithKelley(score: Pick<BlsRoleScore, 'automationCostIndex' | 'humanCriticality'>): KelleyComparison | null {
-    const published = getBakedScores();
-    if (!published) return null;
-    const rows = Object.values(published.scores).filter((a) => a.tasks.length > 0);
-    if (rows.length === 0) return null;
-    const risks = rows.map((a) => parseFloat(mean(a.tasks.map((t) => t.aiCapabilityScore)).toFixed(2)));
-    // Three decimals on both sides: exact for five two-decimal task scores, so a
-    // tie stays a tie and two decimals' false ties (0.564 and 0.56) never appear.
-    const roundHuman = (v: number) => parseFloat(v.toFixed(3));
-    const humans = rows.map((a) => roundHuman(mean(a.tasks.map((t) => t.humanCriticalityScore))));
-    const sorted = [...humans].sort((a, b) => a - b);
-    const pct = (p: number) => sorted[Math.min(Math.floor(p * sorted.length), sorted.length - 1)];
-    const h = roundHuman(score.humanCriticality);
-    return {
-        total: rows.length,
-        riskHigherThan: risks.filter((r) => r < score.automationCostIndex).length,
-        humanHigherThan: humans.filter((x) => x < h).length,
-        resilienceLabel: h >= pct(PERCENTILES.HIGH) ? RESILIENCE_LABELS.TOP : h >= pct(PERCENTILES.LOW) ? RESILIENCE_LABELS.MID : RESILIENCE_LABELS.BOTTOM,
-    };
+export function publishedScoreDates(meta: BlsBundleMeta | null, legacyGeneratedAt: string | null): { first: string | null; last: string | null } {
+    const dates = [meta?.firstScoredAt, meta?.lastScoredAt, legacyGeneratedAt].filter((d): d is string => !!d && !Number.isNaN(Date.parse(d)));
+    dates.sort((x, y) => Date.parse(x) - Date.parse(y));
+    return { first: dates[0] ?? null, last: dates[dates.length - 1] ?? null };
 }

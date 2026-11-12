@@ -1,17 +1,27 @@
 /**
- * The scoring plan for every BLS occupation that has no AI score yet, in all 22
- * fields. Pure apart from loadAllInputs(). No network: this only reads the
- * committed O*NET and BLS files and builds the prompt text.
+ * The scoring plan for every one of the 830 BLS occupations, in all 22 fields,
+ * by ONE set of rules. Pure apart from loadAllInputs(). No network: this only
+ * reads the committed O*NET and BLS files and builds the prompt text.
  *
- * Already scored, so never planned (60 SOCs):
- *   - the 47 SOCs of the 50 Kelley roles (initialJobs through MAP_TITLE_TO_SOC)
- *   - the 13 Business & Finance SOCs in src/data/ai_scores_bls.json (BF_TARGET_SOCS)
+ * Rows, in this order (the first 770 are byte for byte the 2026-11-07 plan):
+ *   - 770 rows with no `batch`: every occupation outside the Kelley and
+ *     Business & Finance SOCs, sorted by scoring group, field, SOC. Scored by
+ *     --family 1|2|3 / --fields (2026-11-07/08); 47 of them have no tasks.
+ *   - 13 rows with batch "business-finance": BF_TARGET_SOCS, scored on
+ *     2026-11-01 by the Business & Finance run (data/bls_scoring_plan.json, the
+ *     same planRole). Listed so every scored occupation has its row here; a
+ *     run never scores them again.
+ *   - 47 rows with batch "kelley": the SOCs of the 50 Kelley titles
+ *     (initialJobs through MAP_TITLE_TO_SOC), added 2026-11-08 so they are
+ *     scored by the same rules, prompt and inputs as every other job
+ *     (--batch kelley). Their old scores in src/data/ai_scores.json used other
+ *     tasks and inputs (docs/scoring-decisions.md).
  *
- * Every other occupation gets one entry with its task rule:
+ * Every occupation's entry carries its task rule:
  *   own-code   its own .00 task list, first 5 in O*NET file order
  *   sub-codes  no .00 tasks: one task from each O*NET sub-code in turn
  *   combined   no O*NET code of its own: the split O*NET codes' tasks in turn (ONET_CODES_FOR_SOC)
- *   no-tasks   no O*NET tasks anywhere: not scored, stays "not scored yet"
+ *   no-tasks   no O*NET tasks anywhere: never sent; the app shows "Not scored"
  * The task picking itself is planRole() in blsTasks.ts, the code that planned
  * the 13 Business & Finance roles, unchanged.
  */
@@ -54,6 +64,23 @@ export const SCORING_GROUPS = [
 
 export type ScoringGroupId = 1 | 2 | 3;
 export type TaskRule = 'own-code' | 'sub-codes' | 'combined' | 'no-tasks';
+/** Rows added on 2026-11-08 carry a batch; the 770 rows of the first plan have none. */
+export type PlanBatch = 'business-finance' | 'kelley';
+export const PLAN_BATCHES: readonly PlanBatch[] = ['business-finance', 'kelley'];
+/** Batches a scoring run may take (business-finance was scored on 2026-11-01). */
+export const RUNNABLE_BATCHES: readonly PlanBatch[] = ['kelley'];
+
+/**
+ * Kelley batch controls: five already-published non-Kelley jobs from the
+ * 2026-11-01 Business & Finance run, across its risk range and all three task
+ * rules: 13-1074 Farm Labor Contractors 0.30 (lowest of the 13), 13-1199
+ * Business Operations Specialists, All Other 0.40 (sub-codes), 13-2020
+ * Property Appraisers and Assessors 0.55 (combined), 13-1031 Claims Adjusters
+ * 0.66, 13-2081 Tax Examiners 0.73 (highest). Re-scored from their own plan
+ * rows, whose prompt must hash to the published promptSha256, and compared
+ * with the published numbers in ai_scores_bls.json. Never published.
+ */
+export const KELLEY_CONTROL_SOCS = ['13-1074', '13-1199', '13-2020', '13-1031', '13-2081'] as const;
 
 export function scoringGroupOf(field: string): ScoringGroupId {
     const bls = familyOf(field).id;
@@ -71,6 +98,8 @@ export interface PlanAllEntry {
     blsFamily: number;
     /** Two-digit SOC major group: the field on the map. */
     field: string;
+    /** Only on the 60 rows added 2026-11-08 (business-finance, kelley). */
+    batch?: PlanBatch;
     taskRule: TaskRule;
     /** The blsTasks.ts selection rule behind taskRule; null for no-tasks. */
     selectionRule: SelectionRule | null;
@@ -107,9 +136,16 @@ export function loadAllInputs(root: string): PlanInputs {
     return { occupations, statements };
 }
 
-/** The 60 SOCs that already have published scores. */
+/** The 60 SOCs scored before the family batches: the 47 Kelley SOCs and the 13 Business & Finance SOCs. */
 export function scoredSocs(kelleySocs: Iterable<string>): Set<string> {
     return new Set([...kelleySocs, ...BF_TARGET_SOCS]);
+}
+
+/** Which 2026-11-08 batch a SOC's row belongs to, if any. */
+export function batchOf(soc: string, kelleySocs: ReadonlySet<string>): PlanBatch | undefined {
+    if (kelleySocs.has(soc)) return 'kelley';
+    if ((BF_TARGET_SOCS as readonly string[]).includes(soc)) return 'business-finance';
+    return undefined;
 }
 
 /** True when the occupation has no task rows anywhere it could take them from. */
@@ -117,7 +153,7 @@ function hasNoTasks(occ: OccupationRow): boolean {
     return occ.onetTaskSource === 'none' && !ONET_CODES_FOR_SOC[occ.soc];
 }
 
-export function planEntry(occ: OccupationRow, inputs: PlanInputs): PlanAllEntry {
+export function planEntry(occ: OccupationRow, inputs: PlanInputs, batch?: PlanBatch): PlanAllEntry {
     const field = occ.soc.slice(0, 2);
     const base = {
         soc: occ.soc,
@@ -125,6 +161,7 @@ export function planEntry(occ: OccupationRow, inputs: PlanInputs): PlanAllEntry 
         family: scoringGroupOf(field),
         blsFamily: familyOf(field).id,
         field,
+        ...(batch ? { batch } : {}),
     };
     if (hasNoTasks(occ)) {
         if (occ.employment == null || occ.ep == null) throw new Error(`${occ.soc}: missing BLS inputs`);
@@ -161,20 +198,28 @@ export function promptFor(p: { title: string; tasks: { name: string }[]; employm
     return buildJobAnalysisPrompt(p.title, p.tasks.map((t) => t.name), p.employment, p.projectedGrowth);
 }
 
-/** Every unscored occupation, sorted by scoring group, then field, then SOC. */
-export function planAllFields(inputs: PlanInputs, scored: ReadonlySet<string>): PlanAllEntry[] {
-    return Object.values(inputs.occupations)
-        .filter((occ) => !scored.has(occ.soc))
-        .map((occ) => planEntry(occ, inputs))
-        .sort((a, b) => a.family - b.family || a.field.localeCompare(b.field) || a.soc.localeCompare(b.soc));
+const planOrder = (a: PlanAllEntry, b: PlanAllEntry) => a.family - b.family || a.field.localeCompare(b.field) || a.soc.localeCompare(b.soc);
+
+/**
+ * Every one of the occupations, one row each: first the rows with no batch
+ * (the 2026-11-07 plan, unchanged), then business-finance, then kelley, each
+ * sorted by scoring group, field, SOC.
+ */
+export function planAllFields(inputs: PlanInputs, kelleySocs: Iterable<string>): PlanAllEntry[] {
+    const kelley = new Set(kelleySocs);
+    const rows = Object.values(inputs.occupations).map((occ) => planEntry(occ, inputs, batchOf(occ.soc, kelley)));
+    const part = (batch: PlanBatch | undefined) => rows.filter((e) => e.batch === batch).sort(planOrder);
+    return [...part(undefined), ...PLAN_BATCHES.flatMap((b) => part(b))];
 }
 
 export interface PlanFilter {
     family?: ScoringGroupId;
     fields?: string[];
+    /** --batch kelley. Never combined with --family or --fields. */
+    batch?: PlanBatch;
 }
 
-/** Parses --family 1|2|3 and --fields 11,15,17 from argv. Throws on a bad value. */
+/** Parses --family 1|2|3, --fields 11,15,17 and --batch kelley from argv. Throws on a bad value. */
 export function parsePlanFilter(argv: readonly string[]): PlanFilter {
     const value = (flag: string) => {
         const i = argv.indexOf(flag);
@@ -199,17 +244,36 @@ export function parsePlanFilter(argv: readonly string[]): PlanFilter {
         if (list.length === 0) throw new Error('--fields needs at least one field');
         filter.fields = [...new Set(list)].sort();
     }
+    const batch = value('--batch');
+    if (batch !== undefined) {
+        if (!(RUNNABLE_BATCHES as readonly string[]).includes(batch)) {
+            throw new Error(
+                batch === 'business-finance'
+                    ? '--batch business-finance was scored on 2026-11-01 (the Business & Finance run) and is never run again.'
+                    : `--batch must be ${RUNNABLE_BATCHES.join(' or ')}, not "${batch}"`,
+            );
+        }
+        if (filter.family !== undefined || filter.fields !== undefined) throw new Error('--batch cannot be combined with --family or --fields');
+        filter.batch = batch as PlanBatch;
+    }
     return filter;
 }
 
-export const isFiltered = (f: PlanFilter) => f.family !== undefined || f.fields !== undefined;
+export const isFiltered = (f: PlanFilter) => f.family !== undefined || f.fields !== undefined || f.batch !== undefined;
 
+/**
+ * A named batch takes its own rows only. --family / --fields take only rows with
+ * no batch, exactly the rows they took before the Kelley and Business & Finance
+ * rows were added.
+ */
 export function applyFilter(entries: readonly PlanAllEntry[], f: PlanFilter): PlanAllEntry[] {
-    return entries.filter((e) => (f.family === undefined || e.family === f.family) && (f.fields === undefined || f.fields.includes(e.field)));
+    if (f.batch !== undefined) return entries.filter((e) => e.batch === f.batch);
+    return entries.filter((e) => e.batch === undefined && (f.family === undefined || e.family === f.family) && (f.fields === undefined || f.fields.includes(e.field)));
 }
 
 /** A stable name for a filtered batch, used to key its control run in the ledger. */
 export function batchKey(f: PlanFilter): string {
+    if (f.batch !== undefined) return f.batch;
     const parts: string[] = [];
     if (f.family !== undefined) parts.push(`family-${f.family}`);
     if (f.fields !== undefined) parts.push(`fields-${f.fields.join(',')}`);
@@ -218,37 +282,49 @@ export function batchKey(f: PlanFilter): string {
 
 export interface PlanCounts {
     totalOccupations: number;
-    scored: number;
-    toDo: number;
-    plannable: number;
+    /** One row per occupation. */
+    rows: number;
+    /** Rows with O*NET tasks: every occupation that can be scored. */
+    scorable: number;
+    /** Rows with no O*NET tasks anywhere: never sent, "Not scored". */
     noTasks: number;
+    /** The rows with no batch (the 2026-11-07 plan), per scoring group, counted as then. */
     byFamily: Record<string, { toDo: number; plannable: number; noTasks: number; byRule: Record<TaskRule, number> }>;
+    /** The rows added 2026-11-08. */
+    byBatch: Record<PlanBatch, { jobs: number; byRule: Record<TaskRule, number> }>;
+    /** Every row. */
     byRule: Record<TaskRule, number>;
     fewerThanFiveTasks: string[];
 }
 
 const emptyRules = (): Record<TaskRule, number> => ({ 'own-code': 0, 'sub-codes': 0, combined: 0, 'no-tasks': 0 });
 
-export function countPlan(entries: readonly PlanAllEntry[], totalOccupations: number, scored: number): PlanCounts {
+export function countPlan(entries: readonly PlanAllEntry[], totalOccupations: number): PlanCounts {
     const byFamily: PlanCounts['byFamily'] = {};
+    const byBatch = Object.fromEntries(PLAN_BATCHES.map((b) => [b, { jobs: 0, byRule: emptyRules() }])) as PlanCounts['byBatch'];
     const byRule = emptyRules();
     for (const g of SCORING_GROUPS) byFamily[g.id] = { toDo: 0, plannable: 0, noTasks: 0, byRule: emptyRules() };
     for (const e of entries) {
+        byRule[e.taskRule]++;
+        if (e.batch) {
+            byBatch[e.batch].jobs++;
+            byBatch[e.batch].byRule[e.taskRule]++;
+            continue;
+        }
         const f = byFamily[e.family];
         f.toDo++;
         f.byRule[e.taskRule]++;
-        byRule[e.taskRule]++;
         if (e.taskRule === 'no-tasks') f.noTasks++;
         else f.plannable++;
     }
     const noTasks = byRule['no-tasks'];
     return {
         totalOccupations,
-        scored,
-        toDo: entries.length,
-        plannable: entries.length - noTasks,
+        rows: entries.length,
+        scorable: entries.length - noTasks,
         noTasks,
         byFamily,
+        byBatch,
         byRule,
         fewerThanFiveTasks: entries.filter((e) => e.taskRule !== 'no-tasks' && e.tasks.length < TASKS_PER_ROLE).map((e) => e.soc),
     };
@@ -298,16 +374,20 @@ export function planAllFile(entries: PlanAllEntry[], counts: PlanCounts) {
     return {
         _meta: {
             purpose:
-                'Every BLS occupation with no AI score yet, the exact tasks and BLS inputs it would be scored on, and its prompt hash. Generated by `npm run generate-bls-scores -- --plan`; a scoring run refuses to start if this file and the data disagree. No API call is made to build it.',
-            sort: 'family (scoring order 1-3), then field (two-digit SOC major), then SOC',
+                'Every one of the BLS occupations, one row each, with the exact tasks and BLS inputs it is scored on by ONE set of rules, and its prompt hash. Generated by `npm run generate-bls-scores -- --plan`; a scoring run refuses to start if this file and the data disagree. No API call is made to build it.',
+            sort: 'Rows with no batch first (the 2026-11-07 plan, unchanged), then batch business-finance, then batch kelley; each part by family (scoring order 1-3), then field (two-digit SOC major), then SOC',
             families: Object.fromEntries(SCORING_GROUPS.map((g) => [g.id, { name: g.name, blsFamilies: g.blsFamilies }])),
-            excluded: 'The 60 scored SOCs: 47 Kelley SOCs (src/data.ts initialJobs through MAP_TITLE_TO_SOC) and the 13 Business & Finance SOCs in src/data/ai_scores_bls.json.',
+            batches: {
+                none: 'No batch field: every occupation outside the Kelley and Business & Finance SOCs. Scored by --family 1|2|3 (or --fields) on 2026-11-07/08; rows with no tasks are never sent.',
+                'business-finance': 'The 13 SOC-13 occupations no Kelley title covers (scripts/lib/blsTasks.ts BF_TARGET_SOCS), scored on 2026-11-01 by the Business & Finance run from data/bls_scoring_plan.json with the same planRole. Listed so every scored occupation has its row; never run again.',
+                kelley: `The 47 SOCs of the 50 Kelley titles (src/data.ts initialJobs through MAP_TITLE_TO_SOC), planned on 2026-11-08 by the same rules, prompt and inputs as every other row and scored by --batch kelley. Controls: ${KELLEY_CONTROL_SOCS.join(', ')} (published business-finance rows). Their earlier scores in src/data/ai_scores.json are history only.`,
+            },
             taskRules: {
                 'own-code': "The occupation's own .00 tasks, first 5 in O*NET file order.",
                 'sub-codes': "No .00 task list: one task from each O*NET sub-code in turn, each in O*NET file order. A task whose text exactly repeats another sub-code's task is skipped (identical text is kept once, under the first sub-code in the occupations data, e.g. 19-3039.03 repeats 19-3039.02).",
                 combined:
-                    'No O*NET code of its own: the split O*NET codes it maps to (scripts/lib/blsTasks.ts ONET_CODES_FOR_SOC), taken in turn the same way, as for 13-2020.',
-                'no-tasks': 'No O*NET tasks anywhere: not scored, stays "not scored yet".',
+                    'No O*NET code of its own: the split O*NET codes it maps to (src/config/onetSplitCodes.ts ONET_CODES_FOR_SOC), taken in turn the same way, as for 13-2020.',
+                'no-tasks': 'No O*NET tasks anywhere: not scored; the app shows "Not scored".',
             },
             taskSource: `O*NET 30.1 (${TASK_STATEMENTS_PATH})`,
             employment: 'BLS OEWS May 2025 national employment (src/data/occupations/<field>.json employment)',

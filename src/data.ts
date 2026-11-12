@@ -18,9 +18,10 @@ import {
  *   - tasks[].importance               → uniform placeholder (3); NOT real
  *                                        O*NET Importance and unused in scoring
  *
- * NOTE: state-level employment/location-quotient data (src/data/geo_real.json,
- * drives the 2D map) is a SEPARATE vintage — see that file's own _meta block.
- * It is not guaranteed to match the national vintage above.
+ * NOTE: state-level employment/location-quotient data (src/data/geo_real.json
+ * and src/data/state_map/, drives the 2D map) is a SEPARATE extract, from the
+ * BLS OEWS state file (scripts/build_state_map.ts, docs/state-map.md). It is
+ * not guaranteed to match the national figures above.
  *
  * Titles that share a SOC (aliases) each start with the full national OES
  * headcount; store seeding splits that headcount equally so 3D peaks conserve

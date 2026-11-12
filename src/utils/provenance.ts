@@ -40,8 +40,9 @@ export function jobSourceProvenanceChips(job: Job): { key: string; label: string
     const src = new Set(job.dataSources);
 
     if (src.has(DATA_SOURCES.BLS_OES)) chips.push({ key: 'oes', label: 'OES', provenance: 'BLS_OES' });
-    // Pay comes from national_wages.json by SOC, not from data.ts dataSources.
-    if (wageForTitle(job.title)) chips.push({ key: 'pay', label: 'Pay', provenance: 'BLS_OES_WAGES' });
+    // Pay comes from national_wages.json by SOC for a Kelley role, and from the
+    // occupation file for any other scored role (utils/blsRoleJob lists it).
+    if (wageForTitle(job.title) || src.has(DATA_SOURCES.BLS_OES_WAGES)) chips.push({ key: 'pay', label: 'Pay', provenance: 'BLS_OES_WAGES' });
     if (src.has(DATA_SOURCES.BLS_OOH)) chips.push({ key: 'ooh', label: 'OOH', provenance: 'BLS_OOH' });
     if (src.has(DATA_SOURCES.BLS_EP)) chips.push({ key: 'ep', label: 'EP', provenance: 'BLS_EP' });
     if (src.has(DATA_SOURCES.BLS_CPS)) chips.push({ key: 'cps', label: 'CPS', provenance: 'BLS_CPS' });
@@ -72,7 +73,7 @@ export function jobSourceProvenanceChips(job: Job): { key: string; label: string
  */
 export function panelSourceList(job: Job): string[] {
     const sources = (job.dataSources ?? []).filter((s) => s !== DATA_SOURCES.BLS_STATE);
-    if (wageForTitle(job.title)) sources.push(DATA_SOURCES.BLS_OES_WAGES);
+    if (wageForTitle(job.title) && !sources.includes(DATA_SOURCES.BLS_OES_WAGES)) sources.push(DATA_SOURCES.BLS_OES_WAGES);
     return sources.length > 0 ? sources : ['Modeled'];
 }
 

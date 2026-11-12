@@ -1,11 +1,12 @@
 /**
- * The scored layout of OccupationPanel, tested before any real Business &
- * Finance score exists. The score below is a SYNTHETIC FIXTURE for an invented
- * occupation (99-0001): it only drives the layout, it is never written to
- * src/data and it is not a score for any real job.
+ * A scored BLS occupation in the common role panel (JobDetailPanel via
+ * utils/blsRoleJob), and an unscored one in the numbers-only panel. The score
+ * below is a SYNTHETIC FIXTURE for an invented occupation (99-0001): it only
+ * drives the layout, it is never written to src/data and it is not a score for
+ * any real job.
  */
 
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { renderToStaticMarkup } from 'react-dom/server';
 import { JSDOM } from 'jsdom';
 import type { BlsRoleScore } from '../utils/blsScores';
@@ -25,12 +26,12 @@ const FIXTURE: BlsRoleScore = {
     onetCodes: ['99-0001.00'],
 };
 
-vi.mock('../utils/blsScores', async (importOriginal) => {
-    const real = await importOriginal<typeof import('../utils/blsScores')>();
-    return { ...real, blsScoreFor: (soc: string) => (soc === FIXTURE.soc ? FIXTURE : real.blsScoreFor(soc)) };
-});
-
 const { OccupationBody } = await import('../components/OccupationPanel');
+const { JobDetailPanel } = await import('../components/JobDetailPanel');
+const { blsRoleJob } = await import('../utils/blsRoleJob');
+const { roleScaleFor } = await import('../utils/allRoleScale');
+const { resilienceLabelFor, rankScopeText } = await import('../utils/roleScale');
+const { useStore } = await import('../store');
 
 const occupation = {
     soc: '99-0001',
@@ -62,50 +63,82 @@ const occupation = {
     nullReasons: {},
 } as unknown as OccupationEntry;
 
+const scale = roleScaleFor(useStore.getState().jobs);
+const job = blsRoleJob(occupation, FIXTURE, scale);
+
 function render() {
-    const html = renderToStaticMarkup(<OccupationBody occupation={occupation} onClose={() => {}} />);
+    const html = renderToStaticMarkup(
+        <JobDetailPanel
+            job={job}
+            occupation={occupation}
+            analysisResult={null}
+            analysisLoading={false}
+            analysisError={null}
+            missingApiKey={false}
+            onClose={() => {}}
+            onSetAnalysisResult={() => {}}
+            onSetAnalysisLoading={() => {}}
+            onShowMethodology={() => {}}
+        />,
+    );
     return new JSDOM(`<body>${html}</body>`).window.document;
 }
 
-describe('scored OccupationPanel layout', () => {
+describe('a scored BLS occupation in the common role panel', () => {
     const doc = render();
     const text = doc.body.textContent ?? '';
 
-    it('replaces "AI scores coming soon" with the score tiles', () => {
+    it('is a role-panel Job with the published numbers and no invented ones', () => {
+        expect(job.id).toBe('soc:99-0001');
+        expect(job.automationCostIndex).toBe(0.5);
+        expect(job.tasks.map((t) => [t.name, t.aiCapabilityScore, t.humanCriticalityScore])).toEqual([
+            ['Fixture task A', 0.8, 0.2],
+            ['Fixture task B', 0.2, 0.9],
+        ]);
+        expect(job.humanResilienceLabel).toBe(resilienceLabelFor(0.55, scale));
+        // No OOH badge: the repo has OOH figures for the Kelley roles only.
+        expect(job.dataSources).not.toContain('BLS-OOH-2024-34');
+    });
+
+    it('shows the same tiles as a Kelley role, ranked among all scored roles', () => {
         expect(doc.querySelector('[data-testid="ai-soon"]')).toBeNull();
-        expect(text).not.toContain('AI scores coming soon');
-        expect(doc.querySelector('[data-testid="bls-risk"]')!.textContent).toContain('50%');
-        expect(doc.querySelector('[data-testid="bls-human"]')!.textContent).toContain('55%');
+        expect(text).toContain('50%');
+        expect(text).toContain('55%');
+        expect(text).toContain('Human Resilience');
+        expect(doc.querySelector('[data-testid="rank-scope"]')!.textContent).toBe(`Rank ${rankScopeText(scale)}`);
+        expect(text).not.toMatch(/Compared with the \d+ Kelley roles/);
     });
 
     it('splits the rated tasks into the two columns, with both scores on each', () => {
-        const tasks = [...doc.querySelectorAll('[data-testid="bls-task"]')];
-        expect(tasks).toHaveLength(2);
-        expect(tasks[0].textContent).toContain('Fixture task A');
-        expect(tasks[0].textContent).toContain('80% RISK');
-        expect(tasks[0].textContent).toContain('20% HUMAN');
-        expect(tasks[1].textContent).toContain('Fixture task B');
-        expect(tasks[1].textContent).toContain('20% RISK');
+        expect(text).toContain('Fixture task A');
+        expect(text).toContain('80% RISK');
+        expect(text).toContain('20% HUMAN');
+        expect(text).toContain('Fixture task B');
+        expect(text).toContain('90% HUMAN');
     });
 
-    it('words the rank against the 50 plainly, and leaves them alone', () => {
-        const rank = doc.querySelector('[data-testid="bls-rank"]')!.textContent!;
-        expect(rank).toMatch(/Compared with the 50 Kelley roles: its Automation Risk is higher than \d+ of them/);
-        expect(rank).toContain('their own ranks do not change');
+    it('offers every role feature, with no Kelley label', () => {
+        const buttons = [...doc.querySelectorAll('button')].map((b) => b.textContent ?? '');
+        for (const feature of ['Roadmap', 'Scenario', 'Defend this task', 'Build on this']) {
+            expect(buttons.some((b) => b.includes(feature)), feature).toBe(true);
+        }
+        expect(doc.querySelector('[data-testid="kelley-label"]')).toBeNull();
+        expect(doc.querySelector('[data-testid="occupation-about"]')).not.toBeNull();
     });
+});
 
-    it('says who scored it and when', () => {
-        const line = doc.querySelector('[data-testid="bls-provenance"]')!.textContent!;
-        expect(line).toContain('Scored by claude-sonnet-5 on January 2, 2026');
-        expect(line).toContain('no live AI call');
-    });
+describe('an unscored occupation in the numbers-only panel', () => {
+    const html = renderToStaticMarkup(<OccupationBody occupation={occupation} onClose={() => {}} />);
+    const doc = new JSDOM(`<body>${html}</body>`).window.document;
+    const text = doc.body.textContent ?? '';
 
-    it('offers no Claude feature', () => {
-        for (const word of ['Strategic Insight', 'Roadmap', 'Scenario', 'Analyze', 'Defend this task', 'Build on this', 'Likely Replacements']) {
+    it('says Not scored and offers no Claude feature', () => {
+        expect(doc.querySelector('[data-testid="ai-soon"]')!.textContent).toContain('Not scored');
+        for (const word of ['Strategic Insight', 'Roadmap', 'Scenario', 'Analyze', 'Defend this task', 'Build on this', 'Likely Replacements', 'Automation Risk']) {
             expect(text, word).not.toContain(word);
         }
         // Every button is the close button, the pay note or a source badge.
         const buttons = [...doc.querySelectorAll('button')].map((b) => `${b.getAttribute('aria-label') ?? ''} ${b.textContent ?? ''}`.trim());
-        for (const b of buttons) expect(b).toMatch(/^(Close panel|Where the pay figure comes from|Pay|Claude tasks|EP|O\*NET)$/);
+        for (const b of buttons) expect(b).toMatch(/^(Close panel|Where the pay figure comes from|Pay|EP|O\*NET)$/);
     });
 });
