@@ -3,6 +3,7 @@ import { useStore } from './store';
 import { BROAD_LABELS, FIELD_LABELS, labelsAt, type LabelDecision } from './utils/labelLevel';
 import { loadContinentFile, type ContinentFile } from './utils/occupationIndex';
 import { loadBlsFieldScores } from './utils/blsScores';
+import { loadStateMapField } from './utils/stateMapData';
 import { isChunkLoadError, reloadForNewBuild } from './utils/staleBuild';
 import type { Stage } from './utils/stageLayout';
 import type { RoleEntry } from './utils/roles';
@@ -75,11 +76,21 @@ interface WorldState extends WorldLevel {
     continentErrors: Record<string, string>;
     loadContinent: (code: string) => Promise<ContinentFile | null>;
 
+    /**
+     * Fields whose BLS state rows (utils/stateMapData) are loaded, by code.
+     * A field's rows load with the field (loadContinent) or when the Map view
+     * needs them (loadStateMap); the Map view re-renders on this.
+     */
+    stateMapFields: Record<string, true>;
+    stateMapErrors: Record<string, string>;
+    loadStateMap: (code: string) => Promise<void>;
+
     /** Fly to the role's region and open its panel. */
     openRole: (entry: RoleEntry) => void;
 }
 
 const inFlight = new Map<string, Promise<ContinentFile | null>>();
+const stateMapInFlight = new Map<string, Promise<void>>();
 
 export const useWorldStore = create<WorldState>((set, get) => ({
     ...WORLD_LEVEL,
@@ -144,6 +155,9 @@ export const useWorldStore = create<WorldState>((set, get) => ({
         if (loaded) return Promise.resolve(loaded);
         const pending = inFlight.get(code);
         if (pending) return pending;
+        // Its state-map rows load alongside, on their own: the Map view waits
+        // for them, and a failure there never holds up the field.
+        void get().loadStateMap(code);
         // The field's published AI scores load with it, so a panel that has
         // the occupation file also has its scores (utils/blsScores).
         const attempt = () => Promise.all([loadContinentFile(code), loadBlsFieldScores(code)]);
@@ -170,6 +184,34 @@ export const useWorldStore = create<WorldState>((set, get) => ({
             })
             .finally(() => inFlight.delete(code));
         inFlight.set(code, p);
+        return p;
+    },
+
+    stateMapFields: {},
+    stateMapErrors: {},
+    loadStateMap: (code) => {
+        if (get().stateMapFields[code]) return Promise.resolve();
+        const pending = stateMapInFlight.get(code);
+        if (pending) return pending;
+        const p = loadStateMapField(code)
+            .catch(() => new Promise((resolve) => setTimeout(resolve, 1500)).then(() => loadStateMapField(code)))
+            .catch((err: unknown) => {
+                if (isChunkLoadError(err) && reloadForNewBuild()) return new Promise<never>(() => {});
+                throw err;
+            })
+            .then(() => {
+                set((s) => {
+                    const errors = { ...s.stateMapErrors };
+                    delete errors[code];
+                    return { stateMapFields: { ...s.stateMapFields, [code]: true as const }, stateMapErrors: errors };
+                });
+            })
+            .catch((err: unknown) => {
+                console.error(`[World] Could not load state data for field ${code}`, err);
+                set((s) => ({ stateMapErrors: { ...s.stateMapErrors, [code]: 'Could not load the BLS state data.' } }));
+            })
+            .finally(() => stateMapInFlight.delete(code));
+        stateMapInFlight.set(code, p);
         return p;
     },
 

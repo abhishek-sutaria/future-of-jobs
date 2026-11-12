@@ -173,13 +173,3 @@ export function getRoleEntries(jobs: readonly Job[]): RoleEntry[] {
     }
     return entries;
 }
-
-/** How many Kelley titles sit in each continent. */
-export function kelleyCountByContinent(jobs: readonly Job[]): Map<string, number> {
-    const counts = new Map<string, number>();
-    for (const job of jobs) {
-        const soc = MAP_TITLE_TO_SOC[job.title];
-        if (soc) counts.set(continentOf(soc), (counts.get(continentOf(soc)) ?? 0) + 1);
-    }
-    return counts;
-}

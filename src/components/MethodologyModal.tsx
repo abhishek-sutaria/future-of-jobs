@@ -1,7 +1,8 @@
 import React from 'react';
 import { Modal } from './ui/Modal';
 import { IconBrain, IconActivity, IconTrendingUp, IconLayers } from './ui/Icons';
-import { EP_PATH_MAX, INDEX_CONTINENTS, OCCUPATION_INDEX } from '../utils/occupationIndex';
+import { EP_PATH_MAX, INDEX_CONTINENTS, INDEX_OCCUPATION_BY_SOC, OCCUPATION_INDEX } from '../utils/occupationIndex';
+import { STATE_MAP_COVERAGE } from '../utils/stateMapData';
 import { formatCount } from '../utils/roleFormat';
 import { BLS_SCORES_META, SCORE_COUNTS, SCORE_COVERAGE, scoredRangeLabel } from '../utils/blsScores';
 import { LEGACY_SCORES_DATE } from '../utils/bakedScores';
@@ -30,6 +31,11 @@ const LEGACY_MONTH = LEGACY_SCORES_DATE
     ? new Date(LEGACY_SCORES_DATE).toLocaleDateString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' })
     : null;
 const n = formatCount;
+
+/** The jobs BLS publishes no state data for, by their BLS titles. */
+const NO_STATE_DATA_TITLES = STATE_MAP_COVERAGE.noStateData
+    .map((soc) => INDEX_OCCUPATION_BY_SOC.get(soc)?.title ?? soc)
+    .join('; ');
 
 interface MethodologyModalProps {
     isOpen: boolean;
@@ -196,7 +202,7 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                             <li><strong>AI scores cover the {SCORE_COUNTS.kelleyTitles} Kelley roles for now.</strong> Those peaks carry the Job Security colours. Every other occupation is drawn in slate and its panel says &ldquo;AI scores coming soon&rdquo;; no score is estimated in their place.</li>
                         )}
                         <li>Kelley titles that share one BLS code (Marketing / Brand Manager, BI Analyst / Data Scientist, Buyer / Purchasing Agent) keep their own peaks, each with an equal share of that code&apos;s jobs, and their own Kelley labels. {SCORE_COUNTS.kelleyOnFile > 0 ? 'Scored by the same method as every other job, both titles of a code have that code’s tasks and scores.' : 'Until their BLS code is re-scored, each still shows its own first score.'} In the ranks each BLS code counts once: {n(SCORE_COUNTS.ranked)} scored occupations.</li>
-                        <li><strong>The task view</strong> covers every scored role in the open field, family or whole map. <strong>The state map</strong> covers the {SCORE_COUNTS.kelleyTitles} Kelley roles only: it uses BLS state employment (OEWS May 2025), which the app has for their {SCORE_COUNTS.kelleySocs} occupations and no others.</li>
+                        <li><strong>The task view</strong> covers every scored role in the open field, family or whole map. <strong>The state map</strong> covers every job there, all {n(SCORE_COUNTS.total)} of them, scored or not: it uses BLS state employment (OEWS May 2025). A grey state is one where BLS publishes no number for the job.</li>
                     </ul>
                 </div>
 
@@ -258,7 +264,8 @@ export const MethodologyModal: React.FC<MethodologyModalProps> = ({ isOpen, onCl
                     </p>
                     <ul className="list-disc list-inside text-xs text-gray-400 ml-1 space-y-1">
                         <li><strong>Aggregation</strong>: employment is summed once per unique SOC code. Alias titles sharing a SOC (e.g. Marketing Manager and Brand Manager both map to 11-2021) are counted once per state.</li>
-                        <li><strong>Coverage</strong>: the {SCORE_COUNTS.kelleyTitles} Kelley roles only. All {SCORE_COUNTS.kelleySocs} of their SOC codes have BLS state-level data, including 13-1020 (Wholesale &amp; Retail Buyer / Purchasing Agent), the broad group BLS now publishes after retiring the two detailed codes it used to comprise. Other occupations are not on the map: the only state file for every occupation in the app&apos;s data is OEWS May 2023, two years older than these figures, and mixing the two years on one map would not be a fair comparison.</li>
+                        <li><strong>Coverage</strong>: all {n(SCORE_COUNTS.total)} jobs, Kelley or not, scored or not, from one file: the BLS OEWS May 2025 state file (50 states, DC, Guam, Puerto Rico and the Virgin Islands). The map shows every job in the open field, family or whole map. Each job uses its own BLS code, including 13-1020 (Wholesale &amp; Retail Buyer / Purchasing Agent) and the other combined codes, which BLS publishes as they are.</li>
+                        <li><strong>Grey states</strong>: BLS does not publish every job in every state. Where it marks the number as not available (&ldquo;**&rdquo;) or lists no row, the state is grey and its tooltip says &ldquo;No data from BLS&rdquo;; nothing is estimated. For {STATE_MAP_COVERAGE.none} jobs BLS publishes no state numbers at all ({NO_STATE_DATA_TITLES}), and the map says so instead of drawing an empty map.</li>
                         <li><strong>Map coordinates</strong>: state centroid lat/lng values are US Census Bureau geographic centroids — display-only, not BLS data.</li>
                         <li><strong>Circle labels</strong>: only the top 15 states by total employment receive a circle marker. All states with data still receive a choropleth fill.</li>
                         <li><strong>Automation risk is not encoded</strong> in the map — colour and circle size both represent employment volume only.</li>

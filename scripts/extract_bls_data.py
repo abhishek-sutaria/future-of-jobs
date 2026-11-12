@@ -8,10 +8,11 @@ merges with existing project data to replace all hardcoded values.
 NOTE: national employment (src/data.ts) has since been refreshed to May 2025
 via scripts/refresh_oes_data.mjs, which pulls api.bls.gov directly — the
 www.bls.gov/download.bls.gov workbook download blocks automated clients
-(Akamai bot protection), so a newer workbook cannot be fetched here. This
-script's OUTPUT for state-level data (src/data/geo_real.json) is still the
-one in use; the state-level equivalent of refresh_oes_data.mjs's national
-pass has not been run yet. See AGENTS.md "OES vintage is SPLIT".
+(Akamai bot protection), so a newer workbook cannot be fetched here. Do NOT
+use this script's state-level output any more: src/data/geo_real.json (and
+src/data/state_map/, every job) is built from the BLS OEWS May 2025 state
+file by `npx tsx scripts/build_state_map.ts` (docs/state-map.md); running
+this would overwrite it with May 2023 numbers.
 
 Inputs:
   - data/all_data_M_2023.xlsx (BLS OES May 2023 - 413K rows)

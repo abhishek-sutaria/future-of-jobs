@@ -1,15 +1,16 @@
 import { useStore } from '../store';
 import { useScoredRolesInScope } from './useScoredRoles';
+import { useMapRolesInScope } from './useMapRoles';
 
 /**
  * The roles the side list offers in the current view. The task view lists every
- * scored role on stage (Kelley or not). The state map lists the 50 Kelley roles
- * only: BLS state employment in the repo (geo_real.json, OEWS May 2025) covers
- * their 47 occupations, and no other occupation is drawn on it.
+ * scored role on stage (Kelley or not). The state map lists every job on stage,
+ * Kelley or not, scored or not: BLS OEWS May 2025 state data covers all 830
+ * (docs/state-map.md; the 5 it publishes no state data for say so on the map).
  */
 export function useFilterRoles(): { id: string; title: string }[] {
     const mapView = useStore((s) => s.mapView);
-    const jobs = useStore((s) => s.jobs);
     const { roles } = useScoredRolesInScope(mapView === 'tasks');
-    return mapView === 'tasks' ? roles : jobs;
+    const { roles: mapRoles } = useMapRolesInScope(mapView === 'map');
+    return mapView === 'tasks' ? roles : mapRoles;
 }
