@@ -55,6 +55,14 @@
       "url": "https://nces.ed.gov/ipeds/cipcode/Files/CIP2020_SOC2018_Crosswalk.xlsx",
       "retrieved": "2026-11-09",
       "sha256": "ba3d59a191b9d977a5c457a66b9348c4f2f7963aafacf72c0b80113b46bf0ab8"
+    },
+    {
+      "path": "raw/CIPCode2020.csv",
+      "title": "CIP 2020: every code with its title and NCES definition. The build checks that each title-match code is a CIP 2020 code with the crosswalk's title; notes quote its definitions",
+      "publisher": "NCES",
+      "url": "https://nces.ed.gov/ipeds/cipcode/Files/CIPCode2020.csv",
+      "retrieved": "2026-11-12",
+      "sha256": "6cf0882c1f5beb94981d0a1a72285ab5cf633759f45433fb909afbfb6d6b2657"
     }
   ],
   "pages": [
@@ -75,6 +83,12 @@
       "url": "https://economics.indiana.edu/news-events/news/2020-10-23-01.html",
       "retrieved": "2026-11-09",
       "sha256": "879a846c556ec75e56df55ae657afca75e282db95903cda1362ef2507055156d"
+    },
+    {
+      "title": "IU Institutional Analytics, 'Report By CIP Code': IU assigns four versions of a program's CIP code; the IPEDS version 'may classify some academic programs using a more general rather than a specific CIP code', and IU's program-to-CIP list (the Academic Program Inventory) is an IU login-only Tableau view",
+      "url": "https://iuia.iu.edu/finding-test/report-by-cip-code.html",
+      "retrieved": "2026-11-12",
+      "sha256": "970af37835ffa020220c559f08c7507e9935e6813c5bbee2996d041d0e021f66"
     }
   ]
 }
