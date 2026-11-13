@@ -3,7 +3,10 @@
  * files are exactly what the committed sources build, twice over; spot checks
  * against the real NCES crosswalk; the SOC roll-up; and the rules never guess
  * (a code IU Bloomington does not report at a program's level is dropped, and a
- * program with no rule stops the build). Method and gaps: docs/iu-schools.md.
+ * program with no rule stops the build). A 'title-match' major (IPEDS files its
+ * whole degree under one general code) takes the CIP 2020 code its name matches,
+ * and the Kelley School always includes the 50 Kelley roles. Method and gaps:
+ * docs/iu-schools.md.
  */
 
 import { describe, it, expect } from 'vitest';
@@ -17,6 +20,7 @@ import {
     matchProgram,
     parseCrosswalk,
     parseCampusIpeds,
+    parseCipCodes,
     parseIpeds,
     reportedAt,
     serialize,
@@ -31,6 +35,7 @@ import {
 import fullFile from '../data/iu_schools.json';
 import slimFile from '../data/iu_school_jobs.json';
 import planAll from '../../data/bls_score_plan_all.json';
+import { KELLEY_SOC_SET } from '../utils/kelleySocs';
 
 const ROOT = path.resolve(__dirname, '../..');
 const inputs = loadIuSchoolInputs(ROOT);
@@ -113,6 +118,13 @@ describe('the build', () => {
             for (const m of s.majors) {
                 const data = m.campusUnitid === '151111' ? indianapolis : ipeds;
                 if (m.campusUnitid) expect(m.campusUnitid).toBe('151111');
+                if (m.basis === 'title-match') {
+                    // Its own code is not in IPEDS; the general code IPEDS files its degree under is.
+                    expect(m.campusUnitid).toBeUndefined();
+                    expect(reportedAt(ipeds, m.ipedsCip!, m.level), `${m.name} ${m.degree} ${m.ipedsCip}`).toBe(true);
+                    continue;
+                }
+                expect(m.ipedsCip).toBeUndefined();
                 for (const cip of m.cips) expect(reportedAt(data, cip, m.level), `${m.name} ${m.degree} ${cip}`).toBe(true);
                 if (m.cips.length === 0) expect(m.reason, `${m.name} ${m.degree}`).toBeTruthy();
             }
@@ -139,16 +151,79 @@ describe('spot checks against the real crosswalk', () => {
         expect(xw.socTitle.get('15-1252')).toBe('Software Developers');
     });
 
-    it('Kelley reaches Accountants and Auditors through its master\'s in accounting, not the BSB major', () => {
+    it('Kelley reaches Accountants and Auditors through the BSB Accounting major (title match) and its master\'s in accounting', () => {
         const kelley = school('kelley');
         expect(kelley.jobs).toContain('13-2011');
         const bsb = kelley.majors.find((m) => m.name === 'Accounting' && m.degree === 'Bachelor of Science in Business')!;
-        expect(bsb.cips).toEqual(['52.0101']);
-        expect(bsb.basis).toBe('degree');
-        expect(bsb.jobs).not.toContain('13-2011');
+        expect(bsb).toMatchObject({ cips: ['52.0301'], basis: 'title-match', ipedsCip: '52.0101' });
+        expect(bsb.jobs).toContain('13-2011');
         const msa = kelley.majors.find((m) => m.degree === 'Master of Science in Accounting with Data and Analytics')!;
         expect(msa.cips).toEqual(['52.0301', '52.0305']);
         expect(msa.jobs).toContain('13-2011');
+    });
+
+    it('every Kelley major IPEDS files under 52.0101 has its own rule: 32 majors (13 BSB, 18 MBA, the PhD)', () => {
+        const kelley = school('kelley');
+        const lumped = kelley.majors.filter((m) => m.ipedsCip === '52.0101' || m.cips.includes('52.0101'));
+        expect(lumped.length).toBe(32);
+        expect(lumped.filter((m) => m.degree === 'Bachelor of Science in Business').length).toBe(13);
+        expect(lumped.filter((m) => m.degree === 'Master of Business Administration').length).toBe(18);
+        const keep = lumped.filter((m) => m.basis !== 'title-match').map((m) => `${m.degree} / ${m.name}`).sort();
+        expect(keep).toEqual([
+            'Bachelor of Science in Business / Business',
+            'Bachelor of Science in Business / Economic Consulting',
+            'Bachelor of Science in Business / Management',
+            'Doctor of Philosophy / Business',
+            'Master of Business Administration / Management (80-99% online)',
+            'Master of Business Administration / Strategic Analysis Accounting Information',
+            'Master of Business Administration / Strategic Management Consulting',
+            'Master of Business Administration / Strategy and Leadership',
+            'Master of Business Administration / Strategy and Leadership (80-99% online)',
+            'Master of Business Administration / Technology Leadership in Organizations (80-99% online)',
+        ]);
+        for (const m of keep) expect(lumped.find((x) => `${x.degree} / ${x.name}` === m)!.cips).toEqual(['52.0101']);
+    });
+
+    it('Marketing and Professional Sales (52.1401 + 52.1804) leads to sales jobs; Marketing to marketing jobs', () => {
+        const kelley = school('kelley');
+        const mps = kelley.majors.find((m) => m.name === 'Marketing and Professional Sales')!;
+        expect(mps).toMatchObject({ cips: ['52.1401', '52.1804'], basis: 'title-match' });
+        expect(xw.cipTitle.get('52.1804')).toBe('Selling Skills and Sales Operations.');
+        expect(mps.jobs).toEqual(expect.arrayContaining(['11-2021', '13-1161', '41-3091', '41-4011']));
+        const mkt = kelley.majors.find((m) => m.name === 'Marketing' && m.degree === 'Bachelor of Science in Business')!;
+        expect(mkt.cips).toEqual(['52.1401']);
+        expect(mkt.jobs).toContain('11-2021');
+        expect(xw.cipSocs.get('52.0101')!.some((soc) => soc.startsWith('41-'))).toBe(false);
+    });
+
+    it('the Kelley School always includes the 50 Kelley roles, labelled kelley-roles', () => {
+        const kelley = school('kelley');
+        const roles = [...KELLEY_SOC_SET].sort();
+        expect(roles.length).toBe(47);
+        expect(kelley.roles).toMatchObject({ basis: 'kelley-roles', jobs: roles });
+        for (const soc of roles) expect(kelley.jobs, soc).toContain(soc);
+        expect(kelley.roles!.added).toEqual(roles.filter((soc) => !kelley.majorJobs.includes(soc)));
+        expect(kelley.jobs).toEqual([...new Set([...kelley.majorJobs, ...roles])].sort());
+        expect(slim.schools.find((s) => s.id === 'kelley')!.jobs).toEqual(kelley.jobs);
+        // No other school has roles added; its jobs are exactly what its majors lead to.
+        for (const s of full.schools.filter((x) => x.id !== 'kelley')) {
+            expect(s.roles, s.name).toBeUndefined();
+            expect(s.jobs, s.name).toEqual(s.majorJobs);
+        }
+    });
+
+    it('every title-match code is a CIP 2020 code with the crosswalk\'s title, and every major rule has a note', () => {
+        const cip2020 = parseCipCodes(inputs.cipCodesCsv);
+        expect(cip2020.get('52.1401')).toBe('Marketing/Marketing Management, General.');
+        for (const r of inputs.rules.majorRules) {
+            expect(r.note.length, `${r.degree} / ${r.subject}`).toBeGreaterThan(20);
+            if (r.basis === 'title-match') {
+                expect(r.ipedsCip, `${r.degree} / ${r.subject}`).toBeTruthy();
+                for (const c of r.cips) expect(cip2020.get(c), c).toBe(xw.cipTitle.get(c));
+            } else {
+                expect(r.ipedsCip).toBeUndefined();
+            }
+        }
     });
 
     it('a Luddy Computer Science major leads to Software Developers', () => {
@@ -262,8 +337,26 @@ describe('matching rules never guess', () => {
         const dm = matchProgram(program({ name: 'Computer Science/Philosophy', degree: 'Bachelor of Arts', level: 'B', subject: 'Computer Science/Philosophy' }), rules, ipeds);
         expect(dm.cips.sort()).toEqual(['11.0701', '38.0101']);
         expect(dm.basis).toBe('double-major');
-        const bsb = matchProgram(program({ name: 'Finance', degree: 'Bachelor of Science in Business', level: 'B', subject: 'Finance' }), rules, ipeds);
+        const bsb = matchProgram(program({ name: 'Business', degree: 'Bachelor of Science in Business', level: 'B', subject: 'Business' }), rules, ipeds);
         expect(bsb).toMatchObject({ cips: ['52.0101'], basis: 'degree' });
+        const fin = matchProgram(program({ name: 'Finance', degree: 'Bachelor of Science in Business', level: 'B', subject: 'Finance' }), rules, ipeds);
+        expect(fin).toMatchObject({ cips: ['52.0801'], basis: 'title-match', ipedsCip: '52.0101' });
+    });
+
+    it('a new major of a reviewed degree stops the build until it has its own rule', () => {
+        expect(() => matchProgram(program({ name: 'Underwater Finance', degree: 'Bachelor of Science in Business', level: 'B', subject: 'Underwater Finance' }), rules, ipeds)).toThrow(/No major rule/);
+    });
+
+    it('a title match needs its degree\'s general code reported at the program\'s level, and a kept code must be the degree\'s', () => {
+        const bad: RulesFile = { ...rules, majorRules: rules.majorRules.map((r) => (r.degree === 'Bachelor of Science in Business' && r.subject === 'Finance' ? { ...r, ipedsCip: '52.0301' } : r)) };
+        expect(reportedAt(ipeds, '52.0301', 'B')).toBe(false);
+        expect(() => matchProgram(program({ name: 'Finance', degree: 'Bachelor of Science in Business', level: 'B', subject: 'Finance' }), bad, ipeds)).toThrow(/ipedsCip/);
+        const wrongKeep: RulesFile = { ...rules, majorRules: rules.majorRules.map((r) => (r.degree === 'Bachelor of Science in Business' && r.subject === 'Management' ? { ...r, cips: ['52.0201'] } : r)) };
+        expect(() => matchProgram(program({ name: 'Management', degree: 'Bachelor of Science in Business', level: 'B', subject: 'Management' }), wrongKeep, ipeds)).toThrow(/keeps its degree's code/);
+        const ghost: RulesFile = { ...rules, majorRules: [...rules.majorRules, { degree: 'Bachelor of Science in Business', subject: 'Ghost', cips: ['52.0801'], basis: 'title-match', ipedsCip: '52.0101', note: 'test' }] };
+        expect(() => buildIuSchools({ ...inputs, rules: ghost })).toThrow(/matches no program/);
+        const notCip: RulesFile = { ...rules, majorRules: rules.majorRules.map((r) => (r.subject === 'Real Estate' ? { ...r, cips: ['52.9998'] } : r)) };
+        expect(() => buildIuSchools({ ...inputs, rules: notCip })).toThrow(/not a CIP 2020 code/);
     });
 
     it('reads a program\'s subject without its parentheses or BFA tag', () => {

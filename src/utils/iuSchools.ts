@@ -84,6 +84,18 @@ export function highlightedRoles<T extends { kind: RoleKind; soc: string }>(role
     return roles.filter((r) => inScope(r) && isHighlighted(h, r));
 }
 
+/**
+ * The one count a school shows everywhere (its menu row, its chip at the
+ * world, the list's rows, the screen-reader note): the roles it picks out on
+ * the whole map, one per peak, so a SOC held by two Kelley titles counts twice.
+ */
+export function schoolRoleCount(school: Pick<IuSchool, 'jobs'> | SchoolFilter, roles: readonly { kind: RoleKind; soc: string }[]): number {
+    const socs = 'socs' in school ? school.socs : new Set(school.jobs);
+    let n = 0;
+    for (const r of roles) if (socs.has(r.soc)) n++;
+    return n;
+}
+
 /** How many of `socs` (an occupation list: the world, a family or a field) the school's jobs include. */
 export function countMatches(school: SchoolFilter, socs: Iterable<string>): number {
     let n = 0;

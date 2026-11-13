@@ -1,6 +1,8 @@
 import React, { useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
 import { useWorldStore } from '../worldStore';
-import { loadIuSchools, schoolFilterOf, type IuSchool, type SchoolFilter } from '../utils/iuSchools';
+import { useStore } from '../store';
+import { loadIuSchools, schoolFilterOf, schoolRoleCount, type IuSchool, type SchoolFilter } from '../utils/iuSchools';
+import { getRoleEntries } from '../utils/roles';
 import { prefersReducedMotion } from './world/worldCamera';
 import { listPlacement } from '../utils/schoolLook';
 import { IconCheck, IconChevronDown, IconGraduationCap } from './ui/Icons';
@@ -146,12 +148,14 @@ export const SchoolPicker: React.FC<{ onOpenChange?: (open: boolean) => void }> 
         if (prev.schoolsRevealed && !s.schoolsRevealed) fieldPicker()?.focus({ preventScroll: true });
     }), []);
 
+    // The count each school row shows: the same role rows its chip lists at the world.
+    const roles = getRoleEntries(useStore((s) => s.jobs));
     const [announcement, setAnnouncement] = useState('');
     useEffect(() => useWorldStore.subscribe((s, prev) => {
         if (s.schoolsRevealed && !prev.schoolsRevealed) setAnnouncement('IU school filter shown. Pick a school to see only the jobs its majors lead to.');
         else if (!s.schoolsRevealed && prev.schoolsRevealed) setAnnouncement('IU school filter hidden. Showing every job.');
         else if (s.school !== prev.school) {
-            setAnnouncement(s.school ? `${s.school.name}: ${s.school.socs.size} occupations stand out.` : 'No school picked. Showing every job.');
+            setAnnouncement(s.school ? `${s.school.name}: ${schoolRoleCount(s.school, getRoleEntries(useStore.getState().jobs))} jobs stand out.` : 'No school picked. Showing every job.');
         }
     }), []);
 
@@ -297,7 +301,7 @@ export const SchoolPicker: React.FC<{ onOpenChange?: (open: boolean) => void }> 
                                     >
                                         <CheckSlot on={school?.id === s.id} />
                                         <span className={`text-[13px] flex-1 ${school?.id === s.id ? 'text-white font-semibold' : 'text-gray-200'}`}>{s.name}</span>
-                                        <span className={`text-[11px] tabular-nums shrink-0 ${school?.id === s.id ? 'text-rose-100/80' : 'text-gray-500'}`}>{s.jobs.length} occupations</span>
+                                        <span className={`text-[11px] tabular-nums shrink-0 ${school?.id === s.id ? 'text-rose-100/80' : 'text-gray-500'}`}>{schoolRoleCount(s, roles)} jobs</span>
                                     </button>
                                 </li>
                             ))}

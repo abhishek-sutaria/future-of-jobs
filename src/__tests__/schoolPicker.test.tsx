@@ -17,7 +17,8 @@ import { useWorldStore } from '../worldStore';
 import { BROAD_LABELS } from '../utils/labelLevel';
 import { WORLD_LEVEL, fieldLevel } from '../utils/worldLevel';
 import { LONG_PRESS_MS } from '../utils/schoolShortcut';
-import { highlightOn, isHighlighted, loadIuSchools, schoolFilterOf, type IuSchool } from '../utils/iuSchools';
+import { highlightOn, highlightedRoles, isHighlighted, loadIuSchools, schoolFilterOf, schoolRoleCount, type IuSchool } from '../utils/iuSchools';
+import { getRoleEntries } from '../utils/roles';
 import { CONTINENT_DISPLAY_NAMES } from '../config/continents';
 import slim from '../data/iu_school_jobs.json';
 import { bakeStage, rebakeStageColors, STAGE_DIM_EMPHASIS } from '../utils/stageBake';
@@ -157,7 +158,7 @@ describe('picking a school', () => {
         const options = [...container.querySelectorAll<HTMLButtonElement>('[role="listbox"][aria-label="IU schools"] [role="option"]')];
         expect(options.map((o) => o.textContent)).toEqual([
             'All IU schools · no filter',
-            ...slim.schools.map((s) => `${s.name}${s.jobs.length} occupations`),
+            ...slim.schools.map((s) => `${s.name}${schoolRoleCount(s, getRoleEntries(useStore.getState().jobs))} jobs`),
         ]);
         expect(options.some((o) => o.textContent?.includes('Graduate School Bloomington'))).toBe(false);
         expect(options.some((o) => o.textContent?.includes('School of Nursing'))).toBe(true);
@@ -169,7 +170,26 @@ describe('picking a school', () => {
         expect(useWorldStore.getState().school?.id).toBe('kelley');
         expect(schoolButton()!.textContent).toContain('Kelley School of Business');
         expect(document.activeElement).toBe(schoolButton());
-        expect(announcer()).toBe(`Kelley School of Business: ${kelley().jobs.length} occupations stand out.`);
+        expect(announcer()).toBe(`Kelley School of Business: ${schoolRoleCount(kelley(), getRoleEntries(useStore.getState().jobs))} jobs stand out.`);
+    });
+
+    it('shows one count per school: the menu row, the chip at the world and the list rows agree', async () => {
+        const roles = getRoleEntries(useStore.getState().jobs);
+        // Kelley: 80 SOC codes, but 3 of them hold two Kelley titles, so 83 rows.
+        expect(kelley().jobs.length).toBe(80);
+        expect(schoolRoleCount(kelley(), roles)).toBe(83);
+        for (const s of slim.schools) {
+            const menu = schoolRoleCount(s, roles);
+            await act(async () => useWorldStore.getState().setSchool(schoolFilterOf(s)));
+            const label = s.id === 'kelley' ? 'Kelley' : null;
+            const chip = q('[data-testid="school-chip"]')!.textContent!;
+            expect(chip, s.name).toMatch(new RegExp(`· ${menu} jobs?\\. Show list$`));
+            if (label) expect(chip).toBe(`Kelley · ${menu} jobs. Show list`);
+            expect(highlightedRoles(roles, { kelleyOnly: false, school: schoolFilterOf(s) }).length, s.name).toBe(menu);
+            await act(async () => q<HTMLButtonElement>('[data-testid="school-chip"]')!.click());
+            expect(container.ownerDocument.querySelectorAll('[data-school-job]').length, s.name).toBe(menu);
+            await act(async () => q<HTMLButtonElement>('[data-testid="school-chip"]')!.click());
+        }
     });
 
     it('works with the field: the chip counts what the map lights, at the world, in a field, and in the field list', async () => {

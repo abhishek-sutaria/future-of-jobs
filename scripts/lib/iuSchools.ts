@@ -9,13 +9,19 @@
  *      and accelerated combinations are left out (rules.excludedDegreeTypes).
  *   2. CIP: data/iu_schools/program_cip_rules.json gives each program its CIP
  *      code(s). A code counts only if IU Bloomington reports it in IPEDS
- *      Completions 2023-24 at the program's own award level.
+ *      Completions 2023-24 at the program's own award level, except a major
+ *      rule with basis 'title-match': IPEDS files some degrees under one
+ *      general code for all their majors, so such a major takes the CIP 2020
+ *      code its title names, and the general code (ipedsCip) is checked
+ *      against IPEDS instead.
  *   3. SOC: the NCES CIP 2020 to SOC 2018 crosswalk, sheet CIP-SOC.
  *   4. Jobs: a SOC code that is one of the app's 830 occupations is that job.
  *      A detailed SOC code the app only has inside a combined BLS code (a broad
  *      code such as 13-1020, or an OEWS aggregate such as 21-1018) rolls up to
  *      it, using the parts listed in src/config/onetSplitCodes.ts. Anything
  *      else is reported as not among the app's jobs.
+ *   5. A school rule may add a fixed set of roles to a school: the Kelley
+ *      School always includes the 50 Kelley roles (basis 'kelley-roles').
  */
 
 import fs from 'node:fs';
@@ -23,9 +29,12 @@ import path from 'node:path';
 import crypto from 'node:crypto';
 import * as XLSX from 'xlsx';
 import { ONET_CODES_FOR_SOC, ONET_SPLIT_CODES_WITHOUT_TASKS } from '../../src/config/onetSplitCodes';
+import { KELLEY_SOC_SET } from '../../src/utils/kelleySocs';
 
 export type Level = 'A' | 'B' | 'M' | 'P' | 'D';
 export type Basis = 'title' | 'degree' | 'reviewed' | 'none';
+/** A major rule's basis: 'title-match' = the major's own CIP 2020 code, from its title; 'degree' = it keeps its degree's code. */
+export type MajorBasis = 'title-match' | 'degree';
 
 export const LEVEL_OF_BADGE: Readonly<Record<string, Level>> = {
     "Associate's": 'A',
@@ -101,6 +110,24 @@ export interface DegreeRule {
     note: string;
     /** Check the code against this IU campus's IPEDS rows (sources.json) instead of IU Bloomington's. */
     campusUnitid?: string;
+    /** Every program of this degree (and pattern) must have its own major rule; a new one stops the build. */
+    majorsReviewed?: boolean;
+}
+/** One major of one degree (exact degree and subject), checked before every other rule. */
+export interface MajorRule {
+    degree: string;
+    subject: string;
+    cips: string[];
+    basis: MajorBasis;
+    /** For 'title-match': the general code IPEDS files the whole degree under, checked at the program's level. */
+    ipedsCip?: string;
+    note: string;
+}
+/** Roles a school always includes, whatever its majors lead to. */
+export interface SchoolRoleRule {
+    school: string;
+    basis: 'kelley-roles';
+    note: string;
 }
 export interface SubjectRule {
     subject: string;
@@ -114,8 +141,10 @@ export interface SubjectRule {
 }
 export interface RulesFile {
     excludedDegreeTypes: string[];
+    majorRules: MajorRule[];
     degreeRules: DegreeRule[];
     subjectRules: SubjectRule[];
+    schoolRoles: SchoolRoleRule[];
 }
 
 export interface ApiDegree {
@@ -139,6 +168,10 @@ export interface IuSchoolInputs {
     crosswalk: Buffer | Uint8Array;
     /** The app's 830 occupations: SOC and BLS title. */
     occupations: { soc: string; title: string }[];
+    /** The SOC codes of the 50 Kelley roles (src/utils/kelleySocs.ts), for a 'kelley-roles' school rule. */
+    kelleySocs: string[];
+    /** NCES CIPCode2020.csv: every CIP 2020 code with its title and definition. */
+    cipCodesCsv: string;
 }
 
 export const IU_SCHOOLS_PATHS = {
@@ -187,6 +220,8 @@ export function loadIuSchoolInputs(root: string): IuSchoolInputs {
             .map((f) => [f.path, raw.get(f.path)!.toString('utf-8')])),
         crosswalk: file('CIP2020_SOC2018_Crosswalk.xlsx'),
         occupations: index.occupations.map((o) => ({ soc: o.soc, title: o.title })),
+        kelleySocs: [...KELLEY_SOC_SET].sort(),
+        cipCodesCsv: file('CIPCode2020.csv').toString('utf-8'),
     };
 }
 
@@ -259,6 +294,23 @@ export function parseCampusIpeds(inputs: Pick<IuSchoolInputs, 'sources' | 'other
 export function reportedAt(ipeds: Map<string, Map<string, number>>, cip: string, level: Level): boolean {
     const byLevel = ipeds.get(cip);
     return !!byLevel && AWLEVELS[level].some((a) => byLevel.has(a));
+}
+
+// ---------------------------------------------------------------- CIP 2020 list
+
+/** NCES CIPCode2020.csv -> code -> title. Codes are written ="52.1401" in the file. */
+export function parseCipCodes(csv: string): Map<string, string> {
+    const lines = csv.replace(/^\uFEFF/, '').split(/\r?\n/).filter((l) => l.length > 0);
+    const head = parseCsvLine(lines[0]);
+    const iCode = head.indexOf('CIPCode');
+    const iTitle = head.indexOf('CIPTitle');
+    if (iCode < 0 || iTitle < 0) throw new Error('CIPCode2020.csv has no CIPCode or CIPTitle column');
+    const out = new Map<string, string>();
+    for (const line of lines.slice(1)) {
+        const row = parseCsvLine(line);
+        out.set(row[iCode].replace(/^=/, ''), row[iTitle]);
+    }
+    return out;
 }
 
 // ---------------------------------------------------------------- crosswalk
@@ -404,13 +456,15 @@ export function compareProgram(a: Pick<Program, 'level' | 'name' | 'degree' | 'u
 
 export interface ProgramMatch {
     cips: string[];
-    basis: Basis | 'double-major';
+    basis: Basis | MajorBasis | 'double-major';
     /** Which rule decided it, for the report. */
     rule: string;
     /** Set when the program ends with no CIP, or lost one of its rule's codes to the level check. */
     reason?: string;
     /** Set when its code was checked against another IU campus's IPEDS rows. */
     campusUnitid?: string;
+    /** For 'title-match': the general code IPEDS files the whole degree under. */
+    ipedsCip?: string;
 }
 
 function subjectRuleFor(rules: RulesFile, subject: string, p: Program): SubjectRule | undefined {
@@ -446,7 +500,20 @@ export function matchProgram(
         if (kept.length === 0) return { cips: [], basis: 'none', rule, reason: notAtLevel(dropped, p.level, unitid) };
         return dropped.length > 0 ? { cips: kept, basis, rule, reason: notAtLevel(dropped, p.level, unitid), ...campus } : { cips: kept, basis, rule, ...campus };
     };
+    const majorRule = rules.majorRules.find((r) => r.degree === p.degree && r.subject === p.subject);
     const degreeRule = rules.degreeRules.find((r) => r.degree === p.degree && (!r.pattern || new RegExp(r.pattern).test(p.subject)));
+    if (majorRule) {
+        const rule = `major: ${majorRule.degree} / ${majorRule.subject}`;
+        if (majorRule.cips.length === 0) throw new Error(`Rule "${rule}" has no code; use a subject or degree rule to leave a program unmatched`);
+        if (majorRule.basis === 'degree') {
+            if (!degreeRule || degreeRule.basis === 'none' || majorRule.cips.join() !== degreeRule.cips.join()) throw new Error(`Rule "${rule}" keeps its degree's code, so it must name exactly the code of the degree rule for ${p.degree}`);
+            return finish(majorRule.cips, 'degree', rule, majorRule.note);
+        }
+        const general = majorRule.ipedsCip;
+        if (!general || !reportedAt(ipeds, general, p.level)) throw new Error(`Rule "${rule}" is a title match, so its ipedsCip must be a code IU Bloomington reports at ${LEVEL_NAMES[p.level]} level (got ${general ?? 'none'})`);
+        return { cips: [...majorRule.cips], basis: 'title-match', rule, ipedsCip: general };
+    }
+    if (degreeRule?.majorsReviewed) throw new Error(`No major rule for "${p.subject}" (${p.name}, ${p.degree}, ${p.url}): every ${p.degree} program needs its own rule in majorRules. Add one to program_cip_rules.json.`);
     if (degreeRule) return finish(degreeRule.cips, degreeRule.basis, `degree: ${degreeRule.degree}${degreeRule.pattern ? ` /${degreeRule.pattern}/` : ''}`, degreeRule.note, degreeRule.campusUnitid);
     const exact = subjectRuleFor(rules, p.subject, p);
     if (exact) return finish(exact.cips, exact.basis, `subject: ${exact.subject}`, exact.note, exact.campusUnitid);
@@ -490,6 +557,16 @@ export interface MajorOut {
     reason?: string;
     /** Its code was confirmed in this IU campus's IPEDS rows, not IU Bloomington's. */
     campusUnitid?: string;
+    /** For basis 'title-match': the general code IPEDS files the whole degree under. */
+    ipedsCip?: string;
+}
+export interface SchoolRolesOut {
+    basis: SchoolRoleRule['basis'];
+    note: string;
+    /** The roles' SOC codes (each one an app job). */
+    jobs: string[];
+    /** Those the school's majors do not already lead to. */
+    added: string[];
 }
 export interface SchoolOut {
     id: string;
@@ -498,7 +575,12 @@ export interface SchoolOut {
     majorCount: number;
     matchedMajorCount: number;
     cips: string[];
+    /** Every job the school picks out: its majors' jobs plus any roles it always includes. */
     jobs: string[];
+    /** The jobs its majors lead to. */
+    majorJobs: string[];
+    /** Roles the school always includes (the Kelley School: the 50 Kelley roles). */
+    roles?: SchoolRolesOut;
     majors: MajorOut[];
 }
 export interface IuSchoolsFull {
@@ -532,6 +614,15 @@ export function buildIuSchools(inputs: IuSchoolInputs): { full: IuSchoolsFull; s
     const ipeds = parseIpeds(inputs.ipedsCsv);
     const otherCampuses = parseCampusIpeds(inputs);
     const xw = parseCrosswalk(inputs.crosswalk);
+    const cip2020 = parseCipCodes(inputs.cipCodesCsv);
+    for (const r of inputs.rules.majorRules) {
+        if (r.basis !== 'title-match') continue;
+        for (const c of r.cips) {
+            const title = cip2020.get(c);
+            if (title === undefined) throw new Error(`Major rule "${r.degree} / ${r.subject}": ${c} is not a CIP 2020 code (CIPCode2020.csv)`);
+            if (title !== xw.cipTitle.get(c)) throw new Error(`Major rule "${r.degree} / ${r.subject}": ${c} is "${title}" in CIPCode2020.csv but "${xw.cipTitle.get(c)}" in the crosswalk`);
+        }
+    }
     const appSocs = new Set(inputs.occupations.map((o) => o.soc));
     const appTitle = new Map(inputs.occupations.map((o) => [o.soc, o.title]));
     const rollup = socRollup(appSocs);
@@ -576,14 +667,34 @@ export function buildIuSchools(inputs: IuSchoolInputs): { full: IuSchoolsFull; s
         const out: MajorOut = { name: p.name, degree: p.degree, level: p.level, url: p.url, cips, basis: m.basis, jobs };
         if (m.reason) out.reason = m.reason;
         if (m.campusUnitid) out.campusUnitid = m.campusUnitid;
+        if (m.ipedsCip) out.ipedsCip = m.ipedsCip;
         for (const id of p.schools) majorsBySchool.get(id)!.push(out);
     }
+    for (const r of inputs.rules.majorRules) {
+        if (!programs.some((p) => p.degree === r.degree && p.subject === r.subject)) throw new Error(`Major rule "${r.degree} / ${r.subject}" matches no program; remove it or fix its name`);
+    }
 
+    const roleRuleFor = (id: string) => inputs.rules.schoolRoles.filter((r) => r.school === id);
+    for (const r of inputs.rules.schoolRoles) {
+        if (!inputs.schools.schools.some((s) => s.id === r.school)) throw new Error(`School rule names "${r.school}", which is not in schools.json`);
+    }
     const schools: SchoolOut[] = inputs.schools.schools.map((s) => {
         const majors = majorsBySchool.get(s.id)!;
         const cips = [...new Set(majors.flatMap((m) => m.cips))].sort(byCode);
-        const jobs = [...new Set(majors.flatMap((m) => m.jobs))].sort(byCode);
-        return {
+        const majorJobs = [...new Set(majors.flatMap((m) => m.jobs))].sort(byCode);
+        const ruleList = roleRuleFor(s.id);
+        if (ruleList.length > 1) throw new Error(`${s.name} has more than one school rule`);
+        let roles: SchoolRolesOut | undefined;
+        if (ruleList.length === 1) {
+            const rule = ruleList[0];
+            if (rule.basis !== 'kelley-roles') throw new Error(`Unknown school rule basis "${rule.basis}"`);
+            const roleJobs = [...new Set(inputs.kelleySocs)].sort(byCode);
+            if (roleJobs.length === 0) throw new Error('The Kelley roles have no SOC codes');
+            for (const soc of roleJobs) if (!appSocs.has(soc)) throw new Error(`Kelley role SOC ${soc} is not one of the app's occupations`);
+            roles = { basis: rule.basis, note: rule.note, jobs: roleJobs, added: roleJobs.filter((soc) => !majorJobs.includes(soc)) };
+        }
+        const jobs = [...new Set([...majorJobs, ...(roles?.jobs ?? [])])].sort(byCode);
+        const out: SchoolOut = {
             id: s.id,
             name: s.name,
             inDropdown: jobs.length > 0,
@@ -591,8 +702,11 @@ export function buildIuSchools(inputs: IuSchoolInputs): { full: IuSchoolsFull; s
             matchedMajorCount: majors.filter((m) => m.cips.length > 0).length,
             cips,
             jobs,
+            majorJobs,
             majors,
         };
+        if (roles) out.roles = roles;
+        return out;
     });
 
     const cips: Record<string, CipEntry> = {};
@@ -602,7 +716,8 @@ export function buildIuSchools(inputs: IuSchoolInputs): { full: IuSchoolsFull; s
         _meta: {
             about: [
                 'Generated by scripts/build_iu_schools.ts from data/iu_schools/ (do not edit). docs/iu-schools.md is the coverage report.',
-                'schools[].majors: IU Bloomington degree programs (certificates, diplomas and accelerated combinations left out). cips: the program\'s CIP 2020 code(s); basis: how the code was matched (program_cip_rules.json); jobs: the app occupations (SOC codes, src/data/occupations/index.json) the codes lead to through the NCES crosswalk.',
+                'schools[].majors: IU Bloomington degree programs (certificates, diplomas and accelerated combinations left out). cips: the program\'s CIP 2020 code(s); basis: how the code was matched (program_cip_rules.json); jobs: the app occupations (SOC codes, src/data/occupations/index.json) the codes lead to through the NCES crosswalk. ipedsCip (basis title-match): the general code IPEDS files the whole degree under.',
+                'schools[].jobs: majorJobs (what the majors lead to) plus roles.jobs, roles a school always includes (basis kelley-roles: the 50 Kelley roles, src/utils/kelleySocs.ts).',
                 'socRollup: detailed SOC 2018 codes that the app holds only inside a combined BLS code; a crosswalk SOC listed here counts as that combined job.',
             ],
             sources: inputs.sources,
@@ -649,13 +764,19 @@ function renderReport(
     L.push(`- ${fmt(counts.programs)} degree programs (bachelor's, master's, specialist, doctoral, one associate's). ${fmt(counts.excludedRows)} rows of IU's list are certificates, diplomas or accelerated combinations and are left out.`);
     L.push(`- ${fmt(counts.matchedPrograms)} programs matched to at least one CIP code; ${fmt(counts.programs - counts.matchedPrograms)} not matched (listed below, each with the reason).`);
     L.push(`- ${counts.cips} CIP codes used, leading to ${counts.jobs} of the app's ${counts.appJobs} jobs.`);
+    const titleMatched = full.schools.flatMap((s) => s.majors).filter((m, i, all) => m.basis === 'title-match' && all.findIndex((x) => x.url === m.url) === i);
+    L.push(`- ${titleMatched.length} majors take their own CIP 2020 code by title, where IPEDS files their whole degree under one general code (listed below).`);
+    for (const s of full.schools.filter((x) => x.roles)) {
+        L.push(`- ${s.name} also always includes the ${s.roles!.jobs.length} jobs of the 50 Kelley roles (basis \`${s.roles!.basis}\`), ${s.roles!.added.length} of them not already reached by its majors.`);
+    }
     L.push('');
     L.push('## Schools');
     L.push('');
     L.push('| School | Degree programs | Matched to a CIP | CIP codes | Jobs | In dropdown |');
     L.push('|---|---:|---:|---:|---:|---|');
     for (const s of full.schools) {
-        L.push(`| ${mdCell(s.name)} | ${s.majorCount} | ${s.matchedMajorCount} | ${s.cips.length} | ${s.jobs.length} | ${s.inDropdown ? 'yes' : '**no, 0 jobs**'} |`);
+        const jobs = s.roles ? `${s.jobs.length} (${s.majorJobs.length} from majors + ${s.roles.added.length} Kelley roles)` : `${s.jobs.length}`;
+        L.push(`| ${mdCell(s.name)} | ${s.majorCount} | ${s.matchedMajorCount} | ${s.cips.length} | ${jobs} | ${s.inDropdown ? 'yes' : '**no, 0 jobs**'} |`);
     }
     L.push('');
     const out = full.schools.filter((s) => !s.inDropdown);
@@ -671,14 +792,16 @@ function renderReport(
     L.push('');
     L.push('1. **Schools**: the 16 degree-granting schools on IU Bloomington\'s schools page, named as it names them (`data/iu_schools/schools.json`).');
     L.push('2. **Programs**: IU\'s degree finder data for Bloomington, the list behind "Browse All Programs". Each row names the program, its degree and its school(s). Rows that share a URL are one program.');
-    L.push('3. **CIP codes**: IU publishes no program-to-CIP list without an IU login (its Academic Program Inventory is behind IU single sign-on, and the state\'s is behind a CHE login). So each program gets its code from a reviewed rule in `data/iu_schools/program_cip_rules.json`, and the build accepts a code only if IU Bloomington (UNITID 151351) reports it in IPEDS Completions 2023-24 at the program\'s own award level. Rule kinds:');
+    L.push('3. **CIP codes**: IU publishes no program-to-CIP list without an IU login (its Academic Program Inventory is behind IU single sign-on, and the state\'s is behind a CHE login; checked again 2026-11-12, along with Kelley\'s STEM-designation pages, which name no codes). So each program gets its code from a reviewed rule in `data/iu_schools/program_cip_rules.json`, and the build accepts a code only if IU Bloomington (UNITID 151351) reports it in IPEDS Completions 2023-24 at the program\'s own award level, apart from the `title-match` majors below. Rule kinds:');
     L.push('   - `title`: the CIP title names the same subject (History -> 54.0101 History, General).');
-    L.push('   - `degree`: IU reports the whole degree under one code, so every major in it takes that code. For example, every Kelley BSB major is 52.0101 Business/Commerce, General: IPEDS shows 2,407 business bachelor\'s awards under 52.0101 and no major-specific business code at bachelor\'s level.');
+    L.push('   - `degree`: IU reports the whole degree under one code, so a major in it takes that code unless it has a `title-match` rule. For example, IPEDS shows 2,407 Kelley business bachelor\'s awards under 52.0101 Business/Commerce, General and no major-specific business code at bachelor\'s level.');
+    L.push('   - `title-match`: a major of such a degree whose name is, exactly or nearly, the title of a CIP 2020 code (CIP 2020 to SOC 2018 crosswalk titles; NCES definitions in `data/iu_schools/raw/CIPCode2020.csv`) takes that code instead (Kelley BSB Marketing -> 52.1401 Marketing/Marketing Management, General). IU\'s own guide to reporting by CIP code says its IPEDS codes "may classify some academic programs using a more general rather than a specific CIP code", so this code is not in IPEDS; the build checks the degree\'s general code (`ipedsCip`) against IPEDS instead. A major named "A and B" takes the codes of the parts that have one. Every such major has its own rule and note, and a major with no such title keeps its degree\'s code in its own rule (`degree`), so every major of these degrees is reviewed one by one.');
     L.push('   - `reviewed`: matched by subject where the title differs; the rule\'s note gives the reason (usually "the only code in this subject IU Bloomington reports at this level").');
     L.push('   - `double-major`: a program named "A/B" takes the codes of A and B.');
     L.push('   - `none`: left unmatched on purpose, with the reason. Nothing is guessed; a new program with no rule stops the build.');
     L.push('   - A rule with `campusUnitid` is the one exception to "IU Bloomington reports it": for a school whose degrees IU reports under another campus, the code is checked against that campus\'s IPEDS rows instead. Every such program is listed under "Codes confirmed at another IU campus".');
     L.push('4. **Jobs**: the NCES CIP 2020 to SOC 2018 crosswalk (sheet CIP-SOC) gives each code its SOC occupations, then each SOC is matched to the app\'s 830 jobs.');
+    L.push('5. **Kelley roles**: the Kelley School also always includes the 50 Kelley roles (their 47 SOC codes, `src/utils/kelleySocs.ts`), basis `kelley-roles`, so the school filter never leaves out a job the original Kelley filter shows.');
     L.push('');
     L.push('### SOC roll-up');
     L.push('');
@@ -720,6 +843,29 @@ function renderReport(
         ? `Luddy reaches 15-1252 Software Developers through: ${luddySw.join('; ')}.`
         : 'Luddy does not reach Software Developers.');
     L.push('');
+
+    L.push('## Majors with their own code (title-match)');
+    L.push('');
+    L.push('IPEDS files each of these degrees under one general code; each major below takes the CIP 2020 code its name matches. The rule\'s note in `program_cip_rules.json` gives the reason for each.');
+    L.push('');
+    const majorsByDegree = new Map<string, MajorOut[]>();
+    for (const m of titleMatched) {
+        const list = majorsByDegree.get(m.degree) ?? [];
+        list.push(m);
+        majorsByDegree.set(m.degree, list);
+    }
+    for (const [degree, list] of [...majorsByDegree].sort((a, b) => a[0].localeCompare(b[0]))) {
+        L.push(`**${degree}** (IPEDS: ${list[0].ipedsCip} ${full.cips[list[0].ipedsCip!]?.title ?? ctx.xw.cipTitle.get(list[0].ipedsCip!) ?? ''})`);
+        L.push('');
+        for (const m of list) L.push(`- ${m.name}: ${m.cips.map((c) => `${c} ${full.cips[c].title}`).join(' + ')} (${m.jobs.length} jobs)`);
+        L.push('');
+    }
+    for (const s of full.schools.filter((x) => x.roles)) {
+        L.push(`### ${s.name}: the 50 Kelley roles`);
+        L.push('');
+        L.push(`${s.roles!.note} Their ${s.roles!.jobs.length} SOC codes: ${s.roles!.jobs.join(', ')}. Not already reached by its majors (${s.roles!.added.length}): ${s.roles!.added.map((soc) => `${soc} ${ctx.appTitle.get(soc) ?? ''}`).join('; ') || 'none'}.`);
+        L.push('');
+    }
 
     L.push('## Gaps');
     L.push('');
