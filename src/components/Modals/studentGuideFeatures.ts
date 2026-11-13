@@ -118,7 +118,7 @@ export const FEATURES: Feature[] = [
         emoji: '📊',
         title: 'Job Security Index',
         description:
-            `The colour legend at the bottom right of the screen maps the scored roles into three bands: High Automation Risk (red), Hybrid/Augmented (amber), and Safe Human-Centric (green). Bands are relative, graded on a curve across all ${RANKED} scored occupations (each BLS code once), a third in each.` + (SLATE || ' Slate peaks are occupations with no AI scores yet.'),
+            `The colour legend at the bottom right of the screen maps the scored roles into three bands: High AI Exposure (red), Hybrid/Augmented (amber), and Safe Human-Centric (green). Bands are relative, graded on a curve across all ${RANKED} scored occupations (each BLS code once), a third in each.` + (SLATE || ' Slate peaks are occupations with no AI scores yet.'),
         tip: 'A "green" role here means it is safer than most others in this dataset, not that it is completely immune to automation.',
         color: 'green',
     },
