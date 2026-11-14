@@ -8,7 +8,7 @@ import { UI } from '../../config/constants';
 const RISK_BANDS: { value: RiskBand; label: string; color: string }[] = [
     { value: 'safe', label: 'Safe / Human-Centric', color: 'text-emerald-400' },
     { value: 'hybrid', label: 'Hybrid / Augmented', color: 'text-amber-400' },
-    { value: 'high', label: 'High Automation Risk', color: 'text-red-400' },
+    { value: 'high', label: 'High AI Exposure', color: 'text-red-400' },
 ];
 
 const SORT_OPTIONS: { value: SortKey; label: string }[] = [

@@ -30,7 +30,7 @@ export const Legend: React.FC = () => {
                 <div className="flex flex-col justify-between h-[60px] md:h-[77px] text-[8px] md:text-[10px] font-medium text-right py-0.5">
                     <span style={{ color: RISK_BAND_COLORS.safe }}>Safe / Human-Centric</span>
                     <span style={{ color: RISK_BAND_COLORS.hybrid }}>Hybrid / Augmented</span>
-                    <span style={{ color: RISK_BAND_COLORS.high }}>High Automation Risk</span>
+                    <span style={{ color: RISK_BAND_COLORS.high }}>High AI Exposure</span>
                 </div>
 
                 <div
