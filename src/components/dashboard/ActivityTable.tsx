@@ -55,7 +55,7 @@ export const ActivityTable: React.FC<ActivityTableProps> = ({ rows, variant, onO
                     <tr className="text-[10px] uppercase text-gray-500 font-semibold tracking-wider border-b border-white/[0.06]">
                         <th className="text-left px-3 py-2.5">Role</th>
                         <th className="text-left px-3 py-2.5 hidden md:table-cell">Cluster</th>
-                        <th className="text-left px-3 py-2.5">Risk</th>
+                        <th className="text-left px-3 py-2.5">AI Exposure</th>
                         <th className="text-left px-3 py-2.5 hidden sm:table-cell">Growth</th>
                         <th className="text-left px-3 py-2.5">{variant === 'saved' ? 'Saved' : 'Last viewed'}</th>
                         {variant === 'saved' && <th className="w-10" />}

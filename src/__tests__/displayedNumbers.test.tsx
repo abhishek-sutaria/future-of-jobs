@@ -85,8 +85,8 @@ describe('every displayed % is the exact mean of whole hundredths, rounded once,
             const doc = render(job, occupation);
             expect(doc.querySelector('[data-testid="risk-value"]')!.textContent, job.title).toBe(`${expectedPct(job.tasks.map((t) => t.aiCapabilityScore))}%`);
             expect(doc.querySelector('[data-testid="human-value"]')!.textContent, job.title).toBe(`${expectedPct(job.tasks.map((t) => t.humanCriticalityScore))}%`);
-            const chips = [...doc.querySelectorAll('div')].map((d) => d.textContent ?? '').filter((t) => /^\d+% (RISK|HUMAN)$/.test(t));
-            const expected = job.tasks.flatMap((t) => [`${hundredths(t.aiCapabilityScore)}% RISK`, `${hundredths(t.humanCriticalityScore)}% HUMAN`]);
+            const chips = [...doc.querySelectorAll('div')].map((d) => d.textContent ?? '').filter((t) => /^\d+% (AI EXPOSURE|HUMAN)$/.test(t));
+            const expected = job.tasks.flatMap((t) => [`${hundredths(t.aiCapabilityScore)}% AI EXPOSURE`, `${hundredths(t.humanCriticalityScore)}% HUMAN`]);
             expect(chips.sort(), job.title).toEqual(expected.sort());
             checked++;
         }
@@ -127,7 +127,7 @@ describe('the risk gauge takes the map’s band and colour, the same as the hill
         const title = render(job, occupation).querySelector('[data-testid="resilience-label"]')!.getAttribute('title')!;
         expect(title).toContain(`Future-Proof from ${(scale.humanP75 * 100).toFixed(1)}%`);
         expect(title).toContain(`High from ${(scale.humanP25 * 100).toFixed(1)}%`);
-        expect(title).toContain('rated separately from Automation Risk');
+        expect(title).toContain('rated separately from AI Exposure');
         const doc = render(job, occupation);
         expect(doc.body.textContent).toContain('are rated separately');
         expect(doc.body.textContent).not.toContain('independent ratings');

@@ -14,7 +14,7 @@ const RISK_BANDS: { value: RiskBand; label: string; color: string }[] = [
 const SORT_OPTIONS: { value: SortKey; label: string }[] = [
     { value: 'date', label: 'Date' },
     { value: 'title', label: 'Title' },
-    { value: 'risk', label: 'Automation risk' },
+    { value: 'risk', label: 'AI exposure' },
     { value: 'growth', label: 'Projected growth' },
 ];
 
@@ -116,7 +116,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
                             : 'border-white/[0.08] bg-white/[0.03] text-gray-300 hover:bg-white/10'
                     }`}
                 >
-                    Risk{filters.riskBands.size > 0 ? ` (${filters.riskBands.size})` : ''}
+                    AI Exposure{filters.riskBands.size > 0 ? ` (${filters.riskBands.size})` : ''}
                     <IconChevronDown size={12} />
                 </button>
                 {riskOpen && (

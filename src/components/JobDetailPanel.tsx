@@ -194,7 +194,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
     const riskBandName = bandFor(riskValue, scale);
     const riskColor = RISK_BAND_COLORS[riskBandName];
     const riskTitle =
-        `${percentOf(riskValue)}% Automation Risk is ${BAND_NAME[riskBandName]} on the map. Colours split all ${scale.count.toLocaleString('en-US')} scored occupations into thirds: ` +
+        `${percentOf(riskValue)}% AI Exposure is ${BAND_NAME[riskBandName]} on the map. Colours split all ${scale.count.toLocaleString('en-US')} scored occupations into thirds: ` +
         `green below ${percentOf(scale.risk.lower)}%, amber from ${percentOf(scale.risk.lower)}%, red from ${percentOf(scale.risk.upper)}%.`;
 
     const { riskTask, safeTask } = pickRoadmapPair(job.tasks);
@@ -221,7 +221,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
     const resilienceTitle =
         `This role's average Human Criticality is ${cutPct(humanAvg)}. Human Resilience ranks it ${rankScopeText(scale)}: ` +
         `Future-Proof from ${cutPct(scale.humanP75)} (top quarter), High from ${cutPct(scale.humanP25)} (middle half), At Risk below ${cutPct(scale.humanP25)}. ` +
-        `It is rated separately from Automation Risk, so a role can be Future-Proof and still red on the map.`;
+        `It is rated separately from AI Exposure, so a role can be Future-Proof and still red on the map.`;
     const insightError = analysisResult ? analyzeError : (analyzeError ?? analysisError);
 
     const renderTaskScores = (task: Job['tasks'][number], riskChipClass: string) => {
@@ -229,10 +229,10 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
         return (
             <div className="flex items-center gap-1.5">
                 <div className={`text-[10px] font-semibold px-2 py-1 rounded border tabular-nums ${riskChipClass}`}>
-                    {percentOf(task.aiCapabilityScore)}% RISK
+                    {percentOf(task.aiCapabilityScore)}% AI EXPOSURE
                 </div>
                 <div
-                    title="Need for human judgment on this task. Rated separately from the risk score."
+                    title="Need for human judgment on this task. Rated separately from the AI Exposure score."
                     className={`text-[10px] font-semibold px-2 py-1 rounded border tabular-nums ${isHumanCritical ? 'text-emerald-400 bg-emerald-500/10 border-emerald-500/20' : 'text-gray-500 bg-white/[0.04] border-white/[0.08]'}`}
                 >
                     {percentOf(task.humanCriticalityScore)}% HUMAN
@@ -352,7 +352,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                     {percentOf(riskValue)}%
                                 </div>
                                 <div className="relative group/gauge flex items-center gap-1">
-                                    <p className="text-[10px] uppercase text-gray-500 font-semibold tracking-wider">Automation Risk</p>
+                                    <p className="text-[10px] uppercase text-gray-500 font-semibold tracking-wider">AI Exposure</p>
                                     <button
                                         onClick={(e) => { e.stopPropagation(); onShowMethodology(); }}
                                         aria-label="View methodology"
@@ -361,7 +361,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                         <IconInfo size={10} className="text-gray-500 hover:text-cyan-400" />
                                     </button>
                                     <div className="absolute top-full left-0 mt-2 w-56 p-2 bg-gray-900 border border-gray-700 rounded-lg text-[9px] text-gray-300 opacity-0 group-hover/gauge:opacity-100 pointer-events-none transition-opacity z-10 leading-tight">
-                                        The average of the risk scores shown on each of this role&rsquo;s tasks below. It is not a count of tasks at risk, so it can sit in the middle even when no single task is mostly automated. {riskTitle}
+                                        The average of the AI Exposure scores shown on each of this role&rsquo;s tasks below. It is not a count of highly exposed tasks, so it can sit in the middle even when no single task is mostly automated. {riskTitle}
                                     </div>
                                 </div>
                             </div>
@@ -423,7 +423,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                         </div>
                         <p className="col-span-2 md:col-span-4 text-[11px] text-gray-400 leading-snug flex items-start gap-1.5">
                             <IconInfo size={12} className="text-cyan-400 mt-0.5 shrink-0" />
-                            <span>Automation Risk and Human Criticality are rated separately, on the role and on each task, so they are not meant to add up to 100%.</span>
+                            <span>AI Exposure and Human Criticality are rated separately, on the role and on each task, so they are not meant to add up to 100%.</span>
                         </p>
                     </div>
 
@@ -465,7 +465,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                             {/* Automation Risk Card */}
                             <div className="rounded-xl p-4 border border-red-500/15 bg-red-500/[0.03]">
                                 <h3 className="text-red-400 font-semibold uppercase tracking-wider text-xs mb-2 flex items-center gap-2">
-                                    <IconAlertTriangle size={14} /> Automation Risk
+                                    <IconAlertTriangle size={14} /> AI Exposure
                                 </h3>
                                 {highRiskTasks.length > 0 && (
                                     <p className="text-[11px] text-gray-400 leading-relaxed mb-4">

@@ -66,10 +66,10 @@ export default function RoadmapModal({ job, riskTask, targetTask, onClose }: Roa
                     </h3>
                     <p className="text-white text-sm font-medium leading-relaxed mb-3">{riskTask.name}</p>
                     <p className="text-[11px] text-gray-400 leading-relaxed mb-3">
-                        Own the judgment and oversight around this high-risk work — do not abandon it.
+                        Own the judgment and oversight around this highly AI-exposed work — do not abandon it.
                     </p>
                     <div className="flex justify-between items-end pt-3 border-t border-white/[0.04]">
-                        <span className="text-[10px] text-gray-500 uppercase">Automation Risk</span>
+                        <span className="text-[10px] text-gray-500 uppercase">AI Exposure</span>
                         <span className="text-xl font-bold text-red-400 tabular-nums">{percentOf(riskTask.aiCapabilityScore)}%</span>
                     </div>
                 </div>

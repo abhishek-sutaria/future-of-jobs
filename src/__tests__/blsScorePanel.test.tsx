@@ -111,7 +111,7 @@ describe('a scored BLS occupation in the common role panel', () => {
 
     it('splits the rated tasks into the two columns, with both scores on each', () => {
         expect(text).toContain('Fixture task A');
-        expect(text).toContain('80% RISK');
+        expect(text).toContain('80% AI EXPOSURE');
         expect(text).toContain('20% HUMAN');
         expect(text).toContain('Fixture task B');
         expect(text).toContain('90% HUMAN');
@@ -134,7 +134,7 @@ describe('an unscored occupation in the numbers-only panel', () => {
 
     it('says Not scored and offers no Claude feature', () => {
         expect(doc.querySelector('[data-testid="ai-soon"]')!.textContent).toContain('Not scored');
-        for (const word of ['Strategic Insight', 'Roadmap', 'Scenario', 'Analyze', 'Defend this task', 'Build on this', 'Likely Replacements', 'Automation Risk']) {
+        for (const word of ['Strategic Insight', 'Roadmap', 'Scenario', 'Analyze', 'Defend this task', 'Build on this', 'Likely Replacements', 'AI Exposure']) {
             expect(text, word).not.toContain(word);
         }
         // Every button is the close button, the pay note or a source badge.

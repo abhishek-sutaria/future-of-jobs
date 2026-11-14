@@ -83,7 +83,7 @@ export const UpskillModal: React.FC<UpskillModalProps> = ({ isOpen, onClose, job
                 </div>
                 <div>
                     <p className="text-blue-100/80 text-xs font-bold uppercase tracking-wider mb-1">
-                        {mode === 'defend' ? `Defending this task · ${Math.round(aiRiskPercent)}% automation exposure` : 'Building on a human strength'}
+                        {mode === 'defend' ? `Defending this task · ${Math.round(aiRiskPercent)}% AI exposure` : 'Building on a human strength'}
                     </p>
                     <h2 className="text-xl font-bold text-white leading-snug pr-16">{taskName}</h2>
                 </div>
@@ -153,7 +153,7 @@ export const UpskillModal: React.FC<UpskillModalProps> = ({ isOpen, onClose, job
                         <IconInfo size={14} className="shrink-0 mt-0.5" />
                         <span>
                             Marking this complete records it against <strong>your</strong> profile and adds it
-                            to your dashboard's training log. The role's own risk scores stay as measured —
+                            to your dashboard's training log. The role's own AI Exposure scores stay as measured —
                             they describe the occupation, not your progress against it.
                         </span>
                     </p>

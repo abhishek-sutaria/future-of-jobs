@@ -44,10 +44,10 @@ export const StatTiles: React.FC<{ stats: PortfolioStats; riskScale: RiskScale }
                 // and RadialGauge's fixed-size text box (tuned for its 120px
                 // default) clips/overflows a third line at this compact size —
                 // confirmed live, the sublabel bled past the tile's edge.
-                <RadialGauge value={stats.averageRisk} label="Portfolio Risk" size={96} color={RISK_BAND_COLORS[riskBand(stats.averageRisk, riskScale)]} />
+                <RadialGauge value={stats.averageRisk} label="AI Exposure" size={96} color={RISK_BAND_COLORS[riskBand(stats.averageRisk, riskScale)]} />
             ) : (
                 <div className="text-center py-2">
-                    <div className="text-[10px] uppercase text-gray-500 font-semibold tracking-wider">Portfolio Risk</div>
+                    <div className="text-[10px] uppercase text-gray-500 font-semibold tracking-wider">Portfolio AI Exposure</div>
                     <div className="text-xs text-gray-600 italic mt-1">Save a scored role to see this</div>
                 </div>
             )}

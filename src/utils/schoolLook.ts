@@ -30,7 +30,7 @@ export function schoolChipLabel(school: { id: string; name: string }, count: num
 
 /** A role's line in the list: its risk as the app shows it everywhere (whole percent, halves up), or "Not scored". */
 export function riskText(risk: number | null): string {
-    return risk == null ? 'Not scored' : `${percentOf(risk)}% risk`;
+    return risk == null ? 'Not scored' : `${percentOf(risk)}% AI exposure`;
 }
 
 /** One pulse of the crimson rings, in seconds: slow enough to read as a glow, not a blink. */

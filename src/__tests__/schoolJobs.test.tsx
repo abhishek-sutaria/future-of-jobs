@@ -216,7 +216,7 @@ describe('the school chip and its list', () => {
             const risk = roleRisk(peak.entry, peak.job);
             expect(row.textContent).toBe(`${peak.entry.title}${riskText(risk)}`);
         }
-        expect(riskText(0.725)).toBe(`${percentOf(0.725)}% risk`);
+        expect(riskText(0.725)).toBe(`${percentOf(0.725)}% AI exposure`);
         expect(riskText(null)).toBe('Not scored');
         // Alphabetical, so a job is easy to find.
         const titles = rows.map((r) => scene.peakByKey.get(r.dataset.schoolJob!)!.entry.title);

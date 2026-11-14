@@ -43,7 +43,7 @@ const ALL_STEPS: Step[] = [
     {
         target: 'tour-skills',
         title: 'My Skills',
-        description: "Paste your CV or skills list here. You'll get a personalised AI risk score, skill gaps, and a 6-month upskilling roadmap.",
+        description: "Paste your CV or skills list here. You'll get a personalised AI exposure score, skill gaps, and a 6-month upskilling roadmap.",
         padding: 10,
     },
     {
@@ -55,7 +55,7 @@ const ALL_STEPS: Step[] = [
     {
         target: 'tour-methodology',
         title: 'Data & sources',
-        description: 'Employment and outlook come from BLS; task lists from O*NET; risk scores from Claude (judgment, not official stats). Claude writes each role’s insight, roadmap and scenario the first time it is asked for; when saving is on, it is saved so everyone sees the same answer. Click to read the full methodology.',
+        description: 'Employment and outlook come from BLS; task lists from O*NET; AI Exposure scores from Claude (judgment, not official stats). Claude writes each role’s insight, roadmap and scenario the first time it is asked for; when saving is on, it is saved so everyone sees the same answer. Click to read the full methodology.',
         padding: 10,
     },
 ];

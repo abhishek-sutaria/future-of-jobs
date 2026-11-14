@@ -58,7 +58,7 @@ export function pickRoadmapPair<T extends ScoredTask>(tasks: T[]): { riskTask: T
  *  point at something that isn't on screen. */
 export function emptyColumnNote(column: 'exposed' | 'resistant', hasHybrid: boolean): string {
     if (column === 'exposed') {
-        return `No single task here reaches ${RISK_THRESHOLDS.AUTOMATABLE_AI_SCORE * 100}% automation exposure. This role’s risk score comes from AI handling parts of many tasks rather than taking over any one of them.`;
+        return `No single task here reaches ${RISK_THRESHOLDS.AUTOMATABLE_AI_SCORE * 100}% AI exposure. This role’s AI Exposure score comes from AI handling parts of many tasks rather than taking over any one of them.`;
     }
     return hasHybrid
         ? 'Every task in this role carries significant AI exposure. Those marked Hybrid still depend on human judgment.'
