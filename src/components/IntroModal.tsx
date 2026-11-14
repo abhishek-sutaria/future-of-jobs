@@ -47,9 +47,9 @@ export const IntroModal: React.FC = () => {
                         <IconAlertTriangle size={18} className="text-red-400" />
                     </div>
                     <div>
-                        <h3 className="text-white font-semibold mb-1 text-sm">Color Indicates Relative Risk</h3>
+                        <h3 className="text-white font-semibold mb-1 text-sm">Color Indicates Relative AI Exposure</h3>
                         <p className="text-gray-400 text-sm leading-relaxed">
-                            <span className="text-red-400">High risk markers</span> are more exposed to automation than most of the {SCORE_COUNTS.ranked.toLocaleString('en-US')} scored occupations.
+                            <span className="text-red-400">High AI exposure markers</span> are more exposed to AI than most of the {SCORE_COUNTS.ranked.toLocaleString('en-US')} scored occupations.
                             <span className="text-emerald-400"> Safer markers</span> rank lower on that same relative scale — not immune.{' '}
                             {SCORE_COVERAGE.sentence}
                             {SCORE_COVERAGE.slate && (
