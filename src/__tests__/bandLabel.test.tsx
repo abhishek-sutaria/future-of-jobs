@@ -58,4 +58,20 @@ describe('red band label', () => {
         expect(html).toContain('73% · High AI exposure');
         expect(html).not.toContain('High risk');
     });
+
+    // 2026-11-13: one name for the score everywhere. "Automation Risk" and the
+    // red band "High AI Exposure" were the same score under two names.
+    it('the score is called AI Exposure in every place a user sees it', () => {
+        const files = [
+            'src/components/JobDetailPanel.tsx', 'src/components/MethodologyModal.tsx', 'src/components/UpskillModal.tsx',
+            'src/components/GuidedTour.tsx', 'src/components/Modals/RoadmapModal.tsx', 'src/components/Modals/studentGuideFeatures.ts',
+            'src/components/dashboard/ActivityTable.tsx', 'src/components/dashboard/FilterBar.tsx', 'src/components/dashboard/StatTiles.tsx',
+            'src/utils/schoolLook.ts', 'src/utils/provenance.ts', 'src/utils/taskPartition.ts', 'public/student-guide.html',
+        ];
+        // Comments are allowed to keep the old name; shown text is not.
+        const shown = (f: string) => read(f).replace(/\/\*[\s\S]*?\*\//g, '').replace(/^\s*\/\/.*$/gm, '');
+        for (const f of files) {
+            expect(shown(f), f).not.toMatch(/Automation Risk|Automation risk|automation risk|% RISK|% risk`|Portfolio Risk|AI risk|risk score|high-risk|highest-risk|risk colours|risk numbers|>Risk</);
+        }
+    });
 });

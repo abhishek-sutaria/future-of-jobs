@@ -49,8 +49,8 @@ export const FEATURES: Feature[] = [
         title: 'Fields & Kelley Roles',
         description:
             MORE_SCORED
-                ? `${SCORE_COVERAGE.sentence} They are drawn in their risk colours. It is one app for every scored role: each opens the same panel with the same features, and the ${KELLEY} Kelley roles carry a small Kelley label.${SLATE} Nothing is shown in place of a missing score.`
-                : `AI scores currently cover the ${KELLEY} Kelley business roles, drawn in their risk colours. Every other occupation is drawn in slate: its AI scores are coming soon, and nothing is shown in their place.`,
+                ? `${SCORE_COVERAGE.sentence} They are drawn in their AI exposure colours. It is one app for every scored role: each opens the same panel with the same features, and the ${KELLEY} Kelley roles carry a small Kelley label.${SLATE} Nothing is shown in place of a missing score.`
+                : `AI scores currently cover the ${KELLEY} Kelley business roles, drawn in their AI exposure colours. Every other occupation is drawn in slate: its AI scores are coming soon, and nothing is shown in their place.`,
         tip: `Search any job title in the header: all ${n(SCORE_COUNTS.total)} BLS occupations are there, from Actors to Electricians.`,
         color: 'orange',
     },
@@ -58,7 +58,7 @@ export const FEATURES: Feature[] = [
         emoji: '📋',
         title: 'Job Detail Panel',
         description:
-            'Inside a field, click any peak to open its panel: what the job involves (O*NET), how many people do it (BLS Employment Projections, 2025, self-employed included), median pay (BLS OEWS, payroll employees only), the BLS 2025–35 growth outlook, and its day-to-day O*NET tasks. For every scored role the panel also shows Automation Risk, Human Criticality and Human Resilience, with a risk score on every rated task, plus Roadmap, Scenario, Defend / Build and Save role. Automation Risk is the plain average of those task scores, so you can check it yourself.' +
+            'Inside a field, click any peak to open its panel: what the job involves (O*NET), how many people do it (BLS Employment Projections, 2025, self-employed included), median pay (BLS OEWS, payroll employees only), the BLS 2025–35 growth outlook, and its day-to-day O*NET tasks. For every scored role the panel also shows AI Exposure, Human Criticality and Human Resilience, with an AI Exposure score on every rated task, plus Roadmap, Scenario, Defend / Build and Save role. AI Exposure is the plain average of those task scores, so you can check it yourself.' +
             (MORE_SCORED ? ` Human Resilience ranks the role among all ${RANKED} scored occupations.` : ''),
         tip: 'Two worker counts are normal: pay comes from payroll employees only, while "workers" counts everyone, self-employed included. Scores measure GenAI capability, not guaranteed adoption.',
         color: 'blue',
@@ -94,15 +94,15 @@ export const FEATURES: Feature[] = [
         emoji: '🗺️',
         title: 'Career Roadmap',
         description:
-            'On any scored role, identifies the highest-risk task and builds a 6-month plan to defend it — own the judgment and oversight around the automatable work — while deepening a human-critical task. Covers skills, tools, and learning resources. Written once per role and, when saving is on, saved so everyone sees the same plan.',
-        tip: 'Open it with the Roadmap button on the role panel. Defend = supervise the high-risk task; Build = deepen the human-critical one.',
+            'On any scored role, identifies the task most exposed to AI and builds a 6-month plan to defend it — own the judgment and oversight around the automatable work — while deepening a human-critical task. Covers skills, tools, and learning resources. Written once per role and, when saving is on, saved so everyone sees the same plan.',
+        tip: 'Open it with the Roadmap button on the role panel. Defend = supervise the task most exposed to AI; Build = deepen the human-critical one.',
         color: 'orange',
     },
     {
         emoji: '🎯',
         title: 'My Skills (CV Match)',
         description:
-            'Paste your CV or a list of your skills. The app analyses which roles align with your strengths and flags where you are most exposed to automation risk.',
+            'Paste your CV or a list of your skills. The app analyses which roles align with your strengths and flags where you are most exposed to AI.',
         tip: 'Honest input = honest output. List the skills you actually have, not the ones you wish you had.',
         color: 'emerald',
     },
@@ -126,7 +126,7 @@ export const FEATURES: Feature[] = [
         emoji: '📚',
         title: 'Data Sources',
         description:
-            'Workers in each occupation and each field come from the BLS Employment Projections 2025–35, which count everyone, self-employed included; growth outlooks come from the same projections. Pay comes from the BLS Occupational Employment & Wage Statistics (OEWS, May 2025), which covers payroll employees only. Task descriptions are from O*NET 30.1. AI risk scores are Claude\'s ratings of the tasks of ' + (MORE_SCORED ? `${n(SCORE_COUNTS.scored)} occupations, the ${KELLEY} Kelley roles among them` : `the ${KELLEY} Kelley roles`) + ', published with the app, so every student sees the same numbers. Sources explains which tasks each job is scored on and when.' + (MORE_SCORED
+            'Workers in each occupation and each field come from the BLS Employment Projections 2025–35, which count everyone, self-employed included; growth outlooks come from the same projections. Pay comes from the BLS Occupational Employment & Wage Statistics (OEWS, May 2025), which covers payroll employees only. Task descriptions are from O*NET 30.1. AI Exposure scores are Claude\'s ratings of the tasks of ' + (MORE_SCORED ? `${n(SCORE_COUNTS.scored)} occupations, the ${KELLEY} Kelley roles among them` : `the ${KELLEY} Kelley roles`) + ', published with the app, so every student sees the same numbers. Sources explains which tasks each job is scored on and when.' + (MORE_SCORED
                 ? (SCORE_COVERAGE.unscoredReason ? ` ${SCORE_COVERAGE.unscoredReason}` : '')
                 : ' Scores for the other occupations are coming soon.'),
         tip: 'Click "Sources" at the bottom of the screen to read the full sourcing and calculation methodology.',

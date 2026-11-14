@@ -106,13 +106,13 @@ function featureSet(panel: Element): string[] {
         has(/Defend this task|Build on this/) && 'Defend / Build',
         /Strategic Insight/.test(text) && 'Strategic Insight',
         /Human Resilience/.test(text) && 'Human Resilience',
-        /Automation Risk/.test(text) && 'Automation Risk',
+        /AI Exposure/.test(text) && 'AI Exposure',
         /Human Criticality/.test(text) && 'Human Criticality',
         /Rank among all [\d,]+ scored occupations/.test(text) && 'all-roles rank',
     ].filter(Boolean) as string[];
 }
 
-const FULL_SET = ['Roadmap', 'Scenario', 'Defend / Build', 'Strategic Insight', 'Human Resilience', 'Automation Risk', 'Human Criticality', 'all-roles rank'];
+const FULL_SET = ['Roadmap', 'Scenario', 'Defend / Build', 'Strategic Insight', 'Human Resilience', 'AI Exposure', 'Human Criticality', 'all-roles rank'];
 
 describe('one role panel for every scored role', () => {
     it('every unscored occupation says Not scored and never reaches Claude', { timeout: 60_000 }, async () => {
@@ -125,7 +125,7 @@ describe('one role panel for every scored role', () => {
             const panel = await open(entry);
             expect(panel.getAttribute('aria-label'), entry.title).toBe(entry.title);
             expect(panel.querySelector('[data-testid="ai-soon"]')!.textContent, entry.title).toContain('Not scored');
-            expect(panel.textContent).not.toContain('Automation Risk');
+            expect(panel.textContent).not.toContain('AI Exposure');
             expect(featureSet(panel), entry.title).toEqual([]);
         }
         await closeAll();

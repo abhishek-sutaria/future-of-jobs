@@ -217,7 +217,7 @@ describe('unscored occupation panel: no AI score', () => {
                 expect(soon, e.soc).toContain(AI_SOON_TITLE);
             }
             expect(text).not.toMatch(/\d+\s*%\s*(risk|human)/i);
-            expect(text).not.toMatch(/Automation Risk|Human Criticality|Human Resilience|Job Security/);
+            expect(text).not.toMatch(/Automation Risk|AI Exposure|Human Criticality|Human Resilience|Job Security/);
             expect(text).not.toMatch(/\bAnalyze\b|Roadmap|Scenario|Defend this task|Build on this/);
             // The one percentage on the panel is the BLS growth figure.
             expect((text.match(/%/g) ?? []).length, e.title).toBe(byS.get(e.soc)!.ep ? 1 : 0);
