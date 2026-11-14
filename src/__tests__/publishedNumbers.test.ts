@@ -9,6 +9,8 @@ import { useStore } from '../store';
 import { alignAnalysisToTasks } from '../utils/analysis';
 import { forecastPathPoints } from '../utils/terrainMath';
 import { RESILIENCE_LABELS, YEAR_MIN, AI_FORECAST_YEAR_MAX } from '../config/constants';
+import { KELLEY_SOC_SCORES } from '../utils/blsScores';
+import { MAP_TITLE_TO_SOC as TITLE_SOC } from '../utils/onet';
 
 const jobs = () => useStore.getState().jobs;
 
@@ -64,8 +66,8 @@ describe('headline tiles are published', () => {
         for (const j of jobs()) expect(vocab).toContain(j.humanResilienceLabel);
     });
 
-    it('every role has a complete forecast path', () => {
-        for (const j of jobs()) {
+    it('every role still on its first score has a complete forecast path (a role on its SOC entry has none to draw)', () => {
+        for (const j of jobs().filter((x) => !KELLEY_SOC_SCORES.has(TITLE_SOC[x.title]))) {
             const points = forecastPathPoints(j.yearlyForecast);
             expect(points).not.toBeNull();
             expect(points!.length).toBe(AI_FORECAST_YEAR_MAX - YEAR_MIN + 1);

@@ -1,0 +1,43 @@
+{
+  "note": "Outside data for the outside-study check (docs/outside-study-check.md, scripts/outside_study_check.ts). Every file is committed as downloaded; scripts/outside_study_check.ts refuses to run if a sha256 differs.",
+  "retrieved": "2026-11-12",
+  "sources": [
+    {
+      "id": "gpts-are-gpts",
+      "citation": "Eloundou, T., Manning, S., Mishkin, P., and Rock, D. (2024). GPTs are GPTs: Labor market impact potential of LLMs. Science 384(6702), 1306-1308. https://doi.org/10.1126/science.adj0998",
+      "repo": "https://github.com/openai/GPTs-are-GPTs",
+      "commit": "0471612fef3cc22b74fb884d27bff9dbd3770582",
+      "license": "MIT (data/outside_study/raw/openai_LICENSE)",
+      "measures": "Per the repo README: dv_rating = GPT-4 rating, human_rating = human annotators; alpha = E1, beta = E1 + 0.5 x E2, gamma = E1 + E2. Job level = mean over the job's O*NET tasks with Core tasks counted twice (scripts/outside_study_check.ts reproduces all six columns of occ_level.csv exactly from full_labelset.tsv this way).",
+      "codes": "O*NET-SOC 2019 (8-digit, for example 11-1011.00)"
+    },
+    {
+      "id": "microsoft-working-with-ai",
+      "citation": "Tomlinson, K., Jaffe, S., Wang, W., Counts, S., and Suri, S. (2026). Working with AI: Measuring the Applicability of Generative AI to Occupations. NeurIPS 2026 (in press). https://arxiv.org/abs/2507.07935",
+      "repo": "https://github.com/microsoft/working-with-ai",
+      "commit": "550c00c9d1b054ac78b87da3a26165bace334779",
+      "version": "v1.1 (README)",
+      "license": "CC BY 4.0 (data/outside_study/raw/ms_LICENSE.txt)",
+      "measures": "ai_applicability_score: how often and how successfully Bing Copilot conversations (US, Jan to Sep 2024) covered the work activities of each job. The authors say it does not measure whether AI can replace a job.",
+      "codes": "SOC 2018 detailed (6-digit)"
+    },
+    {
+      "id": "onet-30-1",
+      "citation": "O*NET 30.1 Database, National Center for O*NET Development, U.S. Department of Labor. https://www.onetcenter.org/database.html",
+      "url": "https://www.onetcenter.org/dl_files/database/db_30_1_text.zip",
+      "zipSha256": "bfdf922f17a5c22d7f6c9498ee2cc49a6752976072085f9b9b1af0f2232a6568",
+      "license": "CC BY 4.0",
+      "measures": "Task Ratings.txt Scale ID IM (task importance, 1 to 5); Task Statements.txt Task Type (Core / Supplemental). Already in the repo; downloaded again on 2026-11-12 and both files are byte-identical to the official zip."
+    }
+  ],
+  "files": [
+    { "source": "gpts-are-gpts", "path": "data/outside_study/raw/occ_level.csv", "url": "https://raw.githubusercontent.com/openai/GPTs-are-GPTs/0471612fef3cc22b74fb884d27bff9dbd3770582/data/occ_level.csv", "sha256": "40c74f53de40aec91c0017d80690cbba915f83a8bb414bcf2f884692f1749acb" },
+    { "source": "gpts-are-gpts", "path": "data/outside_study/raw/full_labelset.tsv", "url": "https://raw.githubusercontent.com/openai/GPTs-are-GPTs/0471612fef3cc22b74fb884d27bff9dbd3770582/data/full_labelset.tsv", "sha256": "094378905e1f3349e50a9a83dc69643a2ef227954d611c8316a46da08cb3d8de" },
+    { "source": "gpts-are-gpts", "path": "data/outside_study/raw/openai_LICENSE", "url": "https://raw.githubusercontent.com/openai/GPTs-are-GPTs/0471612fef3cc22b74fb884d27bff9dbd3770582/LICENSE", "sha256": "d831db55645e47ca8e491c5a0e37f1ee744d7b10bf5aa8d50146c795ac0176c0" },
+    { "source": "microsoft-working-with-ai", "path": "data/outside_study/raw/ms_ai_applicability_scores.csv", "url": "https://raw.githubusercontent.com/microsoft/working-with-ai/550c00c9d1b054ac78b87da3a26165bace334779/ai_applicability_scores.csv", "sha256": "204c7e6a5ec704156212f88a6282dba7508c8b90e5df7c0d590088b2b44aa7d2" },
+    { "source": "microsoft-working-with-ai", "path": "data/outside_study/raw/ms_README.md", "url": "https://raw.githubusercontent.com/microsoft/working-with-ai/550c00c9d1b054ac78b87da3a26165bace334779/README.md", "sha256": "b98be795b8a96490ecf0e50329d5867958f11f0ac78939b4144422a1929433b3" },
+    { "source": "microsoft-working-with-ai", "path": "data/outside_study/raw/ms_LICENSE.txt", "url": "https://raw.githubusercontent.com/microsoft/working-with-ai/550c00c9d1b054ac78b87da3a26165bace334779/LICENSE.txt", "sha256": "7482bb7c074d6d966bb94e54f3393f089d576e8be9dc9e92e239a40a56df8a41" },
+    { "source": "onet-30-1", "path": "data/db_30_1_text/Task Ratings.txt", "url": "https://www.onetcenter.org/dl_files/database/db_30_1_text.zip", "sha256": "01e9812b38cbdeaa7e18f6a4b8f016e94b2ecc59e833f3cbab75fbbf07e42f7b" },
+    { "source": "onet-30-1", "path": "data/db_30_1_text/Task Statements.txt", "url": "https://www.onetcenter.org/dl_files/database/db_30_1_text.zip", "sha256": "093fae042127cddb2913f78e54c62a7ef6b7a82578d6ea1b60f928f6893470a7" }
+  ]
+}

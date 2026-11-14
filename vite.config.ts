@@ -1,18 +1,21 @@
 import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
+import { blsScoresPlugin } from './scripts/lib/blsScoresPlugin'
+import { devApiPlugin } from './scripts/lib/devApiPlugin'
 
 // https://vite.dev/config/
 //
-// ⚠️  PRODUCTION DEPLOYMENT NOTE:
-// The dev-server proxy below only works during local development (`npm run dev`).
-// For production, you MUST set up a proper server-side proxy (e.g. Cloudflare Worker,
-// Vercel serverless function, or an Express backend) to forward BLS/Claude requests.
-// The built static files will NOT have any proxy available.
+// Claude: under `npm run dev`, devApiPlugin serves /api/claude/messages with the
+// same gateway the Vercel function runs (api/_lib/gateway.ts → api.anthropic.com),
+// so dev follows production's rules. FOJ_MOCK_CLAUDE=1 runs it against an
+// in-memory mock of Claude and Supabase instead (no key, no real call).
+// BLS: the dev proxy below only works during local development; production
+// uses api/bls.ts.
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
-  const hasDefaultClaudeKey = Boolean(env.ANTHROPIC_API_KEY)
+  const hasDefaultClaudeKey = Boolean(env.ANTHROPIC_API_KEY) || env.FOJ_MOCK_CLAUDE === '1'
   return {
-    plugins: [react()],
+    plugins: [react(), blsScoresPlugin(), devApiPlugin(env)],
     define: {
       'import.meta.env.VITE_HAS_DEFAULT_CLAUDE_KEY': JSON.stringify(hasDefaultClaudeKey),
     },
@@ -21,38 +24,6 @@ export default defineConfig(({ mode }) => {
     },
     server: {
       proxy: {
-        '/api/claude': {
-          target: 'https://api.anthropic.com',
-          changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/api\/claude/, '/v1'),
-          configure: (proxy) => {
-            proxy.on('proxyReq', (proxyReq, req) => {
-              const userProvidedKey = req.headers['x-user-api-key'];
-              const keyFromHeader = Array.isArray(userProvidedKey) ? userProvidedKey[0] : userProvidedKey;
-              const keySource = req.headers['x-foj-key-source'];
-              const keySourceStr = Array.isArray(keySource) ? keySource[0] : keySource;
-              // Explicit "Use my key" uses browser key first; otherwise prefer .env so stale keys in
-              // localStorage cannot override a valid ANTHROPIC_API_KEY.
-              const apiKey =
-                keySourceStr === 'user' && keyFromHeader
-                  ? keyFromHeader || env.ANTHROPIC_API_KEY
-                  : env.ANTHROPIC_API_KEY || keyFromHeader;
-
-              if (apiKey) {
-                proxyReq.setHeader('x-api-key', apiKey);
-              }
-              proxyReq.setHeader('anthropic-version', '2023-06-01');
-              proxyReq.setHeader('content-type', 'application/json');
-              // Ensure upstream sees a server-to-server request, not browser CORS headers.
-              proxyReq.removeHeader('origin');
-              proxyReq.removeHeader('referer');
-
-              // Prevent accidentally forwarding the raw user key header upstream.
-              proxyReq.removeHeader('x-user-api-key');
-              proxyReq.removeHeader('x-foj-key-source');
-            });
-          }
-        },
         '/api/bls': {
           target: 'https://api.bls.gov/publicAPI/v2/timeseries/data',
           changeOrigin: true,

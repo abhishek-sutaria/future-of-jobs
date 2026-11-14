@@ -1,5 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useStore } from '../store';
+import { useWorldStore } from '../worldStore';
+import { useScoredRolesInScope } from '../hooks/useScoredRoles';
+import { socOfBlsRoleId } from '../utils/blsRoleJob';
+import type { Job } from '../types';
 import { useIsMobile } from '../hooks/useIsMobile';
 import { RISK_THRESHOLDS, MAP_SIDEBAR } from '../config/constants';
 import { RISK_BAND_COLORS } from '../config/theme';
@@ -9,7 +13,10 @@ import {
     findContrastPair,
     orderRolesByRisk,
     publishedRisk,
+    totalWorkers,
 } from '../utils/taskSplitMath';
+import { percentOf } from '../utils/scoreRounding';
+import { WORKERS_NOTE } from '../utils/roleFormat';
 
 /**
  * Task split view — the third view alongside the 3D terrain and the 2D map.
@@ -28,10 +35,19 @@ const AI = RISK_BAND_COLORS.high;
 const HUMAN = RISK_BAND_COLORS.safe;
 
 export const TaskSplitView: React.FC = () => {
-    const jobs = useStore((s) => s.jobs);
+    // Every scored role on stage (field, family or whole map), Kelley or not.
+    const { roles, loading, scopeLabel } = useScoredRolesInScope();
     const selectedRoleIds = useStore((s) => s.selectedRoleIds);
     const setSelectedJob = useStore((s) => s.setSelectedJob);
+    const openOccupation = useWorldStore((s) => s.openOccupation);
     const isMobile = useIsMobile();
+    // A Kelley role opens through the store, any other role through its SOC;
+    // both reach the same role panel.
+    const openRole = (job: Job) => {
+        const soc = socOfBlsRoleId(job.id);
+        if (soc) openOccupation(soc);
+        else setSelectedJob(job);
+    };
 
     // The app header is a transparent overlay, so a scroll container running the
     // full height sends rows sliding under the AI Scores badge and the
@@ -56,16 +72,14 @@ export const TaskSplitView: React.FC = () => {
 
     // Same filter contract as MapView and the terrain: an empty set means "all".
     const scored = useMemo(() => {
-        const withScores = jobs.filter((j) => j.tasks.some((t) => t.aiCapabilityScore > 0));
-        return selectedRoleIds.size === 0 ? withScores : withScores.filter((j) => selectedRoleIds.has(j.id));
-    }, [jobs, selectedRoleIds]);
+        const inView = roles.filter((j) => selectedRoleIds.has(j.id));
+        // A selection made for other roles (e.g. on the state map) does not empty this view.
+        return selectedRoleIds.size === 0 || inView.length === 0 ? roles : inView;
+    }, [roles, selectedRoleIds]);
 
     const ordered = useMemo(() => orderRolesByRisk(scored), [scored]);
 
-    const totals = useMemo(() => {
-        const workers = scored.reduce((a, job) => a + job.employment, 0);
-        return { workers, aiPct: averageRiskPct(scored) };
-    }, [scored]);
+    const totals = useMemo(() => ({ workers: totalWorkers(scored), aiPct: averageRiskPct(scored) }), [scored]);
 
     const contrast = useMemo(() => findContrastPair(scored), [scored]);
 
@@ -73,7 +87,7 @@ export const TaskSplitView: React.FC = () => {
 
     return (
         // Opaque ground, the same way MapView paints its own: without it the 3D
-        // terrain and its 50 labels show straight through the text.
+        // terrain and its labels show straight through the text.
         <div
             className="absolute inset-0"
             style={{ background: 'radial-gradient(circle at 50% 0%, #111b2b 0%, #0a0e17 70%)' }}
@@ -99,15 +113,16 @@ export const TaskSplitView: React.FC = () => {
                 <h2 className="text-2xl md:text-3xl font-semibold text-white tracking-tight">
                     Inside each job
                 </h2>
-                <p className="text-sm text-gray-400 mt-2">
-                    Every role, ordered by GenAI capability today — not guaranteed adoption.
+                <p className="text-sm text-gray-400 mt-2" data-testid="task-view-scope">
+                    Every scored role in {scopeLabel}, ordered by GenAI capability today — not guaranteed adoption.
+                    {loading && <span className="text-gray-500"> Loading more roles…</span>}
                 </p>
 
                 <div className="mt-5 bg-gray-900/60 backdrop-blur-xl border border-cyan-400/25 rounded-2xl p-5 md:p-6 shadow-lg shadow-cyan-500/5">
                     <div className="flex flex-wrap items-baseline justify-between gap-2">
                         <p className="text-[10px] uppercase tracking-widest text-gray-500 font-semibold">
                             Average of the {scored.length} role{scored.length === 1 ? '' : 's'} below &middot;{' '}
-                            {totals.workers.toLocaleString()} workers
+                            <span title={WORKERS_NOTE} data-testid="task-view-workers">{totals.workers.toLocaleString('en-US')} workers</span>
                         </p>
                         <div className="flex items-center gap-4 text-[11px]">
                             <span className="flex items-center gap-1.5 text-gray-400">
@@ -155,14 +170,14 @@ export const TaskSplitView: React.FC = () => {
                     <ul className="mt-3 space-y-1.5">
                         {ordered.map((job) => {
                             const risk = publishedRisk(job);
-                            const aiPct = Math.round(risk * 100);
+                            const aiPct = percentOf(risk);
                             const exposed = job.tasks.filter((t) => t.aiCapabilityScore >= RISK_THRESHOLDS.AUTOMATABLE_AI_SCORE).length;
                             return (
                                 <li key={job.id}>
                                     <button
                                         type="button"
-                                        onClick={() => setSelectedJob(job)}
-                                        title={`${job.title} — ${job.employment.toLocaleString()} workers. Open the role.`}
+                                        onClick={() => openRole(job)}
+                                        title={`${job.title}: ${(job.epEmployment2025 ?? 0).toLocaleString('en-US')} workers in 2025. Open the role.`}
                                         className="w-full grid grid-cols-[1fr_64px] md:grid-cols-[200px_1fr_64px] items-center gap-x-3 gap-y-1 px-2 py-1.5 rounded-lg hover:bg-white/[0.04] transition-colors text-left min-h-[44px]"
                                     >
                                         <span className="text-[13px] text-gray-200 truncate">{job.title}</span>
@@ -197,14 +212,14 @@ export const TaskSplitView: React.FC = () => {
                             Same score, different jobs
                         </h3>
                         <p className="text-sm text-gray-400 leading-relaxed mt-2 max-w-2xl">
-                            Both {Math.round(publishedRisk(contrast[0]) * 100)}% overall — the tasks underneath are not.
+                            Both {percentOf(publishedRisk(contrast[0]))}% overall — the tasks underneath are not.
                         </p>
                         <div className="grid md:grid-cols-2 gap-5 mt-5">
                             {contrast.map((job) => (
                                 <div key={job.id} className="bg-white/[0.03] border border-white/[0.07] rounded-xl p-4">
                                     <button
                                         type="button"
-                                        onClick={() => setSelectedJob(job)}
+                                        onClick={() => openRole(job)}
                                         className="text-left w-full flex items-center [@media(pointer:coarse)]:min-h-[44px]"
                                     >
                                         <p className="text-white font-semibold text-sm hover:text-cyan-300 transition-colors">
@@ -212,9 +227,9 @@ export const TaskSplitView: React.FC = () => {
                                         </p>
                                     </button>
                                     <p className="text-[11px] text-gray-500 mb-3 tabular-nums">
-                                        {job.employment.toLocaleString()} workers &middot; tasks spanning{' '}
-                                        {Math.round(Math.min(...job.tasks.map((t) => t.aiCapabilityScore)) * 100)}% to{' '}
-                                        {Math.round(Math.max(...job.tasks.map((t) => t.aiCapabilityScore)) * 100)}%
+                                        {(job.epEmployment2025 ?? 0).toLocaleString('en-US')} workers &middot; tasks spanning{' '}
+                                        {percentOf(Math.min(...job.tasks.map((t) => t.aiCapabilityScore)))}% to{' '}
+                                        {percentOf(Math.max(...job.tasks.map((t) => t.aiCapabilityScore)))}%
                                     </p>
                                     <ul className="space-y-2.5">
                                         {[...job.tasks]
@@ -226,12 +241,12 @@ export const TaskSplitView: React.FC = () => {
                                                             className="text-[11px] font-mono tabular-nums shrink-0 w-9"
                                                             style={{ color: task.aiCapabilityScore >= RISK_THRESHOLDS.AUTOMATABLE_AI_SCORE ? AI : HUMAN }}
                                                         >
-                                                            {Math.round(task.aiCapabilityScore * 100)}%
+                                                            {percentOf(task.aiCapabilityScore)}%
                                                         </span>
                                                         <span className="text-[11.5px] text-gray-400 leading-snug">{task.name}</span>
                                                     </div>
                                                     <div className="h-1 rounded-full mt-1.5 ml-11" style={{
-                                                        width: `${Math.round(task.aiCapabilityScore * 100)}%`,
+                                                        width: `${percentOf(task.aiCapabilityScore)}%`,
                                                         background: task.aiCapabilityScore >= RISK_THRESHOLDS.AUTOMATABLE_AI_SCORE ? AI : HUMAN,
                                                     }} />
                                                 </li>

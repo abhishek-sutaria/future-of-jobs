@@ -6,6 +6,23 @@ declare module '*?url' {
     export default src;
 }
 
+// Published BLS AI scores, served by scripts/lib/blsScoresPlugin.ts.
+declare module 'virtual:bls-scores' {
+    export const meta: import('./utils/blsScoresData').BlsBundleMeta | null;
+    export const risks: Record<string, number>;
+    export const humans: Record<string, number>;
+    /** Kelley SOCs' entries (empty scores until --batch kelley is in). */
+    export const kelley: import('./utils/blsScoresData').RawBlsFile;
+    export const fieldLoaders: Record<string, () => Promise<{ default: import('./utils/blsScoresData').RawBlsFile }>>;
+}
+
+// The Kelley titles' first scores (src/data/ai_scores.json), only for titles
+// whose SOC has no entry in ai_scores_bls.json yet. Served by the same plugin.
+declare module 'virtual:kelley-legacy-scores' {
+    const file: import('./utils/blsScoresData').LegacyKelleyFile;
+    export default file;
+}
+
 interface ImportMetaEnv {
     readonly VITE_BLS_API_KEY: string;
     readonly VITE_HAS_DEFAULT_CLAUDE_KEY: boolean;

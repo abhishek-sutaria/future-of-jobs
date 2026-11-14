@@ -1,15 +1,19 @@
 /**
  * bakedScores.ts
  * --------------
- * Precomputed Claude scores are committed to src/data/ai_scores.json by
- * `npm run generate-scores` and imported statically here, so a cold page load
- * has scores available before first paint with ZERO API calls.
+ * The Kelley titles' FIRST published scores (src/data/ai_scores.json, Aug
+ * 2026), for the titles whose SOC has no entry in ai_scores_bls.json yet.
+ * The build serves only those entries (virtual:kelley-legacy-scores, see
+ * scripts/lib/blsScoresPlugin.ts), so once `--batch kelley` has scored every
+ * Kelley SOC this holds nothing and ai_scores.json is history only: every
+ * Kelley title then reads its tasks and scores from ai_scores_bls.json by its
+ * SOC (utils/kelleyScores). Applied at startup with zero API calls.
  *
- * Previously the app scored all 50 roles live at startup behind a blocking
- * overlay (~4-5 min on a browser with no localStorage cache).
+ * The user's own opt-in re-score (localStorage) still layers on top, newest
+ * first, as before.
  */
 
-import bakedScoresJson from '../data/ai_scores.json';
+import bakedScoresJson from 'virtual:kelley-legacy-scores';
 import { CACHE_VERSION, loadScoreCacheWithMeta, type JobAnalysisResult } from './taskScoring';
 
 export type ScoresSource = 'baked' | 'cache' | 'none';
@@ -29,6 +33,10 @@ interface BakedScoresFile {
 }
 
 const EMPTY: ResolvedScores = { scores: {}, source: 'none', generatedAt: null };
+
+/** Date of ai_scores.json while some Kelley title still uses it; null once none does. */
+export const LEGACY_SCORES_DATE: string | null =
+    Object.keys((bakedScoresJson as BakedScoresFile)?.scores ?? {}).length > 0 ? (bakedScoresJson as BakedScoresFile).generatedAt ?? null : null;
 
 /** Baked scores, or null when the file is missing/empty or its schema is stale. */
 export function getBakedScores(): ResolvedScores | null {

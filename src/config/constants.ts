@@ -27,7 +27,8 @@ export const OOH_FRACTION_AT_YEAR_MAX =
 // BLS_OES is the NATIONAL OEWS headcount baked into src/data.ts (role-panel
 // Workers badge / OES chip). Landscape peak height uses BLS Employment
 // Projections levels (epEmployment2025/2035 from bls_ep_2025_2035.json).
-// BLS_STATE is a SEPARATE vintage: state-level employment/LQ in geo_real.json.
+// BLS_STATE is a SEPARATE extract: state-level employment/LQ for the state
+// map (geo_real.json + data/state_map/, scripts/build_state_map.ts).
 // Keep BLS_OES in sync with every `dataSources` array in src/data.ts —
 // src/__tests__/oesVintage.test.ts guards this.
 // ONET carried exactly that bug until 2026-09: this read 'ONET' while the data
@@ -143,23 +144,9 @@ export const SCENE = {
     FOG_NEAR: 20,
     FOG_FAR: 120,
     MIN_CAMERA_DISTANCE: 10,
-    MAX_CAMERA_DISTANCE: 100,
+    MAX_CAMERA_DISTANCE: 130,
     MAX_POLAR_ANGLE: Math.PI / 2.2,
     PLANE_SIZE: 70,
-    /** OrbitControls' pan target has no built-in bound — a real two-finger
-     * touch gesture (pinch + drag combined, since touches use TOUCH.DOLLY_PAN)
-     * easily imparts an unintended pan alongside the intended zoom. With
-     * nothing stopping it, the target can end up anywhere, and since the
-     * terrain is a *finite* PLANE_SIZE=70 plane (not infinite), a large
-     * enough pan pushes it entirely out of frame — reported directly:
-     * "zoomed out, the entire landscape disappeared." Confirmed by moving
-     * the target 80 units from origin: the terrain fully vanishes, while
-     * floating job labels (drei's Html, not frustum-culled) can still
-     * render somewhere on screen, exactly matching "I can just see four
-     * labels". Peaks sit at radius 7-30 from origin (terrain.ts), so
-     * clamping the target inside that keeps at least the nearer peaks
-     * framed no matter how a gesture drifts. */
-    MAX_PAN_RADIUS: 25,
     /** Camera distance thresholds for Level-of-Detail */
     LOD: {
         FAR: 80,
@@ -253,9 +240,8 @@ export const CHART = {
     RADIAL_GAUGE: {
         SIZE: 120,
         STROKE_WIDTH: 8,
-        /** Thresholds for green→yellow→red */
-        COLOR_LOW: 0.3,
-        COLOR_HIGH: 0.6,
+        // No fixed colour cut-offs: every risk gauge takes the map's band
+        // colour (utils/roleScale bandFor, thirds of all scored occupations).
     },
 } as const;
 

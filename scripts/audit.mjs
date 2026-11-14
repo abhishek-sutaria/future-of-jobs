@@ -195,21 +195,23 @@ heading('CAT-1', 'Telemetry Cleanup — localhost:7252 / Agent Log Markers');
   );
 }
 
-// T5: Unused lastFrameLogRef removed from Terrain.tsx
+// T5: Unused lastFrameLogRef removed from the terrain (Terrain.tsx, replaced
+// by world/WorldTerrain.tsx in the 22-continent world)
 {
-  const src = read('src/components/Terrain.tsx');
+  const src = read('src/components/world/WorldTerrain.tsx');
   check(
-    'T05 — lastFrameLogRef removed from Terrain.tsx',
-    !src.includes('lastFrameLogRef')
+    'T05 — lastFrameLogRef absent from the terrain (world/WorldTerrain.tsx)',
+    !exists('src/components/Terrain.tsx') && !src.includes('lastFrameLogRef')
   );
 }
 
-// T6: Unused lastMarkerLogRef removed from JobMarkers.tsx
+// T6: Unused lastMarkerLogRef removed from the labels (JobMarkers.tsx,
+// replaced by world/WorldMarkers.tsx)
 {
-  const src = read('src/components/JobMarkers.tsx');
+  const src = read('src/components/world/WorldMarkers.tsx');
   check(
-    'T06 — lastMarkerLogRef removed from JobMarkers.tsx',
-    !src.includes('lastMarkerLogRef')
+    'T06 — lastMarkerLogRef absent from the labels (world/WorldMarkers.tsx)',
+    !exists('src/components/JobMarkers.tsx') && !src.includes('lastMarkerLogRef')
   );
 }
 
@@ -529,16 +531,18 @@ check(
   exists('api/bls.ts')
 );
 
-// T35: api/claude.ts correctly reads ANTHROPIC_API_KEY from process.env
+// T35: api/claude.ts hands process.env to the gateway, which reads ANTHROPIC_API_KEY
+// (the rules live in api/_lib/gateway.ts since the shared-answer change).
 {
-  if (exists('api/claude.ts')) {
-    const src = read('api/claude.ts');
+  if (exists('api/claude.ts') && exists('api/_lib/gateway.ts')) {
+    const fn = read('api/claude.ts');
+    const gw = read('api/_lib/gateway.ts');
     check(
-      'T35 — api/claude.ts reads ANTHROPIC_API_KEY from process.env',
-      src.includes('ANTHROPIC_API_KEY')
+      'T35 — api/claude.ts passes process.env; the gateway reads ANTHROPIC_API_KEY from it',
+      /env:\s*\(\)\s*=>\s*process\.env/.test(fn) && /env\.ANTHROPIC_API_KEY/.test(gw)
     );
   } else {
-    check('T35 — api/claude.ts reads ANTHROPIC_API_KEY from process.env', false, 'File missing');
+    check('T35 — api/claude.ts passes process.env; the gateway reads ANTHROPIC_API_KEY from it', false, 'File missing');
   }
 }
 
@@ -569,12 +573,15 @@ check(
   }
 }
 
-// T38: vite.config.ts dev proxy points to real Anthropic endpoint
+// T38: under `npm run dev`, /api/claude runs the same gateway as Vercel, which
+// calls the real Anthropic endpoint (was: a dev proxy straight to Anthropic).
 {
-  const src = read('vite.config.ts');
+  const cfg = read('vite.config.ts');
+  const plugin = exists('scripts/lib/devApiPlugin.ts') ? read('scripts/lib/devApiPlugin.ts') : '';
+  const gw = exists('api/_lib/gateway.ts') ? read('api/_lib/gateway.ts') : '';
   check(
-    'T38 — vite.config.ts dev proxy for /api/claude points to api.anthropic.com',
-    src.includes('api.anthropic.com')
+    'T38 — dev server mounts the Vercel gateway for /api/claude, which calls api.anthropic.com',
+    /devApiPlugin\(env\)/.test(cfg) && plugin.includes('createClaudeHandler') && /const ANTHROPIC_URL = 'https:\/\/api\.anthropic\.com\/v1\/messages'/.test(gw)
   );
 }
 
@@ -654,13 +661,17 @@ heading('CAT-8', 'Real-data policy — banned simulation tokens in src/');
 }
 
 {
-  const src = read('src/utils/taskScoring.ts');
+  // Defined in scoreVersion.ts (no imports, so the Vite plugin can read it) and
+  // used and re-exported by taskScoring.ts.
+  const src = read('src/utils/scoreVersion.ts');
+  const ts = read('src/utils/taskScoring.ts');
   const m = src.match(/const CACHE_VERSION = (\d+)/);
   const v = m ? parseInt(m[1], 10) : 0;
+  const wired = ts.includes("import { CACHE_VERSION } from './scoreVersion'") && ts.includes('export { CACHE_VERSION }');
   check(
     'T48 — taskScoring.ts CACHE_VERSION is at least 5 (prompt + validation bumps)',
-    v >= 5,
-    m ? `Found CACHE_VERSION = ${v}` : 'CACHE_VERSION not found'
+    v >= 5 && wired,
+    m ? `Found CACHE_VERSION = ${v} in scoreVersion.ts${wired ? ', used by taskScoring.ts' : ', NOT wired into taskScoring.ts'}` : 'CACHE_VERSION not found'
   );
 }
 
@@ -904,6 +915,30 @@ check(
   check(
     'T53 — dist/assets/ contains a JavaScript bundle',
     hasJs
+  );
+}
+
+// T68: only index.json is in the main bundle; each continent file is its own
+// lazy chunk. Every occupation's description lives in its continent file only,
+// so finding any of them in the entry chunk means a continent was bundled.
+{
+  const assetsDir = path.join(ROOT, 'dist', 'assets');
+  const files = fs.existsSync(assetsDir) ? fs.readdirSync(assetsDir) : [];
+  const main = files.filter(f => /^index-.*\.js$/.test(f));
+  const index = JSON.parse(fs.readFileSync(path.join(ROOT, 'src/data/occupations/index.json'), 'utf8'));
+  const leaked = [];
+  const missingChunks = [];
+  for (const c of index.continents) {
+    if (!files.some(f => f.startsWith(`${c.code}-`) && f.endsWith('.js'))) missingChunks.push(c.code);
+    const file = JSON.parse(fs.readFileSync(path.join(ROOT, 'src/data/occupations', c.file), 'utf8'));
+    const sample = Object.values(file.occupations).find(o => o.description);
+    const needle = JSON.stringify(sample.description).slice(1, 60);
+    if (main.some(f => fs.readFileSync(path.join(assetsDir, f), 'utf8').includes(needle))) leaked.push(c.code);
+  }
+  check(
+    'T68 — continent files are lazy chunks, absent from the main bundle',
+    main.length === 1 && leaked.length === 0 && missingChunks.length === 0,
+    `main chunks: ${main.length}, leaked: ${leaked.join(',') || 'none'}, missing chunks: ${missingChunks.join(',') || 'none'}`
   );
 }
 

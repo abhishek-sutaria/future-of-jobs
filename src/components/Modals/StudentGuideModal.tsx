@@ -1,109 +1,11 @@
 import React from 'react';
 import { Modal } from '../ui/Modal';
+import { FEATURES } from './studentGuideFeatures';
 
 interface Props {
     isOpen: boolean;
     onClose: () => void;
 }
-
-interface Feature {
-    emoji: string;
-    title: string;
-    description: string;
-    tip: string;
-    color: string;
-}
-
-const FEATURES: Feature[] = [
-    {
-        emoji: '🏔️',
-        title: '3D Terrain Map',
-        description:
-            'Each glowing peak represents one job role. Peak colour = AI automation risk (red = high risk, green = safer). Peak height = number of jobs from BLS Employment Projections (2025–2035).',
-        tip: 'Peak height is BLS Employment Projections job counts. Drag 2025 → 2035 to see the official path for each role.',
-        color: 'cyan',
-    },
-    {
-        emoji: '⏱️',
-        title: 'AI Timeline Slider',
-        description:
-            'Drag the slider from 2025 → 2035 to watch each role\'s BLS Employment Projections job count year by year. Height moves in a straight line between the official 2025 and 2035 employment levels — no AI forecast on the landscape.',
-        tip: 'Compare a Marketing Manager to a Sales Manager at 2035. Notice which peak moves more, then open both roles to compare their task-level risk.',
-        color: 'purple',
-    },
-    {
-        emoji: '📋',
-        title: 'Job Detail Panel',
-        description:
-            'Click any peak to open a role\'s full profile: its Automation Risk, the BLS 2025–35 growth outlook (with a straight-line path between those years), and its Human Resilience rank among all 50 roles. Below that, each of the role\'s O*NET tasks appears with its own risk score. Automation Risk is the plain average of those task scores, so you can check it yourself.',
-        tip: 'Scores measure GenAI capability, not guaranteed adoption. The Human Skills section shows tasks worth deepening.',
-        color: 'blue',
-    },
-    {
-        emoji: '🧩',
-        title: 'Tasks View',
-        description:
-            'Open Tasks in the header to see every role broken into AI-capable vs human-needed work. Roles are ordered by average GenAI capability today — not guaranteed adoption. Use “Same score, different jobs” pairs to make the contrast concrete.',
-        tip: 'Capability labels are Claude judgments of what GenAI can handle, not a forecast that the work is already automated.',
-        color: 'indigo',
-    },
-    {
-        emoji: '🤖',
-        title: 'AI Analysis',
-        description:
-            'Open any role and Claude explains its published scores right in the panel: the reasoning under each task, a strategic insight for the role, and the likely replacements and human traits it calls for. The analysis adds the explanation; it never changes the numbers.',
-        tip: 'Every student sees the same published scores for a role, dated in the header badge, so you can compare notes. The analysis is where you get the why behind them.',
-        color: 'red',
-    },
-    {
-        emoji: '🔮',
-        title: 'Scenario Planning',
-        description:
-            'The Scenario button asks "what if": what happens to this role if AI adoption accelerates, if regulation tightens, or if economic conditions shift? It generates a written strategic brief.',
-        tip: 'Use this to stress-test career choices. Ask the same role under two different scenarios and compare the outlooks.',
-        color: 'violet',
-    },
-    {
-        emoji: '🗺️',
-        title: 'Career Roadmap',
-        description:
-            'Identifies the highest-risk task in a role and builds a personalised 6-month plan to defend it — own the judgment and oversight around the automatable work — while deepening a human-critical task. Covers skills, tools, and learning resources.',
-        tip: 'Open it with View Roadmap at the bottom of the Job Detail Panel. Defend = supervise the high-risk task; Build = deepen the human-critical one.',
-        color: 'orange',
-    },
-    {
-        emoji: '🎯',
-        title: 'My Skills (CV Match)',
-        description:
-            'Paste your CV or a list of your skills. The app analyses which roles align with your strengths and flags where you are most exposed to automation risk.',
-        tip: 'Honest input = honest output. List the skills you actually have, not the ones you wish you had.',
-        color: 'emerald',
-    },
-    {
-        emoji: '🗺️',
-        title: 'US Map View',
-        description:
-            'Switch from the 3D terrain to a flat 2D US map. State colour and circle size both encode BLS employment volume: darker and larger means more workers in that state for the selected roles. Hover a state to see the exact BLS OEWS May 2025 employment count and Location Quotient (LQ) per occupation.',
-        tip: 'Select specific roles using the role filter before opening the map to compare which states are most exposed for those jobs in particular.',
-        color: 'teal',
-    },
-    {
-        emoji: '📊',
-        title: 'Job Security Index',
-        description:
-            'The colour legend at the bottom right of the screen maps roles into three bands: High Automation Risk (red), Hybrid/Augmented (amber), and Safe Human-Centric (green). Bands are relative, graded on a curve across all 50 roles shown.',
-        tip: 'A "green" role here means it is safer than most others in this dataset, not that it is completely immune to automation.',
-        color: 'green',
-    },
-    {
-        emoji: '📚',
-        title: 'Data Sources',
-        description:
-            'Employment numbers come from the Bureau of Labor Statistics (BLS) Occupational Employment & Wage Statistics (OEWS, May 2025). Pay on each role comes from the same survey and year: the national median annual wage, with the mean shown beside it. Growth outlooks come from the BLS 2025–35 Employment Projections. Task descriptions are sourced from O*NET 30.1. AI risk scores are Claude\'s ratings of each O*NET task, published with the app as one dated set, so every student sees the same numbers.',
-        tip: 'Click "Methodology & Data" at the bottom of the screen to read the full sourcing and calculation methodology.',
-        color: 'gray',
-    },
-];
 
 const colorMap: Record<string, { border: string; badge: string; tip: string }> = {
     cyan:    { border: 'border-cyan-500/30',    badge: 'bg-cyan-500/10 text-cyan-300',    tip: 'bg-cyan-500/5 border-cyan-500/20 text-cyan-200/70' },
@@ -130,7 +32,7 @@ export const StudentGuideModal: React.FC<Props> = ({ isOpen, onClose }) => {
             footer={
                 <div className="flex items-center justify-between gap-4">
                     <p className="text-gray-500 text-[11px]">
-                        futureofjobs.vercel.app &nbsp;·&nbsp; BLS OES, O*NET 30.1, Anthropic Claude
+                        futureofjobs.vercel.app &nbsp;·&nbsp; BLS EP &amp; OEWS, O*NET 30.1, Anthropic Claude
                     </p>
                     <a
                         href="/student-guide.pdf"
@@ -147,7 +49,7 @@ export const StudentGuideModal: React.FC<Props> = ({ isOpen, onClose }) => {
             <div className="hidden print:block mb-6 pb-4 border-b border-gray-300">
                 <h1 className="text-2xl font-bold text-gray-900">AI & Future of Work: Feature Guide</h1>
                 <p className="text-gray-600 text-sm mt-1">
-                    futureofjobs.vercel.app &nbsp;·&nbsp; All data: BLS, O*NET 30.1, Anthropic Claude
+                    futureofjobs.vercel.app &nbsp;·&nbsp; All data: BLS EP &amp; OEWS, O*NET 30.1, Anthropic Claude
                 </p>
             </div>
 
@@ -155,7 +57,7 @@ export const StudentGuideModal: React.FC<Props> = ({ isOpen, onClose }) => {
             <div className="mb-5 p-4 rounded-xl bg-white/[0.03] border border-white/[0.07] print:bg-gray-50 print:border-gray-200">
                 <p className="text-gray-300 text-sm leading-relaxed print:text-gray-700">
                     This guide explains every feature of the <strong className="text-white print:text-gray-900">AI & Future of Work</strong> visualisation tool.
-                    Each feature is designed to help you analyse how artificial intelligence is reshaping specific job roles, so you can make strategic decisions about your career or studies.
+                    It covers all 830 BLS occupations, in every field, to help you analyse how artificial intelligence is reshaping work, so you can make strategic decisions about your career or studies.
                 </p>
             </div>
 

@@ -18,7 +18,8 @@ import {
     OOH_FRACTION_AT_YEAR_MAX,
     OOH_ENDPOINT_YEAR,
 } from '../config/constants';
-import { oohEnvelopeCap } from './terrainMath';
+import { oohEnvelopeCap, oohEnvelopeCapLabel } from './oohEnvelope';
+import { CACHE_VERSION } from './scoreVersion';
 
 // ── Types ──────────────────────────────────────────────────────────────────
 
@@ -48,9 +49,8 @@ interface ScoreCache {
 // ── Cache ──────────────────────────────────────────────────────────────────
 
 const CACHE_KEY = 'foj_ai_scores_v1';
-// v4 = cumulative % from 2025 baseline (not YoY deltas).
-// v5 = prompts grounded in inlined BLS numbers; post-parse forecast cap validation.
-export const CACHE_VERSION = 5;
+// Version history in ./scoreVersion.
+export { CACHE_VERSION };
 const CACHE_TTL_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
 const RATE_LIMIT_MS = 1200; // stay under free-tier limits (~50 req/min)
 
@@ -101,9 +101,12 @@ export function clearScoreCache(): void {
 function assertValidYearlyForecast(projectedGrowth: number, points: ForecastPoint[]): void {
     // Cap at the in-app 2030 fraction of the 10-year OOH endpoint (≈5/9), not the
     // full 2034 figure — otherwise a five-year path silently front-loads a decade.
-    const cap = oohEnvelopeCap(projectedGrowth);
+    // The bound is the cap as the prompt states it, so an answer exactly on that
+    // stated cap is valid. Whether the role is flat is decided on the exact cap.
+    const cap = Number(oohEnvelopeCapLabel(projectedGrowth));
     const lo = Math.min(0, cap);
     const hi = Math.max(0, cap);
+    const flat = Math.abs(oohEnvelopeCap(projectedGrowth)) < 1e-9;
     // The 2025 baseline point must be essentially exact — it's defined as 0 by
     // construction, not modeled. Interior years for a ~0% BLS role are a real
     // AI-reasoned forecast, though, and a small transient dip-then-recover is
@@ -126,7 +129,7 @@ function assertValidYearlyForecast(projectedGrowth: number, points: ForecastPoin
         if (!pt) throw new Error(`Forecast missing year ${y}`);
         const g = pt.growthImpact;
         if (!Number.isFinite(g)) throw new Error(`Invalid growthImpact for ${y}`);
-        if (hi - lo < 1e-9) {
+        if (flat) {
             if (Math.abs(g) > nearZeroYearTol) {
                 throw new Error(`BLS 10-year growth ~0%: year ${y} must stay within ±${nearZeroYearTol} of 0, got ${g}`);
             }
@@ -179,8 +182,8 @@ TWO outputs are needed:
   - growthImpact: CUMULATIVE percent change in this role's total US employment
     from the ${YEAR_MIN} baseline. NOT year-over-year — cumulative from ${YEAR_MIN}.
   - Year ${YEAR_MIN} MUST be exactly 0.00 (baseline).
-  - The BLS figure above is a 10-year (2024–${OOH_ENDPOINT_YEAR}) outlook. By ${AI_FORECAST_YEAR_MAX} the path may reach at most ~${(OOH_FRACTION_AT_YEAR_MAX * 100).toFixed(0)}% of that decade change (cap = ${(projectedGrowth * OOH_FRACTION_AT_YEAR_MAX).toFixed(2)}), not the full ${growthLabel}.
-  - For EVERY year in the window, growthImpact MUST fall between 0.00 and ${(projectedGrowth * OOH_FRACTION_AT_YEAR_MAX).toFixed(2)} inclusive — moving monotonically from the ${YEAR_MIN} baseline toward that ${AI_FORECAST_YEAR_MAX} cap. Do not cross zero, and do not go past the cap.
+  - The BLS figure above is a 10-year (2024–${OOH_ENDPOINT_YEAR}) outlook. By ${AI_FORECAST_YEAR_MAX} the path may reach at most ~${(OOH_FRACTION_AT_YEAR_MAX * 100).toFixed(0)}% of that decade change (cap = ${oohEnvelopeCapLabel(projectedGrowth)}), not the full ${growthLabel}.
+  - For EVERY year in the window, growthImpact MUST fall between 0.00 and ${oohEnvelopeCapLabel(projectedGrowth)} inclusive — moving monotonically from the ${YEAR_MIN} baseline toward that ${AI_FORECAST_YEAR_MAX} cap. Do not cross zero, and do not go past the cap.
   - Years ${YEAR_MIN + 1} through ${AI_FORECAST_YEAR_MAX}: smooth progression toward a plausible 2030 endpoint that still respects that range at every year.
   - Use two-decimal precision (e.g. 2.40, -3.85).
   - Do not invent other macro statistics (GDP, national unemployment) unless they appear in a task description below.

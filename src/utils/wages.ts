@@ -80,6 +80,12 @@ export const formatAnnualWage = (n: number) =>
 export const formatHourlyWage = (n: number) =>
     `$${n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
+/** The fields the pay line reads. A WageEntry has them, and so does an occupation in src/data/occupations/. */
+export type PayFields = Pick<WageEntry, WageMeasure | 'hourlyOnly'> & {
+    topcoded: Partial<Record<StoredWageMeasure, boolean>>;
+    nullReasons: Partial<Record<StoredWageMeasure, string>>;
+};
+
 export interface WageText {
     /** Display string: "$1,234", "≥ $239,200", or null when BLS published nothing. */
     text: string | null;
@@ -88,7 +94,7 @@ export interface WageText {
 }
 
 /** How one measure reads on screen, exactly as BLS published it. */
-export function wageText(entry: WageEntry, measure: WageMeasure, meta: WagesMeta = WAGES_META): WageText {
+export function wageText(entry: PayFields, measure: WageMeasure, meta: WagesMeta = WAGES_META): WageText {
     const fmt = isAnnual(measure) ? formatAnnualWage : formatHourlyWage;
     if (entry.topcoded[measure]) {
         return { text: `≥ ${fmt(isAnnual(measure) ? meta.topcode.annual : meta.topcode.hourly)}`, topcoded: true };
@@ -111,7 +117,7 @@ export interface PaySummary {
  * wages for, the headline says so and shows the hourly median instead, never
  * an annualised hourly figure.
  */
-export function paySummary(entry: WageEntry, meta: WagesMeta = WAGES_META): PaySummary {
+export function paySummary(entry: PayFields, meta: WagesMeta = WAGES_META): PaySummary {
     if (entry.hourlyOnly) {
         const hourlyMean = wageText(entry, 'hourlyMean', meta).text;
         return {
@@ -139,6 +145,15 @@ export const BLS_COMBINED_SOCS: ReadonlySet<string> = new Set(
         .filter(([, entry]) => entry.source.oGroups.includes('broad'))
         .map(([soc]) => soc)
 );
+
+/**
+ * Hover note on the pay line: wages are from OEWS payroll employees, a
+ * smaller base than the EP worker count, which includes the self-employed.
+ */
+export function payBaseNote(oewsEmployment: number | null): string {
+    const base = oewsEmployment != null ? `${oewsEmployment.toLocaleString('en-US')} payroll employees` : 'payroll employees';
+    return `Pay is from ${base} (BLS ${WAGES_META.bls_release}); self-employed are not included.`;
+}
 
 /** The small mapping note under the pay line, or null when the code is the role's own. */
 export function payScopeNote(title: string): string | null {

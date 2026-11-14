@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Z } from '../config/layers';
 import { CloseButton } from './ui/CloseButton';
+import { SCORE_COUNTS, SCORE_COVERAGE } from '../utils/blsScores';
 
 interface Step {
     target: string | null; // data-tour="…" selector, or null for centered card
@@ -13,7 +14,13 @@ const ALL_STEPS: Step[] = [
     {
         target: null,
         title: 'Welcome — quick tour',
-        description: 'This map shows 50 marketing & business roles with BLS Employment Projections from 2025 to 2035. Click Next to walk through each feature.',
+        description: 'This map shows every BLS occupation, grouped into 22 fields, with BLS Employment Projections from 2025 to 2035. Click Next to walk through each feature.',
+    },
+    {
+        target: 'tour-fields',
+        title: 'Fields',
+        description: 'Click a job family on the map to see it on its own, then a field to see its occupations, or pick any field from All 22 fields. Back, Esc or the trail next to that button takes you back up, and the line under it gives the numbers for what you have open. A field’s size is its number of workers. ' + SCORE_COVERAGE.sentence + ` Colours and Human Resilience rank each role among all ${SCORE_COUNTS.ranked.toLocaleString('en-US')} scored occupations.`,
+        padding: 8,
     },
     {
         target: 'tour-slider',
@@ -24,13 +31,13 @@ const ALL_STEPS: Step[] = [
     {
         target: 'tour-tasks',
         title: 'Tasks view',
-        description: 'See every role broken into AI-capable vs human-needed tasks. Same score, different jobs makes the contrast concrete. Scores are capability judgments, not guaranteed adoption.',
+        description: 'See every scored role in the open field (or the whole map) broken into AI-capable vs human-needed tasks. Same score, different jobs makes the contrast concrete. Scores are capability judgments, not guaranteed adoption.',
         padding: 10,
     },
     {
         target: 'tour-search',
         title: 'Search any role',
-        description: 'Type a job title to jump to it on the map and instantly open its full AI impact analysis.',
+        description: 'Type any job title, from Actors to Electricians, to fly to it on the map and open its panel. Every scored job has the same panel: Strategic Insight, Roadmap, Scenario and Defend / Build.',
         padding: 10,
     },
     {
@@ -48,7 +55,7 @@ const ALL_STEPS: Step[] = [
     {
         target: 'tour-methodology',
         title: 'Data & sources',
-        description: 'Employment and outlook come from BLS; task lists from O*NET; risk scores and year curves from Claude (judgment, not official stats). Click to read the full methodology.',
+        description: 'Employment and outlook come from BLS; task lists from O*NET; risk scores from Claude (judgment, not official stats). Claude writes each role’s insight, roadmap and scenario the first time it is asked for; when saving is on, it is saved so everyone sees the same answer. Click to read the full methodology.',
         padding: 10,
     },
 ];

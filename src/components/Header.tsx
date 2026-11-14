@@ -6,7 +6,12 @@ import { useIsMobile } from '../hooks/useIsMobile';
 import { useUserStore } from '../userStore';
 import { Z } from '../config/layers';
 import { YEAR_MIN, YEAR_MAX, UI, MAP_SIDEBAR } from '../config/constants';
-import type { Job } from '../types';
+import { useWorldStore } from '../worldStore';
+import { resetViewVisible } from '../utils/resetView';
+import { getRoleEntries, searchRoles, type RoleEntry } from '../utils/roles';
+import { CONTINENT_DISPLAY_NAMES } from '../config/continents';
+import { SCORE_COUNTS } from '../utils/blsScores';
+import { SCORES_BADGE_MONTHS, SCORES_DATE_RANGE } from '../utils/scoreDates';
 
 interface HeaderProps {
     economyData: { value: string; period: string; color: string } | null;
@@ -22,14 +27,17 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onOpenSkillsModal, onOpenStartupIdeasModal, onStartTour, onOpenStudentGuide, onOpenHealthCheck, onShowMethodology }) => {
     const mapView = useStore((state) => state.mapView);
     const setMapView = useStore((state) => state.setMapView);
-    const setSelectedJob = useStore((state) => state.setSelectedJob);
+    const openRole = useWorldStore((state) => state.openRole);
     const isScoring = useStore((state) => state.isScoring);
     const hasAIScores = useStore((state) => state.hasAIScores);
     const scoringProgress = useStore((state) => state.scoringProgress);
     const scoresGeneratedAt = useStore((state) => state.scoresGeneratedAt);
+    const scoresSource = useStore((state) => state.scoresSource);
     const openRescoreModal = useStore((state) => state.openRescoreModal);
     const navigate = useStore((state) => state.navigate);
     const isDefaultView = useStore((state) => state.isDefaultView);
+    const zoomedToFields = useWorldStore((state) => state.labels.fields);
+    const onStage = useWorldStore((state) => state.focusedFamily != null);
     const triggerResetView = useStore((state) => state.triggerResetView);
 
     // Account state. Deliberately read from the separate user store — identity
@@ -38,9 +46,16 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
     const authStatus = useUserStore((state) => state.authStatus);
     const savedCount = useUserStore((state) => state.activity.savedRoles.length);
 
-    const scoresAgeLabel = scoresGeneratedAt
-        ? new Date(scoresGeneratedAt).toLocaleDateString(undefined, { month: 'short', year: 'numeric' })
+    // The badge's date is the published scores' own dates (utils/scoreDates),
+    // never the build or a browser cache. A user's own re-score is only named
+    // in the tooltip, since it changes the Kelley roles in that browser only.
+    const ownRescore = (scoresSource === 'cache' || scoresSource === 'live') && scoresGeneratedAt
+        ? new Date(scoresGeneratedAt).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
         : null;
+    const scoresBadgeTitle =
+        (SCORES_DATE_RANGE ? `Published AI scores, made ${SCORES_DATE_RANGE}, the same for every visitor.` : 'Published AI scores, the same for every visitor.') +
+        (ownRescore ? ` This browser shows your own re-score of the Kelley roles from ${ownRescore}.` : '') +
+        ` Click to re-score the ${SCORE_COUNTS.kelleyTitles} Kelley roles with your own Claude key (changes only this browser).`;
 
     const [showMoreSheet, setShowMoreSheet] = useState(false);
     const isMobile = useIsMobile();
@@ -79,15 +94,12 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
                     {!isScoring && hasAIScores && (
                         <span
                             className="hidden md:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-[10px] text-emerald-400 font-semibold uppercase tracking-wider pointer-events-auto cursor-pointer hover:bg-emerald-500/20 transition-colors"
-                            title={
-                                scoresAgeLabel
-                                    ? `AI ratings computed ${scoresAgeLabel}. Click to re-score all roles with fresh Claude data (uses your API key).`
-                                    : 'Click to re-score all roles with fresh Claude data (uses your API key).'
-                            }
+                            title={scoresBadgeTitle}
                             onClick={() => openRescoreModal()}
+                            data-testid="scores-badge"
                         >
                             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-                            {scoresAgeLabel ? `AI Scores · ${scoresAgeLabel}` : 'AI Scores'}
+                            {SCORES_BADGE_MONTHS ? `AI Scores · ${SCORES_BADGE_MONTHS}` : 'AI Scores'}
                         </span>
                     )}
 
@@ -130,16 +142,23 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
                         distance and reports it here via the store — reported
                         directly: a two-finger touch gesture panned the camera
                         far enough to lose the terrain entirely with no way back
-                        short of reloading the page.
+                        short of reloading the page. It also always shows
+                        inside a family or field, and zoomed in with no pan
+                        (the Kelley toggle's zoom), as the way straight back
+                        to the five families. Not on a phone inside a family or
+                        field, though: it would wrap this header onto a second
+                        row, and Back, the breadcrumb and Esc are right there.
                         First in a justify-end row, so appearing/disappearing
                         never shifts any other button. */}
-                    {mapView !== 'map' && !isDefaultView && (
+                    {resetViewVisible({ mapView, isDefaultView, zoomedToFields, onStage, isMobile }) && (
                         <button
                             onClick={triggerResetView}
                             title="Return the 3D view to its starting position"
+                            aria-label="Reset view"
                             className="shrink-0 px-3 py-2.5 rounded-lg border border-white/[0.08] bg-white/[0.03] hover:bg-white/[0.08] text-gray-300 hover:text-white text-xs font-semibold uppercase tracking-wider transition-colors min-h-[44px] max-md:min-w-[44px] max-md:justify-center"
                         >
-                            Reset view
+                            {/* One word on a phone, or this row wraps and takes room from the map. */}
+                            Reset<span className="max-md:hidden"> view</span>
                         </button>
                     )}
 
@@ -218,7 +237,7 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
 
                 <div className="flex items-center gap-2 w-full md:w-auto justify-end">
                     <div data-tour="tour-search" className="w-full md:w-auto">
-                        <SearchBar onSelectJob={(job) => setSelectedJob(job)} />
+                        <SearchBar onSelectRole={openRole} />
                     </div>
                 </div>
             </div>
@@ -232,7 +251,7 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
             onShowMethodology={onShowMethodology}
             onOpenHealthCheck={onOpenHealthCheck}
             onOpenRescore={() => openRescoreModal()}
-            scoresAgeLabel={scoresAgeLabel}
+            scoresAgeLabel={SCORES_BADGE_MONTHS}
         />
         </>
     );
@@ -287,20 +306,19 @@ const ViewSwitcher: React.FC<{ view: View; onChange: (v: View) => void }> = ({ v
     </div>
 );
 
-const SearchBar: React.FC<{ onSelectJob: (job: Job) => void }> = ({ onSelectJob }) => {
+const SearchBar: React.FC<{ onSelectRole: (role: RoleEntry) => void }> = ({ onSelectRole }) => {
     const [query, setQuery] = useState('');
-    const [matches, setMatches] = useState<Job[]>([]);
+    const [matches, setMatches] = useState<RoleEntry[]>([]);
     const [isOpen, setIsOpen] = useState(false);
     const debounceRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
+    // Every role: the 50 Kelley titles plus every other BLS occupation.
     const handleChange = useCallback((val: string) => {
         setQuery(val);
         clearTimeout(debounceRef.current);
         debounceRef.current = setTimeout(() => {
-            if (val.length > 1) {
-                const jobs = useStore.getState().jobs;
-                const filtered = jobs.filter(j => j.title.toLowerCase().includes(val.toLowerCase()));
-                setMatches(filtered);
+            if (val.trim().length > 1) {
+                setMatches(searchRoles(getRoleEntries(useStore.getState().jobs), val));
                 setIsOpen(true);
             } else {
                 setIsOpen(false);
@@ -309,43 +327,58 @@ const SearchBar: React.FC<{ onSelectJob: (job: Job) => void }> = ({ onSelectJob 
         }, UI.SEARCH_DEBOUNCE_MS);
     }, []);
 
-    const handleSelect = useCallback((job: Job) => {
-        onSelectJob(job);
+    const handleSelect = useCallback((role: RoleEntry) => {
+        onSelectRole(role);
         setQuery('');
         setIsOpen(false);
         setMatches([]);
-    }, [onSelectJob]);
+    }, [onSelectRole]);
 
     return (
-        <div className="relative w-full md:w-[220px]">
+        <div className="relative w-full md:w-[260px]">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <IconSearch size={14} className="text-gray-500" />
             </div>
             <input
                 type="text"
-                placeholder="Search jobs..."
+                placeholder="Search 830 jobs..."
                 value={query}
                 onChange={(e) => handleChange(e.target.value)}
-                onFocus={() => { if (query.length > 1) setIsOpen(true); }}
+                onFocus={() => { if (query.trim().length > 1) setIsOpen(true); }}
                 onBlur={() => setTimeout(() => setIsOpen(false), UI.SEARCH_DEBOUNCE_MS)}
+                onKeyDown={(e) => {
+                    if (e.key === 'Enter' && matches.length > 0) handleSelect(matches[0]);
+                }}
                 aria-label="Search jobs"
                 className="block w-full pl-9 pr-3 py-2.5 border border-white/[0.06] rounded-lg bg-white/[0.03] text-gray-300 placeholder-gray-600 focus:outline-none focus:bg-white/[0.06] focus:border-white/15 focus:ring-1 focus:ring-white/10 text-sm transition-all min-h-[44px] max-md:min-w-[44px] max-md:justify-center"
             />
             {isOpen && matches.length > 0 && (
-                <div className="absolute mt-2 w-full bg-gray-900/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl max-h-[300px] overflow-y-auto text-sm custom-scrollbar" style={{ zIndex: Z.sidebar }}>
-                    {matches.map(j => (
+                <div role="listbox" aria-label="Matching jobs" className="absolute mt-2 w-full md:w-[340px] md:right-0 bg-gray-900/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl max-h-[340px] overflow-y-auto text-sm custom-scrollbar" style={{ zIndex: Z.sidebar }}>
+                    {matches.map((r) => (
                         <div
-                            key={j.id}
-                            className="px-3 py-3 hover:bg-white/[0.06] cursor-pointer flex justify-between items-center transition-colors border-b border-white/[0.04] last:border-0"
-                            onMouseDown={() => handleSelect(j)}
+                            key={r.key}
+                            role="option"
+                            aria-selected={false}
+                            className="px-3 py-2.5 hover:bg-white/[0.06] cursor-pointer flex justify-between items-center gap-3 transition-colors border-b border-white/[0.04] last:border-0"
+                            onMouseDown={() => handleSelect(r)}
                         >
-                            <span className="font-medium text-gray-200 text-sm">{j.title}</span>
-                            <span className="text-[10px] uppercase tracking-wider text-gray-500 px-2 py-0.5 rounded bg-white/[0.04] border border-white/[0.06]">{j.cluster}</span>
+                            <span className="min-w-0">
+                                <span className="block font-medium text-gray-200 text-sm leading-snug line-clamp-2">{r.title}</span>
+                                {r.kind === 'kelley' && r.blsTitle !== r.title && (
+                                    <span className="block text-[10px] text-gray-500 truncate">BLS: {r.blsTitle}</span>
+                                )}
+                            </span>
+                            <span className="flex items-center gap-1 shrink-0">
+                                {r.kind === 'kelley' && (
+                                    <span className="text-[10px] uppercase tracking-wider text-amber-300 px-1.5 py-0.5 rounded bg-amber-500/10 border border-amber-500/20" title="One of the 50 Kelley business roles. Every scored job has published AI scores and the same panel; this tag only marks the Kelley list.">Kelley</span>
+                                )}
+                                <span className="text-[9px] uppercase tracking-wider text-gray-500 px-1.5 py-0.5 rounded bg-white/[0.04] border border-white/[0.06] max-w-[7.5rem] text-right leading-tight">{CONTINENT_DISPLAY_NAMES[r.continent]}</span>
+                            </span>
                         </div>
                     ))}
                 </div>
             )}
-            {isOpen && query.length > 1 && matches.length === 0 && (
+            {isOpen && query.trim().length > 1 && matches.length === 0 && (
                 <div className="absolute mt-2 w-full bg-gray-900/95 backdrop-blur-xl border border-white/10 rounded-xl shadow-2xl p-3 text-gray-500 text-xs text-center" style={{ zIndex: Z.sidebar }}>
                     No jobs found
                 </div>

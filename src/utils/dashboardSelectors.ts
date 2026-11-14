@@ -8,10 +8,11 @@
  * lives here as a plain function, and the components stay a thin
  * presentational shell over it. See src/__tests__/dashboardSelectors.test.ts.
  *
- * SCALE NOTE: the app has exactly 50 roles total, so the realistic ceiling is
- * 50 saved + 50 explored + 250 possible trainings — a few hundred tiny rows,
- * not thousands. These functions are plain array operations with no
- * pagination/virtualization; that is a deliberate choice, not an oversight.
+ * SCALE NOTE: every scored role can be saved (the Kelley titles and every
+ * scored BLS occupation, ids "soc:<SOC>"), but one person's saved and viewed
+ * lists stay small, a few hundred rows at most. These functions are plain
+ * array operations with no pagination/virtualization; that is a deliberate
+ * choice, not an oversight.
  */
 
 import type { Job } from '../types';
@@ -19,14 +20,19 @@ import type { SavedRole, JobView, UpskillCompletion, StoredArtifact, ArtifactKin
 import { getFunctionalCluster, type FunctionalCluster } from '../config/clusters';
 import { buildRiskScale, riskBand, type RiskBand, type RiskScale } from '../config/theme';
 import { RISK_THRESHOLDS } from '../config/constants';
+import { meanUnit } from './scoreRounding';
 
 // ── Job lookup ───────────────────────────────────────────────────────────
 //
 // No such index exists anywhere in the codebase today — every consumer does
 // an O(n) `jobs.find(j => j.id === id)` (AccountModal.tsx, UpskillModal.tsx,
-// store.ts, Terrain.tsx, JobMarkers.tsx). A dashboard doing N lookups per
+// store.ts). A dashboard doing N lookups per
 // render over ~50 jobs is trivial cost either way, but a Map is the honest
 // tool for repeated lookups and costs nothing to build.
+
+/** A Kelley role's functional cluster; other occupations have none (they are grouped by BLS field). */
+export const roleCluster = (job: Job): FunctionalCluster | null =>
+    job.id.startsWith('soc:') ? null : getFunctionalCluster(job.title);
 
 export function buildJobIndex(jobs: Job[]): Map<string, Job> {
     const index = new Map<string, Job>();
@@ -70,7 +76,7 @@ function enrichBase(
         jobId,
         jobTitle,
         job,
-        cluster: job ? getFunctionalCluster(job.title) : null,
+        cluster: job ? roleCluster(job) : null,
         automationCostIndex: job ? job.automationCostIndex : null,
         projectedGrowth: job ? job.projectedGrowth : null,
         riskBand: job && job.automationCostIndex > 0 ? riskBand(job.automationCostIndex, riskScale) : null,
@@ -176,9 +182,8 @@ export function computePortfolioStats(
         savedCount: saved.length,
         exploredCount: views.length,
         trainedCount: completions.length,
-        averageRisk: scored.length > 0
-            ? scored.reduce((sum, j) => sum + j.automationCostIndex, 0) / scored.length
-            : null,
+        // Rounded from whole hundredths (utils/scoreRounding), like every score on screen.
+        averageRisk: scored.length > 0 ? meanUnit(scored.map((j) => j.automationCostIndex)) : null,
     };
 }
 
@@ -234,7 +239,7 @@ export function groupTrainingByRole(completions: UpskillCompletion[], jobIndex: 
         return {
             jobId,
             jobTitle: job?.title ?? '(role no longer available)',
-            cluster: job ? getFunctionalCluster(job.title) : null,
+            cluster: job ? roleCluster(job) : null,
             completions: list.map((c) => {
                 const mode = resolveUpskillMode(c, job);
                 return mode === c.mode ? c : { ...c, mode };

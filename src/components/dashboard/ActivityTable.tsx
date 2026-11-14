@@ -3,8 +3,9 @@ import { IconTrash } from '../ui/Icons';
 import { Empty } from '../ui/EmptyState';
 import { RISK_BAND_COLORS } from '../../config/theme';
 import type { EnrichedRow } from '../../utils/dashboardSelectors';
+import { percentOf } from '../../utils/scoreRounding';
 
-const RISK_LABEL: Record<string, string> = { safe: 'Safe', hybrid: 'Hybrid', high: 'High risk' };
+const RISK_LABEL: Record<string, string> = { safe: 'Safe', hybrid: 'Hybrid', high: 'High AI exposure' };
 
 const RiskBadge: React.FC<{ row: EnrichedRow }> = ({ row }) => {
     if (row.automationCostIndex === null || row.riskBand === null) {
@@ -17,7 +18,7 @@ const RiskBadge: React.FC<{ row: EnrichedRow }> = ({ row }) => {
             style={{ color, borderColor: `${color}40`, backgroundColor: `${color}15` }}
         >
             <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: color }} />
-            {(row.automationCostIndex * 100).toFixed(0)}% · {RISK_LABEL[row.riskBand]}
+            {percentOf(row.automationCostIndex)}% · {RISK_LABEL[row.riskBand]}
         </span>
     );
 };

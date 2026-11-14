@@ -5,17 +5,14 @@ Geographic Data Verification Script (workbook path — STALE as of the May 2025 
 Verifies that every employment and lq value in src/data/geo_real.json matches
 the corresponding value in the BLS OES May 2023 source workbook.
 
-WARNING: src/data/geo_real.json was refreshed to BLS OEWS May 2025 via
-scripts/refresh_oes_data.mjs (pulls api.bls.gov directly — see that script's
-header comment for why the workbook path can no longer be used to fetch a new
-vintage). Running THIS script now will report every value as a "mismatch",
-because it is comparing the current (2025) file against the old (2023)
-workbook — that is expected, not a data bug. This script is kept for whenever
-a workbook-based vintage is in use again; it is not the current proof of
-correctness. For the current extract, correctness comes from
-scripts/refresh_oes_data.mjs reading directly from BLS's own API responses
-(see src/__tests__/oesVintage.test.ts and scripts/audit.mjs T65–T67 for the
-automated checks that do apply today).
+WARNING: src/data/geo_real.json is now built from the BLS OEWS May 2025
+state file (data/oews_state/state_M2025_dl.xlsx) by
+`npx tsx scripts/build_state_map.ts`, for every job (docs/state-map.md).
+Running THIS script now will report values as "mismatches", because it
+compares the current (2025) file against the old (2023) workbook — that is
+expected, not a data bug. The current proof of correctness is
+src/__tests__/stateMap.test.ts, which re-reads every cell of the 2025 state
+workbook (and `build_state_map.ts --check`).
 
 Usage:
   python3 scripts/verify_geo_data.py

@@ -215,10 +215,38 @@ def main():
     eget = lambda r, name: cells.get((r, E[name]))  # noqa: E731
     ep_cols = {"employment2025": "Employment, 2025", "employment2035": "Employment, 2035",
                "numericChange": "Employment change, numeric, 2025–35", "percentChange": "Employment change, percent, 2025–35"}
-    ep_lines = {}
+    ep_lines, ep_summaries = {}, {}
     for r in rows:
-        if text(eget(r, "Occupation type")) == "Line item":
-            ep_lines[text(eget(r, "2025 National Employment Matrix code"))] = r
+        kind = text(eget(r, "Occupation type"))
+        code = text(eget(r, "2025 National Employment Matrix code"))
+        if kind == "Line item":
+            ep_lines[code] = r
+        elif kind == "Summary":
+            if code in ep_summaries:
+                fail(f"EP summary {code} twice")
+            ep_summaries[code] = r
+
+    def check_ep_block(where, block, block_sources, r):
+        """One stored EP block (title + the four columns) against its raw row."""
+        if block is None:
+            fail(f"{where}: ep is null but EP row {r} exists")
+            return
+        same("ep", f"{where} title", block["title"], text(eget(r, "2025 National Employment Matrix title")).strip())
+        same("ep", f"{where} title source", block_sources.get("ep.title"),
+             f"ep:{s['ep']['sheet']}!{E['2025 National Employment Matrix title']}{r}")
+        for f, colname in ep_cols.items():
+            raw = eget(r, colname)
+            same("ep", f"{where} {f} source", block_sources.get(f"ep.{f}"), f"ep:{s['ep']['sheet']}!{E[colname]}{r}")
+            if not isinstance(raw, tuple):
+                fail(f"{where} {f}: non-numeric {raw!r}")
+                continue
+            stored = block[f]
+            if f == "percentChange":
+                same("ep", f"{where} {f}", float(stored), float(raw[1]))
+            else:
+                checked["ep"] += 1
+                if not isinstance(stored, int) or stored / 1000 != float(raw[1]):
+                    fail(f"{where} {f}: stored {stored!r} persons, source {raw[1]} thousand")
     for soc, e in sorted(entries.items()):
         r = ep_lines.get(soc)
         if r is None:
@@ -244,6 +272,25 @@ def main():
                 checked["ep"] += 1
                 if not isinstance(stored, int) or stored / 1000 != float(raw[1]):
                     fail(f"{where} {f}: stored {stored!r} persons, source {raw[1]} thousand")
+    # Region totals: the published summary row for every continent and minor group, never a sum.
+    for c in index["continents"]:
+        r = ep_summaries.get(c["soc"])
+        if r is None:
+            fail(f"continent {c['soc']}: no EP summary row")
+        else:
+            check_ep_block(f"continent {c['soc']} (EP row {r})", c.get("ep"), c["sources"], r)
+        for g in c["minorGroups"]:
+            r = ep_summaries.get(g["soc"])
+            if r is None:
+                fail(f"minor {g['soc']}: no EP summary row")
+            else:
+                check_ep_block(f"minor {g['soc']} (EP row {r})", g.get("ep"), g["sources"], r)
+    total = s["ep"]["allOccupations"]
+    check_ep_block(f"all occupations (EP row {ep_summaries['00-0000']})", total, total["sources"], ep_summaries["00-0000"])
+    groups = {c["soc"] for c in index["continents"]} | {g["soc"] for c in index["continents"] for g in c["minorGroups"]}
+    same("ep", "unmatched EP summary groups", [u["soc"] for u in meta["unmatched"]["epSummaryWithoutOews"]],
+         sorted(k for k in ep_summaries if k.endswith("00") and k != "00-0000" and k not in groups))
+
     only_ep = sorted(set(ep_lines) - set(entries))
     only_oews = sorted(set(entries) - set(ep_lines))
     same("ep", "unmatched EP lines", [u["soc"] for u in meta["unmatched"]["epWithoutOews"]], only_ep)
@@ -302,6 +349,8 @@ def main():
         e = entries[row["soc"]]
         for k, v in [("title", e["title"]), ("minor", e["minor"]), ("employment", e["employment"]),
                      ("annualMedian", e["annualMedian"]), ("epPercentChange", e["ep"]["percentChange"] if e["ep"] else None),
+                     ("epEmployment2025", e["ep"]["employment2025"] if e["ep"] else None),
+                     ("epEmployment2035", e["ep"]["employment2035"] if e["ep"] else None),
                      ("taskCount", len(e["tasks"]))]:
             same("index", f"index {row['soc']} {k}", row[k], v)
     same("index", "index occupation count", len(index["occupations"]), len(detailed_rows))
