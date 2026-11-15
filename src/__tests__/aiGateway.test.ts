@@ -159,7 +159,7 @@ describe('one shared saved answer', () => {
             'job-15|analyze|analyze-1',
             'soc:29-1141|analyze|analyze-1',
             'soc:29-1141|analyze|analyze-1',
-            'soc:29-1141|roadmap|roadmap-4',
+            'soc:29-1141|roadmap|roadmap-5',
         ]);
         for (const r of rows) expect(r.input_hash).toMatch(/^[0-9a-f]{64}$/);
     });

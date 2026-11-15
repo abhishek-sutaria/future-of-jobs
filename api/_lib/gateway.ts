@@ -27,7 +27,6 @@ import {
     AI_MODEL,
     RAW_FEATURES,
     RawRequestSchema,
-    courseSearchTool,
     extractJsonBlock,
     isAiFeature,
     type GatewayErrorBody,
@@ -116,181 +115,31 @@ async function pipe(upstream: Response, res: ApiResponse) {
     res.end();
 }
 
-// ── One Claude turn, with server tools (web search) ──────────────────────────
-
-/** A content block of a Claude answer: text, or a server tool's call / result. */
-export interface ClaudeBlock {
-    type: string;
-    text?: string;
-    content?: unknown;
-    [key: string]: unknown;
-}
+// ── One Claude answer: time limit, tokens and time ──────────────────────────
 
 interface ClaudeMessage {
-    content?: ClaudeBlock[];
+    content?: { text?: string }[];
     stop_reason?: string;
-    container?: { id?: string } | null;
-    usage?: {
-        input_tokens?: number;
-        output_tokens?: number;
-        cache_read_input_tokens?: number;
-        cache_creation_input_tokens?: number;
-        server_tool_use?: { web_search_requests?: number };
-    };
+    usage?: { input_tokens?: number; output_tokens?: number };
 }
 
-/** What one feature answer cost and took, logged for every new answer and sent with it. */
-export interface TurnUsage {
-    /** Requests to Claude for this answer (1, plus one per pause_turn continuation, plus a retry without search). */
-    requests: number;
-    continuations: number;
-    /** Web searches Claude ran (usage.server_tool_use.web_search_requests, summed). */
-    searches: number;
-    /** Error codes of searches that failed (they come back inside a 200, not as an HTTP error). */
-    searchErrors: string[];
+/** What one new answer cost and took: logged, and sent with the answer. */
+export interface AnswerUsage {
     inputTokens: number;
     outputTokens: number;
-    cacheReadTokens: number;
-    cacheWriteTokens: number;
     ms: number;
     stopReason: string;
-    /** True when the request was re-sent without the search tool because the API refused it. */
-    searchDropped: boolean;
 }
 
-/** A turn paused by the server (pause_turn) is continued at most this many times. */
-export const MAX_CONTINUATIONS = 2;
-/** No continuation starts after this long. */
-export const CONTINUE_DEADLINE_MS = 60_000;
 /**
- * A whole answer (every request of the turn) is stopped after this long, so
- * the visitor gets a clear message and their slot back, with time left for the
- * link checks, inside the function's 120 s limit (vercel.json maxDuration).
+ * An answer is stopped after this long, so the visitor gets a clear message
+ * and their slot back, with time left for the course link checks, inside the
+ * function's 120 s limit (vercel.json maxDuration).
  */
 export const TURN_TIMEOUT_MS = 100_000;
 
-/**
- * The answer's text: the run of text blocks at the very end, after the last
- * search or code block. Citations split that text into several blocks, often
- * in the middle of a JSON string, so they are joined with nothing between.
- * Text written before or between searches ("I'll search for…") is left out.
- */
-export function finalText(content: ClaudeBlock[]): string {
-    let i = content.length;
-    while (i > 0 && content[i - 1]?.type === 'text') i--;
-    return content.slice(i).map((b) => b.text ?? '').join('').trim();
-}
-
-/** Error codes of failed searches: an error result's content is one object, a success's is a list. */
-export function searchErrorCodes(content: ClaudeBlock[]): string[] {
-    return content
-        .filter((b) => b.type === 'web_search_tool_result' && b.content && !Array.isArray(b.content))
-        .map((b) => String((b.content as { error_code?: unknown }).error_code ?? 'unknown'));
-}
-
-/** Every URL the searches returned, to log whether the course URLs were copied from them. */
-export function searchResultUrls(content: ClaudeBlock[]): Set<string> {
-    const urls = new Set<string>();
-    for (const b of content) {
-        if (b.type !== 'web_search_tool_result' || !Array.isArray(b.content)) continue;
-        for (const r of b.content as { url?: unknown }[]) if (typeof r?.url === 'string') urls.add(r.url);
-    }
-    return urls;
-}
-
-type TurnResult =
-    | { ok: true; content: ClaudeBlock[]; usage: TurnUsage }
-    | { ok: false; status: number; message: string; usage: TurnUsage };
-
-/**
- * Runs one answer to the end: continues a pause_turn (resending what Claude
- * has so far, the same tools and its code container), and if the API refuses
- * the search tool itself (e.g. web search turned off for the organization),
- * asks once more without it, so the feature still answers and its courses
- * fall back to search links.
- */
-async function runTurn(
-    call: (body: Record<string, unknown>, signal?: AbortSignal) => Promise<Response>,
-    first: Record<string, unknown>,
-    now: () => number,
-    timeoutMs: number,
-): Promise<TurnResult> {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), timeoutMs);
-    try {
-        return await runTurnUntil(call, first, now, controller.signal);
-    } catch (err) {
-        if (controller.signal.aborted) {
-            return { ok: false, status: 504, message: 'Claude took too long looking for courses, so nothing was saved. Try again in a moment.', usage: emptyUsage(true) };
-        }
-        throw err;
-    } finally {
-        clearTimeout(timer);
-    }
-}
-
-function emptyUsage(timedOut = false): TurnUsage {
-    return {
-        requests: 0, continuations: 0, searches: 0, searchErrors: [], inputTokens: 0, outputTokens: 0,
-        cacheReadTokens: 0, cacheWriteTokens: 0, ms: 0, stopReason: timedOut ? 'timeout' : '', searchDropped: false,
-    };
-}
-
-async function runTurnUntil(
-    call: (body: Record<string, unknown>, signal?: AbortSignal) => Promise<Response>,
-    first: Record<string, unknown>,
-    now: () => number,
-    signal: AbortSignal,
-): Promise<TurnResult> {
-    const started = now();
-    const usage = emptyUsage();
-    let body = first;
-    const userMessages = first.messages as unknown[];
-    let content: ClaudeBlock[] = [];
-    let container: string | undefined;
-    for (;;) {
-        const messages = content.length > 0 ? [...userMessages, { role: 'assistant', content }] : userMessages;
-        usage.requests++;
-        const upstream = await call({ ...body, messages, ...(container ? { container } : {}) }, signal);
-        if (!upstream.ok) {
-            let message = upstream.statusText || 'Claude error';
-            try {
-                const data = (await upstream.json()) as { error?: { message?: string } };
-                message = data?.error?.message || message;
-            } catch { /* keep the status text */ }
-            if (upstream.status === 400 && body.tools && content.length === 0 && /web[ _]?search|server tool|allowed_domains|tool/i.test(message)) {
-                console.warn('[ai-gateway] web search refused, answering without it:', message);
-                const { tools: _dropped, ...rest } = body;
-                void _dropped;
-                body = rest;
-                usage.searchDropped = true;
-                continue;
-            }
-            usage.ms = now() - started;
-            return { ok: false, status: upstream.status, message, usage };
-        }
-        const data = (await upstream.json()) as ClaudeMessage;
-        const u = data.usage ?? {};
-        usage.inputTokens += u.input_tokens ?? 0;
-        usage.outputTokens += u.output_tokens ?? 0;
-        usage.cacheReadTokens += u.cache_read_input_tokens ?? 0;
-        usage.cacheWriteTokens += u.cache_creation_input_tokens ?? 0;
-        usage.searches += u.server_tool_use?.web_search_requests ?? 0;
-        content = [...content, ...(data.content ?? [])];
-        if (data.container?.id) container = data.container.id;
-        usage.stopReason = data.stop_reason ?? '';
-        if (data.stop_reason === 'pause_turn' && usage.continuations < MAX_CONTINUATIONS && now() - started < CONTINUE_DEADLINE_MS) {
-            usage.continuations++;
-            continue;
-        }
-        usage.searchErrors = searchErrorCodes(content);
-        usage.ms = now() - started;
-        return { ok: true, content, usage };
-    }
-}
-
-/** One log line per new answer: searches, tokens and time, never the prompt, answer or a key. */
-function logTurn(feature: string, usage: TurnUsage, extra: Record<string, unknown> = {}) {
+/** One log line per new answer: tokens and time, never the prompt, the answer or a key. */
+function logAnswer(feature: string, usage: AnswerUsage, extra: Record<string, unknown> = {}) {
     console.info('[ai-gateway] answer', JSON.stringify({ feature, ...usage, ...extra }));
 }
 
@@ -375,8 +224,6 @@ export function createClaudeHandler(deps: GatewayDeps) {
             // Sonnet 5 thinks by default when this is omitted, eating into
             // max_tokens on a structured answer that does not need it.
             thinking: { type: 'disabled' },
-            // Course features may search the providers' sites (shared/aiFeatures courseSearchTool).
-            ...('webSearch' in feature && feature.webSearch ? { tools: [courseSearchTool(feature.webSearch.maxUses)] } : {}),
             messages: [{ role: 'user', content: feature.prompt(input) }],
         };
 
@@ -441,41 +288,57 @@ export function createClaudeHandler(deps: GatewayDeps) {
             return pipe(upstream, res);
         }
 
-        let turn: TurnResult;
+        const started = now();
+        const usage: AnswerUsage = { inputTokens: 0, outputTokens: 0, ms: 0, stopReason: '' };
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), deps.turnTimeoutMs ?? TURN_TIMEOUT_MS);
+        let data: ClaudeMessage;
         try {
-            turn = await runTurn(callClaude, anthropicBody, now, deps.turnTimeoutMs ?? TURN_TIMEOUT_MS);
+            const upstream = await callClaude(anthropicBody, controller.signal);
+            if (!upstream.ok) {
+                let message = upstream.statusText || 'Claude error';
+                try {
+                    const err = (await upstream.json()) as { error?: { message?: string } };
+                    message = err?.error?.message || message;
+                } catch { /* keep the status text */ }
+                usage.ms = now() - started;
+                logAnswer(name, usage, { status: upstream.status });
+                return failAndRefund(upstream.status, 'foj_upstream', message);
+            }
+            data = (await upstream.json()) as ClaudeMessage;
         } catch (error) {
+            usage.ms = now() - started;
+            if (controller.signal.aborted) {
+                logAnswer(name, usage, { status: 504 });
+                return failAndRefund(504, 'foj_upstream', 'Claude took too long to answer, so nothing was saved. Try again in a moment.');
+            }
             return failAndRefund(502, 'foj_upstream', error instanceof Error ? error.message : 'Unknown proxy error');
+        } finally {
+            clearTimeout(timer);
         }
-        const usage = turn.usage;
-        if (!turn.ok) {
-            logTurn(name, usage, { status: turn.status });
-            return failAndRefund(turn.status, 'foj_upstream', turn.message);
-        }
+        usage.inputTokens = data.usage?.input_tokens ?? 0;
+        usage.outputTokens = data.usage?.output_tokens ?? 0;
+        usage.stopReason = data.stop_reason ?? '';
+        usage.ms = now() - started;
 
         let answer: unknown;
-        let rawUrls: string[] = [];
         try {
-            const text = finalText(turn.content);
+            const text = (data.content ?? []).map((p) => p?.text || '').join('\n').trim();
             if (!text) {
-                logTurn(name, usage, { rejected: 'empty' });
-                return failAndRefund(502, 'foj_invalid_answer', usage.stopReason === 'pause_turn'
-                    ? 'Claude was still searching when time ran out, so nothing was saved. Try again.'
-                    : 'Empty response from Claude');
+                logAnswer(name, usage, { rejected: 'empty' });
+                return failAndRefund(502, 'foj_invalid_answer', 'Empty response from Claude');
             }
             try {
                 answer = JSON.parse(extractJsonBlock(text));
             } catch {
-                logTurn(name, usage, { rejected: 'json' });
+                logAnswer(name, usage, { rejected: 'json' });
                 return failAndRefund(502, 'foj_invalid_answer', usage.stopReason === 'max_tokens'
                     ? 'Claude response truncated: hit max_tokens before finishing the JSON output.'
                     : 'Claude’s answer was not valid JSON, so it was not saved. Try again.');
             }
             answer = (feature.check as (a: unknown, i: unknown) => unknown)(answer, input);
-            const courses = (answer as { courses?: { url?: unknown }[] })?.courses;
-            if (Array.isArray(courses)) rawUrls = courses.map((c) => (typeof c?.url === 'string' ? c.url.trim() : '')).filter(Boolean);
         } catch {
-            logTurn(name, usage, { rejected: 'check' });
+            logAnswer(name, usage, { rejected: 'check' });
             return failAndRefund(502, 'foj_invalid_answer', 'Claude’s answer did not pass the app’s checks, so it was not saved. Try again.');
         }
 
@@ -489,14 +352,10 @@ export function createClaudeHandler(deps: GatewayDeps) {
             }
         }
 
-        // Did Claude copy its course URLs from the search results, as the prompt asks?
-        const found = searchResultUrls(turn.content);
         const courseLinks = (answer as { courses?: { link?: { kind?: string } }[] })?.courses;
-        logTurn(name, usage, Array.isArray(courseLinks) ? {
+        logAnswer(name, usage, Array.isArray(courseLinks) ? {
             courses: courseLinks.length,
             direct: courseLinks.filter((c) => c?.link?.kind === 'course').length,
-            urlsGiven: rawUrls.length,
-            urlsFromSearch: rawUrls.filter((u) => found.has(u)).length,
         } : {});
 
         if (!feature.shared || !key) return res.status(200).json({ result: answer, usage });

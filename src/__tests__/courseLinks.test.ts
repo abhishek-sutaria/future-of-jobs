@@ -283,23 +283,18 @@ describe('a whole answer', () => {
     });
 });
 
-describe('the prompts ask for links found by search', () => {
-    it('upskill and roadmap: search first, copy URLs from results, never invent; versions bumped', () => {
-        const prompts = [
-            buildUpskillPrompt('Accountants', 'Prepare tax returns', 'defend', 70),
-            buildUpskillPrompt('Accountants', 'Advise clients', 'build', 20),
-            buildRoadmapPrompt('Accountants', 'Prepare tax returns', 'Advise clients'),
-        ];
-        for (const p of prompts) {
-            expect(p).toMatch(/Use the web_search tool to find each course/);
-            expect(p).toMatch(/copy each course's "url" exactly from a search result/);
-            expect(p).toMatch(/recommend fewer\. Never invent a course/);
-            expect(p).toMatch(/"url": "the course page URL copied exactly from one of your web search results"/);
-        }
-        expect(prompts[2]).toMatch(/"courses": \[/);
-        expect(prompts[2]).not.toMatch(/"category": "Courses & Certifications"/);
-        expect(AI_FEATURES.upskill.promptVersion).toBe('upskill-3');
-        expect(AI_FEATURES.roadmap.promptVersion).toBe('roadmap-4');
+describe('the prompts ask for a link', () => {
+    it('upskill and roadmap ask for each course’s url (empty if unsure), with no web search; versions bumped', () => {
+        expect(buildUpskillPrompt('Accountants', 'Prepare tax returns', 'defend', 70)).toMatch(/"url": "https link to this exact course/);
+        expect(buildUpskillPrompt('Accountants', 'Advise clients', 'build', 20)).toMatch(/or an empty string if you are not sure of it/);
+        const roadmap = buildRoadmapPrompt('Accountants', 'Prepare tax returns', 'Advise clients');
+        expect(roadmap).toMatch(/"courses": \[/);
+        expect(roadmap).toMatch(/"url": "https link to this exact course/);
+        expect(roadmap).not.toMatch(/"category": "Courses & Certifications"/);
+        for (const p of [roadmap, buildUpskillPrompt('A', 't', 'defend', 50)]) expect(p).not.toMatch(/web_search|search result/i);
+        // Bumped past the web-search versions (upskill-3, roadmap-4), so none of those answers is reused.
+        expect(AI_FEATURES.upskill.promptVersion).toBe('upskill-4');
+        expect(AI_FEATURES.roadmap.promptVersion).toBe('roadmap-5');
     });
 });
 

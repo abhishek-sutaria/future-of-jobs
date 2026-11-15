@@ -61,10 +61,8 @@ describe('both modes', () => {
 
     it('keep the real-course constraint and the JSON contract', () => {
         for (const p of prompts) {
-            expect(p).toContain('up to 3 real, specific courses');
-            // Only courses found by search, URLs copied from results, never invented (upskill-3).
-            expect(p).toMatch(/Recommend ONLY courses you found in your search results/);
-            expect(p).toMatch(/Never invent a course, a title or a URL/);
+            expect(p).toContain('exactly 3 real, specific courses');
+            expect(p).toMatch(/real course title that exists today/i);
             expect(p).toContain('"courses"');
             expect(p).toContain('"whyTheseCourses"');
             expect(p).toContain('Output JSON only');

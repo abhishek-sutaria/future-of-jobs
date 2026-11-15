@@ -17,19 +17,7 @@ import { oohEnvelopeCap } from '../utils/oohEnvelope.js';
  * link before anyone sees it (shared/courseLinks.ts); an empty one goes
  * straight to a search for the course name.
  */
-export const COURSE_URL_HINT = 'the course page URL copied exactly from one of your web search results';
-
-/**
- * How Claude must find courses (upskill-3, roadmap-4): the gateway gives these
- * features a web_search tool limited to the course providers
- * (shared/courseProviders COURSE_SEARCH_DOMAINS), and every URL is still
- * checked by the server before anyone sees it.
- */
-export const COURSE_SEARCH_RULES = `COURSE RULES:
-        - Use the web_search tool to find each course or certification on the provider's own site before you recommend it.
-        - Recommend ONLY courses you found in your search results, and copy each course's "url" exactly from a search result. Never build, shorten or guess a URL.
-        - If you cannot find a good real course, recommend fewer. Never invent a course, a title or a URL.
-        - After searching, reply with the JSON object only, with nothing after it.`;
+export const COURSE_URL_HINT = 'https link to this exact course or certification page on the provider’s own site (not a home or search page), or an empty string if you are not sure of it';
 
 /** Thousands separators fixed to en-US, so the server and every browser write the same prompt. */
 const formatInt = (n: number): string => n.toLocaleString('en-US');
@@ -87,9 +75,6 @@ export function buildRoadmapPrompt(jobTitle: string, riskTask: string, targetTas
         Goal: DEFEND "${riskTask}" (high GenAI capability / automation exposure) by owning judgment, oversight, and exception-handling around it — do NOT abandon that task — while BUILDING "${targetTask}" (high human criticality) into a durable advantage.
 
         INSTRUCTION: Be specific to this exact role. Do not use generic filler text. Do not frame the plan as leaving or exiting the high-risk task. Reference specific, real-world tools, platforms, certifications, and frameworks relevant to a ${jobTitle}.
-
-        ${COURSE_SEARCH_RULES}
-        Aim for 2 to 4 courses in "courses" (fewer if you cannot find good real ones).
 
         Output JSON only:
         {
@@ -164,8 +149,8 @@ export function buildUpskillPrompt(
 
         Recommend training that moves them UP the value chain on this exact task: directing and reviewing automated output, recognising where it fails, handling the exceptions and edge cases it cannot, carrying the accountability and judgment a model cannot own, and holding enough domain depth to know when the output is wrong.
 
-        Recommend up to 3 real, specific courses or certifications that make that shift.
-        ${COURSE_SEARCH_RULES}
+        Recommend exactly 3 real, specific courses or certifications that make that shift.
+        Each must reference a real platform and a real course title that exists today.
         ${shape.replace('REPLACE_WHY', `One sentence on how these move a ${jobTitle} from performing this task to owning the judgment around it.`)}
     `;
     }
@@ -176,8 +161,8 @@ export function buildUpskillPrompt(
 
         This task is assessed as human-critical: it resists automation, and it is where this person's durable advantage lies. The goal is to deepen it from something they can do into something that clearly distinguishes them.
 
-        Recommend up to 3 real, specific courses or certifications that build that depth.
-        ${COURSE_SEARCH_RULES}
+        Recommend exactly 3 real, specific courses or certifications that build that depth.
+        Each must reference a real platform and a real course title that exists today.
         ${shape.replace('REPLACE_WHY', `One sentence on why these compound the human advantage a ${jobTitle} already has here.`)}
     `;
 }

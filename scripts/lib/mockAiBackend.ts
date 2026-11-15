@@ -30,7 +30,7 @@ function featureOf(prompt: string): string {
     if (prompt.includes('Analyze the following job tasks')) return 'analyze';
     if (prompt.includes('"Day in the Life"')) return 'scenario';
     if (prompt.includes('Career Defend & Build plan')) return 'roadmap';
-    if (prompt.includes('Recommend up to 3 real')) return 'upskill';
+    if (prompt.includes('Recommend exactly 3 real')) return 'upskill';
     if (prompt.includes('Career Resilience Expert')) return 'skills';
     if (prompt.includes('startup execution coach')) return 'startup_plans';
     if (prompt.includes('AI co-founder')) return 'startup_core';
@@ -137,25 +137,6 @@ export function createMockBackend(): MockBackend {
                     `data: ${JSON.stringify({ type: 'message_delta', delta: { stop_reason: 'end_turn' } })}\n\n`,
                 ].join('');
                 return new Response(sse, { status: 200, headers: { 'content-type': 'text/event-stream' } });
-            }
-            const searchTool = Array.isArray(body?.tools) && body.tools.some((t: { name?: string }) => t?.name === 'web_search');
-            if (searchTool) {
-                // The shape a web-search answer has: a note, a search and its
-                // results, then the JSON split by a citation mid-string.
-                const text = JSON.stringify(answer);
-                const cut = Math.floor(text.length / 2);
-                const urls = ((answer as { courses?: { url?: string }[] }).courses ?? []).map((c) => c.url).filter(Boolean);
-                return json(200, {
-                    content: [
-                        { type: 'text', text: 'I will search for courses {first}.' },
-                        { type: 'server_tool_use', id: 'srvtoolu_mock', name: 'web_search', input: { query: 'mock course' } },
-                        { type: 'web_search_tool_result', tool_use_id: 'srvtoolu_mock', content: urls.map((u) => ({ type: 'web_search_result', url: u, title: 'Mock result', encrypted_content: 'x' })) },
-                        { type: 'text', text: text.slice(0, cut) },
-                        { type: 'text', text: text.slice(cut), citations: [{ type: 'web_search_result_location', url: urls[0] ?? '', title: 'Mock', cited_text: 'mock' }] },
-                    ],
-                    stop_reason: 'end_turn',
-                    usage: { input_tokens: 5000, output_tokens: 800, server_tool_use: { web_search_requests: 2 } },
-                });
             }
             return json(200, { content: [{ type: 'text', text: JSON.stringify(answer) }], stop_reason: 'end_turn', usage: { input_tokens: 900, output_tokens: 400 } });
         }
