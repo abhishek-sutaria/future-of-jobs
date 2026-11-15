@@ -47,6 +47,8 @@ export function devApiPlugin(env: Record<string, string>): Plugin {
     const mock = env.FOJ_MOCK_CLAUDE === '1' ? createMockBackend() : null;
     const handler = createClaudeHandler({
         fetch: mock ? mock.fetch : (input, init) => fetch(input, init),
+        // Course links are always checked for real, mock or not (no Claude cost).
+        linkFetch: (input, init) => fetch(input, init),
         env: () => (mock ? { ...env, ...MOCK_ENV } : env),
     });
 

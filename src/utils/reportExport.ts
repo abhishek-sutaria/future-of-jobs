@@ -41,9 +41,17 @@ function roadmapBody(r: RoadmapResult): string[] {
         out.push(`## ${phase.title}`, '');
         out.push(...(phase.items ?? []).map((i) => `- ${i}`), '');
     }
-    if (r.resources?.length) {
+    if (r.resources?.length || r.courses?.length) {
         out.push('## Recommended resources', '');
-        for (const res of r.resources) out.push(...bullets(res.category, res.items));
+        if (r.courses?.length) {
+            out.push('**Courses & Certifications**', '');
+            for (const c of r.courses) {
+                const href = c.link?.href?.startsWith('https://') ? c.link.href : null;
+                out.push(href ? `- [${c.title}](${href}) · ${c.provider} (${c.link!.label})` : `- ${c.title} · ${c.provider}`);
+            }
+            out.push('');
+        }
+        for (const res of r.resources ?? []) out.push(...bullets(res.category, res.items));
     }
     if (r.successMetrics?.length) out.push('## Success milestones', '', ...r.successMetrics.map((m) => `- ${m}`), '');
     return out;

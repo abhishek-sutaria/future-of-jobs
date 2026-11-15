@@ -6,6 +6,7 @@ import { Skeleton, SkeletonText } from './ui/Skeleton';
 import type { UpskillCoursesResult, UpskillMode } from '../utils/analysis';
 import { useUserStore } from '../userStore';
 import { toast } from './ui/Toast';
+import { CourseLinkButton } from './CourseLinkButton';
 
 interface UpskillModalProps {
     isOpen: boolean;
@@ -113,15 +114,20 @@ export const UpskillModal: React.FC<UpskillModalProps> = ({ isOpen, onClose, job
                                 </div>
                             ))}
                         </div>
+                    ) : courses && courses.courses.length === 0 ? (
+                        // Claude recommends only courses its search found; it may find none.
+                        <p className="text-xs text-gray-400 italic" role="status" data-testid="no-courses">
+                            No course for this task could be found on a course provider's site, so none is suggested.
+                        </p>
                     ) : courses ? (
                         <div className="space-y-3">
                             {courses.courses.map((course, i) => (
-                                // A plain list, not links: nothing here opens anywhere, so nothing looks clickable.
+                                // Only the link button opens anything: a server-checked course page, or a search for it.
                                 <div
                                     key={i}
                                     className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-4"
                                 >
-                                    <div className="flex justify-between items-start gap-2">
+                                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3">
                                         <div className="flex-1 min-w-0">
                                             <h4 className="font-bold text-gray-200 text-sm leading-snug">
                                                 {course.title}
@@ -135,6 +141,7 @@ export const UpskillModal: React.FC<UpskillModalProps> = ({ isOpen, onClose, job
                                                 </span>
                                             </div>
                                         </div>
+                                        <CourseLinkButton link={course.link} courseTitle={course.title} className="self-start sm:shrink-0" />
                                     </div>
                                 </div>
                             ))}

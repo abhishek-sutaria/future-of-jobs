@@ -12,6 +12,13 @@
 import { RISK_THRESHOLDS, OOH_FRACTION_AT_YEAR_MAX, OOH_ENDPOINT_YEAR } from '../config/constants.js';
 import { oohEnvelopeCap } from '../utils/oohEnvelope.js';
 
+/**
+ * What Claude is asked to put in a course's "url". The server checks every
+ * link before anyone sees it (shared/courseLinks.ts); an empty one goes
+ * straight to a search for the course name.
+ */
+export const COURSE_URL_HINT = 'https link to this exact course or certification page on the provider’s own site (not a home or search page), or an empty string if you are not sure of it';
+
 /** Thousands separators fixed to en-US, so the server and every browser write the same prompt. */
 const formatInt = (n: number): string => n.toLocaleString('en-US');
 
@@ -76,8 +83,11 @@ export function buildRoadmapPrompt(jobTitle: string, riskTask: string, targetTas
                 { "title": "Months 3-4: Application", "items": ["Specific step 1", "Specific step 2", "Specific step 3"] },
                 { "title": "Months 5-6: Mastery", "items": ["Specific step 1", "Specific step 2", "Specific step 3"] }
             ],
+            "courses": [
+                { "title": "Specific course or cert name relevant to ${jobTitle} and ${targetTask}", "provider": "Platform or certifying body", "url": "${COURSE_URL_HINT}" },
+                { "title": "...", "provider": "...", "url": "..." }
+            ],
             "resources": [
-                { "category": "Courses & Certifications", "items": ["Specific course or cert name relevant to ${jobTitle} and ${targetTask}", "..."] },
                 { "category": "Tools & Platforms", "items": ["Specific tool used in this field", "..."] },
                 { "category": "Communities & Networks", "items": ["Specific professional association, forum, or community", "..."] },
                 { "category": "Books & Research", "items": ["Specific book or publication relevant to this transition", "..."] }
@@ -120,9 +130,9 @@ export function buildUpskillPrompt(
         Output JSON only:
         {
             "courses": [
-                { "title": "Exact real course name", "provider": "Platform name (e.g. Coursera, edX, LinkedIn Learning, Udemy, official body)", "duration": "e.g. 6 weeks", "level": "Beginner | Intermediate | Advanced" },
-                { "title": "...", "provider": "...", "duration": "...", "level": "..." },
-                { "title": "...", "provider": "...", "duration": "...", "level": "..." }
+                { "title": "Exact real course name", "provider": "Platform name (e.g. Coursera, edX, LinkedIn Learning, Udemy, official body)", "url": "${COURSE_URL_HINT}", "duration": "e.g. 6 weeks", "level": "Beginner | Intermediate | Advanced" },
+                { "title": "...", "provider": "...", "url": "...", "duration": "...", "level": "..." },
+                { "title": "...", "provider": "...", "url": "...", "duration": "...", "level": "..." }
             ],
             "whyTheseCourses": "REPLACE_WHY"
         }

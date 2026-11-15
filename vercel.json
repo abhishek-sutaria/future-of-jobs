@@ -3,7 +3,7 @@
   "outputDirectory": "dist",
   "framework": "vite",
   "functions": {
-    "api/claude.ts": { "maxDuration": 60 }
+    "api/claude.ts": { "maxDuration": 120 }
   },
   "routes": [
     {

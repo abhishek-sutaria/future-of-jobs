@@ -27,6 +27,7 @@ import {
     buildUpskillPrompt,
 } from './aiPrompts.js';
 import { oohEnvelopeCap } from '../utils/oohEnvelope.js';
+import { linkCourses, type FetchLike } from './courseLinks.js';
 
 /** The one model the app calls. claude-sonnet-5 rejects `temperature`, so it is never sent. */
 export const AI_MODEL = 'claude-sonnet-5';
@@ -114,8 +115,13 @@ export const ScenarioOutput = z.object({
     keyChanges: z.array(NonEmpty).min(1),
 }).passthrough();
 
+/** Claude's link for a course: kept only until the server has checked it (shared/courseLinks). */
+const CourseUrl = z.string().nullish();
+
 export const RoadmapOutput = z.object({
     phases: z.array(z.object({ title: NonEmpty, items: z.array(NonEmpty).min(1) }).passthrough()).min(1),
+    // Fewer, even none, is accepted (Defend / Build then says no course was found).
+    courses: z.array(z.object({ title: NonEmpty, provider: NonEmpty, url: CourseUrl }).passthrough()).max(6),
     resources: z.array(z.object({ category: NonEmpty, items: z.array(NonEmpty) }).passthrough()),
     successMetrics: z.array(NonEmpty).min(1),
 }).passthrough();
@@ -124,9 +130,10 @@ export const UpskillOutput = z.object({
     courses: z.array(z.object({
         title: NonEmpty,
         provider: NonEmpty,
+        url: CourseUrl,
         duration: z.string(),
         level: z.string(),
-    }).passthrough()).min(1),
+    }).passthrough()).max(5),
     whyTheseCourses: z.string(),
 }).passthrough();
 
@@ -160,6 +167,17 @@ interface FeatureSpec<I> {
     prompt: (input: I) => string;
     /** Checks a parsed answer; returns the answer to save and show, or throws. */
     check: (answer: unknown, input: I) => unknown;
+    /**
+     * Runs on the server after `check` and before the answer is shown or
+     * saved: checks every course link (shared/courseLinks), so only checked
+     * links ever reach a visitor or the saved store. Never throws.
+     */
+    finalize?: (answer: unknown, ctx: FinalizeContext) => Promise<unknown>;
+}
+
+export interface FinalizeContext {
+    /** The fetch the course-link checks use. */
+    fetch: FetchLike;
 }
 
 function spec<I>(s: FeatureSpec<I>): FeatureSpec<I> {
@@ -210,20 +228,30 @@ export const AI_FEATURES = {
     roadmap: spec<RoadmapFeatureInput>({
         shared: true,
         stream: false,
-        promptVersion: 'roadmap-2',
+        // roadmap-5: no web search; never reuse a roadmap-4 (web search) answer.
+        promptVersion: 'roadmap-5',
         maxTokens: 4096,
         input: RoadmapInput,
         prompt: (i) => buildRoadmapPrompt(i.title, i.riskTask, i.targetTask),
         check: (answer) => RoadmapOutput.parse(answer),
+        finalize: async (answer, ctx) => {
+            const a = answer as z.infer<typeof RoadmapOutput>;
+            return { ...a, courses: await linkCourses(a.courses, ctx) };
+        },
     }),
     upskill: spec<UpskillFeatureInput>({
         shared: true,
         stream: false,
-        promptVersion: 'upskill-1',
+        // upskill-4: no web search; never reuse an upskill-3 (web search) answer.
+        promptVersion: 'upskill-4',
         maxTokens: 4096,
         input: UpskillInput,
         prompt: (i) => buildUpskillPrompt(i.title, i.taskName, i.mode, i.riskPercent),
         check: (answer) => UpskillOutput.parse(answer),
+        finalize: async (answer, ctx) => {
+            const a = answer as z.infer<typeof UpskillOutput>;
+            return { ...a, courses: await linkCourses(a.courses, ctx) };
+        },
     }),
     skills: spec<z.infer<typeof SkillsInput>>({
         shared: false,
