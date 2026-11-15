@@ -41,7 +41,7 @@ export const COURSE_PROVIDERS: readonly CourseProvider[] = [
     { name: 'Khan Academy', aliases: ['khan academy'], domains: ['khanacademy.org'], search: (s) => `https://www.khanacademy.org/search?page_search_query=${q(s)}` },
     { name: 'FutureLearn', aliases: ['futurelearn'], domains: ['futurelearn.com'], search: (s) => `https://www.futurelearn.com/search?q=${q(s)}` },
     { name: 'Pluralsight', aliases: ['pluralsight'], domains: ['pluralsight.com'], search: (s) => `https://www.pluralsight.com/search?q=${q(s)}` },
-    { name: 'DataCamp', aliases: ['datacamp'], domains: ['datacamp.com'], search: (s) => `https://www.datacamp.com/search?q=${q(s)}` },
+    { name: 'DataCamp', aliases: ['datacamp'], domains: ['datacamp.com'], search: (s) => `https://www.datacamp.com/courses-all?q=${q(s)}` },
     { name: 'Udacity', aliases: ['udacity'], domains: ['udacity.com'], search: null },
     { name: 'MIT OpenCourseWare', aliases: ['mit opencourseware', 'mit ocw', 'opencourseware'], domains: ['ocw.mit.edu'], search: (s) => `https://ocw.mit.edu/search/?q=${q(s)}` },
     { name: 'Harvard Online', aliases: ['harvard online', 'harvardx', 'harvard business school online', 'harvard'], domains: ['pll.harvard.edu', 'online.hbs.edu', 'harvardonline.harvard.edu'], search: null },
