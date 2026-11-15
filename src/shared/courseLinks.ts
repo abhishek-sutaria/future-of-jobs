@@ -160,13 +160,20 @@ function words(s: string): string[] {
         .map((w) => (w.length > 3 && w.endsWith('s') && !w.endsWith('ss') ? w.slice(0, -1) : w));
 }
 
-/** Share of the course name's words found on the page. Generic words count only if the name is nothing but generic words. */
+/**
+ * Share of the course name's words found on the page. Generic words count only
+ * if the name is nothing but generic words. A credential's own acronym in
+ * brackets ("Progressive Care Certified Nurse (PCCN)") is enough on its own
+ * when the page names it: certification pages often use only the acronym.
+ */
 export function titleMatch(courseTitle: string, pageText: string[]): number {
+    const have = new Set(pageText.flatMap(words));
+    const acronyms = [...courseTitle.matchAll(/\(([A-Z][A-Za-z0-9]{2,7})\)/g)].map((m) => m[1].toLowerCase());
+    if (acronyms.some((a) => have.has(a))) return 1;
     const all = words(courseTitle);
     const key = all.filter((w) => !STOP.has(w));
     const want = [...new Set(key.length > 0 ? key : all)];
     if (want.length === 0) return 0;
-    const have = new Set(pageText.flatMap(words));
     return want.filter((w) => have.has(w)).length / want.length;
 }
 

@@ -48,6 +48,9 @@ export const COURSE_PROVIDERS: readonly CourseProvider[] = [
     { name: 'Stanford Online', aliases: ['stanford online', 'stanford'], domains: ['online.stanford.edu'], search: null },
     { name: 'eCornell', aliases: ['ecornell', 'cornell'], domains: ['ecornell.cornell.edu'], search: null },
     { name: 'Wharton Online', aliases: ['wharton online', 'wharton'], domains: ['online.wharton.upenn.edu', 'executiveeducation.wharton.upenn.edu'], search: null },
+    { name: 'DeepLearning.AI', aliases: ['deeplearning.ai', 'deeplearning ai'], domains: ['deeplearning.ai'], search: null },
+    { name: 'O’Reilly', aliases: ['o\'reilly learning', 'o\'reilly media', 'o\'reilly', 'o’reilly', 'oreilly'], domains: ['oreilly.com'], search: (s) => `https://www.oreilly.com/search/?q=${q(s)}` },
+    { name: 'Becker', aliases: ['becker professional education', 'becker'], domains: ['becker.com'], search: null },
     { name: 'Kaggle', aliases: ['kaggle learn', 'kaggle'], domains: ['kaggle.com'], pathPrefix: '/learn/', search: null },
 
     // Company academies

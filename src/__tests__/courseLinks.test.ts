@@ -294,3 +294,17 @@ describe('the prompts ask for a link', () => {
 });
 
 vi.restoreAllMocks();
+
+describe('credential acronyms', () => {
+    it('a certification page that names only the acronym in brackets matches', () => {
+        expect(titleMatch('Progressive Care Certified Nurse (PCCN) Certification', ['PCCN (Adult) – Direct Care Eligibility Pathway - AACN'])).toBe(1);
+        expect(titleMatch('Progressive Care Certified Nurse (PCCN) Certification', ['CCRN (Adult) | AACN'])).toBeLessThan(0.7);
+    });
+
+    it('O’Reilly, DeepLearning.AI and Becker are on the list', () => {
+        expect(providerFor('O\'Reilly Media')?.name).toBe('O’Reilly');
+        expect(providerFor('DeepLearning.AI')?.name).toBe('DeepLearning.AI');
+        expect(urlProblem('https://www.deeplearning.ai/courses/generative-ai-for-software-development/')).toBeNull();
+        expect(providerFor('Becker Professional Education')?.name).toBe('Becker');
+    });
+});
