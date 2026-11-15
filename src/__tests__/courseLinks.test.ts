@@ -4,7 +4,7 @@
  * name when it fails any check. fetch is mocked: no network here.
  */
 
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import {
     checkCourseUrl,
     linkCourse,
@@ -274,26 +274,34 @@ describe('a whole answer', () => {
         expect(done2.courses[0].link.label).toBe('Search the web');
     });
 
-    it('a roadmap with no courses fails the check (the prompt always asks for them)', () => {
-        expect(() => AI_FEATURES.roadmap.check({ phases: [{ title: 'M1', items: ['a'] }], resources: [], successMetrics: ['m'] },
-            { roleKey: 'soc:13-2011', title: 'A', riskTask: 'r', targetTask: 't' })).toThrow();
+    it('an answer with fewer courses, even none, passes (never an invented one); a missing list does not', () => {
+        const input = { roleKey: 'soc:13-2011', title: 'A', riskTask: 'r', targetTask: 't' };
+        expect(() => AI_FEATURES.roadmap.check({ phases: [{ title: 'M1', items: ['a'] }], courses: [], resources: [], successMetrics: ['m'] }, input)).not.toThrow();
+        expect(() => AI_FEATURES.roadmap.check({ phases: [{ title: 'M1', items: ['a'] }], resources: [], successMetrics: ['m'] }, input)).toThrow();
+        expect(() => AI_FEATURES.upskill.check({ courses: [], whyTheseCourses: '' },
+            { roleKey: 'soc:13-2011', title: 'A', taskName: 't', mode: 'build', riskPercent: 10 })).not.toThrow();
     });
 });
 
-describe('the prompts ask for a link', () => {
-    it('upskill and roadmap ask for each course’s url; versions bumped', () => {
-        expect(buildUpskillPrompt('Accountants', 'Prepare tax returns', 'defend', 70)).toMatch(/"url": "https link to this exact course/);
-        expect(buildUpskillPrompt('Accountants', 'Advise clients', 'build', 20)).toMatch(/"url": "https link to this exact course/);
-        const roadmap = buildRoadmapPrompt('Accountants', 'Prepare tax returns', 'Advise clients');
-        expect(roadmap).toMatch(/"courses": \[/);
-        expect(roadmap).toMatch(/"url": "https link to this exact course/);
-        expect(roadmap).not.toMatch(/"category": "Courses & Certifications"/);
-        expect(AI_FEATURES.upskill.promptVersion).toBe('upskill-2');
-        expect(AI_FEATURES.roadmap.promptVersion).toBe('roadmap-3');
+describe('the prompts ask for links found by search', () => {
+    it('upskill and roadmap: search first, copy URLs from results, never invent; versions bumped', () => {
+        const prompts = [
+            buildUpskillPrompt('Accountants', 'Prepare tax returns', 'defend', 70),
+            buildUpskillPrompt('Accountants', 'Advise clients', 'build', 20),
+            buildRoadmapPrompt('Accountants', 'Prepare tax returns', 'Advise clients'),
+        ];
+        for (const p of prompts) {
+            expect(p).toMatch(/Use the web_search tool to find each course/);
+            expect(p).toMatch(/copy each course's "url" exactly from a search result/);
+            expect(p).toMatch(/recommend fewer\. Never invent a course/);
+            expect(p).toMatch(/"url": "the course page URL copied exactly from one of your web search results"/);
+        }
+        expect(prompts[2]).toMatch(/"courses": \[/);
+        expect(prompts[2]).not.toMatch(/"category": "Courses & Certifications"/);
+        expect(AI_FEATURES.upskill.promptVersion).toBe('upskill-3');
+        expect(AI_FEATURES.roadmap.promptVersion).toBe('roadmap-4');
     });
 });
-
-vi.restoreAllMocks();
 
 describe('credential acronyms', () => {
     it('a certification page that names only the acronym in brackets matches', () => {

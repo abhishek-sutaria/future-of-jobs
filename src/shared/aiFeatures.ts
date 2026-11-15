@@ -28,9 +28,20 @@ import {
 } from './aiPrompts.js';
 import { oohEnvelopeCap } from '../utils/oohEnvelope.js';
 import { linkCourses, type FetchLike } from './courseLinks.js';
+import { courseSearchDomains } from './courseProviders.js';
 
 /** The one model the app calls. claude-sonnet-5 rejects `temperature`, so it is never sent. */
 export const AI_MODEL = 'claude-sonnet-5';
+
+/**
+ * The web search tool the course features carry. web_search_20260209 filters
+ * results with code it runs itself (dynamic filtering), so no code_execution
+ * tool is declared. Pricing: $10 per 1,000 searches plus tokens; a failed
+ * search is not billed.
+ */
+export function courseSearchTool(maxUses: number) {
+    return { type: 'web_search_20260209', name: 'web_search', max_uses: maxUses, allowed_domains: courseSearchDomains() };
+}
 
 /** Highest max_tokens any request may carry (Startup Ideas' two streamed calls). */
 export const MAX_TOKENS_CAP = 6000;
@@ -120,7 +131,8 @@ const CourseUrl = z.string().nullish();
 
 export const RoadmapOutput = z.object({
     phases: z.array(z.object({ title: NonEmpty, items: z.array(NonEmpty).min(1) }).passthrough()).min(1),
-    courses: z.array(z.object({ title: NonEmpty, provider: NonEmpty, url: CourseUrl }).passthrough()).min(1),
+    // Fewer (even none) when Claude's search found no good real course: never an invented one.
+    courses: z.array(z.object({ title: NonEmpty, provider: NonEmpty, url: CourseUrl }).passthrough()).max(6),
     resources: z.array(z.object({ category: NonEmpty, items: z.array(NonEmpty) }).passthrough()),
     successMetrics: z.array(NonEmpty).min(1),
 }).passthrough();
@@ -132,7 +144,7 @@ export const UpskillOutput = z.object({
         url: CourseUrl,
         duration: z.string(),
         level: z.string(),
-    }).passthrough()).min(1),
+    }).passthrough()).max(5),
     whyTheseCourses: z.string(),
 }).passthrough();
 
@@ -162,6 +174,12 @@ interface FeatureSpec<I> {
      */
     promptVersion: string;
     maxTokens: number;
+    /**
+     * Lets Claude search the course providers' sites while it answers
+     * (Anthropic's web_search server tool, limited to courseSearchDomains),
+     * so course URLs come from search results, not memory.
+     */
+    webSearch?: { maxUses: number };
     input: z.ZodType<I>;
     prompt: (input: I) => string;
     /** Checks a parsed answer; returns the answer to save and show, or throws. */
@@ -227,8 +245,11 @@ export const AI_FEATURES = {
     roadmap: spec<RoadmapFeatureInput>({
         shared: true,
         stream: false,
-        promptVersion: 'roadmap-3',
-        maxTokens: 4096,
+        promptVersion: 'roadmap-4',
+        // Room for the filtering code Claude writes around its searches, then the JSON.
+        maxTokens: 6000,
+        // 2-4 courses: about one search each, plus one to retry a miss.
+        webSearch: { maxUses: 5 },
         input: RoadmapInput,
         prompt: (i) => buildRoadmapPrompt(i.title, i.riskTask, i.targetTask),
         check: (answer) => RoadmapOutput.parse(answer),
@@ -240,8 +261,10 @@ export const AI_FEATURES = {
     upskill: spec<UpskillFeatureInput>({
         shared: true,
         stream: false,
-        promptVersion: 'upskill-2',
-        maxTokens: 4096,
+        promptVersion: 'upskill-3',
+        maxTokens: 6000,
+        // Up to 3 courses: one search each, plus one to retry a miss.
+        webSearch: { maxUses: 4 },
         input: UpskillInput,
         prompt: (i) => buildUpskillPrompt(i.title, i.taskName, i.mode, i.riskPercent),
         check: (answer) => UpskillOutput.parse(answer),

@@ -114,6 +114,11 @@ export const UpskillModal: React.FC<UpskillModalProps> = ({ isOpen, onClose, job
                                 </div>
                             ))}
                         </div>
+                    ) : courses && courses.courses.length === 0 ? (
+                        // Claude recommends only courses its search found; it may find none.
+                        <p className="text-xs text-gray-400 italic" role="status" data-testid="no-courses">
+                            No course for this task could be found on a course provider's site, so none is suggested.
+                        </p>
                     ) : courses ? (
                         <div className="space-y-3">
                             {courses.courses.map((course, i) => (
