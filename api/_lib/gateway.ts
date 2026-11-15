@@ -56,6 +56,8 @@ export interface ApiResponse {
 
 export interface GatewayDeps {
     fetch: FetchLike;
+    /** For checking course links (shared/courseLinks); defaults to `fetch`. */
+    linkFetch?: FetchLike;
     /** Read on every request, so a changed Vercel env applies without a code change. */
     env: () => ServerEnv;
     now?: () => number;
@@ -270,6 +272,16 @@ export function createClaudeHandler(deps: GatewayDeps) {
             answer = (feature.check as (a: unknown, i: unknown) => unknown)(answer, input);
         } catch {
             return failAndRefund(502, 'foj_invalid_answer', 'Claude’s answer did not pass the app’s checks, so it was not saved. Try again.');
+        }
+
+        // Course links are checked here, before the answer is shown or saved,
+        // so a visitor and the saved store only ever get checked links.
+        if ('finalize' in feature && feature.finalize) {
+            try {
+                answer = await feature.finalize(answer, { fetch: deps.linkFetch ?? deps.fetch });
+            } catch {
+                return failAndRefund(502, 'foj_invalid_answer', 'Claude’s answer did not pass the app’s checks, so it was not saved. Try again.');
+            }
         }
 
         if (!feature.shared || !key) return res.status(200).json({ result: answer });

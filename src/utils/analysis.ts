@@ -10,6 +10,7 @@
 import type { z } from 'zod';
 import { callClaudeFeature, StartupIdeasSchema, StartupCoreSchema, StartupPlansSchema, type SharedAnswerMeta } from './claude';
 import type { UpskillMode } from '../shared/aiPrompts';
+import type { CourseLink } from '../shared/courseLinks';
 
 export { getClaudeUserFriendlyMessage, AiLimitError } from './claude';
 export { buildUpskillPrompt } from '../shared/aiPrompts';
@@ -40,10 +41,19 @@ export interface ResumeAnalysisResult {
     feedback: string;
 }
 
+/** A course link the server checked (shared/courseLinks): "Open course", or a search for the course name. */
+export type { CourseLink } from '../shared/courseLinks';
+
 export interface RoadmapResult {
     phases: {
         title: string;
         items: string[];
+    }[];
+    /** Since roadmap-3. Older saved roadmaps list courses as plain text under `resources`. */
+    courses?: {
+        title: string;
+        provider: string;
+        link?: CourseLink;
     }[];
     resources: {
         category: string;
@@ -58,6 +68,7 @@ export interface UpskillCoursesResult {
         provider: string;
         duration: string;
         level: string;
+        link?: CourseLink;
     }[];
     whyTheseCourses: string;
 }

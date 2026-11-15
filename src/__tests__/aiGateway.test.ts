@@ -159,9 +159,42 @@ describe('one shared saved answer', () => {
             'job-15|analyze|analyze-1',
             'soc:29-1141|analyze|analyze-1',
             'soc:29-1141|analyze|analyze-1',
-            'soc:29-1141|roadmap|roadmap-2',
+            'soc:29-1141|roadmap|roadmap-3',
         ]);
         for (const r of rows) expect(r.input_hash).toMatch(/^[0-9a-f]{64}$/);
+    });
+
+    it('course links are checked before the answer is shown or saved; the saved answer keeps the checked links', async () => {
+        const good = 'https://www.coursera.org/learn/ai-for-everyone';
+        const linkCalls: string[] = [];
+        const h = createClaudeHandler({
+            fetch: mock.fetch,
+            linkFetch: async (url) => {
+                linkCalls.push(url);
+                if (url === good) return new Response('<title>AI For Everyone | Coursera</title>', { status: 200, headers: { 'content-type': 'text/html' } });
+                return new Response('<title>Page Not Found</title>', { status: 404, headers: { 'content-type': 'text/html' } });
+            },
+            env: () => env,
+        });
+        const input = { roleKey: 'soc:13-2011', title: 'Accountants and Auditors', taskName: 'Prepare tax returns', mode: 'defend', riskPercent: 70 };
+        const first = await call(h, { feature: 'upskill', input }, { ip: '198.51.100.1' });
+        expect(first.status).toBe(200);
+        const links = first.json.result.courses.map((c: { link: { kind: string; label: string }; url?: string }) => {
+            expect(c.url).toBeUndefined();
+            return [c.link.kind, c.link.label];
+        });
+        expect(links).toEqual([['course', 'Open course'], ['search', 'Search on Coursera'], ['search', 'Search the web']]);
+        // The unknown provider's link is not on the list, so it is never fetched.
+        expect(linkCalls).toEqual([good, 'https://www.coursera.org/learn/foj-mock-course-that-does-not-exist']);
+        const saved = [...mock.answers.values()][0].row.payload as { courses: Record<string, unknown>[] };
+        expect(saved.courses.map((c) => 'url' in c)).toEqual([false, false, false]);
+        expect(saved.courses[0].link).toEqual({ href: good, kind: 'course', label: 'Open course' });
+
+        const second = await call(h, { feature: 'upskill', input }, { ip: '198.51.100.2' });
+        expect(second.json.shared).toMatchObject({ hit: true });
+        expect(second.json.result).toEqual(first.json.result);
+        expect(linkCalls).toHaveLength(2);
+        expect(claudeCalls()).toBe(1);
     });
 
     it('never saves an answer that fails the check, and says so', async () => {

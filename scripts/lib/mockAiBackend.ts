@@ -75,12 +75,21 @@ function answerFor(feature: string, prompt: string, n: number): unknown {
                     { title: 'Months 3-4: Application', items: ['Mock step'] },
                     { title: 'Months 5-6: Mastery', items: ['Mock step'] },
                 ],
-                resources: [{ category: 'Courses & Certifications', items: ['Mock course'] }],
+                // Real links, checked for real by the dev server: one that opens, one that falls back to search.
+                courses: [
+                    { title: 'AI For Everyone', provider: 'Coursera', url: 'https://www.coursera.org/learn/ai-for-everyone' },
+                    { title: `[mock #${n}] Course`, provider: 'Mock Academy', url: '' },
+                ],
+                resources: [{ category: 'Tools & Platforms', items: ['Mock tool'] }],
                 successMetrics: ['Mock metric'],
             };
         case 'upskill':
             return {
-                courses: [{ title: `[mock #${n}] Course`, provider: 'Mock Academy', duration: '4 weeks', level: 'Intermediate' }],
+                courses: [
+                    { title: 'AI For Everyone', provider: 'Coursera', url: 'https://www.coursera.org/learn/ai-for-everyone', duration: '6 hours', level: 'Beginner' },
+                    { title: 'Mock Course That Does Not Exist', provider: 'Coursera', url: 'https://www.coursera.org/learn/foj-mock-course-that-does-not-exist', duration: '4 weeks', level: 'Intermediate' },
+                    { title: `[mock #${n}] Course`, provider: 'Mock Academy', url: 'https://mock-academy.example/course', duration: '4 weeks', level: 'Advanced' },
+                ],
                 whyTheseCourses: 'Mock reason.',
             };
         case 'skills':
