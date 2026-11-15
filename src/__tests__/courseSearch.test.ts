@@ -193,6 +193,32 @@ describe('when search is not available', () => {
         expect(r.json.result.courses[0].link.label).toBe('Search on Coursera');
     });
 
+    it('an answer that takes too long is stopped with a clear message and the visitor\'s slot back, inside the function limit', async () => {
+        const h = createClaudeHandler({
+            fetch: (url, init) => url.startsWith('https://api.anthropic.com')
+                ? new Promise((_ok, fail) => init?.signal?.addEventListener('abort', () => fail(new DOMException('aborted', 'AbortError'))))
+                : mock.fetch(url, init),
+            env: () => ({ ANTHROPIC_API_KEY: 'sk-test', SUPABASE_URL: MOCK_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY: 'sb' }),
+            turnTimeoutMs: 30,
+        });
+        const r = await call(h, { feature: 'upskill', input: UPSKILL });
+        expect(r.status).toBe(504);
+        expect(r.json.error.message).toMatch(/took too long/);
+        expect(mock.answers.size).toBe(0);
+        // The slot was given back: the visitor's hour count is back to zero.
+        const visitor = [...mock.rateCounts].filter(([k]) => k.startsWith('v:')).map(([, v]) => v.count);
+        expect(visitor.length).toBeGreaterThan(0);
+        expect(visitor.every((c) => c === 0)).toBe(true);
+    });
+
+    it('the function may run 120 s, and an answer is stopped well before that', async () => {
+        const fs = await import('fs');
+        const cfg = JSON.parse(fs.readFileSync(new URL('../../vercel.json', import.meta.url), 'utf8'));
+        expect(cfg.functions['api/claude.ts'].maxDuration).toBe(120);
+        const { TURN_TIMEOUT_MS } = await import('../../api/_lib/gateway');
+        expect(TURN_TIMEOUT_MS).toBeLessThanOrEqual(120_000 - 15_000);
+    });
+
     it('any other upstream error is passed on, not retried', async () => {
         const h = handlerWith([() => reply({ error: { message: 'Overloaded' } }, 529)]);
         const r = await call(h, { feature: 'upskill', input: UPSKILL });

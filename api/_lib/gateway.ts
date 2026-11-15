@@ -59,6 +59,8 @@ export interface GatewayDeps {
     fetch: FetchLike;
     /** For checking course links (shared/courseLinks); defaults to `fetch`. */
     linkFetch?: FetchLike;
+    /** How long one answer may take in all (TURN_TIMEOUT_MS); tests shorten it. */
+    turnTimeoutMs?: number;
     /** Read on every request, so a changed Vercel env applies without a code change. */
     env: () => ServerEnv;
     now?: () => number;
@@ -158,8 +160,14 @@ export interface TurnUsage {
 
 /** A turn paused by the server (pause_turn) is continued at most this many times. */
 export const MAX_CONTINUATIONS = 2;
-/** No continuation starts after this long, so the answer and its link checks stay inside the 60 s function limit. */
-export const CONTINUE_DEADLINE_MS = 30_000;
+/** No continuation starts after this long. */
+export const CONTINUE_DEADLINE_MS = 60_000;
+/**
+ * A whole answer (every request of the turn) is stopped after this long, so
+ * the visitor gets a clear message and their slot back, with time left for the
+ * link checks, inside the function's 120 s limit (vercel.json maxDuration).
+ */
+export const TURN_TIMEOUT_MS = 100_000;
 
 /**
  * The answer's text: the run of text blocks at the very end, after the last
@@ -202,15 +210,40 @@ type TurnResult =
  * fall back to search links.
  */
 async function runTurn(
-    call: (body: Record<string, unknown>) => Promise<Response>,
+    call: (body: Record<string, unknown>, signal?: AbortSignal) => Promise<Response>,
     first: Record<string, unknown>,
     now: () => number,
+    timeoutMs: number,
+): Promise<TurnResult> {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+        return await runTurnUntil(call, first, now, controller.signal);
+    } catch (err) {
+        if (controller.signal.aborted) {
+            return { ok: false, status: 504, message: 'Claude took too long looking for courses, so nothing was saved. Try again in a moment.', usage: emptyUsage(true) };
+        }
+        throw err;
+    } finally {
+        clearTimeout(timer);
+    }
+}
+
+function emptyUsage(timedOut = false): TurnUsage {
+    return {
+        requests: 0, continuations: 0, searches: 0, searchErrors: [], inputTokens: 0, outputTokens: 0,
+        cacheReadTokens: 0, cacheWriteTokens: 0, ms: 0, stopReason: timedOut ? 'timeout' : '', searchDropped: false,
+    };
+}
+
+async function runTurnUntil(
+    call: (body: Record<string, unknown>, signal?: AbortSignal) => Promise<Response>,
+    first: Record<string, unknown>,
+    now: () => number,
+    signal: AbortSignal,
 ): Promise<TurnResult> {
     const started = now();
-    const usage: TurnUsage = {
-        requests: 0, continuations: 0, searches: 0, searchErrors: [], inputTokens: 0, outputTokens: 0,
-        cacheReadTokens: 0, cacheWriteTokens: 0, ms: 0, stopReason: '', searchDropped: false,
-    };
+    const usage = emptyUsage();
     let body = first;
     const userMessages = first.messages as unknown[];
     let content: ClaudeBlock[] = [];
@@ -218,7 +251,7 @@ async function runTurn(
     for (;;) {
         const messages = content.length > 0 ? [...userMessages, { role: 'assistant', content }] : userMessages;
         usage.requests++;
-        const upstream = await call({ ...body, messages, ...(container ? { container } : {}) });
+        const upstream = await call({ ...body, messages, ...(container ? { container } : {}) }, signal);
         if (!upstream.ok) {
             let message = upstream.statusText || 'Claude error';
             try {
@@ -305,9 +338,10 @@ export function createClaudeHandler(deps: GatewayDeps) {
         const body = parseBody(req.body);
         if (!body) return fail(res, 400, 'foj_bad_request', 'The request body must be a JSON object.');
 
-        const callClaude = (anthropicBody: Record<string, unknown>) =>
+        const callClaude = (anthropicBody: Record<string, unknown>, signal?: AbortSignal) =>
             deps.fetch(ANTHROPIC_URL, {
                 method: 'POST',
+                ...(signal ? { signal } : {}),
                 headers: { 'x-api-key': apiKey, 'anthropic-version': ANTHROPIC_VERSION, 'content-type': 'application/json' },
                 body: JSON.stringify(anthropicBody),
             });
@@ -409,7 +443,7 @@ export function createClaudeHandler(deps: GatewayDeps) {
 
         let turn: TurnResult;
         try {
-            turn = await runTurn(callClaude, anthropicBody, now);
+            turn = await runTurn(callClaude, anthropicBody, now, deps.turnTimeoutMs ?? TURN_TIMEOUT_MS);
         } catch (error) {
             return failAndRefund(502, 'foj_upstream', error instanceof Error ? error.message : 'Unknown proxy error');
         }
