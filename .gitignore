@@ -41,3 +41,7 @@ data/.oes_api_cache.json
 *.sln
 *.sw?
 .vercel
+
+# Download cache for scripts/build_course_catalog.ts (the committed outputs are
+# data/course_catalog/*)
+.cache/
