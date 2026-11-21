@@ -1,14 +1,14 @@
 {
   "_about": "Counts per site and every dropped item with its reason. Written by scripts/build_course_catalog.ts.",
-  "generated": "2026-11-15",
-  "requests": 84,
+  "generated": "2026-11-21",
+  "requests": 6,
   "sites": [
     {
       "source": "microsoft-learn",
       "collected": 1161,
-      "passed": 1127,
+      "passed": 1092,
       "dropped": {
-        "page says it is retired": 34
+        "page says it is retired": 69
       }
     },
     {
@@ -4844,6 +4844,111 @@
       "reason": "a lab, not a course"
     },
     {
+      "id": "microsoft-learn:applied-skill:applied-skill.create-an-ai-agent",
+      "title": "Microsoft Applied Skills: Create an AI agent",
+      "url": "https://learn.microsoft.com/en-us/credentials/applied-skills/create-an-ai-agent/",
+      "source": "microsoft-learn",
+      "reason": "page says it is retired"
+    },
+    {
+      "id": "microsoft-learn:applied-skill:applied-skill.implement-knowledge-mining-with-azure-ai-search",
+      "title": "Microsoft Applied Skills: Implement knowledge mining with Azure AI Search",
+      "url": "https://learn.microsoft.com/en-us/credentials/applied-skills/implement-knowledge-mining-with-azure-ai-search/",
+      "source": "microsoft-learn",
+      "reason": "page says it is retired"
+    },
+    {
+      "id": "microsoft-learn:certification:certification.azure-ai-engineer",
+      "title": "Microsoft Certified: Azure AI Engineer Associate",
+      "url": "https://learn.microsoft.com/en-us/credentials/certifications/azure-ai-engineer/",
+      "source": "microsoft-learn",
+      "reason": "page says it is retired"
+    },
+    {
+      "id": "microsoft-learn:certification:certification.azure-data-scientist",
+      "title": "Microsoft Certified: Azure Data Scientist Associate",
+      "url": "https://learn.microsoft.com/en-us/credentials/certifications/azure-data-scientist/",
+      "source": "microsoft-learn",
+      "reason": "page says it is retired"
+    },
+    {
+      "id": "microsoft-learn:certification:certification.azure-developer",
+      "title": "Microsoft Certified: Azure Developer Associate",
+      "url": "https://learn.microsoft.com/en-us/credentials/certifications/azure-developer/",
+      "source": "microsoft-learn",
+      "reason": "page says it is retired"
+    },
+    {
+      "id": "microsoft-learn:certification:certification.azure-iot-developer-specialty",
+      "title": "Microsoft Certified: Azure IoT Developer Specialty",
+      "url": "https://learn.microsoft.com/en-us/credentials/certifications/azure-iot-developer-specialty/",
+      "source": "microsoft-learn",
+      "reason": "page says it is retired"
+    },
+    {
+      "id": "microsoft-learn:certification:certification.azure-security-engineer",
+      "title": "Microsoft Certified: Azure Security Engineer Associate",
+      "url": "https://learn.microsoft.com/en-us/credentials/certifications/azure-security-engineer/",
+      "source": "microsoft-learn",
+      "reason": "page says it is retired"
+    },
+    {
+      "id": "microsoft-learn:certification:certification.azure-stack-hub-operator",
+      "title": "Microsoft Certified: Azure Stack Hub Operator Associate",
+      "url": "https://learn.microsoft.com/en-us/credentials/certifications/azure-stack-hub-operator/",
+      "source": "microsoft-learn",
+      "reason": "page says it is retired"
+    },
+    {
+      "id": "microsoft-learn:certification:certification.azure-support-engineer-for-connectivity-specialty",
+      "title": "Microsoft Certified: Azure Support Engineer for Connectivity Specialty",
+      "url": "https://learn.microsoft.com/en-us/credentials/certifications/azure-support-engineer-for-connectivity-specialty/",
+      "source": "microsoft-learn",
+      "reason": "page says it is retired"
+    },
+    {
+      "id": "microsoft-learn:certification:certification.d365-customer-experience-analyst-associate",
+      "title": "Microsoft Certified: Dynamics 365 Customer Experience Analyst Associate",
+      "url": "https://learn.microsoft.com/en-us/credentials/certifications/d365-customer-experience-analyst-associate/",
+      "source": "microsoft-learn",
+      "reason": "page says it is retired"
+    },
+    {
+      "id": "microsoft-learn:certification:certification.d365-finance-and-operations-apps-solution-architect-expert",
+      "title": "Microsoft Certified: Dynamics 365: Finance and Operations Apps Solution Architect Expert",
+      "url": "https://learn.microsoft.com/en-us/credentials/certifications/d365-finance-and-operations-apps-solution-architect-expert/",
+      "source": "microsoft-learn",
+      "reason": "page says it is retired"
+    },
+    {
+      "id": "microsoft-learn:certification:certification.d365-functional-consultant-commerce",
+      "title": "Microsoft Certified: Dynamics 365 Commerce Functional Consultant Associate",
+      "url": "https://learn.microsoft.com/en-us/credentials/certifications/d365-functional-consultant-commerce/",
+      "source": "microsoft-learn",
+      "reason": "page says it is retired"
+    },
+    {
+      "id": "microsoft-learn:certification:certification.d365-functional-consultant-field-service-v3",
+      "title": "Microsoft Certified: Dynamics 365 Field Service Functional Consultant Associate",
+      "url": "https://learn.microsoft.com/en-us/credentials/certifications/d365-functional-consultant-field-service/",
+      "source": "microsoft-learn",
+      "reason": "page says it is retired"
+    },
+    {
+      "id": "microsoft-learn:certification:certification.d365-functional-consultant-manufacturing",
+      "title": "Microsoft Certified: Dynamics 365 Supply Chain Management, Manufacturing Functional Consultant Associate",
+      "url": "https://learn.microsoft.com/en-us/credentials/certifications/d365-functional-consultant-manufacturing/",
+      "source": "microsoft-learn",
+      "reason": "page says it is retired"
+    },
+    {
+      "id": "microsoft-learn:certification:certification.d365-functional-consultant-supply-chain-management",
+      "title": "Microsoft Certified: Dynamics 365 Supply Chain Management Functional Consultant Associate",
+      "url": "https://learn.microsoft.com/en-us/credentials/certifications/d365-functional-consultant-supply-chain-management/",
+      "source": "microsoft-learn",
+      "reason": "page says it is retired"
+    },
+    {
       "id": "microsoft-learn:certification:certification.d365-fundamentals",
       "title": "Microsoft Certified: Dynamics 365 Fundamentals",
       "url": "https://learn.microsoft.com/en-us/credentials/certifications/d365-fundamentals/",
@@ -4861,6 +4966,62 @@
       "id": "microsoft-learn:certification:certification.d365-fundamentals-finance-and-operations-apps-erp",
       "title": "Microsoft Certified: Dynamics 365 Fundamentals (ERP)",
       "url": "https://learn.microsoft.com/en-us/credentials/certifications/d365-fundamentals-finance-and-operations-apps-erp/",
+      "source": "microsoft-learn",
+      "reason": "page says it is retired"
+    },
+    {
+      "id": "microsoft-learn:certification:certification.d365-supply-chain-management-functional-consultant-expert",
+      "title": "Microsoft Certified: Dynamics 365 Supply Chain Management Functional Consultant Expert",
+      "url": "https://learn.microsoft.com/en-us/credentials/certifications/d365-supply-chain-management-functional-consultant-expert/",
+      "source": "microsoft-learn",
+      "reason": "page says it is retired"
+    },
+    {
+      "id": "microsoft-learn:certification:certification.m365-developer-associate",
+      "title": "Microsoft 365 Certified: Teams Application Developer Associate",
+      "url": "https://learn.microsoft.com/en-us/credentials/certifications/m365-teams-application-developer-associate/",
+      "source": "microsoft-learn",
+      "reason": "page says it is retired"
+    },
+    {
+      "id": "microsoft-learn:certification:certification.m365-enterprise-administrator",
+      "title": "Microsoft 365 Certified: Administrator Expert",
+      "url": "https://learn.microsoft.com/en-us/credentials/certifications/m365-administrator-expert/",
+      "source": "microsoft-learn",
+      "reason": "page says it is retired"
+    },
+    {
+      "id": "microsoft-learn:certification:certification.m365-exchange-online-support-engineer-specialty",
+      "title": "Microsoft 365 Certified: Exchange Online Support Engineer Specialty",
+      "url": "https://learn.microsoft.com/en-us/credentials/certifications/m365-exchange-online-support-engineer-specialty/",
+      "source": "microsoft-learn",
+      "reason": "page says it is retired"
+    },
+    {
+      "id": "microsoft-learn:certification:certification.m365-messaging-administrator",
+      "title": "Microsoft 365 Certified: Messaging Administrator Associate",
+      "url": "https://learn.microsoft.com/en-us/credentials/certifications/m365-messaging-administrator/",
+      "source": "microsoft-learn",
+      "reason": "page says it is retired"
+    },
+    {
+      "id": "microsoft-learn:certification:certification.m365-security-administrator",
+      "title": "Microsoft 365 Certified: Security Administrator Associate",
+      "url": "https://learn.microsoft.com/en-us/credentials/certifications/m365-security-administrator/",
+      "source": "microsoft-learn",
+      "reason": "page says it is retired"
+    },
+    {
+      "id": "microsoft-learn:certification:certification.m365-teams-support-engineer-specialty",
+      "title": "Microsoft 365 Certified: Teams Support Engineer Specialty",
+      "url": "https://learn.microsoft.com/en-us/credentials/certifications/m365-teams-support-engineer-specialty/",
+      "source": "microsoft-learn",
+      "reason": "page says it is retired"
+    },
+    {
+      "id": "microsoft-learn:certification:certification.m365-teams-voice-engineer-expert",
+      "title": "Microsoft 365 Certified: Teams Voice Engineer Expert",
+      "url": "https://learn.microsoft.com/en-us/credentials/certifications/m365-teams-voice-engineer-expert/",
       "source": "microsoft-learn",
       "reason": "page says it is retired"
     },
@@ -4984,6 +5145,69 @@
       "reason": "page says it is retired"
     },
     {
+      "id": "microsoft-learn:certification:certification.microsoft-office-specialist-master-certification-2013",
+      "title": "Microsoft Office Specialist 2013 Master",
+      "url": "https://learn.microsoft.com/en-us/credentials/certifications/microsoft-office-specialist-master-certification-2013/",
+      "source": "microsoft-learn",
+      "reason": "page says it is retired"
+    },
+    {
+      "id": "microsoft-learn:certification:certification.microsoft-office-specialist-master-certification-2016",
+      "title": "Microsoft Office Specialist: 2016 Master",
+      "url": "https://learn.microsoft.com/en-us/credentials/certifications/microsoft-office-specialist-master-certification-2016/",
+      "source": "microsoft-learn",
+      "reason": "page says it is retired"
+    },
+    {
+      "id": "microsoft-learn:certification:certification.mos-access-2016",
+      "title": "Microsoft Office Specialist: Access (Office 2016)",
+      "url": "https://learn.microsoft.com/en-us/credentials/certifications/mos-access-2016/",
+      "source": "microsoft-learn",
+      "reason": "page says it is retired"
+    },
+    {
+      "id": "microsoft-learn:certification:certification.mos-excel-2016",
+      "title": "Microsoft Office Specialist: Excel (Office 2016)",
+      "url": "https://learn.microsoft.com/en-us/credentials/certifications/mos-excel-2016/",
+      "source": "microsoft-learn",
+      "reason": "page says it is retired"
+    },
+    {
+      "id": "microsoft-learn:certification:certification.mos-excel-2016-expert",
+      "title": "Microsoft Office Specialist: Excel Expert (Office 2016)",
+      "url": "https://learn.microsoft.com/en-us/credentials/certifications/mos-excel-2016-expert/",
+      "source": "microsoft-learn",
+      "reason": "page says it is retired"
+    },
+    {
+      "id": "microsoft-learn:certification:certification.mos-outlook-2016",
+      "title": "Microsoft Office Specialist: Outlook (Office 2016)",
+      "url": "https://learn.microsoft.com/en-us/credentials/certifications/mos-outlook-2016/",
+      "source": "microsoft-learn",
+      "reason": "page says it is retired"
+    },
+    {
+      "id": "microsoft-learn:certification:certification.mos-powerpoint-2016",
+      "title": "Microsoft Office Specialist: PowerPoint (Office 2016)",
+      "url": "https://learn.microsoft.com/en-us/credentials/certifications/mos-powerpoint-2016/",
+      "source": "microsoft-learn",
+      "reason": "page says it is retired"
+    },
+    {
+      "id": "microsoft-learn:certification:certification.mos-word-2016",
+      "title": "Microsoft Office Specialist: Word (Office 2016)",
+      "url": "https://learn.microsoft.com/en-us/credentials/certifications/mos-word-2016/",
+      "source": "microsoft-learn",
+      "reason": "page says it is retired"
+    },
+    {
+      "id": "microsoft-learn:certification:certification.mos-word-2016-expert",
+      "title": "Microsoft Office Specialist: Word Expert (Office 2016)",
+      "url": "https://learn.microsoft.com/en-us/credentials/certifications/mos-word-2016-expert/",
+      "source": "microsoft-learn",
+      "reason": "page says it is retired"
+    },
+    {
       "id": "microsoft-learn:certification:certification.mta-database-fundamentals",
       "title": "MTA: Database Fundamentals",
       "url": "https://learn.microsoft.com/en-us/credentials/certifications/mta-database-fundamentals/",
@@ -5078,6 +5302,27 @@
       "id": "microsoft-learn:certification:certification.power-apps-and-d365-solution-architect-expert",
       "title": "Microsoft Certified: Dynamics 365 + Power Platform Solution Architect Expert",
       "url": "https://learn.microsoft.com/en-us/credentials/certifications/power-apps-and-d365-solution-architect-expert/",
+      "source": "microsoft-learn",
+      "reason": "page says it is retired"
+    },
+    {
+      "id": "microsoft-learn:certification:certification.power-automate-rpa-developer-associate",
+      "title": "Microsoft Certified: Power Automate RPA Developer Associate",
+      "url": "https://learn.microsoft.com/en-us/credentials/certifications/power-automate-rpa-developer-associate/",
+      "source": "microsoft-learn",
+      "reason": "page says it is retired"
+    },
+    {
+      "id": "microsoft-learn:certification:certification.power-platform-functional-consultant-associate",
+      "title": "Microsoft Certified: Power Platform Functional Consultant Associate",
+      "url": "https://learn.microsoft.com/en-us/credentials/certifications/power-platform-functional-consultant-associate/",
+      "source": "microsoft-learn",
+      "reason": "page says it is retired"
+    },
+    {
+      "id": "microsoft-learn:certification:certification.power-platform-solution-architect-expert",
+      "title": "Microsoft Certified: Power Platform Solution Architect Expert",
+      "url": "https://learn.microsoft.com/en-us/credentials/certifications/power-platform-solution-architect-expert/",
       "source": "microsoft-learn",
       "reason": "page says it is retired"
     }

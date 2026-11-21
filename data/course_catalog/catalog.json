@@ -1,23 +1,23 @@
 {
   "_about": "Real courses and certifications from each provider's own official public list, every link checked by the app's checkCourseUrl (src/shared/courseLinks.ts). Built by scripts/build_course_catalog.ts; see docs/course-catalog.md. Not imported by the app: server-side / offline data for Step 2.",
-  "generated": "2026-11-15",
-  "count": 1802,
+  "generated": "2026-11-21",
+  "count": 1767,
   "byProvider": {
     "ACE": 4,
     "Google": 28,
     "Google Cloud Skills Boost": 636,
-    "Microsoft Learn": 1127,
+    "Microsoft Learn": 1092,
     "PeopleCert": 4,
     "The IIA": 3
   },
   "byType": {
-    "certification": 132,
-    "certificate": 47,
+    "certification": 99,
+    "certificate": 45,
     "course": 1623
   },
   "byPrice": {
     "paid": 37,
-    "unknown": 1765
+    "unknown": 1730
   },
   "entries": [
     {
@@ -8350,27 +8350,6 @@
       "lastChecked": "2026-11-15"
     },
     {
-      "id": "microsoft-learn:certification:certification.m365-enterprise-administrator",
-      "title": "Microsoft 365 Certified: Administrator Expert",
-      "provider": "Microsoft Learn",
-      "url": "https://learn.microsoft.com/en-us/credentials/certifications/m365-administrator-expert/",
-      "type": "certification",
-      "level": "Advanced",
-      "price": "unknown",
-      "description": "Warning This certification, and related exam will retire on November 30, 2026. You will no longer be able to earn or renew this certification after this date. Learn more. . If you’re an…",
-      "tags": [
-        "Microsoft 365",
-        "entra-id",
-        "Office 365",
-        "Administrator",
-        "Deploy and manage a Microsoft 365 tenant",
-        "Implement and manage Microsoft Entra identity and access",
-        "Manage security and threats by using Microsoft Defender XDR",
-        "Manage compliance by using Microsoft Purview"
-      ],
-      "lastChecked": "2026-11-15"
-    },
-    {
       "id": "microsoft-learn:certification:certification.m365-collaboration-communications-systems-engineer",
       "title": "Microsoft 365 Certified: Collaboration Communications Systems Engineer Associate",
       "provider": "Microsoft Learn",
@@ -8429,44 +8408,6 @@
       "lastChecked": "2026-11-15"
     },
     {
-      "id": "microsoft-learn:certification:certification.m365-exchange-online-support-engineer-specialty",
-      "title": "Microsoft 365 Certified: Exchange Online Support Engineer Specialty",
-      "provider": "Microsoft Learn",
-      "url": "https://learn.microsoft.com/en-us/credentials/certifications/m365-exchange-online-support-engineer-specialty/",
-      "type": "certification",
-      "level": "Advanced",
-      "price": "unknown",
-      "description": "Warning This certification and the renewal assessment are retired. Learn more . Candidates for this certification identify, troubleshoot, and resolve issues with Microsoft Exchange Online, hybrid…",
-      "tags": [
-        "Microsoft 365",
-        "Support Engineer",
-        "Troubleshoot mail flow issues",
-        "Troubleshoot compliance and retention issues",
-        "Troubleshoot mail client issues",
-        "Troubleshoot Exchange Online configuration issues",
-        "Troubleshoot hybrid and migration issues"
-      ],
-      "lastChecked": "2026-11-15"
-    },
-    {
-      "id": "microsoft-learn:certification:certification.m365-messaging-administrator",
-      "title": "Microsoft 365 Certified: Messaging Administrator Associate",
-      "provider": "Microsoft Learn",
-      "url": "https://learn.microsoft.com/en-us/credentials/certifications/m365-messaging-administrator/",
-      "type": "certification",
-      "level": "Intermediate",
-      "price": "unknown",
-      "description": "Warning This certification and the renewal assessment are retired. Learn more . Microsoft 365 messaging administrators manage a secure, efficient, and effective email collaboration platform using…",
-      "tags": [
-        "Microsoft 365",
-        "Administrator",
-        "Manage Microsoft Exchange Online settings and resources",
-        "Plan and manage the mail transport architecture",
-        "Secure the messaging environment"
-      ],
-      "lastChecked": "2026-11-15"
-    },
-    {
       "id": "microsoft-learn:certification:certification.ai-services-administrator-associate",
       "title": "Microsoft 365 Certified: Microsoft 365 and AI Services Administrator Associate",
       "provider": "Microsoft Learn",
@@ -8491,27 +8432,6 @@
       "lastChecked": "2026-11-15"
     },
     {
-      "id": "microsoft-learn:certification:certification.m365-security-administrator",
-      "title": "Microsoft 365 Certified: Security Administrator Associate",
-      "provider": "Microsoft Learn",
-      "url": "https://learn.microsoft.com/en-us/credentials/certifications/m365-security-administrator/",
-      "type": "certification",
-      "level": "Intermediate",
-      "price": "unknown",
-      "description": "Warning This certification and the renewal assessment are retired. Learn more . Candidates for this certification plan, implement, manage, and monitor security and compliance solutions for Microsoft…",
-      "tags": [
-        "Microsoft 365",
-        "entra-id",
-        "Office 365",
-        "Administrator",
-        "Implement and manage identity and access",
-        "Implement and manage threat protection",
-        "Implement and manage information protection",
-        "Manage compliance in Microsoft 365"
-      ],
-      "lastChecked": "2026-11-15"
-    },
-    {
       "id": "microsoft-learn:certification:certification.m365-teams-administrator-associate",
       "title": "Microsoft 365 Certified: Teams Administrator Associate",
       "provider": "Microsoft Learn",
@@ -8527,74 +8447,6 @@
         "Manage teams, channels, chats, and apps",
         "Manage meetings and calling",
         "Monitor, report on, and troubleshoot Teams"
-      ],
-      "lastChecked": "2026-11-15"
-    },
-    {
-      "id": "microsoft-learn:certification:certification.m365-developer-associate",
-      "title": "Microsoft 365 Certified: Teams Application Developer Associate",
-      "provider": "Microsoft Learn",
-      "url": "https://learn.microsoft.com/en-us/credentials/certifications/m365-teams-application-developer-associate/",
-      "type": "certification",
-      "level": "Intermediate",
-      "price": "unknown",
-      "description": "Warning This certification and the renewal assessment are retired. Learn more . Microsoft Teams application developers design, build, test, and maintain modern enterprise-grade applications and…",
-      "tags": [
-        "Microsoft 365",
-        "Developer",
-        "Design collaborative app solutions and existing app integration",
-        "Implement Microsoft identity",
-        "Build apps with Microsoft Graph",
-        "Extend and customize Microsoft 365 with SharePoint Framework",
-        "Extend Microsoft Teams",
-        "Test, deploy, monitor, and maintain modern enterprise-grade app solutions"
-      ],
-      "lastChecked": "2026-11-15"
-    },
-    {
-      "id": "microsoft-learn:certification:certification.m365-teams-support-engineer-specialty",
-      "title": "Microsoft 365 Certified: Teams Support Engineer Specialty",
-      "provider": "Microsoft Learn",
-      "url": "https://learn.microsoft.com/en-us/credentials/certifications/m365-teams-support-engineer-specialty/",
-      "type": "certification",
-      "level": "Intermediate",
-      "price": "unknown",
-      "description": "Warning This certification and the renewal assessment are retired. Learn more . Candidates for this certification are support engineers who use advanced troubleshooting methods to support Microsoft…",
-      "tags": [
-        "Microsoft Teams",
-        "OneDrive",
-        "Office 365",
-        "Microsoft Graph",
-        "entra-id",
-        "Support Engineer",
-        "Troubleshoot Microsoft Teams voice issues",
-        "Troubleshoot issues with Microsoft Teams meetings and live events",
-        "Troubleshoot federation issues",
-        "Troubleshoot issues signing into Microsoft Teams",
-        "Troubleshoot teams and channels",
-        "Troubleshoot issues with files"
-      ],
-      "lastChecked": "2026-11-15"
-    },
-    {
-      "id": "microsoft-learn:certification:certification.m365-teams-voice-engineer-expert",
-      "title": "Microsoft 365 Certified: Teams Voice Engineer Expert",
-      "provider": "Microsoft Learn",
-      "url": "https://learn.microsoft.com/en-us/credentials/certifications/m365-teams-voice-engineer-expert/",
-      "type": "certification",
-      "level": "Advanced",
-      "price": "unknown",
-      "description": "Warning This certification and the renewal assessment are retired. Learn more . If you’re a telecommunications professional that knows how to plan, design, configure, maintain, and troubleshoot an…",
-      "tags": [
-        "Microsoft 365",
-        "Microsoft Teams",
-        "Administrator",
-        "Plan and configure Microsoft Teams Phone",
-        "Optimize network performance",
-        "Plan and configure Direct Routing",
-        "Configure and manage Microsoft Teams Phone for voice users",
-        "Plan and configure Microsoft Teams clients and devices",
-        "Monitor and troubleshoot Microsoft Teams Phone"
       ],
       "lastChecked": "2026-11-15"
     },
@@ -8812,28 +8664,6 @@
       "lastChecked": "2026-11-15"
     },
     {
-      "id": "microsoft-learn:certification:certification.azure-ai-engineer",
-      "title": "Microsoft Certified: Azure AI Engineer Associate",
-      "provider": "Microsoft Learn",
-      "url": "https://learn.microsoft.com/en-us/credentials/certifications/azure-ai-engineer/",
-      "type": "certification",
-      "level": "Intermediate",
-      "price": "unknown",
-      "description": "Warning This certification and the renewal assessment are retired. Learn more . As a Microsoft Azure AI engineer, you build, manage, and deploy AI solutions that leverage Azure AI. Your…",
-      "tags": [
-        "Azure",
-        "AI Engineer",
-        "Artificial intelligence",
-        "Plan and manage an Azure AI solution",
-        "Implement generative AI solutions",
-        "Implement an agentic solution",
-        "Implement computer vision solutions",
-        "Implement natural language processing solutions",
-        "Implement knowledge mining and information extraction solutions"
-      ],
-      "lastChecked": "2026-11-15"
-    },
-    {
       "id": "microsoft-learn:certification:certification.azure-ai-fundamentals",
       "title": "Microsoft Certified: Azure AI Fundamentals",
       "provider": "Microsoft Learn",
@@ -8890,26 +8720,6 @@
       "lastChecked": "2026-11-15"
     },
     {
-      "id": "microsoft-learn:certification:certification.azure-data-scientist",
-      "title": "Microsoft Certified: Azure Data Scientist Associate",
-      "provider": "Microsoft Learn",
-      "url": "https://learn.microsoft.com/en-us/credentials/certifications/azure-data-scientist/",
-      "type": "certification",
-      "level": "Intermediate",
-      "price": "unknown",
-      "description": "Warning This certification and the renewal assessment are retired. Learn more . As a candidate for this certification, you should have subject matter expertise in applying data science and machine…",
-      "tags": [
-        "Azure",
-        "Data Scientist",
-        "Machine learning",
-        "Design and prepare a machine learning solution",
-        "Explore data, and run experiments",
-        "Train and deploy models",
-        "Optimize language models for AI applications"
-      ],
-      "lastChecked": "2026-11-15"
-    },
-    {
       "id": "microsoft-learn:certification:certification.azure-database-administrator-associate",
       "title": "Microsoft Certified: Azure Database Administrator Associate",
       "provider": "Microsoft Learn",
@@ -8947,27 +8757,6 @@
         "Secure and govern Unity Catalog objects",
         "Prepare and process data",
         "Deploy and maintain data pipelines and workloads"
-      ],
-      "lastChecked": "2026-11-15"
-    },
-    {
-      "id": "microsoft-learn:certification:certification.azure-developer",
-      "title": "Microsoft Certified: Azure Developer Associate",
-      "provider": "Microsoft Learn",
-      "url": "https://learn.microsoft.com/en-us/credentials/certifications/azure-developer/",
-      "type": "certification",
-      "level": "Intermediate",
-      "price": "unknown",
-      "description": "Warning This certification and the renewal assessment are retired. Learn more . As a candidate for this certification, you’re responsible for participating in all phases of development, including…",
-      "tags": [
-        "Azure",
-        "Developer",
-        "app-development",
-        "Develop Azure compute solutions",
-        "Develop for Azure storage",
-        "Implement Azure security",
-        "Monitor, troubleshoot, and optimize Azure solutions",
-        "Connect to and consume Azure services and third-party services"
       ],
       "lastChecked": "2026-11-15"
     },
@@ -9035,30 +8824,6 @@
       "lastChecked": "2026-11-15"
     },
     {
-      "id": "microsoft-learn:certification:certification.azure-iot-developer-specialty",
-      "title": "Microsoft Certified: Azure IoT Developer Specialty",
-      "provider": "Microsoft Learn",
-      "url": "https://learn.microsoft.com/en-us/credentials/certifications/azure-iot-developer-specialty/",
-      "type": "certification",
-      "level": "Intermediate",
-      "price": "unknown",
-      "description": "Warning This certification and the renewal assessment are retired. Learn more . Candidates for this certification should have subject matter expertise implementing the configuration and coding tasks…",
-      "tags": [
-        "Azure",
-        "IoT Central",
-        "IoT Hub",
-        "Developer",
-        "Set up the Azure IoT Hub solution infrastructure",
-        "Provision and manage devices",
-        "Implement IoT Edge",
-        "Implement business integration",
-        "Process and manage data",
-        "Monitor, troubleshoot, and optimize IoT solutions",
-        "Implement security"
-      ],
-      "lastChecked": "2026-11-15"
-    },
-    {
       "id": "microsoft-learn:certification:certification.azure-network-engineer-associate",
       "title": "Microsoft Certified: Azure Network Engineer Associate",
       "provider": "Microsoft Learn",
@@ -9076,26 +8841,6 @@
         "Design and implement application delivery services",
         "Design and implement private access to Azure services",
         "Design and implement Azure network security services"
-      ],
-      "lastChecked": "2026-11-15"
-    },
-    {
-      "id": "microsoft-learn:certification:certification.azure-security-engineer",
-      "title": "Microsoft Certified: Azure Security Engineer Associate",
-      "provider": "Microsoft Learn",
-      "url": "https://learn.microsoft.com/en-us/credentials/certifications/azure-security-engineer/",
-      "type": "certification",
-      "level": "Intermediate",
-      "price": "unknown",
-      "description": "Warning This certification, related exam, and renewal assessments was retired on August 31, 2026. You will no longer be able to earn or renew this certification after this date. Learn more . As the…",
-      "tags": [
-        "Azure",
-        "Security Engineer",
-        "Security",
-        "Secure identity and access",
-        "Secure networking",
-        "Secure compute, storage, and databases",
-        "Secure Azure using Microsoft Defender for Cloud and Microsoft Sentinel"
       ],
       "lastChecked": "2026-11-15"
     },
@@ -9151,51 +8896,6 @@
         "Event Hubs",
         "Solution Architect",
         "None"
-      ],
-      "lastChecked": "2026-11-15"
-    },
-    {
-      "id": "microsoft-learn:certification:certification.azure-stack-hub-operator",
-      "title": "Microsoft Certified: Azure Stack Hub Operator Associate",
-      "provider": "Microsoft Learn",
-      "url": "https://learn.microsoft.com/en-us/credentials/certifications/azure-stack-hub-operator/",
-      "type": "certification",
-      "level": "Intermediate",
-      "price": "unknown",
-      "description": "Warning This certification and the renewal assessment are retired. Learn more . Candidates for the Azure Stack Hub Operator Associate certification have subject matter expertise in providing…",
-      "tags": [
-        "Azure",
-        "Azure Stack",
-        "azure-stack-edge",
-        "Azure Stack Hub",
-        "App Service",
-        "Event Hubs",
-        "entra-id",
-        "Administrator",
-        "Plan and deploy Azure Stack Hub",
-        "Provide services",
-        "Manage infrastructure"
-      ],
-      "lastChecked": "2026-11-15"
-    },
-    {
-      "id": "microsoft-learn:certification:certification.azure-support-engineer-for-connectivity-specialty",
-      "title": "Microsoft Certified: Azure Support Engineer for Connectivity Specialty",
-      "provider": "Microsoft Learn",
-      "url": "https://learn.microsoft.com/en-us/credentials/certifications/azure-support-engineer-for-connectivity-specialty/",
-      "type": "certification",
-      "level": "Intermediate",
-      "price": "unknown",
-      "description": "Warning This certification and the renewal assessment are retired. Learn more . Candidates for the Microsoft Azure Support Engineer for Connectivity Specialty certification are support engineers…",
-      "tags": [
-        "Azure",
-        "Support Engineer",
-        "Troubleshoot business continuity issues",
-        "Troubleshoot hybrid and cloud connectivity issues",
-        "Troubleshoot Platform as a Service (PaaS) issues",
-        "Troubleshoot authentication and access control issues",
-        "Troubleshoot networks",
-        "Troubleshoot VM connectivity issues"
       ],
       "lastChecked": "2026-11-15"
     },
@@ -9367,34 +9067,6 @@
       "lastChecked": "2026-11-15"
     },
     {
-      "id": "microsoft-learn:certification:certification.d365-functional-consultant-commerce",
-      "title": "Microsoft Certified: Dynamics 365 Commerce Functional Consultant Associate",
-      "provider": "Microsoft Learn",
-      "url": "https://learn.microsoft.com/en-us/credentials/certifications/d365-functional-consultant-commerce/",
-      "type": "certification",
-      "level": "Intermediate",
-      "price": "unknown",
-      "description": "Warning This certification and the renewal assessment are retired. Learn more . If you're a functional consultant, developer, information worker, or IT or business professional using Dynamics 365…",
-      "tags": [
-        "Dynamics 365",
-        "Finance",
-        "Commerce",
-        "Customer Service",
-        "Sales",
-        "Functional Consultant",
-        "Describe finance and operations apps, and extend apps by using Microsoft Power Platform technologies",
-        "Configure administrative features and workflows",
-        "Manage finance and operations data",
-        "Validate and support solutions",
-        "Configure Dynamics 365 Commerce Headquarters",
-        "Configure products, prices, discounts, loyalty, and affiliations",
-        "Manage Point of Sales (POS) in Dynamics 365 Commerce",
-        "Configure and manage Dynamics 365 Commerce call centers",
-        "Manage e-commerce"
-      ],
-      "lastChecked": "2026-11-15"
-    },
-    {
       "id": "microsoft-learn:certification:certification.d365-contact-center-ai-engineer-associate",
       "title": "Microsoft Certified: Dynamics 365 Contact Center AI Engineer Associate",
       "provider": "Microsoft Learn",
@@ -9415,32 +9087,6 @@
         "Configure work distribution",
         "Configure the Dynamics 365 Contact Center representative experience",
         "Manage analytics for the Dynamics 365 Contact Center"
-      ],
-      "lastChecked": "2026-11-15"
-    },
-    {
-      "id": "microsoft-learn:certification:certification.d365-customer-experience-analyst-associate",
-      "title": "Microsoft Certified: Dynamics 365 Customer Experience Analyst Associate",
-      "provider": "Microsoft Learn",
-      "url": "https://learn.microsoft.com/en-us/credentials/certifications/d365-customer-experience-analyst-associate/",
-      "type": "certification",
-      "level": "Intermediate",
-      "price": "unknown",
-      "description": "Warning This certification and the renewal assessment are retired. Learn more . As a candidate for this certification, you configure solutions using Microsoft Dynamics 365 customer experience apps…",
-      "tags": [
-        "dynamics",
-        "Dynamics 365",
-        "Customer Engagement apps",
-        "Business Analyst",
-        "Functional Consultant",
-        "Business applications",
-        "Customer relationship management",
-        "Marketing and sales",
-        "solution-design",
-        "Implement Dynamics 365 Sales",
-        "Configure and customize Dataverse and model-driven apps",
-        "Demonstrate Dynamics 365 Customer Insights capabilities",
-        "Extend and enhance Dynamics 365 Sales capabilities"
       ],
       "lastChecked": "2026-11-15"
     },
@@ -9518,28 +9164,6 @@
         "Customer Service",
         "Functional Consultant",
         "None"
-      ],
-      "lastChecked": "2026-11-15"
-    },
-    {
-      "id": "microsoft-learn:certification:certification.d365-functional-consultant-field-service-v3",
-      "title": "Microsoft Certified: Dynamics 365 Field Service Functional Consultant Associate",
-      "provider": "Microsoft Learn",
-      "url": "https://learn.microsoft.com/en-us/credentials/certifications/d365-functional-consultant-field-service/",
-      "type": "certification",
-      "level": "Intermediate",
-      "price": "unknown",
-      "description": "Warning This certification and the renewal assessment are retired. Learn more . As a candidate for this certification, you’re a Microsoft Dynamics 365 Field Service functional consultant. You’re…",
-      "tags": [
-        "Dynamics 365",
-        "Functional Consultant",
-        "Business applications",
-        "Configure field service applications",
-        "Manage work orders and customer assets",
-        "Schedule and dispatch work orders",
-        "Manage the Field Service mobile app",
-        "Manage inventory and purchasing by using the built-in inventory management system",
-        "Implement Microsoft Power Platform"
       ],
       "lastChecked": "2026-11-15"
     },
@@ -9755,72 +9379,6 @@
       "lastChecked": "2026-11-15"
     },
     {
-      "id": "microsoft-learn:certification:certification.d365-functional-consultant-supply-chain-management",
-      "title": "Microsoft Certified: Dynamics 365 Supply Chain Management Functional Consultant Associate",
-      "provider": "Microsoft Learn",
-      "url": "https://learn.microsoft.com/en-us/credentials/certifications/d365-functional-consultant-supply-chain-management/",
-      "type": "certification",
-      "level": "Intermediate",
-      "price": "unknown",
-      "description": "Warning This exam will retire on February 1, 2027, at 11:59 PM Central Standard Time. Learn more . As a candidate for this certification, you design solutions and configure Dynamics 365 Supply Chain…",
-      "tags": [
-        "Dynamics 365",
-        "Functional Consultant",
-        "Supply chain management",
-        "Implement product information management",
-        "Implement inventory and asset management",
-        "Implement and manage supply chain processes",
-        "Implement warehouse management and transportation management",
-        "Implement master planning"
-      ],
-      "lastChecked": "2026-11-15"
-    },
-    {
-      "id": "microsoft-learn:certification:certification.d365-supply-chain-management-functional-consultant-expert",
-      "title": "Microsoft Certified: Dynamics 365 Supply Chain Management Functional Consultant Expert",
-      "provider": "Microsoft Learn",
-      "url": "https://learn.microsoft.com/en-us/credentials/certifications/d365-supply-chain-management-functional-consultant-expert/",
-      "type": "certification",
-      "level": "Advanced",
-      "price": "unknown",
-      "description": "Warning This certification, related exam, and renewal assessments was retired on June 30, 2026. You will no longer be able to earn or renew this certification after this date. Learn more . As a…",
-      "tags": [
-        "Dynamics 365",
-        "Supply Chain Management",
-        "Functional Consultant",
-        "Configure products",
-        "Configure production prerequisites",
-        "Implement production methods",
-        "Configure production control",
-        "Implement additional supply chain management features"
-      ],
-      "lastChecked": "2026-11-15"
-    },
-    {
-      "id": "microsoft-learn:certification:certification.d365-functional-consultant-manufacturing",
-      "title": "Microsoft Certified: Dynamics 365 Supply Chain Management, Manufacturing Functional Consultant Associate",
-      "provider": "Microsoft Learn",
-      "url": "https://learn.microsoft.com/en-us/credentials/certifications/d365-functional-consultant-manufacturing/",
-      "type": "certification",
-      "level": "Intermediate",
-      "price": "unknown",
-      "description": "Warning This certification and the renewal assessment are retired. Learn more . If you’re a functional consultant or a business user with a deep understanding of manufacturing industry standards…",
-      "tags": [
-        "Dynamics 365",
-        "Finance",
-        "Functional Consultant",
-        "Describe finance and operations apps, and extend apps by using Microsoft Power Platform technologies",
-        "Configure administrative features and workflows",
-        "Manage finance and operations data",
-        "Validate and support solutions",
-        "Configure Dynamics 365 Supply Chain Management, Manufacturing",
-        "Manage manufacturing processes",
-        "Implement master planning for production",
-        "Implement other manufacturing features"
-      ],
-      "lastChecked": "2026-11-15"
-    },
-    {
       "id": "microsoft-learn:certification:certification.d365-finance-and-operations-apps-developer-associate",
       "title": "Microsoft Certified: Dynamics 365: Finance and Operations Apps Developer Associate",
       "provider": "Microsoft Learn",
@@ -9844,26 +9402,6 @@
         "Implement reporting",
         "Integrate and manage data solutions",
         "Implement security and optimize performance"
-      ],
-      "lastChecked": "2026-11-15"
-    },
-    {
-      "id": "microsoft-learn:certification:certification.d365-finance-and-operations-apps-solution-architect-expert",
-      "title": "Microsoft Certified: Dynamics 365: Finance and Operations Apps Solution Architect Expert",
-      "provider": "Microsoft Learn",
-      "url": "https://learn.microsoft.com/en-us/credentials/certifications/d365-finance-and-operations-apps-solution-architect-expert/",
-      "type": "certification",
-      "level": "Advanced",
-      "price": "unknown",
-      "description": "Warning This certification, related exam, and renewal assessments was retired on June 30, 2026. You will no longer be able to earn or renew this certification after this date. Learn more…",
-      "tags": [
-        "Dynamics 365",
-        "Functional Consultant",
-        "Solution Architect",
-        "Architect solutions",
-        "Define solution strategies",
-        "Manage implementations",
-        "Manage testing"
       ],
       "lastChecked": "2026-11-15"
     },
@@ -10015,24 +9553,6 @@
       "lastChecked": "2026-11-15"
     },
     {
-      "id": "microsoft-learn:certification:certification.power-automate-rpa-developer-associate",
-      "title": "Microsoft Certified: Power Automate RPA Developer Associate",
-      "provider": "Microsoft Learn",
-      "url": "https://learn.microsoft.com/en-us/credentials/certifications/power-automate-rpa-developer-associate/",
-      "type": "certification",
-      "level": "Intermediate",
-      "price": "unknown",
-      "description": "Warning This certification and the renewal assessment are retired. Learn more . As a candidate for this certification, you automate Windows-based, browser-based, and terminal-based applications that…",
-      "tags": [
-        "Microsoft Power Platform",
-        "Developer",
-        "Design automations",
-        "Develop automations",
-        "Deploy and manage automations"
-      ],
-      "lastChecked": "2026-11-15"
-    },
-    {
       "id": "microsoft-learn:certification:certification.data-analyst-associate",
       "title": "Microsoft Certified: Power BI Data Analyst Associate",
       "provider": "Microsoft Learn",
@@ -10076,26 +9596,6 @@
       "lastChecked": "2026-11-15"
     },
     {
-      "id": "microsoft-learn:certification:certification.power-platform-functional-consultant-associate",
-      "title": "Microsoft Certified: Power Platform Functional Consultant Associate",
-      "provider": "Microsoft Learn",
-      "url": "https://learn.microsoft.com/en-us/credentials/certifications/power-platform-functional-consultant-associate/",
-      "type": "certification",
-      "level": "Intermediate",
-      "price": "unknown",
-      "description": "Warning This certification, related exam, and renewal assessments was retired on August 31, 2026. You will no longer be able to earn or renew this certification after this date. Learn more . As a…",
-      "tags": [
-        "Microsoft Power Platform",
-        "Functional Consultant",
-        "Business applications",
-        "Configure Microsoft Dataverse",
-        "Create apps by using Microsoft Power Apps",
-        "Create and manage logic and process automation",
-        "Manage environments"
-      ],
-      "lastChecked": "2026-11-15"
-    },
-    {
       "id": "microsoft-learn:certification:certification.power-platform-fundamentals",
       "title": "Microsoft Certified: Power Platform Fundamentals",
       "provider": "Microsoft Learn",
@@ -10112,39 +9612,6 @@
         "Demonstrate the capabilities of Power Apps",
         "Demonstrate the capabilities of Power Automate",
         "Describe features and capabilities of agents in Microsoft Copilot Studio"
-      ],
-      "lastChecked": "2026-11-15"
-    },
-    {
-      "id": "microsoft-learn:certification:certification.power-platform-solution-architect-expert",
-      "title": "Microsoft Certified: Power Platform Solution Architect Expert",
-      "provider": "Microsoft Learn",
-      "url": "https://learn.microsoft.com/en-us/credentials/certifications/power-platform-solution-architect-expert/",
-      "type": "certification",
-      "level": "Advanced",
-      "price": "unknown",
-      "description": "Warning This certification, related exam, and renewal assessments was retired on June 30, 2026. You will no longer be able to earn or renew this certification after this date. Learn more . As a…",
-      "tags": [
-        "Dynamics 365",
-        "Microsoft Power Platform",
-        "AI Builder",
-        "Power Automate",
-        "Power BI",
-        "Power Apps",
-        "microsoft-copilot-studio",
-        "Azure",
-        "entra-id",
-        "entra",
-        "Customer Engagement apps",
-        "dataverse",
-        "App Configuration",
-        "App Service",
-        "Developer",
-        "Functional Consultant",
-        "Solution Architect",
-        "Perform solution envisioning and requirement analysis",
-        "Architect a solution",
-        "Implement the solution"
       ],
       "lastChecked": "2026-11-15"
     },
@@ -10298,63 +9765,6 @@
       "lastChecked": "2026-11-15"
     },
     {
-      "id": "microsoft-learn:certification:certification.microsoft-office-specialist-master-certification-2013",
-      "title": "Microsoft Office Specialist 2013 Master",
-      "provider": "Microsoft Learn",
-      "url": "https://learn.microsoft.com/en-us/credentials/certifications/microsoft-office-specialist-master-certification-2013/",
-      "type": "certification",
-      "level": "Intermediate",
-      "price": "unknown",
-      "description": "Warning MOS 2013 certifications were fully retired on June 30, 2024. We encourage those currently certified in this MOS version to update the most recent Microsoft certifications. You can find the…",
-      "tags": [
-        "Office",
-        "Word",
-        "Excel",
-        "OneNote",
-        "PowerPoint",
-        "Outlook",
-        "office-access",
-        "SharePoint",
-        "Business User"
-      ],
-      "lastChecked": "2026-11-15"
-    },
-    {
-      "id": "microsoft-learn:certification:certification.microsoft-office-specialist-master-certification-2016",
-      "title": "Microsoft Office Specialist: 2016 Master",
-      "provider": "Microsoft Learn",
-      "url": "https://learn.microsoft.com/en-us/credentials/certifications/microsoft-office-specialist-master-certification-2016/",
-      "type": "certification",
-      "level": "Advanced",
-      "price": "unknown",
-      "description": "Warning This certification, and related exam, was retired on June 30, 2026. It was replaced by Microsoft Office Specialist: Associate or Microsoft Office Specialist: Expert . Learn more…",
-      "tags": [
-        "Office",
-        "Business User"
-      ],
-      "lastChecked": "2026-11-15"
-    },
-    {
-      "id": "microsoft-learn:certification:certification.mos-access-2016",
-      "title": "Microsoft Office Specialist: Access (Office 2016)",
-      "provider": "Microsoft Learn",
-      "url": "https://learn.microsoft.com/en-us/credentials/certifications/mos-access-2016/",
-      "type": "certification",
-      "level": "Intermediate",
-      "price": "unknown",
-      "description": "Warning This certification, and related exam, was retired on June 30, 2026. Learn more . As a candidate for this certification, you have a fundamental understanding of the Access 2016 environment…",
-      "tags": [
-        "office-access",
-        "Business User",
-        "Create and manage a database",
-        "Build tables",
-        "Create queries",
-        "Create forms",
-        "Create reports"
-      ],
-      "lastChecked": "2026-11-15"
-    },
-    {
       "id": "microsoft-learn:certification:certification.mos-access-expert-2019",
       "title": "Microsoft Office Specialist: Access Expert (Office 2019)",
       "provider": "Microsoft Learn",
@@ -10403,26 +9813,6 @@
       "tags": [
         "Office",
         "Business User"
-      ],
-      "lastChecked": "2026-11-15"
-    },
-    {
-      "id": "microsoft-learn:certification:certification.mos-excel-2016",
-      "title": "Microsoft Office Specialist: Excel (Office 2016)",
-      "provider": "Microsoft Learn",
-      "url": "https://learn.microsoft.com/en-us/credentials/certifications/mos-excel-2016/",
-      "type": "certification",
-      "level": "Intermediate",
-      "price": "unknown",
-      "description": "Warning This certification, and related exam, was retired on June 30, 2026. It was replaced by Microsoft Office Specialist: Excel (Microsoft 365 Apps) . Learn more . As a candidate for this…",
-      "tags": [
-        "Excel",
-        "Business User",
-        "Create and manage worksheets and workbooks",
-        "Manage data cells and ranges",
-        "Create tables",
-        "Perform operations with formulas and functions",
-        "Create charts and objects"
       ],
       "lastChecked": "2026-11-15"
     },
@@ -10482,25 +9872,6 @@
         "Manage and format data",
         "Create advanced formulas and macros",
         "Manage advanced charts and tables"
-      ],
-      "lastChecked": "2026-11-15"
-    },
-    {
-      "id": "microsoft-learn:certification:certification.mos-excel-2016-expert",
-      "title": "Microsoft Office Specialist: Excel Expert (Office 2016)",
-      "provider": "Microsoft Learn",
-      "url": "https://learn.microsoft.com/en-us/credentials/certifications/mos-excel-2016-expert/",
-      "type": "certification",
-      "level": "Advanced",
-      "price": "unknown",
-      "description": "Warning This certification, and related exam, was retired on June 30, 2026. It was replaced by Microsoft Office Specialist: Excel Expert (Microsoft 365 Apps) . Learn more . Demonstrate that you have…",
-      "tags": [
-        "Excel",
-        "Business User",
-        "Manage workbook options and settings",
-        "Apply custom data formats and layouts",
-        "Create advanced formulas",
-        "Create advanced charts and tables"
       ],
       "lastChecked": "2026-11-15"
     },
@@ -10614,25 +9985,6 @@
       "lastChecked": "2026-11-15"
     },
     {
-      "id": "microsoft-learn:certification:certification.mos-outlook-2016",
-      "title": "Microsoft Office Specialist: Outlook (Office 2016)",
-      "provider": "Microsoft Learn",
-      "url": "https://learn.microsoft.com/en-us/credentials/certifications/mos-outlook-2016/",
-      "type": "certification",
-      "level": "Intermediate",
-      "price": "unknown",
-      "description": "Warning This certification, and related exam, was retired on June 30, 2026. Learn more . As a candidate for this certification, you have a fundamental understanding of the Outlook 2016 environment…",
-      "tags": [
-        "Outlook",
-        "Business User",
-        "Manage the Outlook environment for productivity",
-        "Manage messages",
-        "Manage schedules",
-        "Manage contacts and groups"
-      ],
-      "lastChecked": "2026-11-15"
-    },
-    {
       "id": "microsoft-learn:certification:certification.mos-outlook-2019",
       "title": "Microsoft Office Specialist: Outlook Associate (Office 2019)",
       "provider": "Microsoft Learn",
@@ -10648,26 +10000,6 @@
         "Manage messages",
         "Manage schedules",
         "Manage contacts and tasks"
-      ],
-      "lastChecked": "2026-11-15"
-    },
-    {
-      "id": "microsoft-learn:certification:certification.mos-powerpoint-2016",
-      "title": "Microsoft Office Specialist: PowerPoint (Office 2016)",
-      "provider": "Microsoft Learn",
-      "url": "https://learn.microsoft.com/en-us/credentials/certifications/mos-powerpoint-2016/",
-      "type": "certification",
-      "level": "Intermediate",
-      "price": "unknown",
-      "description": "Warning This certification, and related exam, was retired on June 30, 2026. It was replaced by Microsoft Office Specialist: PowerPoint (Microsoft 365 Apps) . Learn more . As a candidate for this…",
-      "tags": [
-        "PowerPoint",
-        "Business User",
-        "Create and manage presentations",
-        "Insert and format text, shapes, and images",
-        "Insert tables, charts, SmartArt, and media",
-        "Apply transitions and animations",
-        "Manage multiple presentations"
       ],
       "lastChecked": "2026-11-15"
     },
@@ -10708,26 +10040,6 @@
         "Insert and format text, shapes, and images",
         "Insert tables, charts, SmartArt, 3D models, and media",
         "Apply transitions and animations"
-      ],
-      "lastChecked": "2026-11-15"
-    },
-    {
-      "id": "microsoft-learn:certification:certification.mos-word-2016",
-      "title": "Microsoft Office Specialist: Word (Office 2016)",
-      "provider": "Microsoft Learn",
-      "url": "https://learn.microsoft.com/en-us/credentials/certifications/mos-word-2016/",
-      "type": "certification",
-      "level": "Intermediate",
-      "price": "unknown",
-      "description": "Warning This certification, and related exam, was retired on June 30, 2026. It was replaced by Microsoft Office Specialist: Word (Microsoft 365 Apps) . Learn more . As a candidate for this…",
-      "tags": [
-        "Word",
-        "Business User",
-        "Create and manage documents",
-        "Format text, paragraphs, and sections",
-        "Create tables and lists",
-        "Create and manage references",
-        "Insert and format graphic elements"
       ],
       "lastChecked": "2026-11-15"
     },
@@ -10789,25 +10101,6 @@
         "Use advanced editing and formatting features",
         "Create custom document elements",
         "Use advanced Word features"
-      ],
-      "lastChecked": "2026-11-15"
-    },
-    {
-      "id": "microsoft-learn:certification:certification.mos-word-2016-expert",
-      "title": "Microsoft Office Specialist: Word Expert (Office 2016)",
-      "provider": "Microsoft Learn",
-      "url": "https://learn.microsoft.com/en-us/credentials/certifications/mos-word-2016-expert/",
-      "type": "certification",
-      "level": "Advanced",
-      "price": "unknown",
-      "description": "Warning This certification, and related exam, was retired on June 30, 2026. It will be replaced with Microsoft Office Specialist: Word Expert(Microsoft 365 Apps) . Learn more . As a candidate for…",
-      "tags": [
-        "Word",
-        "Business User",
-        "Manage document options and settings",
-        "Design advanced documents",
-        "Create advanced references",
-        "Create custom Word elements"
       ],
       "lastChecked": "2026-11-15"
     },
@@ -10946,23 +10239,6 @@
         "Virtual Network",
         "Administrator",
         "Networking"
-      ],
-      "lastChecked": "2026-11-15"
-    },
-    {
-      "id": "microsoft-learn:applied-skill:applied-skill.create-an-ai-agent",
-      "title": "Microsoft Applied Skills: Create an AI agent",
-      "provider": "Microsoft Learn",
-      "url": "https://learn.microsoft.com/en-us/credentials/applied-skills/create-an-ai-agent/",
-      "type": "certificate",
-      "level": "Beginner",
-      "price": "unknown",
-      "description": "Warning This Applied Skills assessment has been retired. Explore other Applied Skills to keep building your skills. To earn this Microsoft Applied Skills credential, learners demonstrate the ability…",
-      "tags": [
-        "microsoft-foundry",
-        "AI Engineer",
-        "Developer",
-        "Artificial intelligence"
       ],
       "lastChecked": "2026-11-15"
     },
@@ -11262,23 +10538,6 @@
         "Information Protection Administrator",
         "Security Operations Analyst",
         "Compliance"
-      ],
-      "lastChecked": "2026-11-15"
-    },
-    {
-      "id": "microsoft-learn:applied-skill:applied-skill.implement-knowledge-mining-with-azure-ai-search",
-      "title": "Microsoft Applied Skills: Implement knowledge mining with Azure AI Search",
-      "provider": "Microsoft Learn",
-      "url": "https://learn.microsoft.com/en-us/credentials/applied-skills/implement-knowledge-mining-with-azure-ai-search/",
-      "type": "certificate",
-      "level": "Intermediate",
-      "price": "unknown",
-      "description": "Warning This Applied Skills assessment has been retired. Explore other Applied Skills to keep building your skills. To earn this Microsoft Applied Skills credential, learners demonstrate the ability…",
-      "tags": [
-        "Cognitive Search",
-        "foundry-tools",
-        "AI Engineer",
-        "Artificial intelligence"
       ],
       "lastChecked": "2026-11-15"
     },

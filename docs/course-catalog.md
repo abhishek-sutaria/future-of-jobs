@@ -81,9 +81,9 @@ picks them up).
 
 <!-- counts:start (written by scripts/build_course_catalog.ts) -->
 
-Last full run: 2026-11-15, 2 min. Catalog: **1,802 entries**, 1316 KB.
+Last run: 2026-11-21, re-applying the filters to the saved downloads (no new downloads). Catalog: **1,767 entries**, 1281 KB.
 
-- **Microsoft Learn** (official Catalog API): collected 1161, passed the check 1127, dropped 34: 34 page says it is retired.
+- **Microsoft Learn** (official Catalog API): collected 1161, passed the check 1092, dropped 69: 69 page says it is retired.
 - **Google Skills (Cloud Skills Boost)** (official catalog pages (the list they carry as data)): collected 1303, passed the check 636, dropped 667: 667 a lab, not a course.
 - **Grow with Google** (sitemap listed in robots.txt): collected 28, passed the check 28, dropped 0.
 - **Certification bodies (IIA, PeopleCert, ACE)** (hand-reviewed pages from each body's official certification listing): collected 12, passed the check 11, dropped 1: 1 title does not match.

@@ -120,8 +120,8 @@ const CourseUrl = z.string().nullish();
 
 export const RoadmapOutput = z.object({
     phases: z.array(z.object({ title: NonEmpty, items: z.array(NonEmpty).min(1) }).passthrough()).min(1),
-    // Fewer, even none, is accepted (Defend / Build then says no course was found).
-    courses: z.array(z.object({ title: NonEmpty, provider: NonEmpty, url: CourseUrl }).passthrough()).max(6),
+    // At least one course: an empty list was accepted only during the web-search experiment (#99).
+    courses: z.array(z.object({ title: NonEmpty, provider: NonEmpty, url: CourseUrl }).passthrough()).min(1).max(6),
     resources: z.array(z.object({ category: NonEmpty, items: z.array(NonEmpty) }).passthrough()),
     successMetrics: z.array(NonEmpty).min(1),
 }).passthrough();
@@ -133,7 +133,7 @@ export const UpskillOutput = z.object({
         url: CourseUrl,
         duration: z.string(),
         level: z.string(),
-    }).passthrough()).max(5),
+    }).passthrough()).min(1).max(5),
     whyTheseCourses: z.string(),
 }).passthrough();
 

@@ -274,12 +274,15 @@ describe('a whole answer', () => {
         expect(done2.courses[0].link.label).toBe('Search the web');
     });
 
-    it('an answer with fewer courses, even none, passes (never an invented one); a missing list does not', () => {
+    it('an answer needs at least one course (an empty or missing list is rejected); fewer than asked passes', () => {
         const input = { roleKey: 'soc:13-2011', title: 'A', riskTask: 'r', targetTask: 't' };
-        expect(() => AI_FEATURES.roadmap.check({ phases: [{ title: 'M1', items: ['a'] }], courses: [], resources: [], successMetrics: ['m'] }, input)).not.toThrow();
+        const one = [{ title: 'Certified Internal Auditor', provider: 'The IIA', url: '' }];
+        expect(() => AI_FEATURES.roadmap.check({ phases: [{ title: 'M1', items: ['a'] }], courses: one, resources: [], successMetrics: ['m'] }, input)).not.toThrow();
+        expect(() => AI_FEATURES.roadmap.check({ phases: [{ title: 'M1', items: ['a'] }], courses: [], resources: [], successMetrics: ['m'] }, input)).toThrow();
         expect(() => AI_FEATURES.roadmap.check({ phases: [{ title: 'M1', items: ['a'] }], resources: [], successMetrics: ['m'] }, input)).toThrow();
-        expect(() => AI_FEATURES.upskill.check({ courses: [], whyTheseCourses: '' },
-            { roleKey: 'soc:13-2011', title: 'A', taskName: 't', mode: 'build', riskPercent: 10 })).not.toThrow();
+        const up = { roleKey: 'soc:13-2011', title: 'A', taskName: 't', mode: 'build' as const, riskPercent: 10 };
+        expect(() => AI_FEATURES.upskill.check({ courses: [], whyTheseCourses: '' }, up)).toThrow();
+        expect(() => AI_FEATURES.upskill.check({ courses: [{ ...one[0], duration: '', level: '' }], whyTheseCourses: '' }, up)).not.toThrow();
     });
 });
 
