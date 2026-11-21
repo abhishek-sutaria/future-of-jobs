@@ -296,8 +296,8 @@ describe('the prompts ask for a link', () => {
         expect(roadmap).not.toMatch(/"category": "Courses & Certifications"/);
         for (const p of [roadmap, buildUpskillPrompt('A', 't', 'defend', 50)]) expect(p).not.toMatch(/web_search|search result/i);
         // Bumped past the web-search versions (upskill-3, roadmap-4), so none of those answers is reused.
-        expect(AI_FEATURES.upskill.promptVersion).toBe('upskill-4');
-        expect(AI_FEATURES.roadmap.promptVersion).toBe('roadmap-5');
+        expect(AI_FEATURES.upskill.promptVersion).toBe('upskill-5');
+        expect(AI_FEATURES.roadmap.promptVersion).toBe('roadmap-6');
     });
 });
 

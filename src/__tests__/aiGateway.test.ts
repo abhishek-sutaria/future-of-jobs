@@ -159,7 +159,7 @@ describe('one shared saved answer', () => {
             'job-15|analyze|analyze-1',
             'soc:29-1141|analyze|analyze-1',
             'soc:29-1141|analyze|analyze-1',
-            'soc:29-1141|roadmap|roadmap-5',
+            'soc:29-1141|roadmap|roadmap-6',
         ]);
         for (const r of rows) expect(r.input_hash).toMatch(/^[0-9a-f]{64}$/);
     });
@@ -176,7 +176,8 @@ describe('one shared saved answer', () => {
             },
             env: () => env,
         });
-        const input = { roleKey: 'soc:13-2011', title: 'Accountants and Auditors', taskName: 'Prepare tax returns', mode: 'defend', riskPercent: 70 };
+        // An unmatched job (no catalog courses): the #99 path. Matched jobs: courseCatalogLinks.test.ts.
+        const input = { roleKey: 'soc:47-2111', title: 'Electricians', taskName: 'Prepare sketches or follow blueprints', mode: 'defend', riskPercent: 70 };
         const first = await call(h, { feature: 'upskill', input }, { ip: '198.51.100.1' });
         expect(first.status).toBe(200);
         const links = first.json.result.courses.map((c: { link: { kind: string; label: string }; url?: string }) => {

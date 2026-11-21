@@ -31,6 +31,8 @@ function featureOf(prompt: string): string {
     if (prompt.includes('"Day in the Life"')) return 'scenario';
     if (prompt.includes('Career Defend & Build plan')) return 'roadmap';
     if (prompt.includes('Recommend exactly 3 real')) return 'upskill';
+    // A job with catalog courses (Step 3): the same Defend / Build, its courses listed by id.
+    if (prompt.includes('Courses already checked for a') && prompt.includes('"whyTheseCourses"')) return 'upskill';
     if (prompt.includes('Career Resilience Expert')) return 'skills';
     if (prompt.includes('startup execution coach')) return 'startup_plans';
     if (prompt.includes('AI co-founder')) return 'startup_core';
@@ -48,8 +50,12 @@ function titleOf(prompt: string): string {
     );
 }
 
+/** The catalog ids a Step 3 prompt lists ("- id: <id> | ..."). */
+const catalogIdsOf = (prompt: string): string[] => [...prompt.matchAll(/^\s*- id: (\S+) \|/gm)].map((m) => m[1]);
+
 function answerFor(feature: string, prompt: string, n: number): unknown {
     const title = titleOf(prompt);
+    const catalogIds = catalogIdsOf(prompt);
     switch (feature) {
         case 'analyze': {
             // The numbered lines between "Tasks:" and the JSON instructions.
@@ -76,14 +82,26 @@ function answerFor(feature: string, prompt: string, n: number): unknown {
                     { title: 'Months 5-6: Mastery', items: ['Mock step'] },
                 ],
                 // Real links, checked for real by the dev server: one that opens, one that falls back to search.
-                courses: [
-                    { title: 'AI For Everyone', provider: 'Coursera', url: 'https://www.coursera.org/learn/ai-for-everyone' },
-                    { title: `[mock #${n}] Course`, provider: 'Mock Academy', url: '' },
-                ],
+                // A job with catalog courses gets two of them by id, plus the one other course allowed.
+                courses: catalogIds.length > 0
+                    ? [...catalogIds.slice(0, 2).map((id) => ({ catalogId: id, title: 'As listed', provider: 'As listed' })), { catalogId: null, title: `[mock #${n}] Course`, provider: 'Mock Academy', url: '' }]
+                    : [
+                        { title: 'AI For Everyone', provider: 'Coursera', url: 'https://www.coursera.org/learn/ai-for-everyone' },
+                        { title: `[mock #${n}] Course`, provider: 'Mock Academy', url: '' },
+                    ],
                 resources: [{ category: 'Tools & Platforms', items: ['Mock tool'] }],
                 successMetrics: ['Mock metric'],
             };
         case 'upskill':
+            if (catalogIds.length > 0) {
+                return {
+                    courses: [
+                        ...catalogIds.slice(0, 2).map((id) => ({ catalogId: id, title: 'As listed', provider: 'As listed', duration: '', level: 'Intermediate' })),
+                        { catalogId: null, title: 'AI For Everyone', provider: 'Coursera', url: 'https://www.coursera.org/learn/ai-for-everyone', duration: '6 hours', level: 'Beginner' },
+                    ],
+                    whyTheseCourses: 'Mock reason (catalog).',
+                };
+            }
             return {
                 courses: [
                     { title: 'AI For Everyone', provider: 'Coursera', url: 'https://www.coursera.org/learn/ai-for-everyone', duration: '6 hours', level: 'Beginner' },

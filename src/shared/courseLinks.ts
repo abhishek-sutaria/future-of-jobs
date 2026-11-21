@@ -286,3 +286,65 @@ export async function linkCourse<T extends RawCourse>(course: T, opts: LinkCheck
 export function linkCourses<T extends RawCourse>(courses: T[], opts: LinkCheckOptions): Promise<LinkedCourse<T>[]> {
     return Promise.all(courses.map((c) => linkCourse(c, opts)));
 }
+
+// ── Jobs with catalog courses (Step 3) ──────────────────────────────────────
+
+/** A course in an answer for a job with catalog courses: from the list (catalogId) or one other. */
+export interface CatalogAnswerCourse extends RawCourse {
+    catalogId?: string | null;
+}
+
+export interface CatalogLinkResult<T extends CatalogAnswerCourse> {
+    courses: LinkedCourse<T>[];
+    /** Courses dropped, and why: an id not on this job's list, or a second course not from the list. */
+    rejected: { title: string; why: string }[];
+}
+
+/**
+ * For a job with catalog courses (shared/aiPrompts CatalogCourse):
+ *   - a course with a catalogId on this job's list becomes the catalog entry
+ *     itself: its own title, provider and checked URL ("Open course");
+ *   - a catalogId that is not on this job's list is rejected (dropped);
+ *   - at most `maxOther` courses without a catalogId are kept, and each goes
+ *     through the same link check as every other course (linkCourse);
+ *   - order is kept. The caller rejects the answer if nothing is left.
+ */
+export async function linkCatalogCourses<T extends CatalogAnswerCourse>(
+    courses: T[],
+    catalog: { id: string; title: string; provider: string; url: string; level?: string; duration?: string }[],
+    opts: LinkCheckOptions & { maxOther?: number },
+): Promise<CatalogLinkResult<T>> {
+    const byId = new Map(catalog.map((c) => [c.id, c]));
+    const maxOther = opts.maxOther ?? 1;
+    const rejected: { title: string; why: string }[] = [];
+    const seen = new Set<string>();
+    let others = 0;
+    const jobs: Promise<LinkedCourse<T> | null>[] = courses.map(async (course): Promise<LinkedCourse<T> | null> => {
+        const id = typeof course.catalogId === 'string' ? course.catalogId.trim() : '';
+        if (id) {
+            const entry = byId.get(id);
+            if (!entry) { rejected.push({ title: course.title, why: `catalogId ${id} is not on this job's list` }); return null; }
+            if (seen.has(id)) { rejected.push({ title: course.title, why: `catalogId ${id} given twice` }); return null; }
+            seen.add(id);
+            const { url: _url, catalogId: _cid, ...rest } = course;
+            void _url; void _cid;
+            const filled = rest as Record<string, unknown>;
+            return {
+                ...(rest as Omit<T, 'url'>),
+                title: entry.title,
+                provider: entry.provider,
+                ...('duration' in filled ? { duration: entry.duration || (typeof filled.duration === 'string' ? filled.duration : '') } : {}),
+                ...('level' in filled ? { level: entry.level || (typeof filled.level === 'string' ? filled.level : '') } : {}),
+                catalogId: id,
+                link: { href: entry.url, kind: 'course', label: 'Open course' },
+            } as unknown as LinkedCourse<T>;
+        }
+        if (others >= maxOther) { rejected.push({ title: course.title, why: 'more than one course not from the list' }); return null; }
+        others++;
+        const { catalogId: _cid, ...rest } = course;
+        void _cid;
+        return linkCourse(rest as T, opts) as Promise<LinkedCourse<T>>;
+    });
+    const done = await Promise.all(jobs);
+    return { courses: done.filter((c) => c !== null) as LinkedCourse<T>[], rejected };
+}

@@ -25,9 +25,11 @@ import {
     buildStartupCorePrompt,
     buildStartupPlansPrompt,
     buildUpskillPrompt,
+    MAX_OTHER_COURSES,
+    type CatalogCourse,
 } from './aiPrompts.js';
 import { oohEnvelopeCap } from '../utils/oohEnvelope.js';
-import { linkCourses, type FetchLike } from './courseLinks.js';
+import { linkCatalogCourses, linkCourses, type FetchLike } from './courseLinks.js';
 
 /** The one model the app calls. claude-sonnet-5 rejects `temperature`, so it is never sent. */
 export const AI_MODEL = 'claude-sonnet-5';
@@ -164,7 +166,8 @@ interface FeatureSpec<I> {
     promptVersion: string;
     maxTokens: number;
     input: z.ZodType<I>;
-    prompt: (input: I) => string;
+    /** `ctx` comes from the server only (api/_lib/gateway.ts), never from the browser. */
+    prompt: (input: I, ctx?: PromptContext) => string;
     /** Checks a parsed answer; returns the answer to save and show, or throws. */
     check: (answer: unknown, input: I) => unknown;
     /**
@@ -178,6 +181,29 @@ interface FeatureSpec<I> {
 export interface FinalizeContext {
     /** The fetch the course-link checks use. */
     fetch: FetchLike;
+    /** This job's catalog courses (Step 3), the same list its prompt showed. */
+    catalog?: CatalogCourse[];
+}
+
+/**
+ * What the server adds to a prompt: the job's catalog courses (data matched
+ * in Step 2, loaded by api/_lib/courseMatches.ts). Empty for the jobs with no
+ * match, whose prompts are exactly the #99 ones.
+ */
+export interface PromptContext {
+    catalog?: CatalogCourse[];
+}
+
+/**
+ * The courses of an answer, linked: for a job with catalog courses, catalog ids
+ * become their catalog page and at most one other course is checked; for any
+ * other job, every course is checked as in #99. No course left: the answer is rejected.
+ */
+async function linkAnswerCourses<C extends { title: string; provider: string; url?: string | null; catalogId?: string | null }>(courses: C[], ctx: FinalizeContext) {
+    if (!ctx.catalog || ctx.catalog.length === 0) return linkCourses(courses, ctx);
+    const { courses: linked } = await linkCatalogCourses(courses, ctx.catalog, { ...ctx, maxOther: MAX_OTHER_COURSES });
+    if (linked.length === 0) throw new Error('no course left after the catalog check');
+    return linked;
 }
 
 function spec<I>(s: FeatureSpec<I>): FeatureSpec<I> {
@@ -228,29 +254,29 @@ export const AI_FEATURES = {
     roadmap: spec<RoadmapFeatureInput>({
         shared: true,
         stream: false,
-        // roadmap-5: no web search; never reuse a roadmap-4 (web search) answer.
-        promptVersion: 'roadmap-5',
+        // roadmap-6: catalog courses for matched jobs, at least one course; never reuse a roadmap-5 answer.
+        promptVersion: 'roadmap-6',
         maxTokens: 4096,
         input: RoadmapInput,
-        prompt: (i) => buildRoadmapPrompt(i.title, i.riskTask, i.targetTask),
+        prompt: (i, ctx) => buildRoadmapPrompt(i.title, i.riskTask, i.targetTask, ctx?.catalog ?? []),
         check: (answer) => RoadmapOutput.parse(answer),
         finalize: async (answer, ctx) => {
             const a = answer as z.infer<typeof RoadmapOutput>;
-            return { ...a, courses: await linkCourses(a.courses, ctx) };
+            return { ...a, courses: await linkAnswerCourses(a.courses, ctx) };
         },
     }),
     upskill: spec<UpskillFeatureInput>({
         shared: true,
         stream: false,
-        // upskill-4: no web search; never reuse an upskill-3 (web search) answer.
-        promptVersion: 'upskill-4',
+        // upskill-5: catalog courses for matched jobs, at least one course; never reuse an upskill-4 answer.
+        promptVersion: 'upskill-5',
         maxTokens: 4096,
         input: UpskillInput,
-        prompt: (i) => buildUpskillPrompt(i.title, i.taskName, i.mode, i.riskPercent),
+        prompt: (i, ctx) => buildUpskillPrompt(i.title, i.taskName, i.mode, i.riskPercent, ctx?.catalog ?? []),
         check: (answer) => UpskillOutput.parse(answer),
         finalize: async (answer, ctx) => {
             const a = answer as z.infer<typeof UpskillOutput>;
-            return { ...a, courses: await linkCourses(a.courses, ctx) };
+            return { ...a, courses: await linkAnswerCourses(a.courses, ctx) };
         },
     }),
     skills: spec<z.infer<typeof SkillsInput>>({

@@ -21,8 +21,9 @@ Step 3 those jobs keep the #99 course buttons, which always work.
    times), tags (twice) and description. The job title weighs 3, technology 2
    and tasks 1. Two kinds of entry are never offered:
    - 35 entries whose own description says they are retired or will retire. The
-     Step 1 retired check only knew one wording; this should also be fixed in
-     PR #100.
+     Step 1 retired check only knew one wording; Step 3 fixed it, and those 35
+     are no longer in the catalog at all (1,802 → 1,767). The rule stays as a
+     second guard.
    - 25 generic Microsoft Office Specialist certifications (Word, Excel,
      Outlook, PowerPoint, Access, Microsoft 365 Apps). Excel for Accounting and
      Excel for Business Finance stay, because they teach a subject.
@@ -126,5 +127,29 @@ npx tsx scripts/match_course_catalog.ts                          # rebuild match
 
 It uses the scoring key (`FOJ_SCORING_API_KEY` or `~/.foj_scoring_key`, plus
 the workspace ID; see `scripts/lib/scoringAuth.ts`). If the catalog changes
-(for example after the retired-entries fix in #100), re-run the jobs whose
-shortlist changed. A new prompt version means re-running every job.
+(for example after a catalog refresh), re-run the jobs whose shortlist changed,
+then rebuild the server data (`npx tsx scripts/build_course_matches_server.ts`). A new prompt version means re-running every job.
+
+## How the app uses it (Step 3)
+
+`scripts/build_course_matches_server.ts` writes `api/_lib/courseMatchesData.ts`:
+only the 105 catalog courses matched to at least one job, the job → course IDs
+map (with each reason), and the Kelley role IDs → SOC. It is about 84 KB (14 KB
+gzipped), loaded by the server only (`api/_lib/courseMatches.ts`). Nothing in
+`src/` imports it, so the browser bundle does not carry it. A test fails if it
+is out of date, or if any match points to an entry that is not in the catalog
+or is retired.
+
+- **A job with matches (92):** the Defend / Build and Roadmap prompts list its
+  catalog courses (id, title, provider, type, why it was matched). Claude
+  recommends from that list first, by `catalogId`, and may add at most one
+  other course when the list does not cover the task. The server turns each
+  catalog ID into its catalog page ("Open course") with the catalog's own title
+  and provider. It drops an ID that is not on that job's list, and drops any
+  second course that is not from the list. The one other course goes through
+  the #99 link check. If no course is left, the answer is rejected and the
+  visitor's slot is given back.
+- **A job without matches (691):** the prompt is the #99 prompt, byte for byte
+  (a test checks its sha256), and every link is checked as in #99.
+- **Prompt versions:** `upskill-5` and `roadmap-6`, so no earlier saved answer
+  is reused. Each answer also needs at least one course again.

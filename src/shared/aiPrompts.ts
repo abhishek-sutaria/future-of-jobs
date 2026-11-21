@@ -19,6 +19,42 @@ import { oohEnvelopeCap } from '../utils/oohEnvelope.js';
  */
 export const COURSE_URL_HINT = 'https link to this exact course or certification page on the provider’s own site (not a home or search page), or an empty string if you are not sure of it';
 
+/**
+ * A course from the app's own catalog (data/course_catalog), matched to this
+ * job in Step 2 and handed to the prompt by the server (api/_lib/courseMatches.ts).
+ * Its link was checked when the catalog was built, so the server turns its id
+ * straight into an "Open course" link (shared/courseLinks.ts linkCatalogCourses).
+ */
+export interface CatalogCourse {
+    id: string;
+    title: string;
+    provider: string;
+    url: string;
+    type: string;
+    level?: string;
+    duration?: string;
+    /** Why it was matched to this job (Step 2). */
+    reason?: string;
+}
+
+/** How many courses that are not on the job's catalog list one answer may add. */
+export const MAX_OTHER_COURSES = 1;
+
+/** The job's catalog courses, one per line, as the prompt shows them. */
+export function catalogCourseLines(courses: CatalogCourse[]): string {
+    return courses
+        .map((c) => `- id: ${c.id} | "${c.title}" (${c.provider}, ${c.type})${c.reason ? ` | matched because: ${c.reason}` : ''}`)
+        .join('\n');
+}
+
+/** The instruction that replaces "recommend N real courses" when the job has catalog courses. */
+function catalogAsk(jobTitle: string, courses: CatalogCourse[], max: number, what: string): string {
+    return `Courses already checked for a ${jobTitle} (real pages, links verified):
+        ${catalogCourseLines(courses).split('\n').join('\n        ')}
+
+        Recommend up to ${max} courses ${what}. First recommend every course from this list that genuinely fits, giving its "catalogId" exactly as written above. Only if the list does not cover this, add at most ${MAX_OTHER_COURSES === 1 ? 'ONE' : MAX_OTHER_COURSES} other real course or certification, with "catalogId": null and a real platform and course title that exists today. Recommend at least one course.`;
+}
+
 /** Thousands separators fixed to en-US, so the server and every browser write the same prompt. */
 const formatInt = (n: number): string => n.toLocaleString('en-US');
 
@@ -69,7 +105,8 @@ export function buildResumePrompt(skillsInput: string): string {
     `;
 }
 
-export function buildRoadmapPrompt(jobTitle: string, riskTask: string, targetTask: string): string {
+export function buildRoadmapPrompt(jobTitle: string, riskTask: string, targetTask: string, catalog: CatalogCourse[] = []): string {
+    if (catalog.length > 0) return buildCatalogRoadmapPrompt(jobTitle, riskTask, targetTask, catalog);
     return `
         Context: Career Defend & Build plan for a ${jobTitle}.
         Goal: DEFEND "${riskTask}" (high GenAI capability / automation exposure) by owning judgment, oversight, and exception-handling around it — do NOT abandon that task — while BUILDING "${targetTask}" (high human criticality) into a durable advantage.
@@ -86,6 +123,43 @@ export function buildRoadmapPrompt(jobTitle: string, riskTask: string, targetTas
             "courses": [
                 { "title": "Specific course or cert name relevant to ${jobTitle} and ${targetTask}", "provider": "Platform or certifying body", "url": "${COURSE_URL_HINT}" },
                 { "title": "...", "provider": "...", "url": "..." }
+            ],
+            "resources": [
+                { "category": "Tools & Platforms", "items": ["Specific tool used in this field", "..."] },
+                { "category": "Communities & Networks", "items": ["Specific professional association, forum, or community", "..."] },
+                { "category": "Books & Research", "items": ["Specific book or publication relevant to this transition", "..."] }
+            ],
+            "successMetrics": [
+                "Specific, measurable milestone 1 tied to ${targetTask}",
+                "Specific milestone 2",
+                "Specific milestone 3",
+                "Specific milestone 4",
+                "Specific milestone 5"
+            ]
+        }
+    `;
+}
+
+/** The roadmap prompt for a job with catalog courses: the same plan, its courses from the list first. */
+function buildCatalogRoadmapPrompt(jobTitle: string, riskTask: string, targetTask: string, catalog: CatalogCourse[]): string {
+    return `
+        Context: Career Defend & Build plan for a ${jobTitle}.
+        Goal: DEFEND "${riskTask}" (high GenAI capability / automation exposure) by owning judgment, oversight, and exception-handling around it — do NOT abandon that task — while BUILDING "${targetTask}" (high human criticality) into a durable advantage.
+
+        INSTRUCTION: Be specific to this exact role. Do not use generic filler text. Do not frame the plan as leaving or exiting the high-risk task. Reference specific, real-world tools, platforms, certifications, and frameworks relevant to a ${jobTitle}.
+
+        ${catalogAsk(jobTitle, catalog, 4, `for this plan, most useful first`)}
+
+        Output JSON only:
+        {
+            "phases": [
+                { "title": "Months 1-2: Foundation", "items": ["Specific verifiable step 1", "Specific step 2", "Specific step 3"] },
+                { "title": "Months 3-4: Application", "items": ["Specific step 1", "Specific step 2", "Specific step 3"] },
+                { "title": "Months 5-6: Mastery", "items": ["Specific step 1", "Specific step 2", "Specific step 3"] }
+            ],
+            "courses": [
+                { "catalogId": "id from the list above", "title": "Its title as listed", "provider": "Its provider as listed" },
+                { "catalogId": null, "title": "Only if the list does not cover the plan: one other real course or cert", "provider": "Platform or certifying body", "url": "${COURSE_URL_HINT}" }
             ],
             "resources": [
                 { "category": "Tools & Platforms", "items": ["Specific tool used in this field", "..."] },
@@ -125,7 +199,9 @@ export function buildUpskillPrompt(
     taskName: string,
     mode: UpskillMode,
     aiRiskPercent: number,
+    catalog: CatalogCourse[] = [],
 ): string {
+    if (catalog.length > 0) return buildCatalogUpskillPrompt(jobTitle, taskName, mode, aiRiskPercent, catalog);
     const shape = `
         Output JSON only:
         {
@@ -164,6 +240,44 @@ export function buildUpskillPrompt(
         Recommend exactly 3 real, specific courses or certifications that build that depth.
         Each must reference a real platform and a real course title that exists today.
         ${shape.replace('REPLACE_WHY', `One sentence on why these compound the human advantage a ${jobTitle} already has here.`)}
+    `;
+}
+
+/** Defend / Build for a job with catalog courses: the same goal, its courses from the list first. */
+function buildCatalogUpskillPrompt(jobTitle: string, taskName: string, mode: UpskillMode, aiRiskPercent: number, catalog: CatalogCourse[]): string {
+    const shape = (why: string) => `
+        Output JSON only:
+        {
+            "courses": [
+                { "catalogId": "id from the list above", "title": "Its title as listed", "provider": "Its provider as listed", "duration": "e.g. 6 weeks, or empty if unknown", "level": "Beginner | Intermediate | Advanced" },
+                { "catalogId": null, "title": "Only if the list does not cover this task: one other real course", "provider": "Platform name or official body", "url": "${COURSE_URL_HINT}", "duration": "...", "level": "..." }
+            ],
+            "whyTheseCourses": "${why}"
+        }
+    `;
+    if (mode === 'defend') {
+        return `
+        A professional working as a "${jobTitle}" has this task in their role:
+        "${taskName}"
+
+        This task carries roughly ${Math.round(aiRiskPercent)}% GenAI capability exposure — current models could handle much of it (capability, not guaranteed adoption).
+
+        Do NOT recommend training that teaches them to perform this task faster or more cheaply by hand. That is precisely the part most exposed to automation.
+
+        Recommend training that moves them UP the value chain on this exact task: directing and reviewing automated output, recognising where it fails, handling the exceptions and edge cases it cannot, carrying the accountability and judgment a model cannot own, and holding enough domain depth to know when the output is wrong.
+
+        ${catalogAsk(jobTitle, catalog, 3, 'that make that shift')}
+        ${shape(`One sentence on how these move a ${jobTitle} from performing this task to owning the judgment around it.`)}
+    `;
+    }
+    return `
+        A professional working as a "${jobTitle}" wants to go deeper on this task:
+        "${taskName}"
+
+        This task is assessed as human-critical: it resists automation, and it is where this person's durable advantage lies. The goal is to deepen it from something they can do into something that clearly distinguishes them.
+
+        ${catalogAsk(jobTitle, catalog, 3, 'that build that depth')}
+        ${shape(`One sentence on why these compound the human advantage a ${jobTitle} already has here.`)}
     `;
 }
 

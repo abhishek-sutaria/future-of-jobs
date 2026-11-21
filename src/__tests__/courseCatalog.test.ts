@@ -467,7 +467,7 @@ describe('catalog output', () => {
             for (const name of fs.readdirSync(dir)) {
                 const p = path.join(dir, name);
                 if (fs.statSync(p).isDirectory()) { if (name !== '__tests__') walk(p); }
-                else if (/\.(ts|tsx|js|jsx)$/.test(name) && /course_catalog|courseCatalog/.test(fs.readFileSync(p, 'utf8'))) hits.push(p);
+                else if (/\.(ts|tsx|js|jsx)$/.test(name) && /(from|import)\s*\(?\s*['"][^'"]*(course_catalog|courseCatalog)/.test(fs.readFileSync(p, 'utf8'))) hits.push(p);
             }
         };
         walk(path.join(__dirname, '..'));

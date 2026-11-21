@@ -12,8 +12,9 @@ import { createMockBackend, MOCK_SUPABASE_URL, type MockBackend } from '../../sc
 import { AI_FEATURES } from '../shared/aiFeatures';
 
 const ROOT = path.resolve(__dirname, '../..');
-const UPSKILL = { roleKey: 'soc:13-2011', title: 'Accountants and Auditors', taskName: 'Prepare tax returns', mode: 'defend', riskPercent: 70 };
-const ROADMAP = { roleKey: 'soc:13-1161', title: 'Market Research Analysts', riskTask: 'r', targetTask: 't' };
+// Unmatched jobs (no catalog courses), so these stay on the #99 path; matched jobs: courseCatalogLinks.test.ts.
+const UPSKILL = { roleKey: 'soc:47-2111', title: 'Electricians', taskName: 'Prepare sketches or follow blueprints', mode: 'defend', riskPercent: 70 };
+const ROADMAP = { roleKey: 'soc:47-2152', title: 'Plumbers, Pipefitters, and Steamfitters', riskTask: 'r', targetTask: 't' };
 const env = () => ({ ANTHROPIC_API_KEY: 'sk-test-never-logged', SUPABASE_URL: MOCK_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY: 'sb' });
 
 let mock: MockBackend;
@@ -108,7 +109,7 @@ describe('logging', () => {
         const r = await call(recording(), { feature: 'upskill', input: UPSKILL });
         const line = info.mock.calls.map((c) => String(c[1] ?? '')).find((l) => l.includes('"feature":"upskill"'))!;
         const logged = JSON.parse(line);
-        expect(logged).toEqual({ feature: 'upskill', inputTokens: 900, outputTokens: 400, ms: expect.any(Number), stopReason: 'end_turn', courses: 3, direct: 0 });
+        expect(logged).toEqual({ feature: 'upskill', inputTokens: 900, outputTokens: 400, ms: expect.any(Number), stopReason: 'end_turn', courses: 3, direct: 0, fromCatalog: 0, catalogOffered: 0 });
         expect(line).not.toMatch(/search|sk-test/);
         expect(r.json.usage).toEqual({ inputTokens: 900, outputTokens: 400, ms: expect.any(Number), stopReason: 'end_turn' });
         info.mockRestore();

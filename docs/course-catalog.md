@@ -47,8 +47,10 @@ found" page, and the page's title names the course. Then the build also drops:
 
 - pages that are not English (the page's `lang`, or a title and description in
   another language);
-- pages that say the course or certification **has been retired** (Microsoft
-  keeps pages for retired certifications);
+- pages that say the course or certification **is retired or will retire**, in
+  any of Microsoft's wordings ("has been retired", "are retired", "was retired
+  on ...", "were fully retired", "will retire on ..."), on the page or in the
+  entry's own description (Microsoft keeps pages for retired certifications);
 - the same page listed twice (kept once).
 
 For Grow with Google the title is read from the page itself, so the title part
