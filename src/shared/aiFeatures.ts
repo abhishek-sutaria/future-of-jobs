@@ -25,8 +25,11 @@ import {
     buildStartupCorePrompt,
     buildStartupPlansPrompt,
     buildUpskillPrompt,
+    MAX_OTHER_COURSES,
+    type CatalogCourse,
 } from './aiPrompts.js';
 import { oohEnvelopeCap } from '../utils/oohEnvelope.js';
+import { linkCatalogCourses, linkCourses, type FetchLike } from './courseLinks.js';
 
 /** The one model the app calls. claude-sonnet-5 rejects `temperature`, so it is never sent. */
 export const AI_MODEL = 'claude-sonnet-5';
@@ -114,8 +117,13 @@ export const ScenarioOutput = z.object({
     keyChanges: z.array(NonEmpty).min(1),
 }).passthrough();
 
+/** Claude's link for a course: kept only until the server has checked it (shared/courseLinks). */
+const CourseUrl = z.string().nullish();
+
 export const RoadmapOutput = z.object({
     phases: z.array(z.object({ title: NonEmpty, items: z.array(NonEmpty).min(1) }).passthrough()).min(1),
+    // At least one course: an empty list was accepted only during the web-search experiment (#99).
+    courses: z.array(z.object({ title: NonEmpty, provider: NonEmpty, url: CourseUrl }).passthrough()).min(1).max(6),
     resources: z.array(z.object({ category: NonEmpty, items: z.array(NonEmpty) }).passthrough()),
     successMetrics: z.array(NonEmpty).min(1),
 }).passthrough();
@@ -124,9 +132,10 @@ export const UpskillOutput = z.object({
     courses: z.array(z.object({
         title: NonEmpty,
         provider: NonEmpty,
+        url: CourseUrl,
         duration: z.string(),
         level: z.string(),
-    }).passthrough()).min(1),
+    }).passthrough()).min(1).max(5),
     whyTheseCourses: z.string(),
 }).passthrough();
 
@@ -157,9 +166,45 @@ interface FeatureSpec<I> {
     promptVersion: string;
     maxTokens: number;
     input: z.ZodType<I>;
-    prompt: (input: I) => string;
+    /** `ctx` comes from the server only (api/_lib/gateway.ts), never from the browser. */
+    prompt: (input: I, ctx?: PromptContext) => string;
     /** Checks a parsed answer; returns the answer to save and show, or throws. */
     check: (answer: unknown, input: I) => unknown;
+    /**
+     * Runs on the server after `check` and before the answer is shown or
+     * saved: checks every course link (shared/courseLinks), so only checked
+     * links ever reach a visitor or the saved store. Never throws.
+     */
+    finalize?: (answer: unknown, ctx: FinalizeContext) => Promise<unknown>;
+}
+
+export interface FinalizeContext {
+    /** The fetch the course-link checks use. */
+    fetch: FetchLike;
+    /** This job's catalog courses (Step 3), the same list its prompt showed. */
+    catalog?: CatalogCourse[];
+}
+
+/**
+ * What the server adds to a prompt: the job's catalog courses (data matched
+ * in Step 2, loaded by api/_lib/courseMatches.ts). Empty for the jobs with no
+ * match, whose prompts are exactly the #99 ones.
+ */
+export interface PromptContext {
+    catalog?: CatalogCourse[];
+}
+
+/**
+ * The courses of an answer, linked: for a job with catalog courses, catalog ids
+ * become their catalog entry and at most one other course is kept; for any
+ * other job, every course is kept. Every link is checked; a course whose link
+ * fails keeps its name and gets no link. No course left: the answer is rejected.
+ */
+async function linkAnswerCourses<C extends { title: string; provider: string; url?: string | null; catalogId?: string | null }>(courses: C[], ctx: FinalizeContext) {
+    if (!ctx.catalog || ctx.catalog.length === 0) return linkCourses(courses, ctx);
+    const { courses: linked } = await linkCatalogCourses(courses, ctx.catalog, { ...ctx, maxOther: MAX_OTHER_COURSES });
+    if (linked.length === 0) throw new Error('no course left after the catalog check');
+    return linked;
 }
 
 function spec<I>(s: FeatureSpec<I>): FeatureSpec<I> {
@@ -210,20 +255,30 @@ export const AI_FEATURES = {
     roadmap: spec<RoadmapFeatureInput>({
         shared: true,
         stream: false,
-        promptVersion: 'roadmap-2',
+        // roadmap-7: direct links only, no search fallback (2026-11-22); never reuse an older answer, which may hold search links.
+        promptVersion: 'roadmap-7',
         maxTokens: 4096,
         input: RoadmapInput,
-        prompt: (i) => buildRoadmapPrompt(i.title, i.riskTask, i.targetTask),
+        prompt: (i, ctx) => buildRoadmapPrompt(i.title, i.riskTask, i.targetTask, ctx?.catalog ?? []),
         check: (answer) => RoadmapOutput.parse(answer),
+        finalize: async (answer, ctx) => {
+            const a = answer as z.infer<typeof RoadmapOutput>;
+            return { ...a, courses: await linkAnswerCourses(a.courses, ctx) };
+        },
     }),
     upskill: spec<UpskillFeatureInput>({
         shared: true,
         stream: false,
-        promptVersion: 'upskill-1',
+        // upskill-6: direct links only, no search fallback (2026-11-22); never reuse an older answer, which may hold search links.
+        promptVersion: 'upskill-6',
         maxTokens: 4096,
         input: UpskillInput,
-        prompt: (i) => buildUpskillPrompt(i.title, i.taskName, i.mode, i.riskPercent),
+        prompt: (i, ctx) => buildUpskillPrompt(i.title, i.taskName, i.mode, i.riskPercent, ctx?.catalog ?? []),
         check: (answer) => UpskillOutput.parse(answer),
+        finalize: async (answer, ctx) => {
+            const a = answer as z.infer<typeof UpskillOutput>;
+            return { ...a, courses: await linkAnswerCourses(a.courses, ctx) };
+        },
     }),
     skills: spec<z.infer<typeof SkillsInput>>({
         shared: false,

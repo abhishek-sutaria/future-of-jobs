@@ -1,0 +1,894 @@
+{
+  "_about": "Every list the catalog was built from: URL, date, sha256 and size of exactly what was downloaded (and of the committed copy or extract in raw/, if any). Robots.txt and terms were read for every site before collecting; see docs/course-catalog.md.",
+  "userAgent": "FutureOfJobsCourseCatalog/1.0 (+https://github.com/abhishek-sutaria/future-of-jobs; course link checker, rate-limited)",
+  "files": [
+    {
+      "source": "microsoft-learn",
+      "title": "Microsoft Learn Catalog API, en-us: learning paths, certifications, instructor-led courses, Applied Skills, and the product/role/subject/level names",
+      "publisher": "Microsoft",
+      "url": "https://learn.microsoft.com/api/catalog/?locale=en-us&type=learningPaths,mergedCertifications,courses,appliedSkills,products,roles,subjects,levels",
+      "retrieved": "2026-11-15",
+      "sha256": "fd3d7e94129c5b782d1e6ea2ad2b1ced3108951f0903d753d10eaf799b5abed5",
+      "bytes": 1836237,
+      "path": "raw/microsoft_learn_catalog.json",
+      "pathSha256": "fd3d7e94129c5b782d1e6ea2ad2b1ced3108951f0903d753d10eaf799b5abed5",
+      "note": "bytes unchanged"
+    },
+    {
+      "source": "google-skills",
+      "title": "Google Skills catalog, all 164 pages (8 items each, 1312 items)",
+      "publisher": "Google (Qwiklabs, Inc.)",
+      "url": "https://www.skills.google/catalog?page=N",
+      "retrieved": "2026-11-15",
+      "sha256": "52beb18053de19c02b6b90b59a95eabbb59a9a5f376ba3c0e225bdaf5875b721",
+      "bytes": 45640,
+      "path": "raw/google_skills_catalog_items.json",
+      "pathSha256": "aa0c399cae9dc423e061aa2b442ca23afc1d016985b538d3059d3e37b2f9443d",
+      "note": "sha256/bytes = page 1; every page is listed in pages",
+      "pages": [
+        {
+          "url": "https://www.skills.google/catalog",
+          "sha256": "52beb18053de19c02b6b90b59a95eabbb59a9a5f376ba3c0e225bdaf5875b721",
+          "bytes": 45640
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=2",
+          "sha256": "68a74fbdc1aa36c972ad3e466964291c1d0b8118c0d529806a546051a4fb0d85",
+          "bytes": 45727
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=3",
+          "sha256": "089391384a3705b584737a6bba4f35d40eabef61490bf71433a742d949eb936e",
+          "bytes": 45059
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=4",
+          "sha256": "51c3220d525057ed8eaa9865db6fc71edbe7fd4db9e6f5beb75e220842d2486a",
+          "bytes": 45346
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=5",
+          "sha256": "fc38edab8d77aa4feba629aa7d78e4c2246d51cca3a0d4619652b105f96a5529",
+          "bytes": 45259
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=6",
+          "sha256": "5a5fe79584d04539b4c7f9f6066e677e1879e5fc5738903a948a82e011e53998",
+          "bytes": 45143
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=7",
+          "sha256": "dee17cb3624c034d245702f646123ab57f48f5199eba4d537b18626c211e2146",
+          "bytes": 45212
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=8",
+          "sha256": "d49338e24f99ad689f5366fb4390eaf3a3235627093a4c03312c5475b606e12f",
+          "bytes": 45526
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=9",
+          "sha256": "8e2fc331b4b8e0df01549d34cd51118a9fc866b4549bc5118b02d339f041537d",
+          "bytes": 45055
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=10",
+          "sha256": "aa45a2b9d1dc370c337e881a1ea3c7802924150c36d242ce1c593c44aaa302ea",
+          "bytes": 45464
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=11",
+          "sha256": "45e3804b247fcc8f6a586df6395aac92ce85b4b9072fb281078ce2f14315328d",
+          "bytes": 45214
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=12",
+          "sha256": "f97b22da2ab3f28dadf513e5d1da59559cbb8bbcacb75d84208b58f554fec73b",
+          "bytes": 45475
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=13",
+          "sha256": "8386d664a7bf2de106059427f03a36fa0ef41e6b9575af3fd58d5c15cb81a986",
+          "bytes": 45132
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=14",
+          "sha256": "e6fa3cffade3705c6bd1107d1aad68b429e607ea436a809fba09ffae00fb2aa8",
+          "bytes": 45256
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=15",
+          "sha256": "d47165901721b4bd8c9ac47df1ae5b25fdaa991dcaec04ff74191eb19f53305d",
+          "bytes": 45302
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=16",
+          "sha256": "2ad6af1c8c017593a4777b4cc24e952e9915694fbb50bf874de1a11c129e3a4d",
+          "bytes": 45512
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=17",
+          "sha256": "c6e6a5a53c9301157aa5543822f6e933aeab7fecb5a7d5462cb28486d3d07016",
+          "bytes": 45475
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=18",
+          "sha256": "6a2d1bff4db8082f4acc0bcabc3837cd81cd146148ca2b71481ac17354220a67",
+          "bytes": 45250
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=19",
+          "sha256": "47cd72e6b1fd68ebc9af2170b981f6f082e39f1466eecf10d9e30236b53c990c",
+          "bytes": 45564
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=20",
+          "sha256": "a1959d0e47b22cc2871723488b06b92ccd7bae4480865ac509eb75aab0fb7c3f",
+          "bytes": 45314
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=21",
+          "sha256": "de1dc282b24b26d42bdd1f27ddd0f381daabb72a209091c358e9599dee6d4968",
+          "bytes": 45157
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=22",
+          "sha256": "9fa54f81469b395cb42e4cc52f0e5b643dec5ca8ef5a16d2a13d98a5c3924656",
+          "bytes": 45796
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=23",
+          "sha256": "a1d27a97050057ce4ab97bb272452bcbedfccc19f8c663ad6c3a90c8ad858b06",
+          "bytes": 45613
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=24",
+          "sha256": "5d980711e72171693fe97d238209c8f437350fc8a8d7c2e423faf96140b698e2",
+          "bytes": 45013
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=25",
+          "sha256": "c4da4728974f21182c8fb1d2c03605061e3dd6e25e42c01d77987721d71902bc",
+          "bytes": 45279
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=26",
+          "sha256": "ecd1ec8785f75a10db8aed1a25a922dbd2c6f327a901ba0f19c3d7a965dd5646",
+          "bytes": 45599
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=27",
+          "sha256": "37f3af4f3a6b274a6cd2b87b511cbd5e103928c2add5afc1431f8a3d3075fdf6",
+          "bytes": 45204
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=28",
+          "sha256": "ba2a8369d1665fbc9f2d1dbe94746216e60011c00ee6fbf9a48b5e98d1d1e5e6",
+          "bytes": 45346
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=29",
+          "sha256": "124b7f546ae8bb962216c54c7cddf5b83e6a7ba0706b9c591fa6e289b773fc31",
+          "bytes": 45531
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=30",
+          "sha256": "6f2bedf5bc5be3dec035e6b668ec0024825a3089475995c892a05684a771f7f3",
+          "bytes": 45518
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=31",
+          "sha256": "b4aa5fb2ca9bf8ca74eec1df4c08aee06ac9cadfe5ba193a76f4917e74b3303f",
+          "bytes": 45206
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=32",
+          "sha256": "5f36a08f41267a624463faa15201d7271ff436430a67976126c189b09ac0759f",
+          "bytes": 45366
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=33",
+          "sha256": "7f482902f3f9cfd16b06b360d8ad5793bf1a0586ea50583b61c6bafb938e572c",
+          "bytes": 45324
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=34",
+          "sha256": "af4e05669fcf7e64e6ac052c65180921aafce1bc86d8fe98ab4aab608c63f0e8",
+          "bytes": 45856
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=35",
+          "sha256": "cecc6cb1352981daffb1b3c06bb7730fca25b775547f436ca40c479b98744ae1",
+          "bytes": 45177
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=36",
+          "sha256": "d22be13b572493e6fb37241587c8b1cc2e11720ff9c81e16848db225974dbcf7",
+          "bytes": 45384
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=37",
+          "sha256": "d4f4f287a3e2cd2614e3b90a9ef88d220f26aa6f99cdf50c27c6a760e2cee6f2",
+          "bytes": 45712
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=38",
+          "sha256": "a051d5811c3e774c9227e31e6b941ec4fa6b05507d3e48d4da4549e0f988dc23",
+          "bytes": 45112
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=39",
+          "sha256": "f6c23328179a2e7f101bea78f010dd8439ecf07f04e19cee0bbb6e0c391604e6",
+          "bytes": 45161
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=40",
+          "sha256": "eca674761f60e56803889542b5b07ddf8b7bb51d447bbff3573a1947821c746b",
+          "bytes": 45131
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=41",
+          "sha256": "6cf704bd6fed123b5c83c7655a929970e00a427ac419580185eb74722c237e83",
+          "bytes": 45362
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=42",
+          "sha256": "d64346dc1726ff1ee098a86689c6765de834dabf7802756020d6fe8f96ecfda5",
+          "bytes": 45088
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=43",
+          "sha256": "6d73ae42afec3c2e6a119cb31137b3f842ba69bda971afdadc370776ca984de6",
+          "bytes": 45244
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=44",
+          "sha256": "d90a5119f5a57e83a2b3e6a350069095a819bae08b976a3864100a610d122333",
+          "bytes": 45312
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=45",
+          "sha256": "6fc8bba83ccbce13691c391508758c813b4d056c9b40573f2916de703485033f",
+          "bytes": 45530
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=46",
+          "sha256": "680da009934718b3435fce63ef435b9982d325becbd1f8af84f323439ae1b70a",
+          "bytes": 45156
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=47",
+          "sha256": "3137fc343c38f8a36932b8e4720c77a1f922c309be4746a0e861a71c59832214",
+          "bytes": 45257
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=48",
+          "sha256": "2a03a77ff92cd3759bba0714a2827cdf0dd4ca2c5c3ae0633b91bb5590ff1e88",
+          "bytes": 45475
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=49",
+          "sha256": "7f8aef74e3108be829d85ab2e6e148b3cb6ced4ef2c05d8ecc354f958eb8cad7",
+          "bytes": 45132
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=50",
+          "sha256": "c7e5e6ff89d703aedfc74bfc13e032b5eab460a839abe78072630f492f169fdb",
+          "bytes": 45170
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=51",
+          "sha256": "d2aedbf3e4aecd9ff5f862ed54239911cd1b6a95227058ae7df19631b324ed35",
+          "bytes": 45189
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=52",
+          "sha256": "4a10a1666059b5f487cd46b9fc694f28d056833da652770b3f1d903fc2491269",
+          "bytes": 45415
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=53",
+          "sha256": "440e2d61e12d297262dd0157298197b4f2cb3334a86356be93fd96ed29596570",
+          "bytes": 45004
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=54",
+          "sha256": "b921431609dfd18d9e7ccffa8a8d1f543adc1eb7501a841d7c77f62cf0cb0a2d",
+          "bytes": 45564
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=55",
+          "sha256": "8628544bc11789f3d0a178ee5cbbf54d18a28ae212569c1f841e8888d1489fe8",
+          "bytes": 45221
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=56",
+          "sha256": "c086b4f460d8d3f2689a698a9c9470beb8e54a70da00417bff07582b3eeb0774",
+          "bytes": 45360
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=57",
+          "sha256": "722298c6b20522c45bab7e733a8bbd78dbf98b01df4452beb7335fbe06f186b0",
+          "bytes": 45331
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=58",
+          "sha256": "729be910232b8a3194f4e03dd96317bc92159f835ed4ab8ecf7c5311fa69ec03",
+          "bytes": 45096
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=59",
+          "sha256": "554cb341de3b524b23cfe32378f4462d209ea3fa63bc5bb5cb143a7f3b32738c",
+          "bytes": 45180
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=60",
+          "sha256": "c899b9485f91cbd1cf6602ed47972b63698b05dba8c409274719b5790f958835",
+          "bytes": 45682
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=61",
+          "sha256": "5e9353aa674db213edb8d9c8353fbcd9fc41bba0215d4ce77d9a28d92a3bdeb1",
+          "bytes": 45153
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=62",
+          "sha256": "cfe4182039ccf48f6d3f21b78a83c1f2b0f88a74e81280d9c32858627943c29d",
+          "bytes": 45518
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=63",
+          "sha256": "ef6ead2b98b2f99d2de1fd85ebb1ba60ccf435c4a6981a24cd5725bc88b71334",
+          "bytes": 45406
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=64",
+          "sha256": "de77783a5aba0bdfa779b25852db1e146821a118a8f2f821a04d375463429742",
+          "bytes": 45815
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=65",
+          "sha256": "c5706ba8af5ed7df16ad705f91ade7327c9544c9fba244da69b504ca2d313487",
+          "bytes": 45272
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=66",
+          "sha256": "7387028d4790060d1c83dcc4d66f1f6aab3195e1ce71ee1ebfe9cdbad00151d2",
+          "bytes": 45141
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=67",
+          "sha256": "41653090601594ce03cba4ad55858ca9798b125096c7c6ed590f5fba1042e6af",
+          "bytes": 45496
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=68",
+          "sha256": "e7167d13a1a83675cb1405fa72ba2beb6702f60e20b63d5c8b3386fcf0cc9545",
+          "bytes": 45160
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=69",
+          "sha256": "833e5846e89bcc2b0c58032bbb6a9916e2dd53989e12b0dbe4cc0102dbcb3adf",
+          "bytes": 45703
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=70",
+          "sha256": "190c21d57f8a77bb94aebadf7c133e29b568ffac53b11a65e3bf49c9178bffb2",
+          "bytes": 45738
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=71",
+          "sha256": "85f543a93b5cc3958bacc28ca34472755a3b2b773594bfb8b42f31080c49ccb3",
+          "bytes": 45714
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=72",
+          "sha256": "a0aa8cc7a20d5dd81a6236fcfd927cd408470c756100980cb84805810519c146",
+          "bytes": 45658
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=73",
+          "sha256": "5919e6da821c9e1456141ca087bd35297f9f5177339ed1123d17353359b93cae",
+          "bytes": 45178
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=74",
+          "sha256": "de220e16acdd93ebdbe7270e8d068bc6c004224f313395c19a86505b09271310",
+          "bytes": 45217
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=75",
+          "sha256": "17ec669337565f8dcd9a0b7f4d7b9016f22d7d7c915991a2e76f2363f1007ae0",
+          "bytes": 45718
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=76",
+          "sha256": "f7180a45a4688ad36cb722f456cee5161e21c14d153e0e8580d30802e56f4844",
+          "bytes": 45352
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=77",
+          "sha256": "b6727d5babfeaf58c9aa5cd1671fde1e609a4f0470d270196b251737c3436b11",
+          "bytes": 45387
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=78",
+          "sha256": "4ec6d32a175f8fd97ed7d4607969fe18dbe1ba096bbc89a71d099658eed80a47",
+          "bytes": 45237
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=79",
+          "sha256": "fe91a35abe5610c8a0789f6d9eea96be0416549a9efead0d158a61b1a6f04b67",
+          "bytes": 45701
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=80",
+          "sha256": "9fe2b17855f54e6fa16a67401ee67a8b50e74f9aac6f950b7dfbf751b7a14d53",
+          "bytes": 46099
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=81",
+          "sha256": "a0abf411d71006e4f31b1b7c01770644dfb71a1ac2010887ae4273485f630568",
+          "bytes": 45502
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=82",
+          "sha256": "86124223678004f845cf2ac4a6868cdab6bdc5ec95682201a9ed944331bc5af6",
+          "bytes": 45564
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=83",
+          "sha256": "05965d6b77fb58c32ebb943f96051e19842175e08226d41645c824f78f05b896",
+          "bytes": 45796
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=84",
+          "sha256": "e34e7ec4f56de8c9cb4e695fb12d2430a6b7c4803b89445d8d15a2d80a9cf014",
+          "bytes": 45411
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=85",
+          "sha256": "820093c8eb6e79c921c7e1ecd73b440f928c2d42545ff90e85bfccf29a62c8ee",
+          "bytes": 47604
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=86",
+          "sha256": "37cbb22ce5aeee326c5bbcc2c415510c11a9ad5255fc66c51f5b1cef22543bed",
+          "bytes": 47583
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=87",
+          "sha256": "ed3a7d31830923b7db8ee459a7a1ce6a518ed298b6fcb9072cdebf68f6537c95",
+          "bytes": 47661
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=88",
+          "sha256": "71f9f330397268fb25cc4e8223acbad04f3abe0159146fdc31a72419229b49f2",
+          "bytes": 47593
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=89",
+          "sha256": "0c91fd07d173d9b3f5a125fb0befb6553ee9bcd303ebbcdf0e1c0a7ac47ddea3",
+          "bytes": 47335
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=90",
+          "sha256": "715c097d540c4ca8613921330e99cb86d2f770927ad930261116091fdab94722",
+          "bytes": 47292
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=91",
+          "sha256": "1c775b9ce5c2c8c463606b938f9b9c8de609b25906a92b2516d842a965ab87e2",
+          "bytes": 46610
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=92",
+          "sha256": "5a232804470f457839e24e8ca889fd701b28387bce3df54bd29a346a134f1504",
+          "bytes": 46699
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=93",
+          "sha256": "f2ab0d6d6cf02003711d281334a0699a1adb28244b8508f3c8b31076365e04bb",
+          "bytes": 46631
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=94",
+          "sha256": "7e41763f617cc51f491a5867bf94b716ca72624f518cf8b434d04e0a4d5ef313",
+          "bytes": 46089
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=95",
+          "sha256": "d703d7b034ee847e9a8e4f94191b439a9e52522ac1fbbbbaf8eeec6e7118c127",
+          "bytes": 45959
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=96",
+          "sha256": "343c7d05459067b72324a8e33af0fba4012b592a95e353bb1f4a28af53b62288",
+          "bytes": 45938
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=97",
+          "sha256": "66bf0b85e1746fa9725a2c3542abaad30a818ea114ec3ca972576a016f5f494f",
+          "bytes": 47105
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=98",
+          "sha256": "192e54d1907823d5adfea06059117e9436c6cb249cbfdf3c0dfed1f20b3a01a5",
+          "bytes": 47082
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=99",
+          "sha256": "dc08307df24d99a148c381b6175f86a96016a98b25ce3e479f56be773460862e",
+          "bytes": 47331
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=100",
+          "sha256": "b4cd9ce8ec7d4da1ac26f7719afe2770c8ab15ac5d84e9599904e41f695b47df",
+          "bytes": 47541
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=101",
+          "sha256": "ce4e818fb3cc7b39e69bbb9ec9bc5d36dd5b9dde90e712d174d95a853322dd43",
+          "bytes": 48118
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=102",
+          "sha256": "ec23043b857cd9eac052376e7ae6b0f682786d0ffb37514913d41f9e077da9b3",
+          "bytes": 48218
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=103",
+          "sha256": "66efda89ee70e58711f0356112af8f31eaa2ef6f1a85b4b005c206281de561af",
+          "bytes": 49022
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=104",
+          "sha256": "bc8eb4da0b12117811403735ba187acbfcb2728b3c9ad5bde5405555bf129fe3",
+          "bytes": 48193
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=105",
+          "sha256": "53b9e3bffcb51fed8bb4b8ff84c9faef779e70a47d94d03ad0f5a3bb470761a0",
+          "bytes": 48213
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=106",
+          "sha256": "bebb4d32746452c20118c5344f8db4d7b7d0cf0806a01aa3eedaa2e89f7c5e9a",
+          "bytes": 46646
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=107",
+          "sha256": "242bd31884fdca1f4c72d56595011131175e741cd3547f51fcc5d577bdb2c8d5",
+          "bytes": 48184
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=108",
+          "sha256": "847cb5d70691790d033cda89bd08b2950b0c49167a4a9da7b4118d778637fbc7",
+          "bytes": 47706
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=109",
+          "sha256": "a1b357db0c5b0ede033e2522ec7748b14640efb180b2debb9fd239febe81d6db",
+          "bytes": 48125
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=110",
+          "sha256": "53e833baf2c516e9354d5af1f42cfe3995b36146464f5704843adf14b44ae9fe",
+          "bytes": 48183
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=111",
+          "sha256": "8a50188b3f99d031ac816b71efa15ffc47a505c54539a240d871d2845cf63b2e",
+          "bytes": 47877
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=112",
+          "sha256": "3bb51a94d6614c4ad83ec08191546e0d533f4715a6d1259485562823178aa6a1",
+          "bytes": 47198
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=113",
+          "sha256": "50b649b979645a86722b28614900222b66e986e14a3788d329ee0fd4bdbbe669",
+          "bytes": 46632
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=114",
+          "sha256": "9f61e0e9f619e4860f62b4d36d3e16c443bbb073e37690d5a5a5e5a28e846930",
+          "bytes": 47611
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=115",
+          "sha256": "2d284ad0887e3c2108481299dac0c76f42c7e4069fcea1610921313a8b5ac9da",
+          "bytes": 47061
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=116",
+          "sha256": "ede5466e62cf1388f162df864c226ef0cb68e3cc7b94c48eaf5e8b786cfa163f",
+          "bytes": 47747
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=117",
+          "sha256": "3a081c7d6a463721d2ddd624db0b74ca8291b5607f417ce63c90caa939544797",
+          "bytes": 46609
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=118",
+          "sha256": "311e67abfbf919162693c9e1b39ffcc7b9db00c41c7893242bd64f8a16194639",
+          "bytes": 48542
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=119",
+          "sha256": "17d1c74d431ffc72874c3628dd94b56160c983cfa7bccfd54103cc691e18f3e5",
+          "bytes": 47418
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=120",
+          "sha256": "83d4b8fdccecf4407b1fc7ff9125a5d8e4852cd4232d72a58ad353d9284334ed",
+          "bytes": 48082
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=121",
+          "sha256": "2823e38b1bfa3a5e2e326e5b9cead9d8e3b031b1ded302893c55bab91e3c788f",
+          "bytes": 46783
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=122",
+          "sha256": "2b1f6fc40c5bfd179e8cde6c4386e1542db933bbd6148e0eb5b91f9b7e7edede",
+          "bytes": 45338
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=123",
+          "sha256": "ed8cc1523ec93c7664dc0c3d67e2a42ce96e74837e53c81e10339f0054f7cf67",
+          "bytes": 47931
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=124",
+          "sha256": "422c282eacc078f3c3a01dd9cb12f9efbdd9261564575bf121bef3b2e63746d5",
+          "bytes": 48118
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=125",
+          "sha256": "9dee37e5d274a94554b897cd371ef54a9c359b7f1da3511e4255c7408fa8edce",
+          "bytes": 46950
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=126",
+          "sha256": "5a5a4e2db41df19424c0a742d5a7fbfa35bc7244fa420b76f3a91d42d8871665",
+          "bytes": 46312
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=127",
+          "sha256": "830aee4affbc61db083f743e7ea8e3ade1373134875f421a9c92b0138ee13cc2",
+          "bytes": 47220
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=128",
+          "sha256": "4783941aea8208f0f2e6e64f23db2c4dcb1a8c8f0448f4da52db6aa2f9989982",
+          "bytes": 47232
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=129",
+          "sha256": "c2427836b33b7e563ee2e40160e5562aaf8ac92edcedd6bd0605fcc3d45cb337",
+          "bytes": 47531
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=130",
+          "sha256": "31ede4d4db11177d3555da64831b8f7a4e001dadfcea62702078f7be1a39a737",
+          "bytes": 48688
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=131",
+          "sha256": "3c02934973d6a354dbbe2f27d608c58a171593b5ad002850aaaf5ced335d4091",
+          "bytes": 45985
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=132",
+          "sha256": "5957af07ba18c8395c17cd69eb642c7cc13ffedd7a7dfa7be140bc6bdb344759",
+          "bytes": 46291
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=133",
+          "sha256": "a4532411ffa81e2bcacfbeff7e377ba36242ddbdff3159a20ef5cdc217f56530",
+          "bytes": 46155
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=134",
+          "sha256": "5169ae8d28a1bf46f65ff276a5a520944df9945a4c5d3f127c264177646dc5ad",
+          "bytes": 47462
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=135",
+          "sha256": "453bcdd6fa0a70a783f338e54d4f7fc5c8eab12da346d50c0e9150cf05cd52d1",
+          "bytes": 47556
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=136",
+          "sha256": "eaf01c9c636e1e10a603606f6e15c6a21bf55227cc9d04ac128055cbbcecc313",
+          "bytes": 46551
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=137",
+          "sha256": "f32b3f4142384b0aaa157dd6c4f4f7c5473cdba650f93c920fc4b5ef135c323b",
+          "bytes": 47113
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=138",
+          "sha256": "3248eada2ae1037e27b3353a09aa87b143ca36c2355f7104b4afd4b86ec664f9",
+          "bytes": 46279
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=139",
+          "sha256": "91b9fb9ac22e532b62316e2015719b9d5a9c5482016fa5cfa7e59837b7ddb97f",
+          "bytes": 47161
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=140",
+          "sha256": "91922a2a31ad90966d9afea33c9d00cf93d68876617d7b914ee9f0a4c0bd7e96",
+          "bytes": 48592
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=141",
+          "sha256": "97c607005b7a67ba22f600716c2fe12c2943ee70b84c560752a033233397082a",
+          "bytes": 47970
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=142",
+          "sha256": "e5a9cfb63618062adfff79bd9d12bc4b4c6bfaf52c8eb3d590c68b05317429fa",
+          "bytes": 46832
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=143",
+          "sha256": "5cbb530e6b484d899b7b00dc07ecf74e5833f2c7ea46e9cc56760f178f7d6276",
+          "bytes": 47419
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=144",
+          "sha256": "0e645116425a247d5106a63fb0910867d7c5202ad83cbf6f9e020f2847f2d3ae",
+          "bytes": 48187
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=145",
+          "sha256": "4e5e47caa7aaad2610f93b0ce645e75bde6aa2d16b635717b6856a6c172bd783",
+          "bytes": 46565
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=146",
+          "sha256": "5bba2121ed23134241873b09ff1d4fc813526439c26de5f667af9d3ceedc6e98",
+          "bytes": 45552
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=147",
+          "sha256": "f94f7f6d517b30e8588b14fcc3f1890772f73c815370cd8e8b55fa771ae6e8de",
+          "bytes": 45691
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=148",
+          "sha256": "e4cf22bf1921b6915d21040227fe8d757354aede67c5c51e7335aad841419724",
+          "bytes": 47325
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=149",
+          "sha256": "ec30cb6b8bd440e43e5e4e839bffb2b757c25983637d7439cd837a071e93e40a",
+          "bytes": 46158
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=150",
+          "sha256": "9c8ee2ec97466ef9dec87e84553e65d8d99c7d004bfeda1d0047e2d21055c891",
+          "bytes": 48490
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=151",
+          "sha256": "ea4375ff04b27d8773bbd70b46ac942f55c3d1c1895a90b2c52e2df41cef2fc4",
+          "bytes": 47728
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=152",
+          "sha256": "792a7eeff0912e37b6be2519c00870201388eb01a9c5a3af1c1921430b46971e",
+          "bytes": 47189
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=153",
+          "sha256": "ca0b7fa38675fe5e242ccd33345e49ad28ca5a9b50eae052f38e97ba929e0605",
+          "bytes": 48547
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=154",
+          "sha256": "55cb1e839b55e88737cdaf8ef7e4eaf863b0620498fb095cd118f0ef955f0ef6",
+          "bytes": 50676
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=155",
+          "sha256": "271e57e7ebceaa2303ccc49bf5a12d0bb412e4ccee1a9c28cd8b90ef6edc374a",
+          "bytes": 49428
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=156",
+          "sha256": "4fb7bf779bc7a90cda3b54fe5997b507500119b97b7bcc0c4134b35dbfca206a",
+          "bytes": 46994
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=157",
+          "sha256": "f3ece3d73f6bdf8142e7d10391a70a4bc55b50e6063ff0cb40f3ddddd612e2ca",
+          "bytes": 47519
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=158",
+          "sha256": "ff7ed807b51d034f5049c82a81da4dda2bc5300e2eb4c4734113a023336cdbd2",
+          "bytes": 48046
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=159",
+          "sha256": "18a0846eb8542fb588055ebf7c18aa713bf48ee1280e00b1d3f2ffd5490bb738",
+          "bytes": 48331
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=160",
+          "sha256": "c95a1ebda7e6b583274346da6478fb1d3ae51266ed7a6973ac1e30b847652377",
+          "bytes": 48628
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=161",
+          "sha256": "5f828c7b46cfed2f82c3fe81de5844ea4272a3d4d496f415f85b77bc6873536b",
+          "bytes": 47571
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=162",
+          "sha256": "3bbd4eb4e01af670e76507c4e40634068f4a918242afb4b37c7b9f1e0231abd8",
+          "bytes": 48435
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=163",
+          "sha256": "f4fed58749d4c570b913ddaeffec8ae706bdcad58fac9351d305580c28623292",
+          "bytes": 46629
+        },
+        {
+          "url": "https://www.skills.google/catalog?page=164",
+          "sha256": "f1fe4c79f87eceec8a3d37993e5f7f4640571708cad78c4df7132f7e25fb94dc",
+          "bytes": 45122
+        }
+      ]
+    },
+    {
+      "source": "grow-google",
+      "title": "Grow with Google sitemap (named in grow.google/robots.txt)",
+      "publisher": "Google",
+      "url": "https://grow.google/sitemap.xml/",
+      "retrieved": "2026-11-15",
+      "sha256": "e07f4ce48b758c4f22eaba54113ab12d4ecfff19367e0f57559c0907b3f1b747",
+      "bytes": 2109381,
+      "path": "raw/grow_google_sitemap_locs.json",
+      "pathSha256": "a5360562c40f1800445ab0d1607a0cfe0b2f8045019e6559ab830d91bbb55db9",
+      "note": "the full sitemap is not committed (2 MB); its <loc> list is"
+    },
+    {
+      "source": "cert-bodies",
+      "title": "Official certification listing page: www.theiia.org",
+      "publisher": "www.theiia.org",
+      "url": "https://www.theiia.org/en/certifications/",
+      "retrieved": "2026-11-15",
+      "sha256": "b4682d5a514477c940279202f42426c99ee12f960321bf4ff129d5c231a12fdc",
+      "bytes": 104403,
+      "note": "used for: https://www.theiia.org/en/certifications/cia/, https://www.theiia.org/en/certifications/crma/, https://www.theiia.org/en/certifications/iap/"
+    },
+    {
+      "source": "cert-bodies",
+      "title": "Official certification listing page: www.peoplecert.org",
+      "publisher": "www.peoplecert.org",
+      "url": "https://www.peoplecert.org/browse-certifications",
+      "retrieved": "2026-11-15",
+      "sha256": "c11ba9d8664157dd6fd4cf8030d104774420b79b6fa23cc73ce2488252bfac89",
+      "bytes": 422150,
+      "note": "used for: https://www.peoplecert.org/browse-certifications/it-governance-and-service-management/ITIL-1, https://www.peoplecert.org/browse-certifications/project-programme-and-portfolio-management, https://www.peoplecert.org/browse-certifications/devops, https://www.peoplecert.org/browse-certifications/Lean-Six-Sigma, https://www.peoplecert.org/browse-certifications/it-governance-and-service-management/SDI-35"
+    },
+    {
+      "source": "cert-bodies",
+      "title": "Official certification listing page: www.acefitness.org",
+      "publisher": "www.acefitness.org",
+      "url": "https://www.acefitness.org/fitness-certifications/default.aspx",
+      "retrieved": "2026-11-15",
+      "sha256": "3e203dcef7cd219121bebaf731dd76ab3954878403fd6448907a0bab5c3b01ce",
+      "bytes": 141628,
+      "note": "used for: https://www.acefitness.org/fitness-certifications/personal-trainer-certification/default.aspx, https://www.acefitness.org/fitness-certifications/health-coach-certification/default.aspx, https://www.acefitness.org/fitness-certifications/group-fitness-certification/default.aspx, https://www.acefitness.org/fitness-certifications/certified-medical-exercise-specialist/default.aspx"
+    }
+  ]
+}

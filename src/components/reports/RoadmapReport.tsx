@@ -2,6 +2,7 @@ import React from 'react';
 import { IconBook, IconAward, IconCheck } from '../ui/Icons';
 import type { RoadmapResult } from '../../utils/analysis';
 import { PHASE_COLORS } from '../../config/theme';
+import { CourseLinkButton } from '../CourseLinkButton';
 
 /** Presentational only. Shared by RoadmapModal and the dashboard viewer. */
 export const RoadmapReport: React.FC<{ result: RoadmapResult }> = ({ result }) => (
@@ -24,13 +25,32 @@ export const RoadmapReport: React.FC<{ result: RoadmapResult }> = ({ result }) =
             </div>
         )}
 
-        {result.resources?.length > 0 && (
+        {(result.resources?.length > 0 || (result.courses?.length ?? 0) > 0) && (
             <div data-print-card className="bg-white/[0.02] border border-white/[0.06] rounded-xl p-5">
                 <h3 className="text-blue-400 font-semibold text-xs uppercase tracking-wider mb-3 flex items-center gap-2 print:text-black">
                     <IconBook size={14} /> Recommended Resources
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {result.resources.map((resource, i) => (
+                    {(result.courses?.length ?? 0) > 0 && (
+                        <div className="md:col-span-2">
+                            <p className="text-gray-400 font-medium mb-1 text-xs print:text-black">Courses & Certifications</p>
+                            <ul className="space-y-2">
+                                {result.courses!.map((course, j) => (
+                                    <li key={j} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 print:text-black">
+                                        <span className="text-gray-300 text-sm flex items-start gap-1.5 min-w-0 print:text-black">
+                                            <span className="text-blue-500 mt-1 shrink-0 text-xs">&rsaquo;</span>
+                                            <span>
+                                                {course.title}
+                                                <span className="text-gray-500"> · {course.provider}</span>
+                                            </span>
+                                        </span>
+                                        <CourseLinkButton link={course.link} courseTitle={course.title} className="self-start sm:self-auto sm:shrink-0 ml-4 sm:ml-0" />
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+                    {(result.resources ?? []).map((resource, i) => (
                         <div key={i}>
                             <p className="text-gray-400 font-medium mb-1 text-xs print:text-black">{resource.category}</p>
                             <ul className="space-y-1">

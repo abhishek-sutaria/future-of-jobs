@@ -34,6 +34,8 @@ import {
 import { supabaseConfig, type FetchLike, type ServerEnv } from './supabaseRest.js';
 import { requestHash, supabaseSharedAnswers, type SharedAnswerKey } from './sharedAnswers.js';
 import { limitsFromEnv, memoryRateLimiter, supabaseRateLimiter, visitorId, type RateLimiter, type Window } from './rateLimit.js';
+import { matchedCoursesFor } from './courseMatches.js';
+import type { CatalogCourse } from '../../src/shared/aiPrompts.js';
 
 const ANTHROPIC_URL = 'https://api.anthropic.com/v1/messages';
 const ANTHROPIC_VERSION = '2023-06-01';
@@ -56,8 +58,14 @@ export interface ApiResponse {
 
 export interface GatewayDeps {
     fetch: FetchLike;
+    /** For checking course links (shared/courseLinks); defaults to `fetch`. */
+    linkFetch?: FetchLike;
+    /** How long one answer may take in all (TURN_TIMEOUT_MS); tests shorten it. */
+    turnTimeoutMs?: number;
     /** Read on every request, so a changed Vercel env applies without a code change. */
     env: () => ServerEnv;
+    /** A job's catalog courses (Step 3); defaults to api/_lib/courseMatches.ts. Tests pass their own. */
+    catalogFor?: (roleKey: string) => CatalogCourse[];
     now?: () => number;
 }
 
@@ -111,6 +119,34 @@ async function pipe(upstream: Response, res: ApiResponse) {
     res.end();
 }
 
+// ── One Claude answer: time limit, tokens and time ──────────────────────────
+
+interface ClaudeMessage {
+    content?: { text?: string }[];
+    stop_reason?: string;
+    usage?: { input_tokens?: number; output_tokens?: number };
+}
+
+/** What one new answer cost and took: logged, and sent with the answer. */
+export interface AnswerUsage {
+    inputTokens: number;
+    outputTokens: number;
+    ms: number;
+    stopReason: string;
+}
+
+/**
+ * An answer is stopped after this long, so the visitor gets a clear message
+ * and their slot back, with time left for the course link checks, inside the
+ * function's 120 s limit (vercel.json maxDuration).
+ */
+export const TURN_TIMEOUT_MS = 100_000;
+
+/** One log line per new answer: tokens and time, never the prompt, the answer or a key. */
+function logAnswer(feature: string, usage: AnswerUsage, extra: Record<string, unknown> = {}) {
+    console.info('[ai-gateway] answer', JSON.stringify({ feature, ...usage, ...extra }));
+}
+
 export function createClaudeHandler(deps: GatewayDeps) {
     const now = deps.now ?? (() => Date.now());
     // One in-memory fallback per instance, kept across requests.
@@ -155,9 +191,10 @@ export function createClaudeHandler(deps: GatewayDeps) {
         const body = parseBody(req.body);
         if (!body) return fail(res, 400, 'foj_bad_request', 'The request body must be a JSON object.');
 
-        const callClaude = (anthropicBody: Record<string, unknown>) =>
+        const callClaude = (anthropicBody: Record<string, unknown>, signal?: AbortSignal) =>
             deps.fetch(ANTHROPIC_URL, {
                 method: 'POST',
+                ...(signal ? { signal } : {}),
                 headers: { 'x-api-key': apiKey, 'anthropic-version': ANTHROPIC_VERSION, 'content-type': 'application/json' },
                 body: JSON.stringify(anthropicBody),
             });
@@ -185,13 +222,19 @@ export function createClaudeHandler(deps: GatewayDeps) {
         if (!parsedInput.success) return fail(res, 400, 'foj_bad_request', `The ${name} request is not one the app makes.`);
         const input = parsedInput.data as never;
 
+        // The job's catalog courses (server data, never from the browser): only
+        // the course features use them, and only jobs Step 2 matched have any.
+        const catalog: CatalogCourse[] = name === 'upskill' || name === 'roadmap'
+            ? (deps.catalogFor ?? matchedCoursesFor)((input as { roleKey: string }).roleKey)
+            : [];
+
         const anthropicBody: Record<string, unknown> = {
             model: AI_MODEL,
             max_tokens: feature.maxTokens,
             // Sonnet 5 thinks by default when this is omitted, eating into
             // max_tokens on a structured answer that does not need it.
             thinking: { type: 'disabled' },
-            messages: [{ role: 'user', content: feature.prompt(input) }],
+            messages: [{ role: 'user', content: (feature.prompt as (i: unknown, c: { catalog: CatalogCourse[] }) => string)(input, { catalog }) }],
         };
 
         const { config: sbConfig } = supabaseConfig(env);
@@ -237,42 +280,97 @@ export function createClaudeHandler(deps: GatewayDeps) {
             return fail(res, status, type, message);
         };
 
-        let upstream: Response;
-        try {
-            upstream = await callClaude(feature.stream ? { ...anthropicBody, stream: true } : anthropicBody);
-        } catch (error) {
-            return failAndRefund(502, 'foj_upstream', error instanceof Error ? error.message : 'Unknown proxy error');
-        }
-
-        if (!upstream.ok) {
-            let message = upstream.statusText || 'Claude error';
+        if (feature.stream) {
+            let upstream: Response;
             try {
-                const data = (await upstream.json()) as { error?: { message?: string } };
-                message = data?.error?.message || message;
-            } catch { /* keep the status text */ }
-            return failAndRefund(upstream.status, 'foj_upstream', message);
+                upstream = await callClaude({ ...anthropicBody, stream: true });
+            } catch (error) {
+                return failAndRefund(502, 'foj_upstream', error instanceof Error ? error.message : 'Unknown proxy error');
+            }
+            if (!upstream.ok) {
+                let message = upstream.statusText || 'Claude error';
+                try {
+                    const data = (await upstream.json()) as { error?: { message?: string } };
+                    message = data?.error?.message || message;
+                } catch { /* keep the status text */ }
+                return failAndRefund(upstream.status, 'foj_upstream', message);
+            }
+            return pipe(upstream, res);
         }
 
-        if (feature.stream) return pipe(upstream, res);
+        const started = now();
+        const usage: AnswerUsage = { inputTokens: 0, outputTokens: 0, ms: 0, stopReason: '' };
+        const controller = new AbortController();
+        const timer = setTimeout(() => controller.abort(), deps.turnTimeoutMs ?? TURN_TIMEOUT_MS);
+        let data: ClaudeMessage;
+        try {
+            const upstream = await callClaude(anthropicBody, controller.signal);
+            if (!upstream.ok) {
+                let message = upstream.statusText || 'Claude error';
+                try {
+                    const err = (await upstream.json()) as { error?: { message?: string } };
+                    message = err?.error?.message || message;
+                } catch { /* keep the status text */ }
+                usage.ms = now() - started;
+                logAnswer(name, usage, { status: upstream.status });
+                return failAndRefund(upstream.status, 'foj_upstream', message);
+            }
+            data = (await upstream.json()) as ClaudeMessage;
+        } catch (error) {
+            usage.ms = now() - started;
+            if (controller.signal.aborted) {
+                logAnswer(name, usage, { status: 504 });
+                return failAndRefund(504, 'foj_upstream', 'Claude took too long to answer, so nothing was saved. Try again in a moment.');
+            }
+            return failAndRefund(502, 'foj_upstream', error instanceof Error ? error.message : 'Unknown proxy error');
+        } finally {
+            clearTimeout(timer);
+        }
+        usage.inputTokens = data.usage?.input_tokens ?? 0;
+        usage.outputTokens = data.usage?.output_tokens ?? 0;
+        usage.stopReason = data.stop_reason ?? '';
+        usage.ms = now() - started;
 
         let answer: unknown;
         try {
-            const data = (await upstream.json()) as { content?: { text?: string }[]; stop_reason?: string };
             const text = (data.content ?? []).map((p) => p?.text || '').join('\n').trim();
-            if (!text) return failAndRefund(502, 'foj_invalid_answer', 'Empty response from Claude');
+            if (!text) {
+                logAnswer(name, usage, { rejected: 'empty' });
+                return failAndRefund(502, 'foj_invalid_answer', 'Empty response from Claude');
+            }
             try {
                 answer = JSON.parse(extractJsonBlock(text));
             } catch {
-                return failAndRefund(502, 'foj_invalid_answer', data.stop_reason === 'max_tokens'
+                logAnswer(name, usage, { rejected: 'json' });
+                return failAndRefund(502, 'foj_invalid_answer', usage.stopReason === 'max_tokens'
                     ? 'Claude response truncated: hit max_tokens before finishing the JSON output.'
                     : 'Claude’s answer was not valid JSON, so it was not saved. Try again.');
             }
             answer = (feature.check as (a: unknown, i: unknown) => unknown)(answer, input);
         } catch {
+            logAnswer(name, usage, { rejected: 'check' });
             return failAndRefund(502, 'foj_invalid_answer', 'Claude’s answer did not pass the app’s checks, so it was not saved. Try again.');
         }
 
-        if (!feature.shared || !key) return res.status(200).json({ result: answer });
+        // Course links are checked here, before the answer is shown or saved,
+        // so a visitor and the saved store only ever get checked links.
+        if ('finalize' in feature && feature.finalize) {
+            try {
+                answer = await feature.finalize(answer, { fetch: deps.linkFetch ?? deps.fetch, catalog });
+            } catch {
+                return failAndRefund(502, 'foj_invalid_answer', 'Claude’s answer did not pass the app’s checks, so it was not saved. Try again.');
+            }
+        }
+
+        const courseLinks = (answer as { courses?: { link?: { kind?: string }; catalogId?: string }[] })?.courses;
+        logAnswer(name, usage, Array.isArray(courseLinks) ? {
+            courses: courseLinks.length,
+            direct: courseLinks.filter((c) => c?.link?.kind === 'course').length,
+            fromCatalog: courseLinks.filter((c) => typeof c?.catalogId === 'string').length,
+            catalogOffered: catalog.length,
+        } : {});
+
+        if (!feature.shared || !key) return res.status(200).json({ result: answer, usage });
 
         let saved = false;
         let savedAt: string | null = null;
@@ -288,6 +386,6 @@ export function createClaudeHandler(deps: GatewayDeps) {
             }
         }
         res.setHeader('cache-control', 'no-store');
-        return res.status(200).json({ result, shared: { hit: false, saved, savedAt } });
+        return res.status(200).json({ result, shared: { hit: false, saved, savedAt }, usage });
     };
 }

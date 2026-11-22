@@ -1,0 +1,17 @@
+{
+  "_about": "The hand-reviewed list of official certification pages (Step 1, scripts/build_course_catalog.ts). Each URL and its linkText were read from the body's own certification listing page on 2026-11-15; the build fetches the listing page again and keeps a certification only if the page still links to it under that text, then runs the app's link check on it. Only bodies whose robots.txt and terms of use allow automated access are here: see docs/course-catalog.md for the bodies left out and why.",
+  "pages": [
+    { "key": "iia-cia", "listingUrl": "https://www.theiia.org/en/certifications/", "url": "https://www.theiia.org/en/certifications/cia/", "linkText": "Certified Internal Auditor" },
+    { "key": "iia-crma", "listingUrl": "https://www.theiia.org/en/certifications/", "url": "https://www.theiia.org/en/certifications/crma/", "linkText": "Certification in Risk Management Assurance" },
+    { "key": "iia-iap", "listingUrl": "https://www.theiia.org/en/certifications/", "url": "https://www.theiia.org/en/certifications/iap/", "linkText": "Internal Audit Practitioner" },
+    { "key": "peoplecert-itil", "listingUrl": "https://www.peoplecert.org/browse-certifications", "url": "https://www.peoplecert.org/browse-certifications/it-governance-and-service-management/ITIL-1", "linkText": "ITIL" },
+    { "key": "peoplecert-prince2", "listingUrl": "https://www.peoplecert.org/browse-certifications", "url": "https://www.peoplecert.org/browse-certifications/project-programme-and-portfolio-management", "linkText": "PRINCE2" },
+    { "key": "peoplecert-devops", "listingUrl": "https://www.peoplecert.org/browse-certifications", "url": "https://www.peoplecert.org/browse-certifications/devops", "linkText": "DEVOPS INSTITUTE" },
+    { "key": "peoplecert-lean-six-sigma", "listingUrl": "https://www.peoplecert.org/browse-certifications", "url": "https://www.peoplecert.org/browse-certifications/Lean-Six-Sigma", "linkText": "Lean and Lean Six Sigma Certifications" },
+    { "key": "peoplecert-sdi", "listingUrl": "https://www.peoplecert.org/browse-certifications", "url": "https://www.peoplecert.org/browse-certifications/it-governance-and-service-management/SDI-35", "linkText": "Service Desk Institute (SDI) Certifications" },
+    { "key": "ace-personal-trainer", "listingUrl": "https://www.acefitness.org/fitness-certifications/default.aspx", "url": "https://www.acefitness.org/fitness-certifications/personal-trainer-certification/default.aspx", "linkText": "Personal Trainer" },
+    { "key": "ace-health-coach", "listingUrl": "https://www.acefitness.org/fitness-certifications/default.aspx", "url": "https://www.acefitness.org/fitness-certifications/health-coach-certification/default.aspx", "linkText": "Health Coach" },
+    { "key": "ace-group-fitness", "listingUrl": "https://www.acefitness.org/fitness-certifications/default.aspx", "url": "https://www.acefitness.org/fitness-certifications/group-fitness-certification/default.aspx", "linkText": "Group Fitness Instructor" },
+    { "key": "ace-medical-exercise", "listingUrl": "https://www.acefitness.org/fitness-certifications/default.aspx", "url": "https://www.acefitness.org/fitness-certifications/certified-medical-exercise-specialist/default.aspx", "linkText": "Medical Exercise Specialist" }
+  ]
+}

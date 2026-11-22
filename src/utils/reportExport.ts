@@ -7,6 +7,7 @@
  * already lost most of a Startup Ideas plan that way.
  */
 
+import { directCourseHref } from './courseLink';
 import type { StoredArtifact, ArtifactKind } from '../lib/userData';
 import type {
     ScenarioResult,
@@ -41,9 +42,18 @@ function roadmapBody(r: RoadmapResult): string[] {
         out.push(`## ${phase.title}`, '');
         out.push(...(phase.items ?? []).map((i) => `- ${i}`), '');
     }
-    if (r.resources?.length) {
+    if (r.resources?.length || r.courses?.length) {
         out.push('## Recommended resources', '');
-        for (const res of r.resources) out.push(...bullets(res.category, res.items));
+        if (r.courses?.length) {
+            out.push('**Courses & Certifications**', '');
+            for (const c of r.courses) {
+                // Only a checked course page; an older saved search link is left out (utils/courseLink).
+                const href = directCourseHref(c.link);
+                out.push(href ? `- [${c.title}](${href}) · ${c.provider} (Open course)` : `- ${c.title} · ${c.provider}`);
+            }
+            out.push('');
+        }
+        for (const res of r.resources ?? []) out.push(...bullets(res.category, res.items));
     }
     if (r.successMetrics?.length) out.push('## Success milestones', '', ...r.successMetrics.map((m) => `- ${m}`), '');
     return out;
