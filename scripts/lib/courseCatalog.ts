@@ -369,7 +369,15 @@ export interface PageFacts {
     saysFree: boolean;
 }
 
-const RETIRED = /\bthis (certification|course|exam|learning path|credential|module|program|programme) (has been|was|is) retired\b/i;
+/**
+ * A retirement notice, in each of Microsoft's wordings: "This certification
+ * has been retired", "This certification and the renewal assessment are
+ * retired", "This certification, related exam, and renewal assessments was
+ * retired on ...", "MOS 2013 certifications were fully retired", "This exam
+ * will retire on February 1, 2027", "This Applied Skills assessment has been
+ * retired". Checked on the course page and on the entry's own description.
+ */
+export const RETIRED = /\bthis (certification|course|exam|learning path|credential|module|program|programme|applied skills assessment|assessment)\b[^.]{0,120}?\b(?:(?:is|are|was|were|has been|have been)\s+(?:fully\s+)?retired\b|will (?:be )?retire)|\bcertifications (?:were|have been|are) (?:fully )?retired\b/i;
 
 export function pageFacts(html: string): PageFacts {
     const lang = html.match(/<html[^>]*\blang=["']([^"']+)["']/i)?.[1];
@@ -683,7 +691,7 @@ export async function checkCandidate(c: Candidate, opts: CheckOptions): Promise<
     if (facts?.lang && !/^en\b/i.test(facts.lang)) return { ok: false, reason: `not English (page lang ${facts.lang})` };
     const lang = notEnglish(`${title} ${description ?? ''}`);
     if (lang) return { ok: false, reason: lang };
-    if (facts?.retired) return { ok: false, reason: 'page says it is retired' };
+    if (facts?.retired || RETIRED.test(description ?? '')) return { ok: false, reason: 'page says it is retired' };
     const provider = providerOfUrl(new URL(check.href));
     if (!provider) return { ok: false, reason: 'not on the provider list' };
     let price = c.price;
@@ -716,7 +724,7 @@ export async function recheckEntry(e: CatalogEntry, opts: CheckOptions): Promise
     const check = await checkCourseUrl(e.url, e.title, { fetch: opts.fetcher.fetch, timeoutMs: opts.timeoutMs ?? 30_000 });
     if (!check.ok) return { ok: false, reason: check.reason };
     const page = opts.fetcher.pages.get(check.href);
-    if (page && pageFacts(page.body).retired) return { ok: false, reason: 'page says it is retired' };
+    if ((page && pageFacts(page.body).retired) || RETIRED.test(e.description ?? '')) return { ok: false, reason: 'page says it is retired' };
     return { ok: true, entry: { ...e, url: canonicalUrl(check.href), lastChecked: page ? isoDay(page.fetchedAt) : opts.today } };
 }
 

@@ -41,7 +41,7 @@ export interface ResumeAnalysisResult {
     feedback: string;
 }
 
-/** A course link the server checked (shared/courseLinks): "Open course", or a search for the course name. */
+/** A course link the server checked (shared/courseLinks): "Open course" only. A course without one has no `link`. */
 export type { CourseLink } from '../shared/courseLinks';
 
 export interface RoadmapResult {
