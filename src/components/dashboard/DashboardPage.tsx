@@ -125,7 +125,7 @@ export const DashboardPage: React.FC = () => {
     }, [close]);
 
     return (
-        <div className="absolute inset-0 bg-gray-900 flex flex-col pointer-events-auto" style={{ zIndex: Z.page }}>
+        <div className="absolute inset-0 bg-gray-900 flex flex-col pointer-events-auto pt-[var(--safe-top)] pb-[var(--safe-bottom)] pl-[var(--safe-left)] pr-[var(--safe-right)]" style={{ zIndex: Z.page }}>
             {/* Header */}
             <div className="flex-none flex items-center justify-between gap-3 pl-5 md:pl-8 pr-3 md:pr-6 py-3 border-b border-white/[0.06]">
                 <h1 className="text-lg font-semibold text-white tracking-wide">Your Dashboard</h1>

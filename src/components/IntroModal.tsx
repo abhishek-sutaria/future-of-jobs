@@ -6,6 +6,7 @@ import { useStore } from '../store';
 
 import { UI } from '../config/constants';
 import { SCORE_COUNTS, SCORE_COVERAGE } from '../utils/blsScores';
+import { INTRO_CLOSED_EVENT } from '../utils/installTip';
 
 const STORAGE_KEY = UI.INTRO_STORAGE_KEY;
 
@@ -23,6 +24,8 @@ export const IntroModal: React.FC = () => {
     const handleClose = () => {
         localStorage.setItem(STORAGE_KEY, '1');
         setDismissed(true);
+        // The iPhone install tip waits for this, so it never shows under the intro.
+        window.dispatchEvent(new Event(INTRO_CLOSED_EVENT));
     };
 
     return (

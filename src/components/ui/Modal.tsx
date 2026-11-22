@@ -84,7 +84,7 @@ export function Modal({ isOpen, onClose, title, children, chrome, footer, size =
 
     const tree = (
         <div
-            className="fixed inset-0 flex items-center justify-center p-4 pointer-events-auto animate-in fade-in duration-200"
+            className="fixed inset-0 flex items-center justify-center [--pad:1rem] safe-pad pointer-events-auto animate-in fade-in duration-200"
             style={{ zIndex: Z_MAP[layer] }}
             role="dialog"
             aria-modal="true"
@@ -100,7 +100,7 @@ export function Modal({ isOpen, onClose, title, children, chrome, footer, size =
             <div
                 ref={dialogRef}
                 {...(printable ? { 'data-print-modal': '' } : {})}
-                className={`relative bg-gray-900/95 border border-white/10 rounded-2xl ${SIZE_MAP[size]} w-full shadow-2xl flex flex-col max-h-[90vh] overflow-hidden animate-in zoom-in-95 slide-in-from-bottom-2 duration-300`}
+                className={`relative bg-gray-900/95 border border-white/10 rounded-2xl ${SIZE_MAP[size]} w-full shadow-2xl flex flex-col max-h-[calc(90vh-var(--safe-top)-var(--safe-bottom))] overflow-hidden animate-in zoom-in-95 slide-in-from-bottom-2 duration-300`}
             >
                 <div className="flex items-center justify-between gap-3 pl-6 pr-3 py-3 border-b border-white/[0.06] shrink-0">
                     <h2

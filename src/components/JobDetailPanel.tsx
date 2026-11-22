@@ -249,7 +249,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
 
     return (
         <>
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none p-2 md:p-8" style={{ zIndex: Z.detailPanel }}>
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none [--pad:0.5rem] md:[--pad:2rem] safe-pad" style={{ zIndex: Z.detailPanel }}>
                 {/* Backdrop — dims and blurs the terrain/header/legend behind the
                     panel so focus stays on the report, matching ui/Modal's own
                     backdrop convention. Click-through closes, same as every
@@ -259,7 +259,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                     onClick={onClose}
                     aria-hidden="true"
                 />
-                <div className="relative bg-gray-900/95 backdrop-blur-xl border border-cyan-400/20 shadow-2xl rounded-2xl w-full max-w-6xl h-auto max-h-[92vh] flex flex-col pointer-events-auto overflow-hidden">
+                <div className="relative bg-gray-900/95 backdrop-blur-xl border border-cyan-400/20 shadow-2xl rounded-2xl w-full max-w-6xl h-auto max-h-[calc(92vh-var(--safe-top)-var(--safe-bottom))] flex flex-col pointer-events-auto overflow-hidden">
 
                     {/* Header */}
                     <div className="flex-none px-4 py-3 md:px-6 md:py-4 border-b border-white/[0.06] flex justify-between items-start gap-4">
@@ -673,7 +673,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                     {/* Footer */}
                     <div
                         className="flex-none p-3 border-t border-white/[0.04] flex justify-end text-[10px] text-gray-600 font-mono uppercase tracking-wider"
-                        style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))' }}
+                        style={{ paddingBottom: 'max(0.75rem, calc(env(safe-area-inset-bottom) - var(--safe-bottom)))' }}
                     >
                         <span>Sources: {panelSourceList(job).join(', ')}</span>
                     </div>

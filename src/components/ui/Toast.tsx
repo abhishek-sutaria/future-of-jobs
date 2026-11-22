@@ -57,7 +57,7 @@ export function ToastContainer() {
 
     return (
         <div
-            className="fixed bottom-6 right-6 flex flex-col gap-2 pointer-events-none"
+            className="fixed bottom-[calc(1.5rem+var(--safe-bottom))] right-[calc(1.5rem+var(--safe-right))] flex flex-col gap-2 pointer-events-none"
             style={{ zIndex: Z.toast }}
             aria-live="polite"
         >

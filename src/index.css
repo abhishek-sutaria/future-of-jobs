@@ -28,6 +28,53 @@ html {
   --bg-glass: rgba(26, 26, 26, 0.6);
 }
 
+/* Installed phone app (iPhone Add to Home Screen, Android Install app).
+   In standalone mode the page runs edge to edge (viewport-fit=cover, and on
+   iPhone the black-translucent status bar in index.html), so every control
+   pinned to an edge adds these insets to clear the notch, status bar and home
+   bar. In a browser tab they stay 0px, so the browser layout is unchanged.
+   phoneApp.test.ts checks the edge controls use them. */
+:root {
+  --safe-top: 0px;
+  --safe-right: 0px;
+  --safe-bottom: 0px;
+  --safe-left: 0px;
+}
+
+/* A full-screen overlay (role panel, dialog) padded by --pad on every side
+   plus the insets: `[--pad:1rem] safe-pad` is `p-4` in a browser tab. Its
+   backdrop (absolute inset-0) still covers the whole screen. */
+.safe-pad {
+  padding: calc(var(--pad, 0px) + var(--safe-top)) calc(var(--pad, 0px) + var(--safe-right))
+    calc(var(--pad, 0px) + var(--safe-bottom)) calc(var(--pad, 0px) + var(--safe-left));
+}
+
+@media (display-mode: standalone) {
+  :root {
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-right: env(safe-area-inset-right, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+    --safe-left: env(safe-area-inset-left, 0px);
+  }
+
+  /* No grey flash on every tap, as a native app has none. */
+  html,
+  body {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+/* iOS zooms the whole page when a text field under 16px gets focus, and an
+   installed app has no browser zoom-out to undo it. Every text field in the
+   app is 12-14px, so in the installed app on touch screens they become 16px. */
+@media (display-mode: standalone) and (pointer: coarse) {
+  input:not([type='range']):not([type='checkbox']):not([type='radio']):not([type='file']):not([type='button']):not([type='submit']),
+  textarea,
+  select {
+    font-size: 16px;
+  }
+}
+
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Outfit', sans-serif;
 }

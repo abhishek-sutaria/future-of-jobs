@@ -311,7 +311,7 @@ export const WorldBar: React.FC = () => {
     return (
         <div
             ref={frameRef}
-            className="absolute left-4 right-4 md:left-8 md:right-8 md:max-w-[66rem] pointer-events-none"
+            className="absolute left-[calc(1rem+var(--safe-left))] right-[calc(1rem+var(--safe-right))] md:left-[calc(2rem+var(--safe-left))] md:right-[calc(2rem+var(--safe-right))] md:max-w-[66rem] pointer-events-none"
             // Open, the list must lie over the year slider, which outranks the bar.
             style={{ top, zIndex: open || schoolOpen ? Z.sidebar : Z.base }}
         >
