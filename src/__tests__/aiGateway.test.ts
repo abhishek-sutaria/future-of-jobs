@@ -159,7 +159,7 @@ describe('one shared saved answer', () => {
             'job-15|analyze|analyze-1',
             'soc:29-1141|analyze|analyze-1',
             'soc:29-1141|analyze|analyze-1',
-            'soc:29-1141|roadmap|roadmap-6',
+            'soc:29-1141|roadmap|roadmap-7',
         ]);
         for (const r of rows) expect(r.input_hash).toMatch(/^[0-9a-f]{64}$/);
     });
@@ -180,15 +180,17 @@ describe('one shared saved answer', () => {
         const input = { roleKey: 'soc:47-2111', title: 'Electricians', taskName: 'Prepare sketches or follow blueprints', mode: 'defend', riskPercent: 70 };
         const first = await call(h, { feature: 'upskill', input }, { ip: '198.51.100.1' });
         expect(first.status).toBe(200);
-        const links = first.json.result.courses.map((c: { link: { kind: string; label: string }; url?: string }) => {
+        const links = first.json.result.courses.map((c: { link?: { kind: string; label: string }; url?: string }) => {
             expect(c.url).toBeUndefined();
-            return [c.link.kind, c.link.label];
+            return c.link ? [c.link.kind, c.link.label] : null;
         });
-        expect(links).toEqual([['course', 'Open course'], ['search', 'Search on Coursera'], ['search', 'Search the web']]);
+        // A failed link means no link at all, never a search.
+        expect(links).toEqual([['course', 'Open course'], null, null]);
         // The unknown provider's link is not on the list, so it is never fetched.
         expect(linkCalls).toEqual([good, 'https://www.coursera.org/learn/foj-mock-course-that-does-not-exist']);
         const saved = [...mock.answers.values()][0].row.payload as { courses: Record<string, unknown>[] };
         expect(saved.courses.map((c) => 'url' in c)).toEqual([false, false, false]);
+        expect(saved.courses.map((c) => 'link' in c)).toEqual([true, false, false]);
         expect(saved.courses[0].link).toEqual({ href: good, kind: 'course', label: 'Open course' });
 
         const second = await call(h, { feature: 'upskill', input }, { ip: '198.51.100.2' });

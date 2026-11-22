@@ -14,16 +14,17 @@ import { oohEnvelopeCap } from '../utils/oohEnvelope.js';
 
 /**
  * What Claude is asked to put in a course's "url". The server checks every
- * link before anyone sees it (shared/courseLinks.ts); an empty one goes
- * straight to a search for the course name.
+ * link before anyone sees it (shared/courseLinks.ts); an empty or failed one
+ * means the course is shown with no link.
  */
 export const COURSE_URL_HINT = 'https link to this exact course or certification page on the provider’s own site (not a home or search page), or an empty string if you are not sure of it';
 
 /**
  * A course from the app's own catalog (data/course_catalog), matched to this
  * job in Step 2 and handed to the prompt by the server (api/_lib/courseMatches.ts).
- * Its link was checked when the catalog was built, so the server turns its id
- * straight into an "Open course" link (shared/courseLinks.ts linkCatalogCourses).
+ * Its link was checked when the catalog was built; the server checks it again,
+ * the same way as every other link, before turning its id into an "Open course"
+ * link (shared/courseLinks.ts linkCatalogCourses).
  */
 export interface CatalogCourse {
     id: string;

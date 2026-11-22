@@ -1,7 +1,9 @@
 # Course catalog (Step 1 of 3)
 
-Today the app asks Claude for course links, and most are guessed wrong, so most
-buttons fall back to "Search on <site>". The plan has three steps:
+When this step was written, the app asked Claude for course links, and most
+were guessed wrong, so most buttons fell back to "Search on <site>". (Since
+2026-11-22 there is no search fallback: a course without a checked link shows
+with no link. See `docs/course-matches.md`.) The plan has three steps:
 
 1. **This step:** build our own catalog of real courses and certifications, each
    with a link we checked. No Claude calls.

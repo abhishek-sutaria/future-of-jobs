@@ -5,9 +5,10 @@
  *   - a matched job's Defend / Build and Roadmap prompts list its catalog
  *     courses by id; the server turns each id into its catalog page ("Open
  *     course"), rejects an id not on the job's list, keeps at most one other
- *     course and checks that one's link as in #99;
- *   - an unmatched job's prompt is byte for byte the #99 prompt, and its links
- *     are handled exactly as in #99;
+ *     course; every link, the catalog's own included, goes through the same
+ *     check, and a course whose link fails is kept with no link (no search
+ *     fallback since 2026-11-22);
+ *   - an unmatched job's prompt is byte for byte the #99 prompt;
  *   - an answer with no course left is rejected;
  *   - retired or removed catalog entries can never be matched;
  *   - the server data is exactly what the data builds and is not in the
@@ -36,8 +37,17 @@ const CIA: CatalogCourse = { id: 'cert-bodies:iia-cia', title: 'Certified Intern
 const EXCEL: CatalogCourse = { id: 'microsoft-learn:certification:certification.mos-excel-for-accounting-associate', title: 'Microsoft Office Specialist: Excel for Accounting Associate', provider: 'Microsoft Learn', url: 'https://learn.microsoft.com/en-us/credentials/certifications/mos-excel-for-accounting-associate/', type: 'certification', level: 'Intermediate' };
 const CATALOG = [CIA, EXCEL];
 
-/** Link checks: every page is "not found", so a non-catalog course always falls back to a search. */
+/** Link checks: every page is "not found", so every link fails and its course gets no link. */
 const notFound: FetchLike = async () => new Response('<title>Not Found</title>', { status: 404, headers: { 'content-type': 'text/html' } });
+
+/** Link checks: the catalog pages given load with their own title; every other page is "not found". */
+const catalogPages = (entries: { url: string; title: string }[]): FetchLike => async (url) => {
+    const e = entries.find((x) => x.url === url);
+    return e
+        ? new Response(`<html><head><title>${e.title}</title></head><body><h1>${e.title}</h1></body></html>`, { status: 200, headers: { 'content-type': 'text/html' } })
+        : notFound(url);
+};
+const catalogOk = catalogPages(CATALOG);
 
 // ── Prompts ─────────────────────────────────────────────────────────────────
 
@@ -67,21 +77,32 @@ describe('prompts', () => {
         expect(buildUpskillPrompt('A', 't', 'defend', 70, CATALOG)).toMatch(/moves them UP the value chain/);
     });
 
-    it('prompt versions bumped past #99, so no #99 answer is reused', () => {
-        expect(AI_FEATURES.upskill.promptVersion).toBe('upskill-5');
-        expect(AI_FEATURES.roadmap.promptVersion).toBe('roadmap-6');
+    it('prompt versions bumped past every version that saved search links, so none of those answers is reused', () => {
+        expect(AI_FEATURES.upskill.promptVersion).toBe('upskill-6');
+        expect(AI_FEATURES.roadmap.promptVersion).toBe('roadmap-7');
     });
 });
 
 // ── Linking ─────────────────────────────────────────────────────────────────
 
 describe('linking a matched job\'s courses', () => {
-    it('a catalog id becomes its catalog page and title; Claude\'s own wording and url are not used', async () => {
+    it('a catalog id keeps its direct catalog link and title, after the same check; Claude\'s own wording and url are not used', async () => {
+        const seen: string[] = [];
+        const fetch: FetchLike = (url, init) => { seen.push(url); return catalogOk(url, init); };
         const { courses, rejected } = await linkCatalogCourses([
             { catalogId: CIA.id, title: 'CIA cert', provider: 'IIA', url: 'https://example.com/fake', duration: '', level: '' },
-        ], CATALOG, { fetch: notFound });
+        ], CATALOG, { fetch });
         expect(rejected).toEqual([]);
         expect(courses).toEqual([{ catalogId: CIA.id, title: 'Certified Internal Auditor', provider: 'The IIA', duration: '', level: '', link: { href: CIA.url, kind: 'course', label: 'Open course' } }]);
+        expect(seen).toEqual([CIA.url]); // the catalog page itself was checked, never Claude's url
+    });
+
+    it('a catalog course whose page fails the check today is kept by name, with no link', async () => {
+        const { courses } = await linkCatalogCourses([
+            { catalogId: CIA.id, title: 'x', provider: 'y', duration: '', level: '' },
+        ], CATALOG, { fetch: notFound });
+        expect(courses).toEqual([{ catalogId: CIA.id, title: 'Certified Internal Auditor', provider: 'The IIA', duration: '', level: '' }]);
+        expect('link' in courses[0]).toBe(false);
     });
 
     it('an id not on this job\'s list is rejected; so is a repeat, and a second non-catalog course', async () => {
@@ -100,25 +121,25 @@ describe('linking a matched job\'s courses', () => {
         ]);
     });
 
-    it('the one other course goes through the #99 link check (here: not found, so a search)', async () => {
+    it('the one other course goes through the same link check (here: not found, so no link)', async () => {
         const { courses } = await linkCatalogCourses([
             { title: 'Some Course', provider: 'Coursera', url: 'https://www.coursera.org/learn/some-course' },
         ], CATALOG, { fetch: notFound });
-        expect(courses[0].link).toEqual({ href: 'https://www.coursera.org/search?query=Some%20Course', kind: 'search', label: 'Search on Coursera' });
+        expect(courses).toEqual([{ title: 'Some Course', provider: 'Coursera' }]);
     });
 
-    it('finalize: matched → catalog links; no course left → the answer is rejected; unmatched → exactly #99', async () => {
+    it('finalize: matched → catalog links; no course left → the answer is rejected; unmatched → every link checked', async () => {
         const answer = { courses: [{ catalogId: CIA.id, title: 'x', provider: 'y', duration: '', level: '' }], whyTheseCourses: 'w' };
-        const done = await AI_FEATURES.upskill.finalize!(answer, { fetch: notFound, catalog: CATALOG }) as { courses: { link: { label: string; href: string } }[] };
+        const done = await AI_FEATURES.upskill.finalize!(answer, { fetch: catalogOk, catalog: CATALOG }) as { courses: { link: { label: string; href: string } }[] };
         expect(done.courses[0].link).toEqual({ href: CIA.url, kind: 'course', label: 'Open course' });
 
         const bad = { courses: [{ catalogId: 'not-on-list', title: 'x', provider: 'y', duration: '', level: '' }], whyTheseCourses: 'w' };
         await expect(AI_FEATURES.upskill.finalize!(bad, { fetch: notFound, catalog: CATALOG })).rejects.toThrow(/no course left/);
 
-        // No catalog: the #99 path (every course checked; Claude's url never kept).
+        // No catalog: every course checked; Claude's url never kept; a failed link means no link.
         const plain = { courses: [{ title: 'Some Course', provider: 'Coursera', url: 'https://www.coursera.org/learn/some-course', duration: '', level: '' }], whyTheseCourses: 'w' };
         const p = await AI_FEATURES.upskill.finalize!(plain, { fetch: notFound }) as { courses: Record<string, unknown>[] };
-        expect(p.courses[0]).toEqual({ title: 'Some Course', provider: 'Coursera', duration: '', level: '', link: { href: 'https://www.coursera.org/search?query=Some%20Course', kind: 'search', label: 'Search on Coursera' } });
+        expect(p.courses[0]).toEqual({ title: 'Some Course', provider: 'Coursera', duration: '', level: '' });
     });
 
     it('an empty course list is rejected by the check, matched or not', () => {
@@ -179,7 +200,8 @@ describe('the gateway', () => {
 
     const handler = (catalogFor?: (k: string) => CatalogCourse[]) => createClaudeHandler({
         fetch: mock.fetch,
-        linkFetch: notFound,
+        // The matched catalog pages load; every other page is "not found".
+        linkFetch: catalogPages(Object.values(COURSE_MATCHES_DATA.courses)),
         env: () => ({ ANTHROPIC_API_KEY: 'sk-test', SUPABASE_URL: MOCK_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY: 'sb' }),
         ...(catalogFor ? { catalogFor } : {}),
     });
@@ -207,12 +229,14 @@ describe('the gateway', () => {
         }
     });
 
-    it('an unmatched job: no catalog in the prompt, links exactly as #99', async () => {
+    it('an unmatched job: no catalog in the prompt; with every link "not found", the courses show by name only', async () => {
         const r = await ask(handler(), { feature: 'upskill', input: { roleKey: 'soc:47-2111', title: 'Electricians', taskName: 'Prepare sketches or follow blueprints', mode: 'defend', riskPercent: 63 } });
         expect(r.status).toBe(200);
-        const courses = r.json.result.courses as { catalogId?: string; link: { kind: string } }[];
+        const courses = r.json.result.courses as { catalogId?: string; title: string; link?: unknown }[];
+        expect(courses.length).toBeGreaterThan(0);
         expect(courses.some((c) => c.catalogId)).toBe(false);
-        expect(courses.every((c) => c.link.kind === 'search')).toBe(true); // every link "not found" here
+        expect(courses.every((c) => !('link' in c) && c.title)).toBe(true);
+        expect(JSON.stringify(r.json)).not.toMatch(/search|google\.com/i);
     });
 
     it('a catalog the server did not give cannot be used: the browser cannot send one', async () => {

@@ -196,8 +196,9 @@ export interface PromptContext {
 
 /**
  * The courses of an answer, linked: for a job with catalog courses, catalog ids
- * become their catalog page and at most one other course is checked; for any
- * other job, every course is checked as in #99. No course left: the answer is rejected.
+ * become their catalog entry and at most one other course is kept; for any
+ * other job, every course is kept. Every link is checked; a course whose link
+ * fails keeps its name and gets no link. No course left: the answer is rejected.
  */
 async function linkAnswerCourses<C extends { title: string; provider: string; url?: string | null; catalogId?: string | null }>(courses: C[], ctx: FinalizeContext) {
     if (!ctx.catalog || ctx.catalog.length === 0) return linkCourses(courses, ctx);
@@ -254,8 +255,8 @@ export const AI_FEATURES = {
     roadmap: spec<RoadmapFeatureInput>({
         shared: true,
         stream: false,
-        // roadmap-6: catalog courses for matched jobs, at least one course; never reuse a roadmap-5 answer.
-        promptVersion: 'roadmap-6',
+        // roadmap-7: direct links only, no search fallback (2026-11-22); never reuse an older answer, which may hold search links.
+        promptVersion: 'roadmap-7',
         maxTokens: 4096,
         input: RoadmapInput,
         prompt: (i, ctx) => buildRoadmapPrompt(i.title, i.riskTask, i.targetTask, ctx?.catalog ?? []),
@@ -268,8 +269,8 @@ export const AI_FEATURES = {
     upskill: spec<UpskillFeatureInput>({
         shared: true,
         stream: false,
-        // upskill-5: catalog courses for matched jobs, at least one course; never reuse an upskill-4 answer.
-        promptVersion: 'upskill-5',
+        // upskill-6: direct links only, no search fallback (2026-11-22); never reuse an older answer, which may hold search links.
+        promptVersion: 'upskill-6',
         maxTokens: 4096,
         input: UpskillInput,
         prompt: (i, ctx) => buildUpskillPrompt(i.title, i.taskName, i.mode, i.riskPercent, ctx?.catalog ?? []),
