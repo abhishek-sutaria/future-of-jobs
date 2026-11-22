@@ -1,0 +1,62 @@
+{
+  "_meta": {
+    "about": "Career paths: the jobs O*NET lists as related to each of the app's jobs, and each job's O*NET Job Zone. Links and zones are in the lazy chunks next to this file; only src/utils/careerPaths.ts reads them. Pay and AI Exposure are not stored here.",
+    "generator": "npx tsx scripts/build_career_paths.ts",
+    "label": "Similar jobs you could move to (O*NET, by similar skills and work)",
+    "notMeaning": "Not where people actually moved: O*NET relates jobs by similar tasks, knowledge and titles, not by real moves.",
+    "report": "docs/career-paths.md",
+    "source": {
+      "name": "O*NET Database",
+      "version": "O*NET 30.1",
+      "release": "December 2025 Release",
+      "url": "https://www.onetcenter.org/dl_files/database/db_30_1_text.zip",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://www.onetcenter.org/license_db.html",
+      "attribution": "This page includes information from the O*NET 30.1 Database by the U.S. Department of Labor, Employment and Training Administration (USDOL/ETA). Used under the CC BY 4.0 license. O*NET® is a trademark of USDOL/ETA.",
+      "files": [
+        {
+          "path": "data/db_30_1_text/Related Occupations.txt",
+          "sha256": "af539f6f01a36e9514a0dd13cbe125df8cca1114c690505342837f338621906c"
+        },
+        {
+          "path": "data/db_30_1_text/Job Zones.txt",
+          "sha256": "7b13748f1d880dbbc6bd2a5f91bd457492f82c3f3bf9bd64909e73f600cd5fba"
+        }
+      ]
+    },
+    "tiers": [
+      "Primary-Short",
+      "Primary-Long",
+      "Supplemental"
+    ],
+    "jobZoneNames": {
+      "1": "Job Zone One: Little or No Preparation Needed",
+      "2": "Job Zone Two: Some Preparation Needed",
+      "3": "Job Zone Three: Medium Preparation Needed",
+      "4": "Job Zone Four: Considerable Preparation Needed",
+      "5": "Job Zone Five: Extensive Preparation Needed"
+    }
+  },
+  "coverage": {
+    "jobs": 830,
+    "withLinks": 783,
+    "withFivePlus": 783,
+    "noData": 47,
+    "withJobZone": 770,
+    "mixedZones": [
+      "11-9179",
+      "11-9199",
+      "13-1020",
+      "13-2099",
+      "15-1299",
+      "17-2199",
+      "17-3029",
+      "19-4099",
+      "29-1129",
+      "29-2010",
+      "31-9099",
+      "39-7010",
+      "53-1047"
+    ]
+  }
+}

@@ -7,6 +7,7 @@ data/db_30_1_text/
 src/data/geo_real.json
 src/data/ai_scores.json
 src/data/occupations/
+src/data/career_paths/
 
 # Build / cache noise
 dist/
