@@ -8,7 +8,8 @@
  * (scripts/lib/mockAiBackend.ts): no real Claude call, no key needed. Mock
  * mode also serves GET /__mock/claude-calls (what Claude was asked) and
  * POST /__mock/reset, for checking in a browser that a saved answer made no
- * second call.
+ * second call, and POST /__mock/age?days=91 (makes every saved answer that
+ * many days older, to show an old answer being made again and replaced).
  */
 
 import type { IncomingMessage, ServerResponse } from 'node:http';
@@ -60,8 +61,16 @@ export function devApiPlugin(env: Record<string, string>): Plugin {
                 const url = req.url ?? '';
                 if (mock && url.startsWith('/__mock/')) {
                     if (url.startsWith('/__mock/reset') && req.method === 'POST') mock.reset();
+                    if (url.startsWith('/__mock/age') && req.method === 'POST') {
+                        const days = Number(new URL(url, 'http://dev.local').searchParams.get('days'));
+                        if (Number.isFinite(days)) mock.age(days);
+                    }
                     res.setHeader('content-type', 'application/json');
-                    res.end(JSON.stringify({ calls: mock.calls, savedAnswers: mock.answers.size }));
+                    res.end(JSON.stringify({
+                        calls: mock.calls,
+                        savedAnswers: mock.answers.size,
+                        saved: [...mock.answers.values()].map(({ row }) => ({ role: row.role_key, feature: row.feature, createdAt: row.created_at })),
+                    }));
                     return;
                 }
                 if (!url.startsWith('/api/claude/messages')) return next();

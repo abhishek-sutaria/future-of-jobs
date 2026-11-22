@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 /**
  * Owner tool for the saved shared AI answers (Supabase table
- * ai_shared_answers, see supabase/migrations/0003_shared_ai_answers.sql).
+ * ai_shared_answers, see supabase/setup_shared_answers.sql). You rarely need
+ * it: an answer older than 90 days, or made from older data, prompt or model,
+ * is made again on its own.
  * Deleting an answer makes the next visitor's click generate a fresh one,
  * which is then saved for everyone again. There is no public delete
  * endpoint: this runs on your own machine with the service key.
@@ -15,7 +17,8 @@
  * --feature is analyze (Strategic Insight), scenario, roadmap or upskill
  * (Defend / Build). Without --feature, delete removes every answer for the role.
  *
- * Reads SUPABASE_URL (or VITE_SUPABASE_URL) and SUPABASE_SERVICE_ROLE_KEY
+ * Reads SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY (the saved-answers
+ * project, not the accounts project's VITE_SUPABASE_URL)
  * from the environment or from .env.local / .env in the repo. Never prints
  * the key.
  */
@@ -58,9 +61,9 @@ if (!['list', 'delete'].includes(command)) fail('Usage: node scripts/shared_answ
 if (!role || !/^(job-\d{1,3}|soc:\d\d-\d{4})$/.test(role)) fail('--role must be a role key like job-15 or soc:29-1141');
 if (feature && !FEATURES.includes(feature)) fail(`--feature must be one of: ${FEATURES.join(', ')}`);
 
-const url = (process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || '').trim().replace(/\/+$/, '');
+const url = (process.env.SUPABASE_URL || '').trim().replace(/\/+$/, '');
 const key = (process.env.SUPABASE_SERVICE_ROLE_KEY || '').trim();
-const missing = [!url && 'SUPABASE_URL (or VITE_SUPABASE_URL)', !key && 'SUPABASE_SERVICE_ROLE_KEY'].filter(Boolean);
+const missing = [!url && 'SUPABASE_URL', !key && 'SUPABASE_SERVICE_ROLE_KEY'].filter(Boolean);
 if (missing.length) fail(`Missing ${missing.join(' and ')}. Add it to .env.local (never commit it) or export it in this shell.`);
 
 const headers = { apikey: key, 'content-type': 'application/json' };
@@ -69,8 +72,8 @@ if (!key.startsWith('sb_')) headers.authorization = `Bearer ${key}`;
 const filter = `role_key=eq.${encodeURIComponent(role)}${feature ? `&feature=eq.${feature}` : ''}`;
 const base = `${url}/rest/v1/ai_shared_answers`;
 
-const listRes = await fetch(`${base}?select=role_key,feature,prompt_version,input_hash,model,created_at&${filter}&order=feature,created_at`, { headers });
-if (!listRes.ok) fail(`Could not read saved answers (HTTP ${listRes.status}). Is migration 0003 applied?`);
+const listRes = await fetch(`${base}?select=role_key,feature,prompt_version,input_hash,model,data_version,created_at&${filter}&order=feature,created_at`, { headers });
+if (!listRes.ok) fail(`Could not read saved answers (HTTP ${listRes.status}). Was supabase/setup_shared_answers.sql run?`);
 const rows = await listRes.json();
 
 if (rows.length === 0) {
@@ -78,7 +81,7 @@ if (rows.length === 0) {
     process.exit(0);
 }
 for (const r of rows) {
-    console.log(`${r.role_key}  ${r.feature.padEnd(8)}  ${r.prompt_version.padEnd(12)}  ${r.input_hash.slice(0, 12)}…  ${r.model}  saved ${r.created_at}`);
+    console.log(`${r.role_key}  ${r.feature.padEnd(8)}  ${r.prompt_version.padEnd(12)}  ${r.input_hash.slice(0, 12)}…  ${r.model}  saved ${r.created_at}${r.data_version ? `  data ${r.data_version}` : ''}`);
 }
 
 if (command === 'list') process.exit(0);

@@ -942,6 +942,34 @@ check(
   );
 }
 
+// T69: no Supabase server key in the browser build. The service key is server
+// only (api/); its name, the role name, a secret key value or a service_role
+// JWT in dist/ means something under src/ reached for it.
+{
+  const distDir = path.join(ROOT, 'dist');
+  const hits = [];
+  const walk = (dir) => {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const p = path.join(dir, entry.name);
+      if (entry.isDirectory()) { walk(p); continue; }
+      if (!/\.(js|html|css|json|map|txt|webmanifest)$/.test(entry.name)) continue;
+      const text = fs.readFileSync(p, 'utf8');
+      // The names, a new-style secret key VALUE (supabase-js itself only has the
+      // bare prefix "sb_secret_"), or a legacy JWT whose role is service_role.
+      const jwtServiceRole = [...text.matchAll(/eyJ[\w-]{10,}\.(eyJ[\w-]{10,})\.[\w-]{10,}/g)].some((m) => {
+        try { return /service_role/.test(Buffer.from(m[1], 'base64url').toString('utf8')); } catch { return false; }
+      });
+      if (/service_role|SUPABASE_SERVICE_ROLE_KEY|sb_secret_[\w-]{16,}/i.test(text) || jwtServiceRole) hits.push(path.relative(ROOT, p));
+    }
+  };
+  if (fs.existsSync(distDir)) walk(distDir);
+  check(
+    'T69 — no Supabase service key (or its name) anywhere in dist/',
+    fs.existsSync(distDir) && hits.length === 0,
+    hits.length ? `found in: ${hits.join(', ')}` : 'dist/ missing'
+  );
+}
+
 // =============================================================================
 // SUMMARY
 // =============================================================================
