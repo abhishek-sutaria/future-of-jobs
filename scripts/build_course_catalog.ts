@@ -7,6 +7,7 @@
  *
  *   npx tsx scripts/build_course_catalog.ts            collect every list, check every link, write the outputs
  *   npx tsx scripts/build_course_catalog.ts --fresh    the same, ignoring the download cache
+ *   npx tsx scripts/build_course_catalog.ts --cache-days 30   reuse downloads up to 30 days old (re-apply the filters, no new downloads)
  *   npx tsx scripts/build_course_catalog.ts --check    re-check every link in catalog.json (monthly refresh);
  *                                                      entries that fail twice are removed and listed in check_report.json
  *
@@ -186,8 +187,9 @@ const DOC_END = '<!-- counts:end -->';
 
 interface SiteRow { source: SourceKey; collected: number; passed: number; dropped: Record<string, number> }
 
-function countsMarkdown(rows: SiteRow[], total: number, sizeBytes: number, generated: string, runSeconds: number | null, dupes: number): string {
-    const lines = [DOC_START, '', `Last full run: ${generated}${runSeconds !== null ? `, ${Math.round(runSeconds / 60)} min` : ''}. Catalog: **${total.toLocaleString('en-US')} entries**, ${(sizeBytes / 1024).toFixed(0)} KB.`, ''];
+function countsMarkdown(rows: SiteRow[], total: number, sizeBytes: number, generated: string, runSeconds: number | null, dupes: number, fromCache = false): string {
+    const when = fromCache ? `Last run: ${generated}, re-applying the filters to the saved downloads (no new downloads)` : `Last full run: ${generated}${runSeconds !== null ? `, ${Math.round(runSeconds / 60)} min` : ''}`;
+    const lines = [DOC_START, '', `${when}. Catalog: **${total.toLocaleString('en-US')} entries**, ${(sizeBytes / 1024).toFixed(0)} KB.`, ''];
     for (const r of rows) {
         const reasons = Object.entries(r.dropped).sort((a, b) => b[1] - a[1]).map(([why, n]) => `${n} ${why}`);
         lines.push(`- **${SOURCE_LABEL[r.source]}** (${SOURCE_USED[r.source]}): collected ${r.collected}, passed the check ${r.passed}, dropped ${r.collected - r.passed}${reasons.length ? `: ${reasons.join('; ')}` : ''}.`);
@@ -299,10 +301,10 @@ async function collect(fetcher: PoliteFetcher): Promise<{ candidates: Candidate[
 /** Short, countable reason: "title does not match (40%: ...)" → "title does not match". */
 const reasonKey = (r: string) => r.replace(/\s*\(.*$/, '').replace(/^status \d+$/, (s) => s).trim();
 
-async function build(fresh: boolean): Promise<void> {
+async function build(fresh: boolean, cacheDays: number): Promise<void> {
     const started = Date.now();
     const today = isoDay(started);
-    const fetcher = new PoliteFetcher({ fetch: globalThis.fetch.bind(globalThis), minIntervalMs: 1000, cache: fresh ? undefined : diskCache(CACHE_MAX_AGE_MS), log });
+    const fetcher = new PoliteFetcher({ fetch: globalThis.fetch.bind(globalThis), minIntervalMs: 1000, cache: fresh ? undefined : diskCache(cacheDays * 24 * 3600 * 1000), log });
     log(`user agent: ${USER_AGENT}`);
     const { candidates, dropped: listDropped, sources } = await collect(fetcher);
 
@@ -362,7 +364,7 @@ async function build(fresh: boolean): Promise<void> {
         duplicates: dupes.map((e) => ({ id: e.id, url: e.url })),
     });
     const seconds = (Date.now() - started) / 1000;
-    updateDoc(countsMarkdown(rows, entries.length, Buffer.byteLength(catalogBody), today, seconds, dupes.length));
+    updateDoc(countsMarkdown(rows, entries.length, Buffer.byteLength(catalogBody), today, seconds, dupes.length, fetcher.requests < candidates.length / 10));
     for (const r of rows) log(`${SOURCE_LABEL[r.source]}: collected ${r.collected}, passed ${r.passed}, dropped ${r.collected - r.passed} ${JSON.stringify(r.dropped)}`);
     log(`catalog: ${entries.length} entries, ${(Buffer.byteLength(catalogBody) / 1024).toFixed(0)} KB, ${fetcher.requests} requests, ${Math.round(seconds)} s`);
 }
@@ -398,7 +400,9 @@ async function check(): Promise<void> {
 }
 
 const args = process.argv.slice(2);
-(args.includes('--check') ? check() : build(args.includes('--fresh'))).catch((err) => {
+const cacheDaysArg = args.indexOf('--cache-days');
+const cacheDays = cacheDaysArg >= 0 ? Number(args[cacheDaysArg + 1]) : CACHE_MAX_AGE_MS / (24 * 3600 * 1000);
+(args.includes('--check') ? check() : build(args.includes('--fresh'), cacheDays)).catch((err) => {
     console.error(err);
     process.exit(1);
 });

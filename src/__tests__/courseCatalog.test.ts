@@ -15,6 +15,7 @@ import {
     dedupeByUrl,
     notEnglish,
     pageFacts,
+    RETIRED,
     parseMsCatalog,
     parseRobots,
     parseSkillsCatalogPage,
@@ -384,6 +385,32 @@ describe('checkCandidate', () => {
         expect(gone).toEqual({ ok: false, reason: 'status 410' });
     });
 
+    it('retired: every Microsoft wording, on the page or in the description; never a course that only mentions retirement', () => {
+        const retired = [
+            'Warning This certification has been retired.',
+            'Warning This certification and the renewal assessment are retired. Learn more.',
+            'Warning This certification, related exam, and renewal assessments was retired on August 31, 2026.',
+            'Warning This certification, and related exam will retire on November 30, 2026.',
+            'Warning MOS 2013 certifications were fully retired on June 30, 2024.',
+            'Warning This exam will retire on February 1, 2027, at 11:59 PM Central Standard Time.',
+            'Warning This Applied Skills assessment has been retired. Explore other Applied Skills.',
+        ];
+        for (const t of retired) {
+            expect(RETIRED.test(t)).toBe(true);
+            expect(pageFacts(`<html><body><h1>X</h1><div>${t}</div></body></html>`).retired).toBe(true);
+        }
+        for (const t of ['Plan your retirement savings.', 'Complete this exam before the retirement date to ensure it is applied.', 'Retirement date: 06/30/2022']) {
+            expect(RETIRED.test(t)).toBe(false);
+        }
+    });
+
+    it('drops a course whose own description says it is retired, even when the page does not', async () => {
+        const c = { ...parseMsCatalog(MS)[0], description: 'Warning This certification and the renewal assessment are retired.' };
+        const f = fakeFetch({ [c.url]: () => html(page('Analyze data with Power BI')) });
+        const r = await checkCandidate(c, { fetcher: new PoliteFetcher({ fetch: f, ...noWait }), today: '2026-11-21' });
+        expect(r).toEqual({ ok: false, reason: 'page says it is retired' });
+    });
+
     it('page facts: lang, meta description, retired notice, shown price, structured "free"', () => {
         const f = pageFacts('<html lang="en"><head><meta content="Desc here" name="description"><script type="application/ld+json">{"isAccessibleForFree": true}</script></head><body><h1>T</h1>Price: $165 USD</body></html>');
         expect(f).toMatchObject({ lang: 'en', description: 'Desc here', h1: 'T', showsPrice: true, saysFree: true, retired: false });
@@ -440,7 +467,7 @@ describe('catalog output', () => {
             for (const name of fs.readdirSync(dir)) {
                 const p = path.join(dir, name);
                 if (fs.statSync(p).isDirectory()) { if (name !== '__tests__') walk(p); }
-                else if (/\.(ts|tsx|js|jsx)$/.test(name) && /course_catalog|courseCatalog/.test(fs.readFileSync(p, 'utf8'))) hits.push(p);
+                else if (/\.(ts|tsx|js|jsx)$/.test(name) && /(from|import)\s*\(?\s*['"][^'"]*(course_catalog|courseCatalog)/.test(fs.readFileSync(p, 'utf8'))) hits.push(p);
             }
         };
         walk(path.join(__dirname, '..'));

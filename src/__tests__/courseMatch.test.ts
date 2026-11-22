@@ -31,7 +31,7 @@ import {
     type JobProfile,
     type SavedResponse,
 } from '../../scripts/lib/courseMatch';
-import type { CatalogEntry } from '../../scripts/lib/courseCatalog';
+import { RETIRED, type CatalogEntry } from '../../scripts/lib/courseCatalog';
 
 const entry = (id: string, title: string, description = '', tags: string[] = []): CatalogEntry =>
     ({ id, title, provider: 'Microsoft Learn', url: `https://learn.microsoft.com/en-us/training/paths/${id}/`, type: 'course', price: 'unknown', description, tags, lastChecked: '2026-11-15' });
@@ -184,6 +184,16 @@ describe('matches.json', () => {
         // an empty v2 answer still stands under the stricter v3; a v2 answer with matches must be asked again
         expect(matches).toEqual({ '13-2011': [{ id: 'excel-accounting', reason: 'Excel.' }], '29-1141': [], '15-2051': [] });
         expect(missing).toEqual(['13-1161', '15-1252', '47-2111', '53-3032']);
+    });
+
+    it('fails the build on a match to an entry the catalog removed (a retired certification)', () => {
+        const catalog = JSON.parse(fs.readFileSync(path.join(__dirname, '../../data/course_catalog/catalog.json'), 'utf8')) as { entries: CatalogEntry[] };
+        const live = new Set(catalog.entries.map((e) => e.id));
+        const removed = 'microsoft-learn:certification:certification.azure-developer';
+        expect(live.has(removed)).toBe(false);
+        expect(() => assembleMatches({ '15-1252': saved('15-1252', [{ id: removed, reason: 'x' }]) }, ['15-1252'], live)).toThrow(/is not in catalog.json/);
+        // and the committed catalog carries no retirement notice at all
+        expect(catalog.entries.filter((e) => RETIRED.test(`${e.title} ${e.description ?? ''}`)).map((e) => e.id)).toEqual([]);
     });
 
     it('fails the build on an ID that is not in the catalog', () => {

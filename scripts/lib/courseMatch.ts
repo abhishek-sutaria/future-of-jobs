@@ -16,7 +16,7 @@
  */
 
 import crypto from 'node:crypto';
-import type { CatalogEntry } from './courseCatalog';
+import { RETIRED, type CatalogEntry } from './courseCatalog';
 
 export const sha256 = (s: string): string => crypto.createHash('sha256').update(s).digest('hex');
 
@@ -116,7 +116,7 @@ export function buildProfiles(
  * retired", "...will retire on November 30, 2026"). The Step 1 retired check
  * only knew one wording; these 35 or so passed it.
  */
-export const RETIREMENT_WARNING = /\b(is|are|was|were|has been|have been|been)\s+(fully\s+)?retired\b|\bwill retire\b|\bassessment has been retired\b/i;
+export const RETIREMENT_WARNING = RETIRED;
 /**
  * Generic office-software certifications (Microsoft Office Specialist: Word,
  * Excel, Outlook, PowerPoint, Access, Microsoft 365 Apps) are never offered

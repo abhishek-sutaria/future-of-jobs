@@ -1,7 +1,8 @@
 /**
  * Course links (shared/courseLinks.ts): every link Claude gives is checked on
- * the server before anyone sees it, and replaced with a search for the course
- * name when it fails any check. fetch is mocked: no network here.
+ * the server before anyone sees it. One that fails any check is dropped: the
+ * course keeps its name and gets no link (no search fallback since
+ * 2026-11-22). fetch is mocked: no network here.
  */
 
 import { describe, it, expect } from 'vitest';
@@ -9,13 +10,11 @@ import {
     checkCourseUrl,
     linkCourse,
     linkCourses,
-    providerFor,
-    searchLinkFor,
+    providerOfUrl,
     titleMatch,
     urlProblem,
     type FetchLike,
 } from '../shared/courseLinks';
-import { COURSE_PROVIDERS } from '../shared/courseProviders';
 import { AI_FEATURES } from '../shared/aiFeatures';
 import { buildRoadmapPrompt, buildUpskillPrompt } from '../shared/aiPrompts';
 
@@ -46,29 +45,26 @@ describe('checking one link', () => {
         expect(linked.link).toEqual({ href: COURSE, kind: 'course', label: 'Open course' });
     });
 
-    it('a 404 → search on the provider for the exact course name', async () => {
+    it('a 404 → no link at all: the course keeps its name, with no link field', async () => {
         const fetch = fakeFetch({ [COURSE]: () => html(page('Page Not Found'), 404) });
         expect(await checkCourseUrl(COURSE, 'AI For Everyone', { fetch })).toMatchObject({ ok: false, reason: 'status 404' });
         const linked = await linkCourse({ title: 'AI For Everyone', provider: 'Coursera', url: COURSE }, { fetch });
-        expect(linked.link).toEqual({
-            href: 'https://www.coursera.org/search?query=AI%20For%20Everyone',
-            kind: 'search',
-            label: 'Search on Coursera',
-        });
+        expect(linked).toEqual({ title: 'AI For Everyone', provider: 'Coursera' });
+        expect('link' in linked).toBe(false);
     });
 
-    it('a "not found" page served with a 200 → fallback', async () => {
+    it('a "not found" page served with a 200 → no link', async () => {
         const fetch = fakeFetch({ [COURSE]: () => html(page('Course not found | Coursera', 'This course is no longer available')) });
         expect(await checkCourseUrl(COURSE, 'AI For Everyone', { fetch })).toMatchObject({ ok: false, reason: 'a "not found" page' });
     });
 
-    it('a redirect to the home page → fallback (and the home page is never fetched)', async () => {
+    it('a redirect to the home page → no link (and the home page is never fetched)', async () => {
         const fetch = fakeFetch({ [COURSE]: () => redirect('https://www.coursera.org/') });
         expect(await checkCourseUrl(COURSE, 'AI For Everyone', { fetch })).toMatchObject({ ok: false, reason: 'redirects to a home page' });
         expect(fetch.calls).toEqual([COURSE]);
     });
 
-    it('a redirect to a search or sign-in page, or off the list → fallback', async () => {
+    it('a redirect to a search or sign-in page, or off the list → no link', async () => {
         for (const [to, reason] of [
             ['/search?query=ai', 'redirects to a search page'],
             ['https://www.linkedin.com/authwall?trk=1', 'redirects to a not a course page on this site'],
@@ -92,14 +88,14 @@ describe('checking one link', () => {
         expect(fetch.calls).toHaveLength(6);
     });
 
-    it('a page whose title is a different course → fallback', async () => {
+    it('a page whose title is a different course → no link', async () => {
         const fetch = fakeFetch({ [COURSE]: () => html(page('Introduction to Python Programming | Coursera')) });
         const r = await checkCourseUrl(COURSE, 'Financial Accounting Fundamentals', { fetch });
         expect(r.ok).toBe(false);
         expect(!r.ok && r.reason).toMatch(/^title does not match \(0%/);
     });
 
-    it('a link that does not answer in time → fallback, after about the timeout', async () => {
+    it('a link that does not answer in time → no link, after about the timeout', async () => {
         const fetch: FetchLike = (_url, init) => new Promise((_resolve, reject) => {
             init?.signal?.addEventListener('abort', () => reject(new DOMException('aborted', 'AbortError')));
         });
@@ -108,31 +104,27 @@ describe('checking one link', () => {
         expect(r).toEqual({ ok: false, reason: 'timed out' });
         expect(Date.now() - t0).toBeLessThan(1000);
         const linked = await linkCourse({ title: 'AI For Everyone', provider: 'Coursera', url: COURSE }, { fetch, timeoutMs: 50 });
-        expect(linked.link.kind).toBe('search');
+        expect('link' in linked).toBe(false);
     });
 
-    it('a domain not on the list is never fetched → fallback', async () => {
+    it('a domain not on the list is never fetched → no link', async () => {
         const fetch = fakeFetch({});
         for (const url of ['https://free-courses.example/learn/ai', 'https://coursera.org.evil.example/learn/ai', 'https://notcoursera.org/learn/ai']) {
             expect(await checkCourseUrl(url, 'AI For Everyone', { fetch })).toEqual({ ok: false, reason: 'not on the provider list' });
         }
         expect(fetch.calls).toEqual([]);
         const linked = await linkCourse({ title: 'AI For Everyone', provider: 'Coursera', url: 'https://free-courses.example/learn/ai' }, { fetch });
-        expect(linked.link.label).toBe('Search on Coursera');
+        expect('link' in linked).toBe(false);
     });
 
-    it('an unknown provider → a web search for the course name', async () => {
+    it('an unknown provider → no link (never a web search), and nothing is fetched', async () => {
         const fetch = fakeFetch({});
         const linked = await linkCourse({ title: 'Advanced Widget Auditing', provider: 'Widget Academy', url: 'https://widget.example/course/1' }, { fetch });
-        expect(linked.link).toEqual({
-            href: 'https://www.google.com/search?q=%22Advanced%20Widget%20Auditing%22%20Widget%20Academy',
-            kind: 'search',
-            label: 'Search the web',
-        });
+        expect(linked).toEqual({ title: 'Advanced Widget Auditing', provider: 'Widget Academy' });
         expect(fetch.calls).toEqual([]);
     });
 
-    it('a network error, a non-HTML file, or a page with no title → fallback', async () => {
+    it('a network error, a non-HTML file, or a page with no title → no link', async () => {
         expect(await checkCourseUrl(COURSE, 'AI For Everyone', { fetch: fakeFetch({}) })).toMatchObject({ ok: false, reason: 'failed to load (fetch failed)' });
         const pdf = fakeFetch({ [COURSE]: () => new Response('%PDF', { status: 200, headers: { 'content-type': 'application/pdf' } }) });
         expect((await checkCourseUrl(COURSE, 'AI For Everyone', { fetch: pdf })).ok).toBe(false);
@@ -190,34 +182,12 @@ describe('matching the page title', () => {
     });
 });
 
-describe('the fallback search', () => {
-    it('uses the named provider’s own search, or a search of its site', () => {
-        expect(searchLinkFor('Excel Essential Training', 'LinkedIn Learning')).toEqual({
-            href: 'https://www.linkedin.com/learning/search?keywords=Excel%20Essential%20Training',
-            kind: 'search',
-            label: 'Search on LinkedIn Learning',
-        });
-        expect(searchLinkFor('Certified Internal Auditor', 'The Institute of Internal Auditors (IIA)')).toEqual({
-            href: 'https://www.google.com/search?q=site%3Atheiia.org%20%22Certified%20Internal%20Auditor%22',
-            kind: 'search',
-            label: 'Search on The IIA',
-        });
-    });
-
-    it('picks the provider by its longest name in Claude’s text', () => {
-        expect(providerFor('Coursera (offered by Google)')?.name).toBe('Coursera');
-        expect(providerFor('American Welding Society (AWS)')?.name).toBe('American Welding Society');
-        expect(providerFor('AWS Skill Builder')?.name).toBe('AWS');
-        expect(providerFor('Microsoft Learn')?.name).toBe('Microsoft Learn');
-        expect(providerFor('Some Local College')).toBeNull();
-    });
-
-    it('every provider search link is https and on the provider’s own site or a web search', () => {
-        for (const p of COURSE_PROVIDERS) {
-            const href = searchLinkFor('Test Course', p.aliases[0]).href;
-            expect(href.startsWith('https://')).toBe(true);
-            expect(providerFor(p.aliases[0])?.name).toBe(p.name);
-        }
+describe('the provider list', () => {
+    it('finds a URL\'s provider by its domain or a subdomain of it, never a look-alike', () => {
+        expect(providerOfUrl(new URL('https://www.coursera.org/learn/x'))?.name).toBe('Coursera');
+        expect(providerOfUrl(new URL('https://learn.microsoft.com/en-us/x'))?.name).toBe('Microsoft Learn');
+        expect(providerOfUrl(new URL('https://www.aws.org/certification/x'))?.name).toBe('American Welding Society');
+        expect(providerOfUrl(new URL('https://coursera.org.evil.example/learn/x'))).toBeNull();
     });
 });
 
@@ -244,12 +214,13 @@ describe('a whole answer', () => {
             { title: 'Null Link Course', provider: 'Udemy', url: null },
         ], { fetch });
         expect(maxInFlight).toBe(2);
-        expect(out.map((c) => [c.title, c.link.kind, c.link.label])).toEqual([
+        expect(out.map((c) => [c.title, c.link?.kind ?? null, c.link?.label ?? null])).toEqual([
             ['AI For Everyone', 'course', 'Open course'],
-            ['Made Up Course', 'search', 'Search on Coursera'],
-            ['No Link Course', 'search', 'Search on edX'],
-            ['Null Link Course', 'search', 'Search on Udemy'],
+            ['Made Up Course', null, null],
+            ['No Link Course', null, null],
+            ['Null Link Course', null, null],
         ]);
+        for (const c of out.slice(1)) expect('link' in c).toBe(false);
         for (const c of out) expect('url' in c).toBe(false);
         expect(out[0]).toMatchObject({ level: 'Beginner' });
     });
@@ -270,16 +241,20 @@ describe('a whole answer', () => {
             resources: [],
             successMetrics: ['m'],
         }, { roleKey: 'soc:13-2011', title: 'Accountants', riskTask: 'r', targetTask: 't' });
-        const done2 = await AI_FEATURES.roadmap.finalize!(roadmap, { fetch }) as { courses: { link: { label: string } }[] };
-        expect(done2.courses[0].link.label).toBe('Search the web');
+        const done2 = await AI_FEATURES.roadmap.finalize!(roadmap, { fetch }) as { courses: { title: string; link?: unknown }[] };
+        // a whole answer with no direct link still lists the course, by name only
+        expect(done2.courses).toEqual([{ title: 'Unknown Thing', provider: 'Nowhere Institute' }]);
     });
 
-    it('an answer with fewer courses, even none, passes (never an invented one); a missing list does not', () => {
+    it('an answer needs at least one course (an empty or missing list is rejected); fewer than asked passes', () => {
         const input = { roleKey: 'soc:13-2011', title: 'A', riskTask: 'r', targetTask: 't' };
-        expect(() => AI_FEATURES.roadmap.check({ phases: [{ title: 'M1', items: ['a'] }], courses: [], resources: [], successMetrics: ['m'] }, input)).not.toThrow();
+        const one = [{ title: 'Certified Internal Auditor', provider: 'The IIA', url: '' }];
+        expect(() => AI_FEATURES.roadmap.check({ phases: [{ title: 'M1', items: ['a'] }], courses: one, resources: [], successMetrics: ['m'] }, input)).not.toThrow();
+        expect(() => AI_FEATURES.roadmap.check({ phases: [{ title: 'M1', items: ['a'] }], courses: [], resources: [], successMetrics: ['m'] }, input)).toThrow();
         expect(() => AI_FEATURES.roadmap.check({ phases: [{ title: 'M1', items: ['a'] }], resources: [], successMetrics: ['m'] }, input)).toThrow();
-        expect(() => AI_FEATURES.upskill.check({ courses: [], whyTheseCourses: '' },
-            { roleKey: 'soc:13-2011', title: 'A', taskName: 't', mode: 'build', riskPercent: 10 })).not.toThrow();
+        const up = { roleKey: 'soc:13-2011', title: 'A', taskName: 't', mode: 'build' as const, riskPercent: 10 };
+        expect(() => AI_FEATURES.upskill.check({ courses: [], whyTheseCourses: '' }, up)).toThrow();
+        expect(() => AI_FEATURES.upskill.check({ courses: [{ ...one[0], duration: '', level: '' }], whyTheseCourses: '' }, up)).not.toThrow();
     });
 });
 
@@ -292,9 +267,9 @@ describe('the prompts ask for a link', () => {
         expect(roadmap).toMatch(/"url": "https link to this exact course/);
         expect(roadmap).not.toMatch(/"category": "Courses & Certifications"/);
         for (const p of [roadmap, buildUpskillPrompt('A', 't', 'defend', 50)]) expect(p).not.toMatch(/web_search|search result/i);
-        // Bumped past the web-search versions (upskill-3, roadmap-4), so none of those answers is reused.
-        expect(AI_FEATURES.upskill.promptVersion).toBe('upskill-4');
-        expect(AI_FEATURES.roadmap.promptVersion).toBe('roadmap-5');
+        // Bumped past every version that saved search links (up to upskill-5, roadmap-6), so none of those answers is reused.
+        expect(AI_FEATURES.upskill.promptVersion).toBe('upskill-6');
+        expect(AI_FEATURES.roadmap.promptVersion).toBe('roadmap-7');
     });
 });
 
@@ -305,9 +280,8 @@ describe('credential acronyms', () => {
     });
 
     it('O’Reilly, DeepLearning.AI and Becker are on the list', () => {
-        expect(providerFor('O\'Reilly Media')?.name).toBe('O’Reilly');
-        expect(providerFor('DeepLearning.AI')?.name).toBe('DeepLearning.AI');
+        expect(providerOfUrl(new URL('https://www.oreilly.com/library/view/x/123/'))?.name).toBe('O’Reilly');
         expect(urlProblem('https://www.deeplearning.ai/courses/generative-ai-for-software-development/')).toBeNull();
-        expect(providerFor('Becker Professional Education')?.name).toBe('Becker');
+        expect(providerOfUrl(new URL('https://www.becker.com/cpa-review'))?.name).toBe('Becker');
     });
 });
