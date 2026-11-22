@@ -6,8 +6,14 @@
  * Claude: answers by feature, recognised from the prompt the gateway built,
  * with valid JSON in the app's shapes, and logs every call so a check can
  * prove a saved answer made no second call.
- * Supabase: ai_shared_answers (select / insert ignore-duplicates / delete) and
- * rpc/ai_rate_take and rpc/ai_rate_give, in memory, with the same semantics as the migrations.
+ * Supabase: ai_shared_answers (select / delete), rpc/ai_shared_answer_put
+ * (insert, or replace a row saved before p_stale_before) and rpc/ai_rate_take
+ * and rpc/ai_rate_give, in memory, with the same semantics as
+ * supabase/setup_shared_answers.sql.
+ *
+ * Expiry knob: `age(days)` moves every saved answer's created_at that many
+ * days into the past (dev server: POST /__mock/age?days=91), so a check can
+ * show an old answer being made again and replaced.
  */
 
 export const MOCK_SUPABASE_URL = 'http://mock-supabase.local';
@@ -23,7 +29,14 @@ export interface MockBackend {
     calls: MockClaudeCall[];
     answers: Map<string, { row: Record<string, unknown> }>;
     rateCounts: Map<string, { count: number; expiresAt: number }>;
+    /** Moves every saved answer's created_at `days` into the past. */
+    age(days: number): void;
     reset(): void;
+}
+
+export interface MockBackendOptions {
+    /** The clock the fake database uses for created_at (tests pass the gateway's). */
+    now?: () => number;
 }
 
 function featureOf(prompt: string): string {
@@ -129,7 +142,8 @@ function filters(url: URL): [string, string][] {
     return out;
 }
 
-export function createMockBackend(): MockBackend {
+export function createMockBackend(opts: MockBackendOptions = {}): MockBackend {
+    const now = opts.now ?? (() => Date.now());
     const calls: MockClaudeCall[] = [];
     const answers = new Map<string, { row: Record<string, unknown> }>();
     const rateCounts = new Map<string, { count: number; expiresAt: number }>();
@@ -181,18 +195,31 @@ export function createMockBackend(): MockBackend {
                 }
                 return new Response(null, { status: 204 });
             }
+            if (url.pathname === '/rest/v1/rpc/ai_shared_answer_put') {
+                // Same rule as the SQL function: insert; on the same key, replace only a
+                // row saved before p_stale_before (with a new created_at); return what is stored.
+                const row: Record<string, unknown> = {
+                    role_key: body.p_role_key,
+                    feature: body.p_feature,
+                    prompt_version: body.p_prompt_version,
+                    input_hash: body.p_input_hash,
+                    model: body.p_model,
+                    data_version: body.p_data_version,
+                    payload: body.p_payload,
+                };
+                const k = rowKey(row);
+                const existing = answers.get(k);
+                if (!existing || Date.parse(String(existing.row.created_at)) < Date.parse(body.p_stale_before)) {
+                    answers.set(k, { row: { ...row, created_at: new Date(now()).toISOString() } });
+                }
+                const stored = answers.get(k)!.row;
+                return json(200, { payload: stored.payload, created_at: stored.created_at });
+            }
             if (url.pathname === '/rest/v1/ai_shared_answers') {
                 const fs = filters(url);
                 if (method === 'GET') {
                     const rows = [...answers.values()].map((a) => a.row).filter((r) => matches(r, fs));
                     return json(200, rows.slice(0, Number(url.searchParams.get('limit') ?? rows.length)));
-                }
-                if (method === 'POST') {
-                    for (const r of body as Record<string, unknown>[]) {
-                        const k = rowKey(r);
-                        if (!answers.has(k)) answers.set(k, { row: { ...r, created_at: new Date().toISOString() } });
-                    }
-                    return new Response(null, { status: 201 });
                 }
                 if (method === 'DELETE') {
                     const gone: Record<string, unknown>[] = [];
@@ -211,6 +238,11 @@ export function createMockBackend(): MockBackend {
         calls,
         answers,
         rateCounts,
+        age(days: number) {
+            for (const a of answers.values()) {
+                a.row.created_at = new Date(Date.parse(String(a.row.created_at)) - days * 86_400_000).toISOString();
+            }
+        },
         reset() {
             calls.length = 0;
             answers.clear();

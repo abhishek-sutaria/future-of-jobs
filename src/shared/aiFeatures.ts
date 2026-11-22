@@ -164,6 +164,13 @@ interface FeatureSpec<I> {
      * text change already gets a new answer).
      */
     promptVersion: string;
+    /**
+     * Shared features only: days a saved answer is reused before the next
+     * visitor gets a fresh one that replaces it. Leave it out for the
+     * app-wide default (FOJ_SHARED_MAX_AGE_DAYS, else 90:
+     * api/_lib/sharedAnswers.ts SHARED_ANSWER_MAX_AGE_DAYS).
+     */
+    maxAgeDays?: number;
     maxTokens: number;
     input: z.ZodType<I>;
     /** `ctx` comes from the server only (api/_lib/gateway.ts), never from the browser. */
@@ -257,6 +264,8 @@ export const AI_FEATURES = {
         stream: false,
         // roadmap-7: direct links only, no search fallback (2026-11-22); never reuse an older answer, which may hold search links.
         promptVersion: 'roadmap-7',
+        // Course links are re-checked when an answer is made again. To refresh them sooner than
+        // the app-wide default (90 days), set a number of days here, e.g. maxAgeDays: 30,
         maxTokens: 4096,
         input: RoadmapInput,
         prompt: (i, ctx) => buildRoadmapPrompt(i.title, i.riskTask, i.targetTask, ctx?.catalog ?? []),
@@ -271,6 +280,8 @@ export const AI_FEATURES = {
         stream: false,
         // upskill-6: direct links only, no search fallback (2026-11-22); never reuse an older answer, which may hold search links.
         promptVersion: 'upskill-6',
+        // Course links are re-checked when an answer is made again. To refresh them sooner than
+        // the app-wide default (90 days), set a number of days here, e.g. maxAgeDays: 30,
         maxTokens: 4096,
         input: UpskillInput,
         prompt: (i, ctx) => buildUpskillPrompt(i.title, i.taskName, i.mode, i.riskPercent, ctx?.catalog ?? []),

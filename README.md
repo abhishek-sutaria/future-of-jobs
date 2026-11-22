@@ -67,11 +67,13 @@ ANTHROPIC_API_KEY=your_server_default_claude_key_here
 VITE_BLS_API_KEY=your_bls_api_key_here
 VITE_SUPABASE_URL=your_supabase_project_url_here
 VITE_SUPABASE_ANON_KEY=your_supabase_anon_key_here
+SUPABASE_URL=your_saved_answers_supabase_project_url_here
 SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_or_secret_key_here
 ```
 
 - `SUPABASE_SERVICE_ROLE_KEY` is **server-only** (no `VITE_` prefix, so Vite never puts it in the browser bundle). Only `api/claude.ts` reads it, to save shared answers and count the rate limit. Without it the app still works, but every visitor gets a fresh Claude answer and the limit counts per function instance only; System status says which name is missing.
-- `SUPABASE_URL` is optional; the server falls back to `VITE_SUPABASE_URL`.
+- `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` belong to a **separate, server-only** Supabase project (saved answers and rate limits); visitor accounts stay in the `VITE_SUPABASE_*` project. The server never falls back to `VITE_SUPABASE_URL`. Step-by-step setup: [`docs/shared-answers-setup.md`](docs/shared-answers-setup.md) (one SQL paste: `supabase/setup_shared_answers.sql`).
+- Optional `FOJ_SHARED_MAX_AGE_DAYS` (default 90): a saved answer older than this is made again and replaced.
 - Optional limits on new Claude answers made with the server key: `FOJ_RATE_PER_HOUR` (per visitor, default 30), `FOJ_RATE_PER_DAY` (per visitor, default 100), `FOJ_RATE_GLOBAL_PER_DAY` (whole app, default 1000).
 
 Notes:
@@ -113,11 +115,11 @@ These endpoints preserve the same runtime behavior expected by the frontend:
 `api/claude.ts` (rules in `api/_lib/gateway.ts`) no longer forwards whatever the browser sends:
 
 - **Only the app's own requests.** The browser sends `{ feature, input }`. The server checks the feature is one of the app's (`src/shared/aiFeatures.ts`), checks the input's shape and size, builds the prompt itself and sets the model (`claude-sonnet-5`) and `max_tokens`. A raw Anthropic request is accepted only with the visitor's own key, for the opt-in re-score and the status ping.
-- **One shared saved answer.** For Strategic Insight (Analyze), Scenario, Roadmap and Defend / Build, the first answer that passes the app's checks is saved in Supabase (`ai_shared_answers`), keyed by role + feature + prompt version + a hash of the exact request. Every later visitor gets that answer with no Claude call. A changed input or prompt gets a new answer. Résumé-based features are never saved.
+- **One shared saved answer.** For Strategic Insight (Analyze), Scenario, Roadmap and Defend / Build, the first answer that passes the app's checks is saved in Supabase (`ai_shared_answers`), keyed by role + feature + prompt version + a hash of the data version (`src/shared/dataVersion.ts`) and the exact request (model, max_tokens, prompt). Every later visitor gets that answer with no Claude call. A changed input, prompt, model or data vintage gets a new answer, and an answer older than 90 days (`FOJ_SHARED_MAX_AGE_DAYS`, or a feature's own `maxAgeDays`) is made again and replaces the old one. Résumé-based features are never saved.
 - **Rate limit.** Each visitor (a hash of their IP) may ask for a limited number of NEW answers per hour and per day, and the whole app has a daily ceiling. Saved answers never count. Counts live in Supabase (`ai_rate_limits`), so the limit holds across serverless instances.
 - **Make one answer again.** Delete it, and the next visitor's click writes a new one:
   ```bash
-  # .env.local (never committed) holds VITE_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY
+  # .env.local (never committed) holds SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY
   node scripts/shared_answers.mjs list   --role soc:29-1141
   node scripts/shared_answers.mjs delete --role soc:29-1141 --feature roadmap        # dry run
   node scripts/shared_answers.mjs delete --role soc:29-1141 --feature roadmap --yes  # delete

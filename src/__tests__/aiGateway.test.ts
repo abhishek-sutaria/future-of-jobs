@@ -70,7 +70,7 @@ const ANALYZE = {
 const claudeCalls = () => mock.calls.filter((x) => x.feature !== 'ping').length;
 
 beforeEach(() => {
-    mock = createMockBackend();
+    mock = createMockBackend({ now: () => clock });
     env = { ANTHROPIC_API_KEY: SERVER_KEY, SUPABASE_URL: MOCK_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY: SERVICE_KEY };
 });
 
@@ -343,9 +343,10 @@ describe('missing env and secrets', () => {
         const h = handler();
         const ok = await call(h, undefined, { method: 'GET' });
         expect(ok.json).toMatchObject({ serverKey: true, sharedAnswers: true, missing: [] });
-        env = { VITE_SUPABASE_URL: 'https://example.supabase.co' };
+        // The accounts project's URL is not the saved-answers project: never used for the service key.
+        env = { VITE_SUPABASE_URL: 'https://example.supabase.co' } as ServerEnv;
         const missing = await call(h, undefined, { method: 'GET' });
-        expect(missing.json.missing).toEqual(['ANTHROPIC_API_KEY', 'SUPABASE_SERVICE_ROLE_KEY']);
+        expect(missing.json.missing).toEqual(['ANTHROPIC_API_KEY', 'SUPABASE_URL', 'SUPABASE_SERVICE_ROLE_KEY']);
         expect(missing.json.sharedAnswers).toBe(false);
         for (const r of [ok, missing]) {
             expect(r.body).not.toContain(SERVER_KEY);
@@ -404,7 +405,7 @@ describe('the Vercel function runs as Node ESM', () => {
     it('every relative import it reaches carries ".js" (Node ESM needs the extension)', () => {
         const files = [
             'api/claude.ts', 'api/_lib/gateway.ts', 'api/_lib/rateLimit.ts', 'api/_lib/sharedAnswers.ts', 'api/_lib/supabaseRest.ts',
-            'src/shared/aiFeatures.ts', 'src/shared/aiPrompts.ts', 'src/config/constants.ts', 'src/utils/oohEnvelope.ts',
+            'src/shared/aiFeatures.ts', 'src/shared/aiPrompts.ts', 'src/shared/dataVersion.ts', 'src/config/constants.ts', 'src/utils/oohEnvelope.ts',
         ];
         for (const f of files) {
             const src = fs.readFileSync(path.join(ROOT, f), 'utf-8');

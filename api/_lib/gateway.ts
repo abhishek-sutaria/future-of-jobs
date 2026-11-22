@@ -6,8 +6,10 @@
  *   1. feature must be in AI_FEATURES and input must pass its schema;
  *   2. the server builds the prompt and the Anthropic body itself
  *      (model, max_tokens and thinking come from the table, never the browser);
- *   3. shared features: a saved answer for this exact request is returned at
- *      once, with no Claude call and no rate-limit count;
+ *   3. shared features: a saved answer for this exact request and data
+ *      version (DATA_VERSION), younger than the feature's max age, is
+ *      returned at once, with no Claude call and no rate-limit count; an
+ *      older one counts as missing and the new answer replaces it;
  *   4. otherwise, on the server key, the visitor's limit is taken first;
  *   5. Claude's answer is parsed and checked; only a checked answer is
  *      returned, and for shared features saved for every later visitor. If
@@ -32,7 +34,8 @@ import {
     type GatewayErrorBody,
 } from '../../src/shared/aiFeatures.js';
 import { supabaseConfig, type FetchLike, type ServerEnv } from './supabaseRest.js';
-import { requestHash, supabaseSharedAnswers, type SharedAnswerKey } from './sharedAnswers.js';
+import { isFresh, requestHash, sharedMaxAgeDays, staleBefore, supabaseSharedAnswers, type SharedAnswerKey } from './sharedAnswers.js';
+import { DATA_VERSION } from '../../src/shared/dataVersion.js';
 import { limitsFromEnv, memoryRateLimiter, supabaseRateLimiter, visitorId, type RateLimiter, type Window } from './rateLimit.js';
 import { matchedCoursesFor } from './courseMatches.js';
 import type { CatalogCourse } from '../../src/shared/aiPrompts.js';
@@ -66,6 +69,8 @@ export interface GatewayDeps {
     env: () => ServerEnv;
     /** A job's catalog courses (Step 3); defaults to api/_lib/courseMatches.ts. Tests pass their own. */
     catalogFor?: (roleKey: string) => CatalogCourse[];
+    /** Part of every saved answer's key; defaults to src/shared/dataVersion DATA_VERSION. Tests pass their own. */
+    dataVersion?: string;
     now?: () => number;
 }
 
@@ -149,6 +154,7 @@ function logAnswer(feature: string, usage: AnswerUsage, extra: Record<string, un
 
 export function createClaudeHandler(deps: GatewayDeps) {
     const now = deps.now ?? (() => Date.now());
+    const dataVersion = deps.dataVersion ?? DATA_VERSION;
     // One in-memory fallback per instance, kept across requests.
     let memory: { limiter: RateLimiter; sig: string } | null = null;
 
@@ -172,6 +178,8 @@ export function createClaudeHandler(deps: GatewayDeps) {
                 sharedAnswers: missing.length === 0,
                 rateLimitStore: missing.length === 0 ? 'supabase' : 'memory',
                 limits: limitsFromEnv(env),
+                sharedMaxAgeDays: sharedMaxAgeDays({}, env),
+                dataVersion,
                 missing: [...(serverKey ? [] : ['ANTHROPIC_API_KEY']), ...missing],
             });
         }
@@ -240,15 +248,17 @@ export function createClaudeHandler(deps: GatewayDeps) {
         const { config: sbConfig } = supabaseConfig(env);
         const store = feature.shared && sbConfig ? supabaseSharedAnswers(sbConfig, deps.fetch) : null;
         let key: SharedAnswerKey | null = null;
+        // A saved answer from before this time is too old: it counts as missing, and the new answer replaces it.
+        const tooOldBefore = staleBefore(now(), sharedMaxAgeDays(feature, env));
         if (feature.shared) {
             const roleKey = (input as { roleKey: string }).roleKey;
-            key = { roleKey, feature: name, promptVersion: feature.promptVersion, inputHash: requestHash(anthropicBody as never) };
+            key = { roleKey, feature: name, promptVersion: feature.promptVersion, dataVersion, inputHash: requestHash(anthropicBody as never, dataVersion) };
         }
 
         if (store && key) {
             try {
                 const hit = await store.get(key);
-                if (hit) {
+                if (hit && isFresh(hit, tooOldBefore)) {
                     res.setHeader('cache-control', 'no-store');
                     return res.status(200).json({ result: hit.payload, shared: { hit: true, saved: true, savedAt: hit.createdAt } });
                 }
@@ -377,7 +387,7 @@ export function createClaudeHandler(deps: GatewayDeps) {
         let result = answer;
         if (store) {
             try {
-                const stored = await store.put(key, answer, { model: AI_MODEL });
+                const stored = await store.put(key, answer, { model: AI_MODEL, staleBefore: tooOldBefore });
                 saved = true;
                 savedAt = stored.createdAt;
                 result = stored.payload;

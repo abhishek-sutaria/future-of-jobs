@@ -4,8 +4,13 @@
  * so the service key can never reach the browser bundle.
  *
  * Env (Vercel → Project Settings → Environment Variables):
- *   SUPABASE_URL               project URL (falls back to VITE_SUPABASE_URL, already set for accounts)
- *   SUPABASE_SERVICE_ROLE_KEY  service role / secret key: the one the owner must add
+ *   SUPABASE_URL               Project URL of the server-only Supabase project
+ *                              (saved answers + rate limits; docs/shared-answers-setup.md)
+ *   SUPABASE_SERVICE_ROLE_KEY  that project's service_role / secret key
+ *
+ * SUPABASE_URL only, never VITE_SUPABASE_URL: visitor accounts live in a
+ * different Supabase project (the VITE_SUPABASE_* variables), so falling back
+ * to it would send this key to the wrong project.
  *
  * Never logs or returns a key. With either missing, `supabaseConfig` returns
  * the missing names and callers fall back (no saved answers, in-memory limit).
@@ -16,11 +21,12 @@ export type FetchLike = (input: string, init?: RequestInit) => Promise<Response>
 export interface ServerEnv {
     ANTHROPIC_API_KEY?: string;
     SUPABASE_URL?: string;
-    VITE_SUPABASE_URL?: string;
     SUPABASE_SERVICE_ROLE_KEY?: string;
     FOJ_RATE_PER_HOUR?: string;
     FOJ_RATE_PER_DAY?: string;
     FOJ_RATE_GLOBAL_PER_DAY?: string;
+    /** Days a saved shared answer is reused before it is made again (default 90). */
+    FOJ_SHARED_MAX_AGE_DAYS?: string;
 }
 
 export interface SupabaseConfig {
@@ -29,7 +35,7 @@ export interface SupabaseConfig {
 }
 
 export function supabaseConfig(env: ServerEnv): { config: SupabaseConfig | null; missing: string[] } {
-    const url = (env.SUPABASE_URL || env.VITE_SUPABASE_URL || '').trim().replace(/\/+$/, '');
+    const url = (env.SUPABASE_URL || '').trim().replace(/\/+$/, '');
     const key = (env.SUPABASE_SERVICE_ROLE_KEY || '').trim();
     const missing: string[] = [];
     if (!url) missing.push('SUPABASE_URL');
