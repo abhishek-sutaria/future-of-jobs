@@ -8,7 +8,8 @@ matches catalog courses to the 783 scored jobs. The result is
 
 **The rule: match only what truly fits.** The catalog is 98% Microsoft and Google
 technology training, so most jobs get `[]`. That is the intended result. In
-Step 3 those jobs keep the #99 course buttons, which always work.
+Step 3 those jobs keep the #99 course links (Claude's own, checked; since
+2026-11-22 a course whose link fails shows with no link).
 
 ## How it works
 
@@ -153,3 +154,22 @@ or is retired.
   (a test checks its sha256), and every link is checked as in #99.
 - **Prompt versions:** `upskill-5` and `roadmap-6`, so no earlier saved answer
   is reused. Each answer also needs at least one course again.
+
+## Search fallbacks removed (2026-11-22)
+
+The owner wants only direct links. Since 2026-11-22 there is no search
+fallback of any kind: no "Search on <Provider>", no site search, no "Search
+the web".
+
+- A course whose link passes the check shows "Open course". A course whose
+  link fails, or that has none, shows its name as plain text with no link.
+  An answer with no direct link at all still lists the course names, with no
+  search hint.
+- Catalog courses keep their catalog link, but it goes through the same check
+  (`checkCourseUrl`) when the answer is made. If it fails that day, the course
+  shows with no link.
+- In the browser, only a link with `kind: 'course'` over https is ever shown
+  (`src/utils/courseLink.ts`), so a search link kept in an older saved answer
+  shows as plain text. Exported reports carry only direct links.
+- Prompt versions `upskill-6` and `roadmap-7`, so no saved answer that may
+  hold a search link is reused. The prompts themselves did not change.

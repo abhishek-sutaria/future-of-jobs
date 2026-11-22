@@ -115,14 +115,14 @@ export const UpskillModal: React.FC<UpskillModalProps> = ({ isOpen, onClose, job
                             ))}
                         </div>
                     ) : courses && courses.courses.length === 0 ? (
-                        // Claude recommends only courses its search found; it may find none.
+                        // Only an older saved answer can have no course (every new one needs at least one).
                         <p className="text-xs text-gray-400 italic" role="status" data-testid="no-courses">
                             No course for this task could be found on a course provider's site, so none is suggested.
                         </p>
                     ) : courses ? (
                         <div className="space-y-3">
                             {courses.courses.map((course, i) => (
-                                // Only the link button opens anything: a server-checked course page, or a search for it.
+                                // Only the link button opens anything, and only a server-checked course page; a course with no such link is just its name.
                                 <div
                                     key={i}
                                     className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-4"

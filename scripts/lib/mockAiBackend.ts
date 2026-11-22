@@ -81,7 +81,7 @@ function answerFor(feature: string, prompt: string, n: number): unknown {
                     { title: 'Months 3-4: Application', items: ['Mock step'] },
                     { title: 'Months 5-6: Mastery', items: ['Mock step'] },
                 ],
-                // Real links, checked for real by the dev server: one that opens, one that falls back to search.
+                // Real links, checked for real by the dev server: one that opens, one that fails (shown with no link).
                 // A job with catalog courses gets two of them by id, plus the one other course allowed.
                 courses: catalogIds.length > 0
                     ? [...catalogIds.slice(0, 2).map((id) => ({ catalogId: id, title: 'As listed', provider: 'As listed' })), { catalogId: null, title: `[mock #${n}] Course`, provider: 'Mock Academy', url: '' }]
