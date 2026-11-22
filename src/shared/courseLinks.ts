@@ -9,25 +9,26 @@
  *   2. it loads: redirects are followed one by one, and every hop must stay on
  *      the list; the last answer must be a success status;
  *   3. the page is not a "not found" page, and its title names the course.
- * A link that passes is shown as "Open course". Any other is replaced with a
- * search for the exact course name ("Search on <Provider>"), or a web search
- * when the provider is not on the list. Claude's raw URL is never kept.
+ * A link that passes is shown as "Open course". A course whose link fails gets
+ * no link at all: the app shows its name as plain text. There is no search
+ * fallback of any kind (removed 2026-11-22: the owner wants only direct
+ * links). Claude's raw URL is never kept.
  *
  * Pure: no Vite, no DOM, no Node. The fetch is passed in.
  */
 
-import { COURSE_PROVIDERS, webSearchUrl, type CourseProvider } from './courseProviders.js';
+import { COURSE_PROVIDERS, type CourseProvider } from './courseProviders.js';
 
 export type FetchLike = (input: string, init?: RequestInit) => Promise<Response>;
 
-/** What the browser shows: never a URL that was not checked or built by us. */
+/** What the browser shows: only a course page that passed every check. */
 export interface CourseLink {
     href: string;
-    /** 'course': the page passed every check. 'search': a search for the course name. */
-    kind: 'course' | 'search';
-    /** "Open course", "Search on Coursera", or "Search the web". */
-    label: string;
+    kind: 'course';
+    label: 'Open course';
 }
+
+const OPEN_COURSE = (href: string): CourseLink => ({ href, kind: 'course', label: 'Open course' });
 
 export interface LinkCheckOptions {
     fetch: FetchLike;
@@ -47,24 +48,6 @@ const REQUEST_HEADERS = {
 };
 
 // ── Providers ───────────────────────────────────────────────────────────────
-
-const normName = (s: string) => ` ${s.toLowerCase().replace(/[^a-z0-9()²&.]+/g, ' ').trim()} `;
-
-/** The provider Claude named: the one whose longest alias appears in the name, first on the list on a tie. */
-export function providerFor(name: string): CourseProvider | null {
-    const hay = normName(name);
-    let best: CourseProvider | null = null;
-    let bestLen = 0;
-    for (const p of COURSE_PROVIDERS) {
-        for (const alias of p.aliases) {
-            if (alias.length > bestLen && hay.includes(normName(alias))) {
-                best = p;
-                bestLen = alias.length;
-            }
-        }
-    }
-    return best;
-}
 
 const onDomain = (host: string, domain: string) => host === domain || host.endsWith(`.${domain}`);
 
@@ -247,20 +230,6 @@ export async function checkCourseUrl(raw: string, courseTitle: string, opts: Lin
     }
 }
 
-// ── The fallback ────────────────────────────────────────────────────────────
-
-/** A search for the exact course name: on the provider's own search, within its site, or on the web. */
-export function searchLinkFor(courseTitle: string, providerName: string): CourseLink {
-    const title = courseTitle.trim();
-    const provider = providerFor(providerName);
-    if (!provider) {
-        const query = [`"${title}"`, providerName.trim()].filter(Boolean).join(' ');
-        return { href: webSearchUrl(query), kind: 'search', label: 'Search the web' };
-    }
-    const href = provider.search ? provider.search(title) : webSearchUrl(`site:${provider.domains[0]} "${title}"`);
-    return { href, kind: 'search', label: `Search on ${provider.name}` };
-}
-
 // ── What the features call ──────────────────────────────────────────────────
 
 export interface RawCourse {
@@ -269,20 +238,84 @@ export interface RawCourse {
     url?: string | null;
 }
 
-export type LinkedCourse<T extends RawCourse> = Omit<T, 'url'> & { link: CourseLink };
+/** A course as shown: `link` only when its page passed every check, else no `link` field at all. */
+export type LinkedCourse<T extends RawCourse> = Omit<T, 'url'> & { link?: CourseLink };
 
-/** Checks one course's link; on any failure, the provider's search for its name. */
+/** Checks one course's link; on any failure the course keeps its name and gets no link. */
 export async function linkCourse<T extends RawCourse>(course: T, opts: LinkCheckOptions): Promise<LinkedCourse<T>> {
     const { url, ...rest } = course;
     const raw = typeof url === 'string' ? url.trim() : '';
     const check = raw ? await checkCourseUrl(raw, course.title, opts) : { ok: false as const, reason: 'no link given' };
-    const link: CourseLink = check.ok
-        ? { href: check.href, kind: 'course', label: 'Open course' }
-        : searchLinkFor(course.title, course.provider);
-    return { ...rest, link };
+    return check.ok ? { ...rest, link: OPEN_COURSE(check.href) } : { ...rest };
 }
 
 /** Checks every course's link at once (each with its own timeout), keeping their order. */
 export function linkCourses<T extends RawCourse>(courses: T[], opts: LinkCheckOptions): Promise<LinkedCourse<T>[]> {
     return Promise.all(courses.map((c) => linkCourse(c, opts)));
+}
+
+// ── Jobs with catalog courses (Step 3) ──────────────────────────────────────
+
+/** A course in an answer for a job with catalog courses: from the list (catalogId) or one other. */
+export interface CatalogAnswerCourse extends RawCourse {
+    catalogId?: string | null;
+}
+
+export interface CatalogLinkResult<T extends CatalogAnswerCourse> {
+    courses: LinkedCourse<T>[];
+    /** Courses dropped, and why: an id not on this job's list, or a second course not from the list. */
+    rejected: { title: string; why: string }[];
+}
+
+/**
+ * For a job with catalog courses (shared/aiPrompts CatalogCourse):
+ *   - a course with a catalogId on this job's list becomes the catalog entry
+ *     itself: its own title and provider, and its catalog URL ("Open course")
+ *     only if that URL passes the same check as every other link (checkCourseUrl);
+ *   - a catalogId that is not on this job's list is rejected (dropped);
+ *   - at most `maxOther` courses without a catalogId are kept, and each goes
+ *     through the same link check as every other course (linkCourse);
+ *   - order is kept. The caller rejects the answer if nothing is left.
+ */
+export async function linkCatalogCourses<T extends CatalogAnswerCourse>(
+    courses: T[],
+    catalog: { id: string; title: string; provider: string; url: string; level?: string; duration?: string }[],
+    opts: LinkCheckOptions & { maxOther?: number },
+): Promise<CatalogLinkResult<T>> {
+    const byId = new Map(catalog.map((c) => [c.id, c]));
+    const maxOther = opts.maxOther ?? 1;
+    const rejected: { title: string; why: string }[] = [];
+    const seen = new Set<string>();
+    let others = 0;
+    const jobs: Promise<LinkedCourse<T> | null>[] = courses.map(async (course): Promise<LinkedCourse<T> | null> => {
+        const id = typeof course.catalogId === 'string' ? course.catalogId.trim() : '';
+        if (id) {
+            const entry = byId.get(id);
+            if (!entry) { rejected.push({ title: course.title, why: `catalogId ${id} is not on this job's list` }); return null; }
+            if (seen.has(id)) { rejected.push({ title: course.title, why: `catalogId ${id} given twice` }); return null; }
+            seen.add(id);
+            const { url: _url, catalogId: _cid, ...rest } = course;
+            void _url; void _cid;
+            const filled = rest as Record<string, unknown>;
+            // The catalog's link was checked when the catalog was built; it is checked again
+            // here, the same way as every other link. A failure leaves the course with no link.
+            const check = await checkCourseUrl(entry.url, entry.title, opts);
+            return {
+                ...(rest as Omit<T, 'url'>),
+                title: entry.title,
+                provider: entry.provider,
+                ...('duration' in filled ? { duration: entry.duration || (typeof filled.duration === 'string' ? filled.duration : '') } : {}),
+                ...('level' in filled ? { level: entry.level || (typeof filled.level === 'string' ? filled.level : '') } : {}),
+                catalogId: id,
+                ...(check.ok ? { link: OPEN_COURSE(check.href) } : {}),
+            } as unknown as LinkedCourse<T>;
+        }
+        if (others >= maxOther) { rejected.push({ title: course.title, why: 'more than one course not from the list' }); return null; }
+        others++;
+        const { catalogId: _cid, ...rest } = course;
+        void _cid;
+        return linkCourse(rest as T, opts) as Promise<LinkedCourse<T>>;
+    });
+    const done = await Promise.all(jobs);
+    return { courses: done.filter((c) => c !== null) as LinkedCourse<T>[], rejected };
 }
