@@ -3,7 +3,9 @@
   "outputDirectory": "dist",
   "framework": "vite",
   "functions": {
-    "api/claude.ts": { "maxDuration": 120 }
+    "api/claude.ts": {
+      "maxDuration": 120
+    }
   },
   "routes": [
     {
@@ -15,7 +17,26 @@
       "dest": "/api/bls?seriesId=$1"
     },
     {
+      "src": "/manifest\\.webmanifest",
+      "headers": {
+        "Content-Type": "application/manifest+json; charset=utf-8",
+        "Cache-Control": "public, max-age=0, must-revalidate"
+      },
+      "continue": true
+    },
+    {
+      "src": "/icons/(.*)",
+      "headers": {
+        "Cache-Control": "public, max-age=86400, stale-while-revalidate=604800"
+      },
+      "continue": true
+    },
+    {
       "handle": "filesystem"
+    },
+    {
+      "src": "/(icons/.*|manifest\\.webmanifest)",
+      "status": 404
     },
     {
       "src": "/.*",

@@ -10,9 +10,10 @@ import { SCORE_COUNTS, UNSCORED_LABEL } from '../utils/blsScores';
 export const Legend: React.FC = () => {
     return (
         <div
-            className="absolute bottom-6 right-6 flex flex-col justify-center gap-2 pointer-events-none select-none px-3 py-2 md:px-5 md:py-4 rounded-2xl border border-cyan-400/25 bg-gray-900/60 backdrop-blur-xl max-w-[160px] md:max-w-[210px]"
+            className="absolute bottom-[calc(1.5rem+var(--safe-bottom))] right-[calc(1.5rem+var(--safe-right))] flex flex-col justify-center gap-2 pointer-events-none select-none px-3 py-2 md:px-5 md:py-4 rounded-2xl border border-cyan-400/25 bg-gray-900/60 backdrop-blur-xl max-w-[160px] md:max-w-[210px]"
             style={{ zIndex: Z.base }}
             role="complementary"
+            data-legend
             aria-label="Job Security Index legend"
             // On a short landscape phone it reaches up beside the fields bar,
             // whose breadcrumb stops short of it.

@@ -31,7 +31,7 @@ export const RoleFilterButton: React.FC<RoleFilterButtonProps> = ({ onClick }) =
             type="button"
             onClick={onClick}
             aria-label="Filter roles"
-            className="absolute top-48 right-4 flex items-center gap-2 px-4 py-3 min-h-[44px] rounded-full bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold shadow-lg shadow-black/30 transition-colors"
+            className="absolute top-[calc(12rem+var(--safe-top))] right-[calc(1rem+var(--safe-right))] flex items-center gap-2 px-4 py-3 min-h-[44px] rounded-full bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold shadow-lg shadow-black/30 transition-colors"
             style={{ zIndex: Z.sidebar }}
         >
             <IconLayers size={16} />

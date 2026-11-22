@@ -168,7 +168,7 @@ export const MapView: React.FC = () => {
         >
             {/* Reset view — small, conditional, only appears when zoomed/panned */}
             {!isDefault && (
-                <div className="absolute top-32 right-6 z-50">
+                <div className="absolute top-[calc(8rem+var(--safe-top))] right-[calc(1.5rem+var(--safe-right))] z-50">
                     <button
                         onClick={() => setPosition({ coordinates: defaultCenter, zoom: 1 })}
                         className="px-3 py-1.5 bg-slate-800/80 hover:bg-slate-700 text-gray-400 hover:text-white rounded-lg border border-white/[0.07] text-xs transition-colors"
@@ -369,7 +369,7 @@ function StateDataStatus({ loading, failed }: { loading: boolean; failed: string
         });
     };
     return (
-        <div className="absolute left-1/2 -translate-x-1/2 bottom-24 md:bottom-6 z-20" role="status" data-testid="state-data-status">
+        <div className="absolute left-1/2 -translate-x-1/2 bottom-[calc(6rem+var(--safe-bottom))] md:bottom-[calc(1.5rem+var(--safe-bottom))] z-20" role="status" data-testid="state-data-status">
             <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-900/90 border border-white/[0.08] text-[11px] text-gray-400 shadow-lg">
                 {failed.length > 0 ? (
                     <>

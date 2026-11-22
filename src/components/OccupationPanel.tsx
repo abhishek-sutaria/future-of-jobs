@@ -42,13 +42,13 @@ export const OccupationPanel: React.FC<{ soc: string; onClose: () => void }> = (
     const occupation = file?.occupations[soc];
 
     return (
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none p-2 md:p-8" style={{ zIndex: Z.detailPanel }}>
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none [--pad:0.5rem] md:[--pad:2rem] safe-pad" style={{ zIndex: Z.detailPanel }}>
             <div className="absolute inset-0 bg-black/60 backdrop-blur-sm pointer-events-auto" onClick={onClose} aria-hidden="true" />
             <div
                 role="dialog"
                 aria-modal="true"
                 aria-label={occupation?.title ?? 'Occupation'}
-                className="relative bg-gray-900/95 backdrop-blur-xl border border-cyan-400/20 shadow-2xl rounded-2xl w-full max-w-5xl h-auto max-h-[92vh] flex flex-col pointer-events-auto overflow-hidden"
+                className="relative bg-gray-900/95 backdrop-blur-xl border border-cyan-400/20 shadow-2xl rounded-2xl w-full max-w-5xl h-auto max-h-[calc(92vh-var(--safe-top)-var(--safe-bottom))] flex flex-col pointer-events-auto overflow-hidden"
             >
                 {occupation ? (
                     <OccupationBody occupation={occupation} onClose={onClose} />
@@ -205,7 +205,7 @@ export const OccupationBody: React.FC<{ occupation: OccupationEntry; onClose: ()
 
             <div
                 className="flex-none p-3 border-t border-white/[0.04] flex justify-end text-[10px] text-gray-600 font-mono uppercase tracking-wider"
-                style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))' }}
+                style={{ paddingBottom: 'max(0.75rem, calc(env(safe-area-inset-bottom) - var(--safe-bottom)))' }}
             >
                 <span>
                     Sources: {[ep && DATA_SOURCES.BLS_EP, DATA_SOURCES.BLS_OES_WAGES, o.description && DATA_SOURCES.ONET].filter(Boolean).join(', ')}

@@ -2,9 +2,27 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <title>future_of_jobs</title>
+    <title>Future of Jobs</title>
+    <meta name="description" content="A 3D landscape of U.S. jobs: how many people do each one (BLS, 2025 to 2035) and how exposed its tasks are to AI." />
+
+    <!-- App icon (public/icons/icon.svg; PNGs from node scripts/build_icons.mjs) -->
+    <link rel="icon" href="/icons/icon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/icons/favicon-32.png" type="image/png" sizes="32x32" />
+    <link rel="icon" href="/icons/favicon-16.png" type="image/png" sizes="16x16" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" sizes="180x180" />
+
+    <!-- Installable phone app: Android Chrome installs from the manifest; iPhone
+         Safari uses the apple-* tags (Share > Add to Home Screen). No service worker
+         on purpose (stale chunks, see src/utils/staleBuild.ts). -->
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <meta name="theme-color" content="#101828" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Future Jobs" />
+    <!-- black-translucent: the page runs under the status bar; in standalone
+         mode index.css pads every edge control by env(safe-area-inset-*). -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   </head>
   <body>
     <div id="root"></div>

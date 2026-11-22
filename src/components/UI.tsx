@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useStore } from '../store';
 import { IntroModal } from './IntroModal';
+import { InstallTip } from './InstallTip';
 import { SkillsModal } from './SkillsModal';
 import { useUserStore } from '../userStore';
 import { StartupIdeasModal } from './StartupIdeasModal';
@@ -292,7 +293,7 @@ export const UI: React.FC<UIProps> = ({ dashboardOpen }) => {
                 it's this button's own tour-methodology target, so the
                 guided tour's final step also spotlit nothing reachable. */}
             <div
-                className="hidden md:block absolute bottom-4 left-4 md:left-8 pointer-events-auto"
+                className="hidden md:block absolute bottom-[calc(1rem+var(--safe-bottom))] left-4 md:left-[calc(2rem+var(--safe-left))] pointer-events-auto"
                 style={{
                     zIndex: Z.base,
                     ...(mapView !== 'globe' && !isMobile ? { left: MAP_SIDEBAR.CLEARANCE_PX } : {}),
@@ -329,6 +330,7 @@ export const UI: React.FC<UIProps> = ({ dashboardOpen }) => {
             <SkillsModal isOpen={showSkillsModal} onClose={() => setShowSkillsModal(false)} />
             <StartupIdeasModal isOpen={showStartupIdeasModal} onClose={() => setShowStartupIdeasModal(false)} />
             {mapView === 'globe' && <Legend />}
+            <InstallTip />
             <GuidedTour isActive={tourActive} onClose={() => setTourActive(false)} />
         </div>
     );
