@@ -50,12 +50,19 @@ All of the above was fetched and copied word for word on 2026-11-22. The full 20
 - A code whose SOC the app only has inside a combined BLS code belongs to that combined job (30 codes): for example 13-1021, 13-1022 and 13-1023 all belong to 13-1020 Buyers and Purchasing Agents. The table is `src/config/onetSplitCodes.ts` (the scoring plan's table), read through `socRollup` in `scripts/lib/iuSchools.ts`, so all three builds use one rule.
 - Any other code is unmapped: listed below, never forced onto a job (2 codes).
 
-**2. Links.** Each row of Related Occupations.txt (a code and one related code) becomes a link between their two app jobs. 18,460 rows in all:
+**2. Links: own code first** (decided 2026-11-22, the same rule tasks already use).
 
-- 18,025 rows make links.
-- 387 rows are self-links (both codes land on the same app job, for example two sub-codes of one SOC) and are dropped.
+- A job with its **own `.00` code** takes its links **only** from that code's rows. Rows from its sub-codes (`.01`, `.02`, ...) are not used. Example: Registered Nurses (29-1141) uses only the 29-1141.00 rows, so it does not get Psychiatrists from 29-1141.02.
+- A job with **no `.00` code** (a BLS combined job such as 13-1020, or a SOC O*NET has only as sub-codes, such as 15-1299) takes the rows of every code that maps to it.
+- On the target side, a related sub-code still maps to its parent job (a row to 29-1141.02 is a link to Registered Nurses).
+
+Each used row (a code and one related code) becomes a link between their two app jobs. 18,460 rows in all:
+
+- 16,603 rows make links.
+- 1,580 rows come from sub-codes of a job that has its own .00 code and are not used (49 jobs, listed below).
+- 229 rows are self-links (both codes land on the same app job, for example two sub-codes of one SOC) and are dropped.
 - 48 rows touch an unmapped code and are dropped.
-- Rows that land on the same pair of jobs (from sub-codes) merge into one link: 2,523 rows merged away. The link keeps the strongest tier, then the lowest Index, and stores every row it came from (`rows`, line numbers in the file, header = line 1).
+- Rows that land on the same pair of jobs merge into one link: 1,695 rows merged away (from a job's several codes when it has no .00 code, or from several codes of one target job). The link keeps the strongest tier, then the lowest Index, and stores every row it came from (`rows`, line numbers in the file, header = line 1).
 - A job's links are in O*NET's order: tier (Primary-Short, Primary-Long, Supplemental), then Index, then file line.
 
 **3. Job Zone.** O*NET's preparation level, 1 to 5 (names from `Job Zone Reference.txt`: 1 "Job Zone One: Little or No Preparation Needed", 2 "Job Zone Two: Some Preparation Needed", 3 "Job Zone Three: Medium Preparation Needed", 4 "Job Zone Four: Considerable Preparation Needed", 5 "Job Zone Five: Extensive Preparation Needed").
@@ -75,9 +82,9 @@ All of the above was fetched and copied word for word on 2026-11-22. The full 20
 - Jobs with 5 or more links: **783 of 830**
 - Jobs with no O*NET data (no links, no zone): **47**
 - Jobs with a Job Zone: **770**; mixed: **13**
-- Links stored: **15,502** (Primary-Short 4,042, Primary-Long 3,823, Supplemental 7,637); median 19 per job, most 73
-- Jobs whose links come from more than one O*NET code: **75**
-- Direction of the stored links: up 3,463, same 8,084, down 3,153, unknown 802
+- Links stored: **14,908** (Primary-Short 3,861, Primary-Long 3,699, Supplemental 7,348); median 19 per job, most 53
+- Jobs whose links come from more than one O*NET code: **26**
+- Direction of the stored links: up 3,337, same 7,853, down 2,960, unknown 758
 
 ## Jobs with no data
 
@@ -92,7 +99,63 @@ Codes in the O*NET files that are not one of the app's jobs. Their rows are drop
 - 11-1031.00 Legislators: 20 rows from it, 2 rows to it.
 - 45-3031.00 Fishing and Hunting Workers: 20 rows from it, 6 rows to it.
 
+## Jobs the own-code rule changes
+
+These 49 jobs have their own .00 code and also sub-codes in Related Occupations.txt. Their links now come from the .00 rows only. "Before" is the number of links when every code was merged (the first rule in PR #106); "after" is the number stored now.
+
+- 11-1011 Chief Executives: 29 -> 17 links; 20 rows not used from 11-1011.03
+- 11-3013 Facilities Managers: 30 -> 17 links; 20 rows not used from 11-3013.01
+- 11-3031 Financial Managers: 31 -> 18 links; 40 rows not used from 11-3031.01, 11-3031.03
+- 11-3051 Industrial Production Managers: 40 -> 13 links; 100 rows not used from 11-3051.01, 11-3051.02, 11-3051.03, 11-3051.04, 11-3051.06
+- 11-3071 Transportation, Storage, and Distribution Managers: 19 -> 14 links; 20 rows not used from 11-3071.04
+- 11-9041 Architectural and Engineering Managers: 26 -> 18 links; 20 rows not used from 11-9041.01
+- 11-9121 Natural Sciences Managers: 43 -> 15 links; 40 rows not used from 11-9121.01, 11-9121.02
+- 13-1041 Compliance Officers: 73 -> 14 links; 120 rows not used from 13-1041.01, 13-1041.03, 13-1041.04, 13-1041.06, 13-1041.07, 13-1041.08
+- 13-1081 Logisticians: 31 -> 15 links; 40 rows not used from 13-1081.01, 13-1081.02
+- 13-1161 Market Research Analysts and Marketing Specialists: 24 -> 18 links; 20 rows not used from 13-1161.01
+- 15-1211 Computer Systems Analysts: 28 -> 14 links; 20 rows not used from 15-1211.01
+- 15-1241 Computer Network Architects: 18 -> 15 links; 20 rows not used from 15-1241.01
+- 15-1243 Database Architects: 17 -> 14 links; 20 rows not used from 15-1243.01
+- 15-1255 Web and Digital Interface Designers: 24 -> 15 links; 20 rows not used from 15-1255.01
+- 15-2041 Statisticians: 22 -> 16 links; 20 rows not used from 15-2041.01
+- 15-2051 Data Scientists: 28 -> 16 links; 40 rows not used from 15-2051.01, 15-2051.02
+- 17-1022 Surveyors: 30 -> 19 links; 20 rows not used from 17-1022.01
+- 17-2051 Civil Engineers: 37 -> 17 links; 40 rows not used from 17-2051.01, 17-2051.02
+- 17-2072 Electronics Engineers, Except Computer: 20 -> 14 links; 20 rows not used from 17-2072.01
+- 17-2111 Health and Safety Engineers, Except Mining Safety Engineers and Inspectors: 25 -> 16 links; 20 rows not used from 17-2111.02
+- 17-2112 Industrial Engineers: 30 -> 15 links; 60 rows not used from 17-2112.01, 17-2112.02, 17-2112.03
+- 17-2141 Mechanical Engineers: 25 -> 16 links; 40 rows not used from 17-2141.01, 17-2141.02
+- 17-3024 Electro-Mechanical and Mechatronics Technologists and Technicians: 20 -> 17 links; 20 rows not used from 17-3024.01
+- 17-3026 Industrial Engineering Technologists and Technicians: 23 -> 15 links; 20 rows not used from 17-3026.01
+- 17-3027 Mechanical Engineering Technologists and Technicians: 21 -> 17 links; 20 rows not used from 17-3027.01
+- 19-1031 Conservation Scientists: 31 -> 16 links; 40 rows not used from 19-1031.02, 19-1031.03
+- 19-2041 Environmental Scientists and Specialists, Including Health: 29 -> 16 links; 60 rows not used from 19-2041.01, 19-2041.02, 19-2041.03
+- 19-3011 Economists: 26 -> 18 links; 20 rows not used from 19-3011.01
+- 19-4012 Agricultural Technicians: 28 -> 19 links; 20 rows not used from 19-4012.01
+- 19-4051 Nuclear Technicians: 29 -> 16 links; 20 rows not used from 19-4051.02
+- 27-2012 Producers and Directors: 41 -> 16 links; 60 rows not used from 27-2012.03, 27-2012.04, 27-2012.05
+- 27-3043 Writers and Authors: 25 -> 16 links; 20 rows not used from 27-3043.05
+- 29-1071 Physician Assistants: 22 -> 15 links; 20 rows not used from 29-1071.01
+- 29-1122 Occupational Therapists: 24 -> 16 links; 20 rows not used from 29-1122.01
+- 29-1141 Registered Nurses: 27 -> 16 links; 80 rows not used from 29-1141.01, 29-1141.02, 29-1141.03, 29-1141.04
+- 33-3021 Detectives and Criminal Investigators: 32 -> 16 links; 40 rows not used from 33-3021.02, 33-3021.06
+- 33-3051 Police and Sheriff's Patrol Officers: 23 -> 16 links; 20 rows not used from 33-3051.04
+- 35-3023 Fast Food and Counter Workers: 21 -> 19 links; 20 rows not used from 35-3023.01
+- 39-9011 Childcare Workers: 25 -> 16 links; 20 rows not used from 39-9011.01
+- 41-4011 Sales Representatives, Wholesale and Manufacturing, Technical and Scientific Products: 31 -> 18 links; 20 rows not used from 41-4011.07
+- 43-5011 Cargo and Freight Agents: 20 -> 18 links; 20 rows not used from 43-5011.01
+- 47-1011 First-Line Supervisors of Construction Trades and Extraction Workers: 28 -> 17 links; 20 rows not used from 47-1011.03
+- 47-2152 Plumbers, Pipefitters, and Steamfitters: 30 -> 19 links; 20 rows not used from 47-2152.04
+- 47-4011 Construction and Building Inspectors: 27 -> 14 links; 20 rows not used from 47-4011.01
+- 51-8013 Power Plant Operators: 26 -> 16 links; 40 rows not used from 51-8013.03, 51-8013.04
+- 51-9071 Jewelers and Precious Stone and Metal Workers: 26 -> 17 links; 20 rows not used from 51-9071.06
+- 51-9195 Molders, Shapers, and Casters, Except Metal and Plastic: 44 -> 17 links; 60 rows not used from 51-9195.03, 51-9195.04, 51-9195.05
+- 53-6051 Transportation Inspectors: 33 -> 16 links; 40 rows not used from 53-6051.01, 53-6051.07
+- 53-7062 Laborers and Freight, Stock, and Material Movers, Hand: 29 -> 19 links; 20 rows not used from 53-7062.04
+
 ## Mixed Job Zones
+
+Only jobs with no `.00` code can be mixed: a job with its own `.00` zone always uses it. The screen shows "level not available" for these; the level is never guessed.
 
 - 11-9179 Personal Service Managers, All Other: 11-9179.01 zone 4, 11-9179.02 zone 3. Stored as null; direction unknown.
 - 11-9199 Managers, All Other: 11-9199.01 zone 4, 11-9199.02 zone 4, 11-9199.08 zone 4, 11-9199.09 zone 3, 11-9199.10 zone 4, 11-9199.11 zone 4. Stored as null; direction unknown.
@@ -132,7 +195,7 @@ The `.00` zone is used. Listed so the choice is visible.
 
 ## Self-links dropped
 
-387 rows, by job: 11-1011 Chief Executives (2); 11-3013 Facilities Managers (2); 11-3031 Financial Managers (6); 11-3051 Industrial Production Managers (24); 11-3071 Transportation, Storage, and Distribution Managers (2); 11-9041 Architectural and Engineering Managers (1); 11-9121 Natural Sciences Managers (4); 11-9179 Personal Service Managers, All Other (2); 11-9199 Managers, All Other (5); 13-1020 Buyers and Purchasing Agents (6); 13-1041 Compliance Officers (27); 13-1081 Logisticians (6); 13-1161 Market Research Analysts and Marketing Specialists (2); 13-1199 Business Operations Specialists, All Other (1); 13-2020 Property Appraisers and Assessors (2); 15-1211 Computer Systems Analysts (2); 15-1241 Computer Network Architects (2); 15-1243 Database Architects (2); 15-1255 Web and Digital Interface Designers (2); 15-1299 Computer Occupations, All Other (30); 15-2041 Statisticians (2); 15-2051 Data Scientists (6); 17-1022 Surveyors (2); 17-2051 Civil Engineers (6); 17-2072 Electronics Engineers, Except Computer (2); 17-2111 Health and Safety Engineers, Except Mining Safety Engineers and Inspectors (2); 17-2112 Industrial Engineers (12); 17-2141 Mechanical Engineers (6); 17-2199 Engineers, All Other (23); 17-3024 Electro-Mechanical and Mechatronics Technologists and Technicians (2); 17-3026 Industrial Engineering Technologists and Technicians (2); 17-3027 Mechanical Engineering Technologists and Technicians (2); 17-3029 Engineering Technologists and Technicians, Except Drafters, All Other (1); 19-1029 Biological Scientists, All Other (11); 19-1031 Conservation Scientists (6); 19-2041 Environmental Scientists and Specialists, Including Health (12); 19-3011 Economists (2); 19-3039 Psychologists, All Other (2); 19-4012 Agricultural Technicians (2); 19-4051 Nuclear Technicians (2); 21-1018 Substance Abuse, Behavioral Disorder, and Mental Health Counselors (2); 25-2052 Special Education Teachers, Kindergarten and Elementary School (2); 25-9045 Teaching Assistants, Except Postsecondary (2); 27-2012 Producers and Directors (12); 27-3043 Writers and Authors (2); 29-1071 Physician Assistants (2); 29-1122 Occupational Therapists (2); 29-1129 Therapists, All Other (2); 29-1141 Registered Nurses (20); 29-1229 Physicians, All Other (11); 29-2010 Clinical Laboratory Technologists and Technicians (30); 29-2099 Health Technologists and Technicians, All Other (2); 31-1120 Home Health and Personal Care Aides (2); 33-3021 Detectives and Criminal Investigators (6); 33-3051 Police and Sheriff's Patrol Officers (2); 35-3023 Fast Food and Counter Workers (2); 39-7010 Tour and Travel Guides (2); 39-9011 Childcare Workers (2); 41-4011 Sales Representatives, Wholesale and Manufacturing, Technical and Scientific Products (2); 43-5011 Cargo and Freight Agents (2); 47-1011 First-Line Supervisors of Construction Trades and Extraction Workers (2); 47-2152 Plumbers, Pipefitters, and Steamfitters (2); 47-4011 Construction and Building Inspectors (2); 51-2028 Electrical, Electronic, and Electromechanical Assemblers, Except Coil Winders, Tapers, and Finishers (2); 51-8013 Power Plant Operators (6); 51-9071 Jewelers and Precious Stone and Metal Workers (2); 51-9195 Molders, Shapers, and Casters, Except Metal and Plastic (9); 53-1047 First-Line Supervisors of Transportation and Material Moving Workers, Except Aircraft Cargo Handling Supervisors (10); 53-6051 Transportation Inspectors (6); 53-7062 Laborers and Freight, Stock, and Material Movers, Hand (2).
+229 rows, by job: 11-1011 Chief Executives (1); 11-3013 Facilities Managers (1); 11-3031 Financial Managers (2); 11-3051 Industrial Production Managers (5); 11-3071 Transportation, Storage, and Distribution Managers (1); 11-9041 Architectural and Engineering Managers (1); 11-9121 Natural Sciences Managers (2); 11-9179 Personal Service Managers, All Other (2); 11-9199 Managers, All Other (5); 13-1020 Buyers and Purchasing Agents (6); 13-1041 Compliance Officers (6); 13-1081 Logisticians (2); 13-1161 Market Research Analysts and Marketing Specialists (1); 13-1199 Business Operations Specialists, All Other (1); 13-2020 Property Appraisers and Assessors (2); 15-1211 Computer Systems Analysts (1); 15-1241 Computer Network Architects (1); 15-1243 Database Architects (1); 15-1255 Web and Digital Interface Designers (1); 15-1299 Computer Occupations, All Other (30); 15-2041 Statisticians (1); 15-2051 Data Scientists (2); 17-1022 Surveyors (1); 17-2051 Civil Engineers (2); 17-2072 Electronics Engineers, Except Computer (1); 17-2111 Health and Safety Engineers, Except Mining Safety Engineers and Inspectors (1); 17-2112 Industrial Engineers (3); 17-2141 Mechanical Engineers (2); 17-2199 Engineers, All Other (23); 17-3024 Electro-Mechanical and Mechatronics Technologists and Technicians (1); 17-3026 Industrial Engineering Technologists and Technicians (1); 17-3027 Mechanical Engineering Technologists and Technicians (1); 17-3029 Engineering Technologists and Technicians, Except Drafters, All Other (1); 19-1029 Biological Scientists, All Other (11); 19-1031 Conservation Scientists (2); 19-2041 Environmental Scientists and Specialists, Including Health (3); 19-3011 Economists (1); 19-3039 Psychologists, All Other (2); 19-4012 Agricultural Technicians (1); 19-4051 Nuclear Technicians (1); 21-1018 Substance Abuse, Behavioral Disorder, and Mental Health Counselors (2); 25-2052 Special Education Teachers, Kindergarten and Elementary School (2); 25-9045 Teaching Assistants, Except Postsecondary (2); 27-2012 Producers and Directors (3); 27-3043 Writers and Authors (1); 29-1071 Physician Assistants (1); 29-1122 Occupational Therapists (1); 29-1129 Therapists, All Other (2); 29-1141 Registered Nurses (4); 29-1229 Physicians, All Other (11); 29-2010 Clinical Laboratory Technologists and Technicians (30); 29-2099 Health Technologists and Technicians, All Other (2); 31-1120 Home Health and Personal Care Aides (2); 33-3021 Detectives and Criminal Investigators (2); 33-3051 Police and Sheriff's Patrol Officers (1); 35-3023 Fast Food and Counter Workers (1); 39-7010 Tour and Travel Guides (2); 39-9011 Childcare Workers (1); 41-4011 Sales Representatives, Wholesale and Manufacturing, Technical and Scientific Products (1); 43-5011 Cargo and Freight Agents (1); 47-1011 First-Line Supervisors of Construction Trades and Extraction Workers (1); 47-2152 Plumbers, Pipefitters, and Steamfitters (1); 47-4011 Construction and Building Inspectors (1); 51-2028 Electrical, Electronic, and Electromechanical Assemblers, Except Coil Winders, Tapers, and Finishers (2); 51-8013 Power Plant Operators (2); 51-9071 Jewelers and Precious Stone and Metal Workers (1); 51-9195 Molders, Shapers, and Casters, Except Metal and Plastic (3); 53-1047 First-Line Supervisors of Transportation and Material Moving Workers, Except Aircraft Cargo Handling Supervisors (10); 53-6051 Transportation Inspectors (2); 53-7062 Laborers and Freight, Stock, and Material Movers, Hand (1).
 
 ## How pay and AI Exposure are shown
 

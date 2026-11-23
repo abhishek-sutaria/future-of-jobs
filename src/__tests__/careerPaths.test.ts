@@ -37,6 +37,7 @@ import {
     wageFieldsFor,
 } from '../utils/careerPaths';
 import { BLS_SCORE_RISK, KELLEY_SOC_SCORES } from '../utils/blsScores';
+import { ONET_CODES_FOR_SOC, ONET_SPLIT_CODES_WITHOUT_TASKS } from '../config/onetSplitCodes';
 import { INDEX_OCCUPATION_BY_SOC, OCCUPATION_INDEX } from '../utils/occupationIndex';
 import { bandFor } from '../utils/roleScale';
 import { WAGES_BY_SOC, WAGES_META } from '../utils/wages';
@@ -191,17 +192,8 @@ describe('links match the raw O*NET file', () => {
             soc: '13-1020', to: '11-3061', tier: 'Primary-Short', index: 2,
             rows: [[1145, '13-1021.00\t11-3061.00\tPrimary-Short\t4'], [1165, '13-1022.00\t11-3061.00\tPrimary-Short\t4'], [1183, '13-1023.00\t11-3061.00\tPrimary-Short\t2']],
         },
-        // Registered Nurses (.00 and four sub-codes) -> Nurse Practitioners
-        {
-            soc: '29-1141', to: '29-1171', tier: 'Primary-Short', index: 1,
-            rows: [
-                [8023, '29-1141.00\t29-1171.00\tPrimary-Short\t2'],
-                [8052, '29-1141.01\t29-1171.00\tSupplemental\t11'],
-                [8062, '29-1141.02\t29-1171.00\tPrimary-Short\t1'],
-                [8084, '29-1141.03\t29-1171.00\tPrimary-Short\t3'],
-                [8103, '29-1141.04\t29-1171.00\tPrimary-Short\t2'],
-            ],
-        },
+        // Registered Nurses -> Nurse Practitioners: only the 29-1141.00 row (own code first), not the sub-codes' rows
+        { soc: '29-1141', to: '29-1171', tier: 'Primary-Short', index: 2, rows: [[8023, '29-1141.00\t29-1171.00\tPrimary-Short\t2']] },
         // Software Developers -> Computer Occupations, All Other (five sub-codes of 15-1299)
         {
             soc: '15-1252', to: '15-1299', tier: 'Primary-Short', index: 1,
@@ -218,6 +210,66 @@ describe('links match the raw O*NET file', () => {
     it.each(PICKED.map((p) => [`${p.soc} -> ${p.to}`, p] as const))('%s', (_name, p) => {
         for (const [line, text] of p.rows) expect(rawLine(line)).toBe(text);
         expect(storedLink(p.soc, p.to)).toEqual({ to: p.to, tier: p.tier, index: p.index, rows: p.rows.map(([l]) => l) });
+    });
+
+    it('own code first: Registered Nurses\' links are exactly the 29-1141.00 rows, in O*NET order', () => {
+        // Read here from the raw file: every 29-1141.00 row, in file order.
+        const own = rawLines
+            .map((text, i) => ({ line: i + 1, cells: text.split('\t') }))
+            .filter((r) => r.cells[0] === '29-1141.00');
+        expect(own).toHaveLength(20);
+        // A related code maps to its seven-character SOC (every target here is an app job); self-links drop.
+        const expected = own
+            .filter((r) => r.cells[1].slice(0, 7) !== '29-1141')
+            .map((r) => ({ to: r.cells[1].slice(0, 7), tier: r.cells[2], index: Number(r.cells[3]), rows: [r.line] }));
+        expect(new Set(expected.map((e) => e.to)).size).toBe(expected.length); // no two rows share a target
+        expect(stored('29-1141').links).toEqual(expected);
+        expect(stored('29-1141').links).toHaveLength(16);
+        // 29-1141.00 lists 4 of its own sub-codes (Index 1, 3, 4, 7): self-links, dropped.
+        expect(own.filter((r) => r.cells[1].startsWith('29-1141.')).map((r) => Number(r.cells[3]))).toEqual([1, 3, 4, 7]);
+        // Nothing from the sub-codes: Psychiatrists (29-1223) is related only to 29-1141.02.
+        const psych = rawLines.findIndex((t) => t.startsWith('29-1141.02\t29-1223.00\t')) + 1;
+        expect(psych).toBeGreaterThan(1);
+        expect(stored('29-1141').links.some((l) => l.to === '29-1223')).toBe(false);
+        expect(stored('29-1141').links.flatMap((l) => l.rows)).not.toContain(psych);
+        expect(built.ownCodeChanges.find((x) => x.soc === '29-1141')).toMatchObject({ before: 27, after: 16, rowsNotUsed: 80 });
+    });
+
+    it('a target sub-code still maps to its parent job', () => {
+        // Accountants and Auditors (own .00) -> 11-3031.01 and 11-3031.00 are both Financial Managers.
+        expect(storedLink('13-2011', '11-3031')?.rows).toEqual([1764, 1766]);
+        expect(rawLine(1764)).toBe('13-2011.00\t11-3031.01\tPrimary-Short\t3');
+    });
+
+    it('a combined job with no .00 code (13-1020) merges the rows of all its parts', () => {
+        // A related code's job, written here: its own SOC if that is an app job, else the combined job listing it.
+        const appSocs = new Set(OCCUPATION_INDEX.occupations.map((o) => o.soc));
+        const targetJob = (code: string): string | undefined => {
+            const soc = code.slice(0, 7);
+            if (appSocs.has(soc)) return soc;
+            return Object.entries({ ...ONET_CODES_FOR_SOC }).find(([, cs]) => cs.some((c) => c.slice(0, 7) === soc))?.[0]
+                ?? Object.entries({ ...ONET_SPLIT_CODES_WITHOUT_TASKS }).find(([, cs]) => cs.some((c) => c.slice(0, 7) === soc))?.[0];
+        };
+        const partRows = rawLines
+            .map((text, i) => ({ line: i + 1, cells: text.split('\t') }))
+            .filter((r) => ['13-1021.00', '13-1022.00', '13-1023.00'].includes(r.cells[0]));
+        expect(partRows).toHaveLength(60);
+        const job = stored('13-1020');
+        expect(job.onetCodes).toEqual(['13-1021.00', '13-1022.00', '13-1023.00']);
+        const used = job.links.flatMap((l) => l.rows).sort((a, b) => a - b);
+        // Every part row is in exactly one link, except rows between the parts themselves (self-links).
+        const parts = /^13-102[123]\./;
+        const expectedRows = partRows.filter((r) => !parts.test(r.cells[1])).map((r) => r.line);
+        expect(used).toEqual(expectedRows);
+        const rank: Record<string, number> = { 'Primary-Short': 0, 'Primary-Long': 1, Supplemental: 2 };
+        for (const l of job.links) {
+            const rows = l.rows.map((n) => rawLine(n).split('\t'));
+            for (const c of rows) expect(targetJob(c[1])).toBe(l.to);
+            const best = rows.map((c) => [rank[c[2]], Number(c[3])]).sort((a, b) => a[0] - b[0] || a[1] - b[1])[0];
+            expect([rank[l.tier], l.index]).toEqual(best);
+        }
+        expect(job.jobZone).toBeNull();
+        expect(job.jobZoneRule).toBe('mixed');
     });
 
     it('stores no self-link, and every link has source rows naming its own job and its target', () => {

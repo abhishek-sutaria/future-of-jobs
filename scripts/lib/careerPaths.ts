@@ -26,12 +26,18 @@
  *          socRollup in scripts/lib/iuSchools.ts, which reads the one table
  *          src/config/onetSplitCodes.ts (the scoring plan's table too);
  *        - any other code is unmapped and listed in the report.
- *   2. Links: each row (code -> related code) becomes a link between the two
- *      app jobs. A row whose two codes land on the same app job is a
- *      self-link and is dropped. Rows that land on the same pair (sub-codes)
- *      merge into one link that keeps the strongest tier, then the lowest
- *      Index, and lists every row it came from (line numbers). Links are in
- *      O*NET's order: tier, then Index, then file line.
+ *   2. Links: own code first (decided 2026-11-22, as tasks already work).
+ *      A job with its own .00 code in Related Occupations.txt takes its links
+ *      ONLY from that code's rows; its sub-codes' rows are not used. A job
+ *      with no .00 code (a BLS combined job such as 13-1020, or a SOC O*NET
+ *      has only as sub-codes) takes the rows of every code that maps to it.
+ *      Each used row (code -> related code) becomes a link between the two
+ *      app jobs; on the target side a sub-code still maps to its parent job.
+ *      A row whose two codes land on the same app job is a self-link and is
+ *      dropped. Rows that land on the same pair merge into one link that
+ *      keeps the strongest tier, then the lowest Index, and lists every row
+ *      it came from (line numbers). Links are in O*NET's order: tier, then
+ *      Index, then file line.
  *   3. Job Zone: the job's own .00 code's zone; otherwise the zones of the
  *      codes that map to it (a part of a combined job counts its .00 when it
  *      has one, the way the .00-first rule works everywhere), if they all
@@ -209,7 +215,7 @@ export interface StoredJob {
     jobZoneRule: JobZoneRule;
     /** The Job Zones.txt lines the rule read, ascending. */
     jobZoneRows: number[];
-    /** The O*NET codes that map to this job, as they appear in Related Occupations.txt. */
+    /** The O*NET codes whose Related Occupations.txt rows make this job's links: its own .00 when it has one, else every code that maps to it. */
     onetCodes: string[];
     links: StoredLink[];
 }
@@ -238,7 +244,11 @@ export interface CareerPathsCounts {
     rowsUsed: number;
     rowsSelf: number;
     rowsUnmapped: number;
+    /** Rows from a sub-code of a job that has its own .00 code: not used (own code first). */
+    rowsNotOwnCode: number;
     rowsMerged: number;
+    /** Jobs that have their own .00 code and also sub-codes in the file (the ones the own-code rule changes). */
+    ownCodeJobsWithSubCodes: number;
     onetCodes: number;
     codesBy: Record<CodeRule, number>;
     tiers: Record<Tier, number>;
@@ -255,6 +265,8 @@ export interface CareerPathsBuild {
     mixed: { soc: string; title: string; codes: { code: string; zone: number; line: number }[] }[];
     zoneOverrides: { soc: string; title: string; own: number; others: { code: string; zone: number }[] }[];
     selfLinks: { soc: string; title: string; rows: number }[];
+    /** Jobs the own-code rule changes: links if every code were merged (the first rule) vs links now. */
+    ownCodeChanges: { soc: string; title: string; subCodes: string[]; rowsNotUsed: number; before: number; after: number }[];
     noData: AppJob[];
     report: string;
 }
@@ -291,8 +303,14 @@ export function buildCareerPaths(inputs: CareerPathsInputs): CareerPathsBuild {
     }
     if (!inputs.zoneNames['1'] || Object.keys(inputs.zoneNames).length !== 5) throw new Error(`${ZONE_REFERENCE_FILE}: expected Job Zones 1 to 5`);
 
-    // 2. Related Occupations.txt rows -> links.
+    // 2. Related Occupations.txt rows -> links. A job "has its own .00 code" when that code has rows here.
+    for (const r of inputs.related) mapCode(r.cells[0], `${RELATED_FILE} line ${r.line}`);
+    const hasOwnCode = new Set(inputs.related.map((r) => r.cells[0]).filter((c) => c.endsWith('.00') && appOf.get(c) === c.slice(0, 7)).map((c) => c.slice(0, 7)));
     const codesOf = new Map<string, Set<string>>();
+    const usedCodesOf = new Map<string, Set<string>>();
+    const allPairs = new Map<string, Set<string>>(); // every code merged (the first rule), for the report's before/after
+    const notOwnBySoc = new Map<string, number>();
+    let rowsNotOwnCode = 0;
     const pairRows = new Map<string, { from: string; to: string; tier: Tier; index: number; line: number }[]>();
     const selfBySoc = new Map<string, number>();
     const unmappedRows = new Map<string, { rows: number; asRelated: number }>();
@@ -308,20 +326,31 @@ export function buildCareerPaths(inputs: CareerPathsInputs): CareerPathsBuild {
         seenPair.add(`${code}|${rel}`);
         const from = mapCode(code, where);
         const to = mapCode(rel, where);
+        for (const [c, isFrom] of [[code, true], [rel, false]] as const) {
+            if (appOf.get(c) !== null) continue;
+            const u = unmappedRows.get(c) ?? { rows: 0, asRelated: 0 };
+            if (isFrom) u.rows++;
+            else u.asRelated++;
+            unmappedRows.set(c, u);
+        }
         if (from !== null) {
             const codes = codesOf.get(from) ?? new Set<string>();
             codes.add(code);
             codesOf.set(from, codes);
+            if (to !== null && to !== from) allPairs.set(from, (allPairs.get(from) ?? new Set<string>()).add(to));
         }
-        if (from === null || to === null) {
+        if (from === null) {
             rowsUnmapped++;
-            for (const [c, isFrom] of [[code, true], [rel, false]] as const) {
-                if (appOf.get(c) !== null) continue;
-                const u = unmappedRows.get(c) ?? { rows: 0, asRelated: 0 };
-                if (isFrom) u.rows++;
-                else u.asRelated++;
-                unmappedRows.set(c, u);
-            }
+            continue;
+        }
+        if (hasOwnCode.has(from) && code !== `${from}.00`) {
+            rowsNotOwnCode++;
+            notOwnBySoc.set(from, (notOwnBySoc.get(from) ?? 0) + 1);
+            continue;
+        }
+        usedCodesOf.set(from, (usedCodesOf.get(from) ?? new Set<string>()).add(code));
+        if (to === null) {
+            rowsUnmapped++;
             continue;
         }
         if (from === to) {
@@ -393,7 +422,9 @@ export function buildCareerPaths(inputs: CareerPathsInputs): CareerPathsBuild {
             }
         }
         const links = (linksOf.get(soc) ?? []).sort(better).map(({ to, tier, index, rows }) => ({ to, tier, index, rows }));
-        jobs.set(soc, { jobZone, jobZoneRule: rule, jobZoneRows: used.map((c) => zoneOf.get(c)!.line).sort((a, b) => a - b), onetCodes: codes, links });
+        const onetCodes = [...(usedCodesOf.get(soc) ?? [])].sort();
+        if (hasOwnCode.has(soc) && JSON.stringify(onetCodes) !== JSON.stringify([`${soc}.00`])) throw new Error(`${soc}: own .00 code, but rows used from ${onetCodes.join(', ')}`);
+        jobs.set(soc, { jobZone, jobZoneRule: rule, jobZoneRows: used.map((c) => zoneOf.get(c)!.line).sort((a, b) => a - b), onetCodes, links });
     }
 
     // Outputs.
@@ -453,13 +484,24 @@ export function buildCareerPaths(inputs: CareerPathsInputs): CareerPathsBuild {
         rowsUsed,
         rowsSelf,
         rowsUnmapped,
+        rowsNotOwnCode,
         rowsMerged: rowsUsed - allLinks.length,
+        ownCodeJobsWithSubCodes: 0,
         onetCodes: codeRule.size,
         codesBy,
         tiers,
         directions,
     };
-    if (counts.rowsUsed + counts.rowsSelf + counts.rowsUnmapped !== counts.rows) throw new Error('rows do not add up');
+    if (counts.rowsUsed + counts.rowsSelf + counts.rowsUnmapped + counts.rowsNotOwnCode !== counts.rows) throw new Error('rows do not add up');
+    const ownCodeChanges = [...notOwnBySoc.keys()].sort().map((soc) => ({
+        soc,
+        title: titleOf.get(soc)!,
+        subCodes: [...codesOf.get(soc)!].filter((c) => c !== `${soc}.00`).sort(),
+        rowsNotUsed: notOwnBySoc.get(soc)!,
+        before: allPairs.get(soc)?.size ?? 0,
+        after: jobs.get(soc)!.links.length,
+    }));
+    counts.ownCodeJobsWithSubCodes = ownCodeChanges.length;
 
     const unmapped = [...codeRule].filter(([, r]) => r === 'unmapped').map(([code]) => ({
         code,
@@ -506,7 +548,7 @@ export function buildCareerPaths(inputs: CareerPathsInputs): CareerPathsBuild {
         zones,
     };
 
-    const built: CareerPathsBuild = { index, zones: zonesFile, fields, jobs, counts, unmapped, mixed, zoneOverrides, selfLinks, noData, report: '' };
+    const built: CareerPathsBuild = { index, zones: zonesFile, fields, jobs, counts, unmapped, mixed, zoneOverrides, selfLinks, ownCodeChanges, noData, report: '' };
     built.report = renderReport(inputs, built);
     return built;
 }
@@ -568,12 +610,19 @@ function renderReport(inputs: CareerPathsInputs, b: CareerPathsBuild): string {
     p(`- A code whose SOC the app only has inside a combined BLS code belongs to that combined job (${fmt(c.codesBy.combined)} codes): for example 13-1021, 13-1022 and 13-1023 all belong to 13-1020 Buyers and Purchasing Agents. The table is \`src/config/onetSplitCodes.ts\` (the scoring plan's table), read through \`socRollup\` in \`scripts/lib/iuSchools.ts\`, so all three builds use one rule.`);
     p(`- Any other code is unmapped: listed below, never forced onto a job (${fmt(c.codesBy.unmapped)} codes).`);
     p();
-    p(`**2. Links.** Each row of Related Occupations.txt (a code and one related code) becomes a link between their two app jobs. ${fmt(c.rows)} rows in all:`);
+    p('**2. Links: own code first** (decided 2026-11-22, the same rule tasks already use).');
+    p();
+    p('- A job with its **own `.00` code** takes its links **only** from that code\'s rows. Rows from its sub-codes (`.01`, `.02`, ...) are not used. Example: Registered Nurses (29-1141) uses only the 29-1141.00 rows, so it does not get Psychiatrists from 29-1141.02.');
+    p('- A job with **no `.00` code** (a BLS combined job such as 13-1020, or a SOC O*NET has only as sub-codes, such as 15-1299) takes the rows of every code that maps to it.');
+    p('- On the target side, a related sub-code still maps to its parent job (a row to 29-1141.02 is a link to Registered Nurses).');
+    p();
+    p(`Each used row (a code and one related code) becomes a link between their two app jobs. ${fmt(c.rows)} rows in all:`);
     p();
     p(`- ${fmt(c.rowsUsed)} rows make links.`);
+    p(`- ${fmt(c.rowsNotOwnCode)} rows come from sub-codes of a job that has its own .00 code and are not used (${fmt(c.ownCodeJobsWithSubCodes)} jobs, listed below).`);
     p(`- ${fmt(c.rowsSelf)} rows are self-links (both codes land on the same app job, for example two sub-codes of one SOC) and are dropped.`);
     p(`- ${fmt(c.rowsUnmapped)} rows touch an unmapped code and are dropped.`);
-    p(`- Rows that land on the same pair of jobs (from sub-codes) merge into one link: ${fmt(c.rowsMerged)} rows merged away. The link keeps the strongest tier, then the lowest Index, and stores every row it came from (\`rows\`, line numbers in the file, header = line 1).`);
+    p(`- Rows that land on the same pair of jobs merge into one link: ${fmt(c.rowsMerged)} rows merged away (from a job's several codes when it has no .00 code, or from several codes of one target job). The link keeps the strongest tier, then the lowest Index, and stores every row it came from (\`rows\`, line numbers in the file, header = line 1).`);
     p('- A job\'s links are in O*NET\'s order: tier (Primary-Short, Primary-Long, Supplemental), then Index, then file line.');
     p();
     p(`**3. Job Zone.** O*NET's preparation level, 1 to 5 (names from \`Job Zone Reference.txt\`: ${Object.entries(inputs.zoneNames).map(([z, n]) => `${z} "${n}"`).join(', ')}).`);
@@ -613,7 +662,15 @@ function renderReport(inputs: CareerPathsInputs, b: CareerPathsBuild): string {
     p();
     for (const u of b.unmapped) p(`- ${u.code} ${u.title}: ${u.rows} rows from it, ${u.asRelated} rows to it.`);
     p();
+    p('## Jobs the own-code rule changes');
+    p();
+    p(`These ${fmt(b.ownCodeChanges.length)} jobs have their own .00 code and also sub-codes in Related Occupations.txt. Their links now come from the .00 rows only. "Before" is the number of links when every code was merged (the first rule in PR #106); "after" is the number stored now.`);
+    p();
+    for (const x of b.ownCodeChanges) p(`- ${x.soc} ${x.title}: ${x.before} -> ${x.after} links; ${x.rowsNotUsed} rows not used from ${x.subCodes.join(', ')}`);
+    p();
     p('## Mixed Job Zones');
+    p();
+    p('Only jobs with no `.00` code can be mixed: a job with its own `.00` zone always uses it. The screen shows "level not available" for these; the level is never guessed.');
     p();
     if (b.mixed.length === 0) p('None.');
     for (const m of b.mixed) p(`- ${m.soc} ${m.title}: ${m.codes.map((x) => `${x.code} zone ${x.zone}`).join(', ')}. Stored as null; direction unknown.`);

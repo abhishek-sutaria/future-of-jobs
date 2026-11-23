@@ -20,6 +20,11 @@ seven-character SOC if that SOC is one of the app's 830 jobs; otherwise to the
 combined job whose parts (src/config/onetSplitCodes.ts, read as text) include
 that SOC; otherwise it is unmapped.
 
+Link rule (own code first, decided 2026-11-22): a job whose own .00 code has
+rows in Related Occupations.txt uses only those rows; a job with no .00 code
+uses the rows of every code that maps to it. A related code always maps to
+its job by the mapping rule (a sub-code to its parent).
+
 USAGE
   python3 scripts/verify_career_paths.py [--root <dir>]
   --root reads every file under <dir> instead of the repo (tests).
@@ -115,18 +120,29 @@ def main():
     for line, r in zone_rows:
         zone_of[r["O*NET-SOC Code"]] = (int(r["Job Zone"]), line)
 
+    # Jobs whose own .00 code has rows: only those rows are used.
+    own_code = {r["O*NET-SOC Code"][:7] for _, r in related
+                if r["O*NET-SOC Code"].endswith(".00") and r["O*NET-SOC Code"][:7] in app}
     pair_rows = defaultdict(list)  # (from_soc, to_soc) -> [(tier_rank, index, line)]
-    codes_of = defaultdict(set)
-    self_rows = unmapped_rows = 0
+    codes_of = defaultdict(set)    # every code that maps to the job
+    used_codes = defaultdict(set)  # the codes whose rows are used
+    self_rows = unmapped_rows = not_own_rows = 0
     unmapped_codes = set()
     for line, r in related:
         a, b = r["O*NET-SOC Code"], r["Related O*NET-SOC Code"]
         fa, fb = to_app(a), to_app(b)
+        unmapped_codes.update(c for c, m in ((a, fa), (b, fb)) if m is None)
         if fa:
             codes_of[fa].add(a)
-        if fa is None or fb is None:
+        if fa is None:
             unmapped_rows += 1
-            unmapped_codes.update(c for c, m in ((a, fa), (b, fb)) if m is None)
+            continue
+        if fa in own_code and a != fa + ".00":
+            not_own_rows += 1
+            continue
+        used_codes[fa].add(a)
+        if fb is None:
+            unmapped_rows += 1
             continue
         if fa == fb:
             self_rows += 1
@@ -166,8 +182,10 @@ def main():
     seen_lines = set()
     links_total = 0
     for soc, job in stored.items():
-        if sorted(codes_of[soc]) != job["onetCodes"]:
-            fail(f"{soc}: onetCodes {job['onetCodes']} != {sorted(codes_of[soc])}")
+        if sorted(used_codes[soc]) != job["onetCodes"]:
+            fail(f"{soc}: onetCodes {job['onetCodes']} != {sorted(used_codes[soc])}")
+        if soc in own_code and job["onetCodes"] != [soc + ".00"]:
+            fail(f"{soc}: has its own .00 code but uses {job['onetCodes']}")
         keys = []
         targets = set()
         for l in job["links"]:
@@ -205,8 +223,14 @@ def main():
     missing_pairs = [p for p in pair_rows if p[0] not in stored or p[1] not in {l["to"] for l in stored[p[0]]["links"]}]
     if missing_pairs:
         fail(f"{len(missing_pairs)} pairs in the file have no stored link, e.g. {missing_pairs[:3]}")
-    if len(seen_lines) + self_rows + unmapped_rows != len(related):
-        fail(f"rows: {len(seen_lines)} linked + {self_rows} self + {unmapped_rows} unmapped != {len(related)}")
+    if len(seen_lines) + self_rows + unmapped_rows + not_own_rows != len(related):
+        fail(f"rows: {len(seen_lines)} linked + {self_rows} self + {unmapped_rows} unmapped + {not_own_rows} not own code != {len(related)}")
+    # A job with its own .00 code: no stored row comes from any other code.
+    for soc in own_code & set(stored):
+        for l in stored[soc]["links"]:
+            for line in l["rows"]:
+                if by_line[line]["O*NET-SOC Code"] != soc + ".00":
+                    fail(f"{soc} -> {l['to']}: line {line} is from {by_line[line]['O*NET-SOC Code']}, not {soc}.00")
 
     # ── Job Zones ──
     zones_file = json.load(open(os.path.join(out_dir, "zones.json"), encoding="utf-8"))["zones"]
@@ -267,6 +291,7 @@ def main():
         f"- Links stored: **{n(links_total)}**",
         f"- {n(self_rows)} rows are self-links",
         f"- {n(unmapped_rows)} rows touch an unmapped code",
+        f"- {n(not_own_rows)} rows come from sub-codes of a job that has its own .00 code and are not used",
         f"**\"{LABEL}\"**",
     ]
     for w in want:
@@ -285,7 +310,9 @@ def main():
     print("Career paths, checked against the raw O*NET 30.1 files")
     print(f"  {len(sources['files'])} inputs sha256 OK; {on['version']}, {on['release']}, {on['license']}")
     print(f"  {len(stored)} jobs stored, {counts['noData']} no data; {links_total:,} links from {len(seen_lines):,} rows; "
-          f"{self_rows} self-link rows and {unmapped_rows} unmapped rows dropped; every one of {len(related):,} rows accounted for")
+          f"{self_rows} self-link rows, {unmapped_rows} unmapped rows and {not_own_rows:,} sub-code rows of jobs with their own .00 not used; "
+          f"every one of {len(related):,} rows accounted for")
+    print(f"  own code first: {len(own_code & set(stored))} jobs use only their .00 rows, {len(set(stored) - own_code)} merge every code")
     print(f"  {counts['withLinks']} jobs with at least 1 link, {counts['withFivePlus']} with 5 or more")
     print(f"  Job Zones: {counts['withJobZone']} set, {len(mixed)} mixed ({', '.join(mixed)})")
     print(f"  unmapped codes: {', '.join(sorted(unmapped_codes))}")
