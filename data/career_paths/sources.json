@@ -12,7 +12,11 @@
     "licenseName": "Creative Commons Attribution 4.0 International License",
     "licenseUrl": "https://www.onetcenter.org/license_db.html",
     "licenseText": "The content of the O*NET 30.1 Database is licensed under a Creative Commons Attribution 4.0 International License.",
-    "attribution": "This page includes information from the O*NET 30.1 Database by the U.S. Department of Labor, Employment and Training Administration (USDOL/ETA). Used under the CC BY 4.0 license. O*NET® is a trademark of USDOL/ETA."
+    "attribution": "This page includes information from the O*NET 30.1 Database by the U.S. Department of Labor, Employment and Training Administration (USDOL/ETA). Used under the CC BY 4.0 license. O*NET® is a trademark of USDOL/ETA. Future of Jobs has modified all or some of this information. USDOL/ETA has not approved, endorsed, or tested these modifications.",
+    "attributionSource": "https://www.onetcenter.org/license_db.html",
+    "attributionNote": "Copied on 2026-11-22 from O*NET's 'How to Credit Us', the version for 'If you make edits or additions to O*NET information' (this app maps O*NET codes onto BLS jobs, merges rows and derives step up / same / down from Job Zones), with '[Your name or company]' filled in as Future of Jobs. That page now names the O*NET 31.0 Database; its 'Previous Versions' note says to name the version used, so this says O*NET 30.1. The two links O*NET's own HTML puts in it: databaseUrl on 'O*NET 30.1 Database', licenseDeedUrl on 'CC BY 4.0'.",
+    "databaseUrl": "https://www.onetcenter.org/database.html",
+    "licenseDeedUrl": "https://creativecommons.org/licenses/by/4.0/"
   },
   "files": [
     {

@@ -41,7 +41,7 @@ function main(): void {
     const c = built.counts;
     console.log(
         `${check ? 'Up to date' : `Wrote ${stale.length} file(s)`}: ${c.jobs} jobs, ${c.withLinks} with at least 1 link, ${c.withFivePlus} with 5 or more, ` +
-            `${c.noData} no data; ${c.links} links from ${c.rowsUsed} rows (${c.rowsSelf} self, ${c.rowsUnmapped} unmapped, ${c.rowsNotOwnCode} sub-code rows of jobs with their own .00 not used); ` +
+            `${c.noData} no data; ${c.links} links from ${c.rowsUsed} rows (${c.rowsSelf} self, ${c.rowsUnmapped} unmapped, ${c.rowsNotOwnCode} sub-code rows whose part has its own .00 not used); ` +
             `Job Zone ${c.withJobZone}, mixed ${c.mixedZones}; unmapped codes ${built.unmapped.map((u) => u.code).join(', ') || 'none'}.`,
     );
 }

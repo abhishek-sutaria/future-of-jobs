@@ -149,6 +149,8 @@ describe('the independent verifier (scripts/verify_career_paths.py)', () => {
             ['47.json', (s) => s.replace('{"to":"47-2132","tier":"Supplemental","index":20,"rows":[13441]}', '{"to":"47-2132","tier":"Supplemental","index":20,"rows":[13441]},\n        {"to":"29-1141","tier":"Supplemental","index":20,"rows":[]}'), /47-2111 -> 29-1141: no source row/],
             ['13.json', (s) => s.replace('"to":"11-3031","tier":"Primary-Short","index":3,"rows":[1764,1766]', '"to":"11-3031","tier":"Primary-Short","index":3,"rows":[1764]'), /13-2011 -> 11-3031: rows \[1764\] != every row for the pair \[1764, 1766\]/],
             ['47.json', (s) => s.replace('"47-2111": {\n      "jobZone": 3,', '"47-2111": {\n      "jobZone": 4,'), /47-2111: Job Zone 4 \(\.00\) != 3 \(\.00\)/],
+            // A combined job's link that also lists a part's sub-code row (the rule before this PR's Part A).
+            ['29.json', (s) => s.replace('{"to":"29-2031","tier":"Primary-Short","index":5,"rows":[8706,8786]}', '{"to":"29-2031","tier":"Primary-Short","index":5,"rows":[8706,8735,8786]}'), /29-2010 -> 29-2031: line 8735 is from 29-2011\.01, but 29-2011\.00 has rows/],
         ];
         for (const [file, edit, message] of cases) {
             const tmp = tmpCopy();
@@ -270,6 +272,39 @@ describe('links match the raw O*NET file', () => {
         }
         expect(job.jobZone).toBeNull();
         expect(job.jobZoneRule).toBe('mixed');
+    });
+
+    it('a combined job takes each part\'s own .00 rows only (29-2010 and 53-1047), the same rule as its Job Zone', () => {
+        const rows = rawLines.map((text, i) => ({ line: i + 1, cells: text.split('\t') }));
+        // 29-2010 = 29-2011 + 29-2012. Both parts have a .00 code with rows, and sub-codes with rows too.
+        const fromCode = (c: string) => rows.filter((r) => r.cells[0] === c);
+        for (const c of ['29-2011.00', '29-2012.00', '29-2011.01', '29-2011.02', '29-2011.04', '29-2012.01']) expect(fromCode(c)).toHaveLength(20);
+        const job = stored('29-2010');
+        expect(job.onetCodes).toEqual(['29-2011.00', '29-2012.00']);
+        const used = new Set(job.links.flatMap((l) => l.rows));
+        for (const c of ['29-2011.01', '29-2011.02', '29-2011.04', '29-2012.01']) {
+            for (const r of fromCode(c)) expect(used.has(r.line), `${c} line ${r.line}`).toBe(false);
+        }
+        // Every .00 row of both parts is used, except rows between the two parts (self-links).
+        const expected = [...fromCode('29-2011.00'), ...fromCode('29-2012.00')].filter((r) => !/^29-201[12]\./.test(r.cells[1])).map((r) => r.line);
+        expect([...used].sort((a, b) => a - b)).toEqual(expected);
+        expect(job.links).toHaveLength(19);
+        // Its zone reads the same codes: each part's .00 (4 and 3, so mixed).
+        expect(job.jobZoneRule).toBe('mixed');
+        expect(built.mixed.find((m) => m.soc === '29-2010')?.codes.map((c) => c.code)).toEqual(['29-2011.00', '29-2012.00']);
+        // 53-1047: 53-1042.01 is not used, 53-1042.00 is.
+        expect(fromCode('53-1042.01')).toHaveLength(20);
+        expect(stored('53-1047').onetCodes).toEqual(['53-1042.00', '53-1043.00', '53-1044.00']);
+        const used53 = new Set(stored('53-1047').links.flatMap((l) => l.rows));
+        for (const r of fromCode('53-1042.01')) expect(used53.has(r.line)).toBe(false);
+        expect(built.ownCodeChanges.filter((x) => x.combined).map((x) => [x.soc, x.subCodes, x.after])).toEqual([
+            ['29-2010', ['29-2011.01', '29-2011.02', '29-2011.04', '29-2012.01'], 19],
+            ['53-1047', ['53-1042.01'], 23],
+        ]);
+        // A part with no .00 code still uses its sub-code: 47-4090 = 47-4091.00 + 47-4099.03 (47-4099.00 has no rows).
+        expect(fromCode('47-4099.00')).toHaveLength(0);
+        expect(stored('47-4090').onetCodes).toEqual(['47-4091.00', '47-4099.03']);
+        expect(built.counts.links).toBe(14_896);
     });
 
     it('stores no self-link, and every link has source rows naming its own job and its target', () => {

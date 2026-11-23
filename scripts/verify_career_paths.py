@@ -20,10 +20,14 @@ seven-character SOC if that SOC is one of the app's 830 jobs; otherwise to the
 combined job whose parts (src/config/onetSplitCodes.ts, read as text) include
 that SOC; otherwise it is unmapped.
 
-Link rule (own code first, decided 2026-11-22): a job whose own .00 code has
-rows in Related Occupations.txt uses only those rows; a job with no .00 code
-uses the rows of every code that maps to it. A related code always maps to
-its job by the mapping rule (a sub-code to its parent).
+Link rule (own code first, decided 2026-11-22, by part): a code's "part" is
+its seven-character SOC (the job itself, or one piece of a combined job).
+When a part's .00 code has rows in Related Occupations.txt, only that code's
+rows are used for the part; a part with no .00 code uses all of its codes. So
+a job with its own .00 uses only it, a combined job (29-2010) uses each part's
+.00 (never 29-2011.01/.02/.04 or 29-2012.01), and a SOC with only sub-codes
+(15-1299) uses every sub-code: the same rule as the Job Zone below. A related
+code always maps to its job by the mapping rule (a sub-code to its parent).
 
 USAGE
   python3 scripts/verify_career_paths.py [--root <dir>]
@@ -120,9 +124,10 @@ def main():
     for line, r in zone_rows:
         zone_of[r["O*NET-SOC Code"]] = (int(r["Job Zone"]), line)
 
-    # Jobs whose own .00 code has rows: only those rows are used.
-    own_code = {r["O*NET-SOC Code"][:7] for _, r in related
-                if r["O*NET-SOC Code"].endswith(".00") and r["O*NET-SOC Code"][:7] in app}
+    # Parts (a code's seven-character SOC) whose .00 code has rows: only those rows are used.
+    part_own = {r["O*NET-SOC Code"][:7] for _, r in related
+                if r["O*NET-SOC Code"].endswith(".00") and to_app(r["O*NET-SOC Code"]) is not None}
+    own_code = {p for p in part_own if p in app}  # jobs with their own .00 code
     pair_rows = defaultdict(list)  # (from_soc, to_soc) -> [(tier_rank, index, line)]
     codes_of = defaultdict(set)    # every code that maps to the job
     used_codes = defaultdict(set)  # the codes whose rows are used
@@ -137,7 +142,7 @@ def main():
         if fa is None:
             unmapped_rows += 1
             continue
-        if fa in own_code and a != fa + ".00":
+        if a[:7] in part_own and not a.endswith(".00"):
             not_own_rows += 1
             continue
         used_codes[fa].add(a)
@@ -186,6 +191,9 @@ def main():
             fail(f"{soc}: onetCodes {job['onetCodes']} != {sorted(used_codes[soc])}")
         if soc in own_code and job["onetCodes"] != [soc + ".00"]:
             fail(f"{soc}: has its own .00 code but uses {job['onetCodes']}")
+        by_part = sorted(c for c in codes_of[soc] if c.endswith(".00") or c[:7] not in part_own)
+        if job["onetCodes"] != by_part:
+            fail(f"{soc}: onetCodes {job['onetCodes']} != each part's .00, else its codes {by_part}")
         keys = []
         targets = set()
         for l in job["links"]:
@@ -225,12 +233,13 @@ def main():
         fail(f"{len(missing_pairs)} pairs in the file have no stored link, e.g. {missing_pairs[:3]}")
     if len(seen_lines) + self_rows + unmapped_rows + not_own_rows != len(related):
         fail(f"rows: {len(seen_lines)} linked + {self_rows} self + {unmapped_rows} unmapped + {not_own_rows} not own code != {len(related)}")
-    # A job with its own .00 code: no stored row comes from any other code.
-    for soc in own_code & set(stored):
-        for l in stored[soc]["links"]:
+    # No stored row comes from a sub-code whose part has its own .00 code.
+    for soc, job in stored.items():
+        for l in job["links"]:
             for line in l["rows"]:
-                if by_line[line]["O*NET-SOC Code"] != soc + ".00":
-                    fail(f"{soc} -> {l['to']}: line {line} is from {by_line[line]['O*NET-SOC Code']}, not {soc}.00")
+                c = by_line[line]["O*NET-SOC Code"]
+                if c[:7] in part_own and not c.endswith(".00"):
+                    fail(f"{soc} -> {l['to']}: line {line} is from {c}, but {c[:7]}.00 has rows")
 
     # ── Job Zones ──
     zones_file = json.load(open(os.path.join(out_dir, "zones.json"), encoding="utf-8"))["zones"]
@@ -291,7 +300,7 @@ def main():
         f"- Links stored: **{n(links_total)}**",
         f"- {n(self_rows)} rows are self-links",
         f"- {n(unmapped_rows)} rows touch an unmapped code",
-        f"- {n(not_own_rows)} rows come from sub-codes of a job that has its own .00 code and are not used",
+        f"- {n(not_own_rows)} rows come from sub-codes whose own .00 code (the job's, or a part's) has rows, and are not used",
         f"**\"{LABEL}\"**",
     ]
     for w in want:
@@ -310,9 +319,11 @@ def main():
     print("Career paths, checked against the raw O*NET 30.1 files")
     print(f"  {len(sources['files'])} inputs sha256 OK; {on['version']}, {on['release']}, {on['license']}")
     print(f"  {len(stored)} jobs stored, {counts['noData']} no data; {links_total:,} links from {len(seen_lines):,} rows; "
-          f"{self_rows} self-link rows, {unmapped_rows} unmapped rows and {not_own_rows:,} sub-code rows of jobs with their own .00 not used; "
+          f"{self_rows} self-link rows, {unmapped_rows} unmapped rows and {not_own_rows:,} sub-code rows whose part has its own .00 not used; "
           f"every one of {len(related):,} rows accounted for")
-    print(f"  own code first: {len(own_code & set(stored))} jobs use only their .00 rows, {len(set(stored) - own_code)} merge every code")
+    combined_own = sorted(s for s in set(stored) - own_code if any(c.endswith(".00") for c in stored[s]["onetCodes"]))
+    print(f"  own code first: {len(own_code & set(stored))} jobs use only their .00 rows, {len(combined_own)} combined jobs use each part's .00, "
+          f"{len(set(stored) - own_code) - len(combined_own)} use their sub-codes")
     print(f"  {counts['withLinks']} jobs with at least 1 link, {counts['withFivePlus']} with 5 or more")
     print(f"  Job Zones: {counts['withJobZone']} set, {len(mixed)} mixed ({', '.join(mixed)})")
     print(f"  unmapped codes: {', '.join(sorted(unmapped_codes))}")

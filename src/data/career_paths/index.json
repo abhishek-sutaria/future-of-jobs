@@ -12,7 +12,10 @@
       "url": "https://www.onetcenter.org/dl_files/database/db_30_1_text.zip",
       "license": "CC BY 4.0",
       "licenseUrl": "https://www.onetcenter.org/license_db.html",
-      "attribution": "This page includes information from the O*NET 30.1 Database by the U.S. Department of Labor, Employment and Training Administration (USDOL/ETA). Used under the CC BY 4.0 license. O*NET® is a trademark of USDOL/ETA.",
+      "attribution": "This page includes information from the O*NET 30.1 Database by the U.S. Department of Labor, Employment and Training Administration (USDOL/ETA). Used under the CC BY 4.0 license. O*NET® is a trademark of USDOL/ETA. Future of Jobs has modified all or some of this information. USDOL/ETA has not approved, endorsed, or tested these modifications.",
+      "attributionSource": "https://www.onetcenter.org/license_db.html",
+      "databaseUrl": "https://www.onetcenter.org/database.html",
+      "licenseDeedUrl": "https://creativecommons.org/licenses/by/4.0/",
       "files": [
         {
           "path": "data/db_30_1_text/Related Occupations.txt",

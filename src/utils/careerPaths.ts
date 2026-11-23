@@ -52,7 +52,20 @@ interface CareerPathsIndex {
     _meta: {
         label: string;
         notMeaning: string;
-        source: { name: string; version: string; release: string; url: string; license: string; licenseUrl: string; attribution: string };
+        source: {
+            name: string;
+            version: string;
+            release: string;
+            url: string;
+            license: string;
+            licenseUrl: string;
+            /** O*NET's own credit line (docs/career-paths.md says where it was copied from). */
+            attribution: string;
+            attributionSource: string;
+            /** O*NET's links in the credit line: on "<version> Database" and on "<license>". */
+            databaseUrl: string;
+            licenseDeedUrl: string;
+        };
         tiers: CareerTier[];
         jobZoneNames: Record<string, string>;
     };
