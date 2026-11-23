@@ -13,7 +13,12 @@
  *   - the header button is there on desktop and on a phone, and the panels'
  *     "Career paths" button opens the view on that job;
  *   - the honest labels: title, subtitle, the source line and O*NET's credit
- *     line word for word.
+ *     line word for word;
+ *   - with no job picked: one search box and nothing else (no suggested jobs),
+ *     results with field, AI colour, the typed letters marked and a note on
+ *     the 47 jobs with no links; Enter opens the top result;
+ *   - an empty level gets no column, and the centre card says so; full job
+ *     titles, never cut short.
  */
 
 import { describe, it, expect, vi, beforeAll, beforeEach, afterEach } from 'vitest';
@@ -27,14 +32,18 @@ import { useWorldStore } from '../worldStore';
 import { useStore } from '../store';
 import { aiExposureFor, CAREER_PATHS_SOURCE, getCareerPaths, payChangeFor } from '../utils/careerPaths';
 import { roleScaleFor } from '../utils/allRoleScale';
-import { INDEX_OCCUPATION_BY_SOC } from '../utils/occupationIndex';
+import { INDEX_OCCUPATION_BY_SOC, OCCUPATION_INDEX } from '../utils/occupationIndex';
+import { getRoleEntries, searchRoles } from '../utils/roles';
 import {
+    CAREER_PATHS_HERO_LINE,
     CAREER_PATHS_SOURCE_LINE,
     CAREER_PATHS_SUBTITLE,
     CAREER_PATHS_TITLE,
     cardFor,
     DEFAULT_SHOWN,
     groupOf,
+    NO_LINKS_NOTE,
+    NO_MATCH_TEXT,
     NO_RELATED_TEXT,
     payChangeExact,
     SHOW_MORE_STEP,
@@ -64,6 +73,16 @@ async function until(cond: () => unknown, what: string) {
 const loaded = () => until(() => q('[data-testid="career-count"]') || q('[data-testid="career-no-links"]'), 'the related jobs');
 const centreSoc = () => q('[data-testid="career-centre"]')?.getAttribute('data-soc');
 const click = (el: Element) => act(async () => { (el as HTMLElement).click(); });
+const key = (el: Element, k: string) => act(async () => { el.dispatchEvent(new KeyboardEvent('keydown', { key: k, bubbles: true, cancelable: true })); });
+/** Type into the search box the way React sees it. */
+async function type(input: HTMLInputElement, text: string) {
+    await act(async () => {
+        input.focus();
+        Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value')!.set!.call(input, text);
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+}
+const options = () => qa('[role="listbox"] [role="option"]');
 
 async function openOn(soc: string, width: number) {
     useWorldStore.setState({ careerPathsOpen: true, careerTrail: [soc], careerRoleKey: null });
@@ -73,7 +92,7 @@ async function openOn(soc: string, width: number) {
 
 beforeAll(() => {
     window.matchMedia = ((query: string) => ({
-        matches: query.includes('prefers-reduced-motion') ? true : query.includes('max-width: 767px') ? phone : false,
+        matches: query.includes('prefers-reduced-motion') ? true : query.includes('max-width: 767px') || query.includes('pointer: coarse') ? phone : false,
         media: query, onchange: null,
         addEventListener: () => {}, removeEventListener: () => {}, addListener: () => {}, removeListener: () => {},
         dispatchEvent: () => false,
@@ -175,6 +194,150 @@ describe('cards and arrows are exactly the stored O*NET links', () => {
         expect(chip.title).toContain(payChangeExact(pay!.kind === 'change' ? pay!.difference : 0));
         // Bookkeeping clerks: a step down, and a pay cut written with a real minus sign.
         expect(q('[data-career-card="43-3031"]')!.getAttribute('aria-label')).toMatch(/^Bookkeeping, Accounting, and Auditing Clerks, step down, pay −\$\d{1,3},\d{3}, AI Exposure (green|amber|red)$/);
+    });
+});
+
+describe('the empty state: one search box, no suggested jobs', () => {
+    const openEmpty = async () => {
+        useWorldStore.setState({ careerPathsOpen: true, careerTrail: [], careerRoleKey: null });
+        await act(async () => root.render(<CareerPathsView layoutWidth={DESKTOP} />));
+    };
+
+    it('shows the title, one line and one search box, nothing else; the top bar has only the close button', async () => {
+        await openEmpty();
+        const dialog = q('[data-career-paths]')!;
+        const empty = q('[data-testid="career-empty"]')!;
+        expect(empty.querySelector('h2')!.textContent).toBe('Career Paths');
+        expect(document.getElementById(dialog.getAttribute('aria-labelledby')!)).toBe(empty.querySelector('h2'));
+        expect(document.getElementById(dialog.getAttribute('aria-describedby')!)!.textContent).toBe(CAREER_PATHS_HERO_LINE);
+        expect(CAREER_PATHS_HERO_LINE).toBe('Search any job to see similar jobs you could move to.');
+        // Exactly one search box (the hero one) and no other button than Close: no starter jobs.
+        expect(qa('[data-career-search]')).toHaveLength(1);
+        expect(q('[data-career-search-box="hero"]')).not.toBeNull();
+        expect(qa('[data-career-paths] button').map((b) => b.getAttribute('aria-label') ?? b.textContent)).toEqual(['Close Career Paths']);
+        for (const t of ['Registered Nurses', 'Electricians', 'Accountants and Auditors']) expect(dialog.textContent).not.toContain(t);
+        expect(q('header')!.querySelector('[data-career-search]')).toBeNull();
+        // 16px text on a phone (no iOS zoom), larger on a desktop.
+        expect(q('[data-career-search]')!.className).toContain('text-base md:text-lg');
+        // Desktop: the box has focus.
+        expect(document.activeElement).toBe(q('[data-career-search]'));
+        noClaude();
+    });
+
+    it('on a phone the search is not focused on opening (no keyboard jumps up)', async () => {
+        phone = true;
+        await openEmpty();
+        expect(document.activeElement).not.toBe(q('[data-career-search]'));
+        expect(document.activeElement).toBe(q('[data-career-paths]'));
+    });
+
+    it('finds "nurse" and "account": title, field and AI colour, the typed letters marked; Enter opens the top result', async () => {
+        await openEmpty();
+        const input = q<HTMLInputElement>('[data-career-search]')!;
+        await type(input, 'nurse');
+        expect(input.getAttribute('aria-expanded')).toBe('true');
+        const first = options()[0];
+        expect(first.dataset.soc).toBe('29-1141');
+        expect(first.textContent).toContain('Registered Nurses');
+        expect(first.textContent).toContain('Healthcare Practitioners');
+        expect(first.querySelector('mark')!.textContent).toBe('Nurse');
+        expect((first.querySelector('span[aria-hidden="true"]') as HTMLElement).style.backgroundColor).not.toBe('');
+        expect(first.textContent).toMatch(/AI Exposure (green|amber|red)$/);
+        expect(input.getAttribute('aria-activedescendant')).toBe(first.id);
+        // Down moves the highlight, up comes back.
+        await key(input, 'ArrowDown');
+        expect(input.getAttribute('aria-activedescendant')).toBe(options()[1].id);
+        await key(input, 'ArrowUp');
+        expect(input.getAttribute('aria-activedescendant')).toBe(first.id);
+
+        await type(input, 'account');
+        const socs = options().map((o) => o.dataset.soc);
+        expect(socs).toContain('13-2011');
+        const top = socs[0]!;
+        await key(input, 'Enter');
+        await loaded();
+        expect(useWorldStore.getState().careerTrail).toEqual([top]);
+        expect(centreSoc()).toBe(top);
+        // The search moved to the top bar.
+        expect(q('[data-career-search-box="bar"]')).not.toBeNull();
+        expect(q('[data-testid="career-empty"]')).toBeNull();
+        noClaude();
+    });
+
+    it('says "No jobs match"; Esc closes the list first, then the view', async () => {
+        await openEmpty();
+        const input = q<HTMLInputElement>('[data-career-search]')!;
+        await type(input, 'zzqx');
+        expect(q('[data-testid="career-no-match"]')!.textContent).toBe(NO_MATCH_TEXT);
+        await type(input, 'nurse');
+        await key(input, 'Escape');
+        expect(input.getAttribute('aria-expanded')).toBe('false');
+        expect(useWorldStore.getState().careerPathsOpen).toBe(true);
+        await key(input, 'Escape');
+        expect(useWorldStore.getState().careerPathsOpen).toBe(false);
+    });
+
+    it('lists the 47 jobs with no links too, with a grey "no related jobs listed" note; search covers all 830 jobs', async () => {
+        await openEmpty();
+        const input = q<HTMLInputElement>('[data-career-search]')!;
+        await type(input, 'education administrators');
+        expect(options().map((o) => o.dataset.soc)).toEqual(expect.arrayContaining(['11-9032', '11-9039']));
+        const hit = options().find((o) => o.dataset.soc === '11-9039')!;
+        expect(hit.querySelector('[data-testid="career-no-links-note"]')!.textContent).toBe(` · ${NO_LINKS_NOTE}`);
+        expect(options().find((o) => o.dataset.soc === '11-9032')!.querySelector('[data-testid="career-no-links-note"]')).toBeNull();
+        // Every one of the 830 jobs is found by its BLS title.
+        const entries = getRoleEntries(useStore.getState().jobs);
+        const missing = OCCUPATION_INDEX.occupations.filter((o) => !searchRoles(entries, o.title).some((e) => e.soc === o.soc)).map((o) => o.soc);
+        expect(missing).toEqual([]);
+    });
+});
+
+describe('empty levels and full titles', () => {
+    it('Accountants and Auditors: no Step up column; the centre card says "No step-up jobs listed"', async () => {
+        await openOn('13-2011', DESKTOP);
+        expect(q('[data-career-list="up"]')).toBeNull();
+        expect(q('[data-testid="career-stage"]')!.textContent).not.toContain('Step up');
+        expect(q('[data-testid="career-absent"]')!.textContent).toBe('No step-up jobs listed');
+        // Phone too.
+        act(() => root.unmount());
+        root = createRoot(container);
+        await openOn('13-2011', PHONE);
+        expect(qa('[data-career-list]').map((l) => l.dataset.careerList)).toEqual(['same', 'down']);
+        expect(q('[data-testid="career-absent"]')!.textContent).toBe('No step-up jobs listed');
+    });
+
+    it('a level that only appears further down says "in the 10 shown", and shows up after "Show more"', async () => {
+        // Financial Examiners: its one step-up job is past the first 10.
+        const cp = (await getCareerPaths('13-2061'))!;
+        expect(cp.links.slice(0, 10).some((l) => l.direction === 'up')).toBe(false);
+        expect(cp.links.some((l) => l.direction === 'up')).toBe(true);
+        await openOn('13-2061', DESKTOP);
+        expect(q('[data-testid="career-absent"]')!.textContent).toBe('No step-up jobs in the 10 shown');
+        await click(q('[data-testid="career-show-more"]')!);
+        expect(q('[data-career-list="up"]')).not.toBeNull();
+        expect(q('[data-testid="career-absent"]')).toBeNull();
+    });
+
+    it('Registered Nurses has no same-level job at all, and says so', async () => {
+        await openOn('29-1141', DESKTOP);
+        expect(q('[data-career-list="same"]')).toBeNull();
+        expect(q('[data-testid="career-absent"]')!.textContent).toBe('No same-level jobs listed');
+    });
+
+    it('shows every job title in full: no "..." and the card grows instead', async () => {
+        // First-Line Supervisors of Transportation and Material Moving Workers, Except Aircraft Cargo Handling Supervisors.
+        await openOn('53-1047', DESKTOP);
+        expect(q('[data-testid="career-centre-title"]')!.textContent).toBe(INDEX_OCCUPATION_BY_SOC.get('53-1047')!.title);
+        expect(q('[data-testid="career-centre-title"]')!.className).not.toMatch(/line-clamp|truncate/);
+        const titles = qa('[data-testid="career-card-title"]');
+        expect(titles.length).toBeGreaterThan(0);
+        for (const t of titles) {
+            expect(t.className).not.toMatch(/line-clamp|truncate/);
+            expect(t.textContent).toBe(INDEX_OCCUPATION_BY_SOC.get(t.closest('[data-career-card]')!.getAttribute('data-career-card')!)!.title);
+        }
+        // A long title's card is taller than a one-line card.
+        const heights = qa('[data-career-card]').map((b) => parseFloat(b.style.height));
+        expect(Math.max(...heights)).toBeGreaterThan(Math.min(...heights));
     });
 });
 

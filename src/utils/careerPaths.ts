@@ -69,7 +69,7 @@ interface CareerPathsIndex {
         tiers: CareerTier[];
         jobZoneNames: Record<string, string>;
     };
-    coverage: { jobs: number; withLinks: number; withFivePlus: number; noData: number; withJobZone: number; mixedZones: string[] };
+    coverage: { jobs: number; withLinks: number; withFivePlus: number; noData: number; withJobZone: number; mixedZones: string[]; noLinks: string[] };
 }
 
 const INDEX = indexJson as CareerPathsIndex;
@@ -82,6 +82,8 @@ export const CAREER_PATHS_SOURCE: Readonly<CareerPathsIndex['_meta']['source']> 
 export const JOB_ZONE_NAMES: Readonly<Record<string, string>> = INDEX._meta.jobZoneNames;
 /** How many of the 830 jobs have links, and which have mixed zones (docs/career-paths.md). */
 export const CAREER_PATHS_COVERAGE: Readonly<CareerPathsIndex['coverage']> = INDEX.coverage;
+/** The jobs O*NET lists no related jobs for (the 47 with no O*NET data), from the small index: no chunk load. */
+export const CAREER_PATHS_NO_LINKS: ReadonlySet<string> = new Set(INDEX.coverage.noLinks);
 
 // Lazy chunks. The [0-9][0-9] pattern keeps index.json (imported above) and zones.json out of the first glob.
 const FIELD_LOADERS = import.meta.glob<FieldChunk>('../data/career_paths/[0-9][0-9].json', { import: 'default' });

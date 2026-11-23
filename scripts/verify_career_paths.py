@@ -286,6 +286,9 @@ def main():
             fail(f"index.json coverage.{k} = {index['coverage'][k]}, counted {v}")
     if sorted(index["coverage"]["mixedZones"]) != sorted(mixed):
         fail("index.json mixedZones differ")
+    no_links = [s for s in app if n_links.get(s, 0) == 0]
+    if index["coverage"].get("noLinks") != no_links:
+        fail(f"index.json noLinks ({len(index['coverage'].get('noLinks', []))}) != jobs with no stored link ({len(no_links)})")
     if index["_meta"]["label"] != LABEL:
         fail(f"label is {index['_meta']['label']!r}")
 

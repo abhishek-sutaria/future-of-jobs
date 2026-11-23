@@ -1,17 +1,23 @@
 /**
  * Where every card and arrow of the desktop Career Paths screen goes. Pure
- * geometry, worked out from the card counts and the width alone, so the same
- * input always draws the same picture, and careerPathsLayout.test.ts can prove
- * for every job that no two cards overlap, no arrow runs under a card and no
- * two arrows cross.
+ * geometry from the cards, their heights and the width, so the same input
+ * always draws the same picture, and careerPathsLayout.test.ts can prove for
+ * every job that no two cards overlap, no arrow runs under a card or heading,
+ * no two arrows cross and nothing leaves the canvas.
  *
  *   Step down        |        centre card         |        Step up
  *   (left lane)      |   Same level, two columns  |     (right lane)
  *                    |   either side of a channel |
  *
- * Three lanes, left to right by level: the x axis is the O*NET Job Zone. The
- * centre card heads the middle lane, as wide as it. "Level not available" is
- * a fourth small group at the foot of the shorter side lane.
+ * Left to right is the O*NET Job Zone. The centre card heads the middle lane,
+ * as wide as it. "Level not available" is a fourth small group at the foot of
+ * the shorter side lane. A group with no card gets no lane and no heading
+ * (the view says "No step-up jobs listed" on the centre card instead); the
+ * lanes left are centred, and the middle lane takes the room, up to MID_MAX.
+ *
+ * Heights: a card is as tall as its full title needs (no "..."): the caller
+ * passes cardHeight(soc, width), worked out by cardHeightFor from the title's
+ * measured width. The two Same level cards of a row share the taller height.
  *
  * Arrows, one per card (one stored O*NET link each):
  *   - side lanes: a curve from the centre card's side edge to the card's inner
@@ -20,7 +26,7 @@
  *     in a gutter has the same x(t), so they never cross.
  *   - same level: from the centre card's bottom edge straight down its own
  *     lane in the channel, then a rounded turn into the card's channel-facing
- *     edge. The nearest card's lane is next to the cards, each farther card's
+ *     edge. The nearest row's lane is next to the cards, each farther row's
  *     one step further out, so a turn never cuts another lane.
  */
 
@@ -81,10 +87,22 @@ export interface DesktopLayout {
 /** Below this content width the screen uses the stacked (phone) layout. */
 export const DESKTOP_MIN_WIDTH = 1080;
 
-export const CARD_H = 64;
+/** A card is never shorter than this (one title line), whatever its title. */
+export const CARD_MIN_H = 60;
+/** Card height without its title: 2 x 8px padding, 2px border, 2px gap, 16px pay/AI line. */
+const CARD_BASE_H = 36;
+/** One title line on a card (13px, leading 16px). */
+export const CARD_LINE_H = 16;
 export const CARD_GAP = 10;
 export const HEADING_H = 40;
-export const CENTRE_H = 196;
+/** The centre card with a title of up to two lines. */
+export const CENTRE_H = 206;
+/** One centre title line (20px, leading-snug). */
+const CENTRE_LINE_H = 28;
+/** The muted "No step-up jobs listed" line on the centre card. */
+export const CENTRE_NOTE_H = 24;
+/** The middle lane never grows wider than this when a side lane is missing. */
+export const MID_MAX = 780;
 export const GUTTER = 76;
 /** Space between the centre card and the Same level cards (their heading sits here). */
 export const SAME_TOP_GAP = 52;
@@ -159,90 +177,155 @@ function channelArrow(soc: string, laneX: number, y0: number, cardX: number, y1:
     return { soc, group: 'same', kind: 'channel', d, points, end: { x: cardX, y: y1 }, dir };
 }
 
+export interface LayoutOptions {
+    /** False when the centre job itself has no Job Zone (mixed): see desktopLayout. */
+    levels?: boolean;
+    /** A card's height at a width (cardHeightFor with its title). Default: CARD_MIN_H. */
+    cardHeight?: (soc: string, width: number) => number;
+    /** The centre card's height at a width (centreHeightFor). Default: CENTRE_H. */
+    centreHeight?: (width: number) => number;
+}
+
 /**
  * The desktop picture for one centre job. `width` is the content width
  * (DESKTOP_MIN_WIDTH or more). Cards are in the order given (O*NET order).
- * `levels` is false when the centre job itself has no Job Zone (mixed): then
- * every link is "Level not available", split between the two side lanes
- * (first, third, ... on the left), and there are no Step up / Same level /
- * Step down headings at all.
+ * With `levels` false (the centre job has no Job Zone) every link is "Level
+ * not available", split between the two side lanes (first, third, ... on the
+ * left), with no Step up / Same level / Step down at all.
  */
-export function desktopLayout(groups: GroupSocs, width: number, levels = true): DesktopLayout {
+export function desktopLayout(groups: GroupSocs, width: number, opts: LayoutOptions = {}): DesktopLayout {
+    const levels = opts.levels ?? true;
+    const cardHeight = opts.cardHeight ?? (() => CARD_MIN_H);
+    // "Level not available" joins the shorter side lane (the right one on a tie).
+    const noneSide: 'left' | 'right' = groups.down.length < groups.up.length ? 'left' : 'right';
+    type LaneGroup = { group: CareerGroupId; socs: readonly string[] };
+    const wanted: Record<'left' | 'right', LaneGroup[]> = levels
+        ? {
+              left: [{ group: 'down', socs: groups.down }, ...(noneSide === 'left' ? [{ group: 'none' as const, socs: groups.none }] : [])],
+              right: [{ group: 'up', socs: groups.up }, ...(noneSide === 'right' ? [{ group: 'none' as const, socs: groups.none }] : [])],
+          }
+        : { left: [{ group: 'none', socs: groups.none.filter((_, i) => i % 2 === 0) }], right: [{ group: 'none', socs: groups.none.filter((_, i) => i % 2 === 1) }] };
+    // A group with no card gets no lane, no heading and no space.
+    const left = wanted.left.filter((g) => g.socs.length > 0);
+    const right = wanted.right.filter((g) => g.socs.length > 0);
+
     const sideW = Math.round(Math.min(300, Math.max(220, width * 0.22)));
-    const midX = sideW + GUTTER;
-    const midW = width - 2 * (sideW + GUTTER);
+    const sides = (left.length > 0 ? 1 : 0) + (right.length > 0 ? 1 : 0);
+    const midW = Math.min(MID_MAX, width - sides * (sideW + GUTTER));
+    const x0 = Math.round((width - midW - sides * (sideW + GUTTER)) / 2);
+    const leftX = x0;
+    const midX = x0 + (left.length > 0 ? sideW + GUTTER : 0);
     const rightX = midX + midW + GUTTER;
-    const centre: Rect = { x: midX, y: 0, w: midW, h: CENTRE_H };
+    const centre: Rect = { x: midX, y: 0, w: midW, h: Math.max(CENTRE_H, opts.centreHeight?.(midW) ?? CENTRE_H) };
     const cards: LaidCard[] = [];
     const arrows: LaidArrow[] = [];
     const headings: LaidHeading[] = [];
 
-    // "Level not available" joins the shorter side lane (the right one on a tie).
-    const noneSide: 'left' | 'right' = groups.down.length < groups.up.length ? 'left' : 'right';
-    type LaneGroup = { group: CareerGroupId; socs: readonly string[] };
-    const lanes: { side: 'left' | 'right'; x: number; list: LaneGroup[] }[] = levels
-        ? [
-              { side: 'left', x: 0, list: [{ group: 'down', socs: groups.down }, ...(noneSide === 'left' ? [{ group: 'none' as const, socs: groups.none }] : [])] },
-              { side: 'right', x: rightX, list: [{ group: 'up', socs: groups.up }, ...(noneSide === 'right' ? [{ group: 'none' as const, socs: groups.none }] : [])] },
-          ]
-        : [
-              { side: 'left', x: 0, list: [{ group: 'none', socs: groups.none.filter((_, i) => i % 2 === 0) }] },
-              { side: 'right', x: rightX, list: [{ group: 'none', socs: groups.none.filter((_, i) => i % 2 === 1) }] },
-          ];
-
-    let height = CENTRE_H;
-    for (const lane of lanes) {
+    let height = centre.h;
+    for (const lane of [{ side: 'left' as const, x: leftX, list: left }, { side: 'right' as const, x: rightX, list: right }]) {
         let y = 0;
-        const placed: { soc: string; group: CareerGroupId; rect: Rect }[] = [];
-        for (const { group, socs } of lane.list) {
-            // The lane's main group always shows its heading (an empty Step up says so);
-            // "Level not available" only when it has cards.
-            if (group === 'none' && socs.length === 0) continue;
-            if (!levels && socs.length === 0) continue;
-            if (placed.length > 0 || y > 0) y += GROUP_GAP;
+        const placed: LaidCard[] = [];
+        lane.list.forEach(({ group, socs }, i) => {
+            if (i > 0) y += GROUP_GAP;
             headings.push({ group, x: lane.x, y, w: sideW, count: socs.length });
             y += HEADING_H;
             for (const soc of socs) {
-                placed.push({ soc, group, rect: { x: lane.x, y, w: sideW, h: CARD_H } });
-                y += CARD_H + CARD_GAP;
+                const h = Math.max(CARD_MIN_H, cardHeight(soc, sideW));
+                placed.push({ soc, group, rect: { x: lane.x, y, w: sideW, h } });
+                y += h + CARD_GAP;
             }
-        }
+        });
         height = Math.max(height, y);
         // Fan the start points down the centre's side edge in card order.
         const top = centre.y + FAN_INSET;
         const span = centre.h - 2 * FAN_INSET;
         placed.forEach((c, i) => {
             const y0 = placed.length === 1 ? centre.y + centre.h / 2 : top + (span * i) / (placed.length - 1);
-            const x0 = lane.side === 'left' ? centre.x : centre.x + centre.w;
-            const x1 = lane.side === 'left' ? c.rect.x + c.rect.w : c.rect.x;
-            arrows.push(sideArrow(c.soc, c.group, x0, y0, x1, c.rect.y + c.rect.h / 2));
+            const xa = lane.side === 'left' ? centre.x : centre.x + centre.w;
+            const xb = lane.side === 'left' ? c.rect.x + c.rect.w : c.rect.x;
+            arrows.push(sideArrow(c.soc, c.group, xa, y0, xb, c.rect.y + c.rect.h / 2));
             cards.push(c);
         });
     }
 
     // Same level: two columns either side of the channel, filled left, right, left, ...
-    const same = groups.same;
-    const lanesPerSide = Math.max(1, Math.ceil(same.length / 2));
-    const roomy = ((midW - 2 * SAME_MIN_W - MID_GAP) / 2 - EDGE_PAD) / lanesPerSide;
-    const laneGap = Math.max(LANE_GAP_MIN, Math.min(LANE_GAP, roomy));
-    const channelW = 2 * (EDGE_PAD + lanesPerSide * laneGap) + MID_GAP;
-    const subW = (midW - channelW) / 2;
-    const chLeft = midX + subW;
-    const chRight = chLeft + channelW;
-    const sameTop = CENTRE_H + SAME_TOP_GAP;
-    if (levels) headings.push({ group: 'same', x: midX, y: sameTop - HEADING_H, w: subW, count: same.length });
-    same.forEach((soc, i) => {
-        const left = i % 2 === 0;
-        const row = Math.floor(i / 2);
-        const rect: Rect = { x: left ? midX : chRight, y: sameTop + row * (CARD_H + CARD_GAP), w: subW, h: CARD_H };
-        cards.push({ soc, group: 'same', rect });
-        const laneX = left ? chLeft + EDGE_PAD + row * laneGap : chRight - EDGE_PAD - row * laneGap;
-        arrows.push(channelArrow(soc, laneX, centre.y + centre.h, left ? chLeft : chRight, rect.y + rect.h / 2));
-        height = Math.max(height, rect.y + rect.h);
-    });
-    if (same.length === 0 && levels) height = Math.max(height, sameTop);
+    const same = levels ? groups.same : [];
+    if (same.length > 0) {
+        const lanesPerSide = Math.ceil(same.length / 2);
+        const roomy = ((midW - 2 * SAME_MIN_W - MID_GAP) / 2 - EDGE_PAD) / lanesPerSide;
+        const laneGap = Math.max(LANE_GAP_MIN, Math.min(LANE_GAP, roomy));
+        const channelW = 2 * (EDGE_PAD + lanesPerSide * laneGap) + MID_GAP;
+        const subW = (midW - channelW) / 2;
+        const chLeft = midX + subW;
+        const chRight = chLeft + channelW;
+        const sameTop = centre.h + SAME_TOP_GAP;
+        headings.push({ group: 'same', x: midX, y: sameTop - HEADING_H, w: subW, count: same.length });
+        let y = sameTop;
+        for (let row = 0; row * 2 < same.length; row++) {
+            const pair = same.slice(row * 2, row * 2 + 2);
+            const h = Math.max(CARD_MIN_H, ...pair.map((soc) => cardHeight(soc, subW)));
+            pair.forEach((soc, k) => {
+                const isLeft = k === 0;
+                const rect: Rect = { x: isLeft ? midX : chRight, y, w: subW, h };
+                cards.push({ soc, group: 'same', rect });
+                const laneX = isLeft ? chLeft + EDGE_PAD + row * laneGap : chRight - EDGE_PAD - row * laneGap;
+                arrows.push(channelArrow(soc, laneX, centre.y + centre.h, isLeft ? chLeft : chRight, y + h / 2));
+            });
+            y += h + CARD_GAP;
+        }
+        height = Math.max(height, y - CARD_GAP);
+    }
 
     return { width, height: Math.ceil(height), centre, cards, arrows, headings, noneSide };
+}
+
+// ---------------------------------------------------------------- heights from the titles
+
+/** The text's width in px for one of the screen's three title styles. */
+export type MeasureText = (text: string, style: 'card' | 'chip' | 'centre') => number;
+
+/**
+ * A width estimate with no canvas (tests, jsdom): per character, wider than
+ * Inter and Outfit really are, so it counts too many lines rather than too few.
+ */
+export const roughMeasure: MeasureText = (text, style) => text.length * (style === 'centre' ? 11.5 : style === 'chip' ? 7.6 : 7.4);
+
+/** How many lines `text` takes at `width`, wrapping at spaces like the browser does (a word wider than a line takes as many as it needs). */
+export function linesFor(text: string, width: number, style: 'card' | 'centre', measure: MeasureText): number {
+    const space = measure(' ', style);
+    let lines = 1;
+    let line = 0;
+    for (const word of text.split(/\s+/).filter(Boolean)) {
+        const w = measure(word, style);
+        if (line === 0) {
+            lines += Math.max(0, Math.ceil(w / width) - 1);
+            line = w > width ? w % width : w;
+        } else if (line + space + w <= width) {
+            line += space + w;
+        } else {
+            lines += Math.ceil(w / width);
+            line = w > width ? w % width : w;
+        }
+    }
+    return lines;
+}
+
+/** Padding, border, the AI dot and the gaps beside a card's title, plus 4px to spare. */
+const CARD_SIDE_PX = 24 + 2 + 8 + 8 + 8 + 4;
+
+/** A card's height at `width`: its full title wrapped beside the pay chip. */
+export function cardHeightFor(title: string, chip: string, width: number, measure: MeasureText = roughMeasure): number {
+    const lines = linesFor(title, width - CARD_SIDE_PX - measure(chip, 'chip'), 'card', measure);
+    return Math.max(CARD_MIN_H, CARD_BASE_H + lines * CARD_LINE_H);
+}
+
+/** Padding, border and the "Open job details" button beside the centre title, plus 4px to spare. */
+const CENTRE_SIDE_PX = 48 + 2 + 168 + 4;
+
+/** The centre card's height at `width`: its full title, and the muted absence line when there is one. */
+export function centreHeightFor(title: string, width: number, withNote: boolean, measure: MeasureText = roughMeasure): number {
+    const lines = linesFor(title, width - CENTRE_SIDE_PX, 'centre', measure);
+    return CENTRE_H + Math.max(0, lines - 2) * CENTRE_LINE_H + (withNote ? CENTRE_NOTE_H : 0);
 }
 
 // ---------------------------------------------------------------- checks (used by the test)

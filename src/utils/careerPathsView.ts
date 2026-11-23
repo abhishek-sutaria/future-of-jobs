@@ -56,6 +56,11 @@ export const CAREER_PATHS_SUBTITLE = 'Similar jobs you could move to';
 export const CAREER_PATHS_SOURCE_LINE =
     'Related jobs and levels: O*NET 30.1 (similar skills and work, not records of actual job moves). Pay: BLS OEWS May 2025 median annual wage. AI Exposure: this site\'s scores.';
 export const NO_RELATED_TEXT = 'O*NET lists no related jobs for this one.';
+/** The empty screen's one line, above the search. */
+export const CAREER_PATHS_HERO_LINE = 'Search any job to see similar jobs you could move to.';
+/** Beside a search result O*NET lists no related jobs for (the 47). */
+export const NO_LINKS_NOTE = 'no related jobs listed';
+export const NO_MATCH_TEXT = 'No jobs match';
 export const NO_DATA = 'no data';
 export const NOT_SCORED = 'not scored';
 
@@ -200,4 +205,21 @@ export function centreView(soc: string, paths: CareerPaths | null | undefined, s
         zone,
         zoneText: zone != null ? `Job Zone ${zone}${name ? `: ${name}` : ''}` : paths ? 'Job Zone: level not available' : `Job Zone: ${NO_DATA}`,
     };
+}
+
+const ABSENT_WORD = { up: 'step-up', same: 'same-level', down: 'step-down' } as const;
+
+/**
+ * The muted line on the centre card for each level with no card, so a hidden
+ * column is still stated: "No step-up jobs listed" when none of the job's
+ * links is one, "No step-up jobs in the 10 shown" when some are further down
+ * the list. Nothing for a job with no level (every link is "Level not
+ * available" then) and nothing for "Level not available" itself.
+ */
+export function absentLines(paths: CareerPaths, shown: number): string[] {
+    if (paths.jobZone == null) return [];
+    const visible = paths.links.slice(0, shown);
+    return (['up', 'same', 'down'] as const)
+        .filter((g) => !visible.some((l) => groupOf(l) === g))
+        .map((g) => (paths.links.some((l) => groupOf(l) === g) ? `No ${ABSENT_WORD[g]} jobs in the ${visible.length} shown` : `No ${ABSENT_WORD[g]} jobs listed`));
 }

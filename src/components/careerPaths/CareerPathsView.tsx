@@ -3,8 +3,10 @@
  * showing the jobs O*NET 30.1 lists as related to one job ("Similar jobs you
  * could move to"), sorted by level from O*NET Job Zones: step down on the
  * left, same level under the centre job, step up on the right, and "Level not
- * available" when either job has no single Job Zone. Click a related job and
- * it becomes the centre; the trail at the top walks back.
+ * available" when either job has no single Job Zone. A group with no job is
+ * left out, and a muted line on the centre card says so. Click a related job
+ * and it becomes the centre; the trail at the top walks back. With no job
+ * picked, the page is one search box.
  *
  * NOTHING INVENTED, AND NO CLAUDE CALL. Every card and arrow is one stored
  * O*NET link (utils/careerPaths), in O*NET's order; pay is the BLS OEWS May
@@ -14,9 +16,10 @@
  *
  * Loaded lazily by CareerPathsHost, with utils/careerPaths and its data.
  * Desktop (content width >= DESKTOP_MIN_WIDTH): the lane picture from
- * utils/careerPathsLayout, arrows in one SVG. Narrower (phones, landscape
- * phones, tablets): the groups stacked under the centre card with short
- * vertical connectors.
+ * utils/careerPathsLayout, arrows in one SVG; every card is as tall as its
+ * full title needs, measured with the page's own fonts. Narrower (phones,
+ * landscape phones, tablets): the groups stacked under the centre card with
+ * short vertical connectors.
  */
 
 import React, { useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from 'react';
@@ -24,12 +27,16 @@ import { useStore } from '../../store';
 import { useWorldStore } from '../../worldStore';
 import { Z } from '../../config/layers';
 import { CONTINENT_DISPLAY_NAMES } from '../../config/continents';
-import { CAREER_PATHS_SOURCE, getCareerPaths, type CareerPaths } from '../../utils/careerPaths';
+import { aiExposureFor, CAREER_PATHS_NO_LINKS, CAREER_PATHS_SOURCE, getCareerPaths, type CareerPaths } from '../../utils/careerPaths';
 import { roleScaleFor } from '../../utils/allRoleScale';
 import { continentOf } from '../../utils/occupationIndex';
+import type { RoleScale } from '../../utils/roleScale';
 import { getRoleEntries, searchRoles, type RoleEntry } from '../../utils/roles';
 import { isChunkLoadError, reloadForNewBuild } from '../../utils/staleBuild';
 import {
+    absentLines,
+    aiView,
+    CAREER_PATHS_HERO_LINE,
     CAREER_PATHS_SOURCE_LINE,
     CAREER_PATHS_SUBTITLE,
     CAREER_PATHS_TITLE,
@@ -39,6 +46,8 @@ import {
     GROUP_LABEL,
     groupCards,
     NO_DATA,
+    NO_LINKS_NOTE,
+    NO_MATCH_TEXT,
     NO_RELATED_TEXT,
     PHONE_GROUP_ORDER,
     SHOW_MORE_STEP,
@@ -48,7 +57,17 @@ import {
     type CareerGroupId,
     type CentreView,
 } from '../../utils/careerPathsView';
-import { DESKTOP_MIN_WIDTH, desktopLayout, HEADING_H, type DesktopLayout, type LaidArrow } from '../../utils/careerPathsLayout';
+import {
+    cardHeightFor,
+    centreHeightFor,
+    DESKTOP_MIN_WIDTH,
+    desktopLayout,
+    HEADING_H,
+    roughMeasure,
+    type DesktopLayout,
+    type LaidArrow,
+    type MeasureText,
+} from '../../utils/careerPathsLayout';
 import { CloseButton } from '../ui/CloseButton';
 import { IconArrowRight, IconCareerPaths, IconSearch } from '../ui/Icons';
 
@@ -57,11 +76,57 @@ interface Props {
     layoutWidth?: number;
 }
 
-/** Three jobs to start from when nothing is picked yet. Real jobs, nothing more. */
-const STARTERS = ['29-1141', '47-2111', '13-2011'];
 const DESKTOP_ORDER: readonly CareerGroupId[] = ['down', 'same', 'up', 'none'];
 
 const prefersReducedMotion = () => typeof window !== 'undefined' && typeof window.matchMedia === 'function' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/** A desktop: a fine pointer and room for the lanes' header. Phones and tablets get no autofocus, so no keyboard jumps up. */
+const isDesktopPointer = () =>
+    typeof window !== 'undefined' && typeof window.matchMedia === 'function' && !window.matchMedia('(pointer: coarse)').matches && !window.matchMedia('(max-width: 767px)').matches;
+
+/** The text shown in a card's pay chip (the layout measures it beside the title). */
+const chipText = (card: CareerCard) => (card.pay.short === NO_DATA ? 'pay: no data' : card.pay.short);
+
+/** The three title styles, measured on a canvas in the page's own fonts, once they have loaded. */
+const FONTS: Record<Parameters<MeasureText>[1], string> = {
+    card: '500 13px Inter, sans-serif',
+    chip: '600 12px Inter, sans-serif',
+    centre: '600 20px Outfit, sans-serif',
+};
+
+function useTextMeasure(): MeasureText {
+    const [fontsReady, setFontsReady] = useState(0);
+    useEffect(() => {
+        const fonts = typeof document !== 'undefined' ? document.fonts : undefined;
+        if (!fonts?.load) return;
+        let live = true;
+        Promise.all(Object.values(FONTS).map((f) => fonts.load(f))).then(
+            () => live && setFontsReady((n) => n + 1),
+            () => {},
+        );
+        return () => {
+            live = false;
+        };
+    }, []);
+    return useMemo<MeasureText>(() => {
+        // jsdom has no canvas: the generous per-character estimate.
+        if (typeof document === 'undefined' || /jsdom/i.test(navigator.userAgent)) return roughMeasure;
+        const ctx = document.createElement('canvas').getContext('2d');
+        if (!ctx) return roughMeasure;
+        const cache = new Map<string, number>();
+        const stamp = fontsReady; // re-measure once the web fonts are in
+        return (text, style) => {
+            const key = `${stamp}|${style}|${text}`;
+            let w = cache.get(key);
+            if (w === undefined) {
+                ctx.font = FONTS[style];
+                w = ctx.measureText(text).width;
+                cache.set(key, w);
+            }
+            return w;
+        };
+    }, [fontsReady]);
+}
 
 type Loaded = { soc: string; paths: CareerPaths | null };
 
@@ -76,6 +141,7 @@ export default function CareerPathsView({ layoutWidth }: Props) {
     const centreSoc = trail.length > 0 ? trail[trail.length - 1] : null;
     const titleId = useId();
     const subtitleId = useId();
+    const measure = useTextMeasure();
 
     // ── Data: the centre job's stored links (lazy chunk) ──
     const [loaded, setLoaded] = useState<Loaded | null>(null);
@@ -114,6 +180,7 @@ export default function CareerPathsView({ layoutWidth }: Props) {
     const centre = centreSoc ? centreView(centreSoc, ready ? ready.paths : undefined, scale) : null;
     const levels = paths?.jobZone != null;
     const remaining = paths ? paths.links.length - cards.length : 0;
+    const absent = useMemo(() => (paths ? absentLines(paths, shown) : []), [paths, shown]);
 
     // ── Width: lanes on a wide screen, stacked otherwise ──
     const mainRef = useRef<HTMLDivElement>(null);
@@ -125,12 +192,36 @@ export default function CareerPathsView({ layoutWidth }: Props) {
         ro.observe(el);
         return () => ro.disconnect();
     }, []);
+    // The footer never covers content: the page ends with room as tall as the footer.
+    const footerRef = useRef<HTMLElement>(null);
+    const [footerH, setFooterH] = useState(0);
+    useEffect(() => {
+        const el = footerRef.current;
+        if (!el || typeof ResizeObserver === 'undefined') return;
+        const ro = new ResizeObserver(() => setFooterH(Math.ceil(el.getBoundingClientRect().height)));
+        ro.observe(el);
+        return () => ro.disconnect();
+    }, []);
     const width = layoutWidth ?? measured;
     const desktop = width >= DESKTOP_MIN_WIDTH;
-    const layout = useMemo<DesktopLayout | null>(
-        () => (desktop && paths ? desktopLayout({ up: groups.up.map((c) => c.soc), same: groups.same.map((c) => c.soc), down: groups.down.map((c) => c.soc), none: groups.none.map((c) => c.soc) }, width, levels) : null),
-        [desktop, paths, groups, width, levels],
-    );
+    const centreTitle = centre?.title ?? null;
+    const hasAbsent = absent.length > 0;
+    const layout = useMemo<DesktopLayout | null>(() => {
+        if (!desktop || !paths || centreTitle == null) return null;
+        const bySoc = new Map(cards.map((c) => [c.soc, c]));
+        return desktopLayout(
+            { up: groups.up.map((c) => c.soc), same: groups.same.map((c) => c.soc), down: groups.down.map((c) => c.soc), none: groups.none.map((c) => c.soc) },
+            width,
+            {
+                levels,
+                cardHeight: (soc, w) => {
+                    const card = bySoc.get(soc)!;
+                    return cardHeightFor(card.title, chipText(card), w, measure);
+                },
+                centreHeight: (w) => centreHeightFor(centreTitle, w, hasAbsent, measure),
+            },
+        );
+    }, [desktop, paths, centreTitle, cards, groups, width, levels, hasAbsent, measure]);
 
     // ── Walking ──
     const flipFrom = useRef<DOMRect | null>(null);
@@ -145,11 +236,11 @@ export default function CareerPathsView({ layoutWidth }: Props) {
         focusCentre.current = true;
         setTrail(trail.slice(0, i + 1));
     };
-    /** A new path from a search result or a starter. `roleKey`: the Kelley title picked, for "Open job details". */
-    const startAt = (soc: string, roleKey: string | null = null) => {
+    /** A new path from a search result. `roleKey`: the Kelley title picked, for "Open job details". */
+    const startAt = (entry: RoleEntry) => {
         flipFrom.current = null;
         focusCentre.current = true;
-        setTrail([soc], roleKey);
+        setTrail([entry.soc], entry.kind === 'kelley' ? entry.key : null);
     };
     const openDetails = () => {
         if (!centreSoc) return;
@@ -159,6 +250,14 @@ export default function CareerPathsView({ layoutWidth }: Props) {
         close({ restoreFocus: false });
         openRole(entry);
     };
+
+    // With no job picked on a phone or tablet, focus starts on the dialog (not the search: no keyboard pops up).
+    const dialogRef = useRef<HTMLDivElement>(null);
+    const [heroAutoFocus] = useState(isDesktopPointer);
+    const openedEmpty = useRef(centreSoc == null);
+    useEffect(() => {
+        if (openedEmpty.current && !heroAutoFocus) dialogRef.current?.focus({ preventScroll: true });
+    }, [heroAutoFocus]);
 
     // The new centre comes from where its card was; the rest fades in. None with reduced motion.
     const centreRef = useRef<HTMLElement>(null);
@@ -205,55 +304,74 @@ export default function CareerPathsView({ layoutWidth }: Props) {
 
     const [hot, setHot] = useState<string | null>(null);
     const cardProps = { hot, onHot: setHot, onWalk: walkTo };
+    const padX = 'pl-[calc(1rem+var(--safe-left))] pr-[calc(1rem+var(--safe-right))] md:pl-[calc(2rem+var(--safe-left))] md:pr-[calc(2rem+var(--safe-right))]';
 
     return (
         <div
+            ref={dialogRef}
             role="dialog"
             aria-modal="true"
             aria-labelledby={titleId}
             aria-describedby={subtitleId}
+            tabIndex={-1}
             data-career-paths
             data-layout={desktop ? 'desktop' : 'stacked'}
-            className="fixed inset-0 flex flex-col bg-gray-950 text-gray-200"
+            className="fixed inset-0 flex flex-col bg-gray-950 text-gray-200 focus:outline-none"
             style={{ zIndex: Z.page }}
         >
-            <header className="flex-none border-b border-white/[0.06] pt-[calc(0.75rem+var(--safe-top))] pb-3 pl-[calc(1rem+var(--safe-left))] pr-[calc(1rem+var(--safe-right))] md:pl-[calc(2rem+var(--safe-left))] md:pr-[calc(2rem+var(--safe-right))]">
-                <div className="flex flex-wrap md:flex-nowrap items-center gap-x-3 gap-y-2">
-                    <div className="flex items-center gap-3 min-w-0 flex-1">
-                        <span className="hidden sm:flex w-9 h-9 shrink-0 items-center justify-center rounded-lg bg-cyan-500/10 border border-cyan-400/20 text-cyan-300" aria-hidden="true">
-                            <IconCareerPaths size={18} />
-                        </span>
-                        <div className="min-w-0">
-                            <h2 id={titleId} className="text-base md:text-lg font-semibold text-white tracking-tight leading-tight">{CAREER_PATHS_TITLE}</h2>
-                            <p id={subtitleId} className="text-xs text-gray-400 leading-snug">{CAREER_PATHS_SUBTITLE}</p>
+            {centre ? (
+                <header className={`flex-none border-b border-white/[0.06] pt-[calc(0.75rem+var(--safe-top))] pb-3 ${padX}`}>
+                    <div className="flex flex-wrap md:flex-nowrap items-center gap-x-3 gap-y-2">
+                        <div className="flex items-center gap-3 min-w-0 flex-1">
+                            <span className="hidden sm:flex w-9 h-9 shrink-0 items-center justify-center rounded-lg bg-cyan-500/10 border border-cyan-400/20 text-cyan-300" aria-hidden="true">
+                                <IconCareerPaths size={18} />
+                            </span>
+                            <div className="min-w-0">
+                                <h2 id={titleId} className="text-base md:text-lg font-semibold text-white tracking-tight leading-tight">{CAREER_PATHS_TITLE}</h2>
+                                <p id={subtitleId} className="text-xs text-gray-400 leading-snug">{CAREER_PATHS_SUBTITLE}</p>
+                            </div>
                         </div>
+                        <div className="order-last basis-full md:order-none md:basis-auto md:w-[320px]">
+                            <SearchBox variant="bar" onPick={startAt} scale={scale} />
+                        </div>
+                        <CloseButton onClick={() => close()} label="Close Career Paths" />
                     </div>
-                    <div className="order-last basis-full md:order-none md:basis-auto md:w-[320px]">
-                        <SearchBox onPick={(e) => startAt(e.soc, e.kind === 'kelley' ? e.key : null)} autoFocus={centreSoc == null} />
-                    </div>
+                    <Trail trail={trail} onStep={stepBack} />
+                </header>
+            ) : (
+                // Nothing chosen yet: only the close button up here; the title and the one search box are the page.
+                <header className={`flex-none flex justify-end pt-[calc(0.75rem+var(--safe-top))] ${padX}`}>
                     <CloseButton onClick={() => close()} label="Close Career Paths" />
-                </div>
-                {trail.length > 0 && <Trail trail={trail} onStep={stepBack} />}
-            </header>
+                </header>
+            )}
 
-            <main ref={mainRef} className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden custom-scrollbar py-5 md:py-6 pl-[calc(1rem+var(--safe-left))] pr-[calc(1rem+var(--safe-right))] md:pl-[calc(2rem+var(--safe-left))] md:pr-[calc(2rem+var(--safe-right))]" aria-busy={centreSoc != null && !ready && !failed}>
+            <main
+                ref={mainRef}
+                className={`flex-1 min-h-0 overflow-y-auto overflow-x-hidden custom-scrollbar pt-5 md:pt-6 ${padX}`}
+                style={{ paddingBottom: Math.max(20, footerH) }}
+                aria-busy={centreSoc != null && !ready && !failed}
+            >
                 <p className="sr-only" aria-live="polite">{said}</p>
                 {!centre ? (
-                    <EmptyStart onPick={(soc) => startAt(soc)} />
+                    <div className="mx-auto w-full max-w-[640px] pt-2 md:pt-[12vh]" data-testid="career-empty">
+                        <h2 id={titleId} className="text-2xl md:text-4xl font-semibold text-white tracking-tight text-center">{CAREER_PATHS_TITLE}</h2>
+                        <p id={subtitleId} className="mt-2 md:mt-3 text-sm md:text-base text-gray-400 text-center">{CAREER_PATHS_HERO_LINE}</p>
+                        <div className="mt-5 md:mt-8">
+                            <SearchBox variant="hero" onPick={startAt} scale={scale} autoFocus={heroAutoFocus} />
+                        </div>
+                    </div>
                 ) : (
                     <>
                         {layout ? (
                             <div ref={stageRef} className="relative mx-auto" style={{ width: layout.width, height: layout.height }} data-testid="career-stage">
                                 <Arrows layout={layout} hot={hot} />
-                                <CentreCard ref={centreRef} centre={centre} ready={!!ready} onOpen={openDetails} style={{ position: 'absolute', left: layout.centre.x, top: layout.centre.y, width: layout.centre.w, height: layout.centre.h }} />
-                                <DesktopLists layout={layout} groups={groups} levels={levels} remaining={remaining} {...cardProps} />
+                                <CentreCard ref={centreRef} centre={centre} ready={!!ready} absent={absent} onOpen={openDetails} style={{ position: 'absolute', left: layout.centre.x, top: layout.centre.y, width: layout.centre.w, height: layout.centre.h }} />
+                                <DesktopLists layout={layout} groups={groups} levels={levels} {...cardProps} />
                             </div>
                         ) : (
                             <div className="mx-auto w-full max-w-[640px]">
-                                <CentreCard ref={centreRef} centre={centre} ready={!!ready} onOpen={openDetails} />
-                                <div ref={stageRef}>
-                                    {paths && <StackedLists groups={groups} levels={levels} remaining={remaining} {...cardProps} />}
-                                </div>
+                                <CentreCard ref={centreRef} centre={centre} ready={!!ready} absent={absent} onOpen={openDetails} />
+                                <div ref={stageRef}>{paths && <StackedLists groups={groups} levels={levels} {...cardProps} />}</div>
                             </div>
                         )}
                         <div className={`mx-auto mt-5 ${layout ? '' : 'max-w-[640px]'}`} style={layout ? { width: layout.width } : undefined}>
@@ -307,7 +425,7 @@ export default function CareerPathsView({ layoutWidth }: Props) {
                 {!desktop && <Attribution className="mx-auto max-w-[640px] mt-8 text-[11px] text-gray-500 leading-relaxed" />}
             </main>
 
-            <footer className="flex-none border-t border-white/[0.06] pt-2.5 pb-[calc(0.625rem+var(--safe-bottom))] pl-[calc(1rem+var(--safe-left))] pr-[calc(1rem+var(--safe-right))] md:pl-[calc(2rem+var(--safe-left))] md:pr-[calc(2rem+var(--safe-right))]">
+            <footer ref={footerRef} className={`flex-none border-t border-white/[0.06] pt-2.5 pb-[calc(0.625rem+var(--safe-bottom))] ${padX}`}>
                 <p className="text-[11px] text-gray-400 leading-snug" data-testid="career-source-line">
                     {CAREER_PATHS_SOURCE_LINE}
                 </p>
@@ -344,25 +462,6 @@ function Attribution({ className }: { className: string }) {
     );
 }
 
-function EmptyStart({ onPick }: { onPick: (soc: string) => void }) {
-    return (
-        <div className="max-w-lg mx-auto text-center py-14 md:py-20" data-testid="career-empty">
-            <span className="mx-auto mb-4 flex w-12 h-12 items-center justify-center rounded-xl bg-white/[0.04] border border-white/[0.08] text-cyan-300" aria-hidden="true">
-                <IconCareerPaths size={22} />
-            </span>
-            <p className="text-sm text-gray-300 leading-relaxed">Pick a job to see the jobs O*NET lists as similar to it: a step up, at the same level, or a step down.</p>
-            <p className="text-xs text-gray-500 mt-4">Search above, or start from</p>
-            <div className="mt-2 flex flex-wrap justify-center gap-2">
-                {STARTERS.map((soc) => (
-                    <button key={soc} type="button" onClick={() => onPick(soc)} className="px-3 min-h-[44px] rounded-lg border border-white/[0.1] bg-white/[0.03] hover:bg-white/[0.07] text-sm text-gray-200">
-                        {titleOf(soc)}
-                    </button>
-                ))}
-            </div>
-        </div>
-    );
-}
-
 function Trail({ trail, onStep }: { trail: readonly string[]; onStep: (i: number) => void }) {
     const listRef = useRef<HTMLOListElement>(null);
     useEffect(() => {
@@ -394,23 +493,76 @@ function Trail({ trail, onStep }: { trail: readonly string[]; onStep: (i: number
     );
 }
 
-function SearchBox({ onPick, autoFocus }: { onPick: (e: RoleEntry) => void; autoFocus: boolean }) {
+/** The typed letters marked in a title (case-insensitive, every occurrence). */
+function Highlight({ text, query }: { text: string; query: string }) {
+    const q = query.trim().toLowerCase();
+    if (q.length < 2) return <>{text}</>;
+    const lower = text.toLowerCase();
+    const parts: React.ReactNode[] = [];
+    let i = 0;
+    for (let k = lower.indexOf(q); k !== -1; k = lower.indexOf(q, i)) {
+        if (k > i) parts.push(text.slice(i, k));
+        parts.push(
+            <mark key={k} className="bg-transparent text-cyan-200 font-semibold">
+                {text.slice(k, k + q.length)}
+            </mark>,
+        );
+        i = k + q.length;
+    }
+    parts.push(text.slice(i));
+    return <>{parts}</>;
+}
+
+/** About eight results show at once; the rest scroll. */
+const LIST_MAX_H = 440;
+
+function SearchBox({ onPick, variant, scale, autoFocus = false }: { onPick: (e: RoleEntry) => void; variant: 'hero' | 'bar'; scale: RoleScale; autoFocus?: boolean }) {
     const jobs = useStore((s) => s.jobs);
     const [query, setQuery] = useState('');
     const [open, setOpen] = useState(false);
     const [active, setActive] = useState(0);
+    const [room, setRoom] = useState<number | null>(null);
     const listId = useId();
-    const matches = useMemo(() => (query.trim().length > 1 ? searchRoles(getRoleEntries(jobs), query, 12) : []), [query, jobs]);
+    const inputRef = useRef<HTMLInputElement>(null);
+    const listRef = useRef<HTMLUListElement>(null);
+    const matches = useMemo(() => (query.trim().length > 1 ? searchRoles(getRoleEntries(jobs), query) : []), [query, jobs]);
     const expanded = open && query.trim().length > 1;
+    const hero = variant === 'hero';
+
+    // The list fits above a phone's keyboard: the room under the box in the visible part of the page.
+    const measureRoom = () => {
+        const el = inputRef.current;
+        const vv = typeof window !== 'undefined' ? window.visualViewport : null;
+        if (!el || !vv) return;
+        setRoom(Math.floor(vv.offsetTop + vv.height - el.getBoundingClientRect().bottom - 16));
+    };
+    useEffect(() => {
+        const vv = window.visualViewport;
+        const el = inputRef.current;
+        if (!vv || !el) return;
+        const onResize = () => setRoom(Math.floor(vv.offsetTop + vv.height - el.getBoundingClientRect().bottom - 16));
+        vv.addEventListener('resize', onResize);
+        vv.addEventListener('scroll', onResize);
+        return () => {
+            vv.removeEventListener('resize', onResize);
+            vv.removeEventListener('scroll', onResize);
+        };
+    }, []);
+    useEffect(() => {
+        listRef.current?.querySelector('[aria-selected="true"]')?.scrollIntoView?.({ block: 'nearest' });
+    }, [active]);
+
     const choose = (e: RoleEntry) => {
         onPick(e);
         setQuery('');
         setOpen(false);
     };
+    const maxH = room == null ? LIST_MAX_H : Math.max(140, Math.min(LIST_MAX_H, room));
     return (
-        <div className="relative" data-career-search-box>
-            <IconSearch size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" aria-hidden="true" />
+        <div className="relative" data-career-search-box={variant}>
+            <IconSearch size={hero ? 18 : 14} className={`absolute top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none ${hero ? 'left-4' : 'left-3'}`} aria-hidden="true" />
             <input
+                ref={inputRef}
                 type="text"
                 role="combobox"
                 data-career-search
@@ -421,13 +573,19 @@ function SearchBox({ onPick, autoFocus }: { onPick: (e: RoleEntry) => void; auto
                 aria-activedescendant={expanded && matches[active] ? `${listId}-${active}` : undefined}
                 placeholder="Search 830 jobs…"
                 autoFocus={autoFocus}
+                autoComplete="off"
+                spellCheck={false}
+                enterKeyHint="search"
                 value={query}
                 onChange={(e) => {
                     setQuery(e.target.value);
                     setActive(0);
                     setOpen(true);
                 }}
-                onFocus={() => setOpen(true)}
+                onFocus={() => {
+                    setOpen(true);
+                    measureRoom();
+                }}
                 onBlur={() => setOpen(false)}
                 onKeyDown={(e) => {
                     if (e.key === 'ArrowDown') {
@@ -445,39 +603,76 @@ function SearchBox({ onPick, autoFocus }: { onPick: (e: RoleEntry) => void; auto
                         setOpen(false);
                     }
                 }}
-                className="block w-full pl-9 pr-3 py-2.5 min-h-[44px] rounded-lg border border-white/[0.08] bg-white/[0.03] text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-white/20 focus:bg-white/[0.05] focus:ring-1 focus:ring-white/10 transition-colors"
+                className={
+                    hero
+                        ? 'block w-full h-14 pl-12 pr-4 rounded-2xl border border-white/[0.1] bg-white/[0.04] text-base md:text-lg text-gray-100 placeholder-gray-500 shadow-[0_8px_30px_-12px_rgba(0,0,0,0.6)] focus:outline-none focus:border-cyan-400/40 focus:bg-white/[0.06] focus:ring-4 focus:ring-cyan-400/10 transition-[border-color,background-color,box-shadow] duration-200'
+                        : 'block w-full pl-9 pr-3 py-2.5 min-h-[44px] rounded-lg border border-white/[0.08] bg-white/[0.03] text-base md:text-sm text-gray-200 placeholder-gray-600 focus:outline-none focus:border-white/20 focus:bg-white/[0.05] focus:ring-2 focus:ring-cyan-400/10 transition-colors'
+                }
             />
             {expanded && (
-                <ul id={listId} role="listbox" aria-label="Matching jobs" className="absolute z-10 mt-2 w-full md:w-[380px] md:right-0 max-h-[320px] overflow-y-auto custom-scrollbar rounded-xl border border-white/10 bg-gray-900/95 backdrop-blur-xl shadow-2xl text-sm">
-                    {matches.length === 0 && <li className="px-3 py-3 text-xs text-gray-500">No jobs found</li>}
-                    {matches.map((r, i) => (
-                        <li
-                            key={r.key}
-                            id={`${listId}-${i}`}
-                            role="option"
-                            aria-selected={i === active}
-                            onMouseDown={(e) => {
-                                e.preventDefault();
-                                choose(r);
-                            }}
-                            onMouseEnter={() => setActive(i)}
-                            className={`px-3 py-2.5 min-h-[44px] cursor-pointer border-b border-white/[0.04] last:border-0 ${i === active ? 'bg-white/[0.07]' : ''}`}
-                        >
-                            <span className="block text-gray-100 leading-snug">{r.title}</span>
-                            <span className="block text-[10px] text-gray-500">
-                                {r.kind === 'kelley' && r.blsTitle !== r.title ? `BLS: ${r.blsTitle} · ` : ''}
-                                {CONTINENT_DISPLAY_NAMES[r.continent]}
-                            </span>
+                <ul
+                    ref={listRef}
+                    id={listId}
+                    role="listbox"
+                    aria-label="Matching jobs"
+                    style={{ maxHeight: maxH }}
+                    className={`absolute z-10 mt-2 w-full overflow-y-auto overscroll-contain custom-scrollbar rounded-xl border border-white/10 bg-gray-900/95 backdrop-blur-xl shadow-2xl text-sm ${hero ? '' : 'md:w-[400px] md:right-0'}`}
+                >
+                    {matches.length === 0 && (
+                        <li className="px-4 py-3 text-sm text-gray-500" data-testid="career-no-match">
+                            {NO_MATCH_TEXT}
                         </li>
-                    ))}
+                    )}
+                    {matches.map((r, i) => {
+                        const ai = aiView(aiExposureFor(r.soc, scale));
+                        const noLinks = CAREER_PATHS_NO_LINKS.has(r.soc);
+                        return (
+                            <li
+                                key={r.key}
+                                id={`${listId}-${i}`}
+                                role="option"
+                                aria-selected={i === active}
+                                data-soc={r.soc}
+                                onMouseDown={(e) => {
+                                    e.preventDefault();
+                                    choose(r);
+                                }}
+                                onMouseEnter={() => setActive(i)}
+                                className={`flex items-start gap-3 px-4 py-2.5 min-h-[48px] cursor-pointer border-b border-white/[0.04] last:border-0 ${i === active ? 'bg-white/[0.07]' : ''}`}
+                            >
+                                <span className="mt-[7px] w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: ai.color }} aria-hidden="true" />
+                                <span className="min-w-0">
+                                    <span className="block text-gray-100 leading-snug">
+                                        <Highlight text={r.title} query={query} />
+                                    </span>
+                                    <span className="block text-[11px] text-gray-500 leading-snug mt-0.5">
+                                        {CONTINENT_DISPLAY_NAMES[r.continent]}
+                                        {r.kind === 'kelley' && r.blsTitle !== r.title && (
+                                            <>
+                                                {' · BLS: '}
+                                                <Highlight text={r.blsTitle} query={query} />
+                                            </>
+                                        )}
+                                        {noLinks && (
+                                            <span className="text-gray-600" data-testid="career-no-links-note">
+                                                {' · '}
+                                                {NO_LINKS_NOTE}
+                                            </span>
+                                        )}
+                                        <span className="sr-only">, AI Exposure {ai.band}</span>
+                                    </span>
+                                </span>
+                            </li>
+                        );
+                    })}
                 </ul>
             )}
         </div>
     );
 }
 
-const CentreCard = React.forwardRef<HTMLElement, { centre: CentreView; ready: boolean; onOpen: () => void; style?: React.CSSProperties }>(function CentreCard(
-    { centre, ready, onOpen, style },
+const CentreCard = React.forwardRef<HTMLElement, { centre: CentreView; ready: boolean; absent: readonly string[]; onOpen: () => void; style?: React.CSSProperties }>(function CentreCard(
+    { centre, ready, absent, onOpen, style },
     ref,
 ) {
     const fixed = style != null;
@@ -489,7 +684,7 @@ const CentreCard = React.forwardRef<HTMLElement, { centre: CentreView; ready: bo
             data-testid="career-centre"
             data-soc={centre.soc}
             style={style}
-            className={`rounded-2xl border border-cyan-400/25 bg-gradient-to-b from-cyan-500/[0.07] to-white/[0.02] shadow-[0_0_0_1px_rgba(34,211,238,0.05),0_12px_40px_-12px_rgba(0,0,0,0.6)] px-5 py-4 md:px-6 md:py-5 flex flex-col focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/60 ${fixed ? 'overflow-hidden' : ''}`}
+            className="rounded-2xl border border-cyan-400/25 bg-gradient-to-b from-cyan-500/[0.07] to-white/[0.02] shadow-[0_0_0_1px_rgba(34,211,238,0.05),0_12px_40px_-12px_rgba(0,0,0,0.6)] px-5 py-4 md:px-6 md:py-5 flex flex-col focus:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/60"
         >
             <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
@@ -498,7 +693,7 @@ const CentreCard = React.forwardRef<HTMLElement, { centre: CentreView; ready: bo
                         <span className="text-gray-500 normal-case tracking-normal font-normal">{CONTINENT_DISPLAY_NAMES[continentOf(centre.soc)]}</span>
                         <span className="text-gray-600 font-mono normal-case tracking-normal font-normal">BLS {centre.soc}</span>
                     </div>
-                    <h3 className="mt-2 text-lg md:text-xl font-semibold text-white tracking-tight leading-snug line-clamp-2" data-testid="career-centre-title">
+                    <h3 className="mt-2 text-lg md:text-xl font-semibold text-white tracking-tight leading-snug break-words" data-testid="career-centre-title">
                         {centre.title}
                     </h3>
                 </div>
@@ -528,6 +723,11 @@ const CentreCard = React.forwardRef<HTMLElement, { centre: CentreView; ready: bo
                     </dd>
                 </div>
             </dl>
+            {absent.length > 0 && (
+                <p className="mt-2 text-[11px] leading-4 text-gray-500" data-testid="career-absent">
+                    {absent.join(' · ')}
+                </p>
+            )}
             {!fixed && <OpenDetails onOpen={onOpen} wide />}
         </section>
     );
@@ -573,9 +773,12 @@ function CardButton({ card, style, onHot, onWalk, hot }: CardProps & { card: Car
         >
             <span className="flex items-start gap-2 min-w-0">
                 <span className="mt-[5px] w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: card.ai.color }} aria-hidden="true" />
-                <span className="flex-1 min-w-0 text-[13px] leading-4 font-medium text-gray-100 line-clamp-2" title={card.title}>{card.title}</span>
+                {/* The full title, wrapped to as many lines as it needs (the desktop layout measures it). */}
+                <span className="flex-1 min-w-0 text-[13px] leading-4 font-medium text-gray-100 break-words" data-testid="career-card-title">
+                    {card.title}
+                </span>
                 <span className={`shrink-0 text-[12px] leading-4 font-semibold tabular-nums ${payColor}`} title={card.pay.title} data-pay={card.pay.exact}>
-                    {card.pay.short === NO_DATA ? 'pay: no data' : card.pay.short}
+                    {chipText(card)}
                 </span>
             </span>
             <span className="pl-4 text-[11px] leading-4 text-gray-500 tabular-nums truncate">
@@ -606,7 +809,7 @@ function Arrows({ layout, hot }: { layout: DesktopLayout; hot: string | null }) 
     );
 }
 
-function GroupHeading({ group, count, levels, remaining, id, hidden }: { group: CareerGroupId; count: number; levels: boolean; remaining: number; id?: string; hidden?: boolean }) {
+function GroupHeading({ group, count, levels, id, hidden }: { group: CareerGroupId; count: number; levels: boolean; id?: string; hidden?: boolean }) {
     return (
         <div aria-hidden={hidden || undefined}>
             <h3 id={id} className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wider text-gray-300">
@@ -614,9 +817,7 @@ function GroupHeading({ group, count, levels, remaining, id, hidden }: { group: 
                 {GROUP_LABEL[group]}
                 <span className="px-1.5 py-px rounded bg-white/[0.06] text-gray-400 tabular-nums normal-case tracking-normal font-medium">{count}</span>
             </h3>
-            <p className="text-[11px] text-gray-500 mt-0.5 truncate">
-                {count === 0 ? (remaining > 0 ? `None in the jobs shown` : 'O*NET lists none') : group === 'none' && !levels ? 'This job has no single O*NET Job Zone' : GROUP_HINT[group]}
-            </p>
+            <p className="text-[11px] text-gray-500 mt-0.5 truncate">{group === 'none' && !levels ? 'This job has no single O*NET Job Zone' : GROUP_HINT[group]}</p>
         </div>
     );
 }
@@ -630,7 +831,7 @@ function GroupGlyph({ group }: { group: CareerGroupId }) {
     );
 }
 
-function DesktopLists({ layout, groups, levels, remaining, ...cardProps }: CardProps & { layout: DesktopLayout; groups: Record<CareerGroupId, CareerCard[]>; levels: boolean; remaining: number }) {
+function DesktopLists({ layout, groups, levels, ...cardProps }: CardProps & { layout: DesktopLayout; groups: Record<CareerGroupId, CareerCard[]>; levels: boolean }) {
     const rectOf = new Map(layout.cards.map((c) => [c.soc, c.rect]));
     const seen = new Set<CareerGroupId>();
     return (
@@ -640,7 +841,7 @@ function DesktopLists({ layout, groups, levels, remaining, ...cardProps }: CardP
                 seen.add(h.group);
                 return (
                     <div key={`${h.group}-${h.x}`} className="absolute" style={{ left: h.x, top: h.y, width: h.w, height: HEADING_H }}>
-                        <GroupHeading group={h.group} count={h.count} levels={levels} remaining={remaining} hidden={dup} />
+                        <GroupHeading group={h.group} count={h.count} levels={levels} hidden={dup} />
                     </div>
                 );
             })}
@@ -660,8 +861,9 @@ function DesktopLists({ layout, groups, levels, remaining, ...cardProps }: CardP
     );
 }
 
-function StackedLists({ groups, levels, remaining, ...cardProps }: CardProps & { groups: Record<CareerGroupId, CareerCard[]>; levels: boolean; remaining: number }) {
-    const order = PHONE_GROUP_ORDER.filter((g) => (levels ? g !== 'none' || groups.none.length > 0 : g === 'none'));
+function StackedLists({ groups, levels, ...cardProps }: CardProps & { groups: Record<CareerGroupId, CareerCard[]>; levels: boolean }) {
+    // Only groups with a job: an empty level is stated on the centre card instead.
+    const order = PHONE_GROUP_ORDER.filter((g) => groups[g].length > 0 && (levels || g === 'none'));
     const baseId = useId();
     return (
         <div className="relative">
@@ -672,19 +874,17 @@ function StackedLists({ groups, levels, remaining, ...cardProps }: CardProps & {
                         {/* A short vertical connector from the card above down to this group. */}
                         <span className="absolute left-[11px] -top-5 h-[26px] w-px bg-white/15" aria-hidden="true" />
                         <span className="absolute left-[8px] top-[5px] w-[7px] h-[7px] rounded-full border border-white/25 bg-gray-950" aria-hidden="true" />
-                        <GroupHeading group={g} count={groups[g].length} levels={levels} remaining={remaining} id={id} />
-                        {groups[g].length > 0 && (
-                            <ul aria-labelledby={id} className="relative mt-2 space-y-2" data-career-list={g}>
-                                <span className="absolute -left-[13px] -top-1 bottom-[30px] w-px bg-white/15" aria-hidden="true" />
-                                {groups[g].map((card) => (
-                                    <li key={card.soc} className="relative">
-                                        <span className="absolute -left-[13px] top-1/2 w-[9px] h-px bg-white/15" aria-hidden="true" />
-                                        <span className={`absolute -left-[6px] top-1/2 -translate-y-1/2 border-y-[3.5px] border-y-transparent border-l-[5px] ${g === 'none' ? 'border-l-slate-500/60' : 'border-l-white/30'}`} aria-hidden="true" />
-                                        <CardButton card={card} {...cardProps} />
-                                    </li>
-                                ))}
-                            </ul>
-                        )}
+                        <GroupHeading group={g} count={groups[g].length} levels={levels} id={id} />
+                        <ul aria-labelledby={id} className="relative mt-2 space-y-2" data-career-list={g}>
+                            <span className="absolute -left-[13px] -top-1 bottom-[30px] w-px bg-white/15" aria-hidden="true" />
+                            {groups[g].map((card) => (
+                                <li key={card.soc} className="relative">
+                                    <span className="absolute -left-[13px] top-1/2 w-[9px] h-px bg-white/15" aria-hidden="true" />
+                                    <span className={`absolute -left-[6px] top-1/2 -translate-y-1/2 border-y-[3.5px] border-y-transparent border-l-[5px] ${g === 'none' ? 'border-l-slate-500/60' : 'border-l-white/30'}`} aria-hidden="true" />
+                                    <CardButton card={card} {...cardProps} />
+                                </li>
+                            ))}
+                        </ul>
                     </section>
                 );
             })}

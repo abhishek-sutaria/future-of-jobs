@@ -560,6 +560,8 @@ export function buildCareerPaths(inputs: CareerPathsInputs): CareerPathsBuild {
             noData: counts.noData,
             withJobZone: counts.withJobZone,
             mixedZones: mixed.map((m) => m.soc),
+            /** Jobs with no stored link (O*NET has nothing for them), so search can say so without loading a chunk. */
+            noLinks: inputs.appJobs.filter((j) => (jobs.get(j.soc)?.links.length ?? 0) === 0).map((j) => j.soc),
         },
     };
     const zonesFile = {
