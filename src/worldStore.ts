@@ -87,9 +87,40 @@ interface WorldState extends WorldLevel {
 
     /** Fly to the role's region and open its panel. */
     openRole: (entry: RoleEntry) => void;
+
+    /**
+     * The Career Paths view (components/careerPaths), a full-screen page over
+     * everything, separate from the 3D landscape (which pauses while it is
+     * open). Its trail of SOCs survives closing, so reopening returns to the
+     * same job; opening it on a job that is not the trail's last starts a new
+     * trail there. Opening it makes no Claude call.
+     */
+    careerPathsOpen: boolean;
+    /** The path walked so far, oldest first; the last SOC is the centre. Empty: nothing picked yet. */
+    careerTrail: string[];
+    /** The role (RoleEntry key) "Open job details" opens for the centre, when the view was opened from one. */
+    careerRoleKey: string | null;
+    /** Open the view, on `soc` if given. Focus goes back to the element that had it when the view closes (takeCareerPathsOpener). */
+    openCareerPaths: (soc?: string | null, roleKey?: string | null) => void;
+    closeCareerPaths: (opts?: { restoreFocus?: boolean }) => void;
+    /** Replace the trail (walk, go back, search). `roleKey`: the role "Open job details" should open for the new centre. */
+    setCareerTrail: (trail: string[], roleKey?: string | null) => void;
 }
 
 const inFlight = new Map<string, Promise<ContinentFile | null>>();
+/** The element that had focus when the Career Paths view opened (not state: never rendered). */
+let careerPathsOpener: HTMLElement | null = null;
+
+/**
+ * The element to give focus back to once the Career Paths view has closed, at
+ * most once (components/careerPaths/CareerPathsHost calls it after the page
+ * behind the view is no longer inert). Null after "Open job details".
+ */
+export function takeCareerPathsOpener(): HTMLElement | null {
+    const el = careerPathsOpener;
+    careerPathsOpener = null;
+    return el;
+}
 const stateMapInFlight = new Map<string, Promise<void>>();
 
 export const useWorldStore = create<WorldState>((set, get) => ({
@@ -226,6 +257,33 @@ export const useWorldStore = create<WorldState>((set, get) => ({
         useStore.getState().setSelectedJob(null);
         set({ selectedOccupationSoc: entry.soc });
     },
+
+    careerPathsOpen: false,
+    careerTrail: [],
+    careerRoleKey: null,
+    openCareerPaths: (soc, roleKey = null) => {
+        const s = get();
+        if (!s.careerPathsOpen) {
+            const active = typeof document !== 'undefined' ? document.activeElement : null;
+            careerPathsOpener = active instanceof HTMLElement && active !== document.body ? active : null;
+        }
+        const keep = !soc || s.careerTrail[s.careerTrail.length - 1] === soc;
+        set({
+            careerPathsOpen: true,
+            careerTrail: keep ? s.careerTrail : [soc],
+            careerRoleKey: keep && !roleKey ? s.careerRoleKey : roleKey,
+        });
+    },
+    closeCareerPaths: ({ restoreFocus = true } = {}) => {
+        if (!get().careerPathsOpen) return;
+        if (!restoreFocus) careerPathsOpener = null;
+        set({ careerPathsOpen: false });
+    },
+    setCareerTrail: (trail, roleKey) => set((s) => ({
+        careerTrail: trail,
+        // The preferred role only stands while its job is the centre.
+        careerRoleKey: roleKey !== undefined ? roleKey : trail[trail.length - 1] === s.careerTrail[s.careerTrail.length - 1] ? s.careerRoleKey : null,
+    })),
 }));
 
 // A Kelley panel opened from anywhere (Tasks view, a label) closes an open

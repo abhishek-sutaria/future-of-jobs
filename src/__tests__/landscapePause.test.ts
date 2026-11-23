@@ -21,7 +21,12 @@ describe('Landscape GL pause hardening', () => {
 
     it('wakes the mobile idle timer when a panel, level change, the Kelley filter or the IU school filter changes', () => {
         // A level change that left the loop asleep would freeze its fades partway.
-        expect(src).toMatch(/bumpInteraction,\s*year,\s*mapView,\s*selectedJob,\s*route,\s*canvasKey,\s*selectedOccupationSoc,\s*focusedContinent,\s*focusedFamily,\s*drawnStage,\s*kelleyOnly,\s*school,\s*focusRequestId\]/);
+        expect(src).toMatch(/bumpInteraction,\s*year,\s*mapView,\s*selectedJob,\s*route,\s*canvasKey,\s*selectedOccupationSoc,\s*focusedContinent,\s*focusedFamily,\s*drawnStage,\s*kelleyOnly,\s*school,\s*focusRequestId,\s*careerPathsOpen\]/);
+    });
+
+    it('pauses while the Career Paths page covers the screen, and wakes when it closes', () => {
+        expect(src).toMatch(/const careerPathsOpen = useWorldStore\(\(s\) => s\.careerPathsOpen\);/);
+        expect(src).toMatch(/\|\|\s*careerPathsOpen\s*\n\s*\|\|\s*tabHidden/);
     });
 
     it('skips the second fill light on mobile', () => {

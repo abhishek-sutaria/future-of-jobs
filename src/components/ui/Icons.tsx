@@ -157,3 +157,16 @@ export const IconMenu = ({ size, ...p }: IconProps) => (
 export const IconExternalLink = ({ size, ...p }: IconProps) => (
     <svg {...d(size)} {...p}><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /><polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" /></svg>
 );
+
+/** Career Paths: one job branching to three others (step down, same level, step up). */
+export const IconCareerPaths = ({ size, ...p }: IconProps) => (
+    <svg {...d(size)} {...p}>
+        <circle cx="5" cy="12" r="2.5" />
+        <circle cx="19" cy="5" r="2.5" />
+        <circle cx="19" cy="12" r="2.5" />
+        <circle cx="19" cy="19" r="2.5" />
+        <path d="M7.5 12h9" />
+        <path d="M7.2 10.8c3-1.2 5-5.8 9.3-5.8" />
+        <path d="M7.2 13.2c3 1.2 5 5.8 9.3 5.8" />
+    </svg>
+);

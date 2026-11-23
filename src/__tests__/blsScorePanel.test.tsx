@@ -137,8 +137,9 @@ describe('an unscored occupation in the numbers-only panel', () => {
         for (const word of ['Strategic Insight', 'Roadmap', 'Scenario', 'Analyze', 'Defend this task', 'Build on this', 'Likely Replacements', 'AI Exposure']) {
             expect(text, word).not.toContain(word);
         }
-        // Every button is the close button, the pay note or a source badge.
+        // Every button is the close button, the pay note, a source badge, or Career paths
+        // (stored O*NET links only, no Claude call: careerPathsView.test.tsx spies on fetch).
         const buttons = [...doc.querySelectorAll('button')].map((b) => `${b.getAttribute('aria-label') ?? ''} ${b.textContent ?? ''}`.trim());
-        for (const b of buttons) expect(b).toMatch(/^(Close panel|Where the pay figure comes from|Pay|EP|O\*NET)$/);
+        for (const b of buttons) expect(b).toMatch(/^(Close panel|Where the pay figure comes from|Pay|EP|O\*NET|Career paths)$/);
     });
 });

@@ -3,7 +3,7 @@
  * EXHAUSTIVE AUDIT TEST SUITE
  * Future of Jobs — Data Integrity & Production Readiness
  *
- * Runs 64 automated checks across 10 categories:
+ * Runs 67 automated checks across 10 categories:
  *   [CAT-1]  Telemetry Cleanup
  *   [CAT-2]  Dead Code Removal
  *   [CAT-3]  Data Integrity — Jobs & Tasks
@@ -944,8 +944,8 @@ check(
 
 // T70: career paths links and zones (src/data/career_paths/) are never in the
 // main bundle. Each chunk's _meta.about sentence lives only in that chunk, so
-// finding one in the entry chunk means a chunk was bundled. Until a screen
-// imports utils/careerPaths, the build emits no career paths chunk at all.
+// finding one in the entry chunk means a chunk was bundled. The Career Paths
+// view (T71) is what imports utils/careerPaths, lazily.
 {
   const assetsDir = path.join(ROOT, 'dist', 'assets');
   const files = fs.existsSync(assetsDir) ? fs.readdirSync(assetsDir) : [];
@@ -959,6 +959,25 @@ check(
     'T70 — career paths chunks are absent from the main bundle',
     main.length === 1 && needles.length === 23 && leaked.length === 0,
     `main chunks: ${main.length}, chunk files: ${needles.length}, leaked: ${leaked.join(',') || 'none'}`
+  );
+}
+
+// T71: the Career Paths view (components/careerPaths/CareerPathsView) and
+// utils/careerPaths load lazily on first open: the main bundle holds only the
+// host and the buttons. Its source line and O*NET's credit line (read from
+// src/data/career_paths/index.json) live only in the view's own chunk.
+{
+  const assetsDir = path.join(ROOT, 'dist', 'assets');
+  const files = fs.existsSync(assetsDir) ? fs.readdirSync(assetsDir) : [];
+  const main = files.filter(f => /^index-.*\.js$/.test(f)).map(f => fs.readFileSync(path.join(assetsDir, f), 'utf8'));
+  const view = files.filter(f => /^CareerPathsView-.*\.js$/.test(f)).map(f => fs.readFileSync(path.join(assetsDir, f), 'utf8'));
+  const needles = ['not records of actual job moves', 'USDOL/ETA has not approved, endorsed, or tested these modifications'];
+  const leaked = needles.filter(n => main.some(code => code.includes(n)));
+  const inView = needles.filter(n => view.some(code => code.includes(n)));
+  check(
+    'T71 — Career Paths view and its data are a lazy chunk, absent from the main bundle',
+    main.length === 1 && view.length === 1 && leaked.length === 0 && inView.length === needles.length,
+    `main chunks: ${main.length}, view chunks: ${view.length}, leaked: ${leaked.join(' | ') || 'none'}, in view chunk: ${inView.length}/${needles.length}`
   );
 }
 

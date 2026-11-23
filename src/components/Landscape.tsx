@@ -45,6 +45,7 @@ export const Landscape: React.FC = () => {
     const mapView = useStore((s) => s.mapView);
     const selectedJob = useStore((s) => s.selectedJob);
     const selectedOccupationSoc = useWorldStore((s) => s.selectedOccupationSoc);
+    const careerPathsOpen = useWorldStore((s) => s.careerPathsOpen);
     const focusedContinent = useWorldStore((s) => s.focusedContinent);
     const focusedFamily = useWorldStore((s) => s.focusedFamily);
     const drawnStage = useWorldStore((s) => s.drawnStage);
@@ -121,13 +122,13 @@ export const Landscape: React.FC = () => {
     // filter must wake it too, or the camera and the fades would freeze partway. A
     // repeat request for the same level changes neither, so the request id
     // wakes it. A stage going up or down is its own moment: the hills start
-    // rising only once the world has gone.
+    // rising only once the world has gone. Closing Career Paths wakes it too.
     useEffect(() => {
         bumpInteraction();
         return () => {
             if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
         };
-    }, [bumpInteraction, year, mapView, selectedJob, route, canvasKey, selectedOccupationSoc, focusedContinent, focusedFamily, drawnStage, kelleyOnly, school, focusRequestId]);
+    }, [bumpInteraction, year, mapView, selectedJob, route, canvasKey, selectedOccupationSoc, focusedContinent, focusedFamily, drawnStage, kelleyOnly, school, focusRequestId, careerPathsOpen]);
 
     const handleContextLost = useCallback((event: Event) => {
         // Without this, the browser assumes the page doesn't want to recover
@@ -254,6 +255,8 @@ export const Landscape: React.FC = () => {
         || mapView !== 'globe'
         || selectedJob != null
         || selectedOccupationSoc != null
+        // The Career Paths page covers the whole screen.
+        || careerPathsOpen
         || tabHidden
         || (isMobile && mobileIdle);
 
