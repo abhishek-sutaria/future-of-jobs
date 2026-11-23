@@ -1,6 +1,6 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { useStore } from '../store';
-import { IconZap, IconGlobe, IconMap, IconSearch, IconInfo, IconRocket, IconUser, IconMenu, IconLayers, IconBook } from './ui/Icons';
+import { IconZap, IconGlobe, IconMap, IconSearch, IconInfo, IconRocket, IconUser, IconMenu, IconLayers, IconBook, IconCareerPaths } from './ui/Icons';
 import { MobileMoreSheet } from './MobileMoreSheet';
 import { useIsMobile } from '../hooks/useIsMobile';
 import { useUserStore } from '../userStore';
@@ -28,6 +28,7 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
     const mapView = useStore((state) => state.mapView);
     const setMapView = useStore((state) => state.setMapView);
     const openRole = useWorldStore((state) => state.openRole);
+    const openCareerPaths = useWorldStore((state) => state.openCareerPaths);
     const isScoring = useStore((state) => state.isScoring);
     const hasAIScores = useStore((state) => state.hasAIScores);
     const scoringProgress = useStore((state) => state.scoringProgress);
@@ -235,8 +236,26 @@ export const Header: React.FC<HeaderProps> = ({ economyData, loadingEconomy, onO
                     )}
                 </div>
 
-                <div className="flex items-center gap-2 w-full md:w-auto justify-end">
-                    <div data-tour="tour-search" className="w-full md:w-auto">
+                <div className="flex md:flex-wrap items-center gap-2 w-full md:w-auto justify-end">
+                    {/* Career Paths: its own full-screen page (components/careerPaths), not a
+                        fourth view of the map. Beside the job search, so the button row above
+                        keeps its width (at 1280px it already sits close to the title); after
+                        the search box on a phone. Its label shows from 1024px: from 768 to
+                        1199px this column is only as wide as one button group, so below 1024
+                        it is the icon (named by aria-label). Opens with no job, or the path
+                        walked last. */}
+                    <button
+                        type="button"
+                        onClick={() => openCareerPaths()}
+                        title="Career Paths: similar jobs you could move to (O*NET)"
+                        aria-label="Career Paths"
+                        data-testid="header-career-paths"
+                        className="shrink-0 max-md:order-last flex items-center justify-center gap-2 h-11 min-w-[44px] px-3 rounded-lg border border-white/[0.08] bg-white/[0.03] hover:bg-white/[0.08] text-gray-300 hover:text-white text-xs font-semibold uppercase tracking-wider transition-colors"
+                    >
+                        <IconCareerPaths size={14} className="text-cyan-300" aria-hidden="true" />
+                        <span className="hidden lg:inline">Career Paths</span>
+                    </button>
+                    <div data-tour="tour-search" className="w-full md:w-auto min-w-0">
                         <SearchBar onSelectRole={openRole} />
                     </div>
                 </div>

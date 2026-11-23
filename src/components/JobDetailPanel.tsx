@@ -18,6 +18,7 @@ import { useUserStore } from '../userStore';
 import { saveScenario } from '../lib/userData';
 import { SharedAnswerNote } from './SharedAnswerNote';
 import { OccupationAbout } from './OccupationPanel';
+import { OpenCareerPathsButton } from './careerPaths/OpenCareerPathsButton';
 import { useStore } from '../store';
 import { roleScaleFor } from '../utils/allRoleScale';
 import { bandFor, rankScopeText, roundHuman } from '../utils/roleScale';
@@ -275,6 +276,7 @@ export const JobDetailPanel: React.FC<JobDetailPanelProps> = ({
                                         Kelley role{kelleyTracks.length === 1 ? ` · ${kelleyTracks[0]} track` : ''}
                                     </span>
                                 )}
+                                {soc && <OpenCareerPathsButton soc={soc} roleKey={job.id} />}
                             </div>
                             <h2 className="text-xl md:text-2xl font-bold text-white tracking-tight">{job.title}</h2>
                             <RolePay title={job.title} occupation={occupation} />

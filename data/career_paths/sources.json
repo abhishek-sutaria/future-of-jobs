@@ -1,0 +1,78 @@
+{
+  "_about": "Every input of scripts/build_career_paths.ts. The build checks each file against its sha256 and stops on a mismatch. Both O*NET files are the ones already committed in data/db_30_1_text/ (from the O*NET 30.1 text zip below), bytes unchanged. To refresh: download a new O*NET release zip, replace the files, then update every field here and re-run the build and scripts/verify_career_paths.py.",
+  "onet": {
+    "name": "O*NET Database",
+    "version": "O*NET 30.1",
+    "release": "December 2025 Release",
+    "releaseCheck": "data/db_30_1_text/Read Me.txt: line 1 \"O*NET 30.1 Database\", line 2 \"December 2025 Release\"",
+    "publisher": "National Center for O*NET Development, for the U.S. Department of Labor, Employment and Training Administration",
+    "url": "https://www.onetcenter.org/dl_files/database/db_30_1_text.zip",
+    "seenAt": "https://www.onetcenter.org/database.html",
+    "license": "CC BY 4.0",
+    "licenseName": "Creative Commons Attribution 4.0 International License",
+    "licenseUrl": "https://www.onetcenter.org/license_db.html",
+    "licenseText": "The content of the O*NET 30.1 Database is licensed under a Creative Commons Attribution 4.0 International License.",
+    "attribution": "This page includes information from the O*NET 30.1 Database by the U.S. Department of Labor, Employment and Training Administration (USDOL/ETA). Used under the CC BY 4.0 license. O*NET® is a trademark of USDOL/ETA. Future of Jobs has modified all or some of this information. USDOL/ETA has not approved, endorsed, or tested these modifications.",
+    "attributionSource": "https://www.onetcenter.org/license_db.html",
+    "attributionNote": "Copied on 2026-11-22 from O*NET's 'How to Credit Us', the version for 'If you make edits or additions to O*NET information' (this app maps O*NET codes onto BLS jobs, merges rows and derives step up / same / down from Job Zones), with '[Your name or company]' filled in as Future of Jobs. That page now names the O*NET 31.0 Database; its 'Previous Versions' note says to name the version used, so this says O*NET 30.1. The two links O*NET's own HTML puts in it: databaseUrl on 'O*NET 30.1 Database', licenseDeedUrl on 'CC BY 4.0'.",
+    "databaseUrl": "https://www.onetcenter.org/database.html",
+    "licenseDeedUrl": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  "files": [
+    {
+      "path": "data/db_30_1_text/Related Occupations.txt",
+      "title": "Related Occupations: for each O*NET-SOC code, 20 related codes with a relatedness tier and an index",
+      "dictionary": "https://www.onetcenter.org/dictionary/30.1/text/related_occupations.html",
+      "columns": [
+        "O*NET-SOC Code",
+        "Related O*NET-SOC Code",
+        "Relatedness Tier",
+        "Index"
+      ],
+      "sha256": "af539f6f01a36e9514a0dd13cbe125df8cca1114c690505342837f338621906c"
+    },
+    {
+      "path": "data/db_30_1_text/Job Zones.txt",
+      "title": "Job Zones: the preparation level (1 to 5) of each O*NET-SOC code",
+      "dictionary": "https://www.onetcenter.org/dictionary/30.1/text/job_zones.html",
+      "columns": [
+        "O*NET-SOC Code",
+        "Job Zone",
+        "Date",
+        "Domain Source"
+      ],
+      "sha256": "7b13748f1d880dbbc6bd2a5f91bd457492f82c3f3bf9bd64909e73f600cd5fba"
+    },
+    {
+      "path": "data/db_30_1_text/Job Zone Reference.txt",
+      "title": "Job Zone Reference: the official name of each Job Zone (1 to 5)",
+      "dictionary": "https://www.onetcenter.org/dictionary/30.1/text/job_zone_reference.html",
+      "columns": [
+        "Job Zone",
+        "Name",
+        "Experience",
+        "Education",
+        "Job Training",
+        "Examples",
+        "SVP Range"
+      ],
+      "sha256": "0d705299759ff75785a3c503dc39da21db26ec652afac145c65736149d3744ea"
+    },
+    {
+      "path": "data/db_30_1_text/Occupation Data.txt",
+      "title": "Occupation Data: the O*NET title of each code (used only to name codes in docs/career-paths.md)",
+      "dictionary": "https://www.onetcenter.org/dictionary/30.1/text/occupation_data.html",
+      "columns": [
+        "O*NET-SOC Code",
+        "Title",
+        "Description"
+      ],
+      "sha256": "63e6029d3d30ff5c7cf39b5304a733b77a409e01c65ae7095fe92f6d18d74a66"
+    },
+    {
+      "path": "data/db_30_1_text/Read Me.txt",
+      "title": "The O*NET 30.1 Read Me: version banner, release date and license",
+      "sha256": "45cd3154c7f5e1e9ca3a0be6eb565c80acddc9bd7b63feeb76dfdd2e845a6c5f"
+    }
+  ]
+}

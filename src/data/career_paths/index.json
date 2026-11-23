@@ -1,0 +1,114 @@
+{
+  "_meta": {
+    "about": "Career paths: the jobs O*NET lists as related to each of the app's jobs, and each job's O*NET Job Zone. Links and zones are in the lazy chunks next to this file; only src/utils/careerPaths.ts reads them. Pay and AI Exposure are not stored here.",
+    "generator": "npx tsx scripts/build_career_paths.ts",
+    "label": "Similar jobs you could move to (O*NET, by similar skills and work)",
+    "notMeaning": "Not where people actually moved: O*NET relates jobs by similar tasks, knowledge and titles, not by real moves.",
+    "report": "docs/career-paths.md",
+    "source": {
+      "name": "O*NET Database",
+      "version": "O*NET 30.1",
+      "release": "December 2025 Release",
+      "url": "https://www.onetcenter.org/dl_files/database/db_30_1_text.zip",
+      "license": "CC BY 4.0",
+      "licenseUrl": "https://www.onetcenter.org/license_db.html",
+      "attribution": "This page includes information from the O*NET 30.1 Database by the U.S. Department of Labor, Employment and Training Administration (USDOL/ETA). Used under the CC BY 4.0 license. O*NET® is a trademark of USDOL/ETA. Future of Jobs has modified all or some of this information. USDOL/ETA has not approved, endorsed, or tested these modifications.",
+      "attributionSource": "https://www.onetcenter.org/license_db.html",
+      "databaseUrl": "https://www.onetcenter.org/database.html",
+      "licenseDeedUrl": "https://creativecommons.org/licenses/by/4.0/",
+      "files": [
+        {
+          "path": "data/db_30_1_text/Related Occupations.txt",
+          "sha256": "af539f6f01a36e9514a0dd13cbe125df8cca1114c690505342837f338621906c"
+        },
+        {
+          "path": "data/db_30_1_text/Job Zones.txt",
+          "sha256": "7b13748f1d880dbbc6bd2a5f91bd457492f82c3f3bf9bd64909e73f600cd5fba"
+        }
+      ]
+    },
+    "tiers": [
+      "Primary-Short",
+      "Primary-Long",
+      "Supplemental"
+    ],
+    "jobZoneNames": {
+      "1": "Job Zone One: Little or No Preparation Needed",
+      "2": "Job Zone Two: Some Preparation Needed",
+      "3": "Job Zone Three: Medium Preparation Needed",
+      "4": "Job Zone Four: Considerable Preparation Needed",
+      "5": "Job Zone Five: Extensive Preparation Needed"
+    }
+  },
+  "coverage": {
+    "jobs": 830,
+    "withLinks": 783,
+    "withFivePlus": 783,
+    "noData": 47,
+    "withJobZone": 770,
+    "mixedZones": [
+      "11-9179",
+      "11-9199",
+      "13-1020",
+      "13-2099",
+      "15-1299",
+      "17-2199",
+      "17-3029",
+      "19-4099",
+      "29-1129",
+      "29-2010",
+      "31-9099",
+      "39-7010",
+      "53-1047"
+    ],
+    "noLinks": [
+      "11-9039",
+      "17-3019",
+      "19-1099",
+      "21-1019",
+      "21-1029",
+      "21-1099",
+      "21-2099",
+      "23-2099",
+      "25-1069",
+      "25-1199",
+      "25-3099",
+      "25-9099",
+      "27-1019",
+      "27-1029",
+      "27-2099",
+      "27-3099",
+      "27-4099",
+      "29-1029",
+      "29-1249",
+      "33-1099",
+      "35-2019",
+      "35-9099",
+      "37-2019",
+      "37-3019",
+      "39-3019",
+      "39-3099",
+      "39-9099",
+      "41-9099",
+      "43-2099",
+      "43-3099",
+      "43-4199",
+      "43-9199",
+      "45-2099",
+      "45-4029",
+      "47-3019",
+      "47-5049",
+      "47-5099",
+      "49-9069",
+      "51-3099",
+      "51-4199",
+      "51-6099",
+      "51-7099",
+      "51-9199",
+      "53-3099",
+      "53-4099",
+      "53-6099",
+      "53-7199"
+    ]
+  }
+}

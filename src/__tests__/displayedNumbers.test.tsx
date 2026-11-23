@@ -59,6 +59,12 @@ beforeAll(async () => {
     }
 });
 
+/**
+ * One shared window parses every panel: a new JSDOM per render (about 1,600
+ * here) kept every window alive and ran a 2 GB heap out of memory on CI.
+ */
+const PARSER = new new JSDOM('').window.DOMParser();
+
 function render(job: Job, occupation: OccupationEntry | null) {
     const html = renderToStaticMarkup(
         <JobDetailPanel
@@ -74,7 +80,7 @@ function render(job: Job, occupation: OccupationEntry | null) {
             onShowMethodology={() => {}}
         />,
     );
-    return new JSDOM(`<body>${html}</body>`).window.document;
+    return PARSER.parseFromString(`<body>${html}</body>`, 'text/html');
 }
 
 describe('every displayed % is the exact mean of whole hundredths, rounded once, halves up', () => {

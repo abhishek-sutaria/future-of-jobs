@@ -10,6 +10,7 @@ import { payBaseNote } from '../utils/wages';
 import { PayLine } from './RolePay';
 import { ProvenanceBadge } from './ProvenanceBadge';
 import { CloseButton } from './ui/CloseButton';
+import { OpenCareerPathsButton } from './careerPaths/OpenCareerPathsButton';
 import { IconInfo, IconSparkles } from './ui/Icons';
 import { SCORE_COVERAGE } from '../utils/blsScores';
 
@@ -95,6 +96,7 @@ export const OccupationBody: React.FC<{ occupation: OccupationEntry; onClose: ()
                             {CONTINENT_DISPLAY_NAMES[continentOf(o.soc)]}
                         </span>
                         <span className="text-[10px] text-gray-500 font-mono">BLS {o.soc}</span>
+                        <OpenCareerPathsButton soc={o.soc} />
                     </div>
                     <h2 className="text-xl md:text-2xl font-bold text-white tracking-tight">{o.title}</h2>
                     <div className="flex items-start gap-1.5">

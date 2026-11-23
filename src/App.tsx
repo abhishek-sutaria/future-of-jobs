@@ -6,6 +6,7 @@ import { TaskSplitView } from './components/TaskSplitView';
 import { DashboardPage } from './components/dashboard/DashboardPage';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { RescoreConfirmModal } from './components/RescoreConfirmModal';
+import { CareerPathsHost } from './components/careerPaths/CareerPathsHost';
 import { WebGLFallback } from './components/WebGLFallback';
 import { useStore } from './store';
 import { useUserStore } from './userStore';
@@ -110,6 +111,8 @@ function App() {
       <UI dashboardOpen={route === 'dashboard'} />
       {route === 'dashboard' && <DashboardPage />}
       <RescoreConfirmModal />
+      {/* Portalled to <body>, above everything; lazy (its view and data load on first open). */}
+      <CareerPathsHost />
     </div>
   );
 }
